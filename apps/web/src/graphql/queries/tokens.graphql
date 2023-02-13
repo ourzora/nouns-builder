@@ -1,0 +1,31 @@
+query tokens(
+  $chain: Chain!
+  $pagination: PaginationInput = null
+  $filter: TokensQueryFilter = null
+  $where: TokensQueryInput = null
+  $sort: TokenSortInput = null
+) {
+  tokens(
+    pagination: $pagination
+    networks: { network: ETHEREUM, chain: $chain }
+    filter: $filter
+    where: $where
+    sort: $sort
+  ) {
+    nodes {
+      token {
+        name
+        image {
+          url
+          mediaEncoding {
+            __typename
+            ... on ImageEncodingTypes {
+              original
+              thumbnail
+            }
+          }
+        }
+      }
+    }
+  }
+}

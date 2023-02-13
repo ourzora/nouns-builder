@@ -1,0 +1,13 @@
+query daos($where: NounsQueryInput, $chain: Chain!, $pagination: PaginationInput) {
+  nouns {
+    nounsDaos(
+      networks: { chain: $chain, network: ETHEREUM }
+      where: $where
+      pagination: $pagination
+    ) {
+      nodes {
+        ...Dao
+      }
+    }
+  }
+}

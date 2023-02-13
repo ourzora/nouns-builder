@@ -1,5 +1,18 @@
 {
+  "exclude": ["node_modules"],
   "extends": "tsconfig/nextjs.json",
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "compilerOptions": {
+    "strict": true,
+    "baseUrl": ".",
+    "jsx": "preserve",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "include": [
+    "typings",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "node_modules/eslint-plugin-react/lib/types.d.ts"
+  ]
 }

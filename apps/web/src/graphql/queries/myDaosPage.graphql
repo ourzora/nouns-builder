@@ -1,0 +1,18 @@
+query myDaosPage($address: [String!], $chain: Chain!) {
+  nouns {
+    nounsDaos(
+      networks: { chain: $chain, network: ETHEREUM }
+      where: { memberAddresses: $address }
+      pagination: { limit: 30 }
+    ) {
+      nodes {
+        collectionAddress
+      }
+      pageInfo {
+        limit
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+}

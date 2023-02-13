@@ -1,0 +1,19 @@
+query daoInfo($chain: Chain!, $collectionAddress: [String!]) {
+  aggregateStat {
+    ownerCount(
+      where: { collectionAddresses: $collectionAddress }
+      networks: { network: ETHEREUM, chain: $chain }
+    )
+  }
+  nouns {
+    nounsDaos(
+      where: { collectionAddresses: $collectionAddress }
+      pagination: { limit: 1 }
+      networks: { network: ETHEREUM, chain: $chain }
+    ) {
+      nodes {
+        totalSupply
+      }
+    }
+  }
+}

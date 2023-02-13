@@ -1,0 +1,5 @@
+fragment Dao on NounsDao {
+  name
+  collectionAddress
+  auctionAddress
+}

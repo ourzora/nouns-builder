@@ -1,0 +1,27 @@
+query token($address: String!, $tokenId: String!, $chain: Chain!) {
+  token(
+    network: { chain: $chain, network: ETHEREUM }
+    token: { address: $address, tokenId: $tokenId }
+  ) {
+    token {
+      name
+      description
+      image {
+        url
+        mediaEncoding {
+          __typename
+          ... on ImageEncodingTypes {
+            original
+            thumbnail
+          }
+        }
+      }
+      owner
+      mintInfo {
+        mintContext {
+          blockTimestamp
+        }
+      }
+    }
+  }
+}

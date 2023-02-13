@@ -1,0 +1,12 @@
+query salesVolume($chain: Chain!, $collectionAddress: [String!]) {
+  aggregateStat {
+    salesVolume(
+      where: { collectionAddresses: $collectionAddress }
+      networks: { network: ETHEREUM, chain: $chain }
+    ) {
+      chainTokenPrice
+      usdcPrice
+      totalCount
+    }
+  }
+}

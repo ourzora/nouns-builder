@@ -1,0 +1,7 @@
+fragment Vote on NounsBuilderGovernorVoteCastEventProperties {
+  proposalId
+  voter
+  reason
+  support
+  weight
+}

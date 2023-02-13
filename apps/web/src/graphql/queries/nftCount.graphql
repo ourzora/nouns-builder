@@ -1,0 +1,12 @@
+query nftCount(
+  $collectionAddress: [String!]
+  $ownerAddress: [String!]
+  $chain: Chain!
+) {
+  aggregateStat {
+    nftCount(
+      where: { collectionAddresses: $collectionAddress, ownerAddresses: $ownerAddress }
+      networks: { network: ETHEREUM, chain: $chain }
+    )
+  }
+}

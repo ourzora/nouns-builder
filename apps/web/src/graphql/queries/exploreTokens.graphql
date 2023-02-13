@@ -1,0 +1,23 @@
+query exploreTokens($chain: Chain!, $tokens: [TokenInput!]) {
+  tokens(
+    networks: { network: ETHEREUM, chain: $chain }
+    where: { tokens: $tokens }
+    pagination: { limit: 30 }
+  ) {
+    nodes {
+      token {
+        collectionAddress
+        collectionName
+        name
+        image {
+          url
+        }
+      }
+    }
+    pageInfo {
+      limit
+      hasNextPage
+      endCursor
+    }
+  }
+}

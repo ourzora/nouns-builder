@@ -1,0 +1,19 @@
+query tokenWinner($address: String!, $tokenId: String!, $chain: Chain!) {
+  nouns {
+    nounsMarkets(
+      networks: { network: ETHEREUM, chain: $chain }
+      where: { tokens: { address: $address, tokenId: $tokenId } }
+      pagination: { limit: 1 }
+      filter: { nounsMarketType: NOUNS_BUILDER_AUCTION }
+    ) {
+      nodes {
+        highestBidPrice {
+          chainTokenPrice {
+            decimal
+          }
+        }
+        highestBidder
+      }
+    }
+  }
+}

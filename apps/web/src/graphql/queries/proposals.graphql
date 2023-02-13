@@ -1,0 +1,23 @@
+query proposals($token: [String!], $chain: Chain!, $pagination: PaginationInput!) {
+  nouns {
+    nounsProposals(
+      networks: [{ chain: $chain, network: ETHEREUM }]
+      sort: { sortKey: CREATED, sortDirection: DESC }
+      where: { collectionAddresses: $token }
+      pagination: $pagination
+    ) {
+      nodes {
+        ...Proposal
+        transactionInfo {
+          blockNumber
+          transactionHash
+        }
+      }
+      pageInfo {
+        limit
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+}

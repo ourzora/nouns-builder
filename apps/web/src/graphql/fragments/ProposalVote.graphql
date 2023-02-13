@@ -1,0 +1,6 @@
+fragment ProposalVote on NounsProposalVote {
+  voter
+  support
+  weight
+  reason
+}
