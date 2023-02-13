@@ -53,7 +53,7 @@ importers:
       '@vanilla-extract/next-plugin': ^2.0.2
       '@vanilla-extract/recipes': ^0.2.5
       '@vanilla-extract/vite-plugin': ^3.6.1
-      '@vitejs/plugin-react': ^2.1.0
+      '@vitejs/plugin-react': ^2.2.0
       '@wagmi/core': 0.7.9
       '@walletconnect/ethereum-provider': 1.8.0
       '@zoralabs/nouns-protocol': ^1.1.0
@@ -81,7 +81,6 @@ importers:
       lodash: ^4.17.21
       multiformats: 9.9.0
       next: ^13.0.3
-      next-transpile-modules: ^10.0.0
       react: ^18.2.0
       react-content-loader: ^6.0.2
       react-dom: ^18.2.0
@@ -93,8 +92,9 @@ importers:
       tsconfig: workspace:*
       typechain: ^8.1.1
       typescript: ^4.9.3
+      vite: latest
       vite-plugin-svgr: ^2.4.0
-      vitest: ^0.27.2
+      vitest: ^0.27.3
       wagmi: 0.8.10
       yup: ^0.32.9
       zustand: ^4.1.3
@@ -144,7 +144,6 @@ importers:
       lodash: 4.17.21
       multiformats: 9.9.0
       next: 13.1.6_pjwopsidmaokadturxaafygjp4
-      next-transpile-modules: 10.0.0
       react: 18.2.0
       react-content-loader: 6.2.0_react@18.2.0
       react-dom: 18.2.0_react@18.2.0
@@ -171,8 +170,8 @@ importers:
       '@types/react-dom': 18.0.9
       '@types/testing-library__jest-dom': 5.14.5
       '@vanilla-extract/css': 1.9.5
-      '@vanilla-extract/vite-plugin': 3.8.0_ts-node@10.9.1+vite@3.2.5
-      '@vitejs/plugin-react': 2.2.0_vite@3.2.5
+      '@vanilla-extract/vite-plugin': 3.8.0_ts-node@10.9.1+vite@4.1.1
+      '@vitejs/plugin-react': 2.2.0_vite@4.1.1
       dotenv: 16.0.3
       eslint: 8.16.0
       eslint-config-custom: link:../../packages/eslint-config-custom
@@ -180,7 +179,8 @@ importers:
       tsconfig: link:../../packages/tsconfig
       typechain: 8.1.1_typescript@4.9.3
       typescript: 4.9.3
-      vite-plugin-svgr: 2.4.0_vite@3.2.5
+      vite: 4.1.1_@types+node@17.0.35
+      vite-plugin-svgr: 2.4.0_vite@4.1.1
       vitest: 0.27.3_jsdom@20.0.3
 
   packages/analytics:
@@ -254,24 +254,6 @@ importers:
 
   packages/tsconfig:
     specifiers: {}
-
-  packages/ui:
-    specifiers:
-      '@types/react': ^17.0.37
-      '@types/react-dom': ^17.0.11
-      eslint: ^7.32.0
-      eslint-config-custom: workspace:*
-      react: ^17.0.2
-      tsconfig: workspace:*
-      typescript: ^4.5.2
-    devDependencies:
-      '@types/react': 17.0.52
-      '@types/react-dom': 17.0.18
-      eslint: 7.32.0
-      eslint-config-custom: link:../eslint-config-custom
-      react: 17.0.2
-      tsconfig: link:../tsconfig
-      typescript: 4.9.3
 
   packages/zoralabs-zord:
     specifiers:
@@ -5314,12 +5296,6 @@ packages:
       parchment: 1.1.4
     dev: false
 
-  /@types/react-dom/17.0.18:
-    resolution: {integrity: sha512-rLVtIfbwyur2iFKykP2w0pl/1unw26b5td16d5xMgp7/yjTHomkyxPYChFoCr/FtEX1lN9wY6lFj1qvKdS5kDw==}
-    dependencies:
-      '@types/react': 17.0.52
-    dev: true
-
   /@types/react-dom/18.0.9:
     resolution: {integrity: sha512-qnVvHxASt/H7i+XG1U1xMiY5t+IHcPGUK7TDMDzom08xa7e86eCeKOiLZezwCKVxJn6NEiiy2ekgX8aQssjIKg==}
     dependencies:
@@ -5338,14 +5314,6 @@ packages:
     dependencies:
       '@types/react': 18.0.28
     dev: false
-
-  /@types/react/17.0.52:
-    resolution: {integrity: sha512-vwk8QqVODi0VaZZpDXQCmEmiOuyjEFPY7Ttaw5vjM112LOq37yz1CDJGrRJwA1fYEq4Iitd5rnjd1yWAc/bT+A==}
-    dependencies:
-      '@types/prop-types': 15.7.5
-      '@types/scheduler': 0.16.2
-      csstype: 3.1.1
-    dev: true
 
   /@types/react/18.0.28:
     resolution: {integrity: sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==}
@@ -5587,7 +5555,7 @@ packages:
       '@vanilla-extract/css': 1.9.5
     dev: false
 
-  /@vanilla-extract/vite-plugin/3.8.0_ts-node@10.9.1+vite@3.2.5:
+  /@vanilla-extract/vite-plugin/3.8.0_ts-node@10.9.1+vite@4.1.1:
     resolution: {integrity: sha512-HBCecR4eTbweo7wQPq9g/HBvxUi6Cua8O4Xk6t1by4W/imgEsHbRCCa9SowzZwg8lub7uJHBAdzWWpqY+LdH0w==}
     peerDependencies:
       vite: ^2.2.3 || ^3.0.0 || ^4.0.3
@@ -5596,7 +5564,7 @@ packages:
       outdent: 0.8.0
       postcss: 8.4.21
       postcss-load-config: 3.1.4_aesdjsunmf4wiehhujt67my7tu
-      vite: 3.2.5_@types+node@17.0.35
+      vite: 4.1.1_@types+node@17.0.35
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -5624,7 +5592,7 @@ packages:
       react: 18.2.0
     dev: true
 
-  /@vitejs/plugin-react/2.2.0_vite@3.2.5:
+  /@vitejs/plugin-react/2.2.0_vite@4.1.1:
     resolution: {integrity: sha512-FFpefhvExd1toVRlokZgxgy2JtnBOdp4ZDsq7ldCWaqGSGn9UhWMAVm/1lxPL14JfNS5yGz+s9yFrQY6shoStA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
@@ -5637,7 +5605,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.20.12
       magic-string: 0.26.7
       react-refresh: 0.14.0
-      vite: 3.2.5_@types+node@17.0.35
+      vite: 4.1.1_@types+node@17.0.35
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -12386,13 +12354,6 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: false
 
-  /next-transpile-modules/10.0.0:
-    resolution: {integrity: sha512-FyeJ++Lm2Fq31gbThiRCrJlYpIY9QaI7A3TjuhQLzOix8ChQrvn5ny4MhfIthS5cy6+uK1AhDRvxVdW17y3Xdw==}
-    deprecated: All features of next-transpile-modules are now natively built-in Next.js 13.1. Please use Next's transpilePackages option :)
-    dependencies:
-      enhanced-resolve: 5.12.0
-    dev: false
-
   /next/13.1.6_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-hHlbhKPj9pW+Cymvfzc15lvhaOZ54l+8sXDXJWm3OBNBzgrVj6hwGPmqqsXg40xO1Leq+kXpllzRPuncpC0Phw==}
     engines: {node: '>=14.6.0'}
@@ -13677,14 +13638,6 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
     dev: false
-
-  /react/17.0.2:
-    resolution: {integrity: sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-    dev: true
 
   /react/18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
@@ -15682,51 +15635,17 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-svgr/2.4.0_vite@3.2.5:
+  /vite-plugin-svgr/2.4.0_vite@4.1.1:
     resolution: {integrity: sha512-q+mJJol6ThvqkkJvvVFEndI4EaKIjSI0I3jNFgSoC9fXAz1M7kYTVUin8fhUsFojFDKZ9VHKtX6NXNaOLpbsHA==}
     peerDependencies:
       vite: ^2.6.0 || 3 || 4
     dependencies:
       '@rollup/pluginutils': 5.0.2
       '@svgr/core': 6.5.1
-      vite: 3.2.5_@types+node@17.0.35
+      vite: 4.1.1_@types+node@17.0.35
     transitivePeerDependencies:
       - rollup
       - supports-color
-    dev: true
-
-  /vite/3.2.5_@types+node@17.0.35:
-    resolution: {integrity: sha512-4mVEpXpSOgrssFZAOmGIr85wPHKvaDAcXqxVxVRZhljkJOMZi1ibLibzjLHzJvcok8BMguLc7g1W6W/GqZbLdQ==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 17.0.35
-      esbuild: 0.15.18
-      postcss: 8.4.21
-      resolve: 1.22.1
-      rollup: 2.79.1
-    optionalDependencies:
-      fsevents: 2.3.2
     dev: true
 
   /vite/3.2.5_@types+node@18.13.0:
@@ -15759,6 +15678,40 @@ packages:
       postcss: 8.4.21
       resolve: 1.22.1
       rollup: 2.79.1
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
+  /vite/4.1.1_@types+node@17.0.35:
+    resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 17.0.35
+      esbuild: 0.16.17
+      postcss: 8.4.21
+      resolve: 1.22.1
+      rollup: 3.15.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

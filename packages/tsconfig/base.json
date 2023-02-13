@@ -3,8 +3,6 @@
   "display": "Default",
   "compilerOptions": {
     "composite": false,
-    "declaration": true,
-    "declarationMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
@@ -14,7 +12,7 @@
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "strict": true    
+    "strict": true
   },
   "exclude": ["node_modules"]
 }

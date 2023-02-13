@@ -1,12 +1,18 @@
 {
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
   "extends": "tsconfig/nextjs.json",
   "compilerOptions": {
     "strict": true,
     "baseUrl": ".",
     "jsx": "preserve",
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "skipLibCheck": true,
+    "noUnusedParameters": false,
+    "types": [
+      "vitest/globals"
+    ]
   },
   "include": [
     "typings",

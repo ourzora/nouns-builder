@@ -1,5 +1,4 @@
 const { createVanillaExtractPlugin } = require('@vanilla-extract/next-plugin')
-const withTM = require('next-transpile-modules')(['ipfs-service', 'analytics'])
 const withVanillaExtract = createVanillaExtractPlugin()
 const { withSentryConfig } = require('@sentry/nextjs')
 
@@ -8,6 +7,7 @@ const { NEXT_PUBLIC_SENTRY_DSN, SENTRY_ORG, SENTRY_PROJECT } = process.env
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['ipfs-service', 'analytics'],
   env: {
     ETHERSCAN_API_KEY: process.env.ETHERSCAN_API_KEY,
   },
@@ -29,13 +29,18 @@ const nextConfig = {
       },
     ]
   },
-  webpack(config) {
+  webpack(config, { dev }) {
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
       use: ['@svgr/webpack'],
     })
-    return config
+
+    // Hot-fix for $RefreshReg issues: https://github.com/vanilla-extract-css/vanilla-extract/issues/679#issuecomment-1402839249
+    return {
+      ...config,
+      mode: dev ? 'production' : config.mode,
+    }
   },
 }
 
@@ -49,7 +54,7 @@ const sentryWebpackPluginOptions = {
 }
 
 const sentryEnabled = NEXT_PUBLIC_SENTRY_DSN && SENTRY_ORG && SENTRY_PROJECT
-const enhancedConfig = withTM(withVanillaExtract(nextConfig))
+const enhancedConfig = withVanillaExtract(nextConfig)
 
 module.exports = sentryEnabled
   ? withSentryConfig(enhancedConfig, sentryWebpackPluginOptions)

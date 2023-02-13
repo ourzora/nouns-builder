@@ -61,7 +61,6 @@
     "lodash": "^4.17.21",
     "multiformats": "9.9.0",
     "next": "^13.0.3",
-    "next-transpile-modules": "^10.0.0",
     "react": "^18.2.0",
     "react-content-loader": "^6.0.2",
     "react-dom": "^18.2.0",
@@ -90,15 +89,16 @@
     "@types/testing-library__jest-dom": "^5.14.5",
     "@vanilla-extract/css": "^1.9.1",
     "@vanilla-extract/vite-plugin": "^3.6.1",
-    "@vitejs/plugin-react": "^2.1.0",
-    "tsconfig": "workspace:*",
+    "@vitejs/plugin-react": "^2.2.0",
     "dotenv": "^16.0.3",
     "eslint": "8.16.0",
     "eslint-config-custom": "workspace:*",
     "jsdom": "^20.0.1",
+    "tsconfig": "workspace:*",
     "typechain": "^8.1.1",
     "typescript": "^4.9.3",
+    "vite": "latest",
     "vite-plugin-svgr": "^2.4.0",
-    "vitest": "^0.27.2"
+    "vitest": "^0.27.3"
   }
 }
