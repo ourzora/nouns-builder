@@ -1,0 +1,74 @@
+# This workflow runs the CI command defined in package.json
+name: CI
+
+on:
+  - push
+  - workflow_dispatch
+
+jobs:
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    env:
+      PRIVATE_ALCHEMY_ID: ${{ secrets.PRIVATE_ALCHEMY_ID }}
+      ANVIL_BLOCK_NUMBER: 16522514
+      ANVIL_FORK_URL: https://eth-mainnet.alchemyapi.io/v2/${{ secrets.PRIVATE_ALCHEMY_ID }}
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 📦 Install pnpm
+        uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 7.19
+
+      - name: 📦 Setup Node 18
+        uses: actions/setup-node@v3
+        with:
+          cache: "pnpm"
+          node-version: 18
+
+      - name: 💾 Cache node_modules
+        uses: actions/cache@v3
+        id: cache-node-modules
+        with:
+          path: |
+            node_modules
+            apps/**/node_modules
+            apps/**/constants/typechain
+            packages/**/node_modules
+            packages/**/dist
+          key: modules-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: ⏬ Install Dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: pnpm i
+
+      - name: 💾 Cache Anvil
+        uses: "actions/cache@v3"
+        with:
+          path: ~/.foundry/cache/rpc/**/${{ env.ANVIL_BLOCK_NUMBER }}
+          key: foundry-anvil-${{ env.ANVIL_BLOCK_NUMBER }}
+
+      - name: 🦀 Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: wasm32-unknown-unknown
+          profile: minimal
+          override: true
+
+      - name: 🔨 Install Anvil
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: 🚀 Launch Anvil
+        run: anvil --fork-url $ANVIL_FORK_URL --fork-block-number $ANVIL_BLOCK_NUMBER &
+
+      - name: 👾 Run CI task
+        run: pnpm ci
+
+      # Need to shutdown Anvil so cache gets created
+      - name: 💤 Shutdown Anvil
+        run: pkill -2 anvil
