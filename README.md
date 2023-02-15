@@ -15,6 +15,6 @@ TBD
 ## Apps and Packages
 
 - `web`: Nouns Builder [Next.js](https://nextjs.org/) app
-- `zoralabs-zord`: ui components
+- `zoralabs-zord`: Shareable ui components
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
