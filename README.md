@@ -18,3 +18,4 @@ TBD
 - `zoralabs-zord`: Shareable ui components
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
+- `ipfs-service`: api to for image uploads to ipfs
