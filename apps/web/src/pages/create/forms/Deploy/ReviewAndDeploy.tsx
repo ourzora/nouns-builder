@@ -15,17 +15,14 @@ import {
   deployCheckboxWrapperStyle,
   deployContractButtonStyle,
 } from 'src/styles/deploy.css'
-import { getEnsAddress } from 'src/utils/ens'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
 import { Icon } from 'src/components/Icon'
-import type { allocationProps, AddressType } from 'src/typings'
+import type { AddressType } from 'src/typings'
 import { managerAbi } from 'src/constants/abis'
 import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
 import { WriteContractArgs } from '@wagmi/core'
-import useSWR from 'swr'
-import { getProvider } from 'src/utils/provider'
 
 type FounderParameters = NonNullable<
   WriteContractArgs<typeof managerAbi, 'deploy'>['args']
@@ -72,32 +69,18 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     },
   })
 
-  const { data: founderParams } = useSWR('founderParams', async () => {
-    return await getFounderParams([...founderAllocation, ...contributionAllocation])
-  })
-
   /* handle section navigation */
   const handlePrev = () => {
     setActiveSection(activeSection - 1)
   }
 
-  const getFounderParams = async (
-    allocations: allocationProps[]
-  ): Promise<FounderParameters> => {
-    const allocationPromises = allocations.map((allocation) =>
-      getEnsAddress(allocation.founderAddress, getProvider())
-    )
-
-    const ensAddresses = await Promise.all(allocationPromises)
-
-    return ensAddresses.map((address, idx) => ({
-      wallet: address as AddressType,
-      ownershipPct: BigNumber.from(allocations[idx].allocation),
-      vestExpiry: BigNumber.from(
-        Math.floor(new Date(allocations[idx].endDate).getTime() / 1000)
-      ),
-    }))
-  }
+  const founderParams = [...founderAllocation, ...contributionAllocation].map(
+    ({ founderAddress, allocation, endDate }) => ({
+      wallet: founderAddress as AddressType,
+      ownershipPct: BigNumber.from(allocation),
+      vestExpiry: BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
+    })
+  )
 
   const abiCoder = new ethers.utils.AbiCoder()
 
@@ -140,6 +123,11 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       : BigNumber.from('0'),
   }
 
+  const vetoer =
+    vetoPower === 0
+      ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
+      : ethers.utils.getAddress(NULL_ADDRESS) // 0 === YES in Radio component
+
   const { config } = usePrepareContractWrite({
     address: PUBLIC_MANAGER_ADDRESS!,
     abi: managerAbi,
@@ -150,10 +138,7 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       auctionParams,
       {
         ...govParams,
-        vetoer:
-          vetoPower === 0
-            ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
-            : ethers.utils.getAddress(NULL_ADDRESS), // 0 === YES in Radio component
+        vetoer,
       },
     ],
   })
