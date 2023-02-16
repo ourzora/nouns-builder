@@ -35,7 +35,7 @@ interface ReviewProposalProps {
 }
 
 export const ReviewProposalForm = ({
-  disabled,
+  disabled: disabledForm,
   title,
   summary,
   transactions,
@@ -205,7 +205,7 @@ export const ReviewProposalForm = ({
           {(formik) => (
             <form onSubmit={formik.handleSubmit} style={{ width: '100%' }}>
               <Transactions
-                disabled={disabled}
+                disabled={disabledForm}
                 transactions={transactions}
                 simulations={simulations}
                 simulationError={simulationError}
@@ -218,7 +218,7 @@ export const ReviewProposalForm = ({
                     id={'title'}
                     inputLabel={'Proposal Title'}
                     type={'text'}
-                    disabled={disabled}
+                    disabled={disabledForm}
                     errorMessage={formik.errors['title']}
                   />
                 )}
@@ -230,7 +230,7 @@ export const ReviewProposalForm = ({
                     {...formik.getFieldProps('summary')}
                     id={'summary'}
                     formik={formik}
-                    disabled={disabled}
+                    disabled={disabledForm}
                     inputLabel={'Summary'}
                     errorMessage={formik.errors['summary']}
                     onBlur={formik.handleBlur}

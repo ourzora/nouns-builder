@@ -1,120 +1,72 @@
-import { Token, Token__factory } from 'src/constants/typechain'
-import React, { useEffect } from 'react'
+import { useCallback } from 'react'
+import { constants, ContractTransaction } from 'ethers'
 import { useDaoStore } from 'src/stores/useDaoStore'
-import { getProvider } from 'src/utils/provider'
-import useSWR from 'swr'
-import { useSigner } from 'wagmi'
-import SWR_KEYS from 'src/constants/swrKeys'
+import { tokenAbi } from 'src/constants/abis'
+import {
+  Address,
+  useAccount,
+  useContract,
+  useContractRead,
+  useContractReads,
+  useSigner,
+} from 'wagmi'
+import { unpackOptionalArray } from 'src/utils/helpers'
+import { GetContractResult } from '@wagmi/core'
 
-interface auctionResponseProps {
-  contract: Token | undefined
-  delegate: (to: string) => void
+type TokenContract = GetContractResult<typeof tokenAbi>
+
+interface TokenContractInterface {
+  contract?: TokenContract
+  owner?: Address
+  name?: string
+  symbol?: string
+  totalSupply: number
   delegateAddress?: string
-  name: string | undefined
-  symbol: string | undefined
-  totalSupply: number | undefined
-  owner: string | undefined
-  hasVotes: number | undefined
+  delegate: (to: Address) => Promise<ContractTransaction | undefined>
 }
 
-const useTokenContract = () => {
+const useTokenContract = (): TokenContractInterface => {
   const { data: signer } = useSigner()
   const addresses = useDaoStore().addresses
+  const account = useAccount()
 
-  const contract = React.useMemo(() => {
-    if (!addresses.token) return
-
-    let contract: Token
-    if (signer) {
-      contract = new Token__factory(signer).attach(addresses?.token)
-    } else {
-      contract = Token__factory.connect(addresses?.token, getProvider())
-    }
-
-    return contract
-  }, [signer, addresses])
-
-  // delegate to
-  const delegate = React.useCallback(
-    async (to: string) => {
-      if (!contract) return
-
-      const { wait } = await contract.delegate(to)
-      await wait()
-    },
-    [contract]
-  )
-
-  // owner
-  const { data: owner } = useSWR(
-    contract ? SWR_KEYS.DYNAMIC.TOKEN_CONTRACT.OWNER(addresses?.token as string) : null,
-    async () => {
-      return await contract?.owner()
-    },
-    { revalidateOnFocus: false }
-  )
-
-  // name
-  const { data: name } = useSWR(
-    contract ? SWR_KEYS.DYNAMIC.TOKEN_CONTRACT.NAME(addresses?.token as string) : null,
-    async () => {
-      return await contract?.name()
-    }
-  )
-
-  // symbol
-  const { data: symbol } = useSWR(
-    contract ? SWR_KEYS.DYNAMIC.TOKEN_CONTRACT.SYMBOL(addresses?.token as string) : null,
-    async () => {
-      return await contract?.symbol()
-    },
-    { revalidateOnFocus: false }
-  )
-
-  const { data: delegateAddress } = useSWR(
-    contract && signer
-      ? SWR_KEYS.DYNAMIC.TOKEN_CONTRACT.DELEGATES(addresses?.token as string)
-      : null,
-    () => signer?.getAddress().then((address) => contract?.delegates(address))
-  )
-
-  const { data: hasVotes } = useSWR(
-    contract && signer
-      ? SWR_KEYS.DYNAMIC.TOKEN_CONTRACT.HAS_VOTES(addresses?.token as string)
-      : null,
-    () =>
-      signer?.getAddress().then(async (address) => {
-        const votes = await contract?.getVotes(address)
-        return votes?.toNumber()
-      })
-  )
-
-  /* get total supply */
-  const [totalSupply, setTotalSupply] = React.useState<number>()
-  useEffect(() => {
-    if (!addresses?.token) return
-
-    const getTotalSupply = async (token: string) => {
-      const tokenContract = Token__factory.connect(token, getProvider())
-      const total = await tokenContract?.totalSupply()
-      setTotalSupply(Number(total))
-    }
-
-    getTotalSupply(addresses?.token)
-  }, [addresses])
-
-  const response: auctionResponseProps = {
-    contract,
-    delegateAddress,
-    delegate,
-    name,
-    symbol,
-    totalSupply,
-    owner,
-    hasVotes,
+  const tokenContract = {
+    abi: tokenAbi,
+    address: addresses.token,
   }
 
-  return { ...response }
+  const { data } = useContractReads({
+    contracts: [
+      { ...tokenContract, functionName: 'owner' },
+      { ...tokenContract, functionName: 'name' },
+      { ...tokenContract, functionName: 'symbol' },
+      { ...tokenContract, functionName: 'totalSupply' },
+    ],
+  })
+
+  const [owner, name, symbol, totalSupply] = unpackOptionalArray(data, 5)
+
+  // This needs to be separate from the other contract reads as it is an optional contract read
+  const { data: delegateAddress } = useContractRead({
+    ...tokenContract,
+    functionName: 'delegates',
+    args: [account?.address || constants.AddressZero],
+    enabled: !!account?.address,
+  })
+
+  const contract = useContract({ ...tokenContract, signerOrProvider: signer })
+
+  const delegate = useCallback(async (to: Address) => contract?.delegate(to), [contract])
+
+  return {
+    contract: contract || undefined,
+    owner,
+    name,
+    symbol,
+    totalSupply: Number(totalSupply),
+    delegateAddress,
+    delegate,
+  }
 }
 
 export default useTokenContract

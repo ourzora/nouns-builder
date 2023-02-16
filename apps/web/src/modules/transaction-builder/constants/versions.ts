@@ -6,7 +6,6 @@ type ContractVersion = {
   [key: string]: {
     description: string
     date: string
-    summary: string
   }
 }
 
@@ -51,12 +50,10 @@ export const CONTRACT_VERSION_DETAILS: ContractVersion = {
     description:
       'This release upgrades the DAO to V1.2 to add several features, improvements and bug fixes.',
     date: '2023-02-09',
-    summary: `<p><img src="https://i.imgur.com/HrQKZMG.png"></p><h2><br></h2><h2>Summary</h2><p>This proposal upgrades the DAO to V1.2 to add several features, improvements and bug fixes.</p>`,
   },
   '1.1.0': {
     description:
       'This release upgrades the DAO to V1.1 to add several features, improvements and bug fixes.',
     date: '2022-12-22',
-    summary: `<p><img src="https://i.imgur.com/HrQKZMG.png"></p><h2><br></h2><h2>Summary</h2><p>This proposal upgrades the DAO to V1.1 to add the following features, improvements and bug fixes.</p><h3><br></h3><h3>Updatable Founder Shares</h3><p>DAOs will now be able to propose changes to founders shares. This gives DAOs the ability to add, modify and remove founders shares via proposal.</p><p>With this new feature DAO creators will have the ability to modify any errors that may have been caused at DAO deployment.</p><h3><br></h3><h3>Upgrade Visibility</h3><p>In V1.1, each smart contract of a DAO now has an explicit version attached. This means that members and developers will be able easily understand which protocol implementation a DAO is utilizing at any given time.</p><p>This will also make it easier for future upgrades that are in development: including <em>airdrops</em> and <em>custom metadata renderers</em>.</p><h3><br></h3><h3>Proposal Spam Fix</h3><p>Proposal submission to a DAO has an incorrectly implemented check which can allow for spam proposals to be submitted to a DAO. In V1.1 it works as expected.</p><h3><br></h3><h3>Auction Improvements</h3><p>Improved bid handling and edge case management in the Auction House contracts.</p><h3><br></h3><h3>Author</h3><p>This upgrade has been developed and proposed by <strong>Zora</strong> (<a href="https://etherscan.io/address/0xd1d1d4e36117ab794ec5d4c78cbd3a8904e691d0" rel="noopener noreferrer" target="_blank" style="color: rgb(51, 122, 183); background-color: transparent;">zora.eth</a>)</p>`,
   },
 }

@@ -2,21 +2,13 @@ import AuctionAllBids from './AuctionAllBids'
 import { Button, Flex } from '@zoralabs/zord'
 import dynamic from 'next/dynamic'
 import React, { ReactNode } from 'react'
-import { useRouter } from 'next/router'
-import { useBids } from 'src/hooks/useBids'
+import { Bid } from 'src/typings'
 
 const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal'), {
   ssr: false,
 })
 
-export const BidHistory = ({ auctionAddress }: { auctionAddress: string }) => {
-  const { query } = useRouter()
-
-  const { data: bids } = useBids({
-    auction: auctionAddress,
-    tokenId: query?.tokenId as string,
-  })
-
+export const BidHistory = ({ bids }: { bids: Bid[] }) => {
   return (
     <AnimatedModal
       trigger={
@@ -31,7 +23,7 @@ export const BidHistory = ({ auctionAddress }: { auctionAddress: string }) => {
         </Button>
       }
     >
-      <AuctionAllBids bids={bids ?? []} />
+      <AuctionAllBids bids={bids} />
     </AnimatedModal>
   )
 }

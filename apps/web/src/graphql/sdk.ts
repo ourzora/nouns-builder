@@ -2279,6 +2279,12 @@ export type DaoFragment = {
   auctionAddress?: string | null
 }
 
+export type ImageMediaEncodingFragment = {
+  __typename?: 'ImageEncodingTypes'
+  original: string
+  thumbnail?: string | null
+}
+
 export type ProposalFragment = {
   __typename: 'NounsProposal'
   abstainVotes: number
@@ -2315,6 +2321,28 @@ export type ProposalVoteFragment = {
   support: Support
   weight: number
   reason: string
+}
+
+export type TokenFragment = {
+  __typename?: 'Token'
+  tokenId: string
+  name?: string | null
+  description?: string | null
+  owner?: string | null
+  image?: {
+    __typename?: 'TokenContentMedia'
+    url?: string | null
+    mediaEncoding?:
+      | { __typename: 'AudioEncodingTypes' }
+      | { __typename: 'ImageEncodingTypes'; original: string; thumbnail?: string | null }
+      | { __typename: 'UnsupportedEncodingTypes' }
+      | { __typename: 'VideoEncodingTypes' }
+      | null
+  } | null
+  mintInfo?: {
+    __typename?: 'MintInfo'
+    mintContext: { __typename?: 'TransactionInfo'; blockTimestamp: any }
+  } | null
 }
 
 export type VoteFragment = {
@@ -2642,6 +2670,7 @@ export type TokenQuery = {
     __typename?: 'TokenWithFullMarketHistory'
     token: {
       __typename?: 'Token'
+      tokenId: string
       name?: string | null
       description?: string | null
       owner?: string | null
@@ -2794,6 +2823,33 @@ export const ProposalVoteFragmentDoc = gql`
     weight
     reason
   }
+`
+export const ImageMediaEncodingFragmentDoc = gql`
+  fragment ImageMediaEncoding on ImageEncodingTypes {
+    original
+    thumbnail
+  }
+`
+export const TokenFragmentDoc = gql`
+  fragment Token on Token {
+    tokenId
+    name
+    description
+    image {
+      url
+      mediaEncoding {
+        __typename
+        ...ImageMediaEncoding
+      }
+    }
+    owner
+    mintInfo {
+      mintContext {
+        blockTimestamp
+      }
+    }
+  }
+  ${ImageMediaEncodingFragmentDoc}
 `
 export const VoteFragmentDoc = gql`
   fragment Vote on NounsBuilderGovernorVoteCastEventProperties {
@@ -3041,27 +3097,11 @@ export const TokenDocument = gql`
       token: { address: $address, tokenId: $tokenId }
     ) {
       token {
-        name
-        description
-        image {
-          url
-          mediaEncoding {
-            __typename
-            ... on ImageEncodingTypes {
-              original
-              thumbnail
-            }
-          }
-        }
-        owner
-        mintInfo {
-          mintContext {
-            blockTimestamp
-          }
-        }
+        ...Token
       }
     }
   }
+  ${TokenFragmentDoc}
 `
 export const TokenOwnersDocument = gql`
   query tokenOwners($token: [String!], $chain: Chain!) {

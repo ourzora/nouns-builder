@@ -8,7 +8,11 @@ import { useContractReads } from 'wagmi'
 import { metadataAbi, tokenAbi } from 'src/constants/abis'
 import { useRouter } from 'next/router'
 
-const ProposalNavigation = () => {
+interface NavigationProps {
+  handleBack?: () => void
+}
+
+const ProposalNavigation: React.FC<NavigationProps> = ({ handleBack }) => {
   const router = useRouter()
   const addresses = useDaoStore((state) => state.addresses)
 
@@ -23,10 +27,14 @@ const ProposalNavigation = () => {
     ],
   })
 
+  const handleNavigation = () => {
+    handleBack ? handleBack() : router.back()
+  }
+
   return (
     <Flex direction={'column'} w={'100%'} align={'center'} mt={'x8'}>
       <Flex w={'100%'}>
-        <Box onClick={() => router.back()} aria-label="Back" cursor={'pointer'}>
+        <Box onClick={handleNavigation} aria-label="Back" cursor={'pointer'}>
           <Flex direction={'row'} align={'center'} gap={'x2'}>
             <Icon id="arrowLeft" />
 

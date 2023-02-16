@@ -17,9 +17,6 @@ import {
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import { motion } from 'framer-motion'
-import { MemoryBlockStore } from 'ipfs-car/blockstore/memory'
-import { packToBlob } from 'ipfs-car/pack/blob'
-import { CID } from 'multiformats/cid'
 import React, {
   BaseSyntheticEvent,
   ChangeEventHandler,
@@ -28,7 +25,7 @@ import React, {
 } from 'react'
 import LayerOrdering from 'src/pages/create/forms/Artwork/LayerOrdering'
 import Playground from 'src/pages/create/forms/Artwork/PreviewModal/Playground'
-import { getFetchableUrl, normalizeIPFSUrl, upload } from 'ipfs-service'
+import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
   IPFSProps,
@@ -38,6 +35,7 @@ import {
 } from 'src/typings'
 import { sanitizeFileName } from 'src/utils/sanitize'
 import { Icon } from 'src/components/Icon'
+import * as Sentry from '@sentry/nextjs'
 
 interface Artwork {
   id: string
@@ -85,7 +83,10 @@ const Artwork: React.FC<Artwork> = ({ inputLabel, helperText, errorMessage, form
           name: childName,
           cid: upload?.ipfs?.cid || '',
           uri: upload?.ipfs?.uri || '',
-          url: encodeURI(getFetchableUrl(upload?.ipfs?.uri) || ''),
+          url: encodeURI(
+            getFetchableUrl(upload?.ipfs?.uri) +
+              `/${upload.webkitRelativePath.split('/').slice(1).join('/')}` || ''
+          ),
           path: upload.webkitRelativePath,
           content: upload?.content,
           blob: upload?.blob,
@@ -137,7 +138,7 @@ const Artwork: React.FC<Artwork> = ({ inputLabel, helperText, errorMessage, form
       const paths = cv.webkitRelativePath.split('/')
       const collection = paths[0]
       const currentTrait = sanitizeFileName(paths[1])
-      const currentProperty = sanitizeFileName(paths[2])
+      const currentProperty = sanitizeFileName(paths[2] || '')
 
       /*  set collection name and file type */
       if (!collectionName) {
@@ -165,7 +166,7 @@ const Artwork: React.FC<Artwork> = ({ inputLabel, helperText, errorMessage, form
       // check for both folder and file name
       if (
         cv.name.includes(':') ||
-        paths[2].includes(':') ||
+        paths[2]?.includes(':') ||
         cv.name.split('.').length !== 2 ||
         paths[1].split('.').length !== 1
       ) {
@@ -275,113 +276,30 @@ const Artwork: React.FC<Artwork> = ({ inputLabel, helperText, errorMessage, form
 
   /*
 
-  pack files as .car for upload to estuary
-  https://github.com/web3-storage/ipfs-car
-
+   upload Files to ipfs via zora ipfs service
+  
   */
-  const packCar = async (filesArray: File[]) => {
-    let files = []
-    for (let i = 0; i < filesArray.length; i++) {
-      const paths = filesArray[i].webkitRelativePath.split('/')
-      const collection = paths[0]
-      const trait = paths[1]
-      const property = paths[2]
-
-      files.push({
-        name: property,
-        collection,
-        trait,
-        path: filesArray[i].webkitRelativePath,
-        content: filesArray[i],
-        type: filesArray[i].type,
-      })
-    }
-
-    const input = files.reduce(
-      (
-        acc: { path: string; content: File }[] = [],
-        cv: {
-          name: string
-          collection: string
-          trait: string
-          path: string
-          content: File
-        }
-      ) => {
-        const folders = cv.path.split('/')
-        acc.push({
-          path: `${sanitizeFileName(folders[1])}/${sanitizeFileName(folders[2])}`,
-          content: cv.content,
-        })
-
-        return acc
-      },
-      []
+  const uploadToIPFS: (files: File[]) => Promise<IPFSProps[]> = async (files) => {
+    const ipfsUploadResponse = await uploadDirectory(
+      files.map((file) => ({
+        content: file,
+        path: file.webkitRelativePath.split('/').slice(1).join('/'),
+      })),
+      { cache: false }
     )
 
-    const car = await packToBlob({
-      input: input,
-      blockstore: new MemoryBlockStore(),
-    })
-
-    return { car, files }
-  }
-
-  /*
-
-   upload Files to ipfs via estuary and add to store
-   https://docs.estuary.tech/api-content-add-car
-
-  */
-  const uploadToIPFS: ({
-    car,
-    files,
-  }: {
-    car: {
-      root: CID
-      car: Blob
-    }
-    files: {
-      name: string
-      collection: string
-      content: File
-      trait: string
-      path: string
-      type: string
-    }[]
-  }) => Promise<IPFSProps[]> = async ({ car: { car }, files }) => {
-    let promises = []
-    setIsUploadingToIPFS(true)
-
-    const carFile = new File([car], 'file.car', { type: 'application/car' })
-    const { cid, hash, pinning } = await upload(carFile)
-
-    for (let i = 0; i < files.length; i++) {
-      const uri =
-        normalizeIPFSUrl(
-          `${cid}/${sanitizeFileName(
-            files[i].path.substring(files[i].path.indexOf('/') + 1)
-          )}`
-        )?.toString() || ''
-
-      promises.push({
-        name: sanitizeFileName(files[i].name),
-        property: files[i].name,
-        collection: files[i].collection,
-        content: files[i].content,
-        blob: URL.createObjectURL(files[i].content),
-        trait: sanitizeFileName(files[i].trait),
-        webkitRelativePath: files[i].path,
-        type: files[i].type,
-        ipfs: {
-          uri,
-          hash,
-          cid,
-          pinning,
-        },
-      })
-    }
-    return Promise.all(promises)
+    return files.map((file) => ({
+      name: sanitizeFileName(file.webkitRelativePath.split('/')[2]),
+      property: file.webkitRelativePath.split('/')[2],
+      collection: file.webkitRelativePath.split('/')[0],
+      trait: file.webkitRelativePath.split('/')[1],
+      path: file.webkitRelativePath,
+      content: file,
+      blob: URL.createObjectURL(file),
+      webkitRelativePath: file.webkitRelativePath,
+      type: file.type,
+      ipfs: ipfsUploadResponse,
+    }))
   }
 
   useEffect(() => {
@@ -389,10 +307,17 @@ const Artwork: React.FC<Artwork> = ({ inputLabel, helperText, errorMessage, form
 
     const handleUpload = async (filesArray: File[]) => {
       const files = filesArray.filter((file) => file.name !== '.DS_Store')
-      const car = await packCar(files)
-      const ipfs = await uploadToIPFS(car)
-      setIsUploadingToIPFS(false)
-      setIpfsUpload(ipfs)
+      try {
+        setIsUploadingToIPFS(true)
+        const ipfs = await uploadToIPFS(files)
+        setIpfsUpload(ipfs)
+        setIsUploadingToIPFS(false)
+      } catch (err) {
+        setIsUploadingToIPFS(false)
+        Sentry.captureException(err)
+        await Sentry.flush(2000)
+        return
+      }
     }
 
     handleUpload(filesArray)

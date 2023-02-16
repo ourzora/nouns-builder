@@ -11,11 +11,11 @@ import {
   validateAuctionSettings,
 } from 'src/components/Fields/fields/auction'
 
-interface AdminFormSettingsProps {
+interface PreAuctionFormSettingsProps {
   title?: string
 }
 
-const AdminForm: React.FC<AdminFormSettingsProps> = () => {
+const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const {
     auctionDuration: _auctionDuration,
     auctionReservePrice,
@@ -85,10 +85,11 @@ const AdminForm: React.FC<AdminFormSettingsProps> = () => {
           }
           stickySave={true}
           compareReturn={true}
+          auctioningHasStarted={false}
         />
       </Flex>
     </Flex>
   )
 }
 
-export default AdminForm
+export default PreAuctionForm

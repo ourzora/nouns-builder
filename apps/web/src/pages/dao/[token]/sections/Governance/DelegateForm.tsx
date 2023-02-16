@@ -9,6 +9,7 @@ import useTokenContract from 'src/hooks/useTokenContract'
 import { useLayoutStore } from 'src/stores'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
 import { getEnsAddress } from 'src/utils/ens'
+import { Address } from 'wagmi'
 
 interface AddressFormProps {
   address?: string
@@ -29,7 +30,7 @@ const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) => {
 
     setIsLoading(true)
     try {
-      await delegate(await getEnsAddress(values.address, provider))
+      await delegate((await getEnsAddress(values.address, provider)) as Address)
       handleUpdate(values.address)
     } catch (e) {
       console.error(e)

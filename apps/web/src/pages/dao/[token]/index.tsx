@@ -1,45 +1,28 @@
-import SectionHandler from './SectionNavigation/SectionHandler'
-import Proposals from './sections/Proposals'
-import { Auction__factory } from 'src/constants/typechain'
-import { Flex, Text, atoms, theme } from '@zoralabs/zord'
+import React from 'react'
 import { GetServerSideProps } from 'next'
-import React, { useEffect } from 'react'
+import { ethers } from 'ethers'
+import { isAddress } from 'ethers/lib/utils.js'
+import { readContract, readContracts } from '@wagmi/core'
+import { Flex, Text, atoms, theme } from '@zoralabs/zord'
+
 import PreAuction from 'src/components/PreAuction'
 import Meta from 'src/components/Layout/Meta'
-import NogglesLogo from '../../../components/Layout/assets/builder-framed.svg'
-import { useAuctionStore, useDaoStore, useLayoutStore } from 'src/stores'
-import { getDaoContractAddresses } from 'src/utils/getDaoContractAddresses'
-import { getProvider } from 'src/utils/provider'
-import { readAuctionContract } from 'src/utils/readAuctionContract'
+import NogglesLogo from 'src/components/Layout/assets/builder-framed.svg'
+import { useLayoutStore } from 'src/stores'
+import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import { NextPageWithLayout } from 'src/pages/_app'
+import useAuctionContract from 'src/hooks/useAuctionContract'
+import { auctionAbi, managerAbi } from 'src/constants/abis'
+import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+
+import SectionHandler from './SectionNavigation/SectionHandler'
+import Proposals from './sections/Proposals'
 import SmartContracts from './sections/SmartContracts'
 import PreAuctionForm from './sections/Admin/forms/PreAuctionForm'
-import { ethers } from 'ethers'
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
-import { useContractRead } from 'wagmi'
-import { auctionAbi } from 'src/constants/abis'
-import { NextPageWithLayout } from 'src/pages/_app'
 
 const DaoPage: NextPageWithLayout = () => {
-  const addresses = useDaoStore((state) => state.addresses)
-  const auction = addresses?.auction || ''
-  const { signer, signerAddress } = useLayoutStore()
-
-  const { data: owner } = useContractRead({
-    abi: auctionAbi,
-    address: auction,
-    functionName: 'owner',
-  })
-
-  const setAuctionContract = useAuctionStore((state) => state.setAuctionContract)
-
-  useEffect(() => {
-    if (signer) {
-      setAuctionContract(new Auction__factory(signer).attach(auction))
-      return
-    }
-
-    setAuctionContract(Auction__factory.connect(auction, getProvider()))
-  }, [signer, setAuctionContract, auction])
+  const { signerAddress } = useLayoutStore()
+  const { owner } = useAuctionContract()
 
   const sections = [
     {
@@ -60,7 +43,7 @@ const DaoPage: NextPageWithLayout = () => {
     return null
   }
 
-  const isOwner = owner ? owner === signerAddress : false
+  const isOwner = owner === signerAddress
 
   if (!isOwner) {
     return (
@@ -96,32 +79,63 @@ export default DaoPage
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const daoAddress = context?.params?.token as string
 
-  const addresses = await getDaoContractAddresses(daoAddress)
-  const hasMissingAddresses = Object.values(addresses).includes(
-    ethers.constants.AddressZero
-  )
-  if (!addresses.auction || hasMissingAddresses) {
+  if (!isAddress(daoAddress)) {
     return {
       notFound: true,
     }
   }
 
-  const { initialized, tokenId } = await readAuctionContract(
-    addresses.auction,
-    addresses.treasury
-  )
-  if (!initialized) {
+  try {
+    const addresses = await readContract({
+      abi: managerAbi,
+      address: PUBLIC_MANAGER_ADDRESS,
+      functionName: 'getAddresses',
+      args: [daoAddress],
+    })
+    const hasMissingAddresses = Object.values(addresses).includes(
+      ethers.constants.AddressZero
+    )
+    if (hasMissingAddresses) {
+      return {
+        notFound: true,
+      }
+    }
+
+    const [auction, owner] = await readContracts({
+      contracts: [
+        {
+          abi: auctionAbi,
+          address: addresses.auction,
+          functionName: 'auction',
+        },
+        {
+          abi: auctionAbi,
+          address: addresses.auction,
+          functionName: 'owner',
+        },
+      ],
+    })
+
+    const initialized: boolean =
+      auction?.endTime !== 0 && auction?.startTime !== 0 && owner === addresses.treasury
+
+    if (!initialized) {
+      return {
+        props: {
+          addresses,
+        },
+      }
+    }
+
     return {
-      props: {
-        addresses,
+      redirect: {
+        destination: `/dao/${daoAddress}/${auction.tokenId}`,
+        permanent: false,
       },
     }
-  }
-
-  return {
-    redirect: {
-      destination: `/dao/${daoAddress}/${tokenId}`,
-      permanent: false,
-    },
+  } catch (e) {
+    return {
+      notFound: true,
+    }
   }
 }

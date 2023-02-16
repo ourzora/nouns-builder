@@ -1,16 +1,16 @@
+import React, { Fragment } from 'react'
 import { Flex } from '@zoralabs/zord'
-import { GetServerSideProps, NextPage } from 'next'
-import React, { Fragment, useEffect } from 'react'
-import { readAuctionContract } from 'src/utils/readAuctionContract'
-import { getToken } from 'src/utils/readTokenContract'
-import { DaoContractAddresses, Proposal } from 'src/typings'
-import { getDaoContractAddresses } from 'src/utils/getDaoContractAddresses'
+import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
+import { readContract, readContracts } from '@wagmi/core'
+import { isAddress } from 'ethers/lib/utils.js'
+import { ethers } from 'ethers'
 import useSWR, { unstable_serialize } from 'swr'
+
+import getToken from 'src/utils/getToken'
 import SWR_KEYS from 'src/constants/swrKeys'
 import Meta from 'src/components/Layout/Meta'
-import { TokenDataProps } from 'src/typings'
-import { getProvider } from 'src/utils/provider'
-import { Token__factory } from 'src/constants/typechain'
+import { TokenWithWinner } from 'src/typings'
 import {
   ProposalData,
   ProposalDescription,
@@ -21,15 +21,16 @@ import {
 } from 'src/modules/proposals'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposals/utils'
-import { useRouter } from 'next/router'
 import { getProposal } from 'src/query/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
+import { auctionAbi, managerAbi, tokenAbi } from 'src/constants/abis'
+import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 
 export interface VotePageProps {
   proposalId: string
   daoName?: string
-  token?: TokenDataProps
+  token?: TokenWithWinner
 }
 
 const VotePage: NextPageWithLayout<VotePageProps> = ({ proposalId, token, daoName }) => {
@@ -83,30 +84,49 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const token = context?.params?.token as string
   const id = context?.params?.id as string
 
+  if (!isAddress(token)) {
+    return {
+      notFound: true,
+    }
+  }
+
   try {
-    // zora api queries
     const [daoContractAddresses, proposal] = await Promise.all([
-      getDaoContractAddresses(token),
+      readContract({
+        abi: managerAbi,
+        address: PUBLIC_MANAGER_ADDRESS,
+        functionName: 'getAddresses',
+        args: [token],
+      }),
       getProposal(id),
     ])
 
-    // 404 page if no proposal is found
-    if (!proposal) {
+    const hasMissingAddresses = Object.values(daoContractAddresses).includes(
+      ethers.constants.AddressZero
+    )
+    // 404 page if no proposal is found or any of the dao addresses are missing
+    if (!proposal || hasMissingAddresses) {
       return {
         notFound: true,
       }
     }
 
-    const provider = getProvider()
+    const [auction, daoName] = await readContracts({
+      contracts: [
+        {
+          abi: auctionAbi,
+          address: daoContractAddresses.auction,
+          functionName: 'auction',
+        },
+        {
+          abi: tokenAbi,
+          address: token,
+          functionName: 'name',
+        },
+      ],
+    })
 
-    const tokenContract = Token__factory.connect(token, provider)
-
-    const [{ tokenId }, daoName] = await Promise.all([
-      readAuctionContract(daoContractAddresses?.auction, daoContractAddresses?.treasury),
-      tokenContract.name(),
-    ])
-
-    const tokenData = await getToken(token, Number(tokenId))
+    const tokenData = await getToken(token, auction.tokenId.toString())
 
     return {
       props: {

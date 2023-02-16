@@ -22,12 +22,10 @@ const About: React.FC = () => {
   const {
     addresses: { token, treasury, metadata },
   } = useDaoStore()
-  const { name } = useTokenContract()
+  const { name, totalSupply } = useTokenContract()
   const { daoImage, description, contractURI } = useMetadataContract(
     metadata as AddressType
   )
-  const { totalSupply } = useTokenContract()
-
   const { data: balance } = useBalance({ address: treasury as `0x${string}` })
 
   const { data } = useSWR(token ? [SWR_KEYS.DAO_INFO, token] : null, async (_, token) => {

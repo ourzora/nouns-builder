@@ -1,39 +1,40 @@
 import React from 'react'
-import { atoms, Flex, Grid, Stack, Text } from '@zoralabs/zord'
-import { ReviewCard } from '../ReviewCard'
-import { useProposalStore } from '../../stores/useProposalStore'
+import { atoms, Button, Flex, Stack, Text } from '@zoralabs/zord'
+import { ReviewCard } from 'src/modules/transaction-builder/components/ReviewCard/ReviewCard'
+import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import ConfirmRemove from 'src/modules/transaction-builder/components/Transaction/ConfirmRemove'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { TransactionType } from '../../constants/transactionTypes'
 
 export const Queue = () => {
   const transactions = useProposalStore((state) => state.transactions)
   const removeTransaction = useProposalStore((state) => state.removeTransaction)
+  const removeAllTransactions = useProposalStore((state) => state.removeAllTransactions)
 
   const { query } = useRouter()
 
-  /*
-
-  handle remove transaction
-
- */
-
   const [openConfirm, setOpenConfirm] = React.useState<boolean>(false)
   const [removeIndex, setRemoveIndex] = React.useState<number | null>(null)
-  const confirmRemoveTransaction = React.useCallback((index: number) => {
+
+  const confirmRemoveTransaction = (index: number) => {
     setOpenConfirm(true)
     setRemoveIndex(index)
-  }, [])
+  }
 
-  const handleRemoveTransaction = React.useCallback(() => {
+  const handleRemoveTransaction = () => {
     if (removeIndex === null) return
 
     if (transactions.length >= 1) {
       removeTransaction(removeIndex)
     }
     setOpenConfirm(false)
-  }, [removeIndex, transactions, removeTransaction])
+  }
+
+  const handleClearAll = () => {
+    removeAllTransactions()
+  }
 
   return (
     <Stack
@@ -44,15 +45,22 @@ export const Queue = () => {
       p={'x6'}
       pb={'x12'}
     >
-      <Text fontWeight={'label'} fontSize={20} style={{ lineHeight: '32px' }} mb={'x6'}>
-        Review Queue
-      </Text>
+      <Flex justify={'space-between'}>
+        <Text fontWeight={'label'} fontSize={20} style={{ lineHeight: '32px' }} mb={'x6'}>
+          Review Queue
+        </Text>
+        <Button variant="ghost" size="sm" onClick={handleClearAll}>
+          Clear All
+        </Button>
+      </Flex>
+
       <Stack gap={'x4'}>
         {transactions &&
           transactions.map((transaction, i) => (
             <ReviewCard
               key={`${transaction.type}-${i}`}
               handleRemove={() => confirmRemoveTransaction(i)}
+              disabled={transaction.type === TransactionType.UPGRADE}
               transaction={transaction}
             />
           ))}
@@ -64,21 +72,7 @@ export const Queue = () => {
         mt={'x6'}
         mb={'x8'}
       />
-      <Grid
-        rows={'1fr 1fr'}
-        columns={'repeat(2, 1fr)'}
-        justify={'space-between'}
-        gap={'x5'}
-      >
-        {/*<Text className={atoms({ lineHeight: 24 })} fontWeight={'label'}>*/}
-        {/*  Total Amount*/}
-        {/*</Text>*/}
-        {/*<Flex justifySelf={'flex-end'}>3 tokens</Flex>*/}
-        {/*<Flex className={atoms({ lineHeight: 24 })} fontWeight={'label'}>*/}
-        {/*  Total Supply*/}
-        {/*</Flex>*/}
-        {/*<Flex justifySelf={'flex-end'}>71 tokens</Flex>*/}
-      </Grid>
+
       <Link
         href={{
           pathname: `/dao/${query.token}/proposal/review`,
@@ -92,6 +86,7 @@ export const Queue = () => {
           align={'center'}
           justify={'center'}
           fontSize={18}
+          disabled={transactions.length === 0}
           fontWeight={'label'}
           className={atoms({ lineHeight: 24, borderRadius: 'curved' })}
           backgroundColor={'accent'}

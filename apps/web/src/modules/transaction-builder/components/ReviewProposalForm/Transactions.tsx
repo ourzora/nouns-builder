@@ -2,7 +2,7 @@ import { Flex, Stack } from '@zoralabs/zord'
 import React from 'react'
 import { Field } from 'formik'
 import { BuilderTransaction } from 'src/modules/transaction-builder/stores/useProposalStore'
-import { ReviewCard, SimulationError } from '../ReviewCard'
+import { ReviewCard, SimulationError } from '../ReviewCard/ReviewCard'
 import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
 import { Simulation } from 'src/services/simulationService'
 import { intersection } from 'lodash'
@@ -71,7 +71,7 @@ export const Transactions = ({
               <ReviewCard
                 key={`${transaction.type}-${i}`}
                 simulationError={error}
-                disabled={disabled}
+                disabled={disabled || transaction.type === 'upgrade'}
                 transaction={transaction}
                 handleEdit={() => router.back()}
                 simulationUrls={urls}

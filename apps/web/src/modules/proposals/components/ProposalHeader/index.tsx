@@ -4,12 +4,14 @@ import ProposalStatus from '../ProposalStatus'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { Proposal } from 'src/typings'
+import { useRouter } from 'next/router'
 
 interface ProposalHeaderProps {
   proposal: Proposal
 }
 
 const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
+  const router = useRouter()
   const { title, voteStart, voteEnd, proposer, status, expiresAt, proposalNumber } =
     proposal
 
@@ -17,7 +19,16 @@ const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
 
   return (
     <Flex direction={'column'} gap={{ '@initial': 'x4', '@768': 'x7' }} mb={'x2'}>
-      <ProposalNavigation />
+      <ProposalNavigation
+        handleBack={() => {
+          router.push({
+            pathname: `/dao/[token]`,
+            query: {
+              token: router.query?.token,
+            },
+          })
+        }}
+      />
       <Flex gap={'x2'} direction={'column'}>
         <Flex align={'center'}>
           <Label fontSize={20} color={'text3'} mr={'x2'}>

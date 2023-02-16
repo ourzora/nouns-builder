@@ -1,40 +1,39 @@
 import { BigNumber } from 'ethers'
 import { useRouter } from 'next/router'
-import { Auction__factory } from 'src/constants/typechain'
-import { useContractEvent } from 'src/hooks/useContractEvent'
+import { useContractEvent } from 'wagmi'
+import { readContract } from '@wagmi/core'
 import { useDaoStore } from 'src/stores/index'
-import { getProvider } from 'src/utils/provider'
-import { readAuctionContract } from 'src/utils/readAuctionContract'
 import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getBids } from './useBids'
+import getBids from 'src/utils/getBids'
+import { auctionAbi } from 'src/constants/abis'
 
 const useAuction = ({
-  auctionAddress,
   collection,
   tokenId,
   isTokenActiveAuction,
 }: {
-  auctionAddress: string
   collection: string
-  tokenId: string | number
+  tokenId: string
   isTokenActiveAuction: boolean
 }) => {
   const router = useRouter()
   const { mutate } = useSWRConfig()
-  const { auction, treasury } = useDaoStore((state) => state.addresses)
-
-  const contract = Auction__factory.connect(auctionAddress, getProvider())
+  const { auction } = useDaoStore((state) => state.addresses)
 
   useContractEvent({
-    shouldAttach: isTokenActiveAuction,
-    contract: contract,
+    address: isTokenActiveAuction ? auction : undefined,
+    abi: auctionAbi,
     eventName: 'AuctionCreated',
     listener: async (id) => {
       const tokenId = BigNumber.from(id._hex).toNumber()
 
-      await mutate([SWR_KEYS.AUCTION, auction, treasury], () =>
-        readAuctionContract(auction as string, treasury as string)
+      await mutate([SWR_KEYS.AUCTION, auction], () =>
+        readContract({
+          abi: auctionAbi,
+          address: auction as string,
+          functionName: 'auction',
+        })
       )
 
       await mutate([SWR_KEYS.AUCTION_BIDS, auction, tokenId], () =>
@@ -46,13 +45,18 @@ const useAuction = ({
   })
 
   useContractEvent({
-    shouldAttach: isTokenActiveAuction,
-    contract: contract,
+    address: isTokenActiveAuction ? auction : undefined,
+    abi: auctionAbi,
     eventName: 'AuctionBid',
     listener: async () => {
-      await mutate([SWR_KEYS.AUCTION, auction, treasury], () =>
-        readAuctionContract(auction as string, treasury as string)
+      await mutate([SWR_KEYS.AUCTION, auction], () =>
+        readContract({
+          abi: auctionAbi,
+          address: auction as string,
+          functionName: 'auction',
+        })
       )
+
       await mutate([SWR_KEYS.AUCTION_BIDS, auction, tokenId], () =>
         getBids(auction as string, tokenId)
       )

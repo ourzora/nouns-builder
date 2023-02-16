@@ -11,7 +11,7 @@ vi.mock('ipfs-service', async () => {
   const mod = await vi.importActual<typeof import('ipfs-service')>('ipfs-service')
   return {
     ...mod,
-    upload: () => mockUploadFn(),
+    uploadFile: () => mockUploadFn(),
   }
 })
 

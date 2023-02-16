@@ -37,6 +37,7 @@ const Input: FC<CustomInputProps> = ({
 
         <Box mt={'x2'} position={'relative'}>
           <Field
+            data-testid={name}
             as={ZordInput}
             className={input}
             type={type}

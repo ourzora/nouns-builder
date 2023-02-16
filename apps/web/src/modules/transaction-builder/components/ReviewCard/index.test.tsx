@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import { vi } from 'vitest'
-import { ReviewCard } from '.'
+import { ReviewCard } from './ReviewCard'
 import { TransactionType } from '../../constants/transactionTypes'
 
 describe('Review Card', () => {

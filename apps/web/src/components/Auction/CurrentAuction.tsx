@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
 import { ActionsWrapper } from './BidHistory'
 import {
@@ -13,21 +12,22 @@ import dayjs from 'dayjs'
 import { RecentBids } from './RecentBids'
 import { BigNumber, ethers } from 'ethers'
 import { useTimeout } from 'src/hooks/useTimeout'
+import { Bid } from 'src/typings'
 
 export const CurrentAuction = ({
-  auctionAddress,
-  currentAuction,
+  tokenId,
   bid,
   owner,
   endTime,
+  bids,
 }: {
+  tokenId: string
   auctionAddress: string
-  currentAuction?: number
-  bid?: string
+  bid?: BigNumber
   owner?: string
   endTime?: number
+  bids: Bid[]
 }) => {
-  const { query } = useRouter()
   const [isEnded, setIsEnded] = useState(false)
   const [isEnding, setIsEnding] = useState(false)
 
@@ -43,7 +43,7 @@ export const CurrentAuction = ({
   }
 
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
-  const formattedBid = ethers.utils.formatEther(BigNumber.from(bid))
+  const formattedBid = bid ? ethers.utils.formatEther(bid) : ''
 
   if (isEnded || isOver) {
     return (
@@ -54,7 +54,7 @@ export const CurrentAuction = ({
         </AuctionDetails>
 
         <ActionsWrapper>
-          <Settle isEnding={isEnding} collectionAddress={query?.token as string} />
+          <Settle isEnding={isEnding} />
         </ActionsWrapper>
       </Fragment>
     )
@@ -68,14 +68,10 @@ export const CurrentAuction = ({
       </AuctionDetails>
 
       <ActionsWrapper>
-        <MemoizedPlaceBid
-          collectionAddress={query?.token as string}
-          currentAuction={currentAuction}
-          highestBid={bid}
-        />
+        <MemoizedPlaceBid tokenId={tokenId} highestBid={bid} />
       </ActionsWrapper>
 
-      <RecentBids auctionAddress={auctionAddress} />
+      <RecentBids bids={bids} />
     </Fragment>
   )
 }

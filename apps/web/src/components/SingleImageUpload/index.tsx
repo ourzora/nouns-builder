@@ -4,7 +4,7 @@ import { FormikProps } from 'formik'
 import React, { ReactElement, useState, useEffect } from 'react'
 import Image from 'next/image'
 import { uploadingSpinner } from 'src/components/Layout/styles.css'
-import { getFetchableUrl, normalizeIPFSUrl, upload } from 'ipfs-service'
+import { getFetchableUrl, normalizeIPFSUrl, uploadFile } from 'ipfs-service'
 
 interface SingleImageUploadProps {
   formik: FormikProps<any>
@@ -48,7 +48,7 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
       try {
         setIsUploading(true)
 
-        const { cid } = await upload(_input[0], { cache: true })
+        const { cid } = await uploadFile(_input[0], { cache: true })
 
         formik.setFieldValue(id, normalizeIPFSUrl(cid))
         setIsUploading(false)

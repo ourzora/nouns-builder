@@ -1,6 +1,6 @@
 import { describe, expect } from 'vitest'
 import { render, screen, fireEvent, createEvent, waitFor } from '@testing-library/react'
-import AirdropForm from './'
+import AirdropForm from './AirdropForm'
 
 describe('Airdrop form', () => {
   it('should render airdrop form with default values', () => {

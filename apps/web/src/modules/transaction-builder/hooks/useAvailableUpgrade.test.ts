@@ -80,7 +80,13 @@ describe('Use available upgrade hook', () => {
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,
-      transactions: [],
+      transaction: undefined,
+      currentVersions: undefined,
+      latest: undefined,
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
     })
   })
 
@@ -114,7 +120,13 @@ describe('Use available upgrade hook', () => {
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,
-      transactions: [],
+      transaction: undefined,
+      currentVersions: undefined,
+      latest: undefined,
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
     })
   })
 
@@ -142,7 +154,13 @@ describe('Use available upgrade hook', () => {
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,
-      transactions: [],
+      transaction: undefined,
+      currentVersions: undefined,
+      latest: undefined,
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
     })
   })
 
@@ -182,8 +200,20 @@ describe('Use available upgrade hook', () => {
     const { result } = renderHook(() => useAvailableUpgrade(addresses))
 
     expect(result.current).toStrictEqual({
+      latest: '1.1.0',
       shouldUpgrade: false,
-      transactions: [],
+      transaction: undefined,
+      currentVersions: {
+        governor: '1.1.0',
+        treasury: '1.1.0',
+        metadata: '1.1.0',
+        auction: '1.1.0',
+        token: '1.1.0',
+      },
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
     })
   })
 
@@ -224,7 +254,13 @@ describe('Use available upgrade hook', () => {
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,
-      transactions: [],
+      transaction: undefined,
+      currentVersions: undefined,
+      latest: undefined,
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
     })
   })
 
@@ -242,11 +278,11 @@ describe('Use available upgrade hook', () => {
           auction: '',
           token: '1.0.0',
         },
-        '0xac193e2126f0e7734f2ac8da9d4002935b3c1d75',
-        '0x04b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
-        '0x935522cf33ae425187aeec69737bd30ab56bd16e',
-        '0x5bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
-        '0x94d792e07216796cb235e328823199fb8da3c911',
+        '0xe6322201ced0a4d6595968411285a39ccf9d5989',
+        '0x9eefef0891b1895af967fe48c5d7d96e984b96a3',
+        '0x0b6d2473f54de3f1d80b27c92b22d13050da289a',
+        '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
+        '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
     })
 
@@ -254,34 +290,40 @@ describe('Use available upgrade hook', () => {
 
     expect(result.current.latest).toBe('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(3)
-    expect(result.current.transactions).toStrictEqual([
+    expect(result.current.transaction).toBeDefined()
+    expect(result.current.transaction?.transactions).toStrictEqual([
       {
-        name: 'pause()',
-        address: addresses.auction,
+        functionSignature: 'pause()',
+        target: addresses.auction,
         calldata: '0x8456cb59',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.governor,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.governor,
         calldata:
-          '0x3659cfe600000000000000000000000004b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
+          '0x3659cfe60000000000000000000000009eefef0891b1895af967fe48c5d7d96e984b96a3',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.token,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.token,
         calldata:
-          '0x3659cfe6000000000000000000000000ac193e2126f0e7734f2ac8da9d4002935b3c1d75',
+          '0x3659cfe6000000000000000000000000e6322201ced0a4d6595968411285a39ccf9d5989',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.auction,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.auction,
         calldata:
-          '0x3659cfe60000000000000000000000005bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
+          '0x3659cfe60000000000000000000000002661fe1a882abfd28ae0c2769a90f327850397c6',
+        value: '',
       },
       {
-        name: 'unpause()',
-        address: addresses.auction,
+        functionSignature: 'unpause()',
+        target: addresses.auction,
         calldata: '0x3f4ba83a',
+        value: '',
       },
     ])
   })
@@ -298,11 +340,11 @@ describe('Use available upgrade hook', () => {
           auction: '',
           token: '1.0.0',
         },
-        '0xac193e2126f0e7734f2ac8da9d4002935b3c1d75',
-        '0x04b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
-        '0x935522cf33ae425187aeec69737bd30ab56bd16e',
-        '0x5bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
-        '0x94d792e07216796cb235e328823199fb8da3c911',
+        '0xe6322201ced0a4d6595968411285a39ccf9d5989',
+        '0x9eefef0891b1895af967fe48c5d7d96e984b96a3',
+        '0x0b6d2473f54de3f1d80b27c92b22d13050da289a',
+        '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
+        '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
       error: null,
       fetchStatus: 'fetching',
@@ -323,24 +365,28 @@ describe('Use available upgrade hook', () => {
 
     expect(result.current.latest).toEqual('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(3)
-    expect(result.current.transactions).toStrictEqual([
+    expect(result.current.transaction).toBeDefined()
+    expect(result.current.transaction?.transactions).toStrictEqual([
       {
-        name: 'upgradeTo(address)',
-        address: addresses.governor,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.governor,
         calldata:
-          '0x3659cfe600000000000000000000000004b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
+          '0x3659cfe60000000000000000000000009eefef0891b1895af967fe48c5d7d96e984b96a3',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.token,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.token,
         calldata:
-          '0x3659cfe6000000000000000000000000ac193e2126f0e7734f2ac8da9d4002935b3c1d75',
+          '0x3659cfe6000000000000000000000000e6322201ced0a4d6595968411285a39ccf9d5989',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.auction,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.auction,
         calldata:
-          '0x3659cfe60000000000000000000000005bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
+          '0x3659cfe60000000000000000000000002661fe1a882abfd28ae0c2769a90f327850397c6',
+        value: '',
       },
     ])
   })
@@ -358,11 +404,11 @@ describe('Use available upgrade hook', () => {
           auction: '1.0.0',
           token: '1.0.0',
         },
-        '0xac193e2126f0e7734f2ac8da9d4002935b3c1d75',
-        '0x04b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
-        '0x935522cf33ae425187aeec69737bd30ab56bd16e',
-        '0x5bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
-        '0x94d792e07216796cb235e328823199fb8da3c911',
+        '0xe6322201ced0a4d6595968411285a39ccf9d5989',
+        '0x9eefef0891b1895af967fe48c5d7d96e984b96a3',
+        '0x0b6d2473f54de3f1d80b27c92b22d13050da289a',
+        '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
+        '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
     })
 
@@ -370,46 +416,54 @@ describe('Use available upgrade hook', () => {
 
     expect(result.current.latest).toEqual('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(5)
-    expect(result.current.transactions).toStrictEqual([
+    expect(result.current.transaction).toBeDefined()
+    expect(result.current.transaction?.transactions).toStrictEqual([
       {
-        name: 'pause()',
-        address: addresses.auction,
+        functionSignature: 'pause()',
+        target: addresses.auction,
         calldata: '0x8456cb59',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.governor,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.governor,
         calldata:
-          '0x3659cfe600000000000000000000000004b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
+          '0x3659cfe60000000000000000000000009eefef0891b1895af967fe48c5d7d96e984b96a3',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.token,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.token,
         calldata:
-          '0x3659cfe6000000000000000000000000ac193e2126f0e7734f2ac8da9d4002935b3c1d75',
+          '0x3659cfe6000000000000000000000000e6322201ced0a4d6595968411285a39ccf9d5989',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.treasury,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.treasury,
         calldata:
-          '0x3659cfe6000000000000000000000000935522cf33ae425187aeec69737bd30ab56bd16e',
+          '0x3659cfe60000000000000000000000000b6d2473f54de3f1d80b27c92b22d13050da289a',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.auction,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.auction,
         calldata:
-          '0x3659cfe60000000000000000000000005bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
+          '0x3659cfe60000000000000000000000002661fe1a882abfd28ae0c2769a90f327850397c6',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.metadata,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.metadata,
         calldata:
-          '0x3659cfe600000000000000000000000094d792e07216796cb235e328823199fb8da3c911',
+          '0x3659cfe600000000000000000000000026f494af990123154e7cc067da7a311b07d54ae1',
+        value: '',
       },
       {
-        name: 'unpause()',
-        address: addresses.auction,
+        functionSignature: 'unpause()',
+        target: addresses.auction,
         calldata: '0x3f4ba83a',
+        value: '',
       },
     ])
   })
@@ -427,18 +481,32 @@ describe('Use available upgrade hook', () => {
           auction: '1.1.0',
           token: '1.1.0',
         },
-        '0xac193e2126f0e7734f2ac8da9d4002935b3c1d75',
-        '0x04b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
-        '0x935522cf33ae425187aeec69737bd30ab56bd16e',
-        '0x5bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
-        '0x94d792e07216796cb235e328823199fb8da3c911',
+        '0xe6322201ced0a4d6595968411285a39ccf9d5989',
+        '0x9eefef0891b1895af967fe48c5d7d96e984b96a3',
+        '0x0b6d2473f54de3f1d80b27c92b22d13050da289a',
+        '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
+        '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
     })
 
     const { result } = renderHook(() => useAvailableUpgrade(addresses, '1.1.0'))
 
-    expect(result.current.shouldUpgrade).toBe(false)
-    expect(result.current.transactions).toHaveLength(0)
+    expect(result.current).toStrictEqual({
+      latest: '1.2.0',
+      shouldUpgrade: false,
+      transaction: undefined,
+      currentVersions: {
+        governor: '1.1.0',
+        treasury: '1.1.0',
+        metadata: '1.1.0',
+        auction: '1.1.0',
+        token: '1.1.0',
+      },
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
+    })
   })
 
   it('should determine upgrades to latest version given contract does not meet the provided version', async () => {
@@ -454,11 +522,11 @@ describe('Use available upgrade hook', () => {
           auction: '1.1.0',
           token: '1.0.0',
         },
-        '0xac193e2126f0e7734f2ac8da9d4002935b3c1d75',
-        '0x04b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
-        '0x935522cf33ae425187aeec69737bd30ab56bd16e',
-        '0x5bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
-        '0x94d792e07216796cb235e328823199fb8da3c911',
+        '0xe6322201ced0a4d6595968411285a39ccf9d5989',
+        '0x9eefef0891b1895af967fe48c5d7d96e984b96a3',
+        '0x0b6d2473f54de3f1d80b27c92b22d13050da289a',
+        '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
+        '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
     })
 
@@ -466,46 +534,54 @@ describe('Use available upgrade hook', () => {
 
     expect(result.current.latest).toBe('1.2.0')
     expect(result.current.totalContractUpgrades).toBe(5)
-    expect(result.current.transactions).toStrictEqual([
+    expect(result.current.transaction).toBeDefined()
+    expect(result.current.transaction?.transactions).toStrictEqual([
       {
-        name: 'pause()',
-        address: addresses.auction,
+        functionSignature: 'pause()',
+        target: addresses.auction,
         calldata: '0x8456cb59',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.governor,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.governor,
         calldata:
-          '0x3659cfe600000000000000000000000004b2c0ea4ea3e9c92f0555fd0fb9c9564e25c52e',
+          '0x3659cfe60000000000000000000000009eefef0891b1895af967fe48c5d7d96e984b96a3',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.token,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.token,
         calldata:
-          '0x3659cfe6000000000000000000000000ac193e2126f0e7734f2ac8da9d4002935b3c1d75',
+          '0x3659cfe6000000000000000000000000e6322201ced0a4d6595968411285a39ccf9d5989',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.treasury,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.treasury,
         calldata:
-          '0x3659cfe6000000000000000000000000935522cf33ae425187aeec69737bd30ab56bd16e',
+          '0x3659cfe60000000000000000000000000b6d2473f54de3f1d80b27c92b22d13050da289a',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.auction,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.auction,
         calldata:
-          '0x3659cfe60000000000000000000000005bde6cf41cd7aa5b6e522ffa491f1bf6c6607bd3',
+          '0x3659cfe60000000000000000000000002661fe1a882abfd28ae0c2769a90f327850397c6',
+        value: '',
       },
       {
-        name: 'upgradeTo(address)',
-        address: addresses.metadata,
+        functionSignature: 'upgradeTo(address)',
+        target: addresses.metadata,
         calldata:
-          '0x3659cfe600000000000000000000000094d792e07216796cb235e328823199fb8da3c911',
+          '0x3659cfe600000000000000000000000026f494af990123154e7cc067da7a311b07d54ae1',
+        value: '',
       },
       {
-        name: 'unpause()',
-        address: addresses.auction,
+        functionSignature: 'unpause()',
+        target: addresses.auction,
         calldata: '0x3f4ba83a',
+        value: '',
       },
     ])
   })

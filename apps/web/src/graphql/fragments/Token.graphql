@@ -1,0 +1,18 @@
+fragment Token on Token {
+  tokenId
+  name
+  description
+  image {
+    url
+    mediaEncoding {
+      __typename
+      ...ImageMediaEncoding
+    }
+  }
+  owner
+  mintInfo {
+    mintContext {
+      blockTimestamp
+    }
+  }
+}

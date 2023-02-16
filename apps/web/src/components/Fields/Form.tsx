@@ -13,7 +13,6 @@ import { Box, Button, Flex, Stack } from '@zoralabs/zord'
 import { Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
-import { useAuctionStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
   adminStickySaveButton,
@@ -54,6 +53,7 @@ interface FormProps {
   autoSubmit?: boolean
   innerStyle?: any
   parentValues?: any
+  auctioningHasStarted?: boolean
 }
 
 const Form: React.FC<FormProps> = ({
@@ -76,6 +76,7 @@ const Form: React.FC<FormProps> = ({
   autoSubmit = false,
   innerStyle,
   parentValues,
+  auctioningHasStarted = true,
 }) => {
   const {
     setFulfilledSections,
@@ -90,8 +91,6 @@ const Form: React.FC<FormProps> = ({
     next: nextCustomTransactionForm,
     previous: previousCustomTransactionForm,
   } = useCustomTransactionStore()
-
-  const { auctioningHasStarted } = useAuctionStore()
 
   /*
     handle mouseDown

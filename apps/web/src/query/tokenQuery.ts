@@ -1,32 +1,55 @@
+import omitBy from 'lodash/omitBy'
+import isUndefined from 'lodash/isUndefined'
 import { CHAIN } from 'src/constants/network'
 import { sdk } from 'src/graphql/client'
+import { ImageMediaEncodingFragment } from 'src/graphql/sdk'
+import { Token, TokenWinner } from 'src/typings'
 
-export const tokenQuery = async (address: string, tokenId: string) => {
+export const tokenQuery = async (
+  address: string,
+  tokenId: string
+): Promise<Token | undefined> => {
   if (!address) return
 
   const data = await sdk.token({ address, tokenId, chain: CHAIN })
 
+  const token = data?.token?.token
+
+  if (!token) {
+    return undefined
+  }
+
   return {
-    owner: data?.token?.token?.owner || null,
-    name: data?.token?.token?.name || null,
-    image: data?.token?.token?.image?.url || null,
-    media: {
-      ...data?.token?.token?.image?.mediaEncoding,
-    },
-    description: data?.token?.token?.description || null,
-    mintDate: data?.token?.token?.mintInfo?.mintContext?.blockTimestamp || null,
+    id: token.tokenId,
+    ...omitBy(
+      {
+        owner: token.owner || undefined,
+        name: token.name || undefined,
+        description: token.description || undefined,
+        image: token.image?.url || undefined,
+        media: token.image?.mediaEncoding
+          ? (token.image.mediaEncoding as ImageMediaEncodingFragment)
+          : undefined,
+        mintDate: token.mintInfo?.mintContext?.blockTimestamp || undefined,
+      },
+      isUndefined
+    ),
   }
 }
 
-export const tokenWinnerQuery = async (address: string, tokenId: string) => {
-  if (!address) return
-
+export const tokenWinnerQuery = async (
+  address: string,
+  tokenId: string
+): Promise<TokenWinner> => {
   const data = await sdk.tokenWinner({ address, tokenId, chain: CHAIN })
 
-  return {
-    highestBidder: data?.nouns?.nounsMarkets?.nodes[0]?.highestBidder || null,
-    price:
-      data?.nouns?.nounsMarkets?.nodes[0]?.highestBidPrice?.chainTokenPrice?.decimal ||
-      null,
-  }
+  return omitBy(
+    {
+      highestBidder: data?.nouns?.nounsMarkets?.nodes[0]?.highestBidder || undefined,
+      price:
+        data?.nouns?.nounsMarkets?.nodes[0]?.highestBidPrice?.chainTokenPrice?.decimal ||
+        undefined,
+    },
+    isUndefined
+  )
 }

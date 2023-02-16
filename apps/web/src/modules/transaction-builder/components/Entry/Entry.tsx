@@ -5,7 +5,7 @@ import { TransactionType } from '../../constants/transactionTypes'
 import AdminNav from './AdminNav'
 
 const Entry = () => {
-  const shortcuts = [TransactionType.CUSTOM]
+  const shortcuts = [TransactionType.AIRDROP, TransactionType.CUSTOM]
   return (
     <Stack style={{ maxWidth: 680, minHeight: '80vh' }} mx={'auto'}>
       <Text fontWeight={'label'} fontSize={20} lineHeight={24} mb={'x5'}>
