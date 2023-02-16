@@ -2,7 +2,7 @@
 
 ## Getting set up
 
-TODO
+TODOs
 
 ## Testing
 
