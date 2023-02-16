@@ -17,6 +17,7 @@ import { chains } from 'src/wagmi/chains'
 import { VercelAnalytics } from 'analytics'
 import { SWRConfig } from 'swr'
 import { useIsMounted } from 'src/hooks/useIsMounted'
+import { NetworkController } from 'src/components/NetworkController'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -39,7 +40,9 @@ function App({ Component, pageProps, err }: AppPropsWithLayout) {
             <Layout>{getLayout(<Component {...pageProps} err={err} />)}</Layout>
           )}
         </SWRConfig>
-        <VercelAnalytics />
+        <NetworkController.Mainnet>
+          <VercelAnalytics />
+        </NetworkController.Mainnet>
       </RainbowKitProvider>
     </WagmiConfig>
   )
