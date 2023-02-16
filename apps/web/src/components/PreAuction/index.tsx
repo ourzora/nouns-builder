@@ -1,22 +1,23 @@
+import React from 'react'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+import { Box, Button, Flex } from '@zoralabs/zord'
+
+import { useLayoutStore } from 'src/stores'
+import useAuctionContract from 'src/hooks/useAuctionContract'
+
 import {
   wrapper,
   preAuctionButtonVariants,
   preAuctionHelperText,
   preAuctionWrapper,
 } from './index.css'
-import { Box, Button, Flex } from '@zoralabs/zord'
-import { useRouter } from 'next/router'
-import React from 'react'
-import { useLayoutStore } from 'src/stores'
-import { useAuctionStore } from 'src/stores'
-import Link from 'next/link'
 
 const PreAuction = () => {
   const router = useRouter()
   const { query } = router
   const { signer } = useLayoutStore()
-
-  const auctionContract = useAuctionStore((state) => state.auctionContract)
+  const { contract: auctionContract } = useAuctionContract()
 
   /* handle start of auction  */
   const handleStartAuction = React.useCallback(async () => {

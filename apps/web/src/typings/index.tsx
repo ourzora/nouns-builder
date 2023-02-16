@@ -7,6 +7,7 @@ import {
   ProposalVoteFragment as ProposalVote,
   Support,
   MarketSortKey,
+  ImageMediaEncodingFragment,
 } from 'src/graphql/sdk'
 
 export interface CreateFormSection {
@@ -144,20 +145,29 @@ export interface SelectedTraitsProps {
   content: File
 }
 
-export interface TokenDataProps {
-  id?: number
-  name?: string | null
-  image?: string | null
-  owner?: string | null
-  price?: string | null
-  mintDate?: string | null
-  description?: string | null
-  highestBidder?: string | null
-  media?: {
-    original?: string
-    thumbnail?: string
-  }
+export interface Bid {
+  id: number
+  bidder: string
+  amount: string
+  transactionHash: string
 }
+
+export interface Token {
+  id: string
+  name?: string
+  image?: string
+  description?: string
+  owner?: string
+  media?: ImageMediaEncodingFragment
+  mintDate?: string
+}
+
+export interface TokenWinner {
+  highestBidder?: string
+  price?: number
+}
+
+export interface TokenWithWinner extends Token, TokenWinner {}
 
 export type { ProposalVote }
 export interface Proposal extends Omit<ProposalFragment, 'executableFrom' | 'expiresAt'> {
@@ -178,17 +188,6 @@ export type ProposalSucceededStatus = Extract<
   ProposalStatus,
   ProposalStatus.Succeeded | ProposalStatus.Queued | ProposalStatus.Executable
 >
-
-export const enum ProposalContractState {
-  PENDING = 0,
-  ACTIVE,
-  CANCELLED,
-  DEFEATED,
-  SUCCEEDED,
-  QUEUED,
-  EXPIRED,
-  EXECUTED,
-}
 
 export interface ExplorePageData {
   daos: {

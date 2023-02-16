@@ -11,7 +11,7 @@ import { useIsMounted } from 'src/hooks/useIsMounted'
 
 const Nav = () => {
   const { pathname } = useRouter()
-  const isCreatePage = pathname.includes('/create')
+  const isCreatePage = pathname === '/create'
   const isMounted = useIsMounted()
 
   if (!isMounted) return null

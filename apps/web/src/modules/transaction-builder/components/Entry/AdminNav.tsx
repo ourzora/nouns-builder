@@ -1,16 +1,11 @@
 import React from 'react'
-import { Flex, Stack, Text } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useContract } from 'wagmi'
+import { Flex, Stack, Text } from '@zoralabs/zord'
+
+import { Icon } from 'src/components/Icon'
 import { useDaoStore, useLayoutStore } from 'src/stores'
-import shallow from 'zustand/shallow'
-import useSWR from 'swr'
-import { readAuctionContract } from 'src/utils/readAuctionContract'
-import { useContract, useContractRead } from 'wagmi'
-import { AddressType } from '../../../../typings'
-import { auctionAbi } from '../../../../constants/abis'
-import { SUCCESS_MESSAGES } from '../../../../constants/messages'
+import { auctionAbi } from 'src/constants/abis'
 
 const AdminNav = () => {
   const router = useRouter()

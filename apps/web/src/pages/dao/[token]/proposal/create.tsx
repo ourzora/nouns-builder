@@ -2,28 +2,39 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import TwoColumnLayout from 'src/layouts/TwoColumn'
 import Entry from 'src/modules/transaction-builder/components/Entry/Entry'
-import { Queue } from 'src/modules/transaction-builder/components/Queue'
+import { Queue } from 'src/modules/transaction-builder/components/Queue/Queue'
 import CreateProposalHeading from 'src/modules/transaction-builder/components/CreateProposalHeading'
-import Transaction from 'src/modules/transaction-builder/components/Transaction'
 import { Stack } from '@zoralabs/zord'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import {
+  TRANSACTION_TYPE,
+  TransactionType,
+} from 'src/modules/transaction-builder/constants/transactionTypes'
+import TransactionTypeIcon from 'src/modules/transaction-builder/components/TransactionTypeIcon'
+import DropdownSelect from 'src/modules/transaction-builder/components/DropdownSelect'
+import { SelectedTransactionForm } from 'src/modules/transaction-builder/components/SelectedTransactionForm'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
-  const { query } = router
+  const { query, pathname } = router
   const { transaction } = query
 
-  const leftColumn = (query: string | string[] | undefined) => {
-    switch (query) {
-      case 'custom':
-        return (
-          <Transaction
-            helperText={`Add one or more transactions and describe your proposal for the community. 
-            The proposal cannot modified after submission, so please verify all information before submitting.`}
-          />
-        )
-    }
+  const createSelectOption = (type: TransactionType) => ({
+    value: type,
+    label: TRANSACTION_TYPE[type].title,
+    icon: <TransactionTypeIcon transactionType={type} />,
+  })
+
+  const options = [TransactionType.AIRDROP, TransactionType.CUSTOM].map(
+    createSelectOption
+  )
+
+  const handleDropdownOnChange = (value: string) => {
+    router.push({
+      pathname,
+      query: { token: query.token, transaction: value },
+    })
   }
 
   return (
@@ -36,8 +47,20 @@ const CreateProposalPage: NextPageWithLayout = () => {
       mx="auto"
     >
       <CreateProposalHeading title={'Create Proposal'} />
-      {query.transaction ? (
-        <TwoColumnLayout leftColumn={leftColumn(transaction)} rightColumn={<Queue />} />
+      {transaction ? (
+        <TwoColumnLayout
+          leftColumn={
+            <Stack>
+              <DropdownSelect
+                value={transaction.toString()}
+                options={options}
+                onChange={(value) => handleDropdownOnChange(value)}
+              />
+              <SelectedTransactionForm type={transaction as TransactionType} />
+            </Stack>
+          }
+          rightColumn={<Queue />}
+        />
       ) : (
         <TwoColumnLayout leftColumn={<Entry />} />
       )}

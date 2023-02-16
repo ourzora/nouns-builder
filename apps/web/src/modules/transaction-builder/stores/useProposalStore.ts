@@ -11,8 +11,8 @@ export type Transaction = {
 
 export type BuilderTransaction = {
   type: TransactionType
-  summary?: string
   transactions: Transaction[]
+  summary?: string
 }
 
 interface State {
@@ -26,6 +26,7 @@ interface Actions {
   addTransaction: (builderTransaction: BuilderTransaction) => void
   addTransactions: (builderTransactions: BuilderTransaction[]) => void
   removeTransaction: (index: number) => void
+  removeAllTransactions: () => void
   createProposal: ({
     title,
     summary,
@@ -58,6 +59,9 @@ export const useProposalStore = create<State & Actions>((set) => ({
     set((state) => ({
       transactions: state.transactions.filter((_, i) => i !== index),
     }))
+  },
+  removeAllTransactions: () => {
+    set(() => ({ transactions: [] }))
   },
   createProposal: ({ title, summary, disabled, transactions }) =>
     set({ title, summary, disabled, transactions }),

@@ -1,5 +1,5 @@
 import { Flex } from '@zoralabs/zord'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber, Contract, ethers } from 'ethers'
 import { FormikValues } from 'formik'
 import React from 'react'
 import Form from 'src/components/Fields/Form'
@@ -23,7 +23,6 @@ import {
   BuilderTransaction,
 } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { TransactionType } from 'src/modules/transaction-builder/constants/transactionTypes'
-import { Auction } from 'src/constants/typechain'
 import type { AddressType } from 'src/typings'
 
 interface AdminFormSettingsProps {
@@ -331,7 +330,7 @@ const AdminForm: React.FC<AdminFormSettingsProps> = () => {
   const withPauseUnpause = (
     transactions: BuilderTransaction[],
     auctionAddress: AddressType,
-    auctionContract?: Auction
+    auctionContract?: Contract
   ) => {
     const targetAddresses = transactions
       .flatMap((txn) => txn.transactions)

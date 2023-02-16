@@ -1,14 +1,13 @@
 import React from 'react'
 import { Box, Flex, Text, Stack } from '@zoralabs/zord'
-import { useRouter } from 'next/router'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { useBids } from 'src/hooks/useBids'
 import { Avatar } from '../Avatar'
 import { Icon } from 'src/components/Icon'
 import AuctionAllBids from './AuctionAllBids'
 import { recentBid, recentBidder, allRecentBidsButton } from './Auction.css'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import dynamic from 'next/dynamic'
+import { Bid } from 'src/typings'
 
 const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal'), {
   ssr: false,
@@ -34,18 +33,11 @@ const Bidder: React.FC<BidderProps> = ({ address }) => {
 }
 
 interface RecentBidsProps {
-  auctionAddress: string
+  bids: Bid[]
 }
 
-export const RecentBids: React.FC<RecentBidsProps> = ({ auctionAddress }) => {
-  const router = useRouter()
-
-  const { data: bids } = useBids({
-    auction: auctionAddress,
-    tokenId: router?.query?.tokenId as string,
-  })
-
-  return Array.isArray(bids) && bids.length ? (
+export const RecentBids: React.FC<RecentBidsProps> = ({ bids }) => {
+  return bids.length ? (
     <Box mt="x3">
       <Stack>
         {bids.slice(0, 3).map(({ amount, bidder, id, transactionHash }) => (

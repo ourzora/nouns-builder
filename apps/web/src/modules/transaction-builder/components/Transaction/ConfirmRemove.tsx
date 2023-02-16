@@ -20,7 +20,7 @@ const ConfirmRemove: React.FC<ConfrimRemoveProps> = ({
     <Flex direction={'column'} align={'center'}>
       <Flex className={confirmRemoveHeadingStyle}>Are you sure?</Flex>
       <Flex className={confirmRemoveHelper}>
-        This will remove the transaction for your proposal.
+        This will remove the transaction from your proposal.
       </Flex>
       <Button className={confirmButton} onClick={() => handleRemoveTransaction()}>
         Yes

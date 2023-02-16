@@ -1,67 +1,37 @@
-import { auctionActionButtonVariants } from './Auction.css'
-import { Auction, Auction__factory } from 'src/constants/typechain'
-import { Button, Flex } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import React, { useState } from 'react'
-import { ContractButton } from 'src/components/ContractButton'
-import useManagerContract from 'src/hooks/useManagerContract'
-import { useAuctionStore } from 'src/stores/useAuctionStore'
-import shallow from 'zustand/shallow'
 import { useSigner } from 'wagmi'
+import { Button, Flex } from '@zoralabs/zord'
+
+import { ContractButton } from 'src/components/ContractButton'
+import useAuctionContract from 'src/hooks/useAuctionContract'
+
+import { auctionActionButtonVariants } from './Auction.css'
 
 interface SettleProps {
   isEnding: boolean
   collectionAddress?: string
 }
 
-export const Settle = ({ collectionAddress, isEnding }: SettleProps) => {
+export const Settle = ({ isEnding }: SettleProps) => {
   const { data: signer } = useSigner()
+  const { contract: auctionContract } = useAuctionContract()
   const [settling, setSettling] = useState(false)
 
-  const { contract: managerContract } = useManagerContract()
-
-  const { auctionContract } = useAuctionStore(
-    (state) => ({
-      auctionContract: state.auctionContract,
-    }),
-    shallow
-  )
-
-  const getAuctionContract = React.useCallback(async () => {
-    if (!managerContract || !collectionAddress || !signer) return
-
-    const addresses = await managerContract?.getAddresses(
-      ethers.utils.getAddress(collectionAddress as string)
-    )
-    const auctionAddress = addresses?.auction
-    const contract =
-      auctionAddress &&
-      Auction__factory.connect(
-        auctionAddress ? auctionAddress : addresses?.auction || '',
-        signer
-      )
-
-    return contract
-  }, [managerContract, collectionAddress, signer])
-
-  const settleCurrentAndCreateNewAuction = React.useCallback(async () => {
-    const _auctionContract = await getAuctionContract()
-    const contract = (_auctionContract ?? auctionContract) as Auction
-
+  const handleSettle = React.useCallback(async () => {
     const isWrongNetwork =
-      (await signer?.provider?.getCode(contract?.address || '')) === '0x'
+      (await signer?.provider?.getCode(auctionContract?.address || '')) === '0x'
 
-    if (!contract || !signer || isWrongNetwork) return
+    if (!auctionContract || !signer || isWrongNetwork) return
 
     setSettling(true)
     try {
-      const { wait } = await contract.settleCurrentAndCreateNewAuction()
+      const { wait } = await auctionContract.settleCurrentAndCreateNewAuction()
       await wait()
       setSettling(false)
     } catch (error) {
       setSettling(false)
     }
-  }, [auctionContract, signer, getAuctionContract])
+  }, [auctionContract, signer])
 
   if (isEnding && !settling) {
     return (
@@ -86,7 +56,7 @@ export const Settle = ({ collectionAddress, isEnding }: SettleProps) => {
   return (
     <Flex direction="column" align="center" width={'100%'}>
       <ContractButton
-        handleClick={settleCurrentAndCreateNewAuction}
+        handleClick={handleSettle}
         className={auctionActionButtonVariants['settle']}
       >
         Settle Auction

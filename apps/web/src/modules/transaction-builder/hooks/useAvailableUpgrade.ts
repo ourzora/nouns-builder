@@ -3,7 +3,6 @@ import lt from 'lodash/lt'
 import pickBy from 'lodash/pickBy'
 import isNil from 'lodash/isNil'
 import isUndefined from 'lodash/isUndefined'
-import dayjs from 'dayjs'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { CONTRACT_VERSION_DETAILS, VersionType } from 'src/modules/transaction-builder'
 import { AddressType, DaoContractAddresses } from 'src/typings'
@@ -15,23 +14,19 @@ import { sdk } from 'src/graphql/client'
 import { CHAIN } from 'src/constants/network'
 import { NounsProposalStatus, ProposalsWithCalldataQuery } from 'src/graphql/sdk'
 import SWR_KEYS from 'src/constants/swrKeys'
-
-export interface Upgrade {
-  address: AddressType
-  name: string
-  calldata?: string
-}
+import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
+import { TransactionType } from '../constants/transactionTypes'
 
 type Proposal = ProposalsWithCalldataQuery['nouns']['nounsProposals']['nodes'][number]
 
 interface AvailableUpgrade {
   shouldUpgrade: boolean
-  transactions: Upgrade[]
-  title?: string
-  summary?: string
+  transaction?: BuilderTransaction
+  currentVersions?: DaoVersions
   latest?: string
   date?: string
   description?: string
+  activeUpgradeProposalId?: string
   totalContractUpgrades?: number
 }
 
@@ -50,7 +45,7 @@ export const useAvailableUpgrade = (
 
   const auctionContract = useContract({ abi: auctionAbi, address: addresses?.auction })
 
-  const contractInstance = useContract(contract)
+  const managerContract = useContract(contract)
 
   const { data: proposals } = useSWR(
     !!addresses?.token ? [SWR_KEYS.PROPOSALS_CALLDATAS, addresses?.token] : null,
@@ -69,6 +64,7 @@ export const useAvailableUpgrade = (
         ...contract,
         functionName: 'contractVersion',
       },
+
       {
         ...contract,
         functionName: 'getDAOVersions',
@@ -86,7 +82,13 @@ export const useAvailableUpgrade = (
   if (!data || isLoading || hasUndefinedAddresses || isError || !proposals) {
     return {
       shouldUpgrade: false,
-      transactions: [],
+      transaction: undefined,
+      currentVersions: undefined,
+      latest: undefined,
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
     }
   }
 
@@ -102,7 +104,16 @@ export const useAvailableUpgrade = (
   ] = data
 
   if (data.some(isNil)) {
-    return { shouldUpgrade: false, transactions: [] }
+    return {
+      shouldUpgrade: false,
+      latest: undefined,
+      transaction: undefined,
+      currentVersions: undefined,
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
+    }
   }
 
   const daoVersions = {
@@ -121,7 +132,10 @@ export const useAvailableUpgrade = (
     metadata: metadataImpl,
   }
 
-  const getUpgradesForVersion = (versions: DaoVersions, version: string) =>
+  const getUpgradesForVersion = (
+    versions: DaoVersions,
+    version: string
+  ): Record<AddressType, string> =>
     pickBy(versions, (v) => isNil(v) || v === '' || lt(v, version))
 
   const givenVersion = contractVersion ? contractVersion : latest
@@ -130,74 +144,111 @@ export const useAvailableUpgrade = (
   // meets the required given version, no upgrades needed
   if (Object.values(upgradesNeededForGivenVersion).length === 0) {
     return {
+      latest,
+      currentVersions: daoVersions,
       shouldUpgrade: false,
-      transactions: [],
+      transaction: undefined,
+      date: undefined,
+      description: undefined,
+      activeUpgradeProposalId: undefined,
+      totalContractUpgrades: undefined,
     }
   }
 
   const withPauseUnpause = (
     paused: boolean,
-    upgrades: Upgrade[],
+    upgrades: Transaction[],
     auctionContract?: Contract
-  ) => {
+  ): Transaction[] => {
     if (paused || typeof auctionContract === undefined) {
       return upgrades
     }
 
     const pause = {
-      address: addresses?.auction as AddressType,
-      name: 'pause()',
-      calldata: auctionContract?.interface.encodeFunctionData('pause'),
+      target: addresses?.auction as AddressType,
+      functionSignature: 'pause()',
+      calldata: auctionContract?.interface.encodeFunctionData('pause') || '',
+      value: '',
     }
 
     const unpause = {
-      address: addresses?.auction as AddressType,
-      name: 'unpause()',
-      calldata: auctionContract?.interface.encodeFunctionData('unpause'),
+      target: addresses?.auction as AddressType,
+      functionSignature: 'unpause()',
+      calldata: auctionContract?.interface.encodeFunctionData('unpause') || '',
+      value: '',
     }
 
     return [pause, ...upgrades, unpause]
   }
 
+  const createUpgradeTransactions = (
+    upgrades: Record<AddressType, string>,
+    managerContract?: Contract
+  ): Transaction[] =>
+    Object.keys(upgrades).map((contract) => ({
+      value: '',
+      target: addresses[contract as ContractType] as AddressType,
+      functionSignature: 'upgradeTo(address)',
+      calldata:
+        managerContract?.interface?.encodeFunctionData('upgradeTo(address)', [
+          managerImplementationAddresses[contract as ContractType],
+        ]) || '',
+    }))
+
+  const findActiveUpgradeProposal = (
+    proposals: Proposal[],
+    upgrades: Transaction[]
+  ): Proposal | undefined => {
+    const activeProposals = proposals?.filter(
+      (proposal) =>
+        proposal.status === NounsProposalStatus.Active ||
+        proposal.status === NounsProposalStatus.Pending ||
+        proposal.status === NounsProposalStatus.Queued ||
+        proposal.status === NounsProposalStatus.Succeeded ||
+        proposal.status === NounsProposalStatus.Executable
+    )
+
+    const upgradesCalldata = upgrades.map((upgrade) => upgrade.calldata)
+
+    const upgradeInProgress = activeProposals.find(
+      (proposal) => intersection(proposal.calldatas, upgradesCalldata).length > 0
+    )
+
+    return upgradeInProgress
+  }
+
   const upgradesNeededForLatestVersion = getUpgradesForVersion(daoVersions, latest)
-  const upgrades: Upgrade[] = Object.keys(upgradesNeededForLatestVersion).map(
-    (contract) => ({
-      address: addresses[contract as ContractType] as AddressType,
-      name: 'upgradeTo(address)',
-      calldata: contractInstance?.interface?.encodeFunctionData('upgradeTo(address)', [
-        managerImplementationAddresses[contract as ContractType],
-      ]),
-    })
+
+  const upgradeTransactions = createUpgradeTransactions(
+    upgradesNeededForLatestVersion,
+    managerContract ?? undefined
   )
+
+  const activeUpgradeProposal = findActiveUpgradeProposal(
+    proposals?.nouns?.nounsProposals?.nodes,
+    upgradeTransactions
+  )
+
+  const noActiveUpgradeProposal = typeof activeUpgradeProposal === 'undefined'
+
+  const upgrade = {
+    type: TransactionType.UPGRADE,
+    summary: `Upgrade contracts to Nouns Builder v${latest}`,
+    transactions: withPauseUnpause(
+      paused,
+      upgradeTransactions,
+      auctionContract ?? undefined
+    ),
+  }
 
   return {
     latest,
-    title: `Nouns Builder Upgrade v${latest} ${dayjs().format('YYYY-MM-DD')}`,
+    shouldUpgrade: noActiveUpgradeProposal,
+    currentVersions: daoVersions,
     date: CONTRACT_VERSION_DETAILS?.[latest]['date'],
-    description: CONTRACT_VERSION_DETAILS?.[latest]['description'],
-    summary: CONTRACT_VERSION_DETAILS?.[latest]['summary'],
-    totalContractUpgrades: upgrades.length,
-    shouldUpgrade: checkForNoActiveUpgradeProposals(
-      proposals?.nouns?.nounsProposals?.nodes,
-      upgrades
-    ),
-    transactions: withPauseUnpause(paused, upgrades, auctionContract ?? undefined),
+    description: `This release upgrades the DAO to v${latest} to add several features, improvements and bug fixes.`,
+    totalContractUpgrades: upgradeTransactions.length,
+    activeUpgradeProposalId: activeUpgradeProposal?.proposalId,
+    transaction: upgrade,
   }
-}
-
-function checkForNoActiveUpgradeProposals(
-  proposals: Proposal[],
-  upgrades: Upgrade[]
-): boolean {
-  const activeProposals = proposals?.filter(
-    (proposal) =>
-      proposal.status === NounsProposalStatus.Active ||
-      proposal.status === NounsProposalStatus.Pending ||
-      proposal.status === NounsProposalStatus.Queued ||
-      proposal.status === NounsProposalStatus.Succeeded ||
-      proposal.status === NounsProposalStatus.Executable
-  )
-  const proposalsCalldata = activeProposals.flatMap((proposal) => proposal.calldatas)
-  const upgradesCalldata = upgrades.map((upgrade) => upgrade.calldata)
-  return intersection(proposalsCalldata, upgradesCalldata).length === 0
 }

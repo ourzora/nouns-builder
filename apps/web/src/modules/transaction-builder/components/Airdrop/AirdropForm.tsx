@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import type { FC, FormEvent } from 'react'
+import type { FC } from 'react'
 import { Formik, Form } from 'formik'
 import type { FormikHelpers } from 'formik'
 import { Box, Flex, Button } from '@zoralabs/zord'
@@ -12,9 +12,10 @@ export interface AirdropFormProps {
     values: AirdropFormValues,
     actions: FormikHelpers<AirdropFormValues>
   ) => void
+  disabled?: boolean
 }
 
-const AirdropForm: FC<AirdropFormProps> = ({ onSubmit }) => {
+const AirdropForm: FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
   const initialValues: AirdropFormValues = {
     recipientAddress: '',
     amount: 0,
@@ -33,14 +34,15 @@ const AirdropForm: FC<AirdropFormProps> = ({ onSubmit }) => {
         initialValues={initialValues}
         validationSchema={airdropFormSchema}
         onSubmit={handleSubmit}
-        validateOnChange={false}
-        validateOnMount={false}
         validateOnBlur
+        validateOnMount={false}
+        validateOnChange={false}
       >
-        {({ values, errors, isSubmitting, isValid, isValidating, dirty }) => (
+        {({ errors, touched, isValid, isValidating, dirty }) => (
           <Box
+            data-testid="airdrop-form"
             as={'fieldset'}
-            disabled={isSubmitting || isValidating}
+            disabled={isValidating || disabled}
             style={{ outline: 0, border: 0, padding: 0, margin: 0 }}
           >
             <Flex as={Form} direction={'column'}>
@@ -61,7 +63,11 @@ const AirdropForm: FC<AirdropFormProps> = ({ onSubmit }) => {
                     }}
                   />
                 }
-                error={errors.recipientAddress}
+                error={
+                  touched.recipientAddress && errors.recipientAddress
+                    ? errors.recipientAddress
+                    : undefined
+                }
               />
 
               <Box mt={'x5'}>
@@ -73,7 +79,7 @@ const AirdropForm: FC<AirdropFormProps> = ({ onSubmit }) => {
                   type={'number'}
                   placeholder={0}
                   min={0}
-                  error={errors.amount}
+                  error={touched.amount && errors.amount ? errors.amount : undefined}
                 />
               </Box>
 
@@ -82,7 +88,7 @@ const AirdropForm: FC<AirdropFormProps> = ({ onSubmit }) => {
                 variant={'outline'}
                 borderRadius={'curved'}
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || disabled}
               >
                 Add Transaction to Queue
               </Button>

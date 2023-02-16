@@ -7,7 +7,7 @@ export const useMinBidIncrement = ({
   reservePrice,
   minBidIncrement,
 }: {
-  highestBid: BigNumber
+  highestBid?: BigNumber
   reservePrice?: BigNumber
   minBidIncrement?: BigNumber
 }) => {

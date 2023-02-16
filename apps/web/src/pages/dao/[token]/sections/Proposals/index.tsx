@@ -8,7 +8,7 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { ProposalCard } from 'src/modules/proposals'
 import { useDelegate } from 'src/hooks/useDelegate'
-import { useTokenOwnership } from 'src/hooks/useTokenOwnership'
+import { useVotes } from 'src/hooks/useVotes'
 import CurrentDelegate from 'src/pages/dao/[token]/sections/Governance/CurrentDelegate'
 import DelegateForm from 'src/pages/dao/[token]/sections/Governance/DelegateForm'
 import { useDaoStore, useLayoutStore } from 'src/stores'
@@ -21,26 +21,27 @@ import { getProposals, ProposalsResponse } from 'src/query/proposalsQuery'
 import Pagination from 'src/components/Pagination'
 import omit from 'lodash/omit'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
-import { Upgrade } from 'src/modules/transaction-builder/components/Upgrade'
+import { Upgrade } from 'src/modules/transaction-builder/components/Upgrade/Upgrade'
+import { useAccount } from 'wagmi'
 
 const Proposals: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const { createProposal } = useProposalStore()
-
+  const { address } = useAccount()
   const { query, isReady, push, pathname } = useRouter()
-  const { signerAddress, isMobile } = useLayoutStore()
+  const { isMobile } = useLayoutStore()
   const LIMIT = 20
 
-  const { token, governor } = addresses
+  const { token } = addresses
 
   const { data, error } = useSWR<ProposalsResponse>(
     isReady ? [SWR_KEYS.PROPOSALS, query.token, query.page] : null,
     (_, token, page) => getProposals([token], LIMIT, Number(page))
   )
 
-  const { isOwner, hasThreshold } = useTokenOwnership({
-    governorAddress: governor,
-    signerAddress,
+  const { isOwner, hasThreshold } = useVotes({
+    governorAddress: addresses?.governor,
+    signerAddress: address,
     collectionAddress: query.token as string,
   })
 
@@ -166,16 +167,20 @@ const Proposals: React.FC = () => {
             <Button
               className={submitProposalBtn}
               onClick={handleProposalCreation}
-              disabled={!hasThreshold}
+              disabled={!isOwner}
               color={'tertiary'}
             >
               Submit {!isMobile ? 'proposal' : null}
             </Button>
           </Flex>
         </Flex>
-
-        <Upgrade collection={query.token as string} hasThreshold={hasThreshold} />
-
+        {addresses && (
+          <Upgrade
+            collection={query.token as string}
+            hasThreshold={hasThreshold}
+            addresses={addresses}
+          />
+        )}
         <Flex direction={'column'} mt={'x6'}>
           {data?.proposals?.length ? (
             data?.proposals?.map((proposal, index: number) => (

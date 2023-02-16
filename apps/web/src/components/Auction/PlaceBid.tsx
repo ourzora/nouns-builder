@@ -1,68 +1,43 @@
-import { auctionActionButtonVariants, bidForm, bidInput } from './Auction.css'
-import { useMinBidIncrement } from 'src/hooks/useMinBidIncrement'
-import { Auction__factory } from 'src/constants/typechain'
-import { Box, Button, Flex } from '@zoralabs/zord'
-import { BigNumber, ethers } from 'ethers'
 import React, { Fragment, memo, useEffect, useState } from 'react'
+import { BigNumber, ethers } from 'ethers'
 import { useSWRConfig } from 'swr'
-import { ContractButton } from 'src/components/ContractButton'
-import useManagerContract from 'src/hooks/useManagerContract'
-import { useAuctionStore } from 'src/stores/useAuctionStore'
-import { formatCryptoVal } from 'src/utils/numbers'
-import shallow from 'zustand/shallow'
 import { useSigner } from 'wagmi'
+import { Box, Button, Flex } from '@zoralabs/zord'
+
+import { useMinBidIncrement } from 'src/hooks/useMinBidIncrement'
+import { ContractButton } from 'src/components/ContractButton'
+import { formatCryptoVal } from 'src/utils/numbers'
 import { useDaoStore } from 'src/stores'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getProvider } from 'src/utils/provider'
+import useAuctionContract from 'src/hooks/useAuctionContract'
+import getBids from 'src/utils/getBids'
+
+import { auctionActionButtonVariants, bidForm, bidInput } from './Auction.css'
 
 interface PlaceBidProps {
-  collectionAddress?: string
-  highestBid?: string
-  currentAuction?: number
+  tokenId: string
+  highestBid?: BigNumber
 }
 
-export const PlaceBid = ({
-  collectionAddress,
-  highestBid,
-  currentAuction,
-}: PlaceBidProps) => {
+export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
   const { mutate } = useSWRConfig()
-  const { contract: managerContract } = useManagerContract()
+  const {
+    contract: auctionContract,
+    auctionReservePrice,
+    minBidIncrement,
+  } = useAuctionContract()
   const { addresses } = useDaoStore()
-  const { auctionContract } = useAuctionStore(
-    (state) => ({
-      auctionContract: state.auctionContract,
-    }),
-    shallow
-  )
 
   const [creatingBid, setCreatingBid] = useState(false)
   const [bidAmount, setBidAmount] = React.useState<string | undefined>(undefined)
   const [signerETHBalance, setSignerETHBalance] = React.useState<number>(0)
-  const [auctionReservePrice, setAuctionReservePrice] = useState<BigNumber | undefined>()
-  const [minBidIncrement, setMinBidIncrement] = useState<BigNumber | undefined>()
 
   const { minBidAmount } = useMinBidIncrement({
-    highestBid: BigNumber.from(highestBid),
+    highestBid,
     reservePrice: auctionReservePrice,
     minBidIncrement,
   })
-
-  useEffect(() => {
-    const getData = async () => {
-      if (!addresses?.auction) return
-
-      const contract = Auction__factory.connect(addresses?.auction, getProvider())
-      const reserve = await contract.reservePrice()
-      const minbid = await contract.minBidIncrement()
-
-      setAuctionReservePrice(reserve)
-      setMinBidIncrement(minbid)
-    }
-
-    getData()
-  }, [addresses])
 
   useEffect(() => {
     if (!signer || !signer.provider) return
@@ -76,57 +51,31 @@ export const PlaceBid = ({
     getSignerBalance()
   }, [signer])
 
-  const getAuctionContract = React.useCallback(async () => {
-    if (!managerContract || !collectionAddress || !signer) return
-
-    const addresses = await managerContract?.getAddresses(
-      ethers.utils.getAddress(collectionAddress as string)
-    )
-    const auctionAddress = addresses?.auction
-    const contract =
-      auctionAddress &&
-      Auction__factory.connect(
-        auctionAddress ? auctionAddress : addresses?.auction || '',
-        signer
-      )
-
-    return contract
-  }, [managerContract, collectionAddress, signer])
-
   const createBid = React.useCallback(
     async (id: string, bid: { value: BigNumber }) => {
-      const _auctionContract = await getAuctionContract()
-      const contract = _auctionContract ?? auctionContract
-
-      if (!contract || !signer || creatingBid) return
+      if (!auctionContract || !signer || creatingBid) return
       try {
         setCreatingBid(true)
 
-        const { wait } = await contract.createBid(id, bid)
+        const { wait } = await auctionContract.createBid(BigNumber.from(id), bid)
         await wait()
         setCreatingBid(false)
 
-        await mutate([SWR_KEYS.AUCTION_BIDS, addresses?.auction, currentAuction])
+        await mutate([SWR_KEYS.AUCTION_BIDS, addresses.auction, tokenId], () =>
+          getBids(addresses.auction as string, tokenId)
+        )
       } catch (error) {
         setCreatingBid(false)
       }
     },
-    [
-      auctionContract,
-      signer,
-      addresses,
-      creatingBid,
-      currentAuction,
-      getAuctionContract,
-      mutate,
-    ]
+    [auctionContract, signer, addresses, creatingBid, tokenId, mutate]
   )
 
   const handleCreateBid = React.useCallback(async () => {
     if (!bidAmount) return
 
     const bid = ethers.utils.parseEther(bidAmount)
-    createBid(String(currentAuction), { value: bid })
+    createBid(tokenId, { value: bid })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bidAmount, createBid])

@@ -2,15 +2,15 @@ import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Box, Flex } from '@zoralabs/zord'
 
-import { Icon } from '../Icon'
+import { Icon } from '../../../components/Icon'
 
 import {
   defaultFieldsetStyle,
   defaultInputLabelStyle,
   defaultDropdownSelectOptionStyle,
-} from './styles.css'
+} from '../../../components/Fields/styles.css'
 
-interface SelectOption {
+export interface SelectOption {
   value: string
   label: string
   icon?: ReactNode
@@ -45,7 +45,7 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const selectedOption = options.find((option) => option.value == value)
+  const selectedOption = options.find((option) => option.value === value)
 
   return (
     <Box as="fieldset" mb={'x8'} p={'x0'} className={defaultFieldsetStyle}>

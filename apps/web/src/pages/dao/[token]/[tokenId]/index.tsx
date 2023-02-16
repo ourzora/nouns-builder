@@ -6,10 +6,10 @@ import { GetServerSideProps } from 'next'
 import React from 'react'
 import Meta from 'src/components/Layout/Meta'
 import { useHTMLStripper } from 'src/hooks/useHTMLStripper'
-import { useTokenOwnership } from 'src/hooks/useTokenOwnership'
+import { useVotes } from 'src/hooks/useVotes'
 import { useLayoutStore } from 'src/stores'
 import { useDaoStore } from 'src/stores/useDaoStore'
-import { getToken } from 'src/utils/readTokenContract'
+import getToken from 'src/utils/getToken'
 import useSWR, { unstable_serialize } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import AuctionController from 'src/components/Auction/AuctionController'
@@ -21,6 +21,7 @@ import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { useRouter } from 'next/router'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
+import { useAccount } from 'wagmi'
 
 interface TokenPageProps {
   url: string
@@ -29,14 +30,16 @@ interface TokenPageProps {
 }
 
 const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenId }) => {
-  const signerAddress = useLayoutStore((state) => state.signerAddress)
   const { query, replace, pathname } = useRouter()
   const addresses = useDaoStore((state) => state.addresses)
+  const { address } = useAccount()
 
-  const { data: token } = useSWR([SWR_KEYS.TOKEN, collection, tokenId])
+  const { data: token } = useSWR([SWR_KEYS.TOKEN, collection, tokenId], (_, id) =>
+    getToken(collection, tokenId)
+  )
 
-  const { hasThreshold } = useTokenOwnership({
-    signerAddress,
+  const { hasThreshold } = useVotes({
+    signerAddress: address,
     collectionAddress: collection,
     governorAddress: addresses?.governor,
   })
@@ -45,7 +48,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
 
   const handleCloseSuccessModal = () => {
     replace(
-      { pathname, query: { token: query?.token, tokenId: query?.tokenId } },
+      { pathname, query: { token: query.token, tokenId: query.tokenId } },
       undefined,
       { shallow: true }
     )
@@ -76,16 +79,24 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
     return hasThreshold ? [...publicSections, adminSection] : publicSections
   }, [hasThreshold])
 
+  if (!token || !addresses.auction) {
+    return null
+  }
+
   return (
     <Flex direction="column" pb="x30">
       <Meta
-        title={token?.name}
-        type={`${token?.name}:nft`}
-        image={token?.media?.thumbnail || token?.image}
+        title={token.name || ''}
+        type={`${token.name}:nft`}
+        image={token.media?.thumbnail || token.image}
         slug={url}
-        description={stripHTML(token?.description)}
+        description={token.description ? stripHTML(token.description) : ''}
       />
-      <AuctionController auctionAddress={addresses.auction || ''} />
+      <AuctionController
+        auctionAddress={addresses.auction}
+        collection={query.token as string}
+        token={token}
+      />
       <SectionHandler sections={sections} />
 
       <AnimatedModal
@@ -116,7 +127,13 @@ export const getServerSideProps: GetServerSideProps = async ({
   const collection = params?.token as string
   const tokenId = params?.tokenId as string
 
-  const token = await getToken(collection, Number(tokenId))
+  const token = await getToken(collection, tokenId)
+
+  if (!token) {
+    return {
+      notFound: true,
+    }
+  }
 
   return {
     props: {
