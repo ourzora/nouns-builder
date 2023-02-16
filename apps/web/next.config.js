@@ -18,6 +18,7 @@ const nextConfig = {
       'zora-prod.mypinata.cloud',
       'nftstorage.link',
       'zora-dev.mypinata.cloud',
+      'ipfs.zora.co',
     ],
   },
   async redirects() {
