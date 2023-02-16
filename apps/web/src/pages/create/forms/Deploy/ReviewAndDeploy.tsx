@@ -1,10 +1,9 @@
 import InfoSection from './InfoSection'
 import ReviewSection from './ReviewSection'
 import SuccessfulDeploy from './SuccessfulDeploy'
-import { IManager } from 'src/constants/typechain'
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
@@ -17,17 +16,29 @@ import {
   deployContractButtonStyle,
 } from 'src/styles/deploy.css'
 import { getEnsAddress } from 'src/utils/ens'
-import { isEmpty, toSeconds } from 'src/utils/helpers'
+import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
-import { Manager__factory } from 'src/constants/typechain'
 import { Icon } from 'src/components/Icon'
 import type { allocationProps, AddressType } from 'src/typings'
+import { managerAbi } from 'src/constants/abis'
+import { useContractEvent, useContractWrite } from 'wagmi'
+import { usePrepareContractWrite } from 'wagmi'
+import { WriteContractArgs } from '@wagmi/core'
+import useSWR from 'swr'
+import { getProvider } from 'src/utils/provider'
+
+type FounderParameters = NonNullable<
+  WriteContractArgs<typeof managerAbi, 'deploy'>['args']
+>[0]
 
 interface ReviewAndDeploy {
   title: string
 }
 
 const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
+  const { signer, provider } = useLayoutStore()
+  const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
+  const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
   const {
     founderAllocation,
     contributionAllocation,
@@ -44,100 +55,120 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     vetoPower,
   } = useFormStore()
 
-  const { signer, provider } = useLayoutStore()
-
-  const zounsContractAddress = PUBLIC_MANAGER_ADDRESS!
-  const managerContract = React.useMemo(() => {
-    if (!signer) return
-    try {
-      return Manager__factory.connect(zounsContractAddress, signer)
-    } catch (err) {
-      console.log('err', err)
-    }
-  }, [signer, zounsContractAddress])
-
-  /*
-
-    Prepare Params for -- deploy()
-
-
-  */
-  const getFounderParams = React.useCallback(
-    (
-      allocationArray: allocationProps[]
-    ): Promise<IManager.FounderParamsStruct[]> | undefined => {
-      if (!allocationArray) return
-
-      return allocationArray?.reduce(async (acc: any, cv: any) => {
-        const _acc = await acc
-
-        _acc.push({
-          wallet: ethers.utils.getAddress(
-            await getEnsAddress(cv.founderAddress, provider)
-          ),
-          ownershipPct: BigNumber.from(cv.allocation),
-          vestExpiry: Math.floor(new Date(cv.endDate).getTime() / 1000),
-        })
-
-        return _acc
-      }, Promise.resolve([]))
+  useContractEvent({
+    address: PUBLIC_MANAGER_ADDRESS!,
+    abi: managerAbi,
+    eventName: 'DAODeployed',
+    listener(token, metadata, auction, treasury, governor) {
+      setDeployedDao({
+        token,
+        metadata,
+        auction,
+        treasury,
+        governor,
+      })
+      setIsPendingTransaction(false)
+      setFulfilledSections(title)
     },
-    [provider]
+  })
+
+  const { data: founderParams } = useSWR('founderParams', async () => {
+    return await getFounderParams([...founderAllocation, ...contributionAllocation])
+  })
+
+  /* handle section navigation */
+  const handlePrev = () => {
+    setActiveSection(activeSection - 1)
+  }
+
+  const getFounderParams = async (
+    allocations: allocationProps[]
+  ): Promise<FounderParameters> => {
+    const allocationPromises = allocations.map((allocation) =>
+      getEnsAddress(allocation.founderAddress, getProvider())
+    )
+
+    const ensAddresses = await Promise.all(allocationPromises)
+
+    return ensAddresses.map((address, idx) => ({
+      wallet: address as AddressType,
+      ownershipPct: BigNumber.from(allocations[idx].allocation),
+      vestExpiry: BigNumber.from(
+        Math.floor(new Date(allocations[idx].endDate).getTime() / 1000)
+      ),
+    }))
+  }
+
+  const abiCoder = new ethers.utils.AbiCoder()
+
+  const tokenParamsHex = abiCoder.encode(
+    ['string', 'string', 'string', 'string', 'string', 'string'],
+    [
+      sanitizeStringForJSON(generalInfo?.daoName),
+      generalInfo?.daoSymbol.replace('$', ''),
+      sanitizeStringForJSON(setUpArtwork?.projectDescription),
+      generalInfo?.daoAvatar,
+      sanitizeStringForJSON(generalInfo?.daoWebsite),
+      'https://api.zora.co/renderer/stack-images',
+    ]
   )
 
-  const tokenParams = React.useMemo(() => {
-    // name, symbol, description, contract image, renderer base
-    const abiCoder = new ethers.utils.AbiCoder()
-    const hex = abiCoder.encode(
-      ['string', 'string', 'string', 'string', 'string', 'string'],
-      [
-        sanitizeStringForJSON(generalInfo?.daoName),
-        generalInfo?.daoSymbol.replace('$', ''),
-        sanitizeStringForJSON(setUpArtwork?.projectDescription),
-        generalInfo?.daoAvatar,
-        sanitizeStringForJSON(generalInfo?.daoWebsite),
-        'https://api.zora.co/renderer/stack-images',
-      ]
-    )
-    return { initStrings: ethers.utils.arrayify(hex) }
-  }, [generalInfo, setUpArtwork])
+  const tokenParams = { initStrings: ethers.utils.hexlify(tokenParamsHex) as AddressType }
 
-  const auctionParams = React.useMemo(() => {
-    if (isEmpty(auctionSettings)) return
+  const auctionParams = {
+    reservePrice: auctionSettings.auctionReservePrice
+      ? ethers.utils.parseEther(auctionSettings.auctionReservePrice.toString())
+      : ethers.utils.parseEther('0'),
+    duration: auctionSettings?.auctionDuration
+      ? BigNumber.from(toSeconds(auctionSettings?.auctionDuration))
+      : BigNumber.from('86400'),
+  }
 
-    return {
-      reservePrice: auctionSettings.auctionReservePrice
-        ? ethers.utils.parseEther(auctionSettings.auctionReservePrice.toString())
-        : '0',
-      duration: auctionSettings?.auctionDuration
-        ? BigNumber.from(toSeconds(auctionSettings?.auctionDuration))
-        : '86400',
-    }
-  }, [auctionSettings])
+  const govParams = {
+    timelockDelay: BigNumber.from(toSeconds({ days: 2 }).toString()),
+    votingDelay: BigNumber.from('86400'),
+    votingPeriod: BigNumber.from('345600'),
+    proposalThresholdBps: auctionSettings?.proposalThreshold
+      ? BigNumber.from(
+          Number((Number(auctionSettings?.proposalThreshold) * 100).toFixed(2))
+        )
+      : BigNumber.from('0'),
+    quorumThresholdBps: auctionSettings?.quorumThreshold
+      ? BigNumber.from(
+          Number((Number(auctionSettings?.quorumThreshold) * 100).toFixed(2))
+        )
+      : BigNumber.from('0'),
+  }
 
-  const govParams = React.useMemo(() => {
-    if (isEmpty(auctionSettings)) return
+  const { config } = usePrepareContractWrite({
+    address: PUBLIC_MANAGER_ADDRESS!,
+    abi: managerAbi,
+    functionName: 'deploy',
+    args: [
+      founderParams as FounderParameters,
+      tokenParams,
+      auctionParams,
+      {
+        ...govParams,
+        vetoer:
+          vetoPower === 0
+            ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
+            : ethers.utils.getAddress(NULL_ADDRESS), // 0 === YES in Radio component
+      },
+    ],
+  })
 
-    return {
-      timelockDelay: BigNumber.from(toSeconds({ days: 2 }).toString()),
-      votingDelay: BigNumber.from('86400'),
-      votingPeriod: BigNumber.from('345600'),
-      proposalThresholdBps: auctionSettings?.proposalThreshold
-        ? BigNumber.from(
-            Number((Number(auctionSettings?.proposalThreshold) * 100).toFixed(2))
-          )
-        : '0',
-      quorumThresholdBps: auctionSettings?.quorumThreshold
-        ? BigNumber.from(
-            Number((Number(auctionSettings?.quorumThreshold) * 100).toFixed(2))
-          )
-        : '0',
-    }
-  }, [auctionSettings])
+  const { writeAsync } = useContractWrite(config)
+
+  const handleDeploy = async () => {
+    setIsPendingTransaction(true)
+    const txn = await writeAsync?.()
+    await txn?.wait()
+  }
 
   /*
 
-    Parse Store Data
+     Parse Store Data * Compose Review Sections
 
   */
   const _generalInfo = React.useMemo(() => {
@@ -166,11 +197,6 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     })
   }, [])
 
-  /*
-
-  Compose Review Sections
-
-*/
   const ReviewSections = [
     {
       subHeading: 'General Info',
@@ -197,107 +223,6 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       )),
     },
   ]
-
-  /*
-
-    Deploy
-
-  */
-
-  /*
-    check if founders address is gnosis safe  &&   if signer is owner of the safe
-  */
-
-  /*
-
-    handle deploy attempt
-
-   */
-  const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
-  const handleDeploy = React.useCallback(async () => {
-    if (!tokenParams || !auctionParams || !govParams || !managerContract) return
-
-    const founderParams = await getFounderParams([
-      ...founderAllocation,
-      ...contributionAllocation,
-    ])
-    if (!founderParams) return
-
-    /*
-
-      add vetoer if user has chosen vetoPower
-
-     */
-    const _govParams = {
-      ...govParams,
-      vetoer:
-        vetoPower === 0 ? founderParams[0].wallet : ethers.utils.getAddress(NULL_ADDRESS), // 0 === YES in Radio component
-    }
-
-    try {
-      const { wait } = await managerContract?.deploy(
-        founderParams,
-        tokenParams,
-        auctionParams,
-        _govParams
-      )
-
-      setIsPendingTransaction(true)
-      await wait()
-    } catch (err) {
-      console.log('err', err)
-    }
-  }, [
-    tokenParams,
-    auctionParams,
-    govParams,
-    managerContract,
-    founderAllocation,
-    contributionAllocation,
-    getFounderParams,
-    vetoPower,
-  ])
-
-  /*
-
-    Handle Successful Deploy
-
-  */
-  const handleSuccessfulDeploy = (
-    token: AddressType,
-    metadata: AddressType,
-    auction: AddressType,
-    treasury: AddressType,
-    governor: AddressType
-  ) => {
-    setDeployedDao({
-      token,
-      metadata,
-      auction,
-      treasury,
-      governor,
-    })
-    setIsPendingTransaction(false)
-    setFulfilledSections(title)
-  }
-
-  useEffect(() => {
-    if (!managerContract) return
-
-    managerContract.on('DAODeployed', handleSuccessfulDeploy)
-
-    return () => {
-      managerContract.off('DAODeployed', handleSuccessfulDeploy)
-    }
-  }, [managerContract])
-
-  /* handle section navigation */
-  const handlePrev = () => {
-    setActiveSection(activeSection - 1)
-  }
-
-  /* handle confirm review */
-  const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
 
   return (
     <Box>
@@ -354,11 +279,7 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   <Icon id="arrowLeft" />
                 </Flex>
                 <Button
-                  onClick={
-                    isUploadingToIPFS || !signer || !hasConfirmed
-                      ? () => {}
-                      : () => handleDeploy()
-                  }
+                  onClick={handleDeploy}
                   w={'100%'}
                   disabled={isUploadingToIPFS || !signer || !hasConfirmed}
                   className={
