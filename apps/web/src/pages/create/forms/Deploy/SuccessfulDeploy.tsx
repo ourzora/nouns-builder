@@ -14,6 +14,7 @@ import {
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
+import * as Sentry from "@sentry/nextjs";
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
@@ -61,7 +62,6 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const handleDeployMetadata = React.useCallback(async () => {
     if (!transactions || !metadataContract) return
 
-    console.log('artwork and ipfs data:', transactions)
     setIsPendingTransaction(true)
     for await (const transaction of transactions) {
       try {
@@ -72,8 +72,10 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
         )
         await wait()
       } catch (err) {
-        setIsPendingTransaction(false)
         console.log('err', err)
+        setIsPendingTransaction(false)
+        Sentry.captureException(err)
+        await Sentry.flush(2000)
         return
       }
     }
