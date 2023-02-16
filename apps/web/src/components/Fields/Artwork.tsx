@@ -23,8 +23,8 @@ import React, {
   ReactElement,
   useEffect,
 } from 'react'
-import LayerOrdering from 'src/pages/create/forms/Artwork/LayerOrdering'
-import Playground from 'src/pages/create/forms/Artwork/PreviewModal/Playground'
+import LayerOrdering from 'src/modules/create/components/Artwork/LayerOrdering'
+import Playground from 'src/modules/create/components/Artwork/PreviewModal/Playground'
 import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
 import { useFormStore } from 'src/stores/useFormStore'
 import {

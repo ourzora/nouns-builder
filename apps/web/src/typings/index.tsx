@@ -14,7 +14,7 @@ export interface CreateFormSection {
   title: string
   heading?: string | string[]
   subHeading?: string | string[]
-  forms: ReactElement[]
+  forms?: ReactElement[]
 }
 
 export interface generalInfoProps {

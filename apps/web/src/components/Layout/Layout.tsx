@@ -22,7 +22,7 @@ const Layout = ({ children }: LayoutProps) => {
   const { addresses } = useDaoStore()
   const router = useRouter()
   const pathname = router.pathname
-  const noFooter = pathname === '/create' || pathname === '/'
+  const noFooter = pathname.includes('create') || pathname === '/'
 
   // store signer, signerAddress and provider in store
   React.useEffect(() => {

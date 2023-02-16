@@ -4,12 +4,18 @@ import { founderFields, validateFounder } from 'src/components/Fields/fields/fou
 import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import shallow from 'zustand/shallow'
+import { CreateLayout } from 'src/modules/create/layouts'
+import { allocationProps } from 'src/typings'
+import { useRouter } from 'next/router'
+import { CREATE_SECTIONS } from 'src/modules/create/constants'
 
-interface FounderProps {
-  title: string
+interface allocationFormProps {
+  founderAllocation: allocationProps[]
+  contributionAllocation: allocationProps[]
 }
 
-const Allocation: React.FC<FounderProps> = ({ title }) => {
+const Allocation = () => {
+  const router = useRouter()
   const {
     founderAllocation,
     setFounderAllocation,
@@ -33,18 +39,21 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     shallow
   )
 
-  const initialValues = {
+  const initialValues: allocationFormProps = {
     founderAllocation: founderAllocation || [],
     contributionAllocation: contributionAllocation || [],
   }
 
-  const handleSubmitCallback = (values: any) => {
+  const handleSubmitCallback = (values: allocationFormProps) => {
     setFounderAllocation(values.founderAllocation)
     setContributionAllocation(values.contributionAllocation)
+    router.push({
+      pathname: '/create/artwork',
+    })
   }
 
   return (
-    <>
+    <CreateLayout section={CREATE_SECTIONS.ALLOCATION}>
       <Form
         fields={founderFields}
         initialValues={initialValues}
@@ -52,10 +61,10 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
           signerAddress ? validateFounder(signerAddress, provider) : undefined
         }
         buttonText={'Continue'}
-        createSectionTitle={title}
+        createSectionTitle={''}
         submitCallback={handleSubmitCallback}
       />
-    </>
+    </CreateLayout>
   )
 }
 
