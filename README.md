@@ -10,7 +10,7 @@
 
 ## Environment variables
 
-TBD
+See individual app READMEs
 
 ## Apps and Packages
 
