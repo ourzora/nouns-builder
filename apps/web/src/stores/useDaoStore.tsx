@@ -1,4 +1,5 @@
 import { DaoContractAddresses } from 'src/typings'
+import { ethers } from 'ethers'
 import { create } from 'zustand'
 
 interface DaoStoreProps {
@@ -7,13 +8,12 @@ interface DaoStoreProps {
 }
 
 export const useDaoStore = create<DaoStoreProps>((set) => ({
-  // should change this to a more specific name - daoContractAddresses
   addresses: {
-    token: undefined,
-    metadata: undefined,
-    auction: undefined,
-    treasury: undefined,
-    governor: undefined,
+    token: ethers.constants.AddressZero,
+    metadata: ethers.constants.AddressZero,
+    auction: ethers.constants.AddressZero,
+    treasury: ethers.constants.AddressZero,
+    governor: ethers.constants.AddressZero,
   },
   setAddresses: (addresses: DaoContractAddresses) => set({ addresses }),
 }))

@@ -13,6 +13,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
+import { ethers } from 'ethers'
 
 export interface FormStoreState {
   activeSection: number
@@ -195,11 +196,11 @@ export const useFormStore = create(
 
       /* deployedDAO  */
       deployedDao: {
-        token: undefined,
-        metadata: undefined,
-        auction: undefined,
-        treasury: undefined,
-        governor: undefined,
+        token: ethers.constants.AddressZero,
+        metadata: ethers.constants.AddressZero,
+        auction: ethers.constants.AddressZero,
+        treasury: ethers.constants.AddressZero,
+        governor: ethers.constants.AddressZero,
       },
       setDeployedDao: (deployedDao: DaoContractAddresses) => {
         set({

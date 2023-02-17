@@ -219,9 +219,9 @@ export type AddressType = `0x${string}`
 export type BytesType = `0x${string}`
 
 export interface DaoContractAddresses {
-  token?: AddressType
-  metadata?: AddressType
-  auction?: AddressType
-  treasury?: AddressType
-  governor?: AddressType
+  token: AddressType
+  metadata: AddressType
+  auction: AddressType
+  treasury: AddressType
+  governor: AddressType
 }

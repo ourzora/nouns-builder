@@ -31,7 +31,7 @@ const useAuction = ({
       await mutate([SWR_KEYS.AUCTION, auction], () =>
         readContract({
           abi: auctionAbi,
-          address: auction as string,
+          address: auction,
           functionName: 'auction',
         })
       )
@@ -52,7 +52,7 @@ const useAuction = ({
       await mutate([SWR_KEYS.AUCTION, auction], () =>
         readContract({
           abi: auctionAbi,
-          address: auction as string,
+          address: auction,
           functionName: 'auction',
         })
       )

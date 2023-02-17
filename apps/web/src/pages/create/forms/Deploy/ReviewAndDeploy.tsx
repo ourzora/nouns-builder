@@ -22,11 +22,11 @@ import type { AddressType } from 'src/typings'
 import { managerAbi } from 'src/constants/abis'
 import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
-import { WriteContractArgs } from '@wagmi/core'
+import { WriteContractUnpreparedArgs } from '@wagmi/core'
 
 type FounderParameters = NonNullable<
-  WriteContractArgs<typeof managerAbi, 'deploy'>['args']
->[0]
+  WriteContractUnpreparedArgs<typeof managerAbi, 'deploy'>
+>['args'][0]
 
 interface ReviewAndDeploy {
   title: string
