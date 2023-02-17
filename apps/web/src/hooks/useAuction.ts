@@ -7,6 +7,7 @@ import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/utils/getBids'
 import { auctionAbi } from 'src/constants/abis'
+import { AddressType } from 'src/typings'
 
 const useAuction = ({
   collection,
@@ -31,7 +32,7 @@ const useAuction = ({
       await mutate([SWR_KEYS.AUCTION, auction], () =>
         readContract({
           abi: auctionAbi,
-          address: auction,
+          address: auction as AddressType,
           functionName: 'auction',
         })
       )
@@ -52,7 +53,7 @@ const useAuction = ({
       await mutate([SWR_KEYS.AUCTION, auction], () =>
         readContract({
           abi: auctionAbi,
-          address: auction,
+          address: auction as AddressType,
           functionName: 'auction',
         })
       )

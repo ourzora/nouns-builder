@@ -9,11 +9,11 @@ interface DaoStoreProps {
 
 export const useDaoStore = create<DaoStoreProps>((set) => ({
   addresses: {
-    token: ethers.constants.AddressZero,
-    metadata: ethers.constants.AddressZero,
-    auction: ethers.constants.AddressZero,
-    treasury: ethers.constants.AddressZero,
-    governor: ethers.constants.AddressZero,
+    token: undefined,
+    metadata: undefined,
+    auction: undefined,
+    treasury: undefined,
+    governor: undefined,
   },
   setAddresses: (addresses: DaoContractAddresses) => set({ addresses }),
 }))
