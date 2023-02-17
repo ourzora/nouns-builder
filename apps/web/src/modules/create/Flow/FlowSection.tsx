@@ -87,7 +87,9 @@ const FlowSection: React.FC<{
             height={'x4'}
             width={'x4'}
           />
-          <Box className={flowTitleVariant[titleType]}>{section}</Box>
+          <Box className={flowTitleVariant[titleType]}>
+            {section.charAt(0).toUpperCase() + section.slice(1)}
+          </Box>
         </Flex>
       </Link>
     </Flex>
