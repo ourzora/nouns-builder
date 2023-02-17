@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import { Flex, Grid } from '@zoralabs/zord'
 
 import useAuction from 'src/hooks/useAuction'
-import { TokenWithWinner } from 'src/typings'
+import { AddressType, TokenWithWinner } from 'src/typings'
 import { auctionAbi } from 'src/constants/abis'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/utils/getBids'
@@ -31,8 +31,12 @@ const AuctionController: React.FC<AuctionControllerProps> = ({
 
   const { data: auction } = useSWR(
     [SWR_KEYS.AUCTION, auctionAddress],
-    (_, auction) =>
-      readContract({ abi: auctionAbi, address: auction, functionName: 'auction' }),
+    (_, auctionAddress) =>
+      readContract({
+        abi: auctionAbi,
+        address: auctionAddress as AddressType,
+        functionName: 'auction',
+      }),
     { revalidateOnFocus: true }
   )
 
