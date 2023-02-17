@@ -19,3 +19,4 @@ Any notes for code reviewing peers?
 What is the procedure for testing this change?
 
 - [ ] Have you tested it yourself?
+- [ ] Unit tests
