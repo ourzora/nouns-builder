@@ -1,20 +1,26 @@
 import assert from 'assert'
-import { configureChains, defaultChains } from 'wagmi'
+import { configureChains } from 'wagmi'
 import { goerli, mainnet } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 
-assert(process.env.NEXT_PUBLIC_CHAIN_ID, 'NEXT_PUBLIC_CHAIN_ID env var required')
+const CHAIN_IDS = ['1', '5']
 
-export const AVAILABLE_CHAINS = [mainnet, goerli].find(
+function isValidChainEnv(chainEnv: string): chainEnv is typeof CHAIN_IDS[number] {
+  return CHAIN_IDS.includes(chainEnv)
+}
+
+assert(process.env.NEXT_PUBLIC_CHAIN_ID, 'NEXT_PUBLIC_CHAIN_ID env var required')
+assert(
+  isValidChainEnv(process.env.NEXT_PUBLIC_CHAIN_ID),
+  `NEXT_PUBLIC_CHAIN_ID must be one of ${CHAIN_IDS.join(', ')}`
+)
+
+export const AVAILABLE_CHAIN = [mainnet, goerli].find(
   (chain) => chain.id.toString() === process.env.NEXT_PUBLIC_CHAIN_ID
 )!
 
 const { chains, provider } = configureChains(
-  [
-    defaultChains.find(
-      (chain) => chain.id.toString() === process.env.NEXT_PUBLIC_CHAIN_ID
-    )!,
-  ],
+  [AVAILABLE_CHAIN],
   [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string })]
 )
 

@@ -5,10 +5,10 @@ import { readContract } from '@wagmi/core'
 
 import { tokenQuery, tokenWinnerQuery } from 'src/query/tokenQuery'
 import { tokenAbi } from 'src/constants/abis'
-import { TokenWithWinner } from 'src/typings'
+import { AddressType, TokenWithWinner } from 'src/typings'
 
 const readTokenContractData = async (
-  tokenAddress: string,
+  tokenAddress: AddressType,
   id: string
 ): Promise<
   | {
@@ -39,7 +39,7 @@ const readTokenContractData = async (
 }
 
 const getToken = async (
-  tokenAddress: string,
+  tokenAddress: AddressType,
   id: string
 ): Promise<TokenWithWinner | undefined> => {
   try {

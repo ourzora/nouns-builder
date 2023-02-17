@@ -7,7 +7,6 @@ import React from 'react'
 import Meta from 'src/components/Layout/Meta'
 import { useHTMLStripper } from 'src/hooks/useHTMLStripper'
 import { useVotes } from 'src/hooks/useVotes'
-import { useLayoutStore } from 'src/stores'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import getToken from 'src/utils/getToken'
 import useSWR, { unstable_serialize } from 'swr'
@@ -22,10 +21,11 @@ import { useRouter } from 'next/router'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { useAccount } from 'wagmi'
+import { AddressType } from 'src/typings'
 
 interface TokenPageProps {
   url: string
-  collection: string
+  collection: AddressType
   tokenId: string
 }
 
@@ -124,7 +124,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
 
-  const collection = params?.token as string
+  const collection = params?.token as AddressType
   const tokenId = params?.tokenId as string
 
   const token = await getToken(collection, tokenId)
