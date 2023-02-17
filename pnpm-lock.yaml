@@ -83,7 +83,7 @@ importers:
       vitest: ^0.27.3
       wagmi: 0.11.5
       yup: ^0.32.9
-      zustand: ^4.1.3
+      zustand: ^4.3.3
     dependencies:
       '@ethersproject/abstract-provider': 5.7.0
       '@ethersproject/providers': 5.7.2
