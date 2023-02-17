@@ -41,10 +41,10 @@ interface FormProps {
   validationSchema?: {}
   buttonText?: string
   enableReinitialize?: boolean
-  createSectionTitle?: string
   transactionSectionTitle?: string
   submitCallback: (updates: any, setHasConfirmed?: any, formik?: FormikValues) => void
   hasNext?: boolean
+  handlePrev?: () => void
   stickySave?: boolean
   compareReturn?: boolean
   isSubForm?: boolean
@@ -64,10 +64,10 @@ const Form: React.FC<FormProps> = ({
   validationSchema,
   buttonText,
   enableReinitialize = true,
-  createSectionTitle,
   transactionSectionTitle,
   submitCallback,
   hasNext,
+  handlePrev,
   stickySave,
   compareReturn,
   isSubForm = false,
@@ -107,21 +107,7 @@ const Form: React.FC<FormProps> = ({
 
    */
   const handleSubmit = (_values: {}, initialValues: any, formik?: FormikValues) => {
-    /*
-
-      if createSectionTitle  - if form is apart of FormHandler and needs to progress sections
-
-     */
-    if (createSectionTitle) {
-      if (!hasNext) {
-        submitCallback(_values)
-        setFulfilledSections(createSectionTitle)
-        setActiveSection(activeSection + 1)
-      } else {
-        setActiveSectionCurrentIndex(activeSectionCurrentIndex + 1)
-        submitCallback(_values)
-      }
-    } else if (transactionSectionTitle) {
+    if (transactionSectionTitle) {
       /*
 
      if transactionSectionTitle  - if form is apart of transaction FormHandler and needs to progress sections
@@ -171,13 +157,10 @@ const Form: React.FC<FormProps> = ({
     handle back button section navigation
 
    */
-  const handlePrev = () => {
+  const prev = () => {
+    handlePrev && handlePrev()
     if (transactionSectionTitle) {
       previousCustomTransactionForm()
-    }
-
-    if (createSectionTitle) {
-      setActiveSection(activeSection - 1)
     }
   }
 
@@ -272,7 +255,7 @@ const Form: React.FC<FormProps> = ({
 
             {!autoSubmit && (
               <Flex>
-                {createSectionTitle && activeSection > 0 ? (
+                {!!handlePrev ? (
                   <>
                     <Button
                       justify={'center'}
@@ -280,7 +263,7 @@ const Form: React.FC<FormProps> = ({
                       h={'x15'}
                       minH={'x15'}
                       minW={'x15'}
-                      onClick={() => handlePrev()}
+                      onClick={() => prev()}
                       className={defaultBackButtonVariants['default']}
                       aria-label="Back"
                     >
@@ -296,7 +279,7 @@ const Form: React.FC<FormProps> = ({
                       align={'center'}
                       px={'x4'}
                       py={'x2'}
-                      onClick={() => handlePrev()}
+                      onClick={() => prev()}
                       className={defaultBackButtonVariants['transaction']}
                     >
                       Back
@@ -407,7 +390,7 @@ const Form: React.FC<FormProps> = ({
                     className={
                       transactionSectionTitle
                         ? transactionFormButtonWithPrev
-                        : createSectionTitle && activeSection > 0
+                        : !!handlePrev
                         ? defaultFormButtonWithPrev
                         : defaultFormButton
                     }

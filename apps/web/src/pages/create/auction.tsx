@@ -41,6 +41,12 @@ const Auction = () => {
     })
   }
 
+  const handlePrev = () => {
+    router.push({
+      pathname: '/create/general',
+    })
+  }
+
   return (
     <CreateLayout section={CREATE_SECTION.AUCTION}>
       <Flex direction={'column'} w={'100%'}>
@@ -49,11 +55,11 @@ const Auction = () => {
           initialValues={initialValues}
           validationSchema={validateAuctionSettings}
           buttonText={'Continue'}
-          createSectionTitle={''}
           submitCallback={handleSubmitCallback}
           advancedFields={votingSettingsFields}
           advancedValues={advancedValues}
           enableReinitialize
+          handlePrev={handlePrev}
         />
       </Flex>
     </CreateLayout>

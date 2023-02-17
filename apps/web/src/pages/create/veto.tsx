@@ -32,6 +32,12 @@ const Veto = () => {
     })
   }
 
+  const handlePrev = () => {
+    router.push({
+      pathname: '/create/auction',
+    })
+  }
+
   return (
     <CreateLayout section={CREATE_SECTION.VETO}>
       <Flex direction={'column'} w={'100%'}>
@@ -39,9 +45,9 @@ const Veto = () => {
           fields={vetoFields}
           initialValues={initialValues}
           buttonText={'Continue'}
-          createSectionTitle={''}
           submitCallback={handleSubmitCallback}
           options={options}
+          handlePrev={handlePrev}
         />
       </Flex>
     </CreateLayout>

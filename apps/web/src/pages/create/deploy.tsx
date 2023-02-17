@@ -340,7 +340,7 @@ const Deploy = () => {
                   minW={'x15'}
                   onClick={() => {
                     router.push({
-                      pathname: '/create/deploy',
+                      pathname: '/create/artwork',
                     })
                   }}
                   className={defaultBackButtonVariants['default']}

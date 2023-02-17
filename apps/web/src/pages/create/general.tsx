@@ -36,7 +36,6 @@ const General = () => {
           initialValues={initialValues}
           validationSchema={validateGeneralInfo}
           buttonText={'Continue'}
-          createSectionTitle={'General Settings'}
           submitCallback={handleSubmitCallback}
         />
       </Flex>

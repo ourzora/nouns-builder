@@ -52,6 +52,12 @@ const Allocation = () => {
     })
   }
 
+  const handlePrev = () => {
+    router.push({
+      pathname: '/create/veto',
+    })
+  }
+
   return (
     <CreateLayout section={CREATE_SECTION.ALLOCATION}>
       <Form
@@ -61,8 +67,8 @@ const Allocation = () => {
           signerAddress ? validateFounder(signerAddress, provider) : undefined
         }
         buttonText={'Continue'}
-        createSectionTitle={''}
         submitCallback={handleSubmitCallback}
+        handlePrev={handlePrev}
       />
     </CreateLayout>
   )

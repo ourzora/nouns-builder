@@ -26,6 +26,12 @@ const Artwork = () => {
     })
   }
 
+  const handlePrev = () => {
+    router.push({
+      pathname: '/create/allocation',
+    })
+  }
+
   return (
     <CreateLayout section={CREATE_SECTION.ARTWORK}>
       <Form
@@ -34,8 +40,8 @@ const Artwork = () => {
         buttonText={'Continue'}
         enableReinitialize={true}
         fields={setUpArtworkFields}
-        createSectionTitle={''}
         submitCallback={handleSubmitCallback}
+        handlePrev={handlePrev}
       />
     </CreateLayout>
   )

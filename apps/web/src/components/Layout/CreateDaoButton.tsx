@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export const CreateDaoButton: React.FC = () => {
   return (
-    <Link href="/create" passHref>
+    <Link href="/create/general" passHref>
       <Flex
         as={'button'}
         id={'close-modal'}
