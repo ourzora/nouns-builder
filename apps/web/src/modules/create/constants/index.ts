@@ -1,11 +1,3 @@
-export interface CreateSectionsProps {
-  [KEY: string]: {
-    slug: string
-    title: string
-    subHeading?: string
-  }
-}
-
 export type SectionProps =
   | 'general'
   | 'auction'
