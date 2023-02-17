@@ -1,6 +1,3 @@
-// TODO: pull ABIs from artifacts in node_modules/@zoralabs/nouns-protocol/dist/artifacts/**/ and write to src/constants/abis
-// will run post-install, replace typechain (eventually)
-
 const fs = require('fs')
 
 const artifactsDir = './node_modules/@zoralabs/nouns-protocol/dist/artifacts'

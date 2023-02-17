@@ -9,7 +9,7 @@ import {
   uploadArtworkErrorProps,
   votingSettingsProps,
 } from 'src/typings'
-import create from 'zustand'
+import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
