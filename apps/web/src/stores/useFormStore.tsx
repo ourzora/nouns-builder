@@ -48,8 +48,6 @@ export interface FormStoreState {
   setIsUploadingToIPFS: (bool: boolean) => void
   uploadArtworkError: uploadArtworkErrorProps | null | undefined
   setUploadArtworkError: (uploadArtworkError: uploadArtworkErrorProps | null) => void
-  builderAllocationOn: boolean
-  setBuilderAllocationOn: (bool: boolean) => void
   nounsAllocationOn: boolean
   setNounsAllocationOn: (bool: boolean) => void
 }
@@ -133,10 +131,6 @@ export const useFormStore = create(
       ],
       setContributionAllocation: (contributionAllocation: Array<allocationProps>) =>
         set({ contributionAllocation }),
-
-      builderAllocationOn: true,
-      setBuilderAllocationOn: (builderAllocationOn: boolean) =>
-        set({ builderAllocationOn }),
 
       nounsAllocationOn: true,
       setNounsAllocationOn: (nounsAllocationOn: boolean) => set({ nounsAllocationOn }),
