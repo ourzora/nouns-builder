@@ -3,10 +3,17 @@ import Form from 'src/components/Fields/Form'
 import { founderFields, validateFounder } from 'src/components/Fields/fields/founder'
 import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
+import { getEnsAddress } from 'src/utils/ens'
+import { allocationProps } from 'src/typings'
 
 interface FounderProps {
   title: string
+}
+
+interface AllocationFormValues {
+  founderAllocation: allocationProps[]
+  contributionAllocation: allocationProps[]
 }
 
 const Allocation: React.FC<FounderProps> = ({ title }) => {
@@ -38,9 +45,37 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     contributionAllocation: contributionAllocation || [],
   }
 
-  const handleSubmitCallback = (values: any) => {
-    setFounderAllocation(values.founderAllocation)
-    setContributionAllocation(values.contributionAllocation)
+  const handleSubmitCallback = async ({
+    founderAllocation,
+    contributionAllocation,
+  }: AllocationFormValues) => {
+    const foundAllocationPromises = founderAllocation.map((allocation) =>
+      getEnsAddress(allocation.founderAddress)
+    )
+
+    const contributionAllocationPromises = contributionAllocation.map((allocation) =>
+      getEnsAddress(allocation.founderAddress)
+    )
+
+    const founderAllocationAddresses = await Promise.all(foundAllocationPromises)
+
+    const contributionAllocationAddresses = await Promise.all(
+      contributionAllocationPromises
+    )
+
+    setFounderAllocation(
+      founderAllocation.map((allocation, idx) => ({
+        ...allocation,
+        founderAddress: founderAllocationAddresses[idx],
+      }))
+    )
+
+    setContributionAllocation(
+      contributionAllocation.map((allocation, idx) => ({
+        ...allocation,
+        founderAddress: contributionAllocationAddresses[idx],
+      }))
+    )
   }
 
   return (
