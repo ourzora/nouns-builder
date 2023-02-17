@@ -1,4 +1,4 @@
-import { BigNumberish } from '@ethersproject/bignumber'
+import { BigNumberish } from 'ethers'
 import BigNumber from 'bignumber.js'
 
 const ONE_QUADRILLION = new BigNumber(1000000000000000)
