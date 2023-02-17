@@ -1,8 +1,6 @@
-import { GetContractArgs, WriteContractArgs } from '@wagmi/core'
 import { ContractInterface } from 'ethers'
 import { IPFSUploadResponse } from 'ipfs-service'
 import { ReactElement } from 'react'
-import { managerAbi, metadataAbi } from 'src/constants/abis'
 import {
   ProposalFragment,
   NounsProposalStatus as ProposalStatus,
