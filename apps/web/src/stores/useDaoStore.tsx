@@ -1,5 +1,5 @@
 import { DaoContractAddresses } from 'src/typings'
-import create from 'zustand'
+import { create } from 'zustand'
 
 interface DaoStoreProps {
   addresses: DaoContractAddresses

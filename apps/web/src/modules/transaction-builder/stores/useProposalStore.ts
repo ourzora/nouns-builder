@@ -1,4 +1,4 @@
-import create from 'zustand'
+import { create } from 'zustand'
 import { TransactionType } from 'src/modules/transaction-builder/constants/transactionTypes'
 import { AddressType } from 'src/typings'
 

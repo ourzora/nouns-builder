@@ -391,7 +391,7 @@ const AdminForm: React.FC<AdminFormSettingsProps> = () => {
           return addressesToContracts(
             // @ts-ignore //TODO: fix possible undefined
             fieldsToAddresses(field)
-            // @ts-ignore //TODO: this seems like a typechain thing
+            // @ts-ignore //TODO: fix possible undefined
           )?.interface.encodeFunctionData(signature, value)
         }
 
