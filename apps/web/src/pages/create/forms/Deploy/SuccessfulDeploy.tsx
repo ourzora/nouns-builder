@@ -32,7 +32,6 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
 
   const { addresses, setAddresses } = useDaoStore()
   const { contract: metadataContract } = useMetadataContract(addresses?.metadata)
-  const [fulfilledTransactions, setFulfilledTransactions] = useState(0)
   const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
 
   React.useEffect(() => {
@@ -63,7 +62,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     if (!transactions || !metadataContract) return
 
     setIsPendingTransaction(true)
-    for await (const transaction of transactions) {
+    for (const transaction of transactions) {
       try {
         const { wait } = await metadataContract.addProperties(
           transaction.names,
@@ -83,10 +82,6 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
 
     useFormStore.persist.clearStorage()
     localStorage.removeItem(`nouns-builder-create-${process.env.NEXT_PUBLIC_CHAIN_ID}`)
-    console.log(
-      'done ???',
-      localStorage.getItem(`nouns-builder-create-${process.env.NEXT_PUBLIC_CHAIN_ID}`)
-    )
 
     router.push(`/dao/${token}`)
   }, [metadataContract, transactions, router, setFulfilledSections, title, token])
