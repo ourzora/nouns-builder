@@ -110,20 +110,20 @@ describe('Transform Properties', () => {
     }
 
     expect(fileProperties[1].items).toHaveLength(10)
-    expect(fileProperties[1].names).toHaveLength(2)
+    expect(fileProperties[1].names).toHaveLength(1)
     for (var item of fileProperties[1].items.slice(0, 2)) {
-      expect(item.propertyId).toEqual(BigNumber.from(0))
+      expect(item.propertyId).toEqual(BigNumber.from(0)) // 0th element in the total list of names
       expect(item.isNewProperty).toEqual(false)
     }
     for (var item of fileProperties[1].items.slice(2)) {
-      expect(item.propertyId).toEqual(BigNumber.from(1))
+      expect(item.propertyId).toEqual(BigNumber.from(0)) // 0th element in this transactions list of names
       expect(item.isNewProperty).toEqual(true)
     }
 
     expect(fileProperties[2].items).toHaveLength(4)
-    expect(fileProperties[2].names).toHaveLength(1)
+    expect(fileProperties[2].names).toHaveLength(0)
     for (var item of fileProperties[2].items) {
-      expect(item.propertyId).toEqual(BigNumber.from(0))
+      expect(item.propertyId).toEqual(BigNumber.from(1)) // 1st elemenet in the total list of names
       expect(item.isNewProperty).toEqual(false)
     }
   })

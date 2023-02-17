@@ -82,6 +82,11 @@ export function transformFileProperties(
       let isNewProperty = true
 
       while (remainingUploads.length > 0) {
+        // If isNewProperty = false, we index based on the whole list of properties
+        const traitIndex = isNewProperty
+          ? currentTransaction.names.length
+          : traits.indexOf(trait)
+
         if (remainingUploads.length >= availableSpaceInCurrentTransaction) {
           const uploadsForCurrentTransaction = remainingUploads.slice(
             0,
@@ -92,12 +97,15 @@ export function transformFileProperties(
             ...currentTransaction.items,
             ...uploadsToPropertyItems(
               uploadsForCurrentTransaction,
-              currentTransaction.names.length,
+              traitIndex,
               isNewProperty
             ),
           ]
 
-          currentTransaction.names = [...currentTransaction.names, trait]
+          // Only add trait to list of names if isNewProperty is true
+          if (isNewProperty) {
+            currentTransaction.names = [...currentTransaction.names, trait]
+          }
 
           // Add currentTransaction to transactions
           transactions.push(currentTransaction)
@@ -113,14 +121,8 @@ export function transformFileProperties(
           // remaining uploads will fit in current transaction
           currentTransaction.items = [
             ...currentTransaction.items,
-            ...uploadsToPropertyItems(
-              remainingUploads,
-              currentTransaction.names.length,
-              isNewProperty
-            ),
+            ...uploadsToPropertyItems(remainingUploads, traitIndex, isNewProperty),
           ]
-
-          currentTransaction.names = [...currentTransaction.names, trait]
 
           remainingUploads = []
         }
