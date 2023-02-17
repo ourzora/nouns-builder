@@ -15,7 +15,6 @@
     "generate-abis": "node ./scripts/generate-abis.js"
   },
   "dependencies": {
-    "@ethersproject/abi": "^5.7.0",
     "@ethersproject/abstract-provider": "^5.7.0",
     "@ethersproject/providers": "^5.7.0",
     "@fontsource/inter": "4.5.10",
