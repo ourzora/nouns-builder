@@ -5,7 +5,7 @@ import { Icon } from 'src/components/Icon'
 import { FormikProps } from 'formik'
 import React, { ChangeEventHandler, ReactElement } from 'react'
 import { useFormStore, useLayoutStore } from 'src/stores'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 
 interface FounderAllocationProps {
   id: string

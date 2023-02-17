@@ -1,6 +1,6 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { FetchSignerResult } from '@wagmi/core'
-import create from 'zustand'
+import { create } from 'zustand'
 
 interface LayoutStoreProps {
   isMobile: boolean
