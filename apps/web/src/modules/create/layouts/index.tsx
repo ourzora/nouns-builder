@@ -10,13 +10,14 @@ import {
 } from '../../../styles/styles.css'
 import Flow from '../Flow/Flow'
 import { AnimatePresence, motion } from 'framer-motion'
-import { CREATE_SECTIONS, SectionProps } from '../constants'
 
 export const CreateLayout = ({
-  section,
+  title,
+  subTitle,
   children,
 }: {
-  section: SectionProps
+  title: string
+  subTitle?: string
   children: ReactNode
 }) => {
   return (
@@ -44,7 +45,7 @@ export const CreateLayout = ({
         <Flex direction={'column'} className={formWrapper}>
           <AnimatePresence exitBeforeEnter={true}>
             <motion.div
-              key={section}
+              key={title}
               variants={{
                 exit: {
                   y: 10,
@@ -68,10 +69,10 @@ export const CreateLayout = ({
             >
               <Flex className={preHeadingStyle}>Create A dao</Flex>
               <Heading as={'h3'} mt={'x0'} mb={'x8'} className={headingStyle}>
-                {CREATE_SECTIONS[section].title}
+                {title}
               </Heading>
               <Box mb={'x7'} className={subHeadingStyle}>
-                {CREATE_SECTIONS[section].subHeading}
+                {subTitle}
               </Box>
               {children}
             </motion.div>

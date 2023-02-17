@@ -9,7 +9,6 @@ import {
 import { useFormStore } from 'src/stores'
 import { useRouter } from 'next/router'
 import { generalInfoProps } from 'src/typings'
-import { CREATE_SECTION } from 'src/modules/create/constants'
 
 const General = () => {
   const router = useRouter()
@@ -29,7 +28,7 @@ const General = () => {
   }
 
   return (
-    <CreateLayout section={CREATE_SECTION.GENERAL}>
+    <CreateLayout title={'General'}>
       <Flex direction={'column'} w={'100%'}>
         <Form
           fields={generalInfoFields}

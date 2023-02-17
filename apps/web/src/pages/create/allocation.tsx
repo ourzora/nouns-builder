@@ -6,7 +6,6 @@ import { useFormStore } from 'src/stores/useFormStore'
 import { CreateLayout } from 'src/modules/create/layouts'
 import { allocationProps } from 'src/typings'
 import { useRouter } from 'next/router'
-import { CREATE_SECTION } from 'src/modules/create/constants'
 import { shallow } from 'zustand/shallow'
 import { getEnsAddress } from 'src/utils/ens'
 
@@ -94,7 +93,7 @@ const Allocation = () => {
   }
 
   return (
-    <CreateLayout section={CREATE_SECTION.ALLOCATION}>
+    <CreateLayout title={'Allocation'}>
       <Form
         fields={founderFields}
         initialValues={initialValues}

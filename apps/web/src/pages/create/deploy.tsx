@@ -20,7 +20,6 @@ import InfoSection from 'src/modules/create/components/Deploy/InfoSection'
 import ReviewSection from 'src/modules/create/components/Deploy/ReviewSection'
 import SuccessfulDeploy from 'src/modules/create/components/Deploy/SuccessfulDeploy'
 import { useRouter } from 'next/router'
-import { CREATE_SECTION } from 'src/modules/create/constants'
 import { managerAbi } from 'src/constants/abis'
 import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
@@ -235,7 +234,10 @@ const Deploy = () => {
   /* handle confirm review */
 
   return (
-    <CreateLayout section={CREATE_SECTION.DEPLOY}>
+    <CreateLayout
+      title={'Deploy'}
+      subTitle={'[Confirm your contract settings before deploying your DAO]'}
+    >
       {(!deployedDao?.metadata && (
         <>
           <Box>

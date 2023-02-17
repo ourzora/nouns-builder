@@ -5,7 +5,6 @@ import { vetoFields } from 'src/components/Fields/fields/veto'
 import { useFormStore } from 'src/stores/useFormStore'
 import { CreateLayout } from 'src/modules/create/layouts'
 import { useRouter } from 'next/router'
-import { CREATE_SECTION } from 'src/modules/create/constants'
 
 interface VetoPowerProps {
   vetoPower: number | undefined
@@ -39,7 +38,12 @@ const Veto = () => {
   }
 
   return (
-    <CreateLayout section={CREATE_SECTION.VETO}>
+    <CreateLayout
+      title={'Veto'}
+      subTitle={
+        'Veto power is useful for addressing security concerns in the early days of your DAO, though as your membership grows, consider revisiting this functionality through a decentralized community vote.'
+      }
+    >
       <Flex direction={'column'} w={'100%'}>
         <Form
           fields={vetoFields}
