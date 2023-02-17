@@ -1,3 +1,0 @@
-export declare const switchWrapper: import("@vanilla-extract/recipes/dist/declarations/src/types").RuntimeFn<import("@vanilla-extract/recipes/dist/declarations/src/types").VariantGroups>;
-export declare const switchThumb: import("@vanilla-extract/recipes/dist/declarations/src/types").RuntimeFn<import("@vanilla-extract/recipes/dist/declarations/src/types").VariantGroups>;
-//# sourceMappingURL=Switch.css.d.ts.map
