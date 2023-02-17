@@ -33,7 +33,7 @@ interface ReviewAndDeploy {
 }
 
 const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
-  const { signer, provider } = useLayoutStore()
+  const { signer } = useLayoutStore()
   const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
   const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
   const {
@@ -74,16 +74,16 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     setActiveSection(activeSection - 1)
   }
 
-  const founderParams = [...founderAllocation, ...contributionAllocation].map(
-    ({ founderAddress, allocation, endDate }) => ({
-      wallet: founderAddress as AddressType,
-      ownershipPct: BigNumber.from(allocation),
-      vestExpiry: BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
-    })
-  )
+  const founderParams: FounderParameters = [
+    ...founderAllocation,
+    ...contributionAllocation,
+  ].map(({ founderAddress, allocation, endDate }) => ({
+    wallet: founderAddress as AddressType,
+    ownershipPct: BigNumber.from(allocation),
+    vestExpiry: BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
+  }))
 
   const abiCoder = new ethers.utils.AbiCoder()
-
   const tokenParamsHex = abiCoder.encode(
     ['string', 'string', 'string', 'string', 'string', 'string'],
     [
@@ -133,7 +133,7 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     abi: managerAbi,
     functionName: 'deploy',
     args: [
-      founderParams as FounderParameters,
+      founderParams,
       tokenParams,
       auctionParams,
       {
