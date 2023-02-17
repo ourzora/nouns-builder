@@ -10,7 +10,7 @@ import {
 } from 'src/components/Fields/fields/auction'
 import { votingSettingsFields } from 'src/components/Fields/fields/voting'
 import { auctionSettingsProps } from 'src/typings'
-import { CREATE_SECTIONS } from 'src/modules/create/constants'
+import { CREATE_SECTION } from 'src/modules/create/constants'
 
 const Auction = () => {
   const router = useRouter()
@@ -42,7 +42,7 @@ const Auction = () => {
   }
 
   return (
-    <CreateLayout section={CREATE_SECTIONS.AUCTION}>
+    <CreateLayout section={CREATE_SECTION.AUCTION}>
       <Flex direction={'column'} w={'100%'}>
         <Form
           fields={auctionSettingsFields}

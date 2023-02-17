@@ -10,13 +10,13 @@ import {
 } from '../../../styles/styles.css'
 import Flow from '../Flow/Flow'
 import { AnimatePresence, motion } from 'framer-motion'
-import { CreateSectionProps } from '../constants'
+import { CREATE_SECTIONS, SectionProps } from '../constants'
 
 export const CreateLayout = ({
   section,
   children,
 }: {
-  section: CreateSectionProps
+  section: SectionProps
   children: ReactNode
 }) => {
   return (
@@ -33,7 +33,7 @@ export const CreateLayout = ({
               'linear-gradient(179.98deg, rgba(0, 0, 0, 0.5) -0.98%, rgba(0, 0, 0, 0) 47.4%, rgba(0, 0, 0, 0.6) 99.98%)',
           }}
         />
-        <Flow section={section} />
+        <Flow />
       </Flex>
       <Flex
         className={createWrapperHalf['right']}
@@ -44,7 +44,7 @@ export const CreateLayout = ({
         <Flex direction={'column'} className={formWrapper}>
           <AnimatePresence exitBeforeEnter={true}>
             <motion.div
-              // key={sections[activeSection]?.title}
+              key={section}
               variants={{
                 exit: {
                   y: 10,
@@ -68,27 +68,12 @@ export const CreateLayout = ({
             >
               <Flex className={preHeadingStyle}>Create A dao</Flex>
               <Heading as={'h3'} mt={'x0'} mb={'x8'} className={headingStyle}>
-                {section.title}
-                {/*{!heading*/}
-                {/*  ? title*/}
-                {/*  : Array.isArray(heading)*/}
-                {/*    ? heading[activeSectionCurrentIndex]*/}
-                {/*    : heading}*/}
+                {CREATE_SECTIONS[section].title}
               </Heading>
-              {/*{subHeading && (*/}
               <Box mb={'x7'} className={subHeadingStyle}>
-                {section.subHeading}
-                {/*{Array.isArray(subHeading) ? subHeading[activeSectionCurrentIndex] : subHeading}*/}
+                {CREATE_SECTIONS[section].subHeading}
               </Box>
-              {/*)}*/}
               {children}
-              {/*<FormHandler*/}
-              {/*  forms={sections[activeSection]?.forms}*/}
-              {/*  title={sections[activeSection]?.title}*/}
-              {/*  heading={sections[activeSection]?.heading}*/}
-              {/*  subHeading={sections[activeSection]?.subHeading}*/}
-              {/*  sections={sections}*/}
-              {/*/>*/}
             </motion.div>
           </AnimatePresence>
         </Flex>

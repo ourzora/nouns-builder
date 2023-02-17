@@ -17,7 +17,7 @@ const ExploreNoDaos = () => {
       >
         There are no DAOs here
       </Text>
-      <Link href={'/create'} passHref>
+      <Link href={'/create/general'} passHref>
         <Flex
           as="button"
           backgroundColor={'border'}

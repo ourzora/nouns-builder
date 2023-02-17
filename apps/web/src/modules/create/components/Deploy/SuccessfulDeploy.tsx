@@ -14,19 +14,14 @@ import {
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
-import * as Sentry from "@sentry/nextjs";
+import * as Sentry from '@sentry/nextjs'
 
-interface DeployedDaoProps extends DaoContractAddresses {
-  title: string
-}
-
-const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
+const SuccessfulDeploy: React.FC<DaoContractAddresses> = ({
   token,
   metadata,
   auction,
   treasury,
   governor,
-  title,
 }) => {
   const router = useRouter()
   const { generalInfo, setUpArtwork, ipfsUpload, orderedLayers, setFulfilledSections } =
@@ -80,10 +75,9 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
       }
     }
     setIsPendingTransaction(false)
-    setFulfilledSections(title)
     useFormStore.persist.clearStorage()
     await router.push(`/dao/${token}`)
-  }, [metadataContract, transactions, router, setFulfilledSections, title, token])
+  }, [metadataContract, transactions, router, setFulfilledSections, token])
 
   /*
 

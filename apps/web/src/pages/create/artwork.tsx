@@ -8,7 +8,7 @@ import { useFormStore } from 'src/stores/useFormStore'
 import { CreateLayout } from 'src/modules/create/layouts'
 import { setUpArtworkProps } from 'src/typings'
 import { useRouter } from 'next/router'
-import { CREATE_SECTIONS } from 'src/modules/create/constants'
+import { CREATE_SECTION } from 'src/modules/create/constants'
 
 const Artwork = () => {
   const router = useRouter()
@@ -27,7 +27,7 @@ const Artwork = () => {
   }
 
   return (
-    <CreateLayout section={CREATE_SECTIONS.ARTWORK}>
+    <CreateLayout section={CREATE_SECTION.ARTWORK}>
       <Form
         initialValues={initialValues}
         validationSchema={validateSetUpArtwork}

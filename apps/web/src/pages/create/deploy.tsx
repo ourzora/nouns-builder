@@ -24,13 +24,9 @@ import InfoSection from 'src/modules/create/components/Deploy/InfoSection'
 import ReviewSection from 'src/modules/create/components/Deploy/ReviewSection'
 import SuccessfulDeploy from 'src/modules/create/components/Deploy/SuccessfulDeploy'
 import { useRouter } from 'next/router'
-import { CREATE_SECTION, CREATE_SECTIONS } from 'src/modules/create/constants'
+import { CREATE_SECTION } from 'src/modules/create/constants'
 
-interface ReviewAndDeploy {
-  title: string
-}
-
-const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
+const Deploy = () => {
   const router = useRouter()
   const {
     founderAllocation,
@@ -38,13 +34,9 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     generalInfo,
     auctionSettings,
     setUpArtwork,
-    setActiveSection,
-    activeSection,
-    fulfilledSections,
     deployedDao,
     setDeployedDao,
     isUploadingToIPFS,
-    setFulfilledSections,
     vetoPower,
   } = useFormStore()
 
@@ -282,7 +274,6 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       governor,
     })
     setIsPendingTransaction(false)
-    setFulfilledSections(CREATE_SECTION.DEPLOY)
   }
 
   useEffect(() => {
@@ -295,19 +286,12 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     }
   }, [managerContract])
 
-  /* handle section navigation */
-  const handlePrev = () => {
-    router.push({
-      pathname: '/create/deploy',
-    })
-  }
-
   /* handle confirm review */
   const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
 
   return (
-    <CreateLayout section={CREATE_SECTIONS.DEPLOY}>
-      {(!fulfilledSections.includes(CREATE_SECTION.DEPLOY) && (
+    <CreateLayout section={CREATE_SECTION.DEPLOY}>
+      {(!deployedDao?.metadata && (
         <>
           <Box>
             <Flex direction={'column'}>
@@ -354,7 +338,11 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   h={'x15'}
                   minH={'x15'}
                   minW={'x15'}
-                  onClick={() => handlePrev()}
+                  onClick={() => {
+                    router.push({
+                      pathname: '/create/deploy',
+                    })
+                  }}
                   className={defaultBackButtonVariants['default']}
                 >
                   <Icon id="arrowLeft" />
@@ -386,11 +374,10 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
           auction={deployedDao?.auction}
           treasury={deployedDao?.treasury}
           governor={deployedDao?.governor}
-          title={title}
         />
       )}
     </CreateLayout>
   )
 }
 
-export default ReviewAndDeploy
+export default Deploy

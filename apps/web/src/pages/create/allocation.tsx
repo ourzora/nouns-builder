@@ -7,7 +7,7 @@ import shallow from 'zustand/shallow'
 import { CreateLayout } from 'src/modules/create/layouts'
 import { allocationProps } from 'src/typings'
 import { useRouter } from 'next/router'
-import { CREATE_SECTIONS } from 'src/modules/create/constants'
+import { CREATE_SECTION } from 'src/modules/create/constants'
 
 interface allocationFormProps {
   founderAllocation: allocationProps[]
@@ -53,7 +53,7 @@ const Allocation = () => {
   }
 
   return (
-    <CreateLayout section={CREATE_SECTIONS.ALLOCATION}>
+    <CreateLayout section={CREATE_SECTION.ALLOCATION}>
       <Form
         fields={founderFields}
         initialValues={initialValues}

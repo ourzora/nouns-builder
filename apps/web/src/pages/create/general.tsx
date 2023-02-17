@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Stack } from '@zoralabs/zord'
+import { Flex } from '@zoralabs/zord'
 import { CreateLayout } from 'src/modules/create/layouts'
 import Form from 'src/components/Fields/Form'
 import {
@@ -9,7 +9,7 @@ import {
 import { useFormStore } from 'src/stores'
 import { useRouter } from 'next/router'
 import { generalInfoProps } from 'src/typings'
-import { CREATE_SECTIONS } from 'src/modules/create/constants'
+import { CREATE_SECTION } from 'src/modules/create/constants'
 
 const General = () => {
   const router = useRouter()
@@ -29,7 +29,7 @@ const General = () => {
   }
 
   return (
-    <CreateLayout section={CREATE_SECTIONS.GENERAL}>
+    <CreateLayout section={CREATE_SECTION.GENERAL}>
       <Flex direction={'column'} w={'100%'}>
         <Form
           fields={generalInfoFields}

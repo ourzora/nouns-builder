@@ -5,7 +5,7 @@ import { vetoFields } from 'src/components/Fields/fields/veto'
 import { useFormStore } from 'src/stores/useFormStore'
 import { CreateLayout } from 'src/modules/create/layouts'
 import { useRouter } from 'next/router'
-import { CREATE_SECTIONS } from 'src/modules/create/constants'
+import { CREATE_SECTION } from 'src/modules/create/constants'
 
 interface VetoPowerProps {
   vetoPower: number | undefined
@@ -33,7 +33,7 @@ const Veto = () => {
   }
 
   return (
-    <CreateLayout section={CREATE_SECTIONS.VETO}>
+    <CreateLayout section={CREATE_SECTION.VETO}>
       <Flex direction={'column'} w={'100%'}>
         <Form
           fields={vetoFields}

@@ -1,7 +1,6 @@
 import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
 import { useFormStore } from 'src/stores/useFormStore'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
 import {
   circleVariant,
   flowSectionWrapperVariants,
@@ -9,29 +8,20 @@ import {
 } from 'src/styles/styles.css'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { CreateSectionProps, CreateSectionsProps } from 'src/modules/create/constants'
+import { CREATE_FORM_ORDER } from 'src/modules/create/constants'
 
 const FlowSection: React.FC<{
-  sections: CreateSectionsProps
-  section: CreateSectionProps
-  setIsOpen: (bool: boolean) => void
-}> = ({ sections, section, setIsOpen }) => {
+  section: string
+}> = ({ section }) => {
   const router = useRouter()
-  const { pathname } = router
-  const activeRoute = pathname.split('/')[2]
-  console.log('ac', activeRoute, sections)
+  const activeRoute = router.pathname.split('/')[2]
+  const sectionPosition = CREATE_FORM_ORDER.indexOf(section)
+  const activeSectionPosition = CREATE_FORM_ORDER.indexOf(activeRoute)
+  const isActive = sectionPosition === activeSectionPosition
+  const isFulfilled = sectionPosition <= activeSectionPosition
+  const isLast = sectionPosition === CREATE_FORM_ORDER.length
 
-  // const activeForm = sections.filter(
-  //   (section) => section.title.toLowerCase() === activeRoute
-  // )[0]
-  // const activeSection = sections.indexOf(activeForm)
-
-  // console.log('router', activeSection)
-
-  const activeSection = 4
-
-  const { fulfilledSections, setActiveSection, setUpArtwork } = useFormStore()
-  const { isMobile } = useLayoutStore()
+  const { fulfilledSections, setUpArtwork } = useFormStore()
   const [titleType, setTitleType] = React.useState<
     'default' | 'active' | 'fulfilled' | 'preview' | 'previewActive'
   >('default')
@@ -47,22 +37,46 @@ const FlowSection: React.FC<{
   >('flowCircle')
 
   React.useEffect(() => {
-    setCircleType('flowCircle')
+    setCircleType(
+      activeSectionPosition === 4 && isActive && !!setUpArtwork.artwork.length
+        ? 'previewActive'
+        : activeSectionPosition === 4 && !!setUpArtwork.artwork.length
+        ? 'preview'
+        : isActive
+        ? isLast
+          ? 'flowCircleActiveLast'
+          : 'flowCircleActive'
+        : isFulfilled
+        ? isLast
+          ? 'flowFulfilledCircleLast'
+          : 'flowFulfilledCircle'
+        : isLast
+        ? 'flowCircleLast'
+        : 'flowCircle'
+    )
 
-    setTitleType('preview')
-  }, [section, sections, fulfilledSections, activeSection, setUpArtwork])
+    setTitleType(
+      activeSectionPosition === 4 && isActive && !!setUpArtwork.artwork.length
+        ? 'previewActive'
+        : activeSectionPosition === 4 && !!setUpArtwork.artwork.length
+        ? 'preview'
+        : isFulfilled
+        ? 'fulfilled'
+        : isActive
+        ? 'active'
+        : 'default'
+    )
+  }, [section, activeSectionPosition, setUpArtwork])
 
   return (
     <Flex
       direction={'row'}
-      key={section?.title}
-      className={
-        flowSectionWrapperVariants['preview']
-      }
+      key={section}
+      className={flowSectionWrapperVariants['preview']}
     >
       <Link
         href={{
-          pathname: `/create/${section.title.toLowerCase()}`,
+          pathname: isFulfilled ? `/create/${section}` : null,
         }}
       >
         <Flex direction={'column'} align={'center'}>
@@ -73,9 +87,9 @@ const FlowSection: React.FC<{
             height={'x4'}
             width={'x4'}
           >
-            {fulfilledSections.includes(section?.title)}
+            {fulfilledSections.includes(section)}
           </Flex>
-          <Box className={flowTitleVariant[titleType]}>{section?.title}</Box>
+          <Box className={flowTitleVariant[titleType]}>{section}</Box>
         </Flex>
       </Link>
     </Flex>
