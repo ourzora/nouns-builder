@@ -129,7 +129,7 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       : ethers.utils.getAddress(NULL_ADDRESS) // 0 === YES in Radio component
 
   const { config } = usePrepareContractWrite({
-    address: PUBLIC_MANAGER_ADDRESS!,
+    address: PUBLIC_MANAGER_ADDRESS,
     abi: managerAbi,
     functionName: 'deploy',
     args: [

@@ -8,6 +8,7 @@ node_modules
 
 #testing
 coverage
+*.local*
 
 #local env files
 *.local*
@@ -18,6 +19,7 @@ coverage
 #misc
 .DS_Store
 *.pem
+dist
 
 #dist folders
 dist
