@@ -154,18 +154,6 @@ const Form: React.FC<FormProps> = ({
 
   /*
 
-    handle back button section navigation
-
-   */
-  const prev = () => {
-    handlePrev && handlePrev()
-    if (transactionSectionTitle) {
-      previousCustomTransactionForm()
-    }
-  }
-
-  /*
-
     handle advanced values and toggle
 
    */
@@ -263,7 +251,7 @@ const Form: React.FC<FormProps> = ({
                       h={'x15'}
                       minH={'x15'}
                       minW={'x15'}
-                      onClick={() => prev()}
+                      onClick={() => handlePrev()}
                       className={defaultBackButtonVariants['default']}
                       aria-label="Back"
                     >
@@ -279,7 +267,7 @@ const Form: React.FC<FormProps> = ({
                       align={'center'}
                       px={'x4'}
                       py={'x2'}
-                      onClick={() => prev()}
+                      onClick={() => previousCustomTransactionForm()}
                       className={defaultBackButtonVariants['transaction']}
                     >
                       Back
