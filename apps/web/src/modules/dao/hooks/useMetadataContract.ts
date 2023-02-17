@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useContract, useContractReads, useSigner } from 'wagmi'
+import { useContract, useContractReads, usePrepareContractWrite, useSigner } from 'wagmi'
 import { metadataAbi } from 'src/constants/abis/Metadata'
 import { base64 } from 'ethers/lib/utils'
 import type { BigNumber } from 'ethers'
