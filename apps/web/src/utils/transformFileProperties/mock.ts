@@ -1,4 +1,4 @@
-import { IPFSUpload, OrderedLayersProps } from "src/typings"
+import { IPFSUpload, OrderedLayersProps } from 'src/typings'
 
 export const mockTraits = ['backgrounds', 'bodies', 'heads', 'glasses', 'shirt']
 export const layerProperties = ['property-one', 'property-two', 'property-three']
@@ -9,7 +9,10 @@ export const mockOrderedLayers = (traits: string[]): OrderedLayersProps[] => {
   })
 }
 
-export const mockIpfsUpload = (filesUploadCount = 500, traits: string[]): IPFSUpload[] => {
+export const mockIpfsUpload = (
+  filesUploadCount = 500,
+  traits: string[]
+): IPFSUpload[] => {
   let upload = []
   for (let i = 0; i < filesUploadCount; i++) {
     const random = (max: any[]) => Math.floor(Math.random() * max.length)

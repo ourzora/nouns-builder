@@ -1,5 +1,6 @@
 import { IPFSUpload, OrderedLayersProps } from 'src/typings'
-import { BigNumber } from "ethers";
+import { BigNumber } from 'ethers'
+import { normalizeIPFSUrl } from 'ipfs-service'
 
 export interface PropertyItem {
   propertyId: BigNumber
@@ -18,14 +19,18 @@ export interface Properties {
   data: IPFSGroup
 }
 
-function uploadsToPropertyItems(uploads: IPFSUpload[], traitIndex: number, isNewProperty: boolean): PropertyItem[] {
-  return uploads.map((upload) => { 
+function uploadsToPropertyItems(
+  uploads: IPFSUpload[],
+  traitIndex: number,
+  isNewProperty: boolean
+): PropertyItem[] {
+  return uploads.map((upload) => {
     return {
       propertyId: BigNumber.from(traitIndex),
       name: upload.name.substring(0, upload.name.lastIndexOf('.')),
       isNewProperty,
     }
-  }) 
+  })
 }
 
 export function transformFileProperties(
@@ -39,13 +44,18 @@ export function transformFileProperties(
 
   const traits = orderedLayers.map((name) => name.trait).reverse() // this reverse is import for order sent to contract
 
-  const uploadsByTrait: { trait: string; uploads: IPFSUpload[] }[] = traits.map((trait) => {
-    return {trait, uploads: ipfsUpload.filter((item: IPFSUpload) => item.trait === trait)}}
+  const uploadsByTrait: { trait: string; uploads: IPFSUpload[] }[] = traits.map(
+    (trait) => {
+      return {
+        trait,
+        uploads: ipfsUpload.filter((item: IPFSUpload) => item.trait === trait),
+      }
+    }
   )
 
   const upload = ipfsUpload[0]
   const data = {
-    baseUri: `ipfs://${upload?.ipfs?.cid}/`,
+    baseUri: (normalizeIPFSUrl(upload?.ipfs?.cid) as string) + '/',
     extension: `${upload?.type
       ?.replace('image/', '.')
       .replace('+xml', '')
@@ -53,19 +63,19 @@ export function transformFileProperties(
   }
 
   const transactions: Properties[] = []
-  let currentTransaction: Properties | undefined = { names: [], items: [], data}
-  for (var {trait, uploads} of uploadsByTrait) {
-    let availableSpaceInCurrentTransaction = maxFilesPerTransaction - currentTransaction.items.length
+  let currentTransaction: Properties | undefined = { names: [], items: [], data }
+  for (var { trait, uploads } of uploadsByTrait) {
+    let availableSpaceInCurrentTransaction =
+      maxFilesPerTransaction - currentTransaction.items.length
 
     // Check if the whole trait can fit within the current transaction
     if (uploads.length <= availableSpaceInCurrentTransaction) {
       currentTransaction.items = [
-        ...currentTransaction.items, 
-        ...uploadsToPropertyItems(uploads, currentTransaction.names.length, true)
+        ...currentTransaction.items,
+        ...uploadsToPropertyItems(uploads, currentTransaction.names.length, true),
       ]
 
       currentTransaction.names = [...currentTransaction.names, trait]
-
     } else {
       // We need to split the trait up across multiple transactions
       let remainingUploads = [...uploads]
@@ -73,18 +83,25 @@ export function transformFileProperties(
 
       while (remainingUploads.length > 0) {
         if (remainingUploads.length >= availableSpaceInCurrentTransaction) {
-          const uploadsForCurrentTransaction = remainingUploads.slice(0, availableSpaceInCurrentTransaction)
+          const uploadsForCurrentTransaction = remainingUploads.slice(
+            0,
+            availableSpaceInCurrentTransaction
+          )
 
           currentTransaction.items = [
-            ...currentTransaction.items, 
-            ...uploadsToPropertyItems(uploadsForCurrentTransaction, currentTransaction.names.length, isNewProperty)
+            ...currentTransaction.items,
+            ...uploadsToPropertyItems(
+              uploadsForCurrentTransaction,
+              currentTransaction.names.length,
+              isNewProperty
+            ),
           ]
 
           currentTransaction.names = [...currentTransaction.names, trait]
 
           // Add currentTransaction to transactions
           transactions.push(currentTransaction)
-          currentTransaction = { names: [], items: [], data}
+          currentTransaction = { names: [], items: [], data }
 
           // Set isNewProperty to false
           isNewProperty = false
@@ -95,8 +112,12 @@ export function transformFileProperties(
         } else {
           // remaining uploads will fit in current transaction
           currentTransaction.items = [
-            ...currentTransaction.items, 
-            ...uploadsToPropertyItems(remainingUploads, currentTransaction.names.length, isNewProperty)
+            ...currentTransaction.items,
+            ...uploadsToPropertyItems(
+              remainingUploads,
+              currentTransaction.names.length,
+              isNewProperty
+            ),
           ]
 
           currentTransaction.names = [...currentTransaction.names, trait]
@@ -109,7 +130,7 @@ export function transformFileProperties(
     // catch the case in which we have exactly 500 uploads in the current transaction
     if (currentTransaction.items.length === maxFilesPerTransaction) {
       transactions.push(currentTransaction)
-      currentTransaction = { names: [], items: [], data}
+      currentTransaction = { names: [], items: [], data }
     }
   }
 

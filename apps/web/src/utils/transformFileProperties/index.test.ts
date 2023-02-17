@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { ipfsUploadObject, mockIpfsUpload, mockOrderedLayers, mockTraits } from './mock'
-import { transformFileProperties } from "./index";
-import { BigNumber } from 'ethers';
+import { transformFileProperties } from './index'
+import { BigNumber } from 'ethers'
 
 describe('Transform Properties', () => {
   it('should return an empty array given no parameters', () => {
@@ -21,13 +21,13 @@ describe('Transform Properties', () => {
     expect(fileProperties[0].names).toEqual([trait])
     expect(fileProperties[0].items).toHaveLength(1)
     expect(fileProperties[0].items[0]).toEqual({
-      "propertyId": BigNumber.from(0),
-      "name": ipfsUpload.name.replace('.png', ''),
-      "isNewProperty": true,
+      propertyId: BigNumber.from(0),
+      name: ipfsUpload.name.replace('.png', ''),
+      isNewProperty: true,
     })
     expect(fileProperties[0].data).toEqual({
-      "baseUri": "ipfs://bafybeihcsfjvnjmzivm4gxgt75zwajtfxumyxd7j6ibvloykpg4sx47uca/",
-      "extension": ".png",
+      baseUri: 'ipfs://bafybeihcsfjvnjmzivm4gxgt75zwajtfxumyxd7j6ibvloykpg4sx47uca/',
+      extension: '.png',
     })
   })
 
@@ -93,7 +93,7 @@ describe('Transform Properties', () => {
     const maxFiles = 10
     const trait1 = mockTraits[0]
     const trait2 = mockTraits[1]
-    
+
     const orderedLayers = mockOrderedLayers([trait1, trait2])
     const trait1IpfsUpload = mockIpfsUpload(12, [trait1])
     const trait2IpfsUpload = mockIpfsUpload(12, [trait2])
