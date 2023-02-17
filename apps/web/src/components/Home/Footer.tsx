@@ -31,7 +31,7 @@ const Footer = () => {
           >
             Start with a vision. Start a DAO. All onchain.
           </Flex>
-          <Link href={'/create/general'} legacyBehavior>
+          <Link href={'/create'} legacyBehavior>
             <Flex
               alignSelf={'flex-start'}
               py={'x6'}

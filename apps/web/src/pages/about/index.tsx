@@ -94,7 +94,7 @@ const About = () => {
             className={whyCreateButton}
             mb={'x12'}
             handleClick={() => {
-              router.push('/create/general')
+              router.push('/create')
             }}
           >
             Create a DAO

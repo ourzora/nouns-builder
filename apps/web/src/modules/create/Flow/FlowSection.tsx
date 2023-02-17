@@ -8,19 +8,36 @@ import {
 } from 'src/styles/styles.css'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { CREATE_FORM_ORDER, SectionProps } from 'src/modules/create/constants'
+import {
+  CREATE_FORM_ORDER,
+  CREATE_SECTION,
+  SectionProps,
+} from 'src/modules/create/constants'
 
 const FlowSection: React.FC<{
   section: SectionProps
 }> = ({ section }) => {
   const router = useRouter()
-  const activeRoute = router.pathname.split('/')[2] as SectionProps
+  const activeRoute = () => {
+    if (router.pathname.split('/')[1] === 'create' && !router.pathname.split('/')[2]) {
+      return CREATE_SECTION.GENERAL
+    }
+    return router.pathname.split('/')[2] as SectionProps
+  }
   const sectionPosition = CREATE_FORM_ORDER.indexOf(section)
-  const activeSectionPosition = CREATE_FORM_ORDER.indexOf(activeRoute)
+  const activeSectionPosition = CREATE_FORM_ORDER.indexOf(activeRoute())
   const isActive = sectionPosition === activeSectionPosition
   const isFulfilled = sectionPosition <= activeSectionPosition
   const isLast = sectionPosition === CREATE_FORM_ORDER.length
-
+  const pathname = () => {
+    if (isFulfilled) {
+      if (section === CREATE_SECTION.GENERAL) {
+        return '/create'
+      }
+      return `/create/${section}`
+    }
+    return null
+  }
   const { setUpArtwork } = useFormStore()
   const [titleType, setTitleType] = React.useState<
     'default' | 'active' | 'fulfilled' | 'preview' | 'previewActive'
@@ -76,7 +93,7 @@ const FlowSection: React.FC<{
     >
       <Link
         href={{
-          pathname: isFulfilled ? `/create/${section}` : null,
+          pathname: pathname(),
         }}
       >
         <Flex direction={'column'} align={'center'}>

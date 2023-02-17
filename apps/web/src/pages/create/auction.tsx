@@ -43,7 +43,7 @@ const Auction = () => {
 
   const handlePrev = () => {
     router.push({
-      pathname: '/create/general',
+      pathname: '/create',
     })
   }
 

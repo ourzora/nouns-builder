@@ -16,7 +16,7 @@ const GetStarted = () => {
   const { push } = useRouter()
 
   const handleClick = (): void => {
-    push('/create/general')
+    push('/create')
   }
 
   return (
