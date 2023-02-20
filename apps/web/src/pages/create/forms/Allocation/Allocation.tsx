@@ -79,18 +79,14 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
   }
 
   return (
-    <>
-      <Form
-        fields={founderFields}
-        initialValues={initialValues}
-        validationSchema={
-          signerAddress ? validateFounder(signerAddress, provider) : undefined
-        }
-        buttonText={'Continue'}
-        createSectionTitle={title}
-        submitCallback={handleSubmitCallback}
-      />
-    </>
+    <Form
+      fields={founderFields}
+      initialValues={initialValues}
+      validationSchema={validateFounder(signerAddress, provider)}
+      buttonText={'Continue'}
+      createSectionTitle={title}
+      submitCallback={handleSubmitCallback}
+    />
   )
 }
 

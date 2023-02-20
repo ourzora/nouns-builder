@@ -56,7 +56,7 @@ const FounderAllocationFields: React.FC<FounderAllocationFieldsProps> = ({
 
   const initialValues = React.useMemo(() => {
     return {
-      founderAddress: value?.[index]?.founderAddress || defaultAddress || '',
+      founderAddress: 'ddddd',
       allocation: value?.[index]?.allocation || defaultAllocation || '',
       endDate: value?.[index]?.endDate || defaultDate || '',
       maxAllocation: value?.[index]?.maxAllocation || '',
@@ -111,7 +111,7 @@ const FounderAllocationFields: React.FC<FounderAllocationFieldsProps> = ({
       <Form
         initialValues={initialValues}
         fields={founderAllocationFields(disableAddress, disableAll, addressFieldName)}
-        validationSchema={validateFounderAllocation(provider)}
+        // validationSchema={validateFounderAllocation(provider)}
         submitCallback={(values: typeof initialValues) => handleSubmitCallback(values)}
         isSubForm={true}
         autoSubmit={true}

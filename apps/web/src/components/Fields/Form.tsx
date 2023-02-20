@@ -210,6 +210,7 @@ const Form: React.FC<FormProps> = ({
       validateOnBlur={validateOnBlur}
     >
       {(formik) => {
+        console.log(formik.values, formik.errors)
         const changes = hasConfirmed?.values?.length
         return (
           <Box
@@ -417,7 +418,7 @@ const Form: React.FC<FormProps> = ({
                         ? () => handleSubmit(formik.values, formik.initialValues)
                         : undefined
                     }
-                    disabled={!isEmpty(formik.errors) || formik.isSubmitting}
+                    disabled={!isEmpty(formik.errors)}
                     onMouseDown={mouseDownEvent}
                   >
                     {buttonText || 'Submit'}
