@@ -221,14 +221,22 @@ const NavMenu: React.FC<{}> = () => {
             >
               <Link href={'/explore'}>
                 <Flex display="flex" align="center" justify={'center'} py={'x2'}>
-                  <Text cursor={'pointer'} fontWeight={'display'} lineHeight={24}>
+                  <Text
+                    cursor={'pointer'}
+                    fontWeight={'display'}
+                    style={{ lineHeight: '24px' }}
+                  >
                     Explore
                   </Text>
                 </Flex>
               </Link>
               <Link href={'/about'}>
                 <Flex display="flex" align="center" justify={'center'} py={'x2'}>
-                  <Text cursor={'pointer'} fontWeight={'display'} lineHeight={24}>
+                  <Text
+                    cursor={'pointer'}
+                    fontWeight={'display'}
+                    style={{ lineHeight: '24px' }}
+                  >
                     About
                   </Text>
                 </Flex>
@@ -253,7 +261,11 @@ const NavMenu: React.FC<{}> = () => {
                 justify={'center'}
               >
                 <Flex align={'center'} py={'x2'}>
-                  <Text fontWeight={'display'} fontSize={16} lineHeight={24}>
+                  <Text
+                    fontWeight={'display'}
+                    fontSize={16}
+                    style={{ lineHeight: '24px' }}
+                  >
                     Mainnet
                   </Text>
                   <Icon fill="text4" size="sm" ml="x2" id="external-16" />
@@ -272,7 +284,11 @@ const NavMenu: React.FC<{}> = () => {
                 justify={'center'}
               >
                 <Flex align={'center'} py={'x2'}>
-                  <Text fontWeight={'display'} fontSize={16} lineHeight={24}>
+                  <Text
+                    fontWeight={'display'}
+                    fontSize={16}
+                    style={{ lineHeight: '24px' }}
+                  >
                     Testnet
                   </Text>
                   <Icon fill="text4" size="sm" ml="x2" id="external-16" />
