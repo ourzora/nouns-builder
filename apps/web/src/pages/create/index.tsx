@@ -1,3 +1,6 @@
+import React, { useEffect } from 'react'
+import { useAccount } from 'wagmi'
+import { useRouter } from 'next/router'
 import Flow from './Flow/Flow'
 import FormHandler from './FormHandler'
 import Allocation from './forms/Allocation/Allocation'
@@ -9,14 +12,21 @@ import Veto from './forms/Veto/Veto'
 import { Box, Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import { NextPage } from 'next'
-import React from 'react'
 import Meta from 'src/components/Layout/Meta'
 import { useFormStore } from 'src/stores/useFormStore'
 import { createWrapperHalf, formWrapper, pageGrid } from 'src/styles/styles.css'
 import { CreateFormSection } from 'src/typings'
 
 const Create: NextPage = () => {
+  const router = useRouter()
   const { activeSection } = useFormStore()
+  const { address, isConnected } = useAccount()
+
+  useEffect(() => {
+    if (!address) {
+      router.push('/')
+    }
+  }, [address])
 
   /*
 
@@ -74,6 +84,10 @@ const Create: NextPage = () => {
       reviewAndDeploy,
     ]
   }, [])
+
+  if (!address) {
+    return null
+  }
 
   return (
     <>
