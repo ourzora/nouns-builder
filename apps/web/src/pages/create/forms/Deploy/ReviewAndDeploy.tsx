@@ -21,12 +21,12 @@ import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
 import { WriteContractUnpreparedArgs } from '@wagmi/core'
 import { getFetchableUrl } from 'ipfs-service'
+import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create/utils'
 
 import ReviewSection from './ReviewSection'
 import ReviewItem from './ReviewItem'
 import PreviewArtwork from './PreviewArtwork'
 import SuccessfulDeploy from './SuccessfulDeploy'
-import { formatAuctionDuration, formatFounderAllocation } from './utils'
 
 type FounderParameters = NonNullable<
   WriteContractUnpreparedArgs<typeof managerAbi, 'deploy'>
