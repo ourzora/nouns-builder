@@ -56,7 +56,7 @@ const FounderAllocationFields: React.FC<FounderAllocationFieldsProps> = ({
 
   const initialValues = React.useMemo(() => {
     return {
-      founderAddress: 'ddddd',
+      founderAddress: value?.[index]?.founderAddress || defaultAddress || '',
       allocation: value?.[index]?.allocation || defaultAllocation || '',
       endDate: value?.[index]?.endDate || defaultDate || '',
       maxAllocation: value?.[index]?.maxAllocation || '',

@@ -1,38 +1,46 @@
-import React from 'react'
-import Form from 'src/components/Fields/Form'
-import { founderFields, validateFounder } from 'src/components/Fields/fields/founder'
+import React, { useRef } from 'react'
+import { validateFounder } from 'src/components/Fields/fields/founder'
 import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import { shallow } from 'zustand/shallow'
 import { getEnsAddress } from 'src/utils/ens'
 import { allocationProps } from 'src/typings'
+import { Formik, Form, FieldArray, FormikProps } from 'formik'
+import { Button, Flex } from '@zoralabs/zord'
+import FounderAllocationNew from 'src/components/Fields/Allocation/FounderAllocation'
+import ContributionAllocationNew from 'src/components/Fields/Allocation/ContributionAllocation'
+import {
+  defaultBackButtonVariants,
+  defaultFormButtonWithPrev,
+} from 'src/components/Fields/styles.css'
+import { Icon } from 'src/components/Icon'
 
 interface FounderProps {
   title: string
 }
 
-interface AllocationFormValues {
+export interface FounderAllocationFormValues {
   founderAllocation: allocationProps[]
+}
+
+interface ContributionAllocationFormValues {
   contributionAllocation: allocationProps[]
 }
 
 const Allocation: React.FC<FounderProps> = ({ title }) => {
-  const {
-    founderAllocation,
-    setFounderAllocation,
-    contributionAllocation,
-    setContributionAllocation,
-  } = useFormStore(
-    (state) => ({
-      founderAllocation: state.founderAllocation,
-      setFounderAllocation: state.setFounderAllocation,
-      contributionAllocation: state.contributionAllocation,
-      setContributionAllocation: state.setContributionAllocation,
-    }),
-    shallow
-  )
+  const formRef = useRef<FormikProps<FounderAllocationFormValues>>(null)
+  const { founderAllocation, setFounderAllocation, setActiveSection, activeSection } =
+    useFormStore(
+      (state) => ({
+        founderAllocation: state.founderAllocation,
+        setFounderAllocation: state.setFounderAllocation,
+        setActiveSection: state.setActiveSection,
+        activeSection: state.activeSection,
+      }),
+      shallow
+    )
 
-  const { signerAddress, provider } = useLayoutStore(
+  const { signerAddress } = useLayoutStore(
     (state) => ({
       signerAddress: state.signerAddress,
       provider: state.provider,
@@ -40,28 +48,37 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     shallow
   )
 
-  const initialValues = {
-    founderAllocation: founderAllocation || [],
-    contributionAllocation: contributionAllocation || [],
+  const initialFounderValues =
+    founderAllocation.length === 0
+      ? [
+          {
+            founderAddress: signerAddress || '',
+            allocation: '',
+            endDate: '',
+            maxAllocation: '',
+          },
+        ]
+      : [
+          {
+            founderAddress: signerAddress || '',
+            allocation: founderAllocation[0].allocation,
+            endDate: founderAllocation[0].endDate,
+            maxAllocation: founderAllocation[0].maxAllocation,
+          },
+          ...founderAllocation.slice(1),
+        ]
+
+  const handlePrev = () => {
+    setActiveSection(activeSection - 1)
   }
 
-  const handleSubmitCallback = async ({
-    founderAllocation,
-    contributionAllocation,
-  }: AllocationFormValues) => {
+  const handleSubmit = async ({ founderAllocation }: FounderAllocationFormValues) => {
+    console.log(founderAllocation)
     const foundAllocationPromises = founderAllocation.map((allocation) =>
       getEnsAddress(allocation.founderAddress)
     )
 
-    const contributionAllocationPromises = contributionAllocation.map((allocation) =>
-      getEnsAddress(allocation.founderAddress)
-    )
-
     const founderAllocationAddresses = await Promise.all(foundAllocationPromises)
-
-    const contributionAllocationAddresses = await Promise.all(
-      contributionAllocationPromises
-    )
 
     setFounderAllocation(
       founderAllocation.map((allocation, idx) => ({
@@ -69,24 +86,72 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
         founderAddress: founderAllocationAddresses[idx],
       }))
     )
-
-    setContributionAllocation(
-      contributionAllocation.map((allocation, idx) => ({
-        ...allocation,
-        founderAddress: contributionAllocationAddresses[idx],
-      }))
-    )
   }
 
+  console.log(signerAddress)
+  if (!signerAddress) return null
+
   return (
-    <Form
-      fields={founderFields}
-      initialValues={initialValues}
-      validationSchema={validateFounder(signerAddress, provider)}
-      buttonText={'Continue'}
-      createSectionTitle={title}
-      submitCallback={handleSubmitCallback}
-    />
+    <>
+      <Formik
+        initialValues={{ founderAllocation: initialFounderValues }}
+        enableReinitialize
+        validateOnBlur={false}
+        innerRef={formRef}
+        validateOnMount={true}
+        validateOnChange={true}
+        validationSchema={validateFounder(signerAddress)}
+        onSubmit={handleSubmit}
+      >
+        {(formik) => (
+          <Form>
+            <FieldArray name="founderAllocation">
+              {({ remove, push }) => (
+                <FounderAllocationNew
+                  formik={formik}
+                  touched={formik.touched}
+                  values={formik.values}
+                  errors={formik.errors}
+                  removeFounderAddress={remove}
+                  addFounderAddress={() =>
+                    push({ founderAddress: '', allocation: '', endDate: '' })
+                  }
+                />
+              )}
+            </FieldArray>
+          </Form>
+        )}
+      </Formik>
+
+      <ContributionAllocationNew />
+
+      <Flex justify={'space-between'} mt={'x8'}>
+        <Button
+          justify={'center'}
+          align={'center'}
+          h={'x15'}
+          minH={'x15'}
+          minW={'x15'}
+          type="button"
+          onClick={handlePrev}
+          className={defaultBackButtonVariants['default']}
+          aria-label="Back"
+        >
+          <Icon id="arrowLeft" />
+        </Button>
+        <Button
+          flex={1}
+          width={'auto'}
+          ml={'x2'}
+          minH={'x15'}
+          className={defaultFormButtonWithPrev}
+          type="submit"
+          onClick={() => formRef.current?.handleSubmit()}
+        >
+          Continue
+        </Button>
+      </Flex>
+    </>
   )
 }
 

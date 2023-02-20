@@ -268,7 +268,7 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
         )}
       </Flex>
       {/* CHANGE CONTRIBUTIONS MODAL */}
-      <AnimatedModal
+      {/* <AnimatedModal
         trigger={
           <Text w={'100%'} mt={'x4'} mb={'x8'} fontWeight={'display'} align={'center'}>
             {!nounsAllocationOn ? 'Add Contributions' : 'Change Contributions'}
@@ -353,7 +353,7 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
             <Fragment />
           )}
         </Stack>
-      </AnimatedModal>
+      </AnimatedModal> */}
     </Stack>
   )
 }

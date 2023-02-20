@@ -4,22 +4,6 @@ import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
 import * as Yup from 'yup'
 
-export const founderFields = [
-  {
-    name: 'founderAllocation',
-    inputLabel: 'Allocation Address',
-    type: FOUNDER_ALLOCATION,
-    helperText:
-      'A Founder Address will receive x % of Tokens until the specified End Date.',
-    placeholder: '0x... or .eth',
-  },
-  {
-    name: 'contributionAllocation',
-    inputLabel: 'Allocation Address',
-    type: CONTRIBUTION_ALLOCATION,
-  },
-]
-
 const allocationSchema = Yup.object().shape({
   founderAddress: Yup.string()
     .test(
@@ -44,10 +28,33 @@ const allocationSchema = Yup.object().shape({
     }),
 })
 
-export const validateFounder = (
-  signerAddress: string | null,
-  provider: Provider | undefined
-) =>
+export const validationSchemaContributions = Yup.object().shape({
+  contributionAllocation: Yup.array().of(allocationSchema),
+  // .test(
+  //   'totalAllocation',
+  //   'sum of all allocations must be < 100%',
+  //   function (value, context) {
+  //     const allocations = [
+  //       // @ts-ignore
+  //       ...context.options.parent.founderAllocation,
+  //       // @ts-ignore
+  //       ...context.options.parent.contributionAllocation,
+  //     ]
+
+  //     const allocationPercentage = allocations.reduce(
+  //       (acc, cv) => acc + (cv?.allocation || 0),
+  //       0
+  //     )
+
+  //     return (
+  //       (!!allocationPercentage || allocationPercentage === 0) &&
+  //       allocationPercentage <= 100
+  //     )
+  //   }
+  // ),
+})
+
+export const validateFounder = (signerAddress: string | null) =>
   Yup.object().shape({
     founderAllocation: Yup.array()
       .of(allocationSchema)
@@ -56,33 +63,10 @@ export const validateFounder = (
         'founderAddress',
         'the founder must be the connected wallet.',
         function (value) {
-          console.log('test')
-          return value?.[0]['founderAddress'] === signerAddress
-        }
-      ),
-
-    contributionAllocation: Yup.array()
-      .of(allocationSchema)
-      .test(
-        'totalAllocation',
-        'sum of all allocations must be < 100%',
-        function (value, context) {
-          const allocations = [
-            // @ts-ignore
-            ...context.options.parent.founderAllocation,
-            // @ts-ignore
-            ...context.options.parent.contributionAllocation,
-          ]
-
-          const allocationPercentage = allocations.reduce(
-            (acc, cv) => acc + (cv?.allocation || 0),
-            0
-          )
-
-          return (
-            (!!allocationPercentage || allocationPercentage === 0) &&
-            allocationPercentage <= 100
-          )
+          if (value?.[0]) {
+            return value?.[0]['founderAddress'] === signerAddress
+          }
+          return false
         }
       ),
   })
