@@ -4,7 +4,7 @@ import TwoColumnLayout from 'src/layouts/TwoColumn'
 import Entry from 'src/modules/transaction-builder/components/Entry/Entry'
 import { Queue } from 'src/modules/transaction-builder/components/Queue/Queue'
 import CreateProposalHeading from 'src/modules/transaction-builder/components/CreateProposalHeading'
-import { Stack } from '@zoralabs/zord'
+import { Flex, Stack } from '@zoralabs/zord'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import {
@@ -14,11 +14,25 @@ import {
 import TransactionTypeIcon from 'src/modules/transaction-builder/components/TransactionTypeIcon'
 import DropdownSelect from 'src/modules/transaction-builder/components/DropdownSelect'
 import { SelectedTransactionForm } from 'src/modules/transaction-builder/components/SelectedTransactionForm'
+import { useVotes } from 'src/hooks/useVotes'
+import { useDaoStore } from 'src/stores'
+import { useAccount } from 'wagmi'
+import { AddressType } from 'src/typings'
+import { notFoundWrap } from 'src/styles/404.css'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
   const { query, pathname } = router
   const { transaction } = query
+
+  const { addresses } = useDaoStore()
+  const { address } = useAccount()
+
+  const { isLoading, hasThreshold } = useVotes({
+    governorAddress: addresses?.governor,
+    signerAddress: address,
+    collectionAddress: query?.token as AddressType,
+  })
 
   const createSelectOption = (type: TransactionType) => ({
     value: type,
@@ -35,6 +49,12 @@ const CreateProposalPage: NextPageWithLayout = () => {
       pathname,
       query: { token: query.token, transaction: value },
     })
+  }
+
+  if (isLoading) return null
+
+  if (!hasThreshold) {
+    return <Flex className={notFoundWrap}>403 - Access Denied</Flex>
   }
 
   return (
