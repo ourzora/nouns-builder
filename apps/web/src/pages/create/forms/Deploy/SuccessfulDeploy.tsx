@@ -28,7 +28,8 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   title,
 }) => {
   const router = useRouter()
-  const { generalInfo, ipfsUpload, orderedLayers, setFulfilledSections } = useFormStore()
+  const { generalInfo, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
+    useFormStore()
 
   const { addresses, setAddresses } = useDaoStore()
   const { contract: metadataContract } = useMetadataContract(addresses?.metadata)
@@ -80,10 +81,9 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     setIsPendingTransaction(false)
     setFulfilledSections(title)
 
-    useFormStore.persist.clearStorage()
-    localStorage.removeItem(`nouns-builder-create-${process.env.NEXT_PUBLIC_CHAIN_ID}`)
-
-    router.push(`/dao/${token}`)
+    router.push(`/dao/${token}`).then(() => {
+      resetForm()
+    })
   }, [metadataContract, transactions, router, setFulfilledSections, title, token])
 
   /*
