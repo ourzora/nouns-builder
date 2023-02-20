@@ -1,5 +1,5 @@
 import { isAddress } from 'ethers/lib/utils'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
 
 /**
  *
@@ -181,7 +181,7 @@ export const compareAndReturn = (initialValues: {}, values: {}) => {
     let _values: any[] = Object.entries(values)
     const value = _values.filter((item) => item[0] === _field)[0][1]
 
-    if (!_.isEqual(_value, value)) {
+    if (!isEqual(_value, value)) {
       if (typeof value !== 'object') {
         if (_value.toString() !== value.toString()) {
           acc.push({
@@ -197,7 +197,7 @@ export const compareAndReturn = (initialValues: {}, values: {}) => {
           const _v = _cv[1].toString()
           const v = valueObject.filter((item) => item[0] === _f)[0]?.[1].toString()
 
-          if (!_.isEqual(_v, v)) {
+          if (!isEqual(_v, v)) {
             acc.push({
               field: _field,
               value: value,

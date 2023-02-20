@@ -1,22 +1,24 @@
-import ExternalLinks from './ExternalLinks'
-import Statistic from './Statistic'
-import { Box, Flex, Text } from '@zoralabs/zord'
-import Image from 'next/legacy/image'
 import React from 'react'
-import ReactHtmlParser from 'react-html-parser'
+import Image from 'next/legacy/image'
+import useSWR from 'swr'
+import { useBalance } from 'wagmi'
+import HtmlReactParser from 'html-react-parser'
+import { Box, Flex, Text } from '@zoralabs/zord'
+
 import { Avatar } from 'src/components/Avatar/Avatar'
 import { useMetadataContract } from 'src/modules/dao/hooks'
 import useTokenContract from 'src/hooks/useTokenContract'
 import { useDaoStore } from 'src/stores'
 import { about, daoDescription, daoName, daoInfo } from 'src/styles/About.css'
 import { formatCryptoVal } from 'src/utils/numbers'
-import useSWR from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { useBalance } from 'wagmi'
 import { getFetchableUrl } from 'ipfs-service'
 import { sdk } from 'src/graphql/client'
 import { CHAIN } from 'src/constants/network'
 import type { AddressType } from 'src/typings'
+
+import ExternalLinks from './ExternalLinks'
+import Statistic from './Statistic'
 
 const About: React.FC = () => {
   const {
@@ -98,7 +100,7 @@ const About: React.FC = () => {
       {typeof description !== 'undefined' && description !== null ? (
         <Box mt={{ '@initial': 'x4', '@768': 'x6' }}>
           <Text className={daoDescription}>
-            {ReactHtmlParser(description.replace(/\\n/g, '<br />'))}
+            {HtmlReactParser(description.replace(/\\n/g, '<br />'))}
           </Text>
         </Box>
       ) : null}
