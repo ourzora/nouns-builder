@@ -1,5 +1,5 @@
 import {
-  IPFSProps,
+  IPFSUpload,
   OrderedLayersProps,
   allocationProps,
   auctionSettingsProps,
@@ -33,8 +33,8 @@ export interface FormStoreState {
   setAuctionSettings: (auctionSettings: auctionSettingsProps) => void
   setUpArtwork: setUpArtworkProps
   setSetUpArtwork: (artwork: setUpArtworkProps) => void
-  ipfsUpload: IPFSProps[]
-  setIpfsUpload: (ipfsUpload: IPFSProps[]) => void
+  ipfsUpload: IPFSUpload[]
+  setIpfsUpload: (ipfsUpload: IPFSUpload[]) => void
   artworkSettings: {}[]
   setArtworkSettings: (artworkSettings: {}[]) => void
   activeSectionCurrentIndex: number
@@ -155,7 +155,7 @@ export const useFormStore = create(
       setNounsAllocationOn: (nounsAllocationOn: boolean) => set({ nounsAllocationOn }),
       setVetoPower: (vetoPower: number) => set({ vetoPower }),
       setSetUpArtwork: (setUpArtwork: setUpArtworkProps) => set({ setUpArtwork }),
-      setIpfsUpload: (ipfsUpload: IPFSProps[]) => set({ ipfsUpload }),
+      setIpfsUpload: (ipfsUpload: IPFSUpload[]) => set({ ipfsUpload }),
       setArtworkSettings: (artworkSettings: {}[]) => {
         set({
           artworkSettings,

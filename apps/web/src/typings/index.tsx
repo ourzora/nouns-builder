@@ -54,7 +54,7 @@ export interface setUpArtworkProps {
   externalUrl?: string
   filesLength: string | number
 }
-export interface IPFSProps {
+export interface IPFSUpload {
   name: string
   webkitRelativePath: string
   ipfs: IPFSUploadResponse | null

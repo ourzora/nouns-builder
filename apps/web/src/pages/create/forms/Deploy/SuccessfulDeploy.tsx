@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from '@zoralabs/zord'
+import { Box, Button, Flex, Paragraph } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
@@ -14,6 +14,7 @@ import {
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
+import * as Sentry from '@sentry/nextjs'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
@@ -190,8 +191,13 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
         Deploy Token Metadata (2 of 2)
       </Button>
       {transactions && transactions?.length > 1 && (
-        <Flex color={'secondary'} fontSize={14} w={'100%'} justify={'center'} py={'x4'}>
-          This Deploy Step will be split into {transactions?.length} Transactions
+        <Flex color={'secondary'} w={'100%'} justify={'center'} py={'x4'}>
+          <Paragraph>
+            <strong>ATTENTION:</strong> The deploy step will be split into{' '}
+            <strong>{transactions.length} wallet transactions.</strong> You need to sign{' '}
+            <strong>all of them. </strong>
+            Rejecting any of them will cause the metadata upload to fail.
+          </Paragraph>
         </Flex>
       )}
     </Flex>

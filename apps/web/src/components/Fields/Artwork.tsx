@@ -28,7 +28,7 @@ import Playground from 'src/pages/create/forms/Artwork/PreviewModal/Playground'
 import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
-  IPFSProps,
+  IPFSUpload,
   ImageProps,
   ImagesByTraitProps,
   SelectedTraitsProps,
@@ -279,7 +279,7 @@ const Artwork: React.FC<Artwork> = ({ inputLabel, helperText, errorMessage, form
    upload Files to ipfs via zora ipfs service
   
   */
-  const uploadToIPFS: (files: File[]) => Promise<IPFSProps[]> = async (files) => {
+  const uploadToIPFS: (files: File[]) => Promise<IPFSUpload[]> = async (files) => {
     const ipfsUploadResponse = await uploadDirectory(
       files.map((file) => ({
         content: file,
