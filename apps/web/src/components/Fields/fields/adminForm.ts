@@ -1,6 +1,6 @@
 import { isValidAddress } from 'src/utils/ens'
 import { vetoBurnDelegate } from './veto'
-import { votingSettingsFields } from './voting'
+import { votingSettingsFields } from './delegate'
 import { Provider } from '@ethersproject/abstract-provider'
 import {
   auctionSettingsFields,
