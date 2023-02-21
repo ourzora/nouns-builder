@@ -157,7 +157,7 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
   return (
     <Box>
-      {(!fulfilledSections.includes(title) && (
+      {!fulfilledSections.includes(title) ? (
         <Box>
           <Flex direction={'column'}>
             <ReviewSection subHeading="General Info">
@@ -272,7 +272,7 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
             </Flex>
           </Flex>
         </Box>
-      )) || (
+      ) : (
         <SuccessfulDeploy
           token={deployedDao?.token}
           metadata={deployedDao?.metadata}

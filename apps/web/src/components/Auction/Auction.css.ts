@@ -169,7 +169,7 @@ export const auctionHeaderShareLogo = style({
 
 export const auctionDateNavButton = style({
   height: 36,
-  width: 36,
+  minWidth: 36,
   borderRadius: '18px',
   border: `2px solid ${vars.color.border}`,
   selectors: {

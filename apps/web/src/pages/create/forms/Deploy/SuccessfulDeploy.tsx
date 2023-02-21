@@ -1,6 +1,6 @@
-import { Box, Button, Flex } from '@zoralabs/zord'
+import { Box, Button, Flex, Paragraph } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { useMetadataContract } from 'src/modules/dao/hooks'
 import { useDaoStore } from 'src/stores/useDaoStore'
@@ -14,6 +14,7 @@ import {
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
+import * as Sentry from '@sentry/nextjs'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
@@ -28,8 +29,9 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   title,
 }) => {
   const router = useRouter()
-  const { generalInfo, setUpArtwork, ipfsUpload, orderedLayers, setFulfilledSections } =
+  const { generalInfo, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
     useFormStore()
+
   const { addresses, setAddresses } = useDaoStore()
   const { contract: metadataContract } = useMetadataContract(addresses?.metadata)
   const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
@@ -61,9 +63,8 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const handleDeployMetadata = React.useCallback(async () => {
     if (!transactions || !metadataContract) return
 
-    console.log('artwork and ipfs data:', transactions)
     setIsPendingTransaction(true)
-    for await (const transaction of transactions) {
+    for (const transaction of transactions) {
       try {
         const { wait } = await metadataContract.addProperties(
           transaction.names,
@@ -72,15 +73,18 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
         )
         await wait()
       } catch (err) {
+        console.warn(err)
         setIsPendingTransaction(false)
-        console.log('err', err)
         return
       }
     }
+
     setIsPendingTransaction(false)
     setFulfilledSections(title)
-    useFormStore.persist.clearStorage()
-    await router.push(`/dao/${token}`)
+
+    router.push(`/dao/${token}`).then(() => {
+      resetForm()
+    })
   }, [metadataContract, transactions, router, setFulfilledSections, title, token])
 
   /*
@@ -180,15 +184,20 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
           deployContractButtonStyle[isPendingTransaction ? 'pendingFull' : 'defaultFull']
         }
         disabled={!transactions}
-        onClick={() => handleDeployMetadata()}
+        onClick={handleDeployMetadata}
         w={'100%'}
         mt={'x8'}
       >
         Deploy Token Metadata (2 of 2)
       </Button>
       {transactions && transactions?.length > 1 && (
-        <Flex color={'secondary'} fontSize={14} w={'100%'} justify={'center'} py={'x4'}>
-          This Deploy Step will be split into {transactions?.length} Transactions
+        <Flex color={'secondary'} w={'100%'} justify={'center'} py={'x4'}>
+          <Paragraph>
+            <strong>ATTENTION:</strong> The deploy step will be split into{' '}
+            <strong>{transactions.length} wallet transactions.</strong> You need to sign{' '}
+            <strong>all of them. </strong>
+            Rejecting any of them will cause the metadata upload to fail.
+          </Paragraph>
         </Flex>
       )}
     </Flex>

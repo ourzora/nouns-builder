@@ -70,6 +70,8 @@ const AuctionController: React.FC<AuctionControllerProps> = ({
           <AuctionTokenPicker
             mintDate={mintDate}
             name={name}
+            collection={collection}
+            tokenId={Number(token.id)}
             currentAuction={auction?.tokenId.toNumber()}
           />
 
