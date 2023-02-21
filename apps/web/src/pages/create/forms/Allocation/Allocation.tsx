@@ -35,6 +35,8 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     setActiveSection,
     activeSection,
     setFulfilledSections,
+    vetoPower,
+    auctionSettings: { auctionDuration },
   } = useFormStore(
     (state) => ({
       founderAllocation: state.founderAllocation,
@@ -42,6 +44,8 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
       setActiveSection: state.setActiveSection,
       activeSection: state.activeSection,
       setFulfilledSections: state.setFulfilledSections,
+      vetoPower: state.vetoPower,
+      auctionSettings: state.auctionSettings,
     }),
     shallow
   )
@@ -116,6 +120,8 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
               {({ remove, push }) => (
                 <FounderAllocationNew
                   formik={formik}
+                  auctionDuration={auctionDuration}
+                  vetoPower={vetoPower}
                   touched={formik.touched}
                   values={formik.values}
                   errors={formik.errors}
