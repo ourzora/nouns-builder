@@ -1,68 +1,102 @@
 import { auctionDateNavButton, auctionTextVariants } from './Auction.css'
-import { Box, Flex } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import dayjs from 'dayjs'
-import Link from 'next/link'
+import Link, { LinkProps } from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { Icon } from 'src/components/Icon'
+import { useLayoutStore } from 'src/stores'
 
 interface AuctionTokenPickerProps {
+  collection: string
+  tokenId: number
   mintDate?: string
   name?: string
   currentAuction?: number
 }
 
-const AuctionTokenPicker = ({
+const OptionalLink: React.FC<{ enabled: boolean; children: ReactNode } & LinkProps> = ({
+  enabled,
+  children,
+  ...linkProps
+}) => {
+  if (enabled) {
+    return <Link {...linkProps}>{children}</Link>
+  } else {
+    return <>{children}</>
+  }
+}
+
+const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
+  collection,
+  tokenId,
   mintDate,
   name,
   currentAuction,
 }: AuctionTokenPickerProps) => {
-  const { isReady, query } = useRouter()
+  const { isReady } = useRouter()
+  const { isMobile } = useLayoutStore()
+  const disabledStyle = { opacity: 0.2 }
+
+  const hasPreviousToken = tokenId !== 0
+  const hasNextToken = isReady && tokenId < (currentAuction || 0)
 
   return (
     <Flex direction={'column'}>
       <Flex align="center" direction={'row'} gap={'x2'}>
-        {Number(query?.tokenId) === 0 ? (
-          <Flex align={'center'} justify={'center'} className={auctionDateNavButton}>
-            <Icon id="arrowLeft" style={{ opacity: 0.2 }} />
-          </Flex>
-        ) : (
-          <Link
-            href={`/dao/${query?.token}/${Number(query?.tokenId) - 1}`}
-            passHref
-            legacyBehavior
+        <OptionalLink
+          enabled={hasPreviousToken}
+          href={`/dao/${collection}/${tokenId - 1}`}
+          passHref
+          legacyBehavior
+        >
+          <Flex
+            as={hasPreviousToken ? 'a' : undefined}
+            align={'center'}
+            justify={'center'}
+            className={auctionDateNavButton}
           >
-            <Flex
-              as={'a'}
-              align={'center'}
-              justify={'center'}
-              className={auctionDateNavButton}
-            >
-              <Icon id="arrowLeft" />
-            </Flex>
-          </Link>
-        )}
+            <Icon id="arrowLeft" style={hasPreviousToken ? {} : disabledStyle} />
+          </Flex>
+        </OptionalLink>
 
-        {isReady && Number(query.tokenId) < (currentAuction || 0) ? (
-          <Link
-            href={`/dao/${query?.token}/${Number(query?.tokenId) + 1}`}
-            passHref
-            legacyBehavior
+        <OptionalLink
+          enabled={hasNextToken}
+          href={`/dao/${collection}/${tokenId + 1}`}
+          passHref
+          legacyBehavior
+        >
+          <Flex
+            as={hasNextToken ? 'a' : undefined}
+            align={'center'}
+            justify={'center'}
+            className={auctionDateNavButton}
           >
-            <Flex
-              as={'a'}
-              align={'center'}
-              justify={'center'}
-              className={auctionDateNavButton}
-            >
-              <Icon id="arrowRight" />
-            </Flex>
-          </Link>
-        ) : (
-          <Flex align={'center'} justify={'center'} className={auctionDateNavButton}>
-            <Icon id="arrowRight" style={{ opacity: 0.2 }} />
+            <Icon id="arrowRight" style={hasNextToken ? {} : disabledStyle} />
           </Flex>
-        )}
+        </OptionalLink>
+
+        <OptionalLink
+          enabled={hasNextToken}
+          href={`/dao/${collection}/${currentAuction}`}
+          passHref
+          legacyBehavior
+        >
+          <Flex
+            as={hasNextToken ? 'a' : undefined}
+            align={'center'}
+            justify={'center'}
+            className={auctionDateNavButton}
+          >
+            <Text
+              mx={'x3'}
+              style={hasNextToken ? {} : disabledStyle}
+              fontWeight={'display'}
+            >
+              {isMobile ? 'Latest' : 'Latest Auction'}
+            </Text>
+          </Flex>
+        </OptionalLink>
 
         <Box className={auctionTextVariants['tertiary']} ml={'x2'}>
           {!!mintDate && dayjs(mintDate).format('MMMM DD, YYYY')}
