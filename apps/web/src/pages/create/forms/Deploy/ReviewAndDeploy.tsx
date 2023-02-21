@@ -151,8 +151,13 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
   const handleDeploy = async () => {
     setIsPendingTransaction(true)
-    const txn = await writeAsync?.()
-    await txn?.wait()
+    try {
+      const txn = await writeAsync?.()
+      await txn?.wait()
+    } catch (e) {
+      console.error(e)
+      setIsPendingTransaction(false)
+    }
   }
 
   return (
