@@ -40,8 +40,6 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
   const {
     contributionAllocation,
     setContributionAllocation,
-    builderAllocationOn,
-    setBuilderAllocationOn,
     nounsAllocationOn,
     setNounsAllocationOn,
     auctionSettings,
@@ -49,8 +47,6 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
     (state) => ({
       contributionAllocation: state.contributionAllocation,
       setContributionAllocation: state.setContributionAllocation,
-      builderAllocationOn: state.builderAllocationOn,
-      setBuilderAllocationOn: state.setBuilderAllocationOn,
       nounsAllocationOn: state.nounsAllocationOn,
       setNounsAllocationOn: state.setNounsAllocationOn,
       auctionSettings: state.auctionSettings,
@@ -169,20 +165,6 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
     }
   }, [contributionAllocation, calculateMaxAllocation])
 
-  // refactor to one callback for both toggles
-  const handleToggleBuilderContribution = useCallback(() => {
-    if (builderAllocationOn) {
-      const updatedValues = formik?.values[id].filter(
-        (v: { founderAddress: string }) => v.founderAddress !== PUBLIC_BUILDER_ADDRESS
-      )
-      formik?.setFieldValue(id, updatedValues)
-      setBuilderAllocationOn(!builderAllocationOn)
-    } else {
-      formik?.setFieldValue(id, [...formik?.values[id], builderValue])
-      setBuilderAllocationOn(!builderAllocationOn)
-    }
-  }, [builderAllocationOn, formik, id, setBuilderAllocationOn, builderValue])
-
   const handleToggleNounsContribution = useCallback(() => {
     if (nounsAllocationOn) {
       const updatedValues = formik?.values[id].filter(
@@ -223,34 +205,30 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
           </Text>
         </Flex>
 
-        {builderAllocationOn ? (
-          <Flex direction={'row'} py={'x4'}>
-            <Flex gap={'x3'} style={{ width: '50%' }}>
-              <Image
-                src={'/builder-avatar-circle.png'}
-                alt=""
-                height={52}
-                width={52}
-                style={{ borderRadius: '50%' }}
-              />
-              <Flex direction={'column'} h={'100%'} justify={'space-around'}>
-                <Text fontWeight={'display'}>Builder</Text>
-                <Flex direction={'row'} align={'center'}>
-                  <Text>{builderDisplayName}</Text>
-                  <CopyButton text={PUBLIC_BUILDER_ADDRESS} />
-                </Flex>
+        <Flex direction={'row'} py={'x4'}>
+          <Flex gap={'x3'} style={{ width: '50%' }}>
+            <Image
+              src={'/builder-avatar-circle.png'}
+              alt=""
+              height={52}
+              width={52}
+              style={{ borderRadius: '50%' }}
+            />
+            <Flex direction={'column'} h={'100%'} justify={'space-around'}>
+              <Text fontWeight={'display'}>Builder</Text>
+              <Flex direction={'row'} align={'center'}>
+                <Text>{builderDisplayName}</Text>
+                <CopyButton text={PUBLIC_BUILDER_ADDRESS} />
               </Flex>
             </Flex>
-            <Flex align={'center'} style={{ width: '25%' }}>
-              <Text>{builderAllocationOn ? builderValue?.allocation : '0'}%</Text>
-            </Flex>
-            <Flex align={'center'} style={{ width: '25%' }}>
-              <Text>{formatDate(builderValue?.endDate as string, true)}</Text>
-            </Flex>
           </Flex>
-        ) : (
-          <Fragment />
-        )}
+          <Flex align={'center'} style={{ width: '25%' }}>
+            <Text>{builderValue?.allocation}%</Text>
+          </Flex>
+          <Flex align={'center'} style={{ width: '25%' }}>
+            <Text>{formatDate(builderValue?.endDate as string, true)}</Text>
+          </Flex>
+        </Flex>
 
         {nounsAllocationOn ? (
           <Flex direction={'row'} py={'x4'}>
@@ -281,7 +259,7 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
           <Fragment />
         )}
 
-        {!builderAllocationOn && !nounsAllocationOn ? (
+        {!nounsAllocationOn ? (
           <Flex direction={'row'} w={'100%'} py={'x8'} justify={'center'}>
             <Text color={'text3'}>No Contributions</Text>
           </Flex>
@@ -293,9 +271,7 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
       <AnimatedModal
         trigger={
           <Text w={'100%'} mt={'x4'} mb={'x8'} fontWeight={'display'} align={'center'}>
-            {!builderAllocationOn && !nounsAllocationOn
-              ? 'Add Contributions'
-              : 'Change Contributions'}
+            {!nounsAllocationOn ? 'Add Contributions' : 'Change Contributions'}
           </Text>
         }
         size={'auto'}
@@ -313,40 +289,20 @@ const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
                 Builder Contribution
               </Text>
             </Flex>
-            <Flex
-              className={allocationToggle[builderAllocationOn ? 'on' : 'off']}
-              onClick={() => handleToggleBuilderContribution()}
-            >
-              <Flex
-                h={'x6'}
-                w={'x6'}
-                borderRadius={'round'}
-                className={
-                  allocationToggleButtonVariants[builderAllocationOn ? 'on' : 'off']
-                }
-                align={'center'}
-                justify={'center'}
-              >
-                <img src={'/handlebar.png'} alt="toggle-button" />
-              </Flex>
-            </Flex>
           </Flex>
-          {builderAllocationOn ? (
-            <ContributionAllocationFields
-              value={builderValue}
-              submitCallback={submitCallback}
-              disableAddress={true}
-              disableAll={false}
-              defaultAddress={PUBLIC_BUILDER_ADDRESS}
-              defaultAllocation={1}
-              defaultDate={yearsAhead(5)}
-              addressFieldName={'Address'}
-              founderField={false}
-              isBuilder={true}
-            />
-          ) : (
-            <Fragment />
-          )}
+
+          <ContributionAllocationFields
+            value={builderValue}
+            submitCallback={submitCallback}
+            disableAddress={true}
+            disableAll={true}
+            defaultAddress={PUBLIC_BUILDER_ADDRESS}
+            defaultAllocation={1}
+            defaultDate={yearsAhead(5)}
+            addressFieldName={'Address'}
+            founderField={false}
+            isBuilder={true}
+          />
 
           <Box
             h={'x0'}

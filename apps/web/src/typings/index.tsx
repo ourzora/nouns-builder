@@ -29,13 +29,15 @@ export interface votingSettingsProps {
   quorumThreshold: number | string
 }
 
+export interface AuctionDuration {
+  seconds: number | string
+  days: number | string
+  hours: number | string
+  minutes: number | string
+}
+
 export interface auctionSettingsProps {
-  auctionDuration: {
-    seconds: number | string
-    days: number | string
-    hours: number | string
-    minutes: number | string
-  }
+  auctionDuration: AuctionDuration
   auctionReservePrice: number | string
   proposalThreshold: number | string
   quorumThreshold: number | string
@@ -54,7 +56,7 @@ export interface setUpArtworkProps {
   externalUrl?: string
   filesLength: string | number
 }
-export interface IPFSProps {
+export interface IPFSUpload {
   name: string
   webkitRelativePath: string
   ipfs: IPFSUploadResponse | null
