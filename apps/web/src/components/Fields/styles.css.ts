@@ -118,7 +118,7 @@ export const defaultInputErrorStyle = style({
   backgroundColor: '#F2F2F2',
   borderRadius: '15px',
   fontSize: 16,
-  paddingLeft: 24,
+  paddingLeft: 16,
   boxSizing: 'border-box',
   border: '2px solid #ff0015',
   selectors: {

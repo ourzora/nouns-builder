@@ -29,16 +29,22 @@ interface ContributionAllocationFormValues {
 
 const Allocation: React.FC<FounderProps> = ({ title }) => {
   const formRef = useRef<FormikProps<FounderAllocationFormValues>>(null)
-  const { founderAllocation, setFounderAllocation, setActiveSection, activeSection } =
-    useFormStore(
-      (state) => ({
-        founderAllocation: state.founderAllocation,
-        setFounderAllocation: state.setFounderAllocation,
-        setActiveSection: state.setActiveSection,
-        activeSection: state.activeSection,
-      }),
-      shallow
-    )
+  const {
+    founderAllocation,
+    setFounderAllocation,
+    setActiveSection,
+    activeSection,
+    setFulfilledSections,
+  } = useFormStore(
+    (state) => ({
+      founderAllocation: state.founderAllocation,
+      setFounderAllocation: state.setFounderAllocation,
+      setActiveSection: state.setActiveSection,
+      activeSection: state.activeSection,
+      setFulfilledSections: state.setFulfilledSections,
+    }),
+    shallow
+  )
 
   const { signerAddress } = useLayoutStore(
     (state) => ({
@@ -86,6 +92,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
       }))
     )
 
+    setFulfilledSections(title)
     setActiveSection(activeSection + 1)
   }
 
