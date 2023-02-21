@@ -40,9 +40,11 @@ const CreateProposalPage: NextPageWithLayout = () => {
     icon: <TransactionTypeIcon transactionType={type} />,
   })
 
-  const options = [TransactionType.AIRDROP, TransactionType.CUSTOM].map(
-    createSelectOption
-  )
+  const options = [
+    TransactionType.SEND_ETH,
+    TransactionType.AIRDROP,
+    TransactionType.CUSTOM,
+  ].map(createSelectOption)
 
   const handleDropdownOnChange = (value: string) => {
     router.push({

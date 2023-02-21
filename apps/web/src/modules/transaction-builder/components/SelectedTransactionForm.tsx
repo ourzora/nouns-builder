@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 import { TransactionType } from '../constants/transactionTypes'
 import Transaction from './Transaction/Transaction'
 import { Airdrop } from './Airdrop/Airdrop'
+import SendEth from './SendEth/SendEth'
 
 type TransactionFormType = {
   [key in TransactionType]: ReactNode
@@ -20,7 +21,7 @@ export const SelectedTransactionForm = ({ type }: SelectedTransactionFormProps) 
       />
     ),
     [TransactionType.AIRDROP]: <Airdrop />,
-    [TransactionType.SEND_ETH]: null,
+    [TransactionType.SEND_ETH]: <SendEth />,
     [TransactionType.UPGRADE]: null,
   }
 

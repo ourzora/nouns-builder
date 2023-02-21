@@ -6,7 +6,6 @@ import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { Icon } from 'src/components/Icon'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { walletSnippet } from 'src/utils/helpers'
-import { Textarea } from '@mantine/core'
 
 const ContractLink = ({ title, address }: { title: string; address?: string }) => {
   const { isMobile } = useLayoutStore()
