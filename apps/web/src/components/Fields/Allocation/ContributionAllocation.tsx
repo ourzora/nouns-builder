@@ -57,7 +57,7 @@ const Contribution = ({
   endDate,
 }: {
   address: ReactNode
-  allocation: string
+  allocation: string | number
   endDate: string
 }) => (
   <Flex direction={'row'} py={'x4'}>

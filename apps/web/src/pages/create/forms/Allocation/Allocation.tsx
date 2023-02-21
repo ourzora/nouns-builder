@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { validateFounder } from 'src/components/Fields/fields/founder'
+import React, { useRef, useState } from 'react'
+import { validationSchemaFounderAllocation } from 'src/components/Fields/fields/founder'
 import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import { shallow } from 'zustand/shallow'
@@ -9,6 +9,7 @@ import { Formik, Form, FieldArray, FormikProps } from 'formik'
 import { Button, Flex } from '@zoralabs/zord'
 import FounderAllocation from 'src/components/Fields/Allocation/FounderAllocation'
 import ContributionAllocation from 'src/components/Fields/Allocation/ContributionAllocation'
+import sum from 'lodash/sum'
 import {
   defaultBackButtonVariants,
   defaultFormButtonWithPrev,
@@ -25,8 +26,10 @@ export interface FounderAllocationFormValues {
 
 const Allocation: React.FC<FounderProps> = ({ title }) => {
   const formRef = useRef<FormikProps<FounderAllocationFormValues>>(null)
+  const [allocationError, setAllocationError] = useState(false)
   const {
     founderAllocation,
+    contributionAllocation,
     setFounderAllocation,
     setActiveSection,
     activeSection,
@@ -37,6 +40,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     (state) => ({
       founderAllocation: state.founderAllocation,
       setFounderAllocation: state.setFounderAllocation,
+      contributionAllocation: state.contributionAllocation,
       setActiveSection: state.setActiveSection,
       activeSection: state.activeSection,
       setFulfilledSections: state.setFulfilledSections,
@@ -61,7 +65,6 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
             founderAddress: signerAddress || '',
             allocation: '',
             endDate: '',
-            maxAllocation: '',
           },
         ]
       : [
@@ -69,7 +72,6 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
             founderAddress: signerAddress || '',
             allocation: founderAllocation[0].allocation,
             endDate: founderAllocation[0].endDate,
-            maxAllocation: founderAllocation[0].maxAllocation,
           },
           ...founderAllocation.slice(1),
         ]
@@ -79,6 +81,19 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
   }
 
   const handleSubmit = async ({ founderAllocation }: FounderAllocationFormValues) => {
+    setAllocationError(false)
+
+    const totalAllocation = sum(
+      [...founderAllocation, ...contributionAllocation].map(({ allocation }) =>
+        Number(allocation)
+      )
+    )
+
+    if (totalAllocation > 100) {
+      setAllocationError(true)
+      return
+    }
+
     const foundAllocationPromises = founderAllocation.map((allocation) =>
       getEnsAddress(allocation.founderAddress)
     )
@@ -107,7 +122,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
         innerRef={formRef}
         validateOnMount={true}
         validateOnChange={true}
-        validationSchema={validateFounder(signerAddress)}
+        validationSchema={validationSchemaFounderAllocation(signerAddress)}
         onSubmit={handleSubmit}
       >
         {(formik) => (
@@ -133,6 +148,13 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
       </Formik>
 
       <ContributionAllocation />
+
+      {allocationError && (
+        <Flex mt={'x4'} color="negative">
+          Oops, total allocation can not exceed 100%. Please double check the total of the
+          allocation shares.
+        </Flex>
+      )}
 
       <Flex justify={'space-between'} mt={'x8'}>
         <Button

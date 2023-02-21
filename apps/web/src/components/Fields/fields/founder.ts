@@ -1,6 +1,7 @@
-import { AddressType } from 'src/typings'
+import { allocationProps } from 'src/typings'
 import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
+import sumBy from 'lodash/sumBy'
 import * as Yup from 'yup'
 
 const allocationSchema = Yup.object().shape({
@@ -29,60 +30,29 @@ const allocationSchema = Yup.object().shape({
 
 export const validationSchemaContributions = Yup.object().shape({
   contributionAllocation: Yup.array().of(allocationSchema),
-  // .test(
-  //   'totalAllocation',
-  //   'sum of all allocations must be < 100%',
-  //   function (value, context) {
-  //     const allocations = [
-  //       // @ts-ignore
-  //       ...context.options.parent.founderAllocation,
-  //       // @ts-ignore
-  //       ...context.options.parent.contributionAllocation,
-  //     ]
-
-  //     const allocationPercentage = allocations.reduce(
-  //       (acc, cv) => acc + (cv?.allocation || 0),
-  //       0
-  //     )
-
-  //     return (
-  //       (!!allocationPercentage || allocationPercentage === 0) &&
-  //       allocationPercentage <= 100
-  //     )
-  //   }
-  // ),
 })
 
-export const validationSchemaFounders = (signerAddress: AddressType) =>
+export const validationSchemaFounderAllocation = (signerAddress: string | null) =>
   Yup.object().shape({
     founderAllocation: Yup.array()
       .of(allocationSchema)
-      .min(1, 'founder required')
+      .min(1, 'Founder is required')
       .test(
         'founderAddress',
-        'the founder must be the connected wallet.',
+        'The founder must be the connected wallet.',
         function (value) {
           if (value?.[0]) {
             return value?.[0]['founderAddress'] === signerAddress
           }
           return false
         }
-      ),
-  })
-
-export const validateFounder = (signerAddress: string | null) =>
-  Yup.object().shape({
-    founderAllocation: Yup.array()
-      .of(allocationSchema)
-      .min(1, 'founder required')
+      )
       .test(
-        'founderAddress',
-        'the founder must be the connected wallet.',
-        function (value) {
-          if (value?.[0]) {
-            return value?.[0]['founderAddress'] === signerAddress
-          }
-          return false
+        'unique',
+        'Founder allocation addresses should be unique.',
+        function (values) {
+          const addresses = values?.map((v) => v.founderAddress)
+          return values?.length === new Set(addresses)?.size
         }
       ),
   })

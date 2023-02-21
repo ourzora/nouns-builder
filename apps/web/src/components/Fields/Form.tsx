@@ -417,7 +417,7 @@ const Form: React.FC<FormProps> = ({
                         ? () => handleSubmit(formik.values, formik.initialValues)
                         : undefined
                     }
-                    disabled={!isEmpty(formik.errors)}
+                    disabled={!isEmpty(formik.errors) || formik.isSubmitting}
                     onMouseDown={mouseDownEvent}
                   >
                     {buttonText || 'Submit'}

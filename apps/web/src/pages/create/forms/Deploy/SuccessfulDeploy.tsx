@@ -7,6 +7,7 @@ import { useDaoStore } from 'src/stores/useDaoStore'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
   deployContractButtonStyle,
+  deployPendingButtonStyle,
   infoSectionLabelStyle,
   infoSectionValueVariants,
   successHeadingStyle,
@@ -15,6 +16,9 @@ import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
 import * as Sentry from '@sentry/nextjs'
+import { useContractRead } from 'wagmi'
+import { tokenAbi } from 'src/constants/abis'
+import { useLayoutStore } from 'src/stores'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
@@ -31,10 +35,18 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const router = useRouter()
   const { generalInfo, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
     useFormStore()
-
+  const signerAddress = useLayoutStore((state) => state.signerAddress)
   const { addresses, setAddresses } = useDaoStore()
   const { contract: metadataContract } = useMetadataContract(addresses?.metadata)
-  const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
+  const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
+  const [deploymentError, setDeploymentError] = useState<boolean>(false)
+
+  const { data: tokenOwner } = useContractRead({
+    enabled: !!token,
+    abi: tokenAbi,
+    address: token,
+    functionName: 'owner',
+  })
 
   React.useEffect(() => {
     setAddresses({ token, metadata, auction, treasury, governor })
@@ -61,7 +73,14 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   }, [orderedLayers, ipfsUpload])
 
   const handleDeployMetadata = React.useCallback(async () => {
+    setDeploymentError(false)
+
     if (!transactions || !metadataContract) return
+
+    if (tokenOwner !== signerAddress) {
+      setDeploymentError(true)
+      return
+    }
 
     setIsPendingTransaction(true)
     for (const transaction of transactions) {
@@ -117,11 +136,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
           <CopyButton title={generalInfo?.daoName} all={true} />
         </Box>
       </Flex>
-      <Flex
-        mb={'x4'}
-        direction={'column'}
-        style={{ boxSizing: 'border-box', width: '100%' }}
-      >
+      <Flex direction={'column'} style={{ boxSizing: 'border-box', width: '100%' }}>
         <Flex mb={'x5'} direction={'column'}>
           <Box className={infoSectionLabelStyle}>Token:</Box>{' '}
           <Flex
@@ -179,10 +194,18 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
           </Flex>
         </Flex>
       </Flex>
+
+      {deploymentError && (
+        <Flex color="negative">
+          Oops, it looks like the owner of the token contract differs from your signer
+          address. Please ensure that this transaction is handled by the same address.
+        </Flex>
+      )}
+
       <Button
-        className={
-          deployContractButtonStyle[isPendingTransaction ? 'pendingFull' : 'defaultFull']
-        }
+        size={'lg'}
+        borderRadius={'curved'}
+        className={isPendingTransaction ? deployPendingButtonStyle : undefined}
         disabled={!transactions}
         onClick={handleDeployMetadata}
         w={'100%'}

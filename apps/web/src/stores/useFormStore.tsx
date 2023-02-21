@@ -82,15 +82,13 @@ const initialState = {
   contributionAllocation: [
     {
       founderAddress: PUBLIC_BUILDER_ADDRESS,
-      allocation: '1',
+      allocation: 1,
       endDate: yearsAhead(5),
-      maxAllocation: '',
     },
     {
       founderAddress: PUBLIC_NOUNS_ADDRESS,
-      allocation: '1',
+      allocation: 1,
       endDate: yearsAhead(5),
-      maxAllocation: '',
     },
   ],
   nounsAllocationOn: true,

@@ -7,7 +7,7 @@ import SmartInput from '../SmartInput'
 import DatePicker from '../Date'
 import { FounderAllocationFormValues } from 'src/pages/create/forms/Allocation/Allocation'
 import { allocationProps, auctionSettingsProps } from 'src/typings'
-import { toSeconds } from 'src/utils/helpers'
+import { calculateMaxAllocation } from 'src/modules/create/utils'
 
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues
@@ -30,21 +30,6 @@ const FounderAllocationFields = ({
   removeFounderAddress,
   addFounderAddress,
 }: FounderAllocationFieldsProps) => {
-  const calculateMaxAllocation = (
-    allocation: string | number,
-    end: string | number,
-    auctionDuration: auctionSettingsProps['auctionDuration']
-  ) => {
-    const auctionDurationInSeconds = toSeconds(auctionDuration)
-    const endDate = new Date(end).getTime()
-    const now = new Date().getTime()
-    const diffInSeconds = Math.abs((endDate - now) / 1000)
-    const frequency = Number(allocation)
-    const numberOfAuctionsTilEndDate = diffInSeconds / auctionDurationInSeconds
-
-    return Math.floor(numberOfAuctionsTilEndDate * (frequency / 100))
-  }
-
   return (
     <Flex position={'relative'} direction={'column'} w={'100%'}>
       <Heading size="xs">Token Allocation</Heading>
@@ -57,9 +42,10 @@ const FounderAllocationFields = ({
         {values.founderAllocation.map((founder, index) => {
           const isFounder = index === 0
 
-          const error = errors?.founderAllocation?.[
-            index
-          ] as FormikErrors<allocationProps>
+          const error =
+            typeof errors?.founderAllocation === 'object'
+              ? (errors?.founderAllocation?.[index] as FormikErrors<allocationProps>)
+              : undefined
 
           const touchedField = touched?.founderAllocation?.[index]
 
@@ -171,6 +157,12 @@ const FounderAllocationFields = ({
           Add Address
         </Flex>
       </Flex>
+
+      {typeof errors?.founderAllocation === 'string' && (
+        <Flex mt={'x8'}>
+          <Text color="negative">{errors?.founderAllocation}</Text>
+        </Flex>
+      )}
     </Flex>
   )
 }
