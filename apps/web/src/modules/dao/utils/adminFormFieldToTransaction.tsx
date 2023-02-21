@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import { AddressType, DaoContractAddresses, DaoContracts } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
-import { AdminFormValues } from './AdminForm'
+import { AdminFormValues } from 'src/pages/dao/[token]/sections/Admin/forms/AdminForm'
 
 type FormValuesTransactionMap = {
   [K in keyof AdminFormValues]: {
@@ -116,5 +116,3 @@ export const formValuesToTransactionMap: FormValuesTransactionMap = {
       governorContract?.interface.encodeFunctionData('updateVetoer(address)', [value]),
   },
 }
-
-export default formValuesToTransactionMap
