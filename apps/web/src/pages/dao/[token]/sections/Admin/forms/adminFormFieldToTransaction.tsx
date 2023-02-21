@@ -116,3 +116,5 @@ export const formValuesToTransactionMap: FormValuesTransactionMap = {
       governorContract?.interface.encodeFunctionData('updateVetoer(address)', [value]),
   },
 }
+
+export default formValuesToTransactionMap
