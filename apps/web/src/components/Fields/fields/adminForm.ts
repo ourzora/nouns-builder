@@ -1,14 +1,13 @@
 import { isValidAddress } from 'src/utils/ens'
 import { vetoBurnDelegate } from './veto'
-import { votingSettingsFields } from './delegate'
 import { Provider } from '@ethersproject/abstract-provider'
 import {
   auctionSettingsFields,
   validateAuctionSettings,
+  votingSettingsFields,
 } from 'src/components/Fields/fields/auction'
 import {
   DAYS_HOURS_MINS_SECS,
-  NUMBER,
   SINGLE_IMAGE_UPLOAD,
   TEXT,
   TEXTAREA,
