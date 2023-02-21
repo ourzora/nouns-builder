@@ -1,6 +1,6 @@
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
-import React from 'react'
+import React, { useState } from 'react'
 import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
@@ -37,9 +37,10 @@ interface ReviewAndDeploy {
 }
 
 const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
-  const { signer } = useLayoutStore()
-  const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
-  const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
+  const { signer, signerAddress } = useLayoutStore()
+  const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
+  const [hasConfirmed, setHasConfirmed] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string | undefined>()
   const {
     founderAllocation,
     contributionAllocation,
@@ -150,6 +151,20 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const { writeAsync } = useContractWrite(config)
 
   const handleDeploy = async () => {
+    if (founderParams[0].wallet !== signerAddress) {
+      setErrorMessage(
+        'Oops! It looks like the founder address submitted is different than the current signer address. Please go back to the allocation step and re-submit the founder address.'
+      )
+      return
+    }
+
+    if (founderParams.length === 0) {
+      setErrorMessage(
+        'Oops! It looks like you have no founders set. Please go back to the allocation step and add at least one founder address.'
+      )
+      return
+    }
+
     setIsPendingTransaction(true)
     try {
       const txn = await writeAsync?.()
@@ -237,6 +252,7 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 >
                   {hasConfirmed && <Icon fill="background1" id="check" />}
                 </Flex>
+
                 <Flex className={deployCheckboxHelperText}>
                   [I have reviewed and acknowledge and agree to the{' '}
                   <a
@@ -250,6 +266,12 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   ]
                 </Flex>
               </Flex>
+
+              {errorMessage && (
+                <Flex mt={'x4'} color="negative">
+                  {errorMessage}
+                </Flex>
+              )}
             </Flex>
             <Flex mt={'x8'}>
               <Flex
