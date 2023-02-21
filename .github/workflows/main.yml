@@ -35,7 +35,6 @@ jobs:
           path: |
             node_modules
             apps/**/node_modules
-            apps/**/constants/typechain
             packages/**/node_modules
             packages/**/dist
           key: modules-${{ hashFiles('pnpm-lock.yaml') }}

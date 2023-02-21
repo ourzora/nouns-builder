@@ -70,10 +70,15 @@ describe('Use available upgrade hook', () => {
 
     const { result } = renderHook(() =>
       useAvailableUpgrade({
+        //@ts-ignore
         governor: undefined,
+        //@ts-ignore
         treasury: undefined,
+        //@ts-ignore
         metadata: undefined,
+        //@ts-ignore
         auction: undefined,
+        //@ts-ignore
         token: undefined,
       })
     )
@@ -108,15 +113,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() =>
-      useAvailableUpgrade({
-        governor: undefined,
-        treasury: undefined,
-        metadata: undefined,
-        auction: undefined,
-        token: undefined,
-      })
-    )
+    const { result } = renderHook(() => useAvailableUpgrade(addresses))
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,

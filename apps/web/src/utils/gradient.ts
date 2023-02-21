@@ -1,5 +1,4 @@
-import { arrayify } from '@ethersproject/bytes'
-import _ from 'lodash'
+import { ethers } from 'ethers'
 import tinycolor, { ColorInput } from 'tinycolor2'
 
 const linear = (p: number) => p
@@ -109,8 +108,8 @@ const lerpSaturationFn = (optionNum: number) => {
   }
 }
 
-export const gradientForAddress = (address: string) => {
-  const bytes = _(arrayify(address)).reverse().value()
+export const gradientForAddress = (address: string): string[] => {
+  const bytes = ethers.utils.arrayify(address).reverse()
   const hueShiftFn = lerpHueFn(bytes[3], bytes[6] % 2)
   const startHue = bscale(bytes[12], 360)
   const startLightness = bScaleRange(bytes[2], 30, 70)
@@ -153,8 +152,7 @@ export const gradientForAddress = (address: string) => {
     },
   ]
 
-  return _(inputs)
+  return inputs
     .map((c: ColorInput) => tinycolor(c))
     .map((tc: tinycolor.Instance) => tc.toHslString())
-    .value()
 }

@@ -9,8 +9,8 @@ import {
   uploadArtworkErrorProps,
   votingSettingsProps,
 } from 'src/typings'
-import create from 'zustand'
-import { persist } from 'zustand/middleware'
+import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
 
@@ -209,7 +209,7 @@ export const useFormStore = create(
     }),
     {
       name: `nouns-builder-create-${process.env.NEXT_PUBLIC_CHAIN_ID}`,
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage),
       version: 0,
     }
   )

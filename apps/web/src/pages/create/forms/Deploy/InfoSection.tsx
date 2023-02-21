@@ -1,7 +1,9 @@
-import Playground from '../Artwork/PreviewModal/Playground'
-import { Box, Button, Flex, Stack, atoms } from '@zoralabs/zord'
-import { isObject } from 'lodash'
 import React, { BaseSyntheticEvent } from 'react'
+import { isObject } from 'lodash'
+import HTMLReactParser from 'html-react-parser'
+import { Box, Button, Flex, Stack, atoms } from '@zoralabs/zord'
+import { getFetchableUrl } from 'ipfs-service'
+
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
@@ -11,9 +13,8 @@ import {
   infoSectionVariants,
 } from 'src/styles/deploy.css'
 import { camelToTitle, flatten } from 'src/utils/helpers'
-import { getFetchableUrl } from 'ipfs-service'
 
-const ReactHtmlParser = require('react-html-parser').default
+import Playground from '../Artwork/PreviewModal/Playground'
 
 interface InfoSectionProps {
   _key: string
@@ -63,7 +64,7 @@ const InfoSection: React.FC<InfoSectionProps> = ({ _key, value, sub }) => {
       case 'quorumThreshold':
         return `${value} %`
       case 'projectDescription':
-        return <Stack>{ReactHtmlParser(value)}</Stack>
+        return <Stack>{HTMLReactParser(value)}</Stack>
       case 'founderAllocation':
         return (
           `${value.founderAddress} will receive ${value.allocation}% of Tokens, ` +

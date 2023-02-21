@@ -5,7 +5,7 @@ import { foundry } from 'wagmi/chains'
 import { MockConnector } from 'wagmi/connectors/mock'
 import { Wallet, providers } from 'ethers'
 
-const ANVIL_URL = foundry.rpcUrls.default
+const ANVIL_URL = foundry.rpcUrls.default.http[0]
 
 export const TEST_WALLETS: RainbowkitWallet[] = [
   {

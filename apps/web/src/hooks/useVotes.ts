@@ -8,9 +8,9 @@ export const useVotes = ({
   governorAddress,
   signerAddress,
 }: {
-  collectionAddress?: string | AddressType
-  governorAddress?: string | AddressType
-  signerAddress?: string | AddressType
+  collectionAddress?: AddressType
+  governorAddress?: AddressType
+  signerAddress?: AddressType
 }) => {
   const { data, isLoading } = useContractReads({
     enabled: !!collectionAddress && !!governorAddress && !!signerAddress,

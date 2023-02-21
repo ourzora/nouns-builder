@@ -1,7 +1,7 @@
 import React, { Fragment, memo, useEffect, useState } from 'react'
 import { BigNumber, ethers } from 'ethers'
 import { useSWRConfig } from 'swr'
-import { useSigner } from 'wagmi'
+import { useAccount, useBalance, useSigner } from 'wagmi'
 import { Box, Button, Flex } from '@zoralabs/zord'
 
 import { useMinBidIncrement } from 'src/hooks/useMinBidIncrement'
@@ -21,6 +21,8 @@ interface PlaceBidProps {
 
 export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
+  const { address } = useAccount()
+  const { data: balance, isError } = useBalance({ address: address })
   const { mutate } = useSWRConfig()
   const {
     contract: auctionContract,
@@ -31,25 +33,12 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
 
   const [creatingBid, setCreatingBid] = useState(false)
   const [bidAmount, setBidAmount] = React.useState<string | undefined>(undefined)
-  const [signerETHBalance, setSignerETHBalance] = React.useState<number>(0)
 
   const { minBidAmount } = useMinBidIncrement({
     highestBid,
     reservePrice: auctionReservePrice,
     minBidIncrement,
   })
-
-  useEffect(() => {
-    if (!signer || !signer.provider) return
-
-    const getSignerBalance = async () => {
-      const balance =
-        (await signer?.provider?.getBalance(await signer?.getAddress())) || 0
-      setSignerETHBalance(parseFloat(ethers.utils.formatEther(balance)))
-    }
-
-    getSignerBalance()
-  }, [signer])
 
   const createBid = React.useCallback(
     async (id: string, bid: { value: BigNumber }) => {
@@ -98,7 +87,7 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
                 type={'number'}
                 className={bidInput}
                 min={formattedMinBid}
-                max={signerETHBalance}
+                max={balance?.formatted}
                 onChange={(event) => setBidAmount(event.target.value)}
               />
               <Box position="absolute" style={{ top: 0, right: 0, bottom: 0 }}>

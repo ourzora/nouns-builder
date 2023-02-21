@@ -2,12 +2,8 @@
 
 # dependencies
 /node_modules
-/src/constants/typechain
 /.pnp
 .pnp.js
-
-# typechain
-src/constants/typechain/
 
 # testing
 /coverage

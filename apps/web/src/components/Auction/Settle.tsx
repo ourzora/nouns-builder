@@ -18,10 +18,7 @@ export const Settle = ({ isEnding }: SettleProps) => {
   const [settling, setSettling] = useState(false)
 
   const handleSettle = React.useCallback(async () => {
-    const isWrongNetwork =
-      (await signer?.provider?.getCode(auctionContract?.address || '')) === '0x'
-
-    if (!auctionContract || !signer || isWrongNetwork) return
+    if (!auctionContract || !signer) return
 
     setSettling(true)
     try {

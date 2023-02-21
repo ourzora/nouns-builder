@@ -23,6 +23,7 @@ import omit from 'lodash/omit'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { Upgrade } from 'src/modules/transaction-builder/components/Upgrade/Upgrade'
 import { useAccount } from 'wagmi'
+import { AddressType } from 'src/typings'
 
 const Proposals: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
@@ -42,7 +43,7 @@ const Proposals: React.FC = () => {
   const { isOwner, hasThreshold } = useVotes({
     governorAddress: addresses?.governor,
     signerAddress: address,
-    collectionAddress: query.token as string,
+    collectionAddress: query?.token as AddressType,
   })
 
   const [

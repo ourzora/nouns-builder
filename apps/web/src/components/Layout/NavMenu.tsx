@@ -221,14 +221,14 @@ const NavMenu: React.FC<{}> = () => {
             >
               <Link href={'/explore'}>
                 <Flex display="flex" align="center" justify={'center'} py={'x2'}>
-                  <Text cursor={'pointer'} fontWeight={'display'} lineHeight={24}>
+                  <Text cursor={'pointer'} fontWeight={'display'}>
                     Explore
                   </Text>
                 </Flex>
               </Link>
               <Link href={'/about'}>
                 <Flex display="flex" align="center" justify={'center'} py={'x2'}>
-                  <Text cursor={'pointer'} fontWeight={'display'} lineHeight={24}>
+                  <Text cursor={'pointer'} fontWeight={'display'}>
                     About
                   </Text>
                 </Flex>

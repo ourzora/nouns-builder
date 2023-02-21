@@ -1,4 +1,3 @@
-import { hexValue } from '@ethersproject/bytes'
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import axios from 'axios'
 import { BigNumber, constants, ethers } from 'ethers'
@@ -83,7 +82,7 @@ export async function simulate({
       gas: '0x76999c0',
       gasPrice: '0x1',
       // We have to wrap this in a hexValue() call because .toHexString() adds a 0x0 padding to the front of the value.
-      value: hexValue(BigNumber.from(values[i]).toHexString()),
+      value: ethers.utils.hexValue(BigNumber.from(values[i]).toHexString()),
       data: calldatas[i],
     }
     const txHash = await forkProvider.send('eth_sendTransaction', [txParams])
