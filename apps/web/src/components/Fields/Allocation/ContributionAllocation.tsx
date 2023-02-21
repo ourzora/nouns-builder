@@ -1,6 +1,6 @@
-import React, { ChangeEventHandler, ReactElement, ReactNode, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { Button, Heading, Flex, Box, Stack, Text } from '@zoralabs/zord'
-import { Form, Formik, FormikProps, FieldArray } from 'formik'
+import { Form, Formik, FieldArray } from 'formik'
 import { useFormStore } from 'src/stores'
 import { formatDate, yearsAhead } from 'src/utils/helpers'
 import { PUBLIC_NOUNS_ADDRESS, PUBLIC_BUILDER_ADDRESS } from 'src/constants/addresses'
@@ -15,15 +15,8 @@ import Date from '../Date'
 import { getEnsAddress } from 'src/utils/ens'
 import { allocationToggle, allocationToggleButtonVariants } from '../styles.css'
 
-interface ContributionAllocationFormProps {
-  inputLabel: string | ReactElement
-  formik?: FormikProps<any>
-  errorMessage?: any
-  autoSubmit?: boolean
-  helperText?: string
-  onBlur: ChangeEventHandler
-  submitCallback?: (values: any) => void
-  onChange: ChangeEventHandler
+interface ContributionAllocationFormValues {
+  contributionAllocation: allocationProps[]
 }
 
 export const DaoCopyAddress = ({
@@ -78,54 +71,22 @@ const Contribution = ({
   </Flex>
 )
 
-const ContributionFields = ({
-  title,
-  address,
-  index,
-  formik,
-  allocation,
-  endDate,
-}: {
-  title: string
-  address: ReactNode
-  index: number
-  formik: any
-  allocation: string
-  endDate: string
-}) => (
-  <Box mt={'x4'}>
-    <Text fontWeight={'display'}>{title}</Text>
-    <Flex direction={'row'} mt={'x4'}>
-      {address}
-
-      <SmartInput
-        inputLabel={'Percentage'}
-        id={`contributionAllocation.${index}.allocation`}
-        value={allocation}
-        type={'number'}
-        formik={formik}
-        disabled={true}
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        perma={'%'}
-        autoSubmit={false}
-        isAddress={false}
-      />
-
-      <Date
-        id={`contributionAllocation.${index}.endDate`}
-        value={endDate}
-        inputLabel={'End date'}
-        formik={formik}
-        autoSubmit={false}
-        disabled
-        errorMessage={''}
-      />
+const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
+  <Flex className={allocationToggle[on ? 'on' : 'off']} onClick={onToggle}>
+    <Flex
+      h={'x6'}
+      w={'x6'}
+      borderRadius={'round'}
+      className={allocationToggleButtonVariants[on ? 'on' : 'off']}
+      align={'center'}
+      justify={'center'}
+    >
+      <img src={'/handlebar.png'} alt="toggle-button" />
     </Flex>
-  </Box>
+  </Flex>
 )
 
-const ContributionAllocationNew = () => {
+const ContributionAllocation = () => {
   const [open, setOpen] = useState(false)
   const contributionAllocation = useFormStore((state) => state.contributionAllocation)
   const setContributionAllocation = useFormStore(
@@ -157,18 +118,16 @@ const ContributionAllocationNew = () => {
         founderAddress: contributionAllocationAddresses[idx],
       }))
     )
-
     setOpen(false)
   }
 
   return (
     <>
       <Stack>
-        <Flex direction={'column'}>
-          <Heading size="xs" mt={'x8'} mb={'x6'}>
-            Contributions
-          </Heading>
-        </Flex>
+        <Heading size="xs" mt={'x8'} mb={'x6'}>
+          Contributions
+        </Heading>
+
         <Flex
           direction={'column'}
           pt={'x4'}
@@ -227,8 +186,10 @@ const ContributionAllocationNew = () => {
       </Stack>
 
       <AnimatedModal open={open} size={'auto'} close={() => setOpen(false)}>
-        <Formik
-          initialValues={{ contributionAllocation: contributionAllocation || [] }}
+        <Formik<ContributionAllocationFormValues>
+          initialValues={{
+            contributionAllocation: contributionAllocation || [],
+          }}
           enableReinitialize
           validateOnBlur={false}
           validateOnMount={true}
@@ -292,41 +253,20 @@ const ContributionAllocationNew = () => {
                     <Box mb={'x8'}>
                       <Flex justify={'space-between'}>
                         <Text fontWeight={'display'}>Nouns Contribution</Text>
-
-                        <Flex
-                          className={
-                            allocationToggle[
-                              formik.values.contributionAllocation?.[1] ? 'on' : 'off'
-                            ]
-                          }
-                          onClick={() => {
+                        <Toggle
+                          on={!!formik.values.contributionAllocation?.[1]}
+                          onToggle={() => {
                             if (formik.values.contributionAllocation?.[1]) {
                               remove(1)
                               return
                             }
-
                             push({
                               founderAddress: PUBLIC_NOUNS_ADDRESS,
                               allocation: 1,
                               endDate: yearsAhead(5),
                             })
                           }}
-                        >
-                          <Flex
-                            h={'x6'}
-                            w={'x6'}
-                            borderRadius={'round'}
-                            className={
-                              allocationToggleButtonVariants[
-                                formik.values.contributionAllocation?.[1] ? 'on' : 'off'
-                              ]
-                            }
-                            align={'center'}
-                            justify={'center'}
-                          >
-                            <img src={'/handlebar.png'} alt="toggle-button" />
-                          </Flex>
-                        </Flex>
+                        />
                       </Flex>
 
                       {formik.values.contributionAllocation?.[1] && (
@@ -379,4 +319,4 @@ const ContributionAllocationNew = () => {
   )
 }
 
-export default ContributionAllocationNew
+export default ContributionAllocation

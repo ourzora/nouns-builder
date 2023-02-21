@@ -7,8 +7,8 @@ import { getEnsAddress } from 'src/utils/ens'
 import { allocationProps } from 'src/typings'
 import { Formik, Form, FieldArray, FormikProps } from 'formik'
 import { Button, Flex } from '@zoralabs/zord'
-import FounderAllocationNew from 'src/components/Fields/Allocation/FounderAllocation'
-import ContributionAllocationNew from 'src/components/Fields/Allocation/ContributionAllocation'
+import FounderAllocation from 'src/components/Fields/Allocation/FounderAllocation'
+import ContributionAllocation from 'src/components/Fields/Allocation/ContributionAllocation'
 import {
   defaultBackButtonVariants,
   defaultFormButtonWithPrev,
@@ -21,10 +21,6 @@ interface FounderProps {
 
 export interface FounderAllocationFormValues {
   founderAllocation: allocationProps[]
-}
-
-interface ContributionAllocationFormValues {
-  contributionAllocation: allocationProps[]
 }
 
 const Allocation: React.FC<FounderProps> = ({ title }) => {
@@ -118,7 +114,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
           <Form>
             <FieldArray name="founderAllocation">
               {({ remove, push }) => (
-                <FounderAllocationNew
+                <FounderAllocation
                   formik={formik}
                   auctionDuration={auctionDuration}
                   vetoPower={vetoPower}
@@ -136,7 +132,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
         )}
       </Formik>
 
-      <ContributionAllocationNew />
+      <ContributionAllocation />
 
       <Flex justify={'space-between'} mt={'x8'}>
         <Button

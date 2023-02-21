@@ -9,7 +9,7 @@ import { FounderAllocationFormValues } from 'src/pages/create/forms/Allocation/A
 import { allocationProps, auctionSettingsProps } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 
-interface FounderAllocationProps {
+interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues
   auctionDuration: auctionSettingsProps['auctionDuration']
   vetoPower?: number
@@ -20,7 +20,7 @@ interface FounderAllocationProps {
   addFounderAddress: () => void
 }
 
-const FounderAllocationNew = ({
+const FounderAllocationFields = ({
   values,
   vetoPower,
   auctionDuration,
@@ -29,7 +29,7 @@ const FounderAllocationNew = ({
   formik,
   removeFounderAddress,
   addFounderAddress,
-}: FounderAllocationProps) => {
+}: FounderAllocationFieldsProps) => {
   const calculateMaxAllocation = (
     allocation: string | number,
     end: string | number,
@@ -175,4 +175,4 @@ const FounderAllocationNew = ({
   )
 }
 
-export default FounderAllocationNew
+export default FounderAllocationFields

@@ -1,5 +1,4 @@
-import { Provider } from '@ethersproject/abstract-provider'
-import { FOUNDER_ALLOCATION, CONTRIBUTION_ALLOCATION } from 'src/components/Fields/types'
+import { AddressType } from 'src/typings'
 import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
 import * as Yup from 'yup'
@@ -53,6 +52,23 @@ export const validationSchemaContributions = Yup.object().shape({
   //   }
   // ),
 })
+
+export const validationSchemaFounders = (signerAddress: AddressType) =>
+  Yup.object().shape({
+    founderAllocation: Yup.array()
+      .of(allocationSchema)
+      .min(1, 'founder required')
+      .test(
+        'founderAddress',
+        'the founder must be the connected wallet.',
+        function (value) {
+          if (value?.[0]) {
+            return value?.[0]['founderAddress'] === signerAddress
+          }
+          return false
+        }
+      ),
+  })
 
 export const validateFounder = (signerAddress: string | null) =>
   Yup.object().shape({
