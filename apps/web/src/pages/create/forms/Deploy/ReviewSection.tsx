@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { Flex } from '@zoralabs/zord'
 import {
   infoSectionWrapper,
@@ -10,8 +10,8 @@ import { motion } from 'framer-motion'
 
 const ReviewSection: React.FC<{
   subHeading: string
-  section: ReactElement[] | undefined
-}> = ({ subHeading, section }) => {
+  children: ReactNode[]
+}> = ({ subHeading, children }) => {
   const [isOpen, setIsOpen] = React.useState(false)
   const variants = {
     initial: {
@@ -56,7 +56,7 @@ const ReviewSection: React.FC<{
         animate={!isOpen ? 'initial' : 'open'}
       >
         <Flex direction={'column'} width={'100%'} px={'x6'} py={'x4'}>
-          {section}
+          {children}
         </Flex>
       </motion.div>
     </Flex>
