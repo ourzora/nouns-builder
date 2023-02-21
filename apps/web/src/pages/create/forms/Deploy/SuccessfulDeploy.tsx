@@ -1,6 +1,6 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { useMetadataContract } from 'src/modules/dao/hooks'
 import { useDaoStore } from 'src/stores/useDaoStore'
@@ -28,8 +28,9 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   title,
 }) => {
   const router = useRouter()
-  const { generalInfo, setUpArtwork, ipfsUpload, orderedLayers, setFulfilledSections } =
+  const { generalInfo, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
     useFormStore()
+
   const { addresses, setAddresses } = useDaoStore()
   const { contract: metadataContract } = useMetadataContract(addresses?.metadata)
   const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
@@ -61,9 +62,8 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const handleDeployMetadata = React.useCallback(async () => {
     if (!transactions || !metadataContract) return
 
-    console.log('artwork and ipfs data:', transactions)
     setIsPendingTransaction(true)
-    for await (const transaction of transactions) {
+    for (const transaction of transactions) {
       try {
         const { wait } = await metadataContract.addProperties(
           transaction.names,
@@ -72,15 +72,18 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
         )
         await wait()
       } catch (err) {
+        console.warn(err)
         setIsPendingTransaction(false)
-        console.log('err', err)
         return
       }
     }
+
     setIsPendingTransaction(false)
     setFulfilledSections(title)
-    useFormStore.persist.clearStorage()
-    await router.push(`/dao/${token}`)
+
+    router.push(`/dao/${token}`).then(() => {
+      resetForm()
+    })
   }, [metadataContract, transactions, router, setFulfilledSections, title, token])
 
   /*
@@ -180,7 +183,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
           deployContractButtonStyle[isPendingTransaction ? 'pendingFull' : 'defaultFull']
         }
         disabled={!transactions}
-        onClick={() => handleDeployMetadata()}
+        onClick={handleDeployMetadata}
         w={'100%'}
         mt={'x8'}
       >
