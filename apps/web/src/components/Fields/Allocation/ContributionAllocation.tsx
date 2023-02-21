@@ -179,7 +179,13 @@ const ContributionAllocation = () => {
         </Flex>
 
         <Flex align={'center'} justify={'center'}>
-          <Button mt={'x2'} type="button" variant="ghost" onClick={() => setOpen(true)}>
+          <Button
+            borderRadius={'curved'}
+            mt={'x4'}
+            type="button"
+            variant="ghost"
+            onClick={() => setOpen(true)}
+          >
             Change Contributions
           </Button>
         </Flex>
@@ -253,6 +259,7 @@ const ContributionAllocation = () => {
                     <Box mb={'x8'}>
                       <Flex justify={'space-between'}>
                         <Text fontWeight={'display'}>Nouns Contribution</Text>
+
                         <Toggle
                           on={!!formik.values.contributionAllocation?.[1]}
                           onToggle={() => {

@@ -151,11 +151,16 @@ const FounderAllocationFields = ({
         })}
       </Stack>
 
-      <Flex align={'center'} justify={'center'}>
-        <Icon id="plus" />
-        <Flex ml={'x2'} className={[addAddressButton]} onClick={addFounderAddress}>
-          Add Address
-        </Flex>
+      <Flex justify={'center'}>
+        <Button
+          variant={'ghost'}
+          borderRadius={'curved'}
+          type={'button'}
+          onClick={addFounderAddress}
+        >
+          <Icon id="plus" />
+          <Flex>Add Address</Flex>
+        </Button>
       </Flex>
 
       {typeof errors?.founderAllocation === 'string' && (
