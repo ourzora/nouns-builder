@@ -73,7 +73,6 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
   }
 
   const handleSubmit = async ({ founderAllocation }: FounderAllocationFormValues) => {
-    console.log(founderAllocation)
     const foundAllocationPromises = founderAllocation.map((allocation) =>
       getEnsAddress(allocation.founderAddress)
     )
@@ -86,9 +85,10 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
         founderAddress: founderAllocationAddresses[idx],
       }))
     )
+
+    setActiveSection(activeSection + 1)
   }
 
-  console.log(signerAddress)
   if (!signerAddress) return null
 
   return (
