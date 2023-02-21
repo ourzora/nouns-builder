@@ -98,7 +98,6 @@ const initialState = {
       maxAllocation: '',
     },
   ],
-  builderAllocationOn: true,
   nounsAllocationOn: true,
   vetoPower: undefined,
   setUpArtwork: {
