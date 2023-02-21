@@ -1,6 +1,6 @@
 import React from 'react'
 import { Stack, Text } from '@zoralabs/zord'
-import ProposalNavigation from '../../proposals/components/ProposalNavigation'
+import Navigation from '../../proposals/components/Navigation'
 import { useRouter } from 'next/router'
 
 interface CreateProposalHeadingProps {
@@ -14,7 +14,7 @@ const CreateProposalHeading: React.FC<CreateProposalHeadingProps> = ({
 }) => {
   return (
     <Stack mx={'auto'} pb={'x8'} w={'100%'}>
-      <ProposalNavigation />
+      <Navigation />
       <Text
         fontSize={35}
         fontWeight={'label'}

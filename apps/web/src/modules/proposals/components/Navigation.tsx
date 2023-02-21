@@ -12,7 +12,7 @@ interface NavigationProps {
   handleBack?: () => void
 }
 
-const ProposalNavigation: React.FC<NavigationProps> = ({ handleBack }) => {
+const Navigation: React.FC<NavigationProps> = ({ handleBack }) => {
   const router = useRouter()
   const addresses = useDaoStore((state) => state.addresses)
 
@@ -70,4 +70,4 @@ const ProposalNavigation: React.FC<NavigationProps> = ({ handleBack }) => {
   )
 }
 
-export default ProposalNavigation
+export default Navigation

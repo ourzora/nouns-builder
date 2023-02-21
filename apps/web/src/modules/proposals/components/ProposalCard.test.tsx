@@ -1,4 +1,4 @@
-import ProposalCard from '.'
+import ProposalCard from './ProposalCard'
 import { screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import dayjs from 'dayjs'

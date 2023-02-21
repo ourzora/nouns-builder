@@ -3,19 +3,21 @@ import { Flex } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { Proposal, ProposalStatus, ProposalVote } from 'src/typings'
-import VoteStatus from './VoteStatus'
 import { AddressType } from 'src/typings'
-import { isProposalOpen } from '../../utils'
-import OwnerActions from './OwnerActions'
 import { useContractReads } from 'wagmi'
 import { governorAbi } from 'src/constants/abis'
 
-interface ProposalActionsProps {
+import { isProposalOpen, isProposalSuccessful } from '../../utils'
+import OwnerActions from './OwnerActions'
+import SucceededActions from './SucceededActions'
+import VoteStatus from './VoteStatus'
+
+interface ActionsProps {
   daoName?: string
   proposal: Proposal
 }
 
-const ProposalActions: React.FC<ProposalActionsProps> = ({ daoName, proposal }) => {
+const Actions: React.FC<ActionsProps> = ({ daoName, proposal }) => {
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const addresses = useDaoStore((state) => state.addresses)
 
@@ -71,8 +73,12 @@ const ProposalActions: React.FC<ProposalActionsProps> = ({ daoName, proposal }) 
   const showCancel = proposalOpen && isProposer
   const showVeto = proposalOpen && isVetoer
 
+  const displaySucceededActions = isProposalSuccessful(proposal.status)
+
   return (
     <Fragment>
+      {displaySucceededActions && <SucceededActions proposal={proposal} />}
+
       <Flex
         direction={{ '@initial': 'column', '@768': 'row' }}
         w={'100%'}
@@ -107,4 +113,4 @@ const ProposalActions: React.FC<ProposalActionsProps> = ({ daoName, proposal }) 
   )
 }
 
-export default ProposalActions
+export default Actions

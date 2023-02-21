@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'src/test/utils'
 import { Proposal, ProposalStatus } from 'src/typings'
 
-import ProposalSucceededActions from '.'
+import ProposalSucceededActions from './SucceededActions'
 
 describe('proposal status', () => {
   const date = new Date(2022, 1, 1)

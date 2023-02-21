@@ -1,16 +1,16 @@
 import { Box, Flex, Label, Text } from '@zoralabs/zord'
-import ProposalNavigation from '../ProposalNavigation'
-import ProposalStatus from '../ProposalStatus'
+import Navigation from './Navigation'
+import ProposalStatus from './ProposalStatus'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { Proposal } from 'src/typings'
 import { useRouter } from 'next/router'
 
-interface ProposalHeaderProps {
+interface HeaderProps {
   proposal: Proposal
 }
 
-const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
+const Header: React.FC<HeaderProps> = ({ proposal }) => {
   const router = useRouter()
   const { title, voteStart, voteEnd, proposer, status, expiresAt, proposalNumber } =
     proposal
@@ -19,7 +19,7 @@ const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
 
   return (
     <Flex direction={'column'} gap={{ '@initial': 'x4', '@768': 'x7' }} mb={'x2'}>
-      <ProposalNavigation
+      <Navigation
         handleBack={() => {
           router.push({
             pathname: `/dao/[token]`,
@@ -70,4 +70,4 @@ const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
   )
 }
 
-export default ProposalHeader
+export default Header

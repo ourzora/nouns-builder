@@ -1,4 +1,4 @@
-import ProposalStatus from './'
+import ProposalStatus from './ProposalStatus'
 import { screen } from '@testing-library/react'
 import dayjs from 'dayjs'
 import React from 'react'

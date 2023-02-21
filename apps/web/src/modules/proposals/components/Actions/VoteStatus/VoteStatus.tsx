@@ -3,12 +3,13 @@ import { Button, Flex, Text } from '@zoralabs/zord'
 import { ProposalVote, ProposalStatus, Support } from 'src/typings'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 import { useDaoStore, useLayoutStore } from 'src/stores'
-import VoteModal from './VoteModal'
-import Pending from './Pending'
-import Vote from './Vote'
 import { useContractEvent } from 'wagmi'
 import { governorAbi } from 'src/constants/abis'
 import { ethers } from 'ethers'
+
+import VoteModal from './VoteModal'
+import Pending from './Pending'
+import Vote from './Vote'
 
 type SupportValue = 0 | 1 | 2
 

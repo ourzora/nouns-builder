@@ -1,6 +1,5 @@
-import ProposalTile from '.'
+import ProposalTile from './Tile'
 import React, { Fragment } from 'react'
-import { Box } from '@zoralabs/zord'
 import { screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import { describe, expect, it } from 'vitest'

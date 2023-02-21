@@ -1,5 +1,5 @@
-import ProposalStatus from '../ProposalStatus'
-import { statusStyle, titleStyle } from './index.css'
+import ProposalStatus from './ProposalStatus'
+import { statusStyle, titleStyle } from './ProposalCard.css'
 import { Flex, Box, Label, Paragraph } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'

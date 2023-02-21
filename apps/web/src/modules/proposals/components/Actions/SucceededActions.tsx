@@ -9,16 +9,64 @@ import {
 } from 'src/typings'
 import { useSWRConfig } from 'swr'
 import { Countdown } from 'src/components/Countdown'
-import { Queue, Execute } from '../ProposalButtons'
 import SWR_KEYS from 'src/constants/swrKeys'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { getProposal } from 'src/query/proposalQuery'
 import { BigNumber } from 'ethers'
+import useGovernorContract from 'src/hooks/useGovernorContract'
+import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
+
 import { isProposalSuccessful } from '../../utils'
+import GovernorContractButton from '../GovernorContractButton'
 
 interface ProposalSucceededActionsProps {
   proposal: Proposal
+}
+
+const Queue: React.FC<{
+  proposalId: string
+  onSuccess: () => void
+}> = (props) => {
+  const { queue } = useGovernorContract()
+
+  const queueTransaction = async () => {
+    return await queue(props.proposalId as BytesType)
+  }
+
+  return (
+    <GovernorContractButton
+      proposalTransaction={queueTransaction}
+      buttonText="Queue"
+      buttonClassName={proposalActionButtonVariants['queue']}
+      {...props}
+    />
+  )
+}
+
+const Execute: React.FC<{
+  proposalId: string
+  onSuccess: () => void
+  proposer: AddressType
+  descriptionHash: BytesType
+  calldatas: BytesType[]
+  targets: AddressType[]
+  values: BigNumber[]
+}> = ({ proposer, descriptionHash, calldatas, targets, values, ...props }) => {
+  const { execute } = useGovernorContract()
+
+  const executeTransaction = async () => {
+    return await execute(targets, values, calldatas, descriptionHash, proposer)
+  }
+
+  return (
+    <GovernorContractButton
+      proposalTransaction={executeTransaction}
+      buttonText="Execute"
+      buttonClassName={proposalActionButtonVariants['execute']}
+      {...props}
+    />
+  )
 }
 
 const ProposalSucceededActions: React.FC<ProposalSucceededActionsProps> = ({

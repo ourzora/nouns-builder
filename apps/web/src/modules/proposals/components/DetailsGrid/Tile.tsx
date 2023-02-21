@@ -1,6 +1,6 @@
 import React, { ReactNode, Fragment } from 'react'
 import { Flex, Text, TextProps } from '@zoralabs/zord'
-import { proposalTileSubtitleVariants } from './index.css'
+import { proposalTileSubtitleVariants } from './Tile.css'
 
 interface ProposalTileProps {
   title: string
