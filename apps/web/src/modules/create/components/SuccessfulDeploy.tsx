@@ -14,7 +14,6 @@ import {
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
-import * as Sentry from '@sentry/nextjs'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string

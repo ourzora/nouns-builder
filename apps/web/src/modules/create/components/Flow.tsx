@@ -14,7 +14,6 @@ const Flow: React.FC<{
     <Flex direction={'column'} width={'100%'}>
       <motion.div
         className={flowWrapper}
-        // variants={isMobile ? variants : undefined} -- mobile menu
         initial="initial"
         animate={isOpen ? 'animate' : 'initial'}
       >

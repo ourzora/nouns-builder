@@ -1,9 +1,8 @@
 import React, { ReactElement } from 'react'
 import { motion } from 'framer-motion'
-import { Box, Flex, Heading } from '@zoralabs/zord'
+import { atoms, Box, Flex, Heading } from '@zoralabs/zord'
 import { CreateFormSection } from 'src/typings'
 import { useFormStore } from 'src/stores/useFormStore'
-import { headingStyle, preHeadingStyle, subHeadingStyle } from '../../styles/styles.css'
 
 interface FormHandler {
   forms: ReactElement[]
@@ -23,8 +22,19 @@ const FormHandler: React.FC<FormHandler> = ({ forms, title, heading, subHeading 
 
   return (
     <Box>
-      <Flex className={preHeadingStyle}>Create A dao</Flex>
-      <Heading as={'h3'} mt={'x0'} mb={'x8'} className={headingStyle}>
+      <Flex
+        fontSize={12}
+        lineHeight={20}
+        className={atoms({
+          textTransform: 'uppercase',
+        })}
+        style={{
+          letterSpacing: '.05em',
+        }}
+      >
+        Create A dao
+      </Flex>
+      <Heading as={'h3'} mt={'x0'} mb={'x8'} fontSize={40}>
         {!heading
           ? title
           : Array.isArray(heading)
@@ -32,7 +42,7 @@ const FormHandler: React.FC<FormHandler> = ({ forms, title, heading, subHeading 
           : heading}
       </Heading>
       {subHeading && (
-        <Box mb={'x7'} className={subHeadingStyle}>
+        <Box mb={'x7'} color={'text2'}>
           {Array.isArray(subHeading) ? subHeading[activeSectionCurrentIndex] : subHeading}
         </Box>
       )}
