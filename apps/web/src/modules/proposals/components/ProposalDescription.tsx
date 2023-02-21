@@ -9,8 +9,8 @@ import { CHAIN } from 'src/constants/network'
 import { SortDirection, TokenSortKey } from 'src/graphql/sdk'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { Proposal } from 'src/typings'
-
-const ReactHtmlParser = require('react-html-parser').default
+import ReactMarkdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>
@@ -50,7 +50,9 @@ const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   return (
     <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
       <Section title="Description">
-        <Paragraph overflow={'auto'}>{ReactHtmlParser(description)}</Paragraph>
+        <Paragraph overflow={'auto'}>
+          <ReactMarkdown rehypePlugins={[rehypeRaw]}>{description}</ReactMarkdown>
+        </Paragraph>
       </Section>
 
       <Section title="Proposer">

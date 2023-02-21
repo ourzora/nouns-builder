@@ -21,7 +21,7 @@ import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
 import { Transactions } from './Transactions'
 import { ErrorResult } from 'src/pages/api/errorResult'
-import MarkdownEditor from "../MarkdownEditor";
+import MarkdownEditor from '../MarkdownEditor'
 
 interface ReviewProposalProps {
   disabled: boolean
@@ -229,7 +229,6 @@ export const ReviewProposalForm = ({
                     disabled={disabledForm}
                     inputLabel={'Summary'}
                     errorMessage={formik.errors['summary']}
-                    onBlur={formik.handleBlur}
                   />
                 )}
               </Field>

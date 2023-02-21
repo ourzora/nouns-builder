@@ -1,37 +1,35 @@
 import * as React from 'react'
 import ReactMde from 'react-mde'
 import ReactMarkdown from 'react-markdown'
-import '../../../components/Fields/styles.css'
+import 'src/components/Fields/styles.css'
 import 'react-mde/lib/styles/css/react-mde-all.css'
-import { ChangeEventHandler, ReactElement } from 'react'
+import { ReactElement } from 'react'
 import { FormikProps } from 'formik'
 import { Box, Flex, Stack } from '@zoralabs/zord'
-import { defaultHelperTextStyle, defaultInputLabelStyle } from '../../../components/Fields/styles.css'
-import { Error } from '../../../components/Fields/Error'
+import {
+  defaultHelperTextStyle,
+  defaultInputLabelStyle,
+} from 'src/components/Fields/styles.css'
+import { Error } from 'src/components/Fields/Error'
 
 interface MarkdownEditorProps {
+  formik: FormikProps<any>
   id: string
   value: string
   inputLabel: string | ReactElement
-  onChange: ChangeEventHandler
-  onBlur: ChangeEventHandler
-  formik?: FormikProps<any>
   disabled?: boolean
   errorMessage?: string
   helperText?: string
-  autoSubmit?: boolean
-  placeholder?: string
 }
 
 const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
+  formik,
   id,
   value,
   inputLabel,
   disabled,
   errorMessage,
   helperText,
-  formik,
-  placeholder,
 }) => {
   const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>('write')
 
