@@ -1,6 +1,3 @@
-import InfoSection from './InfoSection'
-import ReviewSection from './ReviewSection'
-import SuccessfulDeploy from './SuccessfulDeploy'
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import React from 'react'
@@ -23,6 +20,13 @@ import { managerAbi } from 'src/constants/abis'
 import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
 import { WriteContractUnpreparedArgs } from '@wagmi/core'
+import { getFetchableUrl } from 'ipfs-service'
+import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create/utils'
+
+import ReviewSection from './ReviewSection'
+import ReviewItem from './ReviewItem'
+import PreviewArtwork from './PreviewArtwork'
+import SuccessfulDeploy from './SuccessfulDeploy'
 
 type FounderParameters = NonNullable<
   WriteContractUnpreparedArgs<typeof managerAbi, 'deploy'>
@@ -147,138 +151,132 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
   const handleDeploy = async () => {
     setIsPendingTransaction(true)
-    const txn = await writeAsync?.()
-    await txn?.wait()
+    try {
+      const txn = await writeAsync?.()
+      await txn?.wait()
+    } catch (e) {
+      console.error(e)
+      setIsPendingTransaction(false)
+    }
   }
-
-  /*
-
-     Parse Store Data * Compose Review Sections
-
-  */
-  const _generalInfo = React.useMemo(() => {
-    return Object.entries(generalInfo).map(([key, value], index) => {
-      return <InfoSection _key={key} value={value} key={index} />
-    })
-  }, [])
-
-  const _auctionSettings = React.useMemo(() => {
-    return Object.entries(auctionSettings).map(([key, value], index) => {
-      return <InfoSection _key={key} value={value} key={index} />
-    })
-  }, [])
-
-  const _allocationSettings = React.useMemo(() => {
-    return Object.entries([...founderAllocation, ...contributionAllocation]).map(
-      ([key, value], index) => {
-        return <InfoSection _key={key} value={value} key={index} />
-      }
-    )
-  }, [])
-
-  const _setUpArtwork = React.useMemo(() => {
-    return Object.entries(setUpArtwork).map(([key, value], index) => {
-      return <InfoSection _key={key} value={value} key={index} />
-    })
-  }, [])
-
-  const ReviewSections = [
-    {
-      subHeading: 'General Info',
-      section: _generalInfo.map((element, i) => (
-        <Box key={i}>{React.cloneElement(element)}</Box>
-      )),
-    },
-    {
-      subHeading: 'Auction Settings',
-      section: _auctionSettings.map((element, i) => (
-        <Box key={i}>{React.cloneElement(element)}</Box>
-      )),
-    },
-    {
-      subHeading: 'Allocation',
-      section: _allocationSettings.map((element, i) => (
-        <Box key={i}>{React.cloneElement(element)}</Box>
-      )),
-    },
-    {
-      subHeading: 'Set Up Artwork',
-      section: _setUpArtwork.map((element, i) => (
-        <Box key={i}>{React.cloneElement(element)}</Box>
-      )),
-    },
-  ]
 
   return (
     <Box>
       {!fulfilledSections.includes(title) ? (
-        <>
-          <Box>
-            <Flex direction={'column'}>
-              {ReviewSections.map(({ subHeading, section }) => (
-                <ReviewSection
-                  subHeading={subHeading}
-                  section={section}
-                  key={subHeading}
+        <Box>
+          <Flex direction={'column'}>
+            <ReviewSection subHeading="General Info">
+              <ReviewItem
+                label="Dao Avatar"
+                value={
+                  <img
+                    className={atoms({
+                      mt: 'x4',
+                      height: 'x24',
+                      width: 'x24',
+                      borderRadius: 'round',
+                    })}
+                    src={getFetchableUrl(generalInfo.daoAvatar)}
+                    alt=""
+                  />
+                }
+              />
+              <ReviewItem label="Dao Name" value={generalInfo.daoName} />
+              <ReviewItem label="Dao Symbol" value={generalInfo.daoSymbol} />
+              <ReviewItem label="Dao Website" value={generalInfo.daoWebsite} />
+            </ReviewSection>
+
+            <ReviewSection subHeading="Auction Settings">
+              <ReviewItem
+                label="Auction Duration"
+                value={formatAuctionDuration(auctionSettings.auctionDuration)}
+              />
+              <ReviewItem
+                label="Auction Reserve Price"
+                value={`${auctionSettings.auctionReservePrice} ETH`}
+              />
+              <ReviewItem
+                label="Proposal Threshold"
+                value={`${auctionSettings.proposalThreshold} %`}
+              />
+              <ReviewItem
+                label="Quorum Threshold"
+                value={`${auctionSettings.quorumThreshold} %`}
+              />
+            </ReviewSection>
+
+            <ReviewSection subHeading="Allocation">
+              {[...founderAllocation, ...contributionAllocation].map((value, i) => (
+                <ReviewItem
+                  label="Founder Allocation"
+                  value={formatFounderAllocation(value)}
+                  key={i}
                 />
               ))}
-            </Flex>
-            <Flex direction={'column'} p={'x6'} className={deployCheckboxWrapperStyle}>
-              <Flex>
-                <Flex align={'center'} justify={'center'} gap={'x4'}>
-                  <Flex
-                    align={'center'}
-                    justify={'center'}
-                    className={
-                      deployCheckboxStyleVariants[hasConfirmed ? 'confirmed' : 'default']
-                    }
-                    onClick={() => setHasConfirmed((bool) => !bool)}
-                  >
-                    {hasConfirmed && <Icon fill="background1" id="check" />}
-                  </Flex>
-                  <Flex className={deployCheckboxHelperText}>
-                    [I have reviewed and acknowledge and agree to the{' '}
-                    <a
-                      href={'/legal'}
-                      target="_blank"
-                      className={atoms({ color: 'accent' })}
-                      rel="noreferrer"
-                    >
-                      Nouns Builder Terms of Service
-                    </a>
-                    ]
-                  </Flex>
-                </Flex>
-              </Flex>
-              <Flex mt={'x8'}>
+            </ReviewSection>
+
+            <ReviewSection subHeading="Set Up Artwork">
+              <ReviewItem
+                label="Project Description"
+                value={setUpArtwork.projectDescription}
+              />
+              <ReviewItem label="Artwork" value={<PreviewArtwork />} />
+              <ReviewItem label="Files Length" value={setUpArtwork.filesLength} />
+            </ReviewSection>
+          </Flex>
+          <Flex direction={'column'} p={'x6'} className={deployCheckboxWrapperStyle}>
+            <Flex>
+              <Flex align={'center'} justify={'center'} gap={'x4'}>
                 <Flex
-                  justify={'center'}
                   align={'center'}
-                  w={'x15'}
-                  h={'x15'}
-                  minH={'x15'}
-                  minW={'x15'}
-                  onClick={() => handlePrev()}
-                  className={defaultBackButtonVariants['default']}
-                >
-                  <Icon id="arrowLeft" />
-                </Flex>
-                <Button
-                  onClick={handleDeploy}
-                  w={'100%'}
-                  disabled={isUploadingToIPFS || !signer || !hasConfirmed}
+                  justify={'center'}
                   className={
-                    deployContractButtonStyle[
-                      isPendingTransaction ? 'pending' : 'default'
-                    ]
+                    deployCheckboxStyleVariants[hasConfirmed ? 'confirmed' : 'default']
                   }
+                  onClick={() => setHasConfirmed((bool) => !bool)}
                 >
-                  {!isPendingTransaction ? `Deploy Contracts (1 of 2)` : `Deploying`}
-                </Button>
+                  {hasConfirmed && <Icon fill="background1" id="check" />}
+                </Flex>
+                <Flex className={deployCheckboxHelperText}>
+                  [I have reviewed and acknowledge and agree to the{' '}
+                  <a
+                    href={'/legal'}
+                    target="_blank"
+                    className={atoms({ color: 'accent' })}
+                    rel="noreferrer"
+                  >
+                    Nouns Builder Terms of Service
+                  </a>
+                  ]
+                </Flex>
               </Flex>
             </Flex>
-          </Box>
-        </>
+            <Flex mt={'x8'}>
+              <Flex
+                justify={'center'}
+                align={'center'}
+                w={'x15'}
+                h={'x15'}
+                minH={'x15'}
+                minW={'x15'}
+                onClick={() => handlePrev()}
+                className={defaultBackButtonVariants['default']}
+              >
+                <Icon id="arrowLeft" />
+              </Flex>
+              <Button
+                onClick={handleDeploy}
+                w={'100%'}
+                disabled={isUploadingToIPFS || !signer || !hasConfirmed}
+                className={
+                  deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']
+                }
+              >
+                {!isPendingTransaction ? `Deploy Contracts (1 of 2)` : `Deploying`}
+              </Button>
+            </Flex>
+          </Flex>
+        </Box>
       ) : (
         <SuccessfulDeploy
           token={deployedDao?.token}
