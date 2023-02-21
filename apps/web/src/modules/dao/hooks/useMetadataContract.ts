@@ -66,7 +66,7 @@ export function useMetadataContract(address?: AddressType) {
 
   if (!data) {
     return {
-      contract,
+      contract: contract || undefined,
       daoImage: undefined,
       daoWebsite: undefined,
       updateDescription: undefined,
@@ -83,7 +83,7 @@ export function useMetadataContract(address?: AddressType) {
     data as unknown[] as string[]
 
   return {
-    contract,
+    contract: contract || undefined,
     daoImage,
     daoWebsite,
     updateDescription,

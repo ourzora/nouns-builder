@@ -8,7 +8,6 @@ import {
 } from 'src/components/Fields/fields/auction'
 import {
   DAYS_HOURS_MINS_SECS,
-  NUMBER,
   SINGLE_IMAGE_UPLOAD,
   TEXT,
   TEXTAREA,

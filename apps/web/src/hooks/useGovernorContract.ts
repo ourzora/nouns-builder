@@ -5,6 +5,7 @@ import { useProposalTransactions } from 'src/hooks/useProposalTransactions'
 import { useContract, useContractReads, useSigner } from 'wagmi'
 import { governorAbi } from 'src/constants/abis/Governor'
 import { AddressType, BytesType } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 
 const useGovernorContract = () => {
   const { addresses } = useDaoStore()
@@ -62,39 +63,15 @@ const useGovernorContract = () => {
     ],
   })
 
-  const contractReads = React.useMemo(() => {
-    if (typeof data === 'undefined') {
-      return {
-        quorumThresholdBps: BigNumber.from('0'),
-        proposalThresholdBps: BigNumber.from('0'),
-        votingDelay: BigNumber.from('0'),
-        votingPeriod: BigNumber.from('0'),
-        owner: '',
-        vetoer: '',
-        proposalThreshold: BigNumber.from('0'),
-      }
-    }
-
-    const [
-      quorumThresholdBps,
-      proposalThresholdBps,
-      votingDelay,
-      vetoer,
-      votingPeriod,
-      owner,
-      proposalThreshold,
-    ] = data
-
-    return {
-      quorumVotesBps: quorumThresholdBps,
-      proposalThresholdBps,
-      votingDelay,
-      vetoer,
-      votingPeriod,
-      owner,
-      proposalThreshold,
-    }
-  }, [data])
+  const [
+    quorumThresholdBps,
+    proposalThresholdBps,
+    votingDelay,
+    vetoer,
+    votingPeriod,
+    owner,
+    proposalThreshold,
+  ] = unpackOptionalArray(data, 7)
 
   // made useProposal which takes _proposalId as arg
   // should be migrated to where applicable, but
@@ -157,18 +134,18 @@ const useGovernorContract = () => {
   )
 
   return {
-    proposalThreshold: contractReads.proposalThreshold,
-    owner: contractReads.owner,
-    vetoer: contractReads.vetoer,
-    votingDelay: contractReads.votingDelay,
-    votingPeriod: contractReads.votingPeriod,
+    proposalThreshold: proposalThreshold || BigNumber.from('0'),
+    owner: owner || '',
+    vetoer: vetoer || '',
+    votingDelay: votingDelay || BigNumber.from('0'),
+    votingPeriod: votingPeriod || BigNumber.from('0'),
     updateQuorumVotesBps: updateQuorumThresholdBps,
-    proposalThresholdBps: contractReads.proposalThresholdBps,
-    quorumVotesBps: contractReads.quorumVotesBps,
+    proposalThresholdBps: proposalThresholdBps || BigNumber.from('0'),
+    quorumVotesBps: quorumThresholdBps || BigNumber.from('0'),
     updateProposalThreshold,
     updateVotingPeriod,
     updateVotingDelay,
-    contract,
+    contract: contract || undefined,
     burnVetoer,
     updateVetoer,
     propose,
