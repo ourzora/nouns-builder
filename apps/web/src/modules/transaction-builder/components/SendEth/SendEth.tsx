@@ -22,6 +22,7 @@ const SendEth = () => {
   const handleSubmit = useCallback(
     async (values: SendEthValues, actions: FormikHelpers<SendEthValues>) => {
       if (!values.amount || !values.recipientAddress) return
+
       const target = await getEnsAddress(values.recipientAddress, getProvider())
       const value = values.amount.toString()
 
@@ -37,6 +38,8 @@ const SendEth = () => {
           },
         ],
       })
+
+      actions.resetForm()
     },
     []
   )
