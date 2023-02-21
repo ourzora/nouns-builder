@@ -44,58 +44,64 @@ const FounderAllocationNew = ({
           const touchedField = touched?.founderAllocation?.[index]
           return (
             <Flex key={`founder-${index}`}>
-              <SmartInput
-                inputLabel={
-                  isFounder ? 'Admin founder address' : 'Additional founder allocations'
-                }
-                id={`founderAllocation.${index}.founderAddress`}
-                value={founder.founderAddress}
-                type={'text'}
-                formik={formik}
-                placeholder={'0x... or .eth'}
-                disabled={isFounder}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                autoSubmit={false}
-                isAddress={true}
-                errorMessage={
-                  error?.founderAddress && touchedField?.founderAddress
-                    ? error?.founderAddress
-                    : undefined
-                }
-              />
+              <Flex style={{ flex: '2 1 0' }}>
+                <SmartInput
+                  inputLabel={
+                    isFounder ? 'Admin founder address' : 'Additional founder allocations'
+                  }
+                  id={`founderAllocation.${index}.founderAddress`}
+                  value={founder.founderAddress}
+                  type={'text'}
+                  formik={formik}
+                  placeholder={'0x... or .eth'}
+                  disabled={isFounder}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  autoSubmit={false}
+                  isAddress={true}
+                  errorMessage={
+                    error?.founderAddress && touchedField?.founderAddress
+                      ? error?.founderAddress
+                      : undefined
+                  }
+                />
+              </Flex>
 
-              <SmartInput
-                inputLabel={'Percentage'}
-                id={`founderAllocation.${index}.allocation`}
-                value={founder.allocation}
-                type={'number'}
-                formik={formik}
-                disabled={false}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                perma={'%'}
-                autoSubmit={false}
-                isAddress={false}
-                errorMessage={
-                  error?.allocation && touchedField?.allocation
-                    ? error?.allocation
-                    : undefined
-                }
-              />
+              <Flex style={{ flex: '1 1 0' }}>
+                <SmartInput
+                  inputLabel={'Percentage'}
+                  id={`founderAllocation.${index}.allocation`}
+                  value={founder.allocation}
+                  type={'number'}
+                  formik={formik}
+                  disabled={false}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  perma={'%'}
+                  autoSubmit={false}
+                  isAddress={false}
+                  errorMessage={
+                    error?.allocation && touchedField?.allocation
+                      ? error?.allocation
+                      : undefined
+                  }
+                />
+              </Flex>
 
-              <Date
-                id={`founderAllocation.${index}.endDate`}
-                value={founder.endDate}
-                placeholder={'1/1/2222'}
-                inputLabel={'End date'}
-                formik={formik}
-                autoSubmit={false}
-                disabled={false}
-                errorMessage={
-                  error?.endDate && touchedField?.endDate ? error?.endDate : undefined
-                }
-              />
+              <Flex style={{ flex: '1 1 0' }}>
+                <Date
+                  id={`founderAllocation.${index}.endDate`}
+                  value={founder.endDate}
+                  placeholder={'yyyy-mm-dd'}
+                  inputLabel={'End date'}
+                  formik={formik}
+                  autoSubmit={false}
+                  disabled={false}
+                  errorMessage={
+                    error?.endDate && touchedField?.endDate ? error?.endDate : undefined
+                  }
+                />
+              </Flex>
 
               {!isFounder && (
                 <Button
