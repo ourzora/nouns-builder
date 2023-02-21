@@ -31,6 +31,7 @@ export const useVotes = ({
 
   if (!data || isLoading || data.some(isNil)) {
     return {
+      isLoading,
       isOwner: false,
       hasThreshold: false,
     }
@@ -39,6 +40,7 @@ export const useVotes = ({
   const [votes, proposalThreshold] = data
 
   return {
+    isLoading,
     isOwner: votes.toNumber() > proposalThreshold.toNumber(),
     hasThreshold: votes.toNumber() > 0,
   }

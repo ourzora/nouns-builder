@@ -1,17 +1,40 @@
 import React from 'react'
 import CreateProposalHeading from 'src/modules/transaction-builder/components/CreateProposalHeading'
-import { Stack } from '@zoralabs/zord'
+import { Flex, Stack } from '@zoralabs/zord'
 import { ReviewProposalForm } from 'src/modules/transaction-builder'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { useRouter } from 'next/router'
+import { useVotes } from 'src/hooks/useVotes'
+import { useDaoStore } from 'src/stores'
+import { AddressType } from 'src/typings'
+import { useAccount } from 'wagmi'
+import { notFoundWrap } from 'src/styles/404.css'
 
 const ReviewProposalPage: NextPageWithLayout = () => {
+  const router = useRouter()
+  const { query } = router
+
+  const { addresses } = useDaoStore()
+  const { address } = useAccount()
+
+  const { isLoading, hasThreshold } = useVotes({
+    governorAddress: addresses?.governor,
+    signerAddress: address,
+    collectionAddress: query?.token as AddressType,
+  })
+
   const transactions = useProposalStore((state) => state.transactions)
   const disabled = useProposalStore((state) => state.disabled)
   const title = useProposalStore((state) => state.title)
   const summary = useProposalStore((state) => state.summary)
+
+  if (isLoading) return null
+
+  if (!hasThreshold) {
+    return <Flex className={notFoundWrap}>403 - Access Denied</Flex>
+  }
 
   return (
     <Stack mb={'x20'} w={'100%'} px={'x3'} style={{ maxWidth: 1060 }} mx="auto">
