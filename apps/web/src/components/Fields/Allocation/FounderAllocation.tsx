@@ -1,4 +1,3 @@
-import { addAddressButton } from '../styles.css'
 import { Heading, Button, Flex, Text, Paragraph, Stack } from '@zoralabs/zord'
 import { Icon } from 'src/components/Icon'
 import { FormikErrors, FormikProps, FormikTouched } from 'formik'

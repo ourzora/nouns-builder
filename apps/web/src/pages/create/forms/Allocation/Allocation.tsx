@@ -89,7 +89,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
       )
     )
 
-    if (totalAllocation > 100) {
+    if (totalAllocation > 99) {
       setAllocationError(true)
       return
     }
@@ -115,7 +115,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
 
   return (
     <>
-      <Formik
+      <Formik<FounderAllocationFormValues>
         initialValues={{ founderAllocation: initialFounderValues }}
         enableReinitialize
         validateOnBlur={false}
