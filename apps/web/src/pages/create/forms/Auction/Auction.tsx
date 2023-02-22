@@ -1,5 +1,5 @@
 import React from 'react'
-import { Formik } from 'formik'
+import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
 import { Button, Flex, Stack } from '@zoralabs/zord'
 import {
@@ -32,6 +32,8 @@ const animation = {
   },
 }
 
+interface AuctionFormValues extends auctionSettingsProps {}
+
 const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
   const {
     setAuctionSettings,
@@ -41,7 +43,7 @@ const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
     activeSection,
   } = useFormStore()
 
-  const initialValues = {
+  const initialValues: AuctionFormValues = {
     auctionDuration: {
       seconds: auctionSettings?.auctionDuration?.seconds,
       minutes: auctionSettings?.auctionDuration?.minutes,
@@ -49,9 +51,6 @@ const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
       hours: auctionSettings?.auctionDuration?.hours,
     },
     auctionReservePrice: auctionSettings?.auctionReservePrice,
-  }
-
-  const advancedValues = {
     proposalThreshold:
       auctionSettings?.proposalThreshold === 0
         ? 0
@@ -60,7 +59,7 @@ const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
       auctionSettings?.quorumThreshold === 0 ? 0 : auctionSettings?.quorumThreshold || 10,
   }
 
-  const handleSubmit = (values: auctionSettingsProps) => {
+  const handleSubmit = (values: AuctionFormValues) => {
     setAuctionSettings(values)
     setFulfilledSections(title)
     setActiveSection(activeSection + 1)
@@ -74,23 +73,17 @@ const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
 
   return (
     <>
-      <Formik
-        initialValues={{ ...initialValues, ...advancedValues }}
+      <Formik<AuctionFormValues>
+        initialValues={initialValues}
         validationSchema={validateAuctionSettings}
         onSubmit={handleSubmit}
         enableReinitialize={true}
         validateOnMount={true}
         validateOnBlur={false}
       >
-        {(formik) => {
-          console.log('errors', formik.errors)
-          return (
-            <Flex
-              as={'form'}
-              onSubmit={formik.handleSubmit}
-              direction={'column'}
-              w={'100%'}
-            >
+        {(formik) => (
+          <Form>
+            <Flex direction={'column'} w={'100%'}>
               <Stack>
                 {auctionSettingsFields.map((f, i) => (
                   <FieldSwitch key={i} formik={formik} field={f} autoSubmit={false} />
@@ -145,8 +138,8 @@ const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
                 </Button>
               </Flex>
             </Flex>
-          )
-        }}
+          </Form>
+        )}
       </Formik>
     </>
   )
