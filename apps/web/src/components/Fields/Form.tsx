@@ -1,8 +1,6 @@
 import FieldSwitch from './FieldSwitch'
 import {
   defaultBackButtonVariants,
-  defaultFormAdvancedToggle,
-  defaultFormAdvancedWrapper,
   defaultFormButton,
   defaultFormButtonWithPrev,
   defaultFormStyleVariants,
@@ -36,8 +34,6 @@ interface FieldProps {
 interface FormProps {
   fields: FieldProps[]
   initialValues: {}
-  advancedFields?: FieldProps[]
-  advancedValues?: {}
   validationSchema?: {}
   buttonText?: string
   enableReinitialize?: boolean
@@ -59,8 +55,6 @@ interface FormProps {
 const Form: React.FC<FormProps> = ({
   fields,
   initialValues,
-  advancedFields,
-  advancedValues,
   validationSchema,
   buttonText,
   enableReinitialize = true,
@@ -181,26 +175,9 @@ const Form: React.FC<FormProps> = ({
     }
   }
 
-  /*
-
-    handle advanced values and toggle
-
-   */
-  const [isAdvancedOpen, setIsAdvancedOpen] = React.useState<boolean>(false)
-  const advancedVariants = {
-    init: {
-      height: 0,
-    },
-    open: {
-      height: 'auto',
-    },
-  }
-
   return (
     <Formik
-      initialValues={
-        advancedValues ? { ...initialValues, ...advancedValues } : initialValues
-      }
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values: any, formik: FormikValues) =>
         handleSubmit(values, initialValues, formik)
@@ -233,42 +210,6 @@ const Form: React.FC<FormProps> = ({
                 />
               ))}
             </Stack>
-
-            {advancedFields && (
-              <Button
-                align={'center'}
-                justify={'center'}
-                alignSelf={'center'}
-                onClick={() => setIsAdvancedOpen((bool) => !bool)}
-                className={defaultFormAdvancedToggle}
-                gap={'x3'}
-                py={'x3'}
-                mb={'x8'}
-              >
-                Advanced
-                {isAdvancedOpen ? <Icon id="chevronUp" /> : <Icon id="chevronDown" />}
-              </Button>
-            )}
-            <motion.div
-              className={defaultFormAdvancedWrapper}
-              variants={advancedVariants}
-              initial={'init'}
-              animate={isAdvancedOpen ? 'open' : 'init'}
-            >
-              {advancedFields &&
-                advancedFields?.map((f, i) => (
-                  <FieldSwitch
-                    key={i}
-                    formik={formik}
-                    field={f}
-                    autoSubmit={hasNext}
-                    setHasConfirmed={setHasConfirmed}
-                    hasConfirmed={hasConfirmed}
-                    options={options}
-                    submitCallback={submitCallback}
-                  />
-                ))}
-            </motion.div>
 
             {!autoSubmit && (
               <Flex>
