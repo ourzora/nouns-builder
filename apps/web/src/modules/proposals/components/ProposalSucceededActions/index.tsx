@@ -13,7 +13,7 @@ import { Queue, Execute } from '../ProposalButtons'
 import SWR_KEYS from 'src/constants/swrKeys'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-import { getProposal } from 'src/query/proposalQuery'
+import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { BigNumber } from 'ethers'
 import { isProposalSuccessful } from '../../utils'
 

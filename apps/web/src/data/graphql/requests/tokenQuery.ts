@@ -2,7 +2,7 @@ import omitBy from 'lodash/omitBy'
 import isUndefined from 'lodash/isUndefined'
 import { CHAIN } from 'src/constants/network'
 import { sdk } from 'src/data/graphql/client'
-import { ImageMediaEncodingFragment } from 'src/data/graphql/sdk'
+import { ImageMediaEncodingFragment } from 'src/data/graphql/sdk.generated'
 import { Token, TokenWinner } from 'src/typings'
 
 export const tokenQuery = async (

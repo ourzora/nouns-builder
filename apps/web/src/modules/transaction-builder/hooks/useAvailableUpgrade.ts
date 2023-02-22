@@ -12,7 +12,10 @@ import useSWR from 'swr'
 import intersection from 'lodash/intersection'
 import { sdk } from 'src/data/graphql/client'
 import { CHAIN } from 'src/constants/network'
-import { NounsProposalStatus, ProposalsWithCalldataQuery } from 'src/data/graphql/sdk'
+import {
+  NounsProposalStatus,
+  ProposalsWithCalldataQuery,
+} from 'src/data/graphql/sdk.generated'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
 import { TransactionType } from '../constants/transactionTypes'

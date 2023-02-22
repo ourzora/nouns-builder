@@ -1,4 +1,4 @@
-import { Chain } from 'src/data/graphql/sdk'
+import { Chain } from 'src/data/graphql/sdk.generated'
 
 export const CHAIN = {
   1: Chain.Mainnet,

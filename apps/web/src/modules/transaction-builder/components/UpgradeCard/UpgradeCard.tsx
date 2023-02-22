@@ -7,7 +7,7 @@ import Image from 'next/image'
 import dayjs from 'dayjs'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { PUBLIC_BUILDER_TOKEN } from 'src/constants/addresses'
-import { Chain, SortDirection, TokenSortKey } from 'src/data/graphql/sdk'
+import { Chain, SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 
 interface UpgradeCardProps {
   hasThreshold: boolean
