@@ -266,13 +266,12 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   ]
                 </Flex>
               </Flex>
-
-              {errorMessage && (
-                <Flex mt={'x4'} color="negative">
-                  {errorMessage}
-                </Flex>
-              )}
             </Flex>
+            {errorMessage && (
+              <Flex mt={'x4'} color="negative">
+                {errorMessage}
+              </Flex>
+            )}
             <Flex mt={'x8'}>
               <Flex
                 justify={'center'}
