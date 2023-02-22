@@ -5,6 +5,7 @@ import { ETHERSCAN_BASE_URL, ETHER_ACTOR_BASE_URL } from 'src/constants/ethersca
 import useSWR from 'swr'
 import axios from 'axios'
 import { walletSnippet } from 'src/utils/helpers'
+import SWR_KEYS from 'src/constants/swrKeys'
 
 interface DecodedTransactionProps {
   targets: string[]
@@ -54,8 +55,11 @@ const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
     }
   }
 
-  const getDecodedTransactions = React.useCallback(
-    async (targets: string[], calldatas: string[], values: string[]) => {
+  const { data: decodedTransactions } = useSWR(
+    targets && calldatas && values
+      ? [SWR_KEYS.PROPOSALS_TRANSACTIONS, targets, calldatas, values]
+      : null,
+    async (_, targets, calldatas, values) => {
       return await Promise.all(
         targets.map(async (target, i) => {
           const transaction = await decodeTransaction(target, calldatas[i], values[i])
@@ -67,16 +71,6 @@ const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
           }
         })
       )
-    },
-    [targets, calldatas, values]
-  )
-
-  const { data: decodedTransactions } = useSWR(
-    targets && calldatas && values
-      ? ['proposal-transaction-data', targets, calldatas, values]
-      : null,
-    async () => {
-      return await getDecodedTransactions(targets, calldatas, values)
     },
     { revalidateOnFocus: false }
   )
