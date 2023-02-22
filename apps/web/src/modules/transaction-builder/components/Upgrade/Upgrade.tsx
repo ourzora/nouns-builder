@@ -6,39 +6,13 @@ import { useRouter } from 'next/router'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { DaoContractAddresses } from 'src/typings'
 import dayjs from 'dayjs'
+import { v1_1_0 } from './versions/1.1.0'
+import { v1_2_0 } from './versions/1.2.0'
 
 export const VERSION_PROPOSAL_SUMMARY: { [key: string]: string } = {
-  '1.2.0': `![](https://i.imgur.com/HrQKZMG.png)
-## Summary
-This proposal upgrades the DAO to V1.2 to add several features, improvements and bug fixes.
-
-### Airdrop
-Ability for DAOs to assign minters and airdrop tokens.`,
-  '1.1.0': `![](https://i.imgur.com/HrQKZMG.png)
-## Summary
-This proposal upgrades the DAO to V1.1 to add the following features, improvements and bug fixes.
-
-### Updatable Founder Shares
-DAOs will now be able to propose changes to founders shares. This gives DAOs the ability to add, modify and remove founders shares via proposal.
-
-With this new feature DAO creators will have the ability to modify any errors that may have been caused at DAO deployment
-
-### Upgrade Visibility
-In V1.1, each smart contract of a DAO now has an explicit version attached. This means that members and developers will be able easily understand which protocol implementation a DAO is utilizing at any given time.
-
-This will also make it easier for future upgrades that are in development: including *airdrops* and *custom metadata renderers*.<
-
-### Proposal Spam Fix
-
-Proposal submission to a DAO has an incorrectly implemented check which can allow for spam proposals to be submitted to a DAO. In V1.1 it works as expected.
-
-### Auction Improvements
-Improved bid handling and edge case management in the Auction House contracts.
-
-### Author
-
-This upgrade has been developed and proposed by **Zora** ([zora.eth](https://etherscan.io/address/0xd1d1d4e36117ab794ec5d4c78cbd3a8904e691d0))
-`}
+  '1.2.0': v1_2_0,
+  '1.1.0': v1_1_0,
+}
 
 export const Upgrade = ({
   hasThreshold,

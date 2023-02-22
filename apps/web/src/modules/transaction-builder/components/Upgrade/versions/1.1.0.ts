@@ -1,4 +1,4 @@
-![](https://i.imgur.com/HrQKZMG.png)
+export const v1_1_0 = `![](https://i.imgur.com/HrQKZMG.png)
 ## Summary
 This proposal upgrades the DAO to V1.1 to add the following features, improvements and bug fixes.
 
@@ -21,4 +21,4 @@ Improved bid handling and edge case management in the Auction House contracts.
 
 ### Author
 
-This upgrade has been developed and proposed by **Zora** ([zora.eth](https://etherscan.io/address/0xd1d1d4e36117ab794ec5d4c78cbd3a8904e691d0))
+This upgrade has been developed and proposed by **Zora** ([zora.eth](https://etherscan.io/address/0xd1d1d4e36117ab794ec5d4c78cbd3a8904e691d0))`
