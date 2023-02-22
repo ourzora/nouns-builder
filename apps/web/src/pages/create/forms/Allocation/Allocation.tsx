@@ -58,6 +58,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     shallow
   )
 
+  // should always default to the current signer address given this field is disabled
   const initialFounderValues =
     founderAllocation.length === 0
       ? [
@@ -88,7 +89,6 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
         Number(allocation)
       )
     )
-
     if (totalAllocation > 99) {
       setAllocationError(true)
       return
@@ -97,9 +97,7 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     const foundAllocationPromises = founderAllocation.map((allocation) =>
       getEnsAddress(allocation.founderAddress)
     )
-
     const founderAllocationAddresses = await Promise.all(foundAllocationPromises)
-
     setFounderAllocation(
       founderAllocation.map((allocation, idx) => ({
         ...allocation,
@@ -151,8 +149,8 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
 
       {allocationError && (
         <Flex mt={'x4'} color="negative">
-          Oops, total allocation can not exceed 100%. Please double check the total of the
-          allocation shares.
+          Oops, total allocation must be less than 100%. Please double check the total of
+          the allocation shares.
         </Flex>
       )}
 

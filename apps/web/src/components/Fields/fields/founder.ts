@@ -1,7 +1,5 @@
-import { allocationProps } from 'src/typings'
 import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
-import sumBy from 'lodash/sumBy'
 import * as Yup from 'yup'
 
 const allocationSchema = Yup.object().shape({
@@ -15,7 +13,7 @@ const allocationSchema = Yup.object().shape({
   allocation: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')
-    .min(0, '>= 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
+    .min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
     .max(100, '< 100')
     .integer('Must be whole number'),
   endDate: Yup.string()

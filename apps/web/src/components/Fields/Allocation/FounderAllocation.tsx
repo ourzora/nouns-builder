@@ -133,7 +133,7 @@ const FounderAllocationFields = ({
                   </Flex>
                 )}
 
-                {founder?.allocation && founder?.endDate && (
+                {founder?.allocation && founder?.endDate ? (
                   <Text variant="eyebrow" ml={'auto'}>
                     ~{' '}
                     {calculateMaxAllocation(
@@ -143,7 +143,7 @@ const FounderAllocationFields = ({
                     )}{' '}
                     Tokens
                   </Text>
-                )}
+                ) : null}
               </Flex>
             </Flex>
           )
