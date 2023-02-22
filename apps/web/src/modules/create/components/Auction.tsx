@@ -23,11 +23,6 @@ interface AuctionSettingsProps {
   title: string
 }
 
-<<<<<<< HEAD:apps/web/src/modules/create/components/Auction.tsx
-export const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
-  const { setAuctionSettings, auctionSettings } = useFormStore()
-  const initialValues = {
-=======
 const animation = {
   init: {
     height: 0,
@@ -39,7 +34,7 @@ const animation = {
 
 interface AuctionFormValues extends auctionSettingsProps {}
 
-const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
+export const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
   const {
     setAuctionSettings,
     auctionSettings,
@@ -49,7 +44,6 @@ const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
   } = useFormStore()
 
   const initialValues: AuctionFormValues = {
->>>>>>> main:apps/web/src/pages/create/forms/Auction/Auction.tsx
     auctionDuration: {
       seconds: auctionSettings?.auctionDuration?.seconds,
       minutes: auctionSettings?.auctionDuration?.minutes,
