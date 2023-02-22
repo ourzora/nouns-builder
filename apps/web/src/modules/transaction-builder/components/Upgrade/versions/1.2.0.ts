@@ -1,0 +1,6 @@
+export const v1_2_0 = `![](https://i.imgur.com/HrQKZMG.png)
+## Summary
+This proposal upgrades the DAO to V1.2 to add several features, improvements and bug fixes.
+
+### Airdrop
+Ability for DAOs to assign minters and airdrop tokens.`
