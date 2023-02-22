@@ -4,7 +4,6 @@ import useSWR from 'swr'
 import { useBalance } from 'wagmi'
 import HtmlReactParser from 'html-react-parser'
 import { Box, Flex, Text } from '@zoralabs/zord'
-
 import { Avatar } from 'src/components/Avatar/Avatar'
 import { useMetadataContract } from 'src/modules/dao/hooks'
 import useTokenContract from 'src/hooks/useTokenContract'
@@ -16,11 +15,10 @@ import { getFetchableUrl } from 'ipfs-service'
 import { sdk } from 'src/graphql/client'
 import { CHAIN } from 'src/constants/network'
 import type { AddressType } from 'src/typings'
+import { ExternalLinks } from './ExternalLinks'
+import { Statistic } from './Statistic'
 
-import ExternalLinks from './ExternalLinks'
-import Statistic from './Statistic'
-
-const About: React.FC = () => {
+export const About: React.FC = () => {
   const {
     addresses: { token, treasury, metadata },
   } = useDaoStore()
@@ -114,5 +112,3 @@ const About: React.FC = () => {
     </Box>
   )
 }
-
-export default About

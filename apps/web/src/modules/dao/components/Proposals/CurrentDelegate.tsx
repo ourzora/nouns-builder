@@ -12,7 +12,7 @@ interface CurrentDelegateProps {
   toggleIsEditing: () => void
 }
 
-const CurrentDelegate = ({ toggleIsEditing }: CurrentDelegateProps) => {
+export const CurrentDelegate = ({ toggleIsEditing }: CurrentDelegateProps) => {
   const { delegateAddress } = useTokenContract()
   const { ensName, ensAvatar } = useEnsData(delegateAddress as string)
 
@@ -77,5 +77,3 @@ const CurrentDelegate = ({ toggleIsEditing }: CurrentDelegateProps) => {
     </Flex>
   )
 }
-
-export default CurrentDelegate

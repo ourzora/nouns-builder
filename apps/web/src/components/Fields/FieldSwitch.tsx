@@ -26,7 +26,6 @@ import {
   SINGLE_IMAGE_UPLOAD,
   TEXT,
   TEXTAREA,
-  TRANSACTION,
 } from './types'
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'

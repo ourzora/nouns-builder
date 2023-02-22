@@ -1,5 +1,5 @@
-import Treasury from '../Treasury'
-import MobileMenu from './MobileMenu'
+import { Treasury } from './Treasury'
+import { MobileMenu } from './MobileMenu'
 import { Button, Flex, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -9,8 +9,8 @@ import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { ProposalCard } from 'src/modules/proposals'
 import { useDelegate } from 'src/hooks/useDelegate'
 import { useVotes } from 'src/hooks/useVotes'
-import CurrentDelegate from 'src/pages/dao/[token]/sections/Governance/CurrentDelegate'
-import DelegateForm from 'src/pages/dao/[token]/sections/Governance/DelegateForm'
+import { CurrentDelegate } from './CurrentDelegate'
+import { DelegateForm } from './DelegateForm'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { selectDelegateBtn, submitProposalBtn } from 'src/styles/Proposals.css'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
@@ -25,7 +25,7 @@ import { Upgrade } from 'src/modules/transaction-builder/components/Upgrade/Upgr
 import { useAccount } from 'wagmi'
 import { AddressType } from 'src/typings'
 
-const Proposals: React.FC = () => {
+export const Proposals: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const { createProposal } = useProposalStore()
   const { address } = useAccount()
@@ -241,5 +241,3 @@ const Proposals: React.FC = () => {
     </>
   )
 }
-
-export default Proposals

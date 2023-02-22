@@ -13,7 +13,7 @@ import {
   preAuctionWrapper,
 } from './index.css'
 
-const PreAuction = () => {
+export const PreAuction = () => {
   const router = useRouter()
   const { query } = router
   const { signer } = useLayoutStore()
@@ -62,5 +62,3 @@ const PreAuction = () => {
     </Flex>
   )
 }
-
-export default PreAuction

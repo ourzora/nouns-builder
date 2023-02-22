@@ -44,7 +44,7 @@ interface ExternalLinksProps {
   }
 }
 
-const ExternalLinks: React.FC<ExternalLinksProps> = ({ links }) => {
+export const ExternalLinks: React.FC<ExternalLinksProps> = ({ links }) => {
   return (
     <Flex direction={{ '@initial': 'column', '@768': 'row' }} justify="center">
       {links ? (
@@ -57,4 +57,3 @@ const ExternalLinks: React.FC<ExternalLinksProps> = ({ links }) => {
     </Flex>
   )
 }
-export default ExternalLinks
