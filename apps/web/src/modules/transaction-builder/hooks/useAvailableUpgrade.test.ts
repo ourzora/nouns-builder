@@ -13,7 +13,9 @@ vi.mock('wagmi', async () => {
 })
 
 vi.mock('src/graphql/sdk', async () => {
-  const mod = await vi.importActual<typeof import('src/graphql/sdk')>('src/graphql/sdk')
+  const mod = await vi.importActual<typeof import('src/data/graphql/sdk')>(
+    'src/graphql/sdk'
+  )
   return {
     ...mod,
     getSdk: vi.fn(() => ({

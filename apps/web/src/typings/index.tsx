@@ -16,7 +16,7 @@ import {
   Support,
   MarketSortKey,
   ImageMediaEncodingFragment,
-} from 'src/graphql/sdk'
+} from 'src/data/graphql/sdk'
 
 export interface CreateFormSection {
   title: string

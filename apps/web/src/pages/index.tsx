@@ -10,7 +10,7 @@ import Marquee from 'src/components/Home/Marquee'
 import RecentlyCreated from 'src/components/Home/RecentlyCreated'
 import Twitter from 'src/components/Home/Twitter'
 import Meta from 'src/components/Layout/Meta'
-import { AuctionFragment } from 'src/graphql/sdk'
+import { AuctionFragment } from 'src/data/graphql/sdk'
 import { highestBidsRequest } from 'src/query/homepageQuery'
 
 export type DaoProps = Pick<AuctionFragment, 'collectionAddress'> & {

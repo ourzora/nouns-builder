@@ -10,7 +10,7 @@ import { formatCryptoVal } from 'src/utils/numbers'
 import { useDaoStore } from 'src/stores'
 import SWR_KEYS from 'src/constants/swrKeys'
 import useAuctionContract from 'src/hooks/useAuctionContract'
-import getBids from 'src/utils/getBids'
+import getBids from 'src/data/contract/queries/getBids'
 
 import { auctionActionButtonVariants, bidForm, bidInput } from './Auction.css'
 

@@ -17,7 +17,7 @@ import {
 } from './styles.css'
 import { useRouter } from 'next/router'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { myDaosRequest } from 'src/query/daoQuery'
+import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
 import { formatCryptoVal } from 'src/utils/numbers'
 import useSWR from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
