@@ -1,6 +1,6 @@
 import { render } from 'src/test/utils'
 import { screen, waitFor } from '@testing-library/react'
-import Navigation from './Navigation'
+import { ProposalNavigation } from './ProposalNavigation'
 import { useDaoStore } from 'src/stores'
 import { vi } from 'vitest'
 import { BUILDER_DAO } from 'src/test/fixtures/dao'
@@ -18,7 +18,7 @@ describe('Proposal Navigation', () => {
       metadata: BUILDER_DAO.metadata,
     })
 
-    render(<Navigation />)
+    render(<ProposalNavigation />)
 
     // loading state, no image exists
     expect(screen.queryByTestId('dao-image')).not.toBeInTheDocument()

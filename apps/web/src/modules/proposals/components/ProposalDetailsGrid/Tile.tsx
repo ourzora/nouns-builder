@@ -10,7 +10,7 @@ interface ProposalTileProps {
   variant?: 'for' | 'against' | 'abstain'
 }
 
-const ProposalTile: React.FC<ProposalTileProps> = (props) => {
+export const Tile: React.FC<ProposalTileProps> = (props) => {
   const { title, subtitle, subtext, children, variant } = props
 
   return (
@@ -50,5 +50,3 @@ const ProposalTile: React.FC<ProposalTileProps> = (props) => {
     </Flex>
   )
 }
-
-export default ProposalTile

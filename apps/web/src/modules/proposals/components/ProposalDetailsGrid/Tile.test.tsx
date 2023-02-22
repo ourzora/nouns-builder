@@ -1,4 +1,4 @@
-import ProposalTile from './Tile'
+import { Tile } from './Tile'
 import React, { Fragment } from 'react'
 import { screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
@@ -8,11 +8,7 @@ describe('proposal tile', () => {
   it('should render a proposal tile', async () => {
     render(
       <Fragment>
-        <ProposalTile
-          title={'Threshold'}
-          subtitle={'1 vote'}
-          subtext={'Current threshold'}
-        />
+        <Tile title={'Threshold'} subtitle={'1 vote'} subtext={'Current threshold'} />
       </Fragment>
     )
 

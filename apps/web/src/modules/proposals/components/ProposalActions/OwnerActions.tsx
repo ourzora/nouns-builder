@@ -7,7 +7,7 @@ import useGovernorContract from 'src/hooks/useGovernorContract'
 import { BytesType } from 'src/typings'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 
-import GovernorContractButton from '../GovernorContractButton'
+import { GovernorContractButton } from '../GovernorContractButton'
 
 interface OwnerActionsProps {
   proposalId: string
@@ -55,7 +55,7 @@ const Veto: React.FC<{
   )
 }
 
-const OwnerActions: React.FC<OwnerActionsProps> = ({
+export const OwnerActions: React.FC<OwnerActionsProps> = ({
   proposalId,
   showCancel,
   showVeto,
@@ -122,5 +122,3 @@ const OwnerActions: React.FC<OwnerActionsProps> = ({
     </>
   )
 }
-
-export default OwnerActions

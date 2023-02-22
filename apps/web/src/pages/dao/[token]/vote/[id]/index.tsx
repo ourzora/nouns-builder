@@ -11,9 +11,14 @@ import getToken from 'src/utils/getToken'
 import SWR_KEYS from 'src/constants/swrKeys'
 import Meta from 'src/components/Layout/Meta'
 import { TokenWithWinner } from 'src/typings'
-import { Description, Header, Actions, DetailsGrid } from 'src/modules/proposals'
+import {
+  ProposalDescription,
+  ProposalHeader,
+  ProposalActions,
+  ProposalDetailsGrid,
+  isProposalOpen,
+} from 'src/modules/proposals'
 import { propPageWrapper } from 'src/styles/Proposals.css'
-import { isProposalOpen } from 'src/modules/proposals/utils'
 import { getProposal } from 'src/query/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
@@ -50,13 +55,13 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({ proposalId, token, daoNam
 
       <Flex position="relative" direction="column" pb="x30">
         <Flex className={propPageWrapper} gap={{ '@initial': 'x2', '@768': 'x4' }}>
-          <Header proposal={proposal} />
+          <ProposalHeader proposal={proposal} />
 
-          {displayActions && <Actions daoName={daoName} proposal={proposal} />}
+          {displayActions && <ProposalActions daoName={daoName} proposal={proposal} />}
 
-          <DetailsGrid proposal={proposal} />
+          <ProposalDetailsGrid proposal={proposal} />
 
-          <Description proposal={proposal} collection={query?.token as string} />
+          <ProposalDescription proposal={proposal} collection={query?.token as string} />
         </Flex>
       </Flex>
     </Fragment>

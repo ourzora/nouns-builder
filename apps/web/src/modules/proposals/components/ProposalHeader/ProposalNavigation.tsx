@@ -8,11 +8,7 @@ import { useContractReads } from 'wagmi'
 import { metadataAbi, tokenAbi } from 'src/constants/abis'
 import { useRouter } from 'next/router'
 
-interface NavigationProps {
-  handleBack?: () => void
-}
-
-const Navigation: React.FC<NavigationProps> = ({ handleBack }) => {
+export const ProposalNavigation: React.FC = () => {
   const router = useRouter()
   const addresses = useDaoStore((state) => state.addresses)
 
@@ -28,7 +24,12 @@ const Navigation: React.FC<NavigationProps> = ({ handleBack }) => {
   })
 
   const handleNavigation = () => {
-    handleBack ? handleBack() : router.back()
+    router.push({
+      pathname: `/dao/[token]`,
+      query: {
+        token: router.query?.token,
+      },
+    })
   }
 
   return (
@@ -69,5 +70,3 @@ const Navigation: React.FC<NavigationProps> = ({ handleBack }) => {
     </Flex>
   )
 }
-
-export default Navigation

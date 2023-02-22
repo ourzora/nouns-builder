@@ -20,12 +20,15 @@ const Section = ({ children, title }: { children: ReactNode; title: string }) =>
   </Box>
 )
 
-type DescriptionProps = {
+type ProposalDescriptionProps = {
   proposal: Proposal
   collection: string
 }
 
-const Description: React.FC<DescriptionProps> = ({ proposal, collection }) => {
+export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
+  proposal,
+  collection,
+}) => {
   const { description, proposer, calldatas, values, targets } = proposal
   const { displayName } = useEnsData(proposer)
 
@@ -81,5 +84,3 @@ const Description: React.FC<DescriptionProps> = ({ proposal, collection }) => {
     </Flex>
   )
 }
-
-export default Description

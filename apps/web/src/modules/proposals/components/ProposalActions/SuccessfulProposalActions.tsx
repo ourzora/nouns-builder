@@ -18,9 +18,9 @@ import useGovernorContract from 'src/hooks/useGovernorContract'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 
 import { isProposalSuccessful } from '../../utils'
-import GovernorContractButton from '../GovernorContractButton'
+import { GovernorContractButton } from '../GovernorContractButton'
 
-interface ProposalSucceededActionsProps {
+interface SuccessfulProposalActionsProps {
   proposal: Proposal
 }
 
@@ -69,7 +69,7 @@ const Execute: React.FC<{
   )
 }
 
-const ProposalSucceededActions: React.FC<ProposalSucceededActionsProps> = ({
+export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps> = ({
   proposal,
 }) => {
   const { mutate } = useSWRConfig()
@@ -246,5 +246,3 @@ const ProposalSucceededActions: React.FC<ProposalSucceededActionsProps> = ({
     </Flex>
   )
 }
-
-export default ProposalSucceededActions

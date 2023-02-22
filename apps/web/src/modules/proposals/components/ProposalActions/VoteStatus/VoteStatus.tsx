@@ -28,7 +28,7 @@ interface VoteStatusProps {
   signerVote?: ProposalVote
 }
 
-const VoteStatus: React.FC<VoteStatusProps> = ({
+export const VoteStatus: React.FC<VoteStatusProps> = ({
   signerVote,
   votesAvailable,
   proposalId,
@@ -172,5 +172,3 @@ const VoteStatus: React.FC<VoteStatusProps> = ({
     </Flex>
   )
 }
-
-export default VoteStatus

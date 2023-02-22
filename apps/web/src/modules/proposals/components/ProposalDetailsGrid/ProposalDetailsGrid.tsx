@@ -5,14 +5,14 @@ import { propDataGrid } from 'src/styles/Proposals.css'
 import dayjs from 'dayjs'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 
-import Tile from './Tile'
+import { Tile } from './Tile'
 import { voteProgress, voteProgressVariants } from './Tile.css'
 
-export type DetailsGridProps = {
+export type ProposalDetailsGridProps = {
   proposal: Proposal
 }
 
-const DetailsGrid: React.FC<DetailsGridProps> = ({ proposal }) => {
+export const ProposalDetailsGrid: React.FC<ProposalDetailsGridProps> = ({ proposal }) => {
   const { forVotes, againstVotes, abstainVotes, quorumVotes, transactionInfo, voteEnd } =
     proposal
 
@@ -100,5 +100,3 @@ const DetailsGrid: React.FC<DetailsGridProps> = ({ proposal }) => {
     </>
   )
 }
-
-export default DetailsGrid

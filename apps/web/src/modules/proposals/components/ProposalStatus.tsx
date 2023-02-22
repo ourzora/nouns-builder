@@ -15,7 +15,7 @@ type StatusProps = {
   showTime?: Boolean
 }
 
-const ProposalStatus: React.FC<StatusProps> = ({
+export const ProposalStatus: React.FC<StatusProps> = ({
   state,
   voteEnd,
   voteStart,
@@ -71,5 +71,3 @@ const ProposalStatus: React.FC<StatusProps> = ({
     </Flex>
   )
 }
-
-export default ProposalStatus

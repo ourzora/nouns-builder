@@ -8,16 +8,19 @@ import { useContractReads } from 'wagmi'
 import { governorAbi } from 'src/constants/abis'
 
 import { isProposalOpen, isProposalSuccessful } from '../../utils'
-import OwnerActions from './OwnerActions'
-import SucceededActions from './SucceededActions'
-import VoteStatus from './VoteStatus'
+import { OwnerActions } from './OwnerActions'
+import { SuccessfulProposalActions } from './SuccessfulProposalActions'
+import { VoteStatus } from './VoteStatus'
 
-interface ActionsProps {
+interface ProposalActionsProps {
   daoName?: string
   proposal: Proposal
 }
 
-const Actions: React.FC<ActionsProps> = ({ daoName, proposal }) => {
+export const ProposalActions: React.FC<ProposalActionsProps> = ({
+  daoName,
+  proposal,
+}) => {
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const addresses = useDaoStore((state) => state.addresses)
 
@@ -77,7 +80,7 @@ const Actions: React.FC<ActionsProps> = ({ daoName, proposal }) => {
 
   return (
     <Fragment>
-      {displaySucceededActions && <SucceededActions proposal={proposal} />}
+      {displaySucceededActions && <SuccessfulProposalActions proposal={proposal} />}
 
       <Flex
         direction={{ '@initial': 'column', '@768': 'row' }}
@@ -112,5 +115,3 @@ const Actions: React.FC<ActionsProps> = ({ daoName, proposal }) => {
     </Fragment>
   )
 }
-
-export default Actions
