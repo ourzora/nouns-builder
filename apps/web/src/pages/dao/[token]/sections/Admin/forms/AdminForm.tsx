@@ -60,9 +60,9 @@ const AdminForm: React.FC<AdminFormProps> = () => {
     push,
   } = useRouter()
 
-  const { createProposal } = useProposalStore()
-  const { addresses } = useDaoStore()
-  const { provider } = useLayoutStore()
+  const createProposal = useProposalStore((state) => state.createProposal)
+  const addresses = useDaoStore((state) => state.addresses)
+  const provider = useLayoutStore((state) => state.provider)
 
   const {
     contract: auctionContract,
@@ -108,7 +108,7 @@ const AdminForm: React.FC<AdminFormProps> = () => {
     quorumThreshold: Number(quorumVotesBps) / 100 || 0,
     votingPeriod: fromSeconds(votingPeriod && Number(votingPeriod)),
     votingDelay: fromSeconds(votingDelay && Number(votingDelay)),
-    vetoPower: vetoer == NULL_ADDRESS ? 1 : 0,
+    vetoPower: vetoer === NULL_ADDRESS ? 1 : 0,
     vetoer: vetoer || '',
 
     /* auction */
@@ -177,8 +177,7 @@ const AdminForm: React.FC<AdminFormProps> = () => {
       }
 
       const transactionProperties = formValuesToTransactionMap[field]
-      // @ts-ignore
-      const callData = transactionProperties.constructCalldata(contracts, value)
+      const calldata = transactionProperties.constructCalldata(contracts, value)
       const target = transactionProperties.getTarget(addresses)
 
       if (target)
@@ -188,7 +187,7 @@ const AdminForm: React.FC<AdminFormProps> = () => {
             {
               functionSignature: transactionProperties.functionSignature,
               target,
-              calldata: callData || '',
+              calldata: calldata || '',
               value: '',
             },
           ],
