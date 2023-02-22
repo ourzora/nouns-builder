@@ -2,7 +2,6 @@ import { defaultInputLabelStyle, radioStyles } from './styles.css'
 import { Flex, Stack } from '@zoralabs/zord'
 import { FormikErrors, FormikProps } from 'formik'
 import React, { ReactElement } from 'react'
-import { NULL_ADDRESS } from 'src/constants/addresses'
 
 interface BurnVetoRadioProps {
   inputLabel: string | ReactElement
@@ -29,10 +28,11 @@ const AdminVetoRadio: React.FC<BurnVetoRadioProps> = ({ inputLabel, formik, id }
       formik.setFieldValue(id, 1)
       setSelected(false)
     }
-  }, [formik.values.vetoPower])
+  }, [formik, id])
 
-  const memoizedSelect = React.useMemo(() => {
-    return (
+  return (
+    <Stack direction={'column'} mb={'x8'}>
+      {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
       <Flex direction={'row'}>
         <Flex
           align={'center'}
@@ -65,13 +65,6 @@ const AdminVetoRadio: React.FC<BurnVetoRadioProps> = ({ inputLabel, formik, id }
           No
         </Flex>
       </Flex>
-    )
-  }, [selected])
-
-  return (
-    <Stack direction={'column'} mb={'x8'}>
-      {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
-      {memoizedSelect}
     </Stack>
   )
 }
