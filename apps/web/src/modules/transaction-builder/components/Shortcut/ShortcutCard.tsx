@@ -29,8 +29,8 @@ const ShortcutCard: React.FC<ShortcutCollectionProps> = ({
     >
       <Flex gap={'x4'} align={'center'}>
         <TransactionTypeIcon transactionType={transactionType} large />
-        <Stack className={atoms({ lineHeight: 24 })}>
-          <Text fontSize={18} fontWeight={'label'} style={{ marginBottom: '2px' }}>
+        <Stack>
+          <Text variant={'label-lg'} mb={'x1'}>
             {TRANSACTION_TYPE[transactionType].title}
           </Text>
           <Text>{TRANSACTION_TYPE[transactionType].subTitle}</Text>

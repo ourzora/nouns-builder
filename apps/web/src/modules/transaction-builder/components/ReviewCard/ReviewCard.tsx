@@ -53,10 +53,9 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
         <Flex align={'center'} gap={'x2'}>
           <TransactionTypeIcon transactionType={type} />
           <Text
-            fontSize={16}
+            variant={'paragraph-md'}
             style={{ marginBottom: '2px', textOverflow: 'ellipsis' }}
             className={atoms({
-              lineHeight: 24,
               maxWidth: !disabled ? 'x64' : 'auto',
             })}
           >
@@ -72,17 +71,15 @@ export const ReviewCard: React.FC<ReviewCardProps> = ({
                 as={'button'}
                 py={'x2'}
                 px={'x4'}
-                fontSize={16}
-                fontWeight={'label'}
                 borderWidth={'none'}
                 cursor={'pointer'}
-                style={{ lineHeight: '24px', borderRadius: '8px' }}
+                style={{ borderRadius: '8px' }}
                 alignSelf={'flex-end'}
                 onClick={handleEdit}
                 type={'button'}
                 data-testid="edit"
               >
-                Edit
+                <Text variant={'label-md'}>Edit</Text>
               </Flex>
             )}
             {handleRemove && (

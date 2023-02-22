@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex } from '@zoralabs/zord'
+import { Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
 
 export const CreateDaoButton: React.FC = () => {
@@ -12,17 +12,14 @@ export const CreateDaoButton: React.FC = () => {
         w={'100%'}
         py={'x2'}
         backgroundColor={'primary'}
-        fontSize={16}
-        fontWeight={'display'}
         color={'onAccent'}
         cursor={'pointer'}
         style={{
           borderRadius: 8,
           border: 0,
-          lineHeight: '24px',
         }}
       >
-        Create a DAO
+        <Text variant={'label-md'}>Create a DAO</Text>
       </Flex>
     </Link>
   )

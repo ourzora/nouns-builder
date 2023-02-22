@@ -85,17 +85,15 @@ export const Queue = () => {
           mt={'x10'}
           align={'center'}
           justify={'center'}
-          fontSize={18}
           disabled={transactions.length === 0}
-          fontWeight={'label'}
-          className={atoms({ lineHeight: 24, borderRadius: 'curved' })}
+          borderRadius={'curved'}
           backgroundColor={'accent'}
           color={'onAccent'}
           borderWidth={'none'}
           cursor={'pointer'}
           w={'100%'}
         >
-          Review Proposal
+          <Text variant={'label-lg'}>Review Proposal</Text>
         </Flex>
       </Link>
       <AnimatedModal close={() => setOpenConfirm(false)} open={openConfirm}>
