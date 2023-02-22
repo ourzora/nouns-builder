@@ -42,7 +42,7 @@ const DEPLOYMENT_ERROR = {
   NO_FOUNDER:
     'Oops! It looks like you have no founders set. Please go back to the allocation step and add at least one founder address.',
   GENERIC:
-    'Oops! Looks like there was a problem. Please ensure that your input data is correct',
+    'Oops! Looks like there was a problem handling the dao deployment. Please ensure that input data from all the previous steps is correct',
 }
 
 const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
@@ -142,7 +142,7 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
       : ethers.utils.getAddress(NULL_ADDRESS) // 0 === YES in Radio component
 
-  const { config } = usePrepareContractWrite({
+  const { config, isError } = usePrepareContractWrite({
     address: PUBLIC_MANAGER_ADDRESS,
     abi: managerAbi,
     functionName: 'deploy',
@@ -169,6 +169,11 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
     if (founderParams.length === 0) {
       setDeploymentError(DEPLOYMENT_ERROR.NO_FOUNDER)
+      return
+    }
+
+    if (isError) {
+      setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
       return
     }
 
