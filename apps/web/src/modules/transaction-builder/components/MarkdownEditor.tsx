@@ -27,7 +27,9 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   disabled,
   errorMessage,
 }) => {
-  const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>('write')
+  const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
+    disabled ? 'preview' : 'write'
+  )
 
   return (
     <Stack pb={'x5'}>
@@ -38,7 +40,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         readOnly={disabled}
         value={value}
         onChange={onChange}
-        selectedTab={selectedTab}
+        selectedTab={!disabled ? selectedTab : 'preview'}
         onTabChange={setSelectedTab}
         generateMarkdownPreview={(markdown) =>
           Promise.resolve(<ReactMarkdown>{markdown}</ReactMarkdown>)
