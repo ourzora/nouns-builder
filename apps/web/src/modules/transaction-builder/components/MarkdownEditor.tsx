@@ -30,7 +30,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     disabled ? 'preview' : 'write'
   )
 
-  const save = async function* (data: ArrayBuffer, blob: Blob) {
+  const saveImage = async function* (data: ArrayBuffer, blob: Blob) {
     const file = new File([blob], '')
     const { cid } = await uploadFile(file, { cache: true })
     yield `${ZORA_GATEWAY}/${cid}`
@@ -60,7 +60,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           },
         }}
         paste={{
-          saveImage: save,
+          saveImage,
         }}
       />
       {!!errorMessage && <Error message={errorMessage} />}
