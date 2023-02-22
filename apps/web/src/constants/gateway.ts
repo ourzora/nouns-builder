@@ -1,0 +1,1 @@
+export const ZORA_GATEWAY = 'https://ipfs.zora.co/ipfs'

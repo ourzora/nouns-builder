@@ -8,6 +8,8 @@ import { Flex, Stack } from '@zoralabs/zord'
 import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
 import { Error } from 'src/components/Fields/Error'
 import remarkGfm from 'remark-gfm'
+import { uploadFile } from 'ipfs-service'
+import { ZORA_GATEWAY } from 'src/constants/gateway'
 
 interface MarkdownEditorProps {
   onChange: (value: string) => void
@@ -27,6 +29,14 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
     disabled ? 'preview' : 'write'
   )
+
+  const save = async function* (data: ArrayBuffer, blob: Blob) {
+    const file = new File([blob], '')
+    const { cid } = await uploadFile(file, { cache: true })
+    yield `${ZORA_GATEWAY}/${cid}`
+
+    return true
+  }
 
   return (
     <Stack pb={'x5'}>
@@ -48,6 +58,9 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
           writeButton: {
             tabIndex: -1,
           },
+        }}
+        paste={{
+          saveImage: save,
         }}
       />
       {!!errorMessage && <Error message={errorMessage} />}
