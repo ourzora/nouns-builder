@@ -19,8 +19,8 @@ import {
   useProposalStore,
   BuilderTransaction,
 } from 'src/modules/transaction-builder/stores/useProposalStore'
-import { TransactionType } from 'src/modules/transaction-builder/constants/transactionTypes'
-import type { AddressType, DaoContracts } from 'src/typings'
+import { TransactionType } from 'src/modules/transaction-builder/components/TransactionForm'
+import { AddressType, DaoContracts } from 'src/typings'
 import { generalInfoProps, auctionSettingsProps, votingSettingsProps } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { Stack } from '@mantine/core'

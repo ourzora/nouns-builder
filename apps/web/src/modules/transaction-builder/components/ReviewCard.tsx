@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react'
 import { atoms, Flex, Box, Text } from '@zoralabs/zord'
 import { Icon } from 'src/components/Icon'
-import { BuilderTransaction } from '../../stores/useProposalStore'
-import TransactionTypeIcon from '../TransactionTypeIcon'
+import { BuilderTransaction } from '../stores/useProposalStore'
+import { TransactionTypeIcon } from './TransactionTypeIcon'
 
 export enum SimulationError {
   SimulationFailed, // Whole simulation has failed

@@ -8,45 +8,40 @@ export enum TransactionType {
   UPGRADE = 'upgrade',
 }
 
-export interface TransactionSummaryProps {
+export interface TransactionTypeProps {
   title: string
   subTitle: string
   icon: IconType
   iconBackdrop: string
-  link: string
 }
 
-export interface TransactionTypesProps {
-  [key: string]: TransactionSummaryProps
+export interface TransactionTypesPropsMap {
+  [key: string]: TransactionTypeProps
 }
 
-export const TRANSACTION_TYPE = {
+export const TRANSACTION_TYPES = {
   [TransactionType.SEND_ETH]: {
     title: 'Send ETH',
     subTitle: 'Create a proposal to send ETH from the treasury',
     icon: 'eth',
     iconBackdrop: 'rgba(115, 17, 255, 0.1)',
-    link: TransactionType.SEND_ETH,
   },
   [TransactionType.AIRDROP]: {
     title: 'Create an Airdrop',
     subTitle: 'Create a free Airdrop for selected addresses',
     icon: 'airdrop',
     iconBackdrop: 'rgba(28, 182, 135, 0.1)',
-    link: TransactionType.AIRDROP,
   },
   [TransactionType.UPGRADE]: {
     title: 'Upgrade Proposal',
     subTitle: 'Create a proposal to upgrade',
     icon: 'plus',
     iconBackdrop: color.ghostHover,
-    link: TransactionType.UPGRADE,
   },
   [TransactionType.CUSTOM]: {
     title: 'Custom Proposal',
     subTitle: 'Create any other kind of transaction',
     icon: 'plus',
     iconBackdrop: color.ghostHover,
-    link: TransactionType.CUSTOM,
   },
-} as TransactionTypesProps
+} as TransactionTypesPropsMap

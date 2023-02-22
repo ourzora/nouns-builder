@@ -1,7 +1,9 @@
 import React from 'react'
-import CreateProposalHeading from 'src/modules/transaction-builder/components/CreateProposalHeading'
+import {
+  CreateProposalHeading,
+  ReviewProposalForm,
+} from 'src/modules/transaction-builder/components'
 import { Flex, Stack } from '@zoralabs/zord'
-import { ReviewProposalForm } from 'src/modules/transaction-builder'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
@@ -26,6 +28,7 @@ const ReviewProposalPage: NextPageWithLayout = () => {
   })
 
   const transactions = useProposalStore((state) => state.transactions)
+  console.log('transactions', transactions)
   const disabled = useProposalStore((state) => state.disabled)
   const title = useProposalStore((state) => state.title)
   const summary = useProposalStore((state) => state.summary)

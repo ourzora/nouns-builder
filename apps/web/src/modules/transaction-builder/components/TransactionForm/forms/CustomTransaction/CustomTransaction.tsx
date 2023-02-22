@@ -13,16 +13,10 @@ import ABI from './forms/ABI/ABI'
 import Value from './forms/Value/Value'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { useCustomTransactionStore } from 'src/modules/transaction-builder/stores/useCustomTransactionStore'
-import { TransactionType } from 'src/modules/transaction-builder/constants/transactionTypes'
+import { TransactionType } from 'src/modules/transaction-builder/constants/transactionType'
 import FormHeading from './FormHeading'
 
-export interface TransactionProps {
-  disabled?: boolean
-  errorMessage?: any
-  helperText?: string
-}
-
-const Transaction: React.FC<TransactionProps> = ({ errorMessage }) => {
+export const CustomTransaction: React.FC = () => {
   const { addTransaction } = useProposalStore()
 
   const {
@@ -173,9 +167,6 @@ const Transaction: React.FC<TransactionProps> = ({ errorMessage }) => {
           </motion.div>
         </Flex>
       </Flex>
-      {!!errorMessage && <Error message={errorMessage} />}
     </Flex>
   )
 }
-
-export default Transaction

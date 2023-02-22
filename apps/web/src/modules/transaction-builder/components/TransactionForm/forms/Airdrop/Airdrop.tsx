@@ -7,11 +7,11 @@ import { useDaoStore } from 'src/stores'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useAvailableUpgrade } from 'src/modules/transaction-builder/hooks'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
-import { TransactionType } from 'src/modules/transaction-builder/constants/transactionTypes'
+import { TransactionType } from 'src/modules/transaction-builder/constants/transactionType'
 import { useContractRead } from 'wagmi'
 import { auctionAbi, tokenAbi } from 'src/constants/abis'
 import { UpgradeCard } from 'src/modules/transaction-builder/components/UpgradeCard/UpgradeCard'
-import { Alert } from '../UpgradeCard/Alert'
+import { Alert } from '../../../UpgradeCard/Alert'
 import { AddressType } from 'src/typings'
 import gte from 'lodash/gte'
 import { ethers } from 'ethers'
@@ -39,7 +39,7 @@ const animation = {
   },
 }
 
-export const Airdrop = () => {
+export const Airdrop: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const transactions = useProposalStore((state) => state.transactions)
   const addTransaction = useProposalStore((state) => state.addTransaction)

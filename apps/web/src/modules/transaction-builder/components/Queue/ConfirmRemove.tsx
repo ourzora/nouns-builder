@@ -12,7 +12,7 @@ interface ConfrimRemoveProps {
   setOpenConfirm: (boolean: boolean) => void
 }
 
-const ConfirmRemove: React.FC<ConfrimRemoveProps> = ({
+export const ConfirmRemove: React.FC<ConfrimRemoveProps> = ({
   handleRemoveTransaction,
   setOpenConfirm,
 }) => {
@@ -31,5 +31,3 @@ const ConfirmRemove: React.FC<ConfrimRemoveProps> = ({
     </Flex>
   )
 }
-
-export default ConfirmRemove

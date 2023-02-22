@@ -21,7 +21,7 @@ import { getProposals, ProposalsResponse } from 'src/query/proposalsQuery'
 import Pagination from 'src/components/Pagination'
 import omit from 'lodash/omit'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
-import { Upgrade } from 'src/modules/transaction-builder/components/Upgrade/Upgrade'
+import { Upgrade } from 'src/modules/transaction-builder/components/Upgrade'
 import { useAccount } from 'wagmi'
 import { AddressType } from 'src/typings'
 

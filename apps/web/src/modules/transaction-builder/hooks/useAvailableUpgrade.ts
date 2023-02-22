@@ -15,7 +15,7 @@ import { CHAIN } from 'src/constants/network'
 import { NounsProposalStatus, ProposalsWithCalldataQuery } from 'src/graphql/sdk'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
-import { TransactionType } from '../constants/transactionTypes'
+import { TransactionType } from '../constants/transactionType'
 
 type Proposal = ProposalsWithCalldataQuery['nouns']['nounsProposals']['nodes'][number]
 
