@@ -1,10 +1,10 @@
 import { isValidAddress } from 'src/utils/ens'
 import { vetoBurnDelegate } from './veto'
-import { votingSettingsFields } from './voting'
 import { Provider } from '@ethersproject/abstract-provider'
 import {
   auctionSettingsFields,
   validateAuctionSettings,
+  votingSettingsFields,
 } from 'src/components/Fields/fields/auction'
 import {
   DAYS_HOURS_MINS_SECS,
