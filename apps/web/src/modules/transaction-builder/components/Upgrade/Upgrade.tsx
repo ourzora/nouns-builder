@@ -6,8 +6,7 @@ import { useRouter } from 'next/router'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { DaoContractAddresses } from 'src/typings'
 import dayjs from 'dayjs'
-import { v1_1_0 } from './versions/1.1.0'
-import { v1_2_0 } from './versions/1.2.0'
+import { v1_1_0, v1_2_0 } from './versions'
 
 export const VERSION_PROPOSAL_SUMMARY: { [key: string]: string } = {
   '1.2.0': v1_2_0,

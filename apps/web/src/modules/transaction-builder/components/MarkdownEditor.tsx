@@ -4,28 +4,25 @@ import ReactMarkdown from 'react-markdown'
 import 'src/components/Fields/styles.css'
 import 'react-mde/lib/styles/css/react-mde-all.css'
 import { ReactElement } from 'react'
-import { Box, Flex, Stack } from '@zoralabs/zord'
-import {
-  defaultHelperTextStyle,
-  defaultInputLabelStyle,
-} from 'src/components/Fields/styles.css'
+import { Flex, Stack } from '@zoralabs/zord'
+import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
 import { Error } from 'src/components/Fields/Error'
+import remarkGfm from 'remark-gfm'
 
 interface MarkdownEditorProps {
   onChange: (value: string) => void
   value: string
   inputLabel: string | ReactElement
-  disabled?: boolean
   errorMessage?: string
-  helperText?: string
+  disabled?: boolean
 }
 
-const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
+export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   onChange,
   value,
   inputLabel,
-  disabled,
   errorMessage,
+  disabled,
 }) => {
   const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
     disabled ? 'preview' : 'write'
@@ -43,7 +40,9 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         selectedTab={!disabled ? selectedTab : 'preview'}
         onTabChange={setSelectedTab}
         generateMarkdownPreview={(markdown) =>
-          Promise.resolve(<ReactMarkdown>{markdown}</ReactMarkdown>)
+          Promise.resolve(
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdown}</ReactMarkdown>
+          )
         }
         childProps={{
           writeButton: {
@@ -55,5 +54,3 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
     </Stack>
   )
 }
-
-export default MarkdownEditor

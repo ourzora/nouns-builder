@@ -11,6 +11,7 @@ import { useEnsData } from 'src/hooks/useEnsData'
 import { Proposal } from 'src/typings'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
+import remarkGfm from 'remark-gfm'
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>
@@ -51,7 +52,9 @@ const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
     <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
       <Section title="Description">
         <Paragraph overflow={'auto'}>
-          <ReactMarkdown rehypePlugins={[rehypeRaw]}>{description}</ReactMarkdown>
+          <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+            {description}
+          </ReactMarkdown>
         </Paragraph>
       </Section>
 
