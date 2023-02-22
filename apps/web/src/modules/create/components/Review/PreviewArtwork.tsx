@@ -1,11 +1,9 @@
-import React, { BaseSyntheticEvent } from 'react'
-import { Button } from '@zoralabs/zord'
-
-import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import { useFormStore } from 'src/stores/useFormStore'
-import { flatten } from 'src/utils/helpers'
-
-import Playground from '../Artwork/PreviewModal/Playground'
+import React, { BaseSyntheticEvent } from "react";
+import { Button } from "@zoralabs/zord";
+import AnimatedModal from "src/components/Modal/AnimatedModal";
+import { useFormStore } from "src/stores/useFormStore";
+import { flatten } from "src/utils/helpers";
+import { Playground } from "../Artwork";
 
 export const PreviewArtwork: React.FC = () => {
   const { ipfsUpload } = useFormStore()
@@ -20,7 +18,7 @@ export const PreviewArtwork: React.FC = () => {
       return acc
     }, [])
 
-    const flat = uploads.reduce((acc: any[] = [], cv) => {
+    return uploads.reduce((acc: any[] = [], cv) => {
       if (!cv || typeof cv !== 'object') return
       const image = flatten(cv)
       acc.push({
@@ -34,8 +32,6 @@ export const PreviewArtwork: React.FC = () => {
 
       return acc
     }, [])
-
-    return flat
   }, [ipfsUpload])
 
   const [isOpenModal, setIsOpenModal] = React.useState<boolean>(false)
