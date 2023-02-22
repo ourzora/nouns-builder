@@ -7,7 +7,7 @@ import { isAddress } from 'ethers/lib/utils.js'
 import { ethers } from 'ethers'
 import useSWR, { unstable_serialize } from 'swr'
 
-import getToken from 'src/data/contract/queries/getToken'
+import getToken from 'src/data/contract/requests/getToken'
 import SWR_KEYS from 'src/constants/swrKeys'
 import Meta from 'src/components/Layout/Meta'
 import { TokenWithWinner } from 'src/typings'
