@@ -177,6 +177,7 @@ const AdminForm: React.FC<AdminFormProps> = () => {
       }
 
       const transactionProperties = formValuesToTransactionMap[field]
+      // @ts-ignore
       const calldata = transactionProperties.constructCalldata(contracts, value)
       const target = transactionProperties.getTarget(addresses)
 
