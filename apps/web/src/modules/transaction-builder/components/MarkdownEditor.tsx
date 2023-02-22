@@ -4,7 +4,6 @@ import ReactMarkdown from 'react-markdown'
 import 'src/components/Fields/styles.css'
 import 'react-mde/lib/styles/css/react-mde-all.css'
 import { ReactElement } from 'react'
-import { FormikProps } from 'formik'
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import {
   defaultHelperTextStyle,
@@ -13,8 +12,7 @@ import {
 import { Error } from 'src/components/Fields/Error'
 
 interface MarkdownEditorProps {
-  formik: FormikProps<any>
-  id: string
+  onChange: (value: string) => void
   value: string
   inputLabel: string | ReactElement
   disabled?: boolean
@@ -23,13 +21,11 @@ interface MarkdownEditorProps {
 }
 
 const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
-  formik,
-  id,
+  onChange,
   value,
   inputLabel,
   disabled,
   errorMessage,
-  helperText,
 }) => {
   const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>('write')
 
@@ -41,7 +37,7 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
       <ReactMde
         readOnly={disabled}
         value={value}
-        onChange={(v) => formik?.setFieldValue(id, v)}
+        onChange={onChange}
         selectedTab={selectedTab}
         onTabChange={setSelectedTab}
         generateMarkdownPreview={(markdown) =>
@@ -54,10 +50,6 @@ const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
         }}
       />
       {!!errorMessage && <Error message={errorMessage} />}
-
-      {!!helperText && helperText?.length > 0 ? (
-        <Box className={defaultHelperTextStyle}>{helperText}</Box>
-      ) : null}
     </Stack>
   )
 }

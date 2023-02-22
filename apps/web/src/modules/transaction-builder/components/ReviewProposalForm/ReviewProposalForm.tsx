@@ -223,9 +223,8 @@ export const ReviewProposalForm = ({
               <Field name="summary">
                 {({ field }: FieldProps) => (
                   <MarkdownEditor
-                    {...formik.getFieldProps('summary')}
-                    id={'summary'}
-                    formik={formik}
+                    value={field.value}
+                    onChange={(value: string) => formik?.setFieldValue(field.name, value)}
                     disabled={disabledForm}
                     inputLabel={'Summary'}
                     errorMessage={formik.errors['summary']}
