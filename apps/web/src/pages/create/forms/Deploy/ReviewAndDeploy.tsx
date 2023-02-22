@@ -36,11 +36,20 @@ interface ReviewAndDeploy {
   title: string
 }
 
+const DEPLOYMENT_ERROR = {
+  MISMATCHING_SIGNER:
+    'Oops! It looks like the founder address submitted is different than the current signer address. Please go back to the allocation step and re-submit the founder address.',
+  NO_FOUNDER:
+    'Oops! It looks like you have no founders set. Please go back to the allocation step and add at least one founder address.',
+  GENERIC:
+    'Oops! Looks like there was a problem. Please ensure that your input data is correct',
+}
+
 const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const { signer, signerAddress } = useLayoutStore()
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [hasConfirmed, setHasConfirmed] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage] = useState<string | undefined>()
+  const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const {
     founderAllocation,
     contributionAllocation,
@@ -151,22 +160,20 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const { writeAsync } = useContractWrite(config)
 
   const handleDeploy = async () => {
+    setDeploymentError(undefined)
+
     if (founderParams[0].wallet !== signerAddress) {
-      setErrorMessage(
-        'Oops! It looks like the founder address submitted is different than the current signer address. Please go back to the allocation step and re-submit the founder address.'
-      )
+      setDeploymentError(DEPLOYMENT_ERROR.MISMATCHING_SIGNER)
       return
     }
 
     if (founderParams.length === 0) {
-      setErrorMessage(
-        'Oops! It looks like you have no founders set. Please go back to the allocation step and add at least one founder address.'
-      )
+      setDeploymentError(DEPLOYMENT_ERROR.NO_FOUNDER)
       return
     }
 
-    setIsPendingTransaction(true)
     try {
+      setIsPendingTransaction(true)
       const txn = await writeAsync?.()
       await txn?.wait()
     } catch (e) {
@@ -267,11 +274,13 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 </Flex>
               </Flex>
             </Flex>
-            {errorMessage && (
+
+            {deploymentError && (
               <Flex mt={'x4'} color="negative">
-                {errorMessage}
+                {deploymentError}
               </Flex>
             )}
+
             <Flex mt={'x8'}>
               <Flex
                 justify={'center'}

@@ -6,7 +6,6 @@ import { useMetadataContract } from 'src/modules/dao/hooks'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
-  deployContractButtonStyle,
   deployPendingButtonStyle,
   infoSectionLabelStyle,
   infoSectionValueVariants,
@@ -15,13 +14,19 @@ import {
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
-import * as Sentry from '@sentry/nextjs'
 import { useContractRead } from 'wagmi'
 import { tokenAbi } from 'src/constants/abis'
 import { useLayoutStore } from 'src/stores'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
+}
+
+const DEPLOYMENT_ERROR = {
+  MISMATCHING_SIGNER:
+    'Oops, it looks like the owner of the token contract differs from your signer address. Please ensure that this transaction is handled by the same address.',
+  GENERIC:
+    'Oops! Looks like there was a problem. Please ensure that your input data is correct',
 }
 
 const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
@@ -39,7 +44,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const { addresses, setAddresses } = useDaoStore()
   const { contract: metadataContract } = useMetadataContract(addresses?.metadata)
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
-  const [deploymentError, setDeploymentError] = useState<boolean>(false)
+  const [deploymentError, setDeploymentError] = useState<string | undefined>()
 
   const { data: tokenOwner } = useContractRead({
     enabled: !!token,
@@ -73,12 +78,15 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   }, [orderedLayers, ipfsUpload])
 
   const handleDeployMetadata = React.useCallback(async () => {
-    setDeploymentError(false)
+    setDeploymentError(undefined)
 
-    if (!transactions || !metadataContract) return
+    if (!transactions || !metadataContract) {
+      setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
+      return
+    }
 
     if (tokenOwner !== signerAddress) {
-      setDeploymentError(true)
+      setDeploymentError(DEPLOYMENT_ERROR.MISMATCHING_SIGNER)
       return
     }
 
