@@ -8,8 +8,7 @@ import { Flex, Stack } from '@zoralabs/zord'
 import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
 import { Error } from 'src/components/Fields/Error'
 import remarkGfm from 'remark-gfm'
-import { uploadFile } from 'ipfs-service'
-import { ZORA_GATEWAY } from 'src/constants/gateway'
+import { getFetchableUrl, uploadFile } from 'ipfs-service'
 
 interface MarkdownEditorProps {
   onChange: (value: string) => void
@@ -33,7 +32,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   const saveImage = async function* (data: ArrayBuffer, blob: Blob) {
     const file = new File([blob], '')
     const { cid } = await uploadFile(file, { cache: true })
-    yield `${ZORA_GATEWAY}/${cid}`
+    yield getFetchableUrl(cid) as string
 
     return true
   }
