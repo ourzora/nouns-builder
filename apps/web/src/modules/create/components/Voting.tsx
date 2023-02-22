@@ -11,7 +11,7 @@ interface VotingSettingsProps {
   title: string
 }
 
-const Voting: React.FC<VotingSettingsProps> = ({ title }) => {
+export const Voting: React.FC<VotingSettingsProps> = ({ title }) => {
   const { setVotingSettings, votingSettings } = useFormStore()
   const initialValues = {
     proposalThreshold:
@@ -35,5 +35,3 @@ const Voting: React.FC<VotingSettingsProps> = ({ title }) => {
     </Flex>
   )
 }
-
-export default Voting

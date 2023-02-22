@@ -16,7 +16,7 @@ interface AllocationFormValues {
   contributionAllocation: allocationProps[]
 }
 
-const Allocation: React.FC<FounderProps> = ({ title }) => {
+export const Allocation: React.FC<FounderProps> = ({ title }) => {
   const {
     founderAllocation,
     setFounderAllocation,
@@ -93,5 +93,3 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     </>
   )
 }
-
-export default Allocation

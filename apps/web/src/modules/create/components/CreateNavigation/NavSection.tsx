@@ -9,11 +9,10 @@ import {
 } from 'src/styles/styles.css'
 import { CreateFormSection } from 'src/typings'
 
-const FlowSection: React.FC<{
+export const NavSection: React.FC<{
   sections: CreateFormSection[]
   section: CreateFormSection
-  setIsOpen: (bool: boolean) => void
-}> = ({ sections, section, setIsOpen }) => {
+}> = ({ sections, section }) => {
   const { fulfilledSections, activeSection, setActiveSection, setUpArtwork } =
     useFormStore()
   const { isMobile } = useLayoutStore()
@@ -80,10 +79,6 @@ const FlowSection: React.FC<{
         !!(sections && fulfilledSections.includes(section?.title))
           ? () => {
               setActiveSection(sections.indexOf(section))
-
-              if (isMobile) {
-                setIsOpen(false)
-              }
             }
           : () => {}
       }
@@ -103,5 +98,3 @@ const FlowSection: React.FC<{
     </Flex>
   )
 }
-
-export default FlowSection

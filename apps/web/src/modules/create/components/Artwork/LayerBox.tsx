@@ -24,7 +24,7 @@ interface SettingsBoxProps {
   index: number
 }
 
-const LayerBox: React.FC<SettingsBoxProps> = ({
+export const LayerBox: React.FC<SettingsBoxProps> = ({
   trait,
   properties,
   ipfs,
@@ -214,5 +214,3 @@ const LayerBox: React.FC<SettingsBoxProps> = ({
     </Flex>
   )
 }
-
-export default LayerBox

@@ -1,4 +1,4 @@
-import AnimatedModal from '../Modal/AnimatedModal'
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import {
   artworkPreviewGenerateButton,
   artworkPreviewImageWrapper,
@@ -13,7 +13,7 @@ import {
   noneSelectedStyle,
   uploadErrorBox,
   uploadSuccessBox,
-} from './styles.css'
+} from 'src/components/Fields/styles.css'
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import { motion } from 'framer-motion'
@@ -23,8 +23,8 @@ import React, {
   ReactElement,
   useEffect,
 } from 'react'
-import LayerOrdering from 'src/modules/create/components/Artwork/LayerOrdering'
-import Playground from 'src/modules/create/components/Artwork/PreviewModal/Playground'
+import { LayerOrdering } from './LayerOrdering'
+import { Playground } from './PreviewModal'
 import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
@@ -37,7 +37,7 @@ import { sanitizeFileName } from 'src/utils/sanitize'
 import { Icon } from 'src/components/Icon'
 import * as Sentry from '@sentry/nextjs'
 
-interface Artwork {
+interface ArtworkFormProps {
   id: string
   value: any
   inputLabel: string | ReactElement
@@ -48,7 +48,12 @@ interface Artwork {
   helperText?: string
 }
 
-const Artwork: React.FC<Artwork> = ({ inputLabel, helperText, errorMessage, formik }) => {
+export const ArtworkForm: React.FC<ArtworkFormProps> = ({
+  inputLabel,
+  helperText,
+  errorMessage,
+  formik,
+}) => {
   /*
 
     import store
@@ -687,5 +692,3 @@ const Artwork: React.FC<Artwork> = ({ inputLabel, helperText, errorMessage, form
     </Box>
   )
 }
-
-export default Artwork

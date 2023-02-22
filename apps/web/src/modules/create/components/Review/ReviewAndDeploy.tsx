@@ -21,12 +21,11 @@ import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
 import { WriteContractUnpreparedArgs } from '@wagmi/core'
 import { getFetchableUrl } from 'ipfs-service'
-import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create/utils'
-
-import ReviewSection from './ReviewSection'
-import ReviewItem from './ReviewItem'
-import PreviewArtwork from './PreviewArtwork'
-import SuccessfulDeploy from './SuccessfulDeploy'
+import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create'
+import { ReviewSection } from './ReviewSection'
+import { ReviewItem } from './ReviewItem'
+import { PreviewArtwork } from './PreviewArtwork'
+import { SuccessfulDeploy } from './SuccessfulDeploy'
 
 type FounderParameters = NonNullable<
   WriteContractUnpreparedArgs<typeof managerAbi, 'deploy'>
@@ -36,7 +35,7 @@ interface ReviewAndDeploy {
   title: string
 }
 
-const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
+export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const { signer } = useLayoutStore()
   const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
   const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
@@ -290,5 +289,3 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     </Box>
   )
 }
-
-export default ReviewAndDeploy

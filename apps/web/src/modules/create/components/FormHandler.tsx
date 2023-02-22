@@ -12,7 +12,7 @@ interface FormHandler {
   sections: CreateFormSection[]
 }
 
-const FormHandler: React.FC<FormHandler> = ({ forms, title, heading, subHeading }) => {
+export const FormHandler: React.FC<FormHandler> = ({ forms, title, heading, subHeading }) => {
   const { activeSectionCurrentIndex, setActiveSectionCurrentIndex } = useFormStore()
 
   /*  initialize first form in forms array */
@@ -73,5 +73,3 @@ const FormHandler: React.FC<FormHandler> = ({ forms, title, heading, subHeading 
     </Box>
   )
 }
-
-export default FormHandler

@@ -11,7 +11,7 @@ interface AuctionSettingsProps {
   title: string
 }
 
-const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
+export const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
   const { setAuctionSettings, auctionSettings } = useFormStore()
   const initialValues = {
     auctionDuration: {
@@ -46,5 +46,3 @@ const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
     />
   )
 }
-
-export default Auction

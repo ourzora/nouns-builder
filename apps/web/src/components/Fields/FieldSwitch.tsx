@@ -1,6 +1,5 @@
 import AdminVetoInput from './AdminVetoInput'
 import AdminVetoRadio from './AdminVetoRadio'
-import Artwork from './Artwork'
 import Date from './Date'
 import DaysHoursMins from './DaysHoursMins'
 import DaysHoursMinsSecs from './DaysHoursMinsSecs'
@@ -26,13 +25,13 @@ import {
   SINGLE_IMAGE_UPLOAD,
   TEXT,
   TEXTAREA,
-  TRANSACTION,
 } from './types'
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 import { compareAndReturn } from 'src/utils/helpers'
 import ContributionAllocationForm from './Allocation/ContributionAllocationForm'
 import FounderAllocationForm from './Allocation/FounderAllocationForm'
+import { ArtworkForm } from 'src/modules/create'
 
 interface FieldSwitchProps {
   field: {
@@ -112,7 +111,7 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   switch (field.type) {
     case ARTWORK:
       return (
-        <Artwork
+        <ArtworkForm
           {...formik.getFieldProps(field.name)}
           inputLabel={field.inputLabel}
           formik={formik}

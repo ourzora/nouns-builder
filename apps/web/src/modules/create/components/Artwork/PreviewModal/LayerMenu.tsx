@@ -20,7 +20,7 @@ interface selectedTraits {
   content: File
 }
 
-const LayerMenu: React.FC<{
+export const LayerMenu: React.FC<{
   layers: layerProps[]
   selectedTraits: selectedTraits[]
   setSelectedTraits: (selectedTraits: selectedTraits[]) => void
@@ -107,5 +107,3 @@ const LayerMenu: React.FC<{
     </Stack>
   )
 }
-
-export default LayerMenu

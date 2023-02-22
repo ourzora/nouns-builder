@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
-import Flow from 'src/modules/create/components/Flow'
-import FormHandler from 'src/modules/create/components/FormHandler'
-import Allocation from 'src/modules/create/components/Allocation'
-import SetUpArtwork from 'src/modules/create/components/Artwork/SetUpArtwork'
-import Auction from 'src/modules/create/components/Auction'
-import ReviewAndDeploy from 'src/modules/create/components/ReviewAndDeploy'
-import General from 'src/modules/create/components/General'
-import Veto from 'src/modules/create/components/Veto'
+import {
+  NavWrapper,
+  Allocation,
+  Auction,
+  ReviewAndDeploy,
+  General,
+  Veto,
+  FormHandler,
+  Artwork,
+} from 'src/modules/create'
 import { Box, Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import { NextPage } from 'next'
@@ -20,7 +22,7 @@ import { CreateFormSection } from 'src/typings'
 const Create: NextPage = () => {
   const router = useRouter()
   const { activeSection } = useFormStore()
-  const { address, isConnected } = useAccount()
+  const { address } = useAccount()
 
   useEffect(() => {
     if (!address) {
@@ -66,7 +68,7 @@ const Create: NextPage = () => {
     const setUpArtwork: CreateFormSection = {
       title: 'Artwork',
       heading: ['Artwork Setup', 'Layer Ordering'],
-      forms: [<SetUpArtwork key={'set-up-artwork'} title={''} />],
+      forms: [<Artwork key={'set-up-artwork'} title={''} />],
     }
 
     const reviewAndDeploy: CreateFormSection = {
@@ -106,7 +108,7 @@ const Create: NextPage = () => {
                 'linear-gradient(179.98deg, rgba(0, 0, 0, 0.5) -0.98%, rgba(0, 0, 0, 0) 47.4%, rgba(0, 0, 0, 0.6) 99.98%)',
             }}
           />
-          <Flow sections={sections} />
+          <NavWrapper sections={sections} />
         </Flex>
         <Flex
           className={createWrapperHalf['right']}

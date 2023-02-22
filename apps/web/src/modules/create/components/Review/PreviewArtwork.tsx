@@ -5,9 +5,9 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { useFormStore } from 'src/stores/useFormStore'
 import { flatten } from 'src/utils/helpers'
 
-import Playground from './Artwork/PreviewModal/Playground'
+import Playground from '../Artwork/PreviewModal/Playground'
 
-const PreviewArtwork: React.FC = () => {
+export const PreviewArtwork: React.FC = () => {
   const { ipfsUpload } = useFormStore()
 
   const images = React.useMemo(() => {
@@ -63,5 +63,3 @@ const PreviewArtwork: React.FC = () => {
     </>
   )
 }
-
-export default PreviewArtwork

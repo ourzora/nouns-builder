@@ -7,7 +7,7 @@ import {
 import { Icon } from 'src/components/Icon'
 import { motion } from 'framer-motion'
 
-const ReviewSection: React.FC<{
+export const ReviewSection: React.FC<{
   subHeading: string
   children: ReactNode[]
 }> = ({ subHeading, children }) => {
@@ -66,5 +66,3 @@ const ReviewSection: React.FC<{
     </Flex>
   )
 }
-
-export default ReviewSection

@@ -19,7 +19,7 @@ interface DeployedDaoProps extends DaoContractAddresses {
   title: string
 }
 
-const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
+export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   token,
   metadata,
   auction,
@@ -202,5 +202,3 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     </Flex>
   )
 }
-
-export default SuccessfulDeploy
