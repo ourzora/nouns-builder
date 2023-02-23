@@ -1,6 +1,6 @@
 import { accordionItem, accordionName } from '../../../styles/home.css'
 import { Icon } from 'src/components/Icon'
-import { Flex, Stack, atoms } from '@zoralabs/zord'
+import { Flex, Text, Stack, atoms } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
 
@@ -52,12 +52,9 @@ const AccordionItem: React.FC<{ title: string; description: ReactElement }> = ({
         className={atoms({
           height: 'x0',
           overflow: 'hidden',
-          fontSize: 16,
-          lineHeight: 24,
         })}
-        style={{ fontFamily: 'ptRoot, sans-serif!important', fontWeight: 400 }}
       >
-        {description}
+        <Text variant={'paragraph-md'}>{description}</Text>
       </motion.div>
     </Stack>
   )

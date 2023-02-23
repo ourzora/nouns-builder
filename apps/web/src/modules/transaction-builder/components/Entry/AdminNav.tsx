@@ -2,7 +2,6 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useContract } from 'wagmi'
 import { Flex, Stack, Text } from '@zoralabs/zord'
-
 import { Icon } from 'src/components/Icon'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { auctionAbi } from 'src/constants/abis'
@@ -45,14 +44,10 @@ const AdminNav = () => {
       onClick={() => handleNavigation()}
     >
       <Stack>
-        <Text
-          fontSize={18}
-          fontWeight={'label'}
-          style={{ marginBottom: '2px', lineHeight: '24px' }}
-        >
+        <Text variant="label-lg" mb={'x1'}>
           Configure DAO Settings
         </Text>
-        <Text color={'text3'} fontSize={16} style={{ lineHeight: '24px' }}>
+        <Text variant="paragraph-md" color={'text3'}>
           Change all the main DAO settings in the Admin Tab
         </Text>
       </Stack>

@@ -12,7 +12,7 @@ const Entry = () => {
   ]
   return (
     <Stack style={{ maxWidth: 680, minHeight: '80vh' }} mx={'auto'}>
-      <Text fontWeight={'label'} fontSize={20} lineHeight={24} mb={'x5'}>
+      <Text variant={'heading-xs'} mb={'x5'}>
         Select Transaction Type
       </Text>
       <ShortcutCollection shortcuts={shortcuts} />
