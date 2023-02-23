@@ -4,7 +4,7 @@ import { exploreDaosRequest } from 'src/data/graphql/requests/exploreQueries'
 import { ExplorePageData, MarketSortKey } from 'src/typings'
 import ExploreLayout from 'src/components/Explore/ExploreLayout'
 import Meta from 'src/components/Layout/Meta'
-import { encodePageNumToEndCursor } from 'src/utils/encodePageNumToEndCursor/encodePageNumToEndCursor'
+import { encodePageNumToEndCursor } from 'src/utils/encodePageNumToEndCursor'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const endCursor = encodePageNumToEndCursor(30, context.query?.page as string)
