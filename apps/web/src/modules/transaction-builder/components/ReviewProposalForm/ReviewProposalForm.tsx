@@ -8,7 +8,6 @@ import axios from 'axios'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { useContractRead, useContract, useSigner } from 'wagmi'
 import TextInput from 'src/components/Fields/TextInput'
-import dynamic from 'next/dynamic'
 import { Field, FieldProps, Formik } from 'formik'
 import {
   BuilderTransaction,
@@ -22,10 +21,7 @@ import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
 import { Transactions } from './Transactions'
 import { ErrorResult } from 'src/pages/api/errorResult'
-
-const RichText = dynamic(() => import('src/components/Fields/RichText'), {
-  ssr: false,
-})
+import { MarkdownEditor } from './MarkdownEditor'
 
 interface ReviewProposalProps {
   disabled: boolean
@@ -226,14 +222,12 @@ export const ReviewProposalForm = ({
 
               <Field name="summary">
                 {({ field }: FieldProps) => (
-                  <RichText
-                    {...formik.getFieldProps('summary')}
-                    id={'summary'}
-                    formik={formik}
+                  <MarkdownEditor
+                    value={field.value}
+                    onChange={(value: string) => formik?.setFieldValue(field.name, value)}
                     disabled={disabledForm}
                     inputLabel={'Summary'}
                     errorMessage={formik.errors['summary']}
-                    onBlur={formik.handleBlur}
                   />
                 )}
               </Field>

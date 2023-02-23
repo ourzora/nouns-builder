@@ -1,5 +1,5 @@
 import React from 'react'
-import { atoms, Flex, Stack, Text } from '@zoralabs/zord'
+import { Flex, Stack, Text } from '@zoralabs/zord'
 import { TRANSACTION_TYPES, TransactionType } from '../../constants'
 import { TransactionTypeIcon } from '../TransactionTypeIcon'
 
@@ -15,8 +15,8 @@ const TransactionTypeCard: React.FC<TransactionTypeCardProps> = ({
   return (
     <Flex gap={'x4'} align={'center'} onClick={onClick}>
       <TransactionTypeIcon transactionType={transactionType} large />
-      <Stack className={atoms({ lineHeight: 24 })}>
-        <Text fontSize={18} fontWeight={'label'} style={{ marginBottom: '2px' }}>
+      <Stack>
+        <Text variant={'label-lg'} mb={'x1'}>
           {TRANSACTION_TYPES[transactionType].title}
         </Text>
         <Text>{TRANSACTION_TYPES[transactionType].subTitle}</Text>
