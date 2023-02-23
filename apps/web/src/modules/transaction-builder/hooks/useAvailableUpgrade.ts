@@ -4,7 +4,6 @@ import pickBy from 'lodash/pickBy'
 import isNil from 'lodash/isNil'
 import isUndefined from 'lodash/isUndefined'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-import { CONTRACT_VERSION_DETAILS, VersionType } from 'src/modules/transaction-builder'
 import { AddressType, DaoContractAddresses } from 'src/typings'
 import { useContract, useContractReads } from 'wagmi'
 import { Contract } from 'ethers'
@@ -18,7 +17,7 @@ import {
 } from 'src/data/graphql/sdk.generated'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
-import { TransactionType } from '../constants/transactionTypes'
+import { TransactionType, CONTRACT_VERSION_DETAILS, VersionType } from '../constants'
 
 type Proposal = ProposalsWithCalldataQuery['nouns']['nounsProposals']['nodes'][number]
 

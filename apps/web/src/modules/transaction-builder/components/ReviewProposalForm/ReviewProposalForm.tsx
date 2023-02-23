@@ -21,7 +21,7 @@ import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
 import { Transactions } from './Transactions'
 import { ErrorResult } from 'src/pages/api/errorResult'
-import { MarkdownEditor } from 'src/modules/transaction-builder'
+import { MarkdownEditor } from './MarkdownEditor'
 
 interface ReviewProposalProps {
   disabled: boolean

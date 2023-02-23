@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
 import { vi } from 'vitest'
-import { TransactionType } from '../../constants/transactionTypes'
+import { TransactionType } from '../../constants/transactionType'
 import { Transactions } from './Transactions'
 import { Formik } from 'formik'
 import { ethers } from 'ethers'

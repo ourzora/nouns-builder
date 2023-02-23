@@ -7,7 +7,7 @@ interface CreateProposalHeadingProps {
   align?: 'center' | 'left'
 }
 
-const CreateProposalHeading: React.FC<CreateProposalHeadingProps> = ({
+export const CreateProposalHeading: React.FC<CreateProposalHeadingProps> = ({
   title,
   align = 'left',
 }) => {
@@ -26,5 +26,3 @@ const CreateProposalHeading: React.FC<CreateProposalHeadingProps> = ({
     </Stack>
   )
 }
-
-export default CreateProposalHeading

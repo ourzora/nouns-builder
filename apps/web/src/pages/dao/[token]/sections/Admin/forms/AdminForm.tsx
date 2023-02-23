@@ -18,9 +18,9 @@ import { sectionWrapperStyle } from 'src/styles/dao.css'
 import {
   useProposalStore,
   BuilderTransaction,
-} from 'src/modules/transaction-builder/stores/useProposalStore'
-import { TransactionType } from 'src/modules/transaction-builder/constants/transactionTypes'
-import type { AddressType, DaoContracts } from 'src/typings'
+  TransactionType,
+} from 'src/modules/transaction-builder'
+import { AddressType, DaoContracts } from 'src/typings'
 import { generalInfoProps, auctionSettingsProps, votingSettingsProps } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
