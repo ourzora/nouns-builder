@@ -1,6 +1,6 @@
 import { connectButtonWrapper } from './styles.css'
 import { ConnectButton as RKConnectButton, useChainModal } from '@rainbow-me/rainbowkit'
-import { Flex } from '@zoralabs/zord'
+import { Flex, Text } from '@zoralabs/zord'
 import React from 'react'
 import { useAccount, useNetwork } from 'wagmi'
 
@@ -19,17 +19,15 @@ export const ConnectButton = () => {
         justify={'center'}
         onClick={openChainModal}
         py={'x2'}
-        fontSize={16}
         style={{
           backgroundColor: '#F5E2E2',
           color: '#F03232',
           borderRadius: 8,
           border: 0,
-          lineHeight: '24px',
         }}
         cursor={'pointer'}
       >
-        Wrong Network
+        <Text variant={'paragraph-md'}>Wrong Network</Text>
       </Flex>
     )
   }

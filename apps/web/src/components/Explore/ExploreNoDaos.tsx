@@ -10,11 +10,7 @@ const ExploreNoDaos = () => {
       style={{ maxWidth: 912, minHeight: 500, padding: '150px 0px' }}
       gap={'x4'}
     >
-      <Text
-        fontSize={16}
-        color={'tertiary'}
-        style={{ lineHeight: '24px', fontWeight: 400 }}
-      >
+      <Text variant={'paragraph-md'} color={'tertiary'}>
         There are no DAOs here
       </Text>
       <Link href={'/create'} passHref>
@@ -25,14 +21,11 @@ const ExploreNoDaos = () => {
           borderColor={'border'}
           borderStyle={'solid'}
           borderWidth={'normal'}
+          fontWeight={'display'}
+          cursor={'pointer'}
           px={'x4'}
           py={'x2'}
           mx={'x1'}
-          fontSize={16}
-          style={{
-            cursor: 'pointer',
-            fontWeight: 700,
-          }}
         >
           Create a DAO
         </Flex>

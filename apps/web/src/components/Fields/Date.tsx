@@ -21,7 +21,6 @@ interface DateProps {
   value: any
   placeholder?: string
   autoSubmit?: boolean
-  submitCallback?: (values: any) => void
   parentValues?: any
   disabled?: boolean
 }
@@ -32,40 +31,28 @@ const Date: React.FC<DateProps> = ({
   id,
   errorMessage,
   autoSubmit,
-  submitCallback,
   value,
   placeholder,
   disabled = false,
 }) => {
   const ref = React.useRef(null)
 
-  /*
-
-    init date picker
-
-   */
   React.useEffect(() => {
     if (!ref.current) return
 
     flatpickr(ref.current, {
       dateFormat: 'Y-m-d',
-      onChange: (selectedDates, dateStr, instance) =>
-        handleDateSelect(selectedDates, dateStr, instance),
+      onChange: (_selectedDates, dateStr, _instance) => {
+        formik.setFieldValue(id, dateStr)
+
+        if (autoSubmit && formik) {
+          setTimeout(() => {
+            formik.submitForm()
+          }, 100)
+        }
+      },
     })
-  }, [ref.current])
-
-  const handleDateSelect = React.useCallback(
-    (_selectedDates: Date[], dateStr: string, _instance: Instance) => {
-      formik.setFieldValue(id, dateStr)
-
-      if (autoSubmit && formik) {
-        setTimeout(() => {
-          formik.submitForm()
-        }, 100)
-      }
-    },
-    [formik, submitCallback, autoSubmit]
-  )
+  }, [autoSubmit, formik, id])
 
   return (
     <Box as="fieldset" mb={'x8'} p={'x0'} className={defaultFieldsetStyle}>
