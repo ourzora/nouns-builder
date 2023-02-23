@@ -13,7 +13,7 @@ const TransactionTypeCard: React.FC<TransactionTypeCardProps> = ({
   onClick,
 }) => {
   return (
-    <Flex gap={'x4'} align={'center'} onClick={onClick}>
+    <Flex gap={'x4'} align={'center'} onClick={onClick} cursor={'pointer'}>
       <TransactionTypeIcon transactionType={transactionType} large />
       <Stack>
         <Text variant={'label-lg'} mb={'x1'}>
