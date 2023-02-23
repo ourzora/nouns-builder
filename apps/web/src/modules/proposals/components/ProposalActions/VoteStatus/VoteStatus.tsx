@@ -4,7 +4,7 @@ import { ProposalVote, ProposalStatus, Support } from 'src/typings'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { useContractEvent } from 'wagmi'
-import { governorAbi } from 'src/constants/abis'
+import { governorAbi } from 'src/data/contract/abis'
 import { ethers } from 'ethers'
 
 import VoteModal from './VoteModal'

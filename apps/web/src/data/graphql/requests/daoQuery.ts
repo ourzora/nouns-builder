@@ -1,5 +1,5 @@
 import { CHAIN } from 'src/constants/network'
-import { sdk } from 'src/graphql/client'
+import { sdk } from 'src/data/graphql/client'
 import * as Sentry from '@sentry/nextjs'
 
 export type MyDaosResponse = Array<{

@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react'
 import { Flex, Box, Text, Label, Paragraph, Button, atoms, Stack } from '@zoralabs/zord'
 import useSWR from 'swr'
-import { sdk } from 'src/graphql/client'
+import { sdk } from 'src/data/graphql/client'
 import Image from 'next/image'
 import dayjs from 'dayjs'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { PUBLIC_BUILDER_TOKEN } from 'src/constants/addresses'
-import { Chain, SortDirection, TokenSortKey } from 'src/graphql/sdk'
+import { Chain, SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 
 import { btn, content, image, card } from './UpgradeCard.css'
 

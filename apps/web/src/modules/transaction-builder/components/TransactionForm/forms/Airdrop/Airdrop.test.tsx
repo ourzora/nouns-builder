@@ -10,7 +10,9 @@ vi.mock('src/stores', () => ({
 }))
 
 vi.mock('src/graphql/sdk', async () => {
-  const mod = await vi.importActual<typeof import('src/graphql/sdk')>('src/graphql/sdk')
+  const mod = await vi.importActual<typeof import('src/data/graphql/sdk.generated')>(
+    'src/data/graphql/sdk.generated'
+  )
   return {
     ...mod,
     getSdk: vi.fn(() => ({

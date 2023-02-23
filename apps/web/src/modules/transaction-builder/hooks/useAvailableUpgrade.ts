@@ -1,4 +1,4 @@
-import { auctionAbi, managerAbi } from 'src/constants/abis'
+import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import lt from 'lodash/lt'
 import pickBy from 'lodash/pickBy'
 import isNil from 'lodash/isNil'
@@ -9,9 +9,12 @@ import { useContract, useContractReads } from 'wagmi'
 import { Contract } from 'ethers'
 import useSWR from 'swr'
 import intersection from 'lodash/intersection'
-import { sdk } from 'src/graphql/client'
+import { sdk } from 'src/data/graphql/client'
 import { CHAIN } from 'src/constants/network'
-import { NounsProposalStatus, ProposalsWithCalldataQuery } from 'src/graphql/sdk'
+import {
+  NounsProposalStatus,
+  ProposalsWithCalldataQuery,
+} from 'src/data/graphql/sdk.generated'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
 import { TransactionType, CONTRACT_VERSION_DETAILS, VersionType } from '../constants'

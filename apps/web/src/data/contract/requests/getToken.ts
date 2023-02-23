@@ -3,8 +3,8 @@ import { BigNumber } from 'ethers'
 import { base64 } from 'ethers/lib/utils'
 import { readContract } from '@wagmi/core'
 
-import { tokenQuery, tokenWinnerQuery } from 'src/query/tokenQuery'
-import { tokenAbi } from 'src/constants/abis'
+import { tokenQuery, tokenWinnerQuery } from 'src/data/graphql/requests/tokenQuery'
+import { tokenAbi } from 'src/data/contract/abis'
 import { AddressType, TokenWithWinner } from 'src/typings'
 
 const readTokenContractData = async (

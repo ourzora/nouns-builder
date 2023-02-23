@@ -1,7 +1,7 @@
 schema: https://api.zora.co/graphql
-documents: 'src/graphql/**/*.graphql'
+documents: 'src/data/graphql/**/*.graphql'
 generates:
-  src/graphql/sdk.ts:
+  src/data/graphql/sdk.generated.ts:
     plugins:
       - typescript
       - typescript-operations

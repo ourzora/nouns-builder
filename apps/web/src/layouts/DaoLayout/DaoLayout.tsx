@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { ReactElement, ReactNode, useEffect } from 'react'
-import { managerAbi } from 'src/constants/abis'
+import { managerAbi } from 'src/data/contract/abis'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'

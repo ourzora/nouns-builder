@@ -1,8 +1,8 @@
 import { getContract } from '@wagmi/core'
 import { ethers } from 'ethers'
-import { auctionAbi } from 'src/constants/abis'
+import { auctionAbi } from 'src/data/contract/abis'
 import { Bid } from 'src/typings'
-import { getProvider } from './provider'
+import { getProvider } from '../../../utils/provider'
 
 const readAuctionBidEvents = async (auctionAddress: string): Promise<Bid[]> => {
   const provider = getProvider()

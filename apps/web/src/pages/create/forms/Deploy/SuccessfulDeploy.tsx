@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Paragraph } from '@zoralabs/zord'
+import { Box, Button, Flex, Text, Paragraph } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
@@ -15,7 +15,7 @@ import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
 import { useContractRead } from 'wagmi'
-import { tokenAbi } from 'src/constants/abis'
+import { tokenAbi } from 'src/data/contract/abis'
 import { useLayoutStore } from 'src/stores'
 
 interface DeployedDaoProps extends DaoContractAddresses {
@@ -77,7 +77,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     return transformFileProperties(orderedLayers, ipfsUpload, 500)
   }, [orderedLayers, ipfsUpload])
 
-  const handleDeployMetadata = React.useCallback(async () => {
+  const handleDeployMetadata = async () => {
     setDeploymentError(undefined)
 
     if (!transactions || !metadataContract) {
@@ -112,15 +112,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     router.push(`/dao/${token}`).then(() => {
       resetForm()
     })
-  }, [
-    metadataContract,
-    transactions,
-    router,
-    setFulfilledSections,
-    title,
-    token,
-    resetForm,
-  ])
+  }
 
   /*
 
@@ -135,6 +127,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
       setIsSmallDesktop(window.innerWidth <= 1200 && window.innerWidth >= 768)
     }
   }, [])
+
   const handleResize = () => {
     setIsSmallDesktop(window.innerWidth <= 1200 && window.innerWidth >= 768)
   }
@@ -212,10 +205,10 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
       </Flex>
 
       {deploymentError && (
-        <Flex color="negative">
+        <Text variant={'paragraph-md'} color="negative">
           Oops, it looks like the owner of the token contract differs from your signer
           address. Please ensure that this transaction is handled by the same address.
-        </Flex>
+        </Text>
       )}
 
       <Button
