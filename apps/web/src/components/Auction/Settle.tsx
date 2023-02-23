@@ -27,7 +27,7 @@ export const Settle = ({ isEnding }: SettleProps) => {
 
   const [settling, setSettling] = useState(false)
 
-  const handleSettle = React.useCallback(async () => {
+  const handleSettle = async () => {
     if (!signer) return
 
     if (!!error) return
@@ -40,7 +40,7 @@ export const Settle = ({ isEnding }: SettleProps) => {
     } catch (error) {
       setSettling(false)
     }
-  }, [signer])
+  }
 
   if (isEnding && !settling) {
     return (
