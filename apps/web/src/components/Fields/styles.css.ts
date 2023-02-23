@@ -97,7 +97,7 @@ export const defaultInputStyle = style({
   backgroundColor: '#F2F2F2',
   borderRadius: '12px',
   fontSize: 16,
-  paddingLeft: 24,
+  paddingLeft: 16,
   boxSizing: 'border-box',
   border: '2px solid #fff',
   selectors: {
@@ -118,7 +118,7 @@ export const defaultInputErrorStyle = style({
   backgroundColor: '#F2F2F2',
   borderRadius: '15px',
   fontSize: 16,
-  paddingLeft: 24,
+  paddingLeft: 16,
   boxSizing: 'border-box',
   border: '2px solid #ff0015',
   selectors: {
@@ -194,7 +194,7 @@ export const defaultFormButton = style({
 
 export const defaultInputLabelStyle = style([
   atoms({
-    display: 'block',
+    display: 'inline-flex',
     fontSize: 16,
     mb: 'x4',
   }),
@@ -424,7 +424,7 @@ export const placeholderStyle = style({
 })
 
 export const permaInputPlaceHolderStyle = style({
-  right: '27px',
+  right: '16px',
   height: '26px',
   top: 57,
   background: 'inherit',
@@ -433,7 +433,7 @@ export const permaInputPlaceHolderStyle = style({
 export const inputCheckIcon = styleVariants({
   default: [
     permaInputPlaceHolderStyle,
-    { height: 24, width: 24, borderRadius: '12px', backgroundColor: '#1CB687' },
+    { top: 52, height: 24, width: 24, borderRadius: '12px', backgroundColor: '#1CB687' },
   ],
 })
 

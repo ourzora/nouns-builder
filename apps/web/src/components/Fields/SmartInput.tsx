@@ -46,6 +46,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
   type,
   inputLabel,
   onChange,
+  onBlur,
   autoSubmit,
   formik,
   errorMessage,
@@ -127,7 +128,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
         id={id}
         type={type}
         onChange={onChange}
-        onBlur={handleBlur}
+        onBlur={!!onBlur ? onBlur : handleBlur}
         onFocus={handleFocus}
         value={ensName ? ensName : typeof value === 'number' && isNaN(value) ? '' : value}
         className={`${inputStyleVariants[!!errorMessage ? 'error' : 'default']} ${

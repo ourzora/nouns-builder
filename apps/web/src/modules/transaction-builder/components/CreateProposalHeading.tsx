@@ -1,7 +1,6 @@
 import React from 'react'
 import { Stack, Text } from '@zoralabs/zord'
-import ProposalNavigation from '../../proposals/components/ProposalNavigation'
-import { useRouter } from 'next/router'
+import { ProposalNavigation } from 'src/modules/proposals'
 
 interface CreateProposalHeadingProps {
   title: string

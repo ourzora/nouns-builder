@@ -1,12 +1,12 @@
 import React from 'react'
 import { UpgradeCard, useAvailableUpgrade } from 'src/modules/transaction-builder'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ProposalSection } from 'src/modules/proposals'
 import { useRouter } from 'next/router'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { DaoContractAddresses } from 'src/typings'
 import dayjs from 'dayjs'
 import { v1_1_0, v1_2_0 } from './versions'
+import { Flex, Text } from '@zoralabs/zord'
 
 export const VERSION_PROPOSAL_SUMMARY: { [key: string]: string } = {
   '1.2.0': v1_2_0,
@@ -71,7 +71,10 @@ export const Upgrade = ({
           },
         }}
       >
-        <ProposalSection title="Upgrade available">
+        <Flex direction={'column'} mt={'x6'}>
+          <Text color="text3" mb={'x4'}>
+            Upgrade Available
+          </Text>
           <UpgradeCard
             onUpgrade={handleUpgrade}
             hasThreshold={hasThreshold}
@@ -80,7 +83,7 @@ export const Upgrade = ({
             description={description}
             totalContractUpgrades={totalContractUpgrades}
           />
-        </ProposalSection>
+        </Flex>
       </motion.div>
     </AnimatePresence>
   )

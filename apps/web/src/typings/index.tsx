@@ -1,6 +1,14 @@
+import { GetContractResult } from '@wagmi/core'
 import { ContractInterface } from 'ethers'
 import { IPFSUploadResponse } from 'ipfs-service'
 import { ReactElement } from 'react'
+import {
+  tokenAbi,
+  metadataAbi,
+  auctionAbi,
+  treasuryAbi,
+  governorAbi,
+} from 'src/constants/abis'
 import {
   ProposalFragment,
   NounsProposalStatus as ProposalStatus,
@@ -44,11 +52,11 @@ export interface auctionSettingsProps {
 }
 
 export interface allocationProps {
-  allocation: string
+  allocation: number | string
   founderAddress: string
   endDate: string
-  maxAllocation: string
 }
+
 export interface setUpArtworkProps {
   projectDescription: string
   collectionName: string
@@ -56,6 +64,7 @@ export interface setUpArtworkProps {
   externalUrl?: string
   filesLength: string | number
 }
+
 export interface IPFSUpload {
   name: string
   webkitRelativePath: string
@@ -226,4 +235,12 @@ export interface DaoContractAddresses {
   auction?: AddressType
   treasury?: AddressType
   governor?: AddressType
+}
+
+export interface DaoContracts {
+  tokenContract?: GetContractResult<typeof tokenAbi>
+  metadataContract?: GetContractResult<typeof metadataAbi>
+  auctionContract?: GetContractResult<typeof auctionAbi>
+  treasuryContract?: GetContractResult<typeof treasuryAbi>
+  governorContract?: GetContractResult<typeof governorAbi>
 }

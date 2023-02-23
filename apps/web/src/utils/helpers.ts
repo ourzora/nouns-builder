@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import { isAddress } from 'ethers/lib/utils'
 import isEqual from 'lodash/isEqual'
 
@@ -54,7 +55,11 @@ export const toSeconds = ({ days, hours, minutes, seconds }: toSeconds) => {
   covert seconds to { days, hours, minutes }
 
 */
-export const fromSeconds = (_seconds: number) => {
+export const fromSeconds = (value: BigNumber | number | undefined) => {
+  if (!value) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+  }
+  const _seconds = Number(value)
   let minutes = _seconds / 60
   let hours = minutes / 60
   let days = hours / 24

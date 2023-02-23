@@ -1,6 +1,4 @@
 export const ARTWORK = 'artwork'
-export const FOUNDER_ALLOCATION = 'founderAllocation'
-export const CONTRIBUTION_ALLOCATION = 'contributionAllocation'
 export const DATE = 'date'
 export const DAYS_HOURS_MINS = 'daysHoursMins'
 export const DAYS_HOURS_MINS_SECS = 'daysHoursMinsSecs'
