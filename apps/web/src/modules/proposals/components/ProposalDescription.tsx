@@ -1,17 +1,19 @@
-import { atoms, Box, Flex, Paragraph } from '@zoralabs/zord'
 import React, { ReactNode } from 'react'
-import DecodedTransactions from 'src/components/DecodedTransactions'
 import Image from 'next/image'
 import useSWR from 'swr'
+import ReactMarkdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
+import remarkGfm from 'remark-gfm'
+import rehypeSanitize from 'rehype-sanitize'
+import { atoms, Box, Flex, Paragraph } from '@zoralabs/zord'
+
+import DecodedTransactions from 'src/components/DecodedTransactions'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { sdk } from 'src/graphql/client'
 import { CHAIN } from 'src/constants/network'
 import { SortDirection, TokenSortKey } from 'src/graphql/sdk'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { Proposal } from 'src/typings'
-import ReactMarkdown from 'react-markdown'
-import rehypeRaw from 'rehype-raw'
-import remarkGfm from 'remark-gfm'
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>
@@ -52,7 +54,10 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
     <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
       <Section title="Description">
         <Paragraph overflow={'auto'}>
-          <ReactMarkdown rehypePlugins={[rehypeRaw]} remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown
+            rehypePlugins={[rehypeRaw, rehypeSanitize]}
+            remarkPlugins={[remarkGfm]}
+          >
             {description}
           </ReactMarkdown>
         </Paragraph>
