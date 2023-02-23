@@ -28,7 +28,6 @@ const ReviewProposalPage: NextPageWithLayout = () => {
   })
 
   const transactions = useProposalStore((state) => state.transactions)
-  console.log('transactions', transactions)
   const disabled = useProposalStore((state) => state.disabled)
   const title = useProposalStore((state) => state.title)
   const summary = useProposalStore((state) => state.summary)

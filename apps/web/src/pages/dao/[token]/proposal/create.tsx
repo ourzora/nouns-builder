@@ -44,7 +44,6 @@ const CreateProposalPage: NextPageWithLayout = () => {
   const options = TRANSACTION_FORM_OPTIONS.map(createSelectOption)
 
   const handleDropdownOnChange = (value: TransactionType) => {
-    console.log('setting transaction type')
     setTransactionType(value)
   }
 

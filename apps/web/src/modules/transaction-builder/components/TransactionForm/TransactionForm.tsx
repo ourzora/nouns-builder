@@ -12,9 +12,9 @@ interface TransactionFormProps {
 }
 
 export const TRANSACTION_FORM_OPTIONS = [
+  TransactionType.SEND_ETH,
   TransactionType.AIRDROP,
   TransactionType.CUSTOM,
-  TransactionType.SEND_ETH,
 ]
 
 export const TransactionForm = ({ type }: TransactionFormProps) => {
