@@ -11,7 +11,7 @@ import {
   preAuctionButtonVariants,
   preAuctionHelperText,
   preAuctionWrapper,
-} from './index.css'
+} from './PreAuction.css'
 
 export const PreAuction = () => {
   const router = useRouter()
