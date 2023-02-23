@@ -8,9 +8,9 @@ import {
   sectionTabVariants,
 } from 'src/styles/SectionNavigation.css'
 import { useRouter } from 'next/router'
-import { slugify } from 'src/utils/slugify'
+import { slugify } from 'src/utils/slugify/slugify'
 import Link from 'next/link'
-import { unslugify } from 'src/utils/unslugify'
+import { unslugify } from 'src/utils/unslugify/unslugify'
 import omit from 'lodash/omit'
 
 interface SectionHandlerProps {
