@@ -7,7 +7,7 @@ import VoteModal from './VoteModal'
 import Pending from './Pending'
 import Vote from './Vote'
 import { useContractEvent } from 'wagmi'
-import { governorAbi } from 'src/constants/abis'
+import { governorAbi } from 'src/data/contract/abis'
 import { ethers } from 'ethers'
 
 type SupportValue = 0 | 1 | 2

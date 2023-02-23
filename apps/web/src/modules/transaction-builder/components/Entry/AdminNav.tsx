@@ -5,7 +5,7 @@ import { Flex, Stack, Text } from '@zoralabs/zord'
 
 import { Icon } from 'src/components/Icon'
 import { useDaoStore, useLayoutStore } from 'src/stores'
-import { auctionAbi } from 'src/constants/abis'
+import { auctionAbi } from 'src/data/contract/abis'
 
 const AdminNav = () => {
   const router = useRouter()

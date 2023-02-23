@@ -5,7 +5,7 @@ import { Icon } from 'src/components/Icon'
 import { getFetchableUrl } from 'ipfs-service'
 import { useDaoStore } from 'src/stores'
 import { useContractReads } from 'wagmi'
-import { metadataAbi, tokenAbi } from 'src/constants/abis'
+import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { useRouter } from 'next/router'
 
 interface NavigationProps {

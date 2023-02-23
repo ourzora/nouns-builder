@@ -1,4 +1,4 @@
-import { auctionAbi, managerAbi } from 'src/constants/abis'
+import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import lt from 'lodash/lt'
 import pickBy from 'lodash/pickBy'
 import isNil from 'lodash/isNil'

@@ -8,7 +8,7 @@ import {
   auctionAbi,
   treasuryAbi,
   governorAbi,
-} from 'src/constants/abis'
+} from 'src/data/contract/abis'
 import {
   ProposalFragment,
   NounsProposalStatus as ProposalStatus,

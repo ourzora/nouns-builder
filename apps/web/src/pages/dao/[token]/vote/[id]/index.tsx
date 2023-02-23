@@ -24,7 +24,7 @@ import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposals/util
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { auctionAbi, managerAbi, tokenAbi } from 'src/constants/abis'
+import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 
 export interface VotePageProps {

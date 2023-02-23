@@ -16,7 +16,7 @@ import {
 } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { useRouter } from 'next/router'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
-import { auctionAbi, governorAbi, tokenAbi } from 'src/constants/abis'
+import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { Simulation, SimulationResult } from 'src/services/simulationService'

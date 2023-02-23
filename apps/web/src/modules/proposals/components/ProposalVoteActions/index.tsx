@@ -8,7 +8,7 @@ import { AddressType } from 'src/typings'
 import { isProposalOpen } from '../../utils'
 import OwnerActions from './OwnerActions'
 import { useContractReads } from 'wagmi'
-import { governorAbi } from 'src/constants/abis'
+import { governorAbi } from 'src/data/contract/abis'
 
 interface ProposalActionsProps {
   daoName?: string
