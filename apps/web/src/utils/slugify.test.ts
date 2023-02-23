@@ -1,5 +1,5 @@
 import { assert } from 'vitest'
-import { slugify } from './index'
+import { slugify } from './slugify'
 import { describe } from 'vitest'
 
 describe('Slugify a given string', () => {

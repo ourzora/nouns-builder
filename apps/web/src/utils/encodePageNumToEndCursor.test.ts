@@ -1,5 +1,5 @@
 import { assert } from 'vitest'
-import { encodePageNumToEndCursor } from './index'
+import { encodePageNumToEndCursor } from './encodePageNumToEndCursor'
 import { base64 } from 'ethers/lib/utils'
 import { describe } from 'vitest'
 
