@@ -12,15 +12,13 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import Meta from 'src/components/Layout/Meta'
 import { TokenWithWinner } from 'src/typings'
 import {
-  ProposalData,
   ProposalDescription,
   ProposalHeader,
-  ProposalSucceededActions,
-  ProposalVoteActions,
-  ProposalVotes,
+  ProposalActions,
+  ProposalDetailsGrid,
+  isProposalOpen,
 } from 'src/modules/proposals'
 import { propPageWrapper } from 'src/styles/Proposals.css'
-import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposals/utils'
 import { getProposal } from 'src/query/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
@@ -45,7 +43,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({ proposalId, token, daoNam
   }
 
   const displayActions = isProposalOpen(proposal.status)
-  const displaySucceededActions = isProposalSuccessful(proposal.status)
+
   return (
     <Fragment>
       <Meta
@@ -59,15 +57,9 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({ proposalId, token, daoNam
         <Flex className={propPageWrapper} gap={{ '@initial': 'x2', '@768': 'x4' }}>
           <ProposalHeader proposal={proposal} />
 
-          {displaySucceededActions && <ProposalSucceededActions proposal={proposal} />}
+          {displayActions && <ProposalActions daoName={daoName} proposal={proposal} />}
 
-          {displayActions && (
-            <ProposalVoteActions daoName={daoName} proposal={proposal} />
-          )}
-
-          <ProposalVotes proposal={proposal} />
-
-          <ProposalData proposal={proposal} />
+          <ProposalDetailsGrid proposal={proposal} />
 
           <ProposalDescription proposal={proposal} collection={query?.token as string} />
         </Flex>

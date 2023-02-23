@@ -52,10 +52,9 @@ export interface auctionSettingsProps {
 }
 
 export interface allocationProps {
-  allocation: string
+  allocation: number | string
   founderAddress: string
   endDate: string
-  maxAllocation: string
 }
 
 export interface setUpArtworkProps {

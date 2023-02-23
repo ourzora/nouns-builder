@@ -120,7 +120,7 @@ const pendingColor = keyframes({
   '100%': { backgroundPosition: '0% 50%' },
 })
 
-const deployPendingButtonStyle = style({
+export const deployPendingButtonStyle = style({
   background:
     'linear-gradient(90deg, rgba(0,3,242,1) 0%, rgba(207,187,21,1) 31%, rgba(85,219,9,1) 52%, rgba(255,0,0,1) 91%);',
   animation: `${pendingColor} 12s ease infinite`,
