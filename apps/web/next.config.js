@@ -37,6 +37,11 @@ const nextConfig = {
       use: ['@svgr/webpack'],
     })
 
+    config.module.rules.push({
+      test: /\.md$/,
+      use: 'raw-loader',
+    })
+
     // Hot-fix for $RefreshReg issues: https://github.com/vanilla-extract-css/vanilla-extract/issues/679#issuecomment-1402839249
     return {
       ...config,
