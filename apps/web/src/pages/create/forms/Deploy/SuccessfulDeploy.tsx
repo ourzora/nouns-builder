@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Paragraph } from '@zoralabs/zord'
+import { Box, Button, Flex, Text, Paragraph } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
@@ -127,11 +127,11 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
       setIsSmallDesktop(window.innerWidth <= 1200 && window.innerWidth >= 768)
     }
   }, [])
+
   const handleResize = () => {
     setIsSmallDesktop(window.innerWidth <= 1200 && window.innerWidth >= 768)
   }
 
-  console.log(signerAddress, tokenOwner, signerAddress === tokenOwner)
   return (
     <Flex direction={'column'}>
       <Box mb={'x1'} className={successHeadingStyle}>
@@ -205,10 +205,10 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
       </Flex>
 
       {deploymentError && (
-        <Flex color="negative">
+        <Text variant={'paragraph-md'} color="negative">
           Oops, it looks like the owner of the token contract differs from your signer
           address. Please ensure that this transaction is handled by the same address.
-        </Flex>
+        </Text>
       )}
 
       <Button
