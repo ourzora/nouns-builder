@@ -18,7 +18,7 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { BytesType } from 'src/typings'
 import { IconType } from 'src/components/Icon/icons'
-import { getProposal } from 'src/query/proposalQuery'
+import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 
 enum Choice {
   AGAINST = '0',

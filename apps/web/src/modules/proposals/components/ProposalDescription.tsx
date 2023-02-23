@@ -9,9 +9,9 @@ import { atoms, Box, Flex, Paragraph } from '@zoralabs/zord'
 
 import DecodedTransactions from 'src/components/DecodedTransactions'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { sdk } from 'src/graphql/client'
+import { sdk } from 'src/data/graphql/client'
 import { CHAIN } from 'src/constants/network'
-import { SortDirection, TokenSortKey } from 'src/graphql/sdk'
+import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { Proposal } from 'src/typings'
 

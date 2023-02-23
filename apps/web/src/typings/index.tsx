@@ -8,7 +8,7 @@ import {
   auctionAbi,
   treasuryAbi,
   governorAbi,
-} from 'src/constants/abis'
+} from 'src/data/contract/abis'
 import {
   ProposalFragment,
   NounsProposalStatus as ProposalStatus,
@@ -16,7 +16,7 @@ import {
   Support,
   MarketSortKey,
   ImageMediaEncodingFragment,
-} from 'src/graphql/sdk'
+} from 'src/data/graphql/sdk.generated'
 
 export interface CreateFormSection {
   title: string

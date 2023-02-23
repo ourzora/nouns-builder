@@ -1,6 +1,6 @@
 import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps, NextPage } from 'next'
-import { exploreDaosRequest } from 'src/query/exploreQueries'
+import { exploreDaosRequest } from 'src/data/graphql/requests/exploreQueries'
 import { ExplorePageData, MarketSortKey } from 'src/typings'
 import ExploreLayout from 'src/components/Explore/ExploreLayout'
 import Meta from 'src/components/Layout/Meta'

@@ -15,7 +15,7 @@ import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
 import type { DaoContractAddresses } from 'src/typings'
 import { useContractRead } from 'wagmi'
-import { tokenAbi } from 'src/constants/abis'
+import { tokenAbi } from 'src/data/contract/abis'
 import { useLayoutStore } from 'src/stores'
 
 interface DeployedDaoProps extends DaoContractAddresses {

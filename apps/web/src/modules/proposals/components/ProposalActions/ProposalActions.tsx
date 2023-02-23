@@ -5,7 +5,7 @@ import { useDaoStore, useLayoutStore } from 'src/stores'
 import { Proposal, ProposalStatus, ProposalVote } from 'src/typings'
 import { AddressType } from 'src/typings'
 import { useContractReads } from 'wagmi'
-import { governorAbi } from 'src/constants/abis'
+import { governorAbi } from 'src/data/contract/abis'
 
 import { isProposalOpen, isProposalSuccessful } from '../../utils'
 import { OwnerActions } from './OwnerActions'

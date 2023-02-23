@@ -3,7 +3,7 @@ import { Flex, Text } from '@zoralabs/zord'
 import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { Countdown } from 'src/components/Countdown'
-import { getProposal } from 'src/query/proposalQuery'
+import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { useTimeout } from 'src/hooks/useTimeout'
 
 interface PendingProps {

@@ -1,6 +1,6 @@
 import { useDaoStore } from 'src/stores/useDaoStore'
 import { useContractReads } from 'wagmi'
-import { governorAbi } from 'src/constants/abis/Governor'
+import { governorAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
 
 export function useProposal(_proposalId: `0x${string}`) {

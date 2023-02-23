@@ -7,7 +7,7 @@ import { useLayoutStore } from 'src/stores'
 import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { ContractTransaction } from 'ethers'
-import { getProposal } from 'src/query/proposalQuery'
+import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 
 interface GovernorContractButtonProps {
   buttonText: string
