@@ -17,7 +17,7 @@ interface GovernorContractButtonProps {
   onSuccess: () => void
 }
 
-const GovernorContractButton: React.FC<GovernorContractButtonProps> = ({
+export const GovernorContractButton: React.FC<GovernorContractButtonProps> = ({
   buttonText,
   buttonClassName,
   proposalId,
@@ -58,5 +58,3 @@ const GovernorContractButton: React.FC<GovernorContractButtonProps> = ({
     </ContractButton>
   )
 }
-
-export default GovernorContractButton

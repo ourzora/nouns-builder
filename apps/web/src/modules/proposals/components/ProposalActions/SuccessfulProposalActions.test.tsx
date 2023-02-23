@@ -6,7 +6,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { render } from 'src/test/utils'
 import { Proposal, ProposalStatus } from 'src/typings'
 
-import ProposalSucceededActions from '.'
+import { SuccessfulProposalActions } from './SuccessfulProposalActions'
 
 describe('proposal status', () => {
   const date = new Date(2022, 1, 1)
@@ -21,7 +21,7 @@ describe('proposal status', () => {
 
   it('should render a succeeded proposal', async () => {
     render(
-      <ProposalSucceededActions
+      <SuccessfulProposalActions
         proposal={
           {
             proposalId: '0x9ddab946',
@@ -45,7 +45,7 @@ describe('proposal status', () => {
 
   it('should render a queued proposal', async () => {
     render(
-      <ProposalSucceededActions
+      <SuccessfulProposalActions
         proposal={
           {
             proposalId: '0x9ddab946',
@@ -72,7 +72,7 @@ describe('proposal status', () => {
 
   it('should render a executable proposal', async () => {
     render(
-      <ProposalSucceededActions
+      <SuccessfulProposalActions
         proposal={
           {
             proposalId: '0x9ddab946',

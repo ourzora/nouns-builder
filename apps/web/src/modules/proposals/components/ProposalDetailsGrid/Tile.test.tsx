@@ -1,6 +1,5 @@
-import ProposalTile from '.'
+import { Tile } from './Tile'
 import React, { Fragment } from 'react'
-import { Box } from '@zoralabs/zord'
 import { screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import { describe, expect, it } from 'vitest'
@@ -9,11 +8,7 @@ describe('proposal tile', () => {
   it('should render a proposal tile', async () => {
     render(
       <Fragment>
-        <ProposalTile
-          title={'Threshold'}
-          subtitle={'1 vote'}
-          subtext={'Current threshold'}
-        />
+        <Tile title={'Threshold'} subtitle={'1 vote'} subtext={'Current threshold'} />
       </Fragment>
     )
 

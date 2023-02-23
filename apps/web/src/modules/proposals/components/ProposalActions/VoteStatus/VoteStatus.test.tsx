@@ -1,4 +1,4 @@
-import VoteStatus from '.'
+import { VoteStatus } from './VoteStatus'
 import { screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import { describe, expect, it } from 'vitest'

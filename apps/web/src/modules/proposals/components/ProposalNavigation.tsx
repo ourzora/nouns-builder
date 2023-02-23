@@ -8,11 +8,11 @@ import { useContractReads } from 'wagmi'
 import { metadataAbi, tokenAbi } from 'src/constants/abis'
 import { useRouter } from 'next/router'
 
-interface NavigationProps {
+interface ProposalNavigationProps {
   handleBack?: () => void
 }
 
-const ProposalNavigation: React.FC<NavigationProps> = ({ handleBack }) => {
+export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({ handleBack }) => {
   const router = useRouter()
   const addresses = useDaoStore((state) => state.addresses)
 
@@ -69,5 +69,3 @@ const ProposalNavigation: React.FC<NavigationProps> = ({ handleBack }) => {
     </Flex>
   )
 }
-
-export default ProposalNavigation

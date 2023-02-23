@@ -1,11 +1,12 @@
-import ProposalStatus from '../ProposalStatus'
-import { statusStyle, titleStyle } from './index.css'
 import { Flex, Box, Label, Paragraph } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 import dayjs from 'dayjs'
 import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
 import { useIsMounted } from 'src/hooks/useIsMounted'
+
+import { ProposalStatus } from './ProposalStatus'
+import { statusStyle, titleStyle } from './ProposalCard.css'
 
 type ProposalCardProps = {
   proposalId: string
@@ -19,7 +20,7 @@ type ProposalCardProps = {
   collection?: string
 }
 
-const ProposalCard: React.FC<ProposalCardProps> = ({
+export const ProposalCard: React.FC<ProposalCardProps> = ({
   proposalId,
   title,
   proposalNumber,
@@ -86,5 +87,3 @@ const ProposalCard: React.FC<ProposalCardProps> = ({
     </Link>
   )
 }
-
-export default ProposalCard

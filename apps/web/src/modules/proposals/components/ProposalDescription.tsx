@@ -25,7 +25,7 @@ type ProposalDescriptionProps = {
   collection: string
 }
 
-const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
+export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   proposal,
   collection,
 }) => {
@@ -84,5 +84,3 @@ const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
     </Flex>
   )
 }
-
-export default ProposalDescription

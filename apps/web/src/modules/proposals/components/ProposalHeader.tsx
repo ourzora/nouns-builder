@@ -1,6 +1,6 @@
 import { Box, Flex, Label, Text } from '@zoralabs/zord'
-import ProposalNavigation from '../ProposalNavigation'
-import ProposalStatus from '../ProposalStatus'
+import { ProposalNavigation } from './ProposalNavigation'
+import { ProposalStatus } from './ProposalStatus'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { Proposal } from 'src/typings'
@@ -10,7 +10,7 @@ interface ProposalHeaderProps {
   proposal: Proposal
 }
 
-const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
+export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
   const router = useRouter()
   const { title, voteStart, voteEnd, proposer, status, expiresAt, proposalNumber } =
     proposal
@@ -69,5 +69,3 @@ const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
     </Flex>
   )
 }
-
-export default ProposalHeader
