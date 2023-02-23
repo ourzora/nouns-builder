@@ -20,7 +20,7 @@ import { AddressType } from 'src/typings'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
 import { Transactions } from './Transactions'
-import { ErrorResult } from 'src/pages/api/errorResult'
+import { ErrorResult } from 'src/services/errorResult'
 import { MarkdownEditor } from './MarkdownEditor'
 
 interface ReviewProposalProps {
