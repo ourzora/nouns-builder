@@ -34,7 +34,7 @@ const animation = {
 
 interface AuctionFormValues extends auctionSettingsProps {}
 
-const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
+export const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
   const {
     setAuctionSettings,
     auctionSettings,
@@ -144,5 +144,3 @@ const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
     </>
   )
 }
-
-export default Auction

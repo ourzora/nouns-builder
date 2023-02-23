@@ -24,7 +24,7 @@ export interface FounderAllocationFormValues {
   founderAllocation: allocationProps[]
 }
 
-const Allocation: React.FC<FounderProps> = ({ title }) => {
+export const Allocation: React.FC<FounderProps> = ({ title }) => {
   const formRef = useRef<FormikProps<FounderAllocationFormValues>>(null)
   const [allocationError, setAllocationError] = useState(false)
   const {
@@ -183,5 +183,3 @@ const Allocation: React.FC<FounderProps> = ({ title }) => {
     </>
   )
 }
-
-export default Allocation

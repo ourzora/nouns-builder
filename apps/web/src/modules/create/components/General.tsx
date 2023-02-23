@@ -11,7 +11,7 @@ interface TokenSettingsProps {
   title: string
 }
 
-const General: React.FC<TokenSettingsProps> = ({ title }) => {
+export const General: React.FC<TokenSettingsProps> = ({ title }) => {
   const { setGeneralInfo, generalInfo } = useFormStore()
   const initialValues = {
     daoAvatar: generalInfo?.daoAvatar || '',
@@ -33,5 +33,3 @@ const General: React.FC<TokenSettingsProps> = ({ title }) => {
     </Flex>
   )
 }
-
-export default General

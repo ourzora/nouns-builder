@@ -58,34 +58,6 @@ export const flowWrapper = style({
   },
 })
 
-export const flowMobileDropdownButton = style({
-  display: 'flex',
-  padding: 5,
-  alignItems: 'center',
-  justifyContent: 'center',
-  border: '1px solid #F2F2F2',
-  width: 'calc(100% - 50px)',
-  margin: '0 auto',
-  marginBottom: 30,
-  borderRadius: 10,
-  background: '#000',
-  color: '#fff',
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
-export const flowTitleFulfilled = style({
-  color: '#1CB687',
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
 const flowTitleBase = style({
   position: 'absolute',
   fontSize: 18,
@@ -198,15 +170,6 @@ export const circleVariant = styleVariants({
   previewActive: [circleBase, { backgroundColor: '#000' }],
 })
 
-export const transactionCircleVariant = styleVariants({
-  flowFulfilledCircle: [circleBase, flowFulfilledCircle, { background: '#000' }],
-  flowFulfilledCircleLast: [circleBase, flowFulfilledCircleLast, { background: '#000' }],
-  flowCircle: [circleBase, flowCircle, { background: '#F2F2F2' }],
-  flowCircleLast: [circleBase, flowCircleLast, { background: '#F2F2F2' }],
-  flowCircleActive: [circleBase, flowCircleActive, { background: '#000' }],
-  flowCircleActiveLast: [circleBase, flowCircleActiveLast, { background: '#000' }],
-})
-
 export const flowSectionWrapper = style({
   marginRight: 85,
   selectors: {
@@ -265,47 +228,6 @@ export const flowSectionWrapperVariants = styleVariants({
   ],
 })
 
-export const transactionFlowSectionWrapper = style({
-  marginRight: 85,
-  selectors: {
-    '&:last-of-type': {
-      marginRight: 0,
-    },
-    '&:first-child&:before': {
-      position: 'absolute',
-      content: '',
-      top: '50%',
-      marginTop: -1,
-      width: 516,
-      border: '1px dashed #F2F2F2',
-      '@media': {
-        '(max-width: 1080px)': {
-          width: 368,
-        },
-        '(max-width: 768px)': {
-          display: 'none',
-        },
-      },
-    },
-  },
-  '@media': {
-    '(max-width: 1080px)': {
-      marginRight: 55,
-    },
-  },
-})
-
-/*  /pages/create -- Form   */
-
-export const createWrapper = style({
-  '@media': {
-    '(max-width: 768px)': {
-      flexDirection: 'column',
-      marginTop: 40,
-    },
-  },
-})
-
 const createWrapperBase = style({
   position: 'relative',
   boxSizing: 'border-box',
@@ -355,115 +277,4 @@ export const formWrapper = style({
       width: '100%',
     },
   },
-})
-
-export const preHeadingStyle = style({
-  fontSize: 12,
-  lineHeight: '20px',
-  letterSpacing: '.05em',
-  textTransform: 'uppercase',
-})
-
-export const headingStyle = style({
-  fontSize: 40,
-})
-
-export const subHeadingStyle = style({
-  color: '#4D4D4D',
-})
-
-export const artByStyle = style({
-  opacity: 0.5,
-})
-
-export const artByLinkStyle = style({
-  color: '#fff',
-})
-
-export const artByStyleWrapper = style({
-  color: '#fff',
-  fontSize: 18,
-  fontFamily: 'ptBold',
-  '@media': {
-    '(max-width: 768px)': {
-      left: 20,
-      right: 0,
-      top: 25,
-    },
-  },
-})
-
-/*  /pages/discourse -- discourse   */
-export const auctionGrid = style({
-  maxWidth: 1000,
-  gridTemplateColumns: 'repeat(2, 1fr)',
-  '@media': {
-    '(max-width: 1080px)': {
-      gridTemplateColumns: 'repeat(1, 1fr)',
-    },
-  },
-})
-
-export const auctionWrapper = style({
-  height: '100%',
-  width: '100%',
-  padding: '0 2rem 0 2rem',
-})
-
-export const auctionHeader = style({
-  fontFamily: 'Inter, sans-serif!important',
-  fontWeight: 800,
-  fontSize: '50px',
-  marginTop: '1rem',
-  marginBottom: '1rem',
-})
-
-export const auctionSecondaryText = style({
-  fontFamily: 'Inter, sans-serif!important',
-  fontWeight: 800,
-  fontSize: '30px',
-})
-
-export const daoCardHeader = style({
-  fontWeight: 500,
-  fontSize: 18,
-  whiteSpace: 'nowrap',
-  // color: 'rgba(0, 0, 0, 0.39)',
-})
-
-export const daoCardName = style({
-  whiteSpace: 'nowrap',
-})
-
-export const truncateLine = style({
-  textOverflow: 'ellipsis',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  '@media': {
-    'screen and (max-width: 1024px)': {
-      maxWidth: 260,
-    },
-    'screen and (max-width: 768px)': {
-      maxWidth: 200,
-    },
-  },
-})
-
-export const borderTop = style({
-  borderTop: 'solid 2px',
-  borderColor: '#F2F2F2',
-})
-
-export const borderBottom = style({
-  borderBottom: 'solid 2px',
-  borderColor: '#F2F2F2',
-})
-
-export const borderRight = style({
-  borderRight: 'solid 2px',
-  borderColor: '#F2F2F2',
-})
-
-export const borderAll = style({
-  border: '2px solid #F2F2F2',
 })

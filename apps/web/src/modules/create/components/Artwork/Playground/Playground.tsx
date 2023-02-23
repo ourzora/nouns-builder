@@ -1,5 +1,5 @@
-import ImageGrid from './ImageGrid'
-import LayerMenu from './LayerMenu'
+import { ImageGrid } from './ImageGrid'
+import { LayerMenu } from './LayerMenu'
 import { Button, Flex } from '@zoralabs/zord'
 import React, { BaseSyntheticEvent } from 'react'
 import { useFormStore } from 'src/stores/useFormStore'
@@ -12,7 +12,7 @@ import {
 } from 'src/styles/Artwork.css'
 import { ImagesByTraitProps, PlaygroundProps, SelectedTraitsProps } from 'src/typings'
 
-const Playground: React.FC<PlaygroundProps> = ({ images }) => {
+export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
   const { orderedLayers } = useFormStore()
   const canvas = React.useRef(null)
   const [generatedImages, setGeneratedImages] = React.useState<any[]>([])
@@ -203,5 +203,3 @@ const Playground: React.FC<PlaygroundProps> = ({ images }) => {
     </Flex>
   )
 }
-
-export default Playground

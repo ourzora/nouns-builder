@@ -4,9 +4,9 @@ import { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import React from 'react'
 import SmartInput from '../SmartInput'
 import DatePicker from '../Date'
-import { FounderAllocationFormValues } from 'src/pages/create/forms/Allocation/Allocation'
 import { allocationProps, auctionSettingsProps } from 'src/typings'
 import { calculateMaxAllocation } from 'src/modules/create/utils'
+import { FounderAllocationFormValues } from 'src/modules/create'
 
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues

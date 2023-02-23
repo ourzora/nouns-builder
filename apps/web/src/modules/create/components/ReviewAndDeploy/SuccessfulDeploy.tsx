@@ -29,7 +29,7 @@ const DEPLOYMENT_ERROR = {
     'Oops! Looks like there was a problem. Please ensure that your input data is correct',
 }
 
-const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
+export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   token,
   metadata,
   auction,
@@ -235,5 +235,3 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     </Flex>
   )
 }
-
-export default SuccessfulDeploy

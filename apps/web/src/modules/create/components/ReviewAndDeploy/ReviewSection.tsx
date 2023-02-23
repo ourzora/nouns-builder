@@ -1,14 +1,13 @@
-import React, { ReactElement, ReactNode } from 'react'
-import { Flex } from '@zoralabs/zord'
+import React, { ReactNode } from 'react'
+import { atoms, Flex } from '@zoralabs/zord'
 import {
-  infoSectionWrapper,
   reviewSectionStyleVariants,
   reviewSectionSubHeading,
 } from 'src/styles/deploy.css'
 import { Icon } from 'src/components/Icon'
 import { motion } from 'framer-motion'
 
-const ReviewSection: React.FC<{
+export const ReviewSection: React.FC<{
   subHeading: string
   children: ReactNode[]
 }> = ({ subHeading, children }) => {
@@ -50,7 +49,12 @@ const ReviewSection: React.FC<{
       </Flex>
 
       <motion.div
-        className={infoSectionWrapper}
+        className={atoms({
+          display: 'flex',
+          overflow: 'hidden',
+          height: 'x0',
+          width: '100%',
+        })}
         variants={variants}
         initial={'initial'}
         animate={!isOpen ? 'initial' : 'open'}
@@ -62,5 +66,3 @@ const ReviewSection: React.FC<{
     </Flex>
   )
 }
-
-export default ReviewSection

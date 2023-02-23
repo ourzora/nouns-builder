@@ -1,4 +1,4 @@
-import LayerBox from './LayerBox'
+import { LayerBox } from './LayerBox'
 import { Box } from '@zoralabs/zord'
 import React from 'react'
 import { defaultFormHeading } from 'src/components/Fields/styles.css'
@@ -10,7 +10,7 @@ interface LayerOrderingProps {
   images: ImageProps[]
 }
 
-const LayerOrdering: React.FC<LayerOrderingProps> = ({ title, images }) => {
+export const LayerOrdering: React.FC<LayerOrderingProps> = ({ title, images }) => {
   const { setUpArtwork, orderedLayers, setOrderedLayers } = useFormStore()
   const { artwork } = setUpArtwork
 
@@ -44,5 +44,3 @@ const LayerOrdering: React.FC<LayerOrderingProps> = ({ title, images }) => {
     </Box>
   )
 }
-
-export default LayerOrdering

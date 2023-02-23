@@ -12,7 +12,7 @@ const options = {
   vetoPower: [`Yes`, `No`],
 }
 
-const Veto: React.FC<VetoSettingsProps> = ({ title }) => {
+export const Veto: React.FC<VetoSettingsProps> = ({ title }) => {
   const { vetoPower, setVetoPower } = useFormStore()
   const initialValues = {
     vetoPower: vetoPower || vetoPower === 0 ? vetoPower : undefined,
@@ -36,5 +36,3 @@ const Veto: React.FC<VetoSettingsProps> = ({ title }) => {
     </Flex>
   )
 }
-
-export default Veto

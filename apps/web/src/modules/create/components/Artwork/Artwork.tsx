@@ -6,11 +6,11 @@ import {
 } from 'src/components/Fields/fields/artwork'
 import { useFormStore } from 'src/stores/useFormStore'
 
-interface SetUpArtwork {
+interface ArtworkProps {
   title: string
 }
 
-const SetUpArtwork: React.FC<SetUpArtwork> = ({ title }) => {
+export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
   const { setSetUpArtwork, setUpArtwork } = useFormStore()
   const initialValues = {
     projectDescription: setUpArtwork?.projectDescription || '',
@@ -30,5 +30,3 @@ const SetUpArtwork: React.FC<SetUpArtwork> = ({ title }) => {
     />
   )
 }
-
-export default SetUpArtwork

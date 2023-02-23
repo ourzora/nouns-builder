@@ -13,7 +13,7 @@ interface ReviewItem {
   value: string | ReactNode
   sub?: boolean
 }
-const ReviewItem: React.FC<ReviewItem> = ({ label, value }) => {
+export const ReviewItem: React.FC<ReviewItem> = ({ label, value }) => {
   return (
     <Flex width={'100%'} direction={'column'} className={infoSectionStyle}>
       <Box className={infoSectionLabelStyle} mt={'x4'}>
@@ -27,5 +27,3 @@ const ReviewItem: React.FC<ReviewItem> = ({ label, value }) => {
     </Flex>
   )
 }
-
-export default ReviewItem

@@ -21,12 +21,11 @@ import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
 import { WriteContractUnpreparedArgs } from '@wagmi/core'
 import { getFetchableUrl } from 'ipfs-service'
-import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create/utils'
-
-import ReviewSection from './ReviewSection'
-import ReviewItem from './ReviewItem'
-import PreviewArtwork from './PreviewArtwork'
-import SuccessfulDeploy from './SuccessfulDeploy'
+import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create'
+import { ReviewSection } from './ReviewSection'
+import { ReviewItem } from './ReviewItem'
+import { PreviewArtwork } from './PreviewArtwork'
+import { SuccessfulDeploy } from './SuccessfulDeploy'
 
 type FounderParameters = NonNullable<
   WriteContractUnpreparedArgs<typeof managerAbi, 'deploy'>
@@ -35,6 +34,7 @@ type FounderParameters = NonNullable<
 interface ReviewAndDeploy {
   title: string
 }
+
 
 const DEPLOYMENT_ERROR = {
   MISMATCHING_SIGNER:
@@ -45,7 +45,7 @@ const DEPLOYMENT_ERROR = {
     'Oops! Looks like there was a problem handling the dao deployment. Please ensure that input data from all the previous steps is correct',
 }
 
-const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
+export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const { signer, signerAddress } = useLayoutStore()
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [hasConfirmed, setHasConfirmed] = useState<boolean>(false)
@@ -325,5 +325,3 @@ const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     </Box>
   )
 }
-
-export default ReviewAndDeploy
