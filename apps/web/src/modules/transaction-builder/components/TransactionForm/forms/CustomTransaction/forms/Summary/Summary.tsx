@@ -17,7 +17,7 @@ interface SummaryProps {
   setIsOpen?: (bool: boolean) => void
 }
 
-const Summary: React.FC<SummaryProps> = ({ title, setIsOpen }) => {
+export const Summary: React.FC<SummaryProps> = ({ title, setIsOpen }) => {
   const { signer, provider } = useLayoutStore()
   const { customTransaction, composeCustomTransaction, previous } =
     useCustomTransactionStore()
@@ -197,5 +197,3 @@ const Summary: React.FC<SummaryProps> = ({ title, setIsOpen }) => {
     </Flex>
   )
 }
-
-export default Summary

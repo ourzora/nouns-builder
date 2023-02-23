@@ -11,7 +11,7 @@ interface ABIProps {
   title: string
 }
 
-const ABI: React.FC<ABIProps> = ({ title }) => {
+export const ABI: React.FC<ABIProps> = ({ title }) => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
   const { provider } = useLayoutStore()
   const initialValues = {
@@ -69,5 +69,3 @@ const ABI: React.FC<ABIProps> = ({ title }) => {
     </Flex>
   )
 }
-
-export default ABI

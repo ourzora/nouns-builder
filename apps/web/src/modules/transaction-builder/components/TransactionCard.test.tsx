@@ -1,13 +1,13 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import { vi } from 'vitest'
-import { ReviewCard } from './ReviewCard'
-import { TransactionType } from '../constants/transactionType'
+import { TransactionCard } from './TransactionCard'
+import { TransactionType } from '../constants'
 
 describe('Review Card', () => {
   it('should render a disabled transaction card', () => {
     render(
-      <ReviewCard
+      <TransactionCard
         disabled={true}
         transaction={{
           summary: 'This is a transaction summary',
@@ -27,7 +27,7 @@ describe('Review Card', () => {
     const mockEditFn = vi.fn()
     const mockRemoveFn = vi.fn()
     render(
-      <ReviewCard
+      <TransactionCard
         transaction={{
           summary: 'This is a transaction summary',
           type: TransactionType.UPGRADE,
@@ -54,7 +54,7 @@ describe('Review Card', () => {
     const mockEditFn = vi.fn()
 
     render(
-      <ReviewCard
+      <TransactionCard
         disabled={false}
         transaction={{
           summary: 'This is a transaction summary',
@@ -78,7 +78,7 @@ describe('Review Card', () => {
     const mockRemoveFn = vi.fn()
 
     render(
-      <ReviewCard
+      <TransactionCard
         disabled={false}
         handleRemove={mockRemoveFn}
         transaction={{
@@ -100,7 +100,7 @@ describe('Review Card', () => {
 
   it('should render a review transaction card with a function names given no summary', () => {
     render(
-      <ReviewCard
+      <TransactionCard
         disabled={false}
         transaction={{
           type: TransactionType.CUSTOM,

@@ -8,7 +8,7 @@ interface ValueProps {
   title: string
 }
 
-const Value: React.FC<ValueProps> = ({ title }) => {
+export const Value: React.FC<ValueProps> = ({ title }) => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
   const initialValues = {
     transactionValue: customTransaction?.value || '',
@@ -38,5 +38,3 @@ const Value: React.FC<ValueProps> = ({ title }) => {
     </Flex>
   )
 }
-
-export default Value

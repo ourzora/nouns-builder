@@ -1,20 +1,15 @@
-import { customTransactionWrapper, transactionFormWrapper } from './styles.css'
-import FormHandler from './FormHandler'
-import Address from './forms/Address/Address'
-import Arguments from './forms/Arguments/Arguments'
-import Function from './forms/Function/Function'
-import Summary from './forms/Summary/Summary'
+import React from 'react'
 import { Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
-import React from 'react'
+
 import { AddressType, AddTransactionSection } from 'src/typings'
-import { Error } from 'src/components/Fields/Error'
-import ABI from './forms/ABI/ABI'
-import Value from './forms/Value/Value'
-import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
-import { useCustomTransactionStore } from 'src/modules/transaction-builder/stores/useCustomTransactionStore'
-import { TransactionType } from 'src/modules/transaction-builder/constants/transactionType'
-import FormHeading from './FormHeading'
+
+import { useProposalStore, useCustomTransactionStore } from '../../../../stores'
+import { TransactionType } from '../../../../constants'
+import { customTransactionWrapper, transactionFormWrapper } from './styles.css'
+import { ABI, Address, Arguments, Function, Summary, Value } from './forms'
+import { FormHandler } from './FormHandler'
+import { FormHeading } from './FormHeading'
 
 export const CustomTransaction: React.FC = () => {
   const { addTransaction } = useProposalStore()

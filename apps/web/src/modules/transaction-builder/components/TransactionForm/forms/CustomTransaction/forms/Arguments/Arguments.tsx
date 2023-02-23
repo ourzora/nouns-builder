@@ -18,7 +18,7 @@ interface ArgumentsProps {
   title: string
 }
 
-const Arguments: React.FC<ArgumentsProps> = ({ title }) => {
+export const Arguments: React.FC<ArgumentsProps> = ({ title }) => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
 
   /*
@@ -208,5 +208,3 @@ const Arguments: React.FC<ArgumentsProps> = ({ title }) => {
     </Flex>
   )
 }
-
-export default Arguments

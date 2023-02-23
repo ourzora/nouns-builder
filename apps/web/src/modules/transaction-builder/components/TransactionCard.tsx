@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { atoms, Flex, Box, Text } from '@zoralabs/zord'
 import { Icon } from 'src/components/Icon'
-import { BuilderTransaction } from '../stores/useProposalStore'
+import { BuilderTransaction } from '../stores'
 import { TransactionTypeIcon } from './TransactionTypeIcon'
 
 export enum SimulationError {
@@ -9,7 +9,7 @@ export enum SimulationError {
   TransactionFailed, // One or more of the transactions in the transaction bundle has failed
 }
 
-interface ReviewCardProps {
+interface TransactionCardProps {
   handleEdit?: () => void
   handleRemove?: () => void
   simulationUrls?: Array<string | undefined>
@@ -19,7 +19,7 @@ interface ReviewCardProps {
   children?: ReactNode
 }
 
-export const ReviewCard: React.FC<ReviewCardProps> = ({
+export const TransactionCard: React.FC<TransactionCardProps> = ({
   handleEdit,
   handleRemove,
   simulationError,

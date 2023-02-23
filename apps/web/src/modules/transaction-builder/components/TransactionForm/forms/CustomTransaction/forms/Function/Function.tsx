@@ -8,7 +8,7 @@ interface FunctionProps {
   title: string
 }
 
-const Function: React.FC<FunctionProps> = ({ title }) => {
+export const Function: React.FC<FunctionProps> = ({ title }) => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
 
   const initialValues = {
@@ -54,5 +54,3 @@ const Function: React.FC<FunctionProps> = ({ title }) => {
     </Flex>
   )
 }
-
-export default Function

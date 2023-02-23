@@ -14,7 +14,7 @@ interface AddressProps {
   title: string
 }
 
-const Address: React.FC<AddressProps> = ({ title }) => {
+export const Address: React.FC<AddressProps> = ({ title }) => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
   const { provider } = useLayoutStore()
   const initialValues = {
@@ -62,5 +62,3 @@ const Address: React.FC<AddressProps> = ({ title }) => {
     </Flex>
   )
 }
-
-export default Address

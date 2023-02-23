@@ -2,9 +2,9 @@ import React, { memo } from 'react'
 import { Box, Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import { transactionFlowHeading, transactionFlowWrapper } from './styles.css'
-import { useCustomTransactionStore } from 'src/modules/transaction-builder/stores/useCustomTransactionStore'
+import { useCustomTransactionStore } from '../../../../stores'
 
-const FormHeading: React.FC<{
+export const FormHeading: React.FC<{
   sections: any[]
 }> = memo(({ sections }) => {
   const [isOpen] = React.useState(false)
@@ -28,5 +28,3 @@ const FormHeading: React.FC<{
     </Flex>
   )
 })
-
-export default FormHeading

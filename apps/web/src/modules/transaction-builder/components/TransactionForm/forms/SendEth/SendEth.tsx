@@ -2,17 +2,18 @@ import { useCallback } from 'react'
 import { Formik, Form } from 'formik'
 import type { FormikHelpers } from 'formik'
 import { Box, Flex, Button } from '@zoralabs/zord'
-import sendEthSchema, { SendEthValues } from './SendEth.schema'
 import Input from 'src/components/Input'
 import { Icon } from 'src/components/Icon'
 import { ethers } from 'ethers'
 import { getEnsAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
-import { TransactionType } from '../../../../constants/transactionType'
 import { walletSnippet } from 'src/utils/helpers'
-import { useProposalStore } from '../../../../stores/useProposalStore'
 import { useDaoStore } from 'src/stores'
 import { useBalance } from 'wagmi'
+
+import { TransactionType } from '../../../../constants/transactionType'
+import { useProposalStore } from '../../../../stores/useProposalStore'
+import sendEthSchema, { SendEthValues } from './SendEth.schema'
 
 const SendEth = () => {
   const { treasury } = useDaoStore((state) => state.addresses)

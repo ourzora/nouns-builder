@@ -1,14 +1,14 @@
 import React from 'react'
 import { atoms, Flex, Stack, Text } from '@zoralabs/zord'
-import { TRANSACTION_TYPES, TransactionType } from '../TransactionForm'
+import { TRANSACTION_TYPES, TransactionType } from '../../constants'
 import { TransactionTypeIcon } from '../TransactionTypeIcon'
 
-interface ShortcutCollectionProps {
+interface TransactionTypeCardProps {
   transactionType: TransactionType
   onClick: () => void
 }
 
-const TransactionTypeCard: React.FC<ShortcutCollectionProps> = ({
+const TransactionTypeCard: React.FC<TransactionTypeCardProps> = ({
   transactionType,
   onClick,
 }) => {

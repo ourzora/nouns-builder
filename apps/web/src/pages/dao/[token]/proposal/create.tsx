@@ -27,9 +27,6 @@ const CreateProposalPage: NextPageWithLayout = () => {
   const { query } = router
   const [transactionType, setTransactionType] = useState<TransactionType | undefined>()
 
-  const transactions = useProposalStore((state) => state.transactions)
-  console.log('transactions', transactions)
-
   const { addresses } = useDaoStore()
   const { address } = useAccount()
 

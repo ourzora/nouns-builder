@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import { Flex, Box, Text, Label, Paragraph, Button, atoms, Stack } from '@zoralabs/zord'
-import { btn, content, image, card } from './UpgradeCard.css'
 import useSWR from 'swr'
 import { sdk } from 'src/graphql/client'
 import Image from 'next/image'
@@ -8,6 +7,8 @@ import dayjs from 'dayjs'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { PUBLIC_BUILDER_TOKEN } from 'src/constants/addresses'
 import { Chain, SortDirection, TokenSortKey } from 'src/graphql/sdk'
+
+import { btn, content, image, card } from './UpgradeCard.css'
 
 interface UpgradeCardProps {
   hasThreshold: boolean

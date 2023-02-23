@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Box } from '@zoralabs/zord'
 import { useFormStore } from 'src/stores/useFormStore'
 import { AddTransactionSection } from 'src/typings'
-import { useCustomTransactionStore } from 'src/modules/transaction-builder/stores/useCustomTransactionStore'
+import { useCustomTransactionStore } from '../../../../stores'
 
 interface FormHandler {
   forms: ReactElement[]
@@ -13,7 +13,7 @@ interface FormHandler {
   sections: AddTransactionSection[]
 }
 
-const FormHandler: React.FC<FormHandler> = ({ forms, title }) => {
+export const FormHandler: React.FC<FormHandler> = ({ forms, title }) => {
   const { setActiveSectionCurrentIndex, activeSectionCurrentIndex } = useFormStore()
   const { active: activeCustomTransactionSection } = useCustomTransactionStore()
 
@@ -49,5 +49,3 @@ const FormHandler: React.FC<FormHandler> = ({ forms, title }) => {
     </Box>
   )
 }
-
-export default FormHandler
