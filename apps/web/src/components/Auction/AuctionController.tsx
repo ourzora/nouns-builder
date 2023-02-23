@@ -3,7 +3,7 @@ import { readContract } from '@wagmi/core'
 import useSWR from 'swr'
 import { Flex, Grid } from '@zoralabs/zord'
 
-import useAuction from 'src/hooks/useAuction'
+import { useAuction } from 'src/modules/dao'
 import { AddressType, TokenWithWinner } from 'src/typings'
 import { auctionAbi } from 'src/data/contract/abis'
 import SWR_KEYS from 'src/constants/swrKeys'

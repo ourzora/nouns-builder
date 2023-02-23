@@ -9,7 +9,6 @@ import NogglesLogo from 'src/components/Layout/assets/builder-framed.svg'
 import { useLayoutStore } from 'src/stores'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
-import useAuctionContract from 'src/hooks/useAuctionContract'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import {
@@ -18,6 +17,7 @@ import {
   SmartContracts,
   SectionHandler,
   PreAuction,
+  useAuctionContract
 } from 'src/modules/dao'
 
 const DaoPage: NextPageWithLayout = () => {

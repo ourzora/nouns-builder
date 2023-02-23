@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { FormikValues } from 'formik'
 import React from 'react'
 import Form from 'src/components/Fields/Form'
-import useAuctionContract from 'src/hooks/useAuctionContract'
+import { useAuctionContract } from 'src/modules/dao'
 import { fromSeconds, toSeconds } from 'src/utils/helpers'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import {

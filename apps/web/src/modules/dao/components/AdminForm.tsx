@@ -7,9 +7,8 @@ import {
   validateAdmin,
 } from 'src/components/Fields/fields/adminForm'
 import { NULL_ADDRESS } from 'src/constants/addresses'
-import useAuctionContract from 'src/hooks/useAuctionContract'
-import useGovernorContract from 'src/hooks/useGovernorContract'
-import { useMetadataContract } from 'src/modules/dao/hooks'
+import { useGovernorContract } from 'src/hooks/useGovernorContract'
+import { useMetadataContract, useAuctionContract } from 'src/modules/dao'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds } from 'src/utils/helpers'

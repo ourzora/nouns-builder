@@ -2,7 +2,7 @@ import { Box, Button, Flex, Text, Paragraph } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
-import { useMetadataContract } from 'src/modules/dao/hooks'
+import { useMetadataContract } from 'src/modules/dao'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import { useFormStore } from 'src/stores/useFormStore'
 import {

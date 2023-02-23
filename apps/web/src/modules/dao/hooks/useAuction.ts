@@ -2,14 +2,14 @@ import { BigNumber } from 'ethers'
 import { useRouter } from 'next/router'
 import { useContractEvent } from 'wagmi'
 import { readContract } from '@wagmi/core'
-import { useDaoStore } from 'src/stores/index'
+import { useDaoStore } from 'src/stores'
 import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/data/contract/requests/getBids'
 import { auctionAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
 
-const useAuction = ({
+export const useAuction = ({
   collection,
   tokenId,
   isTokenActiveAuction,
@@ -64,5 +64,3 @@ const useAuction = ({
     },
   })
 }
-
-export default useAuction

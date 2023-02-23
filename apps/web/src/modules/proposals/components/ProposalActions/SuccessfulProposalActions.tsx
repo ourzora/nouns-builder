@@ -14,7 +14,7 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { BigNumber } from 'ethers'
-import useGovernorContract from 'src/hooks/useGovernorContract'
+import { useGovernorContract } from 'src/hooks/useGovernorContract'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 
 import { isProposalSuccessful } from '../../utils'
