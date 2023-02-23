@@ -18,7 +18,7 @@ export const FormHandler: React.FC<FormHandler> = ({ forms, title, heading, subH
   /*  initialize first form in forms array */
   React.useEffect(() => {
     setActiveSectionCurrentIndex(0)
-  }, [])
+  }, [setActiveSectionCurrentIndex])
 
   return (
     <Box>

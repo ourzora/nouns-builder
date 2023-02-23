@@ -99,111 +99,85 @@ const AdminVetoInput: React.FC<SmartInputProps> = ({
     },
   }
 
-  const memoizedInput = React.useMemo(() => {
-    if (formik?.values.vetoPower === 1) {
-      // 'No' is selected - (burnVetoer)
-      return <React.Fragment />
-    } else {
-      // 'Yes' is selected - (updateVetoer(address))
-      return (
-        <AnimatePresence>
-          <motion.div
-            initial={'init'}
-            animate={'open'}
-            exit={'init'}
-            variants={helperVariants}
-            transition={{ duration: 0.2 }}
-          >
-            <Box as="fieldset" mb={'x8'} p={'x0'} className={defaultFieldsetStyle}>
-              {inputLabel && (
-                <label className={defaultInputLabelStyle}>{inputLabel}</label>
-              )}
-              {errorMessage && (
-                <Box
-                  position={'absolute'}
-                  right={'x2'}
-                  top={'x8'}
-                  fontSize={12}
-                  className={defaultInputErrorMessageStyle}
-                >
-                  {errorMessage}
-                </Box>
-              )}
-              <input
-                id={id}
-                type={type}
-                onChange={onChange}
-                onBlur={handleBlur}
-                onFocus={handleFocus}
-                required
-                value={
-                  ensIsValid
-                    ? walletSnippet(value)
-                    : typeof value === 'number' && isNaN(value)
-                    ? ''
-                    : value
-                }
-                className={!!errorMessage ? defaultInputErrorStyle : defaultInputStyle}
-                min={0}
-                max={max}
-                step={step}
-                placeholder={perma || placeholder || ''}
-                ref={input}
-                onWheel={
-                  disableWheelEvent
-                    ? (e: WheelEvent<HTMLInputElement>) => e.currentTarget.blur()
-                    : undefined
-                }
-              />
-              {ensIsValid && (
-                <Flex
-                  align={'center'}
-                  justify={'center'}
-                  position={'absolute'}
-                  className={inputCheckIcon['default']}
-                >
-                  <Icon fill="background1" id="check" />
-                </Flex>
-              )}
-              {(typeof value === 'number' || value) && perma ? (
-                <Box position={'absolute'} className={permaInputPlaceHolderStyle}>
-                  {perma}
-                </Box>
-              ) : null}
-              <motion.div
-                variants={helperVariants}
-                initial={'init'}
-                animate={isFocus ? 'open' : 'init'}
-              >
-                {!!helperText && helperText?.length > 0 ? (
-                  <Box className={defaultHelperTextStyle}>{helperText}</Box>
-                ) : null}
-              </motion.div>
-            </Box>
-          </motion.div>
-        </AnimatePresence>
-      )
-    }
-  }, [
-    ensIsValid,
-    errorMessage,
-    helperText,
-    id,
-    inputLabel,
-    isFocus,
-    max,
-    onChange,
-    perma,
-    placeholder,
-    step,
-    type,
-    value,
-    disableWheelEvent,
-    formik,
-    helperVariants,
-  ])
+  const hasNoVetoPower = formik?.values.vetoPower === 1
+  if (hasNoVetoPower) return null
 
-  return memoizedInput
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={'init'}
+        animate={'open'}
+        exit={'init'}
+        variants={helperVariants}
+        transition={{ duration: 0.2 }}
+      >
+        <Box as="fieldset" mb={'x8'} p={'x0'} className={defaultFieldsetStyle}>
+          {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
+          {errorMessage && (
+            <Box
+              position={'absolute'}
+              right={'x2'}
+              top={'x8'}
+              fontSize={12}
+              className={defaultInputErrorMessageStyle}
+            >
+              {errorMessage}
+            </Box>
+          )}
+          <input
+            id={id}
+            type={type}
+            onChange={onChange}
+            onBlur={handleBlur}
+            onFocus={handleFocus}
+            required
+            value={
+              ensIsValid
+                ? walletSnippet(value)
+                : typeof value === 'number' && isNaN(value)
+                ? ''
+                : value
+            }
+            className={!!errorMessage ? defaultInputErrorStyle : defaultInputStyle}
+            min={0}
+            max={max}
+            step={step}
+            placeholder={perma || placeholder || ''}
+            ref={input}
+            onWheel={
+              disableWheelEvent
+                ? (e: WheelEvent<HTMLInputElement>) => e.currentTarget.blur()
+                : undefined
+            }
+          />
+          {ensIsValid && (
+            <Flex
+              align={'center'}
+              justify={'center'}
+              position={'absolute'}
+              className={inputCheckIcon['default']}
+            >
+              <Icon fill="background1" id="check" />
+            </Flex>
+          )}
+          {(typeof value === 'number' || value) && perma ? (
+            <Box position={'absolute'} className={permaInputPlaceHolderStyle}>
+              {perma}
+            </Box>
+          ) : null}
+          <motion.div
+            variants={helperVariants}
+            initial={'init'}
+            animate={isFocus ? 'open' : 'init'}
+          >
+            {!!helperText && helperText?.length > 0 ? (
+              <Box className={defaultHelperTextStyle}>{helperText}</Box>
+            ) : null}
+          </motion.div>
+        </Box>
+      </motion.div>
+    </AnimatePresence>
+  )
 }
 
 export default AdminVetoInput

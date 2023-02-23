@@ -1,29 +1,30 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import TwoColumnLayout from 'src/layouts/TwoColumn'
-import Entry from 'src/modules/transaction-builder/components/Entry/Entry'
-import { Queue } from 'src/modules/transaction-builder/components/Queue/Queue'
-import CreateProposalHeading from 'src/modules/transaction-builder/components/CreateProposalHeading'
 import { Flex, Stack } from '@zoralabs/zord'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
-import {
-  TRANSACTION_TYPE,
-  TransactionType,
-} from 'src/modules/transaction-builder/constants/transactionTypes'
-import TransactionTypeIcon from 'src/modules/transaction-builder/components/TransactionTypeIcon'
-import DropdownSelect from 'src/modules/transaction-builder/components/DropdownSelect'
-import { SelectedTransactionForm } from 'src/modules/transaction-builder/components/SelectedTransactionForm'
 import { useVotes } from 'src/hooks/useVotes'
 import { useDaoStore } from 'src/stores'
 import { useAccount } from 'wagmi'
 import { AddressType } from 'src/typings'
 import { notFoundWrap } from 'src/styles/404.css'
+import {
+  SelectTransactionType,
+  Queue,
+  CreateProposalHeading,
+  TransactionTypeIcon,
+  DropdownSelect,
+  TransactionForm,
+  TRANSACTION_TYPES,
+  TransactionType,
+  TRANSACTION_FORM_OPTIONS,
+} from 'src/modules/transaction-builder'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
-  const { query, pathname } = router
-  const { transaction } = query
+  const { query } = router
+  const [transactionType, setTransactionType] = useState<TransactionType | undefined>()
 
   const { addresses } = useDaoStore()
   const { address } = useAccount()
@@ -36,19 +37,14 @@ const CreateProposalPage: NextPageWithLayout = () => {
 
   const createSelectOption = (type: TransactionType) => ({
     value: type,
-    label: TRANSACTION_TYPE[type].title,
+    label: TRANSACTION_TYPES[type].title,
     icon: <TransactionTypeIcon transactionType={type} />,
   })
 
-  const options = [TransactionType.AIRDROP, TransactionType.CUSTOM].map(
-    createSelectOption
-  )
+  const options = TRANSACTION_FORM_OPTIONS.map(createSelectOption)
 
-  const handleDropdownOnChange = (value: string) => {
-    router.push({
-      pathname,
-      query: { token: query.token, transaction: value },
-    })
+  const handleDropdownOnChange = (value: TransactionType) => {
+    setTransactionType(value)
   }
 
   if (isLoading) return null
@@ -67,22 +63,29 @@ const CreateProposalPage: NextPageWithLayout = () => {
       mx="auto"
     >
       <CreateProposalHeading title={'Create Proposal'} />
-      {transaction ? (
+      {transactionType ? (
         <TwoColumnLayout
           leftColumn={
             <Stack>
               <DropdownSelect
-                value={transaction.toString()}
+                value={transactionType}
                 options={options}
                 onChange={(value) => handleDropdownOnChange(value)}
               />
-              <SelectedTransactionForm type={transaction as TransactionType} />
+              <TransactionForm type={transactionType} />
             </Stack>
           }
           rightColumn={<Queue />}
         />
       ) : (
-        <TwoColumnLayout leftColumn={<Entry />} />
+        <TwoColumnLayout
+          leftColumn={
+            <SelectTransactionType
+              transactionTypes={TRANSACTION_FORM_OPTIONS}
+              onSelect={setTransactionType}
+            />
+          }
+        />
       )}
     </Stack>
   )

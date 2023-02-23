@@ -2,7 +2,7 @@ import React from 'react'
 import { useContract, useSigner } from 'wagmi'
 import { BigNumber } from 'ethers'
 import { useDaoStore } from 'src/stores/useDaoStore'
-import { governorAbi } from 'src/constants/abis/Governor'
+import { governorAbi } from 'src/data/contract/abis'
 import { AddressType, BytesType } from 'src/typings'
 
 export function useProposalTransactions() {

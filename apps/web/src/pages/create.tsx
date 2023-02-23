@@ -28,7 +28,7 @@ const Create: NextPage = () => {
     if (!address) {
       router.push('/')
     }
-  }, [address])
+  }, [address, router])
 
   /*
 

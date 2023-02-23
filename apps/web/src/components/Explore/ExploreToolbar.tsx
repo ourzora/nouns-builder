@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, Box, vars } from '@zoralabs/zord'
+import { Flex, Box, Text, vars } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useLayoutStore } from 'src/stores/useLayoutStore'
@@ -38,12 +38,11 @@ const ExploreToolbar: React.FC<{}> = () => {
                 mb={'x4'}
                 mx={'x4'}
                 style={{
-                  lineHeight: '24px',
                   borderBottom:
                     router.pathname === '/explore' ? `2px solid black` : `0px`,
                 }}
               >
-                Explore
+                <Text variant="paragraph-md">Explore</Text>
               </Box>
             </Link>
             <Link href={'/mydaos'} passHref>
@@ -52,11 +51,10 @@ const ExploreToolbar: React.FC<{}> = () => {
                 mb={'x4'}
                 mx={'x4'}
                 style={{
-                  lineHeight: '24px',
                   borderBottom: router.pathname === '/mydaos' ? `2px solid black` : `0px`,
                 }}
               >
-                My DAOs
+                <Text variant="paragraph-md">My DAOs</Text>
               </Box>
             </Link>
           </Flex>

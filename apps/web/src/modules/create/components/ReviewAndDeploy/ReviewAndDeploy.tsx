@@ -1,6 +1,6 @@
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
-import React from 'react'
+import React, { useState } from 'react'
 import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
@@ -16,7 +16,7 @@ import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
 import { Icon } from 'src/components/Icon'
 import type { AddressType } from 'src/typings'
-import { managerAbi } from 'src/constants/abis'
+import { managerAbi } from 'src/data/contract/abis'
 import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
 import { WriteContractUnpreparedArgs } from '@wagmi/core'
@@ -35,10 +35,21 @@ interface ReviewAndDeploy {
   title: string
 }
 
+
+const DEPLOYMENT_ERROR = {
+  MISMATCHING_SIGNER:
+    'Oops! It looks like the founder address submitted is different than the current signer address. Please go back to the allocation step and re-submit the founder address.',
+  NO_FOUNDER:
+    'Oops! It looks like you have no founders set. Please go back to the allocation step and add at least one founder address.',
+  GENERIC:
+    'Oops! Looks like there was a problem handling the dao deployment. Please ensure that input data from all the previous steps is correct',
+}
+
 export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
-  const { signer } = useLayoutStore()
-  const [isPendingTransaction, setIsPendingTransaction] = React.useState<boolean>(false)
-  const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
+  const { signer, signerAddress } = useLayoutStore()
+  const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
+  const [hasConfirmed, setHasConfirmed] = useState<boolean>(false)
+  const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const {
     founderAllocation,
     contributionAllocation,
@@ -131,7 +142,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
       : ethers.utils.getAddress(NULL_ADDRESS) // 0 === YES in Radio component
 
-  const { config } = usePrepareContractWrite({
+  const { config, isError } = usePrepareContractWrite({
     address: PUBLIC_MANAGER_ADDRESS,
     abi: managerAbi,
     functionName: 'deploy',
@@ -149,8 +160,25 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const { writeAsync } = useContractWrite(config)
 
   const handleDeploy = async () => {
-    setIsPendingTransaction(true)
+    setDeploymentError(undefined)
+
+    if (founderParams[0].wallet !== signerAddress) {
+      setDeploymentError(DEPLOYMENT_ERROR.MISMATCHING_SIGNER)
+      return
+    }
+
+    if (founderParams.length === 0) {
+      setDeploymentError(DEPLOYMENT_ERROR.NO_FOUNDER)
+      return
+    }
+
+    if (isError) {
+      setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
+      return
+    }
+
     try {
+      setIsPendingTransaction(true)
       const txn = await writeAsync?.()
       await txn?.wait()
     } catch (e) {
@@ -236,6 +264,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 >
                   {hasConfirmed && <Icon fill="background1" id="check" />}
                 </Flex>
+
                 <Flex className={deployCheckboxHelperText}>
                   [I have reviewed and acknowledge and agree to the{' '}
                   <a
@@ -250,6 +279,13 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 </Flex>
               </Flex>
             </Flex>
+
+            {deploymentError && (
+              <Flex mt={'x4'} color="negative">
+                {deploymentError}
+              </Flex>
+            )}
+
             <Flex mt={'x8'}>
               <Flex
                 justify={'center'}

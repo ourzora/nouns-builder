@@ -2,7 +2,7 @@ const fs = require('fs')
 
 const artifactsDir = './node_modules/@zoralabs/nouns-protocol/dist/artifacts'
 
-const abisDir = './src/constants/abis'
+const abisDir = './src/data/contract/abis'
 
 const targetABIs = ['Token', 'Manager', 'Auction', 'Treasury', 'Governor', 'Metadata']
 

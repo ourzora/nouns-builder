@@ -16,8 +16,6 @@ import {
   DATE,
   DAYS_HOURS_MINS,
   DAYS_HOURS_MINS_SECS,
-  CONTRIBUTION_ALLOCATION,
-  FOUNDER_ALLOCATION,
   MINS_SECS,
   NUMBER,
   RADIO,
@@ -29,8 +27,6 @@ import {
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 import { compareAndReturn } from 'src/utils/helpers'
-import ContributionAllocationForm from './Allocation/ContributionAllocationForm'
-import FounderAllocationForm from './Allocation/FounderAllocationForm'
 import { ArtworkUpload } from 'src/modules/create'
 
 interface FieldSwitchProps {
@@ -140,7 +136,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
           }
           placeholder={field.placeholder}
           autoSubmit={autoSubmit}
-          submitCallback={submitCallback}
           parentValues={parentValues}
           disabled={field.disabled}
         />
@@ -177,46 +172,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
               : undefined
           }
           placeholder={field.placeholder}
-        />
-      )
-    /////////////////
-    ////////////////
-    //// current work for allocation forms
-    case FOUNDER_ALLOCATION:
-      return (
-        <FounderAllocationForm
-          {...formik.getFieldProps(field.name)}
-          inputLabel={field.inputLabel}
-          formik={formik}
-          id={field.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          errorMessage={
-            formik.touched[field.name] && formik.errors[field.name]
-              ? formik.errors[field.name]
-              : undefined
-          }
-          autoSubmit={autoSubmit}
-          helperText={field.helperText}
-        />
-      )
-
-    case CONTRIBUTION_ALLOCATION:
-      return (
-        <ContributionAllocationForm
-          {...formik.getFieldProps(field.name)}
-          inputLabel={field.inputLabel}
-          formik={formik}
-          id={field.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          errorMessage={
-            formik.touched[field.name] && formik.errors[field.name]
-              ? formik.errors[field.name]
-              : undefined
-          }
-          autoSubmit={autoSubmit}
-          helperText={field.helperText}
         />
       )
     /////////////////

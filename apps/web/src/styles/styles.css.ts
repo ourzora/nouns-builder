@@ -265,7 +265,7 @@ export const formWrapper = style({
   position: 'absolute',
   top: 0,
   padding: '150px 0',
-  maxWidth: 500,
+  maxWidth: 528,
   width: '80%',
   '@media': {
     '(max-width: 1200px)': {

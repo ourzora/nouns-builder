@@ -46,13 +46,14 @@ export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
   const layers = React.useMemo(() => {
     if (!imagesByTrait) return
 
-    return imagesByTrait.map((layer: any) => {
-      const trait = layer.trait?.replace(/^\d+-/, '')
-      return { trait, images: layer.images }
-    })
+    return imagesByTrait.map((layer: any) => ({
+      trait: layer.trait?.replace(/^\d+-/, ''),
+      images: layer.images,
+    }))
   }, [imagesByTrait])
 
   const [selectedTraits, setSelectedTraits] = React.useState<SelectedTraitsProps[]>([])
+
   React.useEffect(() => {
     if (selectedTraits.length || !layers) {
       return
@@ -70,7 +71,7 @@ export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
         }
       })
     )
-  }, [layers])
+  }, [layers, selectedTraits])
 
   /*
 
@@ -131,28 +132,25 @@ export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
     draw stacked image on canvas
 
   */
-  const generateStackedImage = React.useCallback(
-    (e?: BaseSyntheticEvent) => {
-      try {
-        if (e) e.stopPropagation()
-        if (!imagesToDraw || !canvas.current) return
+  const generateStackedImage = (e?: BaseSyntheticEvent) => {
+    try {
+      if (e) e.stopPropagation()
+      if (!imagesToDraw || !canvas.current) return
 
-        const _canvas: HTMLCanvasElement = canvas.current
-        const ctx = _canvas?.getContext('2d')
-        _canvas.height = imagesToDraw[0].height
-        _canvas.width = imagesToDraw[0].width
+      const _canvas: HTMLCanvasElement = canvas.current
+      const ctx = _canvas?.getContext('2d')
+      _canvas.height = imagesToDraw[0].height
+      _canvas.width = imagesToDraw[0].width
 
-        for (let i = 0; i < imagesToDraw.length; i++) {
-          ctx?.drawImage(imagesToDraw[i], 0, 0)
-        }
-
-        canvasToBlob(_canvas, imageLayerStack)
-      } catch (err) {
-        console.log('err', err)
+      for (let i = 0; i < imagesToDraw.length; i++) {
+        ctx?.drawImage(imagesToDraw[i], 0, 0)
       }
-    },
-    [imageLayerStack, imagesToDraw, canvas]
-  )
+
+      canvasToBlob(_canvas, imageLayerStack)
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
 
   /*
 
@@ -160,18 +158,15 @@ export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
     memory cleanup for saved image
 
  */
-  const canvasToBlob = React.useCallback(
-    (canvas: HTMLCanvasElement, stack: string[] | undefined = []) => {
-      if (canvas.height > 0) {
-        const data = canvas.toDataURL()
-        setGeneratedImages([data, ...generatedImages])
-        for (const blob of stack) {
-          URL.revokeObjectURL(blob)
-        }
+  const canvasToBlob = (canvas: HTMLCanvasElement, stack: string[] | undefined = []) => {
+    if (canvas.height > 0) {
+      const data = canvas.toDataURL()
+      setGeneratedImages([data, ...generatedImages])
+      for (const blob of stack) {
+        URL.revokeObjectURL(blob)
       }
-    },
-    [generatedImages]
-  )
+    }
+  }
 
   return (
     <Flex direction={'column'} className={previewModalWrapperStyle}>
