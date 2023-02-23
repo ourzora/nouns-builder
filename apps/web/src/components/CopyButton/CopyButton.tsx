@@ -2,7 +2,7 @@ import { copyButtonVariants } from './styles.css'
 import { Box } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React from 'react'
-import { useDaoStore } from 'src/stores/useDaoStore'
+import { useDaoStore } from 'src/modules/dao'
 import { Icon } from 'src/components/Icon'
 
 interface CopyButtonProps {

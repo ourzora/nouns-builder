@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { useMetadataContract } from 'src/modules/dao/hooks'
-import { useDaoStore } from 'src/stores/useDaoStore'
+import { useDaoStore } from 'src/modules/dao'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
   deployPendingButtonStyle,

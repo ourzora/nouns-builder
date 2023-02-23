@@ -1,4 +1,4 @@
-import { useDaoStore } from 'src/stores/useDaoStore'
+import { useDaoStore } from 'src/modules/dao'
 import { useContractReads } from 'wagmi'
 import { governorAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'

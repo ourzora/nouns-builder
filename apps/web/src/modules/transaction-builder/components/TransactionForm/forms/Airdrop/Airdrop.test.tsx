@@ -1,7 +1,7 @@
 import { render } from 'src/test/utils'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { Airdrop } from './Airdrop'
 import { BUILDER_DAO } from 'src/test/fixtures/dao'
 

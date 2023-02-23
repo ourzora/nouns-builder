@@ -1,7 +1,7 @@
 import { render } from 'src/test/utils'
 import { screen, waitFor } from '@testing-library/react'
 import { ProposalNavigation } from './ProposalNavigation'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { vi } from 'vitest'
 import { BUILDER_DAO } from 'src/test/fixtures/dao'
 

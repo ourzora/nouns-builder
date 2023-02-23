@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Stack, Text, atoms, Paragraph } from '@zoralabs/zord'
 import { FormikHelpers } from 'formik'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useContractRead } from 'wagmi'
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'

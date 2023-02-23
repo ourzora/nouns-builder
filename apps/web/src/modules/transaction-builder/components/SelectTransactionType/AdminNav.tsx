@@ -3,7 +3,8 @@ import { useRouter } from 'next/router'
 import { useContract } from 'wagmi'
 import { Flex, Stack, Text } from '@zoralabs/zord'
 import { Icon } from 'src/components/Icon'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useLayoutStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { auctionAbi } from 'src/data/contract/abis'
 
 const AdminNav = () => {

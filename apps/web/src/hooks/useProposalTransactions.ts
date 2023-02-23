@@ -1,7 +1,7 @@
 import React from 'react'
 import { useContract, useSigner } from 'wagmi'
 import { BigNumber } from 'ethers'
-import { useDaoStore } from 'src/stores/useDaoStore'
+import { useDaoStore } from 'src/modules/dao'
 import { governorAbi } from 'src/data/contract/abis'
 import { AddressType, BytesType } from 'src/typings'
 

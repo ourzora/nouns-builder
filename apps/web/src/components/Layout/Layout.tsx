@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Box } from '@zoralabs/zord'
 import { useSigner } from 'wagmi'
 
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores/useLayoutStore'
 import { getProvider } from 'src/utils/provider'
 

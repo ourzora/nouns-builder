@@ -3,7 +3,7 @@ import { BigNumber, Contract, ContractTransaction } from 'ethers'
 import { Address, useContract, useContractReads, useSigner } from 'wagmi'
 import { GetContractResult, ReadContractResult } from '@wagmi/core'
 import { auctionAbi } from 'src/data/contract/abis'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 type AuctionContract = GetContractResult<typeof auctionAbi>

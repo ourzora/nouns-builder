@@ -8,7 +8,7 @@ import { ethers } from 'ethers'
 import { getEnsAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
 import { walletSnippet } from 'src/utils/helpers'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { useBalance } from 'wagmi'
 
 import { TransactionType } from '../../../../constants/transactionType'

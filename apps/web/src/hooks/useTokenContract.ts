@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { constants, ContractTransaction } from 'ethers'
-import { useDaoStore } from 'src/stores/useDaoStore'
+import { useDaoStore } from 'src/modules/dao'
 import { tokenAbi } from 'src/data/contract/abis'
 import {
   Address,

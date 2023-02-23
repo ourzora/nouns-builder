@@ -4,7 +4,7 @@ import { Button, Flex } from '@zoralabs/zord'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { auctionActionButtonVariants } from './Auction.css'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { auctionAbi } from 'src/data/contract/abis'
 
 interface SettleProps {
