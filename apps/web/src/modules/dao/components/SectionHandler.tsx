@@ -25,7 +25,7 @@ interface activeSectionProps {
   component: React.ReactElement[]
 }
 
-const SectionHandler: React.FC<SectionHandlerProps> = ({ sections }) => {
+export const SectionHandler: React.FC<SectionHandlerProps> = ({ sections }) => {
   const router = useRouter()
   const { query } = router
 
@@ -126,5 +126,3 @@ const SectionHandler: React.FC<SectionHandlerProps> = ({ sections }) => {
     </>
   )
 }
-
-export default SectionHandler

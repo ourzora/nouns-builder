@@ -4,8 +4,6 @@ import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { readContract, readContracts } from '@wagmi/core'
 import { Flex, Text, atoms, theme } from '@zoralabs/zord'
-
-import PreAuction from 'src/components/PreAuction'
 import Meta from 'src/components/Layout/Meta'
 import NogglesLogo from 'src/components/Layout/assets/builder-framed.svg'
 import { useLayoutStore } from 'src/stores'
@@ -14,11 +12,13 @@ import { NextPageWithLayout } from 'src/pages/_app'
 import useAuctionContract from 'src/hooks/useAuctionContract'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-
-import SectionHandler from './SectionNavigation/SectionHandler'
-import Proposals from './sections/Proposals'
-import SmartContracts from './sections/SmartContracts'
-import PreAuctionForm from './sections/Admin/forms/PreAuctionForm'
+import {
+  Proposals,
+  PreAuctionForm,
+  SmartContracts,
+  SectionHandler,
+  PreAuction,
+} from 'src/modules/dao'
 
 const DaoPage: NextPageWithLayout = () => {
   const { signerAddress } = useLayoutStore()

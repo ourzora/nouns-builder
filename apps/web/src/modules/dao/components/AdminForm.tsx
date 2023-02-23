@@ -53,7 +53,7 @@ export interface AdminFormValues
   vetoer: string
 }
 
-const AdminForm: React.FC<AdminFormProps> = () => {
+export const AdminForm: React.FC<AdminFormProps> = () => {
   const {
     query: { token },
     push,
@@ -265,5 +265,3 @@ const AdminForm: React.FC<AdminFormProps> = () => {
     </Flex>
   )
 }
-
-export default AdminForm

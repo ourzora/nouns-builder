@@ -1,6 +1,3 @@
-import SectionHandler from '../SectionNavigation/SectionHandler'
-import Proposals from '../sections/Proposals'
-import About from '../sections/About'
 import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import React from 'react'
@@ -12,8 +9,13 @@ import getToken from 'src/data/contract/requests/getToken'
 import useSWR, { unstable_serialize } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import AuctionController from 'src/components/Auction/AuctionController'
-import SmartContracts from '../sections/SmartContracts'
-import AdminForm from '../sections/Admin/forms/AdminForm'
+import {
+  AdminForm,
+  SmartContracts,
+  About,
+  Proposals,
+  SectionHandler,
+} from 'src/modules/dao'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'

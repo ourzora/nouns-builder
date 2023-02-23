@@ -10,7 +10,7 @@ import { useBalance } from 'wagmi'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { salesVolumeRequest } from 'src/data/graphql/requests/salesVolumeQuery'
 
-const Treasury = () => {
+export const Treasury = () => {
   const { addresses } = useDaoStore()
   const { data: balance } = useBalance({
     address: addresses?.treasury as `0x${string}`,

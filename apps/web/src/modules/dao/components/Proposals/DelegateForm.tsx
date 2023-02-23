@@ -20,7 +20,7 @@ interface DelegateFormProps {
   handleUpdate: (address: string) => void
 }
 
-const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) => {
+export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const { delegate } = useTokenContract()
   const { provider } = useLayoutStore()
@@ -103,5 +103,3 @@ const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) => {
     </Flex>
   )
 }
-
-export default DelegateForm

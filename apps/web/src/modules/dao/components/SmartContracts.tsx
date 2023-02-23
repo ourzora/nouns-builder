@@ -49,7 +49,7 @@ const ContractLink = ({ title, address }: { title: string; address?: string }) =
   )
 }
 
-const SmartContracts = () => {
+export const SmartContracts = () => {
   const { addresses } = useDaoStore()
 
   return (
@@ -89,5 +89,3 @@ const SmartContracts = () => {
     </Box>
   )
 }
-
-export default SmartContracts

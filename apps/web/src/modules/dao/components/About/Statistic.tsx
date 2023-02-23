@@ -9,7 +9,7 @@ interface StatisticProps {
   address?: string
 }
 
-const Statistic: React.FC<StatisticProps> = ({ title, content, address }) => {
+export const Statistic: React.FC<StatisticProps> = ({ title, content, address }) => {
   return (
     <Box className={statistic}>
       <Flex direction={'row'} w={'100%'} justify={'space-between'}>
@@ -34,5 +34,3 @@ const Statistic: React.FC<StatisticProps> = ({ title, content, address }) => {
     </Box>
   )
 }
-
-export default Statistic

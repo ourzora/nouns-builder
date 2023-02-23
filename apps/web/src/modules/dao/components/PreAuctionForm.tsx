@@ -15,7 +15,7 @@ interface PreAuctionFormSettingsProps {
   title?: string
 }
 
-const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
+export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const {
     auctionDuration: _auctionDuration,
     auctionReservePrice,
@@ -91,5 +91,3 @@ const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
     </Flex>
   )
 }
-
-export default PreAuctionForm

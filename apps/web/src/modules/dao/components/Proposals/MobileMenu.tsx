@@ -5,7 +5,7 @@ interface Props {
   children: ReactNode
 }
 
-const MobileMenu = ({ children }: Props) => {
+export const MobileMenu = ({ children }: Props) => {
   return (
     <PopUp
       padding="x0"
@@ -27,5 +27,3 @@ const MobileMenu = ({ children }: Props) => {
     </PopUp>
   )
 }
-
-export default MobileMenu
