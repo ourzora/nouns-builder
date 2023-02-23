@@ -12,7 +12,7 @@ interface DecodedTransactionProps {
   calldatas: string[]
   values: string[]
 }
-const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
+export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
   targets,
   calldatas,
   values,
@@ -137,5 +137,3 @@ const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
     </Stack>
   )
 }
-
-export default DecodedTransactions
