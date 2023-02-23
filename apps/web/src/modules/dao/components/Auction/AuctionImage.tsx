@@ -9,7 +9,7 @@ interface AucitonImageProps {
   isLoading?: boolean
 }
 
-const AuctionImage = ({ image, name }: AucitonImageProps) => {
+export const AuctionImage = ({ image, name }: AucitonImageProps) => {
   const [imgErr, setImgErr] = React.useState<boolean>(false)
 
   return (
@@ -33,4 +33,3 @@ const AuctionImage = ({ image, name }: AucitonImageProps) => {
     </Box>
   )
 }
-export default AuctionImage

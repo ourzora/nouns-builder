@@ -1,36 +1,17 @@
 import React from 'react'
 import { Box, Flex, Text, Stack } from '@zoralabs/zord'
-import { useEnsData } from 'src/hooks/useEnsData'
-import { Avatar } from '../Avatar'
 import { Icon } from 'src/components/Icon'
-import AuctionAllBids from './AuctionAllBids'
-import { recentBid, recentBidder, allRecentBidsButton } from './Auction.css'
+import { recentBid, allRecentBidsButton } from '../Auction.css'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import dynamic from 'next/dynamic'
 import { Bid } from 'src/typings'
+import { Bidder } from "./Bidder";
+import { AllBids } from '../AllBids'
 
 const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal'), {
   ssr: false,
 })
 
-interface BidderProps {
-  address: string
-}
-
-const Bidder: React.FC<BidderProps> = ({ address }) => {
-  const { displayName, ensAvatar } = useEnsData(address)
-
-  return (
-    <Flex align="center">
-      <Box mr="x2">
-        <Avatar address={address} src={ensAvatar} size="32" />
-      </Box>
-      <Text className={recentBidder} variant="paragraph-md">
-        {displayName}
-      </Text>
-    </Flex>
-  )
-}
 
 interface RecentBidsProps {
   bids: Bid[]
@@ -72,7 +53,7 @@ export const RecentBids: React.FC<RecentBidsProps> = ({ bids }) => {
               </button>
             }
           >
-            <AuctionAllBids bids={bids} />
+            <AllBids bids={bids} />
           </AnimatedModal>
         </Flex>
       </Stack>

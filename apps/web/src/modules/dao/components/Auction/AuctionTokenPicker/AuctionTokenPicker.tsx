@@ -1,11 +1,11 @@
-import { auctionDateNavButton, auctionTextVariants } from './Auction.css'
+import { auctionDateNavButton, auctionTextVariants } from '../Auction.css'
 import { Box, Flex, Text } from '@zoralabs/zord'
 import dayjs from 'dayjs'
-import Link, { LinkProps } from 'next/link'
 import { useRouter } from 'next/router'
-import React, { ReactNode } from 'react'
+import React from 'react'
 import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
+import { OptionalLink } from "./OptionalLink";
 
 interface AuctionTokenPickerProps {
   collection: string
@@ -15,19 +15,7 @@ interface AuctionTokenPickerProps {
   currentAuction?: number
 }
 
-const OptionalLink: React.FC<{ enabled: boolean; children: ReactNode } & LinkProps> = ({
-  enabled,
-  children,
-  ...linkProps
-}) => {
-  if (enabled) {
-    return <Link {...linkProps}>{children}</Link>
-  } else {
-    return <>{children}</>
-  }
-}
-
-const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
+export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
   collection,
   tokenId,
   mintDate,
@@ -116,5 +104,3 @@ const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
     </Flex>
   )
 }
-
-export default AuctionTokenPicker

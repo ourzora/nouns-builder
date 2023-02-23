@@ -8,7 +8,7 @@ import { useDaoStore } from 'src/stores/useDaoStore'
 import getToken from 'src/data/contract/requests/getToken'
 import useSWR, { unstable_serialize } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
-import AuctionController from 'src/components/Auction/AuctionController'
+import { Auction } from 'src/modules/dao'
 import {
   AdminForm,
   SmartContracts,
@@ -94,7 +94,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
         slug={url}
         description={token.description ? stripHTML(token.description) : ''}
       />
-      <AuctionController
+      <Auction
         auctionAddress={addresses.auction}
         collection={query.token as string}
         token={token}
