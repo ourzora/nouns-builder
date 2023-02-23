@@ -2,7 +2,6 @@ import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import React from 'react'
 import Meta from 'src/components/Layout/Meta'
-import { useHTMLStripper } from 'src/hooks/useHTMLStripper'
 import { useVotes } from 'src/hooks/useVotes'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import getToken from 'src/data/contract/requests/getToken'
@@ -45,8 +44,6 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
     collectionAddress: collection,
     governorAddress: addresses?.governor,
   })
-
-  const stripHTML = useHTMLStripper()
 
   const handleCloseSuccessModal = () => {
     replace(
@@ -92,7 +89,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
         type={`${token.name}:nft`}
         image={token.media?.thumbnail || token.image}
         slug={url}
-        description={token.description ? stripHTML(token.description) : ''}
+        description={token.description ?? ''}
       />
       <AuctionController
         auctionAddress={addresses.auction}
