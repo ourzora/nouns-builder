@@ -9,7 +9,6 @@ import { useDaoStore } from 'src/stores'
 import { useAccount } from 'wagmi'
 import { AddressType } from 'src/typings'
 import { notFoundWrap } from 'src/styles/404.css'
-import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import {
   SelectTransactionType,
   Queue,

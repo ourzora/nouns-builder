@@ -18,8 +18,8 @@ import { sectionWrapperStyle } from 'src/styles/dao.css'
 import {
   useProposalStore,
   BuilderTransaction,
-} from 'src/modules/transaction-builder/stores/useProposalStore'
-import { TransactionType } from 'src/modules/transaction-builder/components/TransactionForm'
+  TransactionType,
+} from 'src/modules/transaction-builder'
 import { AddressType, DaoContracts } from 'src/typings'
 import { generalInfoProps, auctionSettingsProps, votingSettingsProps } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
