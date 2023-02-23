@@ -81,21 +81,14 @@ const initialState = {
   founderAllocation: [],
   contributionAllocation: [
     {
-      // essential pieces of data
       founderAddress: PUBLIC_BUILDER_ADDRESS,
-      allocation: '1',
+      allocation: 1,
       endDate: yearsAhead(5),
-      // if a user doesn't toggle either contribution allocation
-      // this persists to the end of the create flow
-      // unimportant to the contract, the hardcoded values in
-      // ContributionAllocationForm.tsx end up in the ui regardless
-      maxAllocation: '',
     },
     {
       founderAddress: PUBLIC_NOUNS_ADDRESS,
-      allocation: '1',
+      allocation: 1,
       endDate: yearsAhead(5),
-      maxAllocation: '',
     },
   ],
   nounsAllocationOn: true,

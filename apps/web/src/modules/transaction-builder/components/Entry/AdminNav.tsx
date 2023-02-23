@@ -52,12 +52,7 @@ const AdminNav = () => {
         >
           Configure DAO Settings
         </Text>
-        <Text
-          color={'text3'}
-          fontSize={16}
-          lineHeight={24}
-          style={{ lineHeight: '24px' }}
-        >
+        <Text color={'text3'} fontSize={16} style={{ lineHeight: '24px' }}>
           Change all the main DAO settings in the Admin Tab
         </Text>
       </Stack>
