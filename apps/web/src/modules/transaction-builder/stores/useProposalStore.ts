@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { TransactionType } from 'src/modules/transaction-builder/constants/transactionTypes'
+import { TransactionType } from '../constants'
 import { AddressType } from 'src/typings'
 
 export type Transaction = {

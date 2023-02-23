@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { useSigner } from 'wagmi'
+import { usePrepareContractWrite, useContractWrite, useSigner } from 'wagmi'
 import { Button, Flex } from '@zoralabs/zord'
 
 import { ContractButton } from 'src/components/ContractButton'
-import useAuctionContract from 'src/hooks/useAuctionContract'
-
 import { auctionActionButtonVariants } from './Auction.css'
+import { useDaoStore } from 'src/stores'
+import { auctionAbi } from 'src/data/contract/abis'
 
 interface SettleProps {
   isEnding: boolean
@@ -14,21 +14,33 @@ interface SettleProps {
 
 export const Settle = ({ isEnding }: SettleProps) => {
   const { data: signer } = useSigner()
-  const { contract: auctionContract } = useAuctionContract()
+  const addresses = useDaoStore((state) => state.addresses)
+
+  const { config, error } = usePrepareContractWrite({
+    enabled: !!addresses?.auction,
+    address: addresses?.auction,
+    abi: auctionAbi,
+    functionName: 'settleCurrentAndCreateNewAuction',
+  })
+
+  const { writeAsync } = useContractWrite(config)
+
   const [settling, setSettling] = useState(false)
 
-  const handleSettle = React.useCallback(async () => {
-    if (!auctionContract || !signer) return
+  const handleSettle = async () => {
+    if (!signer) return
+
+    if (!!error) return
 
     setSettling(true)
     try {
-      const { wait } = await auctionContract.settleCurrentAndCreateNewAuction()
-      await wait()
+      const txn = await writeAsync?.()
+      await txn?.wait()
       setSettling(false)
     } catch (error) {
       setSettling(false)
     }
-  }, [auctionContract, signer])
+  }
 
   if (isEnding && !settling) {
     return (

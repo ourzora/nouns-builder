@@ -1,12 +1,12 @@
 import React from 'react'
 import { atoms, Button, Flex, Stack, Text } from '@zoralabs/zord'
-import { ReviewCard } from 'src/modules/transaction-builder/components/ReviewCard/ReviewCard'
+import { TransactionCard } from 'src/modules/transaction-builder/components/TransactionCard'
 import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
-import ConfirmRemove from 'src/modules/transaction-builder/components/Transaction/ConfirmRemove'
+import { ConfirmRemove } from './ConfirmRemove'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { TransactionType } from '../../constants/transactionTypes'
+import { TransactionType } from '../../constants'
 
 export const Queue = () => {
   const transactions = useProposalStore((state) => state.transactions)
@@ -57,7 +57,7 @@ export const Queue = () => {
       <Stack gap={'x4'}>
         {transactions &&
           transactions.map((transaction, i) => (
-            <ReviewCard
+            <TransactionCard
               key={`${transaction.type}-${i}`}
               handleRemove={() => confirmRemoveTransaction(i)}
               disabled={transaction.type === TransactionType.UPGRADE}
@@ -85,17 +85,15 @@ export const Queue = () => {
           mt={'x10'}
           align={'center'}
           justify={'center'}
-          fontSize={18}
           disabled={transactions.length === 0}
-          fontWeight={'label'}
-          className={atoms({ lineHeight: 24, borderRadius: 'curved' })}
+          borderRadius={'curved'}
           backgroundColor={'accent'}
           color={'onAccent'}
           borderWidth={'none'}
           cursor={'pointer'}
           w={'100%'}
         >
-          Review Proposal
+          <Text variant={'label-lg'}>Review Proposal</Text>
         </Flex>
       </Link>
       <AnimatedModal close={() => setOpenConfirm(false)} open={openConfirm}>

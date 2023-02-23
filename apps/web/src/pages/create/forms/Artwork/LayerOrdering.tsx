@@ -20,7 +20,7 @@ const LayerOrdering: React.FC<LayerOrderingProps> = ({ title, images }) => {
     if (!orderedLayers.length) {
       setOrderedLayers(artwork)
     }
-  }, [artwork])
+  }, [artwork, orderedLayers, setOrderedLayers])
 
   return (
     <Box>

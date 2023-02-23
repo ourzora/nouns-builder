@@ -1,4 +1,4 @@
-import { Flex } from '@zoralabs/zord'
+import { Flex, Stack } from '@zoralabs/zord'
 import { Contract, ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import React from 'react'
@@ -18,12 +18,11 @@ import { sectionWrapperStyle } from 'src/styles/dao.css'
 import {
   useProposalStore,
   BuilderTransaction,
-} from 'src/modules/transaction-builder/stores/useProposalStore'
-import { TransactionType } from 'src/modules/transaction-builder/constants/transactionTypes'
-import type { AddressType, DaoContracts } from 'src/typings'
+  TransactionType,
+} from 'src/modules/transaction-builder'
+import { AddressType, DaoContracts } from 'src/typings'
 import { generalInfoProps, auctionSettingsProps, votingSettingsProps } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
-import { Stack } from '@mantine/core'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
 import isEqual from 'lodash/isEqual'

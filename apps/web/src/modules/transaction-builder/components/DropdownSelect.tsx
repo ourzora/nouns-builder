@@ -1,49 +1,40 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Box, Flex } from '@zoralabs/zord'
-
-import { Icon } from '../../../components/Icon'
-
+import { Icon } from 'src/components/Icon'
 import {
   defaultFieldsetStyle,
   defaultInputLabelStyle,
   defaultDropdownSelectOptionStyle,
-} from '../../../components/Fields/styles.css'
+} from 'src/components/Fields/styles.css'
 
-export interface SelectOption {
-  value: string
+export interface SelectOption<T> {
+  value: T
   label: string
   icon?: ReactNode
 }
 
-interface DropdownSelectProps {
-  value: string
-  options: SelectOption[]
+interface DropdownSelectProps<T> {
+  value: T
+  options: SelectOption<T>[]
   inputLabel?: string | ReactElement
-  onChange: (value: string) => void
+  onChange: (value: T) => void
   disabled?: boolean
 }
 
-const DropdownSelect: React.FC<DropdownSelectProps> = ({
+export function DropdownSelect<T extends React.Key>({
   value,
   onChange,
   options,
   inputLabel,
   disabled = false,
-}) => {
+}: React.PropsWithChildren<DropdownSelectProps<T>>) {
   const [showOptions, setShowOptions] = useState(false)
 
-  const handleOptionSelect = (option: SelectOption) => {
+  const handleOptionSelect = (option: SelectOption<T>) => {
     onChange(option.value)
     setShowOptions(false)
   }
-
-  useEffect(() => {
-    if (!value) {
-      handleOptionSelect(options[0])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const selectedOption = options.find((option) => option.value === value)
 
@@ -131,5 +122,3 @@ const DropdownSelect: React.FC<DropdownSelectProps> = ({
     </Box>
   )
 }
-
-export default DropdownSelect

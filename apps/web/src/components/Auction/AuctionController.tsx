@@ -5,9 +5,9 @@ import { Flex, Grid } from '@zoralabs/zord'
 
 import useAuction from 'src/hooks/useAuction'
 import { AddressType, TokenWithWinner } from 'src/typings'
-import { auctionAbi } from 'src/constants/abis'
+import { auctionAbi } from 'src/data/contract/abis'
 import SWR_KEYS from 'src/constants/swrKeys'
-import getBids from 'src/utils/getBids'
+import getBids from 'src/data/contract/requests/getBids'
 
 import { auctionGrid, auctionWrapper, auctionWrapVariants } from './Auction.css'
 import { AuctionDetails, BidAmount, WinningBidder } from './AuctionDetails'
