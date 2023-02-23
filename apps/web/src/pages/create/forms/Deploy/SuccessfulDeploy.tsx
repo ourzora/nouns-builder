@@ -77,7 +77,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     return transformFileProperties(orderedLayers, ipfsUpload, 500)
   }, [orderedLayers, ipfsUpload])
 
-  const handleDeployMetadata = React.useCallback(async () => {
+  const handleDeployMetadata = async () => {
     setDeploymentError(undefined)
 
     if (!transactions || !metadataContract) {
@@ -112,15 +112,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     router.push(`/dao/${token}`).then(() => {
       resetForm()
     })
-  }, [
-    metadataContract,
-    transactions,
-    router,
-    setFulfilledSections,
-    title,
-    token,
-    resetForm,
-  ])
+  }
 
   /*
 
@@ -139,6 +131,7 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     setIsSmallDesktop(window.innerWidth <= 1200 && window.innerWidth >= 768)
   }
 
+  console.log(signerAddress, tokenOwner, signerAddress === tokenOwner)
   return (
     <Flex direction={'column'}>
       <Box mb={'x1'} className={successHeadingStyle}>
