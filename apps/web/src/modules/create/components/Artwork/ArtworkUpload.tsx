@@ -89,6 +89,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
           cid: upload?.ipfs?.cid || '',
           uri: upload?.ipfs?.uri || '',
           url: encodeURI(
+            //// maybe
             getFetchableUrl(upload?.ipfs?.uri) +
               `/${upload.webkitRelativePath.split('/').slice(1).join('/')}` || ''
           ),
@@ -143,7 +144,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
       const paths = cv.webkitRelativePath.split('/')
       const collection = paths[0]
       const currentTrait = sanitizeFileName(paths[1])
-      const currentProperty = sanitizeFileName(paths[2] || '')
+      const currentProperty = sanitizeFileName(paths[2])
 
       /*  set collection name and file type */
       if (!collectionName) {
@@ -297,7 +298,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
       name: sanitizeFileName(file.webkitRelativePath.split('/')[2]),
       property: file.webkitRelativePath.split('/')[2],
       collection: file.webkitRelativePath.split('/')[0],
-      trait: file.webkitRelativePath.split('/')[1],
+      trait: sanitizeFileName(file.webkitRelativePath.split('/')[1]),
       path: file.webkitRelativePath,
       content: file,
       blob: URL.createObjectURL(file),
