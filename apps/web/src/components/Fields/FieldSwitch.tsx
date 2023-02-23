@@ -136,7 +136,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
           }
           placeholder={field.placeholder}
           autoSubmit={autoSubmit}
-          submitCallback={submitCallback}
           parentValues={parentValues}
           disabled={field.disabled}
         />
