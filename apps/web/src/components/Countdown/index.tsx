@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import { useCountdown } from 'src/hooks/useCountdown'
-
 import { useIsMounted } from 'src/hooks/useIsMounted'
 
 interface CountdownProps
