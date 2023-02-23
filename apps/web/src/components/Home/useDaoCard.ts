@@ -1,6 +1,5 @@
 import { BigNumber, ethers } from 'ethers'
-import { auctionAbi } from 'src/constants/abis/Auction'
-import { tokenAbi } from 'src/constants/abis/Token'
+import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
 import { useContractRead } from 'wagmi'
 

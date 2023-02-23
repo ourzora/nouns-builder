@@ -3,7 +3,7 @@ import { BigNumber } from 'ethers'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import { useProposalTransactions } from 'src/hooks/useProposalTransactions'
 import { useContract, useContractReads, useSigner } from 'wagmi'
-import { governorAbi } from 'src/constants/abis/Governor'
+import { governorAbi } from 'src/data/contract/abis'
 import { AddressType, BytesType } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 

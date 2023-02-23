@@ -1,8 +1,5 @@
 import React from 'react'
-import CreateProposalHeading from 'src/modules/transaction-builder/components/CreateProposalHeading'
 import { Flex, Stack } from '@zoralabs/zord'
-import { ReviewProposalForm } from 'src/modules/transaction-builder'
-import { useProposalStore } from 'src/modules/transaction-builder/stores/useProposalStore'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { useRouter } from 'next/router'
@@ -11,6 +8,11 @@ import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 import { useAccount } from 'wagmi'
 import { notFoundWrap } from 'src/styles/404.css'
+import {
+  CreateProposalHeading,
+  ReviewProposalForm,
+  useProposalStore,
+} from 'src/modules/transaction-builder'
 
 const ReviewProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

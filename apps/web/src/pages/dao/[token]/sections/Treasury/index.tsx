@@ -8,7 +8,7 @@ import { formatCryptoVal, numberFormatter } from 'src/utils/numbers'
 import useSWR from 'swr'
 import { useBalance } from 'wagmi'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { salesVolumeRequest } from 'src/query/salesVolumeQuery'
+import { salesVolumeRequest } from 'src/data/graphql/requests/salesVolumeQuery'
 
 const Treasury = () => {
   const { addresses } = useDaoStore()

@@ -17,7 +17,7 @@ import {
 } from './styles.css'
 import { useRouter } from 'next/router'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { myDaosRequest } from 'src/query/daoQuery'
+import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
 import { formatCryptoVal } from 'src/utils/numbers'
 import useSWR from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -253,7 +253,7 @@ const NavMenu: React.FC<{}> = () => {
                 justify={'center'}
               >
                 <Flex align={'center'} py={'x2'}>
-                  <Text fontWeight={'display'} fontSize={16} lineHeight={24}>
+                  <Text fontWeight={'display'} fontSize={16}>
                     Mainnet
                   </Text>
                   <Icon fill="text4" size="sm" ml="x2" id="external-16" />
@@ -272,7 +272,7 @@ const NavMenu: React.FC<{}> = () => {
                 justify={'center'}
               >
                 <Flex align={'center'} py={'x2'}>
-                  <Text fontWeight={'display'} fontSize={16} lineHeight={24}>
+                  <Text fontWeight={'display'} fontSize={16}>
                     Testnet
                   </Text>
                   <Icon fill="text4" size="sm" ml="x2" id="external-16" />

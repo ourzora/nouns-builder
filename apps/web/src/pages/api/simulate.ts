@@ -1,4 +1,3 @@
-import axios from 'axios'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { InvalidRequestError } from 'src/services/errors'
 import {
@@ -6,7 +5,7 @@ import {
   simulate,
   SimulationResult,
 } from 'src/services/simulationService'
-import { ErrorResult } from './errorResult'
+import { ErrorResult } from 'src/services/errorResult'
 
 export default async function handler(
   req: NextApiRequest,

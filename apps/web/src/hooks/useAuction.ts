@@ -5,8 +5,8 @@ import { readContract } from '@wagmi/core'
 import { useDaoStore } from 'src/stores/index'
 import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
-import getBids from 'src/utils/getBids'
-import { auctionAbi } from 'src/constants/abis'
+import getBids from 'src/data/contract/requests/getBids'
+import { auctionAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
 
 const useAuction = ({
