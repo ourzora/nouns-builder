@@ -4,7 +4,7 @@ import { Box, Flex } from '@zoralabs/zord'
 import { CreateFormSection } from 'src/typings'
 import { NavSection } from './NavSection'
 
-export const NavWrapper: React.FC<{
+export const CreateNavigation: React.FC<{
   sections: any[]
 }> = ({ sections }) => (
   <Flex direction={'column'} width={'100%'}>

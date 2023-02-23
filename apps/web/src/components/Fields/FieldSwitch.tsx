@@ -31,7 +31,7 @@ import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 import { compareAndReturn } from 'src/utils/helpers'
 import ContributionAllocationForm from './Allocation/ContributionAllocationForm'
 import FounderAllocationForm from './Allocation/FounderAllocationForm'
-import { ArtworkForm } from 'src/modules/create'
+import { ArtworkUpload } from 'src/modules/create'
 
 interface FieldSwitchProps {
   field: {
@@ -111,7 +111,7 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   switch (field.type) {
     case ARTWORK:
       return (
-        <ArtworkForm
+        <ArtworkUpload
           {...formik.getFieldProps(field.name)}
           inputLabel={field.inputLabel}
           formik={formik}

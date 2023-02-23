@@ -24,7 +24,7 @@ import React, {
   useEffect,
 } from 'react'
 import { LayerOrdering } from './LayerOrdering'
-import { Playground } from './PreviewModal'
+import { Playground } from './Playground'
 import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
@@ -48,7 +48,7 @@ interface ArtworkFormProps {
   helperText?: string
 }
 
-export const ArtworkForm: React.FC<ArtworkFormProps> = ({
+export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
   inputLabel,
   helperText,
   errorMessage,

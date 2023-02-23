@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import {
-  NavWrapper,
+  CreateNavigation,
   Allocation,
   Auction,
   ReviewAndDeploy,
@@ -108,7 +108,7 @@ const Create: NextPage = () => {
                 'linear-gradient(179.98deg, rgba(0, 0, 0, 0.5) -0.98%, rgba(0, 0, 0, 0) 47.4%, rgba(0, 0, 0, 0.6) 99.98%)',
             }}
           />
-          <NavWrapper sections={sections} />
+          <CreateNavigation sections={sections} />
         </Flex>
         <Flex
           className={createWrapperHalf['right']}
