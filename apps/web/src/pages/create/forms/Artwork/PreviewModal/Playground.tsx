@@ -41,7 +41,7 @@ const Playground: React.FC<PlaygroundProps> = ({ images }) => {
       }
       return acc
     }, [])
-  }, [images, orderedLayers])
+  }, [images])
 
   const layers = React.useMemo(() => {
     if (!imagesByTrait) return
@@ -108,7 +108,7 @@ const Playground: React.FC<PlaygroundProps> = ({ images }) => {
     })
 
     return arr.reverse()
-  }, [selectedTraits, layers])
+  }, [selectedTraits, layers, generatedImages])
 
   /*
 
