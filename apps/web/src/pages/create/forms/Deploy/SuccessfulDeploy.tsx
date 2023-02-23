@@ -112,7 +112,15 @@ const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     router.push(`/dao/${token}`).then(() => {
       resetForm()
     })
-  }, [metadataContract, transactions, router, setFulfilledSections, title, token])
+  }, [
+    metadataContract,
+    transactions,
+    router,
+    setFulfilledSections,
+    title,
+    token,
+    resetForm,
+  ])
 
   /*
 

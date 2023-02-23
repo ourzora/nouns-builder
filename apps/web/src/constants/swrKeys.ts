@@ -6,6 +6,7 @@ const SWR_KEYS = {
   PROPOSAL: 'proposal',
   PROPOSALS: 'proposals',
   PROPOSALS_CALLDATAS: 'proposals-calldatas',
+  PROPOSALS_TRANSACTIONS: 'proposal-transaction-data',
   ENS: 'ens',
   TOKEN: 'token',
   AUCTION: 'auction',
