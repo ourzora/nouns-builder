@@ -3,7 +3,7 @@ import { Flex } from '@zoralabs/zord'
 import { useLayoutStore } from 'src/stores'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-import useGovernorContract from 'src/hooks/useGovernorContract'
+import { useGovernorContract } from 'src/hooks'
 import { BytesType } from 'src/typings'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 

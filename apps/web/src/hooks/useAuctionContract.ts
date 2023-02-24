@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { BigNumber, Contract, ContractTransaction } from 'ethers'
+import { BigNumber } from 'ethers'
 import { Address, useContract, useContractReads, useSigner } from 'wagmi'
 import { GetContractResult, ReadContractResult } from '@wagmi/core'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -24,7 +24,7 @@ interface AuctionContractInterface {
   setReservePrice: (reservePrice: BigNumber) => void
 }
 
-const useAuctionContract = (): AuctionContractInterface => {
+export const useAuctionContract = (): AuctionContractInterface => {
   const { data: signer } = useSigner()
   const { addresses } = useDaoStore()
 
@@ -91,5 +91,3 @@ const useAuctionContract = (): AuctionContractInterface => {
     setReservePrice,
   }
 }
-
-export default useAuctionContract

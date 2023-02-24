@@ -4,7 +4,7 @@ import React, { Fragment } from 'react'
 import { Formik, Form as FormikForm, Field } from 'formik'
 import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
-import useGovernorContract from 'src/hooks/useGovernorContract'
+import { useGovernorContract } from 'src/hooks'
 import { Icon } from 'src/components/Icon'
 import {
   proposalFormTitle,

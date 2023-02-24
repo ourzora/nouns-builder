@@ -2,7 +2,6 @@ import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import React from 'react'
 import Meta from 'src/components/Layout/Meta'
-import { useVotes } from 'src/hooks/useVotes'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import getToken from 'src/data/contract/requests/getToken'
 import useSWR, { unstable_serialize } from 'swr'
@@ -15,6 +14,7 @@ import {
   Proposals,
   SectionHandler,
 } from 'src/modules/dao'
+import { useVotes } from 'src/hooks'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'

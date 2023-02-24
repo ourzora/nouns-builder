@@ -1,26 +1,25 @@
-import { Button, Flex, Box } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { ERROR_CODE, FormValues, validationSchema } from './fields'
+import { useContractRead, useContract, useSigner } from 'wagmi'
+import axios from 'axios'
+import { Field, FieldProps, Formik } from 'formik'
+import { useRouter } from 'next/router'
+import { Button, Flex, Box } from '@zoralabs/zord'
+
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-import useGovernorContract from 'src/hooks/useGovernorContract'
-import axios from 'axios'
+import { useGovernorContract } from 'src/hooks'
 import { useDaoStore, useLayoutStore } from 'src/stores'
-import { useContractRead, useContract, useSigner } from 'wagmi'
 import TextInput from 'src/components/Fields/TextInput'
-import { Field, FieldProps, Formik } from 'formik'
-import {
-  BuilderTransaction,
-  useProposalStore,
-} from 'src/modules/transaction-builder/stores/useProposalStore'
-import { useRouter } from 'next/router'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
-import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
-import { Transactions } from './Transactions'
 import { ErrorResult } from 'src/services/errorResult'
+
+import { BuilderTransaction, useProposalStore } from '../../stores'
+import { prepareProposalTransactions } from '../../utils/prepareTransactions'
+import { ERROR_CODE, FormValues, validationSchema } from './fields'
+import { Transactions } from './Transactions'
 import { MarkdownEditor } from './MarkdownEditor'
 
 interface ReviewProposalProps {

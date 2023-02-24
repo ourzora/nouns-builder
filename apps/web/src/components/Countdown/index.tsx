@@ -1,7 +1,4 @@
-import { useEffect } from 'react'
-import { useCountdown } from 'src/hooks/useCountdown'
-
-import { useIsMounted } from 'src/hooks/useIsMounted'
+import { useCountdown, useIsMounted } from 'src/hooks'
 
 interface CountdownProps
   extends React.DetailedHTMLProps<

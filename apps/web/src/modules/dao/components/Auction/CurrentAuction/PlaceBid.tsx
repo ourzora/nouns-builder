@@ -3,13 +3,14 @@ import { BigNumber, ethers } from 'ethers'
 import { useSWRConfig } from 'swr'
 import { useAccount, useBalance, useSigner } from 'wagmi'
 import { Box, Button, Flex } from '@zoralabs/zord'
-import { useMinBidIncrement } from 'src/hooks/useMinBidIncrement'
 import { ContractButton } from 'src/components/ContractButton'
 import { formatCryptoVal } from 'src/utils/numbers'
+import { useAuctionContract } from 'src/hooks'
 import { useDaoStore } from 'src/stores'
 import SWR_KEYS from 'src/constants/swrKeys'
-import useAuctionContract from 'src/hooks/useAuctionContract'
 import getBids from 'src/data/contract/requests/getBids'
+
+import { useMinBidIncrement } from '../../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 
 interface PlaceBidProps {
