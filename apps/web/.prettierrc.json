@@ -3,5 +3,21 @@
   "singleQuote": true,
   "printWidth": 90,
   "no-console": true,
-  "importOrderSortSpecifiers": true
+  "importOrderSortSpecifiers": true,
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "services/*",
+    "data/*",
+    "stores/*",
+    "typings/*",
+    "constants/*",
+    "utils/*",
+    "pages/*",
+    "modules/*",
+    "hooks/*",
+    "layouts/*",
+    "components/*",
+    "styles/*",
+    "^[./]"
+  ]
 }
