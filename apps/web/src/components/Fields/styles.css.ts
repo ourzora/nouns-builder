@@ -450,9 +450,7 @@ export const allocationToggle = styleVariants({
 })
 
 export const allocationToggleButton = style({
-  border: '2px solid #000',
   marginTop: '-2px',
-  background: '#FFF',
 })
 
 export const allocationToggleButtonVariants = styleVariants({

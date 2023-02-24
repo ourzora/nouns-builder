@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex } from '@zoralabs/zord'
-
 import { allocationToggle, allocationToggleButtonVariants } from '../styles.css'
+import { Icon } from 'src/components/Icon'
 
 export const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
   <Flex className={allocationToggle[on ? 'on' : 'off']} onClick={onToggle}>
@@ -13,7 +13,7 @@ export const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) 
       align={'center'}
       justify={'center'}
     >
-      <img src={'/handlebar.png'} alt="toggle-button" />
+      <Icon id={'handlebarCircle'} />
     </Flex>
   </Flex>
 )
