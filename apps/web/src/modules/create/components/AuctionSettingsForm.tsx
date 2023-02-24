@@ -113,7 +113,7 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
                     'The starting price of an auction. Must be greater than 0.0001 ETH.'
                   }
                   errorMessage={
-                    formik.values['auctionReservePrice'] &&
+                    formik.touched['auctionReservePrice'] &&
                     formik.errors['auctionReservePrice']
                       ? formik.errors['auctionReservePrice']
                       : undefined
@@ -155,7 +155,7 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
                     'This is the percentage of all existing tokens that must be owned by someone attempting to create a proposal. We recommend a starting value of 0.5% to encourage participation.'
                   }
                   errorMessage={
-                    formik.values['proposalThreshold'] &&
+                    formik.touched['proposalThreshold'] &&
                     formik.errors['proposalThreshold']
                       ? formik.errors['proposalThreshold']
                       : undefined
@@ -177,7 +177,7 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
                     'This is the percentage of all existing tokens that must vote in a proposal in order for it to pass (as long as a majority of votes approve). We recommend a starting value of 10%.'
                   }
                   errorMessage={
-                    formik.values['quorumThreshold'] && formik.errors['quorumThreshold']
+                    formik.touched['quorumThreshold'] && formik.errors['quorumThreshold']
                       ? formik.errors['quorumThreshold']
                       : undefined
                   }
