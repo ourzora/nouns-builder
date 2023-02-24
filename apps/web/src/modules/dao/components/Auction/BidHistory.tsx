@@ -1,8 +1,8 @@
-import AuctionAllBids from './AuctionAllBids'
 import { Button, Flex } from '@zoralabs/zord'
 import dynamic from 'next/dynamic'
-import React, { ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { Bid } from 'src/typings'
+import { AllBids } from './AllBids'
 
 const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal'), {
   ssr: false,
@@ -23,7 +23,7 @@ export const BidHistory = ({ bids }: { bids: Bid[] }) => {
         </Button>
       }
     >
-      <AuctionAllBids bids={bids} />
+      <AllBids bids={bids} />
     </AnimatedModal>
   )
 }
