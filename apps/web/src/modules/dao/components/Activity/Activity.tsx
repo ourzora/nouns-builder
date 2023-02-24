@@ -17,7 +17,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { getProposals, ProposalsResponse } from 'src/data/graphql/requests/proposalsQuery'
 import { AddressType } from 'src/typings'
 import Pagination from 'src/components/Pagination'
-import { ProposalCard } from 'src/modules/proposals'
+import { ProposalCard } from 'src/modules/proposal'
 import { useProposalStore, Upgrade } from 'src/modules/transaction-builder'
 
 import { useDelegate } from '../../hooks'
