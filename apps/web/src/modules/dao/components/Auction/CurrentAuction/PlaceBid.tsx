@@ -5,11 +5,12 @@ import { useAccount, useBalance, useSigner } from 'wagmi'
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { ContractButton } from 'src/components/ContractButton'
 import { formatCryptoVal } from 'src/utils/numbers'
+import { useAuctionContract } from 'src/hooks'
 import { useDaoStore } from 'src/stores'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/data/contract/requests/getBids'
 
-import { useAuctionContract, useMinBidIncrement } from '../../../hooks'
+import { useMinBidIncrement } from '../../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 
 interface PlaceBidProps {

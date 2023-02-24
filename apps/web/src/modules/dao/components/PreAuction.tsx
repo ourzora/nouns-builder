@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Box, Button, Flex } from '@zoralabs/zord'
 
 import { useLayoutStore } from 'src/stores'
-import { useAuctionContract } from 'src/modules/dao'
+import { useAuctionContract } from 'src/hooks'
 
 import {
   wrapper,
