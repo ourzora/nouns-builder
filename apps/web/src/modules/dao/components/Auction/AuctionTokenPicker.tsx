@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
-import { OptionalLink } from "./OptionalLink";
+import { OptionalLink } from 'src/components/OptionalLink'
 
 interface AuctionTokenPickerProps {
   collection: string
