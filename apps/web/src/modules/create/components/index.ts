@@ -1,5 +1,5 @@
 export * from './Allocation'
-export * from './AuctionSettings'
+export * from './AuctionSettingsForm'
 export * from './AuctionSettingsForm.schema'
 export * from './General'
 export * from './Veto'

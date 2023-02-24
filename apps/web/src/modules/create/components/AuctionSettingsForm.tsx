@@ -20,7 +20,7 @@ import {
   validateAuctionSettings,
 } from './AuctionSettingsForm.schema'
 
-interface AuctionSettingsProps {
+interface AuctionSettingsFormProps {
   title: string
 }
 
@@ -33,7 +33,7 @@ const animation = {
   },
 }
 
-export const AuctionSettings: React.FC<AuctionSettingsProps> = ({ title }) => {
+export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title }) => {
   const {
     setAuctionSettings,
     auctionSettings,
