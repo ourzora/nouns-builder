@@ -14,7 +14,7 @@ import {
 } from 'src/styles/deploy.css'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import type { AddressType } from 'src/typings'
 import { managerAbi } from 'src/data/contract/abis'
 import { useContractEvent, useContractWrite } from 'wagmi'

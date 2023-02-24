@@ -204,10 +204,6 @@ export const defaultInputLabelStyle = style([
   },
 ])
 
-export const daysHoursMinsWrapper = style({
-  flexDirection: 'column',
-})
-
 export const defaultFileDownloadStyle = style([
   atoms({
     display: 'flex',
@@ -301,14 +297,6 @@ export const defaultUploadButtonStyle = style({
   justifyContent: 'space-between',
 })
 
-export const defaultFocusedInputLabelStyle = style({})
-
-export const defaultLegendStyle = style({})
-
-export const defaultFieldErrorStyle = style({})
-
-export const defaultFieldHeadingStyle = style({})
-
 export const defaultHelperTextStyle = style({
   fontSize: 16,
   lineHeight: '24px',
@@ -370,11 +358,6 @@ export const numberInputErrorStyle = style({
   },
 })
 
-export const dropAreaActiveStyle = style({
-  border: '2px solid #1CB687',
-  borderRadius: '10px',
-})
-
 export const dropAreaStyle = style({
   border: '2px solid #fff',
   borderRadius: '10px',
@@ -387,24 +370,6 @@ export const dropAreaErrorStyle = style({
 
 export const noneSelectedStyle = style({
   color: '#B3B3B3',
-})
-
-export const fileInfoStyle = style({
-  background: '#F2F2F2',
-  borderRadius: '10px',
-})
-
-export const traitPropertyStyle = style({
-  background: '#fff',
-  color: '#000',
-  borderRadius: '10px',
-  border: '2px solid #fff',
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-      borderColor: '#4D4D4D',
-    },
-  },
 })
 
 export const placeholderStyle = style({
@@ -437,107 +402,6 @@ export const inputCheckIcon = styleVariants({
   ],
 })
 
-export const artworkFormButton = style({
-  width: '100%',
-  borderRadius: '10px',
-  height: 60,
-  marginTop: 16,
-})
-
-export const artworkFormUnFulfilledButton = style({
-  width: '100%',
-  borderRadius: '10px',
-  height: 60,
-  marginTop: 16,
-  background: '#F2F2F2',
-  color: '#B3B3B3',
-  selectors: {
-    '&:hover': {
-      cursor: 'default',
-      backgroundColor: '#F2F2F2',
-      color: '#B3B3B3',
-      opacity: 1,
-    },
-  },
-})
-
-export const artworkBackButton = style({
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
-export const addTransactionButton = style({
-  backgroundColor: '#F2F2F2',
-  borderRadius: '12px',
-  color: '#000',
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
-export const transactionButton = style({
-  border: '2px solid #F2F2F2',
-  borderRadius: '12px',
-  color: '#000',
-  overflow: 'hidden',
-  minHeight: 64,
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
-export const transactionButtonCount = style({
-  color: '#B3B3B3',
-  fontSize: 16,
-  fontWeight: '700',
-})
-
-export const customTransactionWrapper = style({
-  borderRadius: '12px',
-})
-
-export const transactionFunctionName = style({
-  maxWidth: 400,
-  overflowWrap: 'anywhere',
-})
-
-export const customTransactionClose = style({
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
-export const transactionFormWrapper = style({
-  position: 'relative',
-  top: 20,
-  width: '100%',
-  '@media': {
-    '(max-width: 768px)': {
-      position: 'relative',
-      padding: 0,
-      width: '100%',
-    },
-  },
-})
-
-export const transactionFlowHeading = style({
-  fontSize: '22px',
-  fontWeight: 700,
-})
-
-export const transactionFlowWrapper = style({
-  display: 'flex',
-})
-
 export const defaultSelectStyle = style({
   padding: 10,
   marginBottom: '24px',
@@ -560,107 +424,6 @@ export const confirmRemoveHelper = style({
   fontSize: 16,
   lineHeight: '24px',
   marginBottom: 8,
-})
-
-export const confirmButton = style({
-  fontFamily: 'Inter, sans-serif!important',
-  width: '100%',
-  borderRadius: '12px',
-  marginBottom: 8,
-})
-
-export const viewProposalButton = style({
-  fontFamily: 'Inter, sans-serif!important',
-  width: '100%',
-  borderRadius: '12px',
-  background: '#F2F2F2',
-  color: '#000000;',
-})
-
-export const dismissButton = style([
-  {
-    fontFamily: 'Inter, sans-serif!important',
-    width: '100%',
-    borderRadius: '12px',
-    background: '#FFF',
-    color: '#000',
-  },
-  atoms({
-    mb: 'x2',
-  }),
-])
-
-export const singleImageUploadWrapper = style({
-  height: 160,
-  width: 160,
-  borderRadius: 80,
-  background: '#F2F2F2',
-  overflow: 'hidden',
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
-export const founderAllocationInner = style(
-  [
-    {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-  ],
-  atoms({
-    w: '100%',
-  })
-)
-
-export const founderAllocationMaxTokens = style({
-  fontSize: '14px',
-  marginTop: '-24px',
-  alignSelf: 'self-end',
-  color: '#1b1b1b',
-})
-
-export const founderRemoveIcon = style({
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
-export const founderExclamationText = style([
-  atoms({
-    fontWeight: 'heading',
-  }),
-  {
-    color: '#F5A623',
-    fontWeight: 700,
-    marginTop: '-16px',
-    '@media': {
-      'screen and (max-width: 940px)': {
-        width: '200px',
-      },
-    },
-  },
-])
-
-export const founderAllocationHelperText = style({
-  marginTop: '-32px',
-})
-
-export const founderAllocationWrapper = style({
-  borderRadius: '12px',
-})
-
-export const addAddressButton = style({
-  fontWeight: '700',
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
 })
 
 export const toggleStyle = style([
@@ -695,24 +458,6 @@ export const allocationToggleButton = style({
 export const allocationToggleButtonVariants = styleVariants({
   off: [allocationToggleButton, { marginLeft: '-2px' }],
   on: [allocationToggleButton, { marginRight: '-2px' }],
-})
-
-export const allocationFormDisableWrapper = styleVariants({
-  enabled: [
-    {
-      display: 'none',
-    },
-  ],
-  disabled: [
-    {
-      background: '#fff',
-      height: 110,
-      width: '100%',
-      position: 'absolute',
-      zIndex: 10,
-      opacity: 0.7,
-    },
-  ],
 })
 
 const pointer = {

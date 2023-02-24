@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import { atoms, Flex, Box, Text } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { BuilderTransaction } from '../stores'
 import { TransactionTypeIcon } from './TransactionTypeIcon'
 

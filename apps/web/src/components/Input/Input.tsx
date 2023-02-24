@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react'
 import { Box, Text, Flex, Input as ZordInput, InputComponentProps } from '@zoralabs/zord'
 import { Field } from 'formik'
-import { input } from './styles.css'
+import { input } from './Input.css'
 import { Error } from 'src/components/Fields/Error'
 
 interface CustomInputProps extends InputComponentProps<typeof ZordInput> {

@@ -1,6 +1,6 @@
 import { uploadingSpinner } from '../Layout/styles.css'
 import { Box, Flex } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import React, { ReactNode } from 'react'
 import {
   confirmRemoveHeadingStyle,

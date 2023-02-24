@@ -1,6 +1,6 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import React from 'react'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { Avatar } from 'src/components/Avatar'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks/useEnsData'

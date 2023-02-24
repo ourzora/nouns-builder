@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, Button } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { iconAnchor } from 'src/styles/About.css'
 import { IconType } from 'src/components/Icon/icons'
 

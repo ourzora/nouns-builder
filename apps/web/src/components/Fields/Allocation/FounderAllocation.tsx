@@ -1,5 +1,5 @@
 import { Heading, Button, Flex, Text, Paragraph, Stack } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import React from 'react'
 import SmartInput from '../SmartInput'

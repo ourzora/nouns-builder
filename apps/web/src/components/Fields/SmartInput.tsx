@@ -16,7 +16,7 @@ import { getEnsName } from 'src/utils/ens'
 import { isEmpty } from 'src/utils/helpers'
 import useSWR from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 
 interface SmartInputProps {
   id: string

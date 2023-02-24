@@ -8,7 +8,7 @@ import {
   inputCheckIcon,
   permaInputPlaceHolderStyle,
 } from './styles.css'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { Box, Flex } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'

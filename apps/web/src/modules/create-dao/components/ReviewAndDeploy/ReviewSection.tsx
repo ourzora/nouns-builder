@@ -4,7 +4,7 @@ import {
   reviewSectionStyleVariants,
   reviewSectionSubHeading,
 } from 'src/styles/deploy.css'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { motion } from 'framer-motion'
 
 export const ReviewSection: React.FC<{

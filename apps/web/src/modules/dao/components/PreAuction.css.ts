@@ -1,5 +1,5 @@
 import { style, styleVariants } from '@vanilla-extract/css'
-import { atoms, media, theme, vars } from '@zoralabs/zord'
+import { atoms, vars } from '@zoralabs/zord'
 
 export const wrapper = atoms({
   flexDirection: 'column',

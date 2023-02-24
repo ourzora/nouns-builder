@@ -3,7 +3,7 @@ import { Box, Grid, Flex, Text, vars } from '@zoralabs/zord'
 import { about } from 'src/styles/About.css'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { walletSnippet } from 'src/utils/helpers'
 

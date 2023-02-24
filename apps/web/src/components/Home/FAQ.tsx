@@ -1,6 +1,6 @@
 import { defaultFileDownloadStyle } from '../Fields/styles.css'
 import Accordion from './accordian'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { Flex, Stack, Text, Box } from '@zoralabs/zord'
 import { homeSectionHeader, homeSectionWrapper } from 'src/styles/home.css'
 

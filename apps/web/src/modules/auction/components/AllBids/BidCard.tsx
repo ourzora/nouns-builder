@@ -3,7 +3,7 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import { Avatar } from 'src/components/Avatar'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { formatCryptoVal } from 'src/utils/numbers'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import React from 'react'
 
 export interface Bid {

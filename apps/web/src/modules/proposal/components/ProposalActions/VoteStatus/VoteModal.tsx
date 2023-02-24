@@ -5,7 +5,7 @@ import { Formik, Form as FormikForm, Field } from 'formik'
 import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { useGovernorContract } from 'src/hooks'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import {
   proposalFormTitle,
   voteModalFieldset,

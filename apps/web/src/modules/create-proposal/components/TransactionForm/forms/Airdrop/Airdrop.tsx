@@ -12,7 +12,7 @@ import { getEnsAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
 import { walletSnippet } from 'src/utils/helpers'
 import Link from 'next/link'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 
 import { useAvailableUpgrade } from '../../../../hooks'
 import { useProposalStore } from '../../../../stores'

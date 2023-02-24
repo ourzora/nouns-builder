@@ -1,6 +1,6 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import { statistic, statisticContent } from 'src/styles/About.css'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 
 interface StatisticProps {

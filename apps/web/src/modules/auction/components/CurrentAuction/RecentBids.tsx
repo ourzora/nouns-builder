@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Flex, Text, Stack } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
+import { Icon } from 'src/components/Icon/Icon'
 import { recentBid, allRecentBidsButton } from '../Auction.css'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import dynamic from 'next/dynamic'
