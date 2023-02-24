@@ -8,7 +8,6 @@ import {
   votingSettingsFields,
 } from 'src/components/Fields/fields/auction'
 import { useFormStore } from 'src/stores/useFormStore'
-import { auctionSettingsProps } from 'src/typings'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import {
   defaultBackButton,
@@ -18,6 +17,7 @@ import {
 } from 'src/components/Fields/styles.css'
 import { isEmpty } from 'src/utils/helpers'
 import { Icon } from 'src/components/Icon'
+import { auctionSettingsProps } from 'src/modules/create';
 
 interface AuctionSettingsProps {
   title: string

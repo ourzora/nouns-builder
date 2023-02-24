@@ -1,4 +1,5 @@
-import { IPFSUpload, OrderedLayersProps } from 'src/typings'
+
+import { IPFSUpload, OrderedLayersProps } from 'src/modules/create'
 
 export const mockTraits = ['backgrounds', 'bodies', 'heads', 'glasses', 'shirt']
 export const layerProperties = ['property-one', 'property-two', 'property-three']

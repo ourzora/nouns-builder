@@ -27,15 +27,15 @@ import { LayerOrdering } from './LayerOrdering'
 import { Playground } from './Playground'
 import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
 import { useFormStore } from 'src/stores/useFormStore'
-import {
-  IPFSUpload,
-  ImageProps,
-  ImagesByTraitProps,
-  SelectedTraitsProps,
-} from 'src/typings'
 import { sanitizeFileName } from 'src/utils/sanitize'
 import { Icon } from 'src/components/Icon'
 import * as Sentry from '@sentry/nextjs'
+import {
+  ImageProps,
+  ImagesByTraitProps,
+  IPFSUpload,
+  SelectedTraitsProps,
+} from 'src/modules/create'
 
 interface ArtworkFormProps {
   id: string

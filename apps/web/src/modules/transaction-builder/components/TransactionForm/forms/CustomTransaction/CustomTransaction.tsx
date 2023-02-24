@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 
-import { AddressType, AddTransactionSection } from 'src/typings'
+import { AddressType} from 'src/typings'
 
 import { useProposalStore, useCustomTransactionStore } from '../../../../stores'
 import { TransactionType } from '../../../../constants'
@@ -10,6 +10,7 @@ import { customTransactionWrapper, transactionFormWrapper } from './styles.css'
 import { ABI, Address, Arguments, Function, Summary, Value } from './forms'
 import { FormHandler } from './FormHandler'
 import { FormHeading } from './FormHeading'
+import { AddTransactionSection } from 'src/modules/create';
 
 export const CustomTransaction: React.FC = () => {
   const { addTransaction } = useProposalStore()

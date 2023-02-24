@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Box } from '@zoralabs/zord'
 import { useFormStore } from 'src/stores/useFormStore'
-import { AddTransactionSection } from 'src/typings'
 import { useCustomTransactionStore } from '../../../../stores'
+import { AddTransactionSection } from 'src/modules/create';
 
 interface FormHandler {
   forms: ReactElement[]

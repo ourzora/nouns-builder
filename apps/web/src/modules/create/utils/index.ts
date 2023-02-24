@@ -1,5 +1,5 @@
-import { allocationProps, AuctionDuration, auctionSettingsProps } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
+import { allocationProps, AuctionDuration, auctionSettingsProps } from 'src/modules/create';
 
 export const formatAuctionDuration = (duration: AuctionDuration): string => {
   const days = `${duration.days || '0'} ${Number(duration.days) === 1 ? 'day' : 'days'}`

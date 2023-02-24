@@ -17,7 +17,7 @@ import { NextPage } from 'next'
 import Meta from 'src/components/Layout/Meta'
 import { useFormStore } from 'src/stores/useFormStore'
 import { createWrapperHalf, formWrapper, pageGrid } from 'src/styles/styles.css'
-import { CreateFormSection } from 'src/typings'
+import { CreateFormSection } from 'src/modules/create'
 
 const Create: NextPage = () => {
   const router = useRouter()

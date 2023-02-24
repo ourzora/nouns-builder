@@ -4,12 +4,12 @@ import { useFormStore } from 'src/stores'
 import { yearsAhead } from 'src/utils/helpers'
 import { PUBLIC_NOUNS_ADDRESS, PUBLIC_BUILDER_ADDRESS } from 'src/constants/addresses'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { allocationProps } from 'src/typings'
 import { validationSchemaContributions } from '../fields/founder'
 import SmartInput from '../SmartInput'
 import Date from '../Date'
 import { Toggle } from './Toggle'
 import { DaoCopyAddress } from './DaoCopyAddress'
+import { allocationProps } from 'src/modules/create';
 
 export interface ContributionAllocationFormValues {
   contributionAllocation: allocationProps[]

@@ -10,7 +10,11 @@ import {
   previewModalWrapperStyle,
   previewWrapperInnerStyle,
 } from 'src/styles/Artwork.css'
-import { ImagesByTraitProps, PlaygroundProps, SelectedTraitsProps } from 'src/typings'
+import {
+  ImagesByTraitProps,
+  PlaygroundProps,
+  SelectedTraitsProps,
+} from 'src/modules/create'
 
 export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
   const { orderedLayers } = useFormStore()

@@ -7,7 +7,7 @@ import {
   flowSectionWrapperVariants,
   flowTitleVariant,
 } from 'src/styles/styles.css'
-import { CreateFormSection } from 'src/typings'
+import { CreateFormSection } from 'src/modules/create';
 
 export const NavSection: React.FC<{
   sections: CreateFormSection[]
