@@ -1,7 +1,7 @@
 import { Stack } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import React from 'react'
-import { DaoFeed } from 'src/components/Home/DaoFeed'
+import { DaoFeed } from 'src/modules/dao/components/DaoFeed/DaoFeed'
 import Everything from 'src/components/Home/Everything'
 import FAQ from 'src/components/Home/FAQ'
 import Footer from 'src/components/Home/Footer'

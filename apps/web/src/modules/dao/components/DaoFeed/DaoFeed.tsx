@@ -1,9 +1,9 @@
 import { Button, Flex, Text } from '@zoralabs/zord'
 import React, { Fragment, ReactNode } from 'react'
 import { useRouter } from 'next/router'
-import { daoFeedGrid, emptyTile } from './Homepage.css'
+import { daoFeedGrid, emptyTile } from '../../../../components/Home/Homepage.css'
 import { Grid } from '@zoralabs/zord'
-import HomeDaoCard from './HomeDaoCard'
+import { DaoFeedCard } from './DaoFeedCard'
 import { DaoProps } from 'src/pages'
 
 export const GridContainer = ({ children }: { children: ReactNode }) => (
@@ -60,7 +60,7 @@ export const DaoFeed = ({
   return (
     <GridContainer>
       {featuredDaos?.map((dao, index) => (
-        <HomeDaoCard key={index} dao={dao} />
+        <DaoFeedCard key={index} dao={dao} />
       ))}
     </GridContainer>
   )

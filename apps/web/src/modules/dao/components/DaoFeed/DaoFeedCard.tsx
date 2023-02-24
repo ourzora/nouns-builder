@@ -1,4 +1,4 @@
-import useDaoCard from './useDaoCard'
+import { useDaoFeedCard } from '../../hooks'
 import React from 'react'
 import { DaoProps } from 'src/pages'
 import { DaoCard } from 'src/modules/dao'
@@ -7,8 +7,8 @@ interface DaoCardProps {
   dao: DaoProps
 }
 
-const HomeDaoCard: React.FC<DaoCardProps> = ({ dao }) => {
-  const { highestBid, tokenUri, endTime } = useDaoCard({
+export const DaoFeedCard: React.FC<DaoCardProps> = ({ dao }) => {
+  const { highestBid, tokenUri, endTime } = useDaoFeedCard({
     collectionAddress: dao.collectionAddress,
     auctionAddress: dao.auctionAddress,
   })
@@ -28,5 +28,3 @@ const HomeDaoCard: React.FC<DaoCardProps> = ({ dao }) => {
     />
   )
 }
-
-export default HomeDaoCard
