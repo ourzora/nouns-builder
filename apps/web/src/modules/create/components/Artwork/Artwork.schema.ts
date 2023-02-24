@@ -3,7 +3,6 @@ import * as Yup from 'yup'
 interface Artwork {
   trait: string
   properties: string[]
-  ipfs?: any
 }
 
 export interface ArtworkFormValues {
