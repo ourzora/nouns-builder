@@ -31,7 +31,6 @@ const Create: NextPage = () => {
   }, [address, router])
 
   /*
-
     Initialize Form Sections
       - order of returned array defines order of sections
       - multiple forms per section supported
