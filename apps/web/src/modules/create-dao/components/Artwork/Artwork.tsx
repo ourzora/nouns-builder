@@ -1,5 +1,6 @@
 import React from 'react'
 import { Formik, Form } from 'formik'
+import isEmpty from 'lodash/isEmpty'
 
 import TextArea from 'src/components/Fields/TextArea'
 import { Icon } from 'src/components/Icon'
@@ -97,6 +98,7 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
               ml={'x2'}
               minH={'x15'}
               type="submit"
+              disabled={!isEmpty(formik.errors) || formik.isSubmitting}
             >
               Continue
             </Button>
