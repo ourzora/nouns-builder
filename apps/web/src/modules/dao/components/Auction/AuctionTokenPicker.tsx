@@ -1,4 +1,4 @@
-import { auctionDateNavButton, auctionTextVariants } from '../Auction.css'
+import { auctionDateNavButton, auctionTextVariants } from './Auction.css'
 import { Box, Flex, Text } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/router'
