@@ -1,6 +1,6 @@
 import React from 'react'
 import { atoms, Flex } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import Link from 'next/link'
 
 type PaginationProps = {

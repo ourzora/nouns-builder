@@ -1,5 +1,5 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { useState } from 'react'
 import { ContractButton } from 'src/components/ContractButton'

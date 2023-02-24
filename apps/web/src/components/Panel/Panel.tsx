@@ -5,7 +5,7 @@ import {
   panelProposalWrapper,
 } from 'src/styles/Proposals.css'
 import { Box, Flex } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 

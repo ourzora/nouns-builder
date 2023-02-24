@@ -1,4 +1,4 @@
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import { Box, Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React from 'react'

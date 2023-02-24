@@ -3,7 +3,7 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
 import { OptionalLink } from 'src/components/OptionalLink'
 

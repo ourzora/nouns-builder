@@ -4,7 +4,7 @@ import { NULL_ADDRESS } from 'src/constants/addresses'
 import { Box, Flex } from '@zoralabs/zord'
 import { Avatar } from 'src/components/Avatar'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 
 export const WinningBidder = ({ owner }: { owner?: string }) => {
   const { displayName, ensAvatar } = useEnsData(owner)

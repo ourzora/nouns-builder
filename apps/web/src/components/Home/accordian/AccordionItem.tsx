@@ -1,5 +1,5 @@
 import { accordionItem, accordionName } from '../../../styles/home.css'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import { Flex, Text, Stack, atoms } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React, { ReactElement } from 'react'

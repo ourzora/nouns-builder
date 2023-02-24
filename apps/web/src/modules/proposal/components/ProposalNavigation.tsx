@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex, Text, Box } from '@zoralabs/zord'
 import Image from 'next/legacy/image'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import { getFetchableUrl } from 'ipfs-service'
 import { useDaoStore } from 'src/stores'
 import { useContractReads } from 'wagmi'

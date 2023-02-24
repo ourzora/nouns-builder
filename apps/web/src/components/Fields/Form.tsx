@@ -6,7 +6,7 @@ import {
   defaultFormStyleVariants,
   transactionFormButtonWithPrev,
 } from './styles.css'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import { Box, Button, Flex, Stack } from '@zoralabs/zord'
 import { Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'

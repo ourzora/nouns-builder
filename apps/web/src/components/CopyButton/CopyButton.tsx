@@ -3,7 +3,7 @@ import { Box } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React from 'react'
 import { useDaoStore } from 'src/stores/useDaoStore'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 
 interface CopyButtonProps {
   title?: string

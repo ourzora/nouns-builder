@@ -34,7 +34,7 @@ import {
   SelectedTraitsProps,
 } from 'src/typings'
 import { sanitizeFileName } from 'src/utils/sanitize'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import * as Sentry from '@sentry/nextjs'
 
 interface ArtworkFormProps {

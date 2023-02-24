@@ -17,7 +17,7 @@ import {
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
 import { isEmpty } from 'src/utils/helpers'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 
 interface AuctionSettingsProps {
   title: string

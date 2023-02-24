@@ -14,7 +14,7 @@ import {
   defaultBackButtonVariants,
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 
 interface FounderProps {
   title: string

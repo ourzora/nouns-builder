@@ -1,7 +1,7 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Box, Flex } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon/Icon'
+import { Icon } from 'src/components/Icon'
 import {
   defaultFieldsetStyle,
   defaultInputLabelStyle,
