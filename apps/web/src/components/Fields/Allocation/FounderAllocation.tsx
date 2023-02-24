@@ -4,13 +4,15 @@ import { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import React from 'react'
 import SmartInput from '../SmartInput'
 import DatePicker from '../Date'
-import { TokenAllocation, auctionSettingsProps } from 'src/typings'
-import { calculateMaxAllocation } from 'src/modules/create/utils'
-import { FounderAllocationFormValues } from 'src/modules/create'
+import { TokenAllocation, AuctionDuration } from 'src/typings'
+import {
+  calculateMaxAllocation,
+  FounderAllocationFormValues,
+} from 'src/modules/create-dao'
 
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues
-  auctionDuration: auctionSettingsProps['auctionDuration']
+  auctionDuration: AuctionDuration
   vetoPower?: number
   errors?: FormikErrors<FounderAllocationFormValues>
   touched: FormikTouched<FounderAllocationFormValues>

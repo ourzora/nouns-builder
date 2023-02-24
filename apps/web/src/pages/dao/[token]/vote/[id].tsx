@@ -17,7 +17,7 @@ import {
   ProposalActions,
   ProposalDetailsGrid,
   isProposalOpen,
-} from 'src/modules/proposals'
+} from 'src/modules/proposal'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
