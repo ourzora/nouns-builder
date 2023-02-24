@@ -4,7 +4,7 @@ import { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import React from 'react'
 import SmartInput from '../SmartInput'
 import DatePicker from '../Date'
-import { allocationProps, auctionSettingsProps } from 'src/typings'
+import { TokenAllocation, auctionSettingsProps } from 'src/typings'
 import { calculateMaxAllocation } from 'src/modules/create/utils'
 import { FounderAllocationFormValues } from 'src/modules/create'
 
@@ -43,7 +43,7 @@ const FounderAllocationFields = ({
 
           const error =
             typeof errors?.founderAllocation === 'object'
-              ? (errors?.founderAllocation?.[index] as FormikErrors<allocationProps>)
+              ? (errors?.founderAllocation?.[index] as FormikErrors<TokenAllocation>)
               : undefined
 
           const touchedField = touched?.founderAllocation?.[index]
@@ -79,8 +79,8 @@ const FounderAllocationFields = ({
                 <Flex style={{ flex: '1 1 0' }}>
                   <SmartInput
                     inputLabel={'Percentage'}
-                    id={`founderAllocation.${index}.allocation`}
-                    value={founder.allocation}
+                    id={`founderAllocation.${index}.allocationPercentage`}
+                    value={founder.allocationPercentage}
                     type={'number'}
                     formik={formik}
                     disabled={false}
@@ -90,8 +90,8 @@ const FounderAllocationFields = ({
                     autoSubmit={false}
                     isAddress={false}
                     errorMessage={
-                      error?.allocation && touchedField?.allocation
-                        ? error?.allocation
+                      error?.allocationPercentage && touchedField?.allocationPercentage
+                        ? error?.allocationPercentage
                         : undefined
                     }
                   />
@@ -133,11 +133,11 @@ const FounderAllocationFields = ({
                   </Flex>
                 )}
 
-                {founder?.allocation && founder?.endDate ? (
+                {founder?.allocationPercentage && founder?.endDate ? (
                   <Text variant="eyebrow" ml={'auto'}>
                     ~{' '}
                     {calculateMaxAllocation(
-                      founder?.allocation,
+                      founder?.allocationPercentage,
                       founder?.endDate,
                       auctionDuration
                     )}{' '}

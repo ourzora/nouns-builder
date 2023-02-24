@@ -1,7 +1,7 @@
 import {
   IPFSUpload,
   OrderedLayersProps,
-  allocationProps,
+  TokenAllocation,
   auctionSettingsProps,
   DaoContractAddresses,
   generalInfoProps,
@@ -25,10 +25,10 @@ export interface FormStoreState {
   setVotingSettings: (votingSettings: votingSettingsProps) => void
   vetoPower: number | undefined
   setVetoPower: (vetoPower: number) => void
-  founderAllocation: Array<allocationProps>
-  setFounderAllocation: (founderAllocation: Array<allocationProps>) => void
-  contributionAllocation: Array<allocationProps>
-  setContributionAllocation: (contributionAllocation: Array<allocationProps>) => void
+  founderAllocation: Array<TokenAllocation>
+  setFounderAllocation: (founderAllocation: Array<TokenAllocation>) => void
+  contributionAllocation: Array<TokenAllocation>
+  setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) => void
   auctionSettings: auctionSettingsProps
   setAuctionSettings: (auctionSettings: auctionSettingsProps) => void
   setUpArtwork: setUpArtworkProps
@@ -82,12 +82,12 @@ const initialState = {
   contributionAllocation: [
     {
       founderAddress: PUBLIC_BUILDER_ADDRESS,
-      allocation: 1,
+      allocationPercentage: 1,
       endDate: yearsAhead(5),
     },
     {
       founderAddress: PUBLIC_NOUNS_ADDRESS,
-      allocation: 1,
+      allocationPercentage: 1,
       endDate: yearsAhead(5),
     },
   ],
@@ -139,9 +139,9 @@ export const useFormStore = create(
       setVotingSettings: (votingSettings: votingSettingsProps) => set({ votingSettings }),
       setAuctionSettings: (auctionSettings: auctionSettingsProps) =>
         set({ auctionSettings }),
-      setFounderAllocation: (founderAllocation: Array<allocationProps>) =>
+      setFounderAllocation: (founderAllocation: Array<TokenAllocation>) =>
         set({ founderAllocation }),
-      setContributionAllocation: (contributionAllocation: Array<allocationProps>) =>
+      setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) =>
         set({ contributionAllocation }),
 
       nounsAllocationOn: true,

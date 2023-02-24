@@ -8,7 +8,7 @@ import { getEnsAddress } from 'src/utils/ens'
 import { Contribution } from './Contribution'
 import { DaoCopyAddress } from './DaoCopyAddress'
 import { ContributionAllocationFormValues, ContributionForm } from './ContributionForm'
-import { allocationProps } from 'src/typings'
+import { TokenAllocation } from 'src/typings'
 
 const ContributionAllocation = () => {
   const [open, setOpen] = useState(false)
@@ -33,7 +33,7 @@ const ContributionAllocation = () => {
   }: ContributionAllocationFormValues) => {
     const contributionAllocation = [builderAllocation, nounsAllocation].filter(
       Boolean
-    ) as allocationProps[]
+    ) as TokenAllocation[]
     const contributionAllocationPromises = contributionAllocation.map((allocation) =>
       getEnsAddress(allocation.founderAddress)
     )
@@ -82,7 +82,7 @@ const ContributionAllocation = () => {
             <>
               {builderAllocationValue && (
                 <Contribution
-                  allocation={builderAllocationValue?.allocation}
+                  allocation={builderAllocationValue?.allocationPercentage}
                   endDate={builderAllocationValue?.endDate}
                   address={
                     <DaoCopyAddress
@@ -97,7 +97,7 @@ const ContributionAllocation = () => {
 
               {nounsAllocationValue && (
                 <Contribution
-                  allocation={nounsAllocationValue?.allocation}
+                  allocation={nounsAllocationValue?.allocationPercentage}
                   endDate={nounsAllocationValue?.endDate}
                   address={
                     <DaoCopyAddress

@@ -1,10 +1,9 @@
 import { Button, Flex, Box, Stack, Text } from '@zoralabs/zord'
 import { Form, Formik } from 'formik'
-import { useFormStore } from 'src/stores'
 import { yearsAhead } from 'src/utils/helpers'
 import { PUBLIC_NOUNS_ADDRESS, PUBLIC_BUILDER_ADDRESS } from 'src/constants/addresses'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { allocationProps } from 'src/typings'
+import { TokenAllocation } from 'src/typings'
 import { validationSchemaContributions } from '../fields/founder'
 import SmartInput from '../SmartInput'
 import Date from '../Date'
@@ -12,8 +11,8 @@ import { Toggle } from './Toggle'
 import { DaoCopyAddress } from './DaoCopyAddress'
 
 export interface ContributionAllocationFormValues {
-  builderAllocation?: allocationProps
-  nounsAllocation?: allocationProps
+  builderAllocation?: TokenAllocation
+  nounsAllocation?: TokenAllocation
 }
 
 export interface ContributionFormProps {
@@ -25,8 +24,6 @@ export const ContributionForm: React.FC<ContributionFormProps> = ({
   initialValues,
   handleSubmit,
 }) => {
-  const contributionAllocation = useFormStore((state) => state.contributionAllocation)
-
   const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS)
   const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS)
 
@@ -83,8 +80,8 @@ export const ContributionForm: React.FC<ContributionFormProps> = ({
 
                     <SmartInput
                       inputLabel={'Percentage'}
-                      id={`builderAllocation.allocation`}
-                      value={builderAllocation.allocation}
+                      id={`builderAllocation.allocationPercentage`}
+                      value={builderAllocation.allocationPercentage}
                       type={'number'}
                       formik={formik}
                       disabled={false}
@@ -151,8 +148,8 @@ export const ContributionForm: React.FC<ContributionFormProps> = ({
 
                     <SmartInput
                       inputLabel={'Percentage'}
-                      id={`nounsAllocation.allocation`}
-                      value={nounsAllocation.allocation}
+                      id={`nounsAllocation.allocationPercentage`}
+                      value={nounsAllocation.allocationPercentage}
                       type={'number'}
                       formik={formik}
                       disabled={false}
