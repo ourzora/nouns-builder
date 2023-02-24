@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import { AddressType, DaoContractAddresses, DaoContracts } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
-import { AdminFormValues } from '../components/Admin'
+import { AdminFormValues } from 'src/modules/dao/components/Admin'
 
 type FormValuesTransactionMap = {
   [K in keyof AdminFormValues]: {
@@ -30,7 +30,7 @@ export const formValuesToTransactionMap: FormValuesTransactionMap = {
     getTarget: (addresses) => addresses.metadata as AddressType,
     constructCalldata: ({ metadataContract }, value) =>
       metadataContract?.interface.encodeFunctionData('updateProjectURI(string)', [
-        sanitizeStringForJSON(value),
+        sanitizeStringForJSON(value as string),
       ]),
   },
   projectDescription: {

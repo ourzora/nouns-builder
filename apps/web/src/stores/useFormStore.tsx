@@ -4,7 +4,6 @@ import {
   allocationProps,
   auctionSettingsProps,
   DaoContractAddresses,
-  generalInfoProps,
   setUpArtworkProps,
   uploadArtworkErrorProps,
   votingSettingsProps,
@@ -13,14 +12,15 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
+import { GeneralFormValues } from 'src/modules/create-dao'
 
 export interface FormStoreState {
   activeSection: number
   setActiveSection: (activeSection: number) => void
   fulfilledSections: string[]
   setFulfilledSections: (section: string) => void
-  generalInfo: generalInfoProps
-  setGeneralInfo: (generalInfo: generalInfoProps) => void
+  general: GeneralFormValues
+  setGeneral: (general: GeneralFormValues) => void
   votingSettings: votingSettingsProps
   setVotingSettings: (votingSettings: votingSettingsProps) => void
   vetoPower: number | undefined
@@ -55,7 +55,7 @@ export interface FormStoreState {
 const initialState = {
   activeSection: 0,
   fulfilledSections: [],
-  generalInfo: {
+  general: {
     daoAvatar: '',
     daoName: '',
     daoSymbol: '',
@@ -135,7 +135,7 @@ export const useFormStore = create(
             : [...state.fulfilledSections],
         }))
       },
-      setGeneralInfo: (generalInfo: generalInfoProps) => set({ generalInfo }),
+      setGeneral: (general: GeneralFormValues) => set({ general }),
       setVotingSettings: (votingSettings: votingSettingsProps) => set({ votingSettings }),
       setAuctionSettings: (auctionSettings: auctionSettingsProps) =>
         set({ auctionSettings }),

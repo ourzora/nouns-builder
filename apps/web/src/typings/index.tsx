@@ -25,13 +25,6 @@ export interface CreateFormSection {
   forms: ReactElement[]
 }
 
-export interface generalInfoProps {
-  daoAvatar: string
-  daoName: string
-  daoSymbol: string
-  daoWebsite: string
-}
-
 export interface votingSettingsProps {
   proposalThreshold: number | string
   quorumThreshold: number | string

@@ -19,18 +19,19 @@ import {
   TransactionType,
 } from 'src/modules/create-proposal'
 import { AddressType, DaoContracts } from 'src/typings'
-import { generalInfoProps, auctionSettingsProps, votingSettingsProps } from 'src/typings'
+import { auctionSettingsProps, votingSettingsProps } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
 import isEqual from 'lodash/isEqual'
+import { GeneralFormValues } from 'src/modules/create-dao'
 
 interface AdminProps {
   title?: string
 }
 
 export interface AdminFormValues
-  extends Omit<generalInfoProps, 'daoName' | 'daoSymbol'>,
+  extends Omit<GeneralFormValues, 'daoName' | 'daoSymbol'>,
     auctionSettingsProps,
     votingSettingsProps {
   projectDescription: string
@@ -176,14 +177,14 @@ export const Admin: React.FC<AdminProps> = () => {
       const transactionProperties = formValuesToTransactionMap[field]
       // @ts-ignore
       const calldata = transactionProperties.constructCalldata(contracts, value)
-      const target = transactionProperties.getTarget(addresses)
+      const target = transactionProperties?.getTarget(addresses)
 
       if (target)
         transactions.push({
           type: TransactionType.CUSTOM,
           transactions: [
             {
-              functionSignature: transactionProperties.functionSignature,
+              functionSignature: transactionProperties?.functionSignature as string,
               target,
               calldata: calldata || '',
               value: '',

@@ -38,7 +38,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   title,
 }) => {
   const router = useRouter()
-  const { generalInfo, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
+  const { general, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
     useFormStore()
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const { addresses, setAddresses } = useDaoStore()
@@ -142,7 +142,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
           Copy all addresses
         </Box>
         <Box cursor={'pointer'}>
-          <CopyButton title={generalInfo?.daoName} all={true} />
+          <CopyButton title={general?.daoName} all={true} />
         </Box>
       </Flex>
       <Flex direction={'column'} style={{ boxSizing: 'border-box', width: '100%' }}>
