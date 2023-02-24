@@ -12,7 +12,7 @@ import { sdk } from 'src/data/graphql/client'
 import { CHAIN } from 'src/constants/network'
 import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { Proposal } from 'src/typings'
+import { Proposal } from "../../typings";
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>

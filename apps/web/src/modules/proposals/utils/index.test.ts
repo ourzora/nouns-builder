@@ -1,5 +1,5 @@
-import { ProposalStatus } from 'src/typings'
 import { isProposalOpen, isProposalSuccessful } from '.'
+import { ProposalStatus } from 'src/modules/proposals'
 
 describe('isProposalOpen', () => {
   it('should return true if proposal is open', () => {

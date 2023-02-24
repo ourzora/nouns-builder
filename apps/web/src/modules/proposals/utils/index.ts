@@ -1,4 +1,4 @@
-import { ProposalStatus, ProposalSucceededStatus } from 'src/typings'
+import { ProposalSucceededStatus, ProposalStatus } from 'src/modules/proposals'
 
 export const isProposalOpen = (state: ProposalStatus): boolean => {
   if (

@@ -6,7 +6,7 @@ import {
   selectTraitNameStyle,
   selectTraitNameWrapper,
 } from 'src/styles/Artwork.css'
-import { ImageProps } from 'src/typings'
+import { ImageProps } from 'src/modules/create'
 
 interface layerProps {
   trait: string

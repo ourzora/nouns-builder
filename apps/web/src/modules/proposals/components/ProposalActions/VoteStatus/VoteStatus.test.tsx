@@ -2,7 +2,8 @@ import { VoteStatus } from './VoteStatus'
 import { screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import { describe, expect, it } from 'vitest'
-import { ProposalStatus, Support } from 'src/typings'
+import { ProposalStatus } from 'src/modules/proposals'
+import { Support } from 'src/typings'
 
 describe('VoteStatus', () => {
   it('should render proposal countdown to active if state is in created', () => {

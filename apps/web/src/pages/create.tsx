@@ -9,15 +9,14 @@ import {
   General,
   Veto,
   FormHandler,
-  Artwork,
-} from 'src/modules/create'
+  Artwork, CreateFormSection
+} from "src/modules/create";
 import { Box, Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import { NextPage } from 'next'
 import Meta from 'src/components/Layout/Meta'
 import { useFormStore } from 'src/stores/useFormStore'
 import { createWrapperHalf, formWrapper, pageGrid } from 'src/styles/styles.css'
-import { CreateFormSection } from 'src/typings'
 
 const Create: NextPage = () => {
   const router = useRouter()

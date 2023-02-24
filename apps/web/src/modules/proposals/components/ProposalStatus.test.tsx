@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import dayjs from 'dayjs'
 import React from 'react'
 import { render } from 'src/test/utils'
-import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
+import { ProposalStatus as ProposalStatusEnum } from 'src/modules/proposals'
 import { describe, expect, it, vi } from 'vitest'
 
 describe('proposal status', () => {

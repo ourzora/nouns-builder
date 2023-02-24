@@ -1,12 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { Flex, Text, vars } from '@zoralabs/zord'
-import {
-  AddressType,
-  BytesType,
-  Proposal,
-  ProposalStatus,
-  ProposalSucceededStatus,
-} from 'src/typings'
+import { AddressType, BytesType } from 'src/typings'
 import { useSWRConfig } from 'swr'
 import { Countdown } from 'src/components/Countdown'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -16,9 +10,13 @@ import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { BigNumber } from 'ethers'
 import useGovernorContract from 'src/hooks/useGovernorContract'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
-
-import { isProposalSuccessful } from '../../utils'
 import { GovernorContractButton } from '../GovernorContractButton'
+import {
+  Proposal,
+  ProposalSucceededStatus,
+  ProposalStatus,
+  isProposalSuccessful,
+} from 'src/modules/proposals'
 
 interface SuccessfulProposalActionsProps {
   proposal: Proposal

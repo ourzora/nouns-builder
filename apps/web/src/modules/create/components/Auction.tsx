@@ -8,7 +8,6 @@ import {
   votingSettingsFields,
 } from 'src/components/Fields/fields/auction'
 import { useFormStore } from 'src/stores/useFormStore'
-import { auctionSettingsProps } from 'src/typings'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import {
   defaultBackButton,
@@ -18,8 +17,9 @@ import {
 } from 'src/components/Fields/styles.css'
 import { isEmpty } from 'src/utils/helpers'
 import { Icon } from 'src/components/Icon'
+import { auctionSettingsProps } from 'src/modules/create'
 
-interface AuctionSettingsProps {
+interface AuctionProps {
   title: string
 }
 
@@ -34,7 +34,7 @@ const animation = {
 
 interface AuctionFormValues extends auctionSettingsProps {}
 
-export const Auction: React.FC<AuctionSettingsProps> = ({ title }) => {
+export const Auction: React.FC<AuctionProps> = ({ title }) => {
   const {
     setAuctionSettings,
     auctionSettings,

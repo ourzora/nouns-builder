@@ -2,12 +2,16 @@ import React, { Fragment } from 'react'
 import { Flex } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import { useDaoStore, useLayoutStore } from 'src/stores'
-import { Proposal, ProposalStatus, ProposalVote } from 'src/typings'
+import {
+  ProposalStatus,
+  ProposalVote,
+  Proposal,
+  isProposalSuccessful,
+  isProposalOpen,
+} from 'src/modules/proposals'
 import { AddressType } from 'src/typings'
 import { useContractReads } from 'wagmi'
 import { governorAbi } from 'src/data/contract/abis'
-
-import { isProposalOpen, isProposalSuccessful } from '../../utils'
 import { OwnerActions } from './OwnerActions'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
 import { VoteStatus } from './VoteStatus'

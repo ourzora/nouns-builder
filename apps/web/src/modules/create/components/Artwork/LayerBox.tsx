@@ -12,7 +12,7 @@ import {
   artworkSettingsPropertyCount,
   artworkSettingsPropertyName,
 } from 'src/styles/Artwork.css'
-import { DragAndDropProps, ImageProps, OrderedLayersProps } from 'src/typings'
+import { DragAndDropProps, ImageProps, OrderedLayersProps } from 'src/modules/create'
 
 interface SettingsBoxProps {
   trait: string

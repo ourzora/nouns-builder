@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import dayjs from 'dayjs'
 import React from 'react'
-import { ProposalStatus } from 'src/typings'
+import { ProposalStatus } from 'src/modules/proposals'
 import { describe, expect, it, vi } from 'vitest'
 
 describe('proposaal card', () => {

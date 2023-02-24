@@ -1,7 +1,7 @@
 import { Box, Flex, Label, Paragraph } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import React from 'react'
-import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
+import { ProposalStatus as ProposalStatusEnum } from 'src/modules/proposals'
 
 import { parseBgColor, parseState, parseTime } from './ProposalStatus.helper'
 

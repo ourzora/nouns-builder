@@ -2,10 +2,8 @@ import React from 'react'
 import { screen } from '@testing-library/react'
 import dayjs from 'dayjs'
 import { describe, expect, it, vi } from 'vitest'
-
 import { render } from 'src/test/utils'
-import { Proposal, ProposalStatus } from 'src/typings'
-
+import { ProposalStatus, Proposal } from 'src/modules/proposals'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
 
 describe('proposal status', () => {

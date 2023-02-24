@@ -4,7 +4,6 @@ import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import { shallow } from 'zustand/shallow'
 import { getEnsAddress } from 'src/utils/ens'
-import { allocationProps } from 'src/typings'
 import { Formik, Form, FieldArray, FormikProps } from 'formik'
 import { Button, Flex } from '@zoralabs/zord'
 import FounderAllocation from 'src/components/Fields/Allocation/FounderAllocation'
@@ -15,6 +14,7 @@ import {
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
+import { allocationProps } from "../typings";
 
 interface FounderProps {
   title: string
