@@ -4,7 +4,7 @@ import { Icon } from 'src/components/Icon'
 import { Avatar } from 'src/components/Avatar'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { useTokenContract } from 'src/modules/dao'
+import { useTokenContract } from 'src/hooks'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
 import { walletSnippet } from 'src/utils/helpers'
 

@@ -13,8 +13,8 @@ import {
   About,
   Proposals,
   SectionHandler,
-  useVotes,
 } from 'src/modules/dao'
+import { useVotes } from 'src/hooks'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
