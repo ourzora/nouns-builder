@@ -12,7 +12,7 @@ import {
   CreateProposalHeading,
   ReviewProposalForm,
   useProposalStore,
-} from 'src/modules/transaction-builder'
+} from 'src/modules/create-proposal'
 
 const ReviewProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

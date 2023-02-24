@@ -18,7 +18,7 @@ import { getProposals, ProposalsResponse } from 'src/data/graphql/requests/propo
 import { AddressType } from 'src/typings'
 import Pagination from 'src/components/Pagination'
 import { ProposalCard } from 'src/modules/proposal'
-import { useProposalStore, Upgrade } from 'src/modules/transaction-builder'
+import { useProposalStore, Upgrade } from 'src/modules/create-proposal'
 
 import { useDelegate } from '../../hooks'
 import { CurrentDelegate } from './CurrentDelegate'

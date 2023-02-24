@@ -17,7 +17,7 @@ import {
   useProposalStore,
   BuilderTransaction,
   TransactionType,
-} from 'src/modules/transaction-builder'
+} from 'src/modules/create-proposal'
 import { AddressType, DaoContracts } from 'src/typings'
 import { generalInfoProps, auctionSettingsProps, votingSettingsProps } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'

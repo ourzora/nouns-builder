@@ -22,7 +22,7 @@ import {
   deployCheckboxStyleVariants,
 } from 'src/styles/deploy.css'
 import { compareAndReturn, isEmpty } from 'src/utils/helpers'
-import { useCustomTransactionStore } from 'src/modules/transaction-builder/stores/useCustomTransactionStore'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 
 interface FieldProps {
   name: string
