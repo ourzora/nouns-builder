@@ -10,7 +10,7 @@ import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
 } from 'src/styles/deploy.css'
-import { Icon } from '../Icon/Icon'
+import { Icon } from 'src/components/Icons'
 
 interface StickySaveProps {
   confirmText: string
