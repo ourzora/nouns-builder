@@ -4,7 +4,7 @@ import { exploreGrid } from './Explore.css'
 import { ExplorePageData } from 'src/typings'
 import ExploreToolbar from './ExploreToolbar'
 import ExploreNoDaos from './ExploreNoDaos'
-import { DaoCard } from 'src/modules/dao/components/DaoCard/DaoCard'
+import { DaoCard } from '../DaoCard'
 import { useRouter } from 'next/router'
 import Pagination from 'src/components/Pagination'
 

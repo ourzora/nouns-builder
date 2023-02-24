@@ -1,7 +1,7 @@
 import useDaoCard from './useDaoCard'
 import React from 'react'
 import { DaoProps } from 'src/pages'
-import { DaoCard } from 'src/modules/dao/components/DaoCard/DaoCard'
+import { DaoCard } from 'src/modules/dao'
 
 interface DaoCardProps {
   dao: DaoProps
