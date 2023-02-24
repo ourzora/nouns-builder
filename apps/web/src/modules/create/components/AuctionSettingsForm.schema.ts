@@ -8,7 +8,7 @@ export interface AuctionSettingsFormValues {
   quorumThreshold?: number
 }
 
-export const validateAuctionSettings = Yup.object().shape({
+export const auctionSettingsValidationSchema = Yup.object().shape({
   auctionDuration: Yup.object()
     .shape({
       seconds: Yup.number()

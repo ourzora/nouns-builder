@@ -1,7 +1,7 @@
 import { isValidAddress } from 'src/utils/ens'
 import { vetoBurnDelegate } from './veto'
 import { Provider } from '@ethersproject/abstract-provider'
-import { validateAuctionSettings } from 'src/modules/create'
+import { auctionSettingsValidationSchema } from 'src/modules/create'
 import {
   DAYS_HOURS_MINS_SECS,
   NUMBER,
@@ -13,7 +13,7 @@ import * as Yup from 'yup'
 
 export const validateAdmin = (provider: Provider | undefined) =>
   Yup.object()
-    .concat(validateAuctionSettings)
+    .concat(auctionSettingsValidationSchema)
     .concat(
       Yup.object()
         .shape({

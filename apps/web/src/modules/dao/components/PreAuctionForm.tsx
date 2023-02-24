@@ -6,7 +6,7 @@ import Form from 'src/components/Fields/Form'
 import { useAuctionContract } from 'src/hooks'
 import { fromSeconds, toSeconds } from 'src/utils/helpers'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { validateAuctionSettings } from 'src/modules/create'
+import { auctionSettingsValidationSchema } from 'src/modules/create'
 import { DAYS_HOURS_MINS_SECS, NUMBER } from 'src/components/Fields/types'
 
 interface PreAuctionFormSettingsProps {
@@ -93,7 +93,7 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
             },
             auctionReservePrice: reservePrice || 0,
           }}
-          validationSchema={validateAuctionSettings}
+          validationSchema={auctionSettingsValidationSchema}
           buttonText={'Continue'}
           submitCallback={(values, setHasConfirmed, formik) =>
             handleUpdateSettings(values, setHasConfirmed, formik)

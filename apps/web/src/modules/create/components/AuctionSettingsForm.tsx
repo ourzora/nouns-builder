@@ -17,7 +17,7 @@ import { NUMBER } from 'src/components/Fields/types'
 
 import {
   AuctionSettingsFormValues,
-  validateAuctionSettings,
+  auctionSettingsValidationSchema,
 } from './AuctionSettingsForm.schema'
 
 interface AuctionSettingsFormProps {
@@ -73,7 +73,7 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
     <>
       <Formik<AuctionSettingsFormValues>
         initialValues={initialValues}
-        validationSchema={validateAuctionSettings}
+        validationSchema={auctionSettingsValidationSchema}
         onSubmit={handleSubmit}
         enableReinitialize={true}
         validateOnMount={true}
