@@ -8,7 +8,6 @@ import { auctionAbi } from 'src/data/contract/abis'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/data/contract/requests/getBids'
 
-import { useAuction } from '../../hooks'
 import { auctionGrid, auctionWrapper, auctionWrapVariants } from './Auction.css'
 import { AuctionDetails } from './AuctionDetails'
 import { ActionsWrapper, BidHistory } from './BidHistory'
@@ -17,6 +16,7 @@ import { BidAmount } from './BidAmount'
 import { WinningBidder } from './WinningBidder'
 import { AuctionImage } from './AuctionImage'
 import { AuctionTokenPicker } from './AuctionTokenPicker'
+import { useAuctionEvents } from '../hooks'
 
 interface AuctionControllerProps {
   auctionAddress: string
@@ -44,7 +44,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
 
   const isTokenActiveAuction = !!auction?.tokenId && auction.tokenId.eq(token.id)
 
-  useAuction({
+  useAuctionEvents({
     collection,
     isTokenActiveAuction,
     tokenId: token.id,

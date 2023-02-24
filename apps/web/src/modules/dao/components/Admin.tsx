@@ -25,7 +25,7 @@ import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
 import isEqual from 'lodash/isEqual'
 
-interface AdminFormProps {
+interface AdminProps {
   title?: string
 }
 
@@ -51,7 +51,7 @@ export interface AdminFormValues
   vetoer: string
 }
 
-export const AdminForm: React.FC<AdminFormProps> = () => {
+export const Admin: React.FC<AdminProps> = () => {
   const {
     query: { token },
     push,

@@ -1,7 +1,7 @@
 import { squareAvatar, avatarVariants } from './Avatar.css'
 import { Box, BoxProps } from '@zoralabs/zord'
 import { useMemo } from 'react'
-import useDaoCard from 'src/components/Home/useDaoCard'
+import { useDaoFeedCard } from 'src/modules/dao'
 import { gradientForAddress } from 'src/utils/gradient'
 import Image from 'next/image'
 
@@ -22,7 +22,7 @@ export function DaoAvatar({
   src,
   ...props
 }: DaoAvatarProps) {
-  const { tokenUri } = useDaoCard({
+  const { tokenUri } = useDaoFeedCard({
     collectionAddress: collectionAddress,
     auctionAddress: auctionAddress,
   })

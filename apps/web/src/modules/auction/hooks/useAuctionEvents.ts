@@ -9,7 +9,7 @@ import getBids from 'src/data/contract/requests/getBids'
 import { auctionAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
 
-export const useAuction = ({
+export const useAuctionEvents = ({
   collection,
   tokenId,
   isTokenActiveAuction,

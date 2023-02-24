@@ -17,7 +17,10 @@ interface AuctionProps {
   settled: boolean
 }
 
-const useDaoCard = ({ collectionAddress, auctionAddress }: useDaoCardProps) => {
+export const useDaoFeedCard = ({
+  collectionAddress,
+  auctionAddress,
+}: useDaoCardProps) => {
   const {
     data: auction,
     isError: isErrorAuction,
@@ -66,5 +69,3 @@ const useDaoCard = ({ collectionAddress, auctionAddress }: useDaoCardProps) => {
     endTime: auction?.endTime || 0,
   }
 }
-
-export default useDaoCard

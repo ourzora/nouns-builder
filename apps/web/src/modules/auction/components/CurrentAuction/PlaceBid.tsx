@@ -10,7 +10,7 @@ import { useDaoStore } from 'src/stores'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/data/contract/requests/getBids'
 
-import { useMinBidIncrement } from '../../../hooks'
+import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 
 interface PlaceBidProps {

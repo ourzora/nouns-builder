@@ -4,12 +4,12 @@ import { useLayoutStore } from 'src/stores'
 import useSWR from 'swr'
 import { userDaosFilter } from 'src/data/graphql/requests/exploreQueries'
 import { Grid } from '@zoralabs/zord'
-import { DaoCard } from 'src/components/DaoCard'
+import { DaoCard } from '../DaoCard'
 import ExploreNoDaos from './ExploreNoDaos'
 import { exploreGrid } from './Explore.css'
 import SWR_KEYS from 'src/constants/swrKeys'
 
-const ExploreMyDaos = () => {
+export const ExploreMyDaos = () => {
   const signerAddress = useLayoutStore((state) => state.signerAddress)
 
   const { data } = useSWR(
@@ -41,5 +41,3 @@ const ExploreMyDaos = () => {
     </>
   )
 }
-
-export default ExploreMyDaos

@@ -4,16 +4,16 @@ import { exploreGrid } from './Explore.css'
 import { ExplorePageData } from 'src/typings'
 import ExploreToolbar from './ExploreToolbar'
 import ExploreNoDaos from './ExploreNoDaos'
-import { DaoCard } from 'src/components/DaoCard'
+import { DaoCard } from '../DaoCard'
 import { useRouter } from 'next/router'
 import Pagination from 'src/components/Pagination'
 
-interface ExploreLayoutProps {
+interface ExploreProps {
   daos?: ExplorePageData['daos'] | null
   pageInfo?: ExplorePageData['pageInfo'] | null
 }
 
-const ExploreLayout: React.FC<ExploreLayoutProps> = ({ daos, pageInfo }) => {
+export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo }) => {
   const router = useRouter()
   const pathname = router.query.address
     ? `/explore/${router.query.address}`
@@ -104,5 +104,3 @@ const ExploreLayout: React.FC<ExploreLayoutProps> = ({ daos, pageInfo }) => {
     </Fragment>
   )
 }
-
-export default ExploreLayout
