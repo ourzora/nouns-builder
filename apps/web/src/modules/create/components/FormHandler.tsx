@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import { motion } from 'framer-motion'
-import { atoms, Box, Flex, Heading } from '@zoralabs/zord'
+import { Box, Text, Heading } from '@zoralabs/zord'
 import { CreateFormSection } from 'src/typings'
 import { useFormStore } from 'src/stores/useFormStore'
 
@@ -12,7 +12,12 @@ interface FormHandler {
   sections: CreateFormSection[]
 }
 
-export const FormHandler: React.FC<FormHandler> = ({ forms, title, heading, subHeading }) => {
+export const FormHandler: React.FC<FormHandler> = ({
+  forms,
+  title,
+  heading,
+  subHeading,
+}) => {
   const { activeSectionCurrentIndex, setActiveSectionCurrentIndex } = useFormStore()
 
   /*  initialize first form in forms array */
@@ -22,18 +27,7 @@ export const FormHandler: React.FC<FormHandler> = ({ forms, title, heading, subH
 
   return (
     <Box>
-      <Flex
-        fontSize={12}
-        lineHeight={20}
-        className={atoms({
-          textTransform: 'uppercase',
-        })}
-        style={{
-          letterSpacing: '.05em',
-        }}
-      >
-        Create A dao
-      </Flex>
+      <Text variant={'eyebrow'}>Create A dao</Text>
       <Heading as={'h3'} mt={'x0'} mb={'x8'} fontSize={40}>
         {!heading
           ? title

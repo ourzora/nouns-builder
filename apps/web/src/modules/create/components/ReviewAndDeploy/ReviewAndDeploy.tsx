@@ -35,7 +35,6 @@ interface ReviewAndDeploy {
   title: string
 }
 
-
 const DEPLOYMENT_ERROR = {
   MISMATCHING_SIGNER:
     'Oops! It looks like the founder address submitted is different than the current signer address. Please go back to the allocation step and re-submit the founder address.',
@@ -135,26 +134,17 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
           Number((Number(auctionSettings?.quorumThreshold) * 100).toFixed(2))
         )
       : BigNumber.from('0'),
+    vetoer:
+      vetoPower === 0
+        ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
+        : ethers.utils.getAddress(NULL_ADDRESS), // 0 === YES in Radio component
   }
-
-  const vetoer =
-    vetoPower === 0
-      ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
-      : ethers.utils.getAddress(NULL_ADDRESS) // 0 === YES in Radio component
 
   const { config, isError } = usePrepareContractWrite({
     address: PUBLIC_MANAGER_ADDRESS,
     abi: managerAbi,
     functionName: 'deploy',
-    args: [
-      founderParams,
-      tokenParams,
-      auctionParams,
-      {
-        ...govParams,
-        vetoer,
-      },
-    ],
+    args: [founderParams, tokenParams, auctionParams, govParams],
   })
 
   const { writeAsync } = useContractWrite(config)
