@@ -41,6 +41,7 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
     setActiveSection,
     activeSection,
   } = useFormStore()
+  const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false)
 
   const initialValues: AuctionSettingsFormValues = {
     auctionDuration: {
@@ -67,8 +68,6 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
   const handlePrev = () => {
     setActiveSection(activeSection - 1)
   }
-
-  const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false)
 
   return (
     <>
