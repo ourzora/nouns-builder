@@ -8,19 +8,43 @@ import { ArtworkUpload } from './ArtworkUpload'
 import { useFormStore } from 'src/stores/useFormStore'
 import { Formik, Form } from 'formik'
 import { validationSchemaArtwork } from './Artwork.schema'
+import { Flex, Button } from '@zoralabs/zord'
+import { Icon } from 'src/components/Icon'
+
+import { ArtworkFormValues } from './Artwork.schema'
 
 interface ArtworkProps {
   title: string
 }
 
-interface ArtworkFormValues {}
-
 export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
-  const { setSetUpArtwork, setUpArtwork } = useFormStore()
+  const {
+    setSetUpArtwork,
+    setUpArtwork,
+    setFulfilledSections,
+    activeSection,
+    setActiveSection,
+  } = useFormStore()
   const initialValues = {
     projectDescription: setUpArtwork?.projectDescription || '',
     artwork: setUpArtwork?.artwork || [],
     filesLength: setUpArtwork?.filesLength || '',
+  }
+
+  const handlePrevious = () => {
+    setActiveSection(activeSection - 1)
+  }
+
+  const handleSubmit = ({
+    projectDescription,
+    artwork,
+    filesLength,
+  }: ArtworkFormValues) => {
+    // setSetUpArtwork()
+    console.log(projectDescription, artwork, filesLength)
+    return
+    setFulfilledSections(title)
+    setActiveSection(activeSection + 1)
   }
 
   return (
@@ -40,7 +64,7 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
       validateOnMount={true}
       validateOnChange={true}
       validationSchema={validationSchemaArtwork}
-      onSubmit={setSetUpArtwork}
+      onSubmit={handleSubmit}
     >
       {(formik) => (
         <Form>
@@ -52,8 +76,8 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             errorMessage={
-              formik.values[field.name] && formik.errors[field.name]
-                ? formik.errors[field.name]
+              formik.touched?.projectDescription && formik.errors?.projectDescription
+                ? formik.errors?.projectDescription
                 : undefined
             }
             placeholder={'Nouns is an experiment which combines...'}
@@ -70,11 +94,37 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
               'Builder uses folder hierarchy to organize your assets. Upload a single folder containing a subfolder for each trait. Each subfolder should contain every variant for that trait.'
             }
             errorMessage={
-              formik.touched[field.name] && formik.errors[field.name]
-                ? formik.errors[field.name]
+              formik.touched.artwork && formik.errors?.artwork
+                ? formik.errors?.artwork
                 : undefined
             }
           />
+
+          <Flex justify={'space-between'} mt={'x8'}>
+            <Button
+              justify={'center'}
+              align={'center'}
+              borderRadius={'curved'}
+              h={'x15'}
+              minH={'x15'}
+              minW={'x15'}
+              variant={'secondary'}
+              onClick={handlePrevious}
+              aria-label="Back"
+            >
+              <Icon id="arrowLeft" />
+            </Button>
+            <Button
+              flex={1}
+              borderRadius={'curved'}
+              width={'auto'}
+              ml={'x2'}
+              minH={'x15'}
+              type="submit"
+            >
+              Continue
+            </Button>
+          </Flex>
         </Form>
       )}
     </Formik>

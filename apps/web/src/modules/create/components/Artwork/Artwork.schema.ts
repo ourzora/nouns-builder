@@ -1,5 +1,13 @@
 import * as Yup from 'yup'
 
+export interface ArtworkFormValues {
+  projectDescription: string
+  artwork: { trait: string; properties: string[]; ipfs?: {}[] }[]
+  filesLength: number | string
+  externalUrl?: string
+  collectionName?: string
+}
+
 export const validationSchemaArtwork = Yup.object().shape({
   projectDescription: Yup.string().required('*').max(5000, '< 5000 characters'),
   artwork: Yup.array()

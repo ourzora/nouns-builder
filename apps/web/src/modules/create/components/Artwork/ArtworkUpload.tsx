@@ -22,6 +22,7 @@ import React, {
   ChangeEventHandler,
   ReactElement,
   useEffect,
+  useState,
 } from 'react'
 import { LayerOrdering } from './LayerOrdering'
 import { Playground } from './Playground'
@@ -48,28 +49,32 @@ interface ArtworkFormProps {
   helperText?: string
 }
 
+interface ArtworkUploadError {
+  maxTraits?: string | null
+  mime?: string | null
+  directory?: string | null
+  dimensions?: string | null
+}
+
 export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
   inputLabel,
   helperText,
   errorMessage,
   formik,
 }) => {
-  /*
-
-    import store
-
-  */
   const {
     ipfsUpload,
     setSetUpArtwork,
     setUpArtwork,
     setIpfsUpload,
-    setIsUploadingToIPFS,
-    setUploadArtworkError,
-    uploadArtworkError,
     isUploadingToIPFS,
+    setIsUploadingToIPFS,
   } = useFormStore()
   const { setOrderedLayers } = useFormStore()
+
+  const [uploadArtworkError, setUploadArtworkError] = useState<
+    ArtworkUploadError | undefined
+  >()
 
   const { artwork } = setUpArtwork
 
@@ -621,7 +626,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
           multiple={true}
           ref={dropInput}
           onChange={(event) => {
-            setUploadArtworkError(null)
+            setUploadArtworkError(undefined)
             setFiles(event.currentTarget.files)
             setOrderedLayers([])
           }}
