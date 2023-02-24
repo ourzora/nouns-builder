@@ -2,7 +2,7 @@ import { transactionValueFields, validateTransactionValue } from './fields'
 import { Flex } from '@zoralabs/zord'
 import React from 'react'
 import Form from 'src/components/Fields/Form'
-import { useCustomTransactionStore } from 'src/modules/create-proposal/stores/useCustomTransactionStore'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 
 interface ValueProps {
   title: string

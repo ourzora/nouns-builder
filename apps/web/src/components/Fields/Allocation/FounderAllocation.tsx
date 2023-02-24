@@ -5,8 +5,10 @@ import React from 'react'
 import SmartInput from '../SmartInput'
 import DatePicker from '../Date'
 import { allocationProps, auctionSettingsProps } from 'src/typings'
-import { calculateMaxAllocation } from 'src/modules/create-dao/utils'
-import { FounderAllocationFormValues } from 'src/modules/create-dao'
+import {
+  calculateMaxAllocation,
+  FounderAllocationFormValues,
+} from 'src/modules/create-dao'
 
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues

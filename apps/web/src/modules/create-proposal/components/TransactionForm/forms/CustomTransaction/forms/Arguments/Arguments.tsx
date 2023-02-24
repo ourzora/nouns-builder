@@ -4,7 +4,7 @@ import { isEqual } from 'lodash'
 import React from 'react'
 import Form from 'src/components/Fields/Form'
 import { TEXT, TEXTAREA } from 'src/components/Fields/types'
-import { useCustomTransactionStore } from 'src/modules/create-proposal/stores/useCustomTransactionStore'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import {
   matchInputFromName,
   matchTypeParameters,

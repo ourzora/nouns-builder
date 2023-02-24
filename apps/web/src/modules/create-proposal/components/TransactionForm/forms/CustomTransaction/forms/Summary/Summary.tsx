@@ -8,7 +8,7 @@ import React from 'react'
 import { useLayoutStore } from 'src/stores/useLayoutStore'
 import { getEnsAddress } from 'src/utils/ens'
 import { matchTypeParameters, normalizePathName, RAW_DATA_KEY } from 'src/utils/formABI'
-import { useCustomTransactionStore } from 'src/modules/create-proposal/stores/useCustomTransactionStore'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import { walletSnippet } from 'src/utils/helpers'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 
