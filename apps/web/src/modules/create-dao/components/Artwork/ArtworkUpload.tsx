@@ -13,6 +13,7 @@ import {
   noneSelectedStyle,
   uploadErrorBox,
   uploadSuccessBox,
+  allocationToggleButton
 } from 'src/components/Fields/styles.css'
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
