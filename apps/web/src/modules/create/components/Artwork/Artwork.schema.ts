@@ -1,8 +1,14 @@
 import * as Yup from 'yup'
 
+interface Artwork {
+  trait: string
+  properties: string[]
+  ipfs?: any
+}
+
 export interface ArtworkFormValues {
   projectDescription: string
-  artwork: { trait: string; properties: string[]; ipfs?: {}[] }[]
+  artwork: Array<Artwork>
   filesLength: number | string
   externalUrl?: string
   collectionName?: string
@@ -17,5 +23,5 @@ export const validationSchemaArtwork = Yup.object().shape({
         properties: Yup.array().of(Yup.string()),
       })
     )
-    .min(1, 'artwork required'),
+    .min(1, 'Artwork required'),
 })

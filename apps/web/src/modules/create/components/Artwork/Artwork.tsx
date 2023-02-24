@@ -1,30 +1,22 @@
 import React from 'react'
-import {
-  setUpArtworkFields,
-  validateSetUpArtwork,
-} from 'src/components/Fields/fields/artwork'
-import TextArea from 'src/components/Fields/TextArea'
-import { ArtworkUpload } from './ArtworkUpload'
-import { useFormStore } from 'src/stores/useFormStore'
 import { Formik, Form } from 'formik'
-import { validationSchemaArtwork } from './Artwork.schema'
-import { Flex, Button } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
 
-import { ArtworkFormValues } from './Artwork.schema'
+import TextArea from 'src/components/Fields/TextArea'
+import { Icon } from 'src/components/Icon'
+import { useFormStore } from 'src/stores/useFormStore'
+import { Flex, Button } from '@zoralabs/zord'
+
+import { ArtworkUpload } from './ArtworkUpload'
+import { ArtworkFormValues, validationSchemaArtwork } from './Artwork.schema'
 
 interface ArtworkProps {
   title: string
 }
 
 export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
-  const {
-    setSetUpArtwork,
-    setUpArtwork,
-    setFulfilledSections,
-    activeSection,
-    setActiveSection,
-  } = useFormStore()
+  const { setUpArtwork, setFulfilledSections, activeSection, setActiveSection } =
+    useFormStore()
+
   const initialValues = {
     projectDescription: setUpArtwork?.projectDescription || '',
     artwork: setUpArtwork?.artwork || [],
@@ -35,28 +27,12 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
     setActiveSection(activeSection - 1)
   }
 
-  const handleSubmit = ({
-    projectDescription,
-    artwork,
-    filesLength,
-  }: ArtworkFormValues) => {
-    // setSetUpArtwork()
-    console.log(projectDescription, artwork, filesLength)
-    return
+  const handleSubmit = (_values: ArtworkFormValues) => {
     setFulfilledSections(title)
     setActiveSection(activeSection + 1)
   }
 
   return (
-    // <Form
-    //   initialValues={initialValues}
-    //   validationSchema={validateSetUpArtwork}
-    //   buttonText={'Continue'}
-    //   enableReinitialize={true}
-    //   fields={setUpArtworkFields}
-    //   createSectionTitle={title}
-    //   submitCallback={setSetUpArtwork}
-    // />
     <Formik<ArtworkFormValues>
       initialValues={initialValues}
       enableReinitialize
