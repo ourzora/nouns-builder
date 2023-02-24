@@ -27,29 +27,6 @@ export const proposalFormTitle = style({
   },
 })
 
-export const proposalRequirementText = style({
-  color: '#808080',
-  marginTop: '-24px',
-})
-
-export const proposalBackButton = style({
-  borderRadius: '8px',
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-      background: '#F2F2F2',
-    },
-  },
-})
-
-export const proposalInfoContainer = style({
-  flexDirection: 'row',
-  border: '2px solid #F2F2F2',
-  borderRadius: '0.5rem',
-  padding: '0.5rem',
-  margin: '1rem 0',
-})
-
 export const submitProposalBtn = style({
   fontSize: '1rem',
   fontFamily: 'ptRoot!important',
@@ -65,46 +42,7 @@ export const submitProposalBtn = style({
   },
 })
 
-export const submitVoteBtn = style({
-  fontSize: '1rem',
-  fontFamily: 'ptRoot!important',
-  borderRadius: '12px',
-  height: 40,
-  color: 'white',
-  backgroundColor: '#000000',
-  selectors: {
-    '&:hover': {
-      color: 'white',
-      backgroundColor: '#00A8FF',
-    },
-  },
-})
-
 export const selectDelegateBtn = style({
-  fontSize: '1rem',
-  fontFamily: 'ptRoot!important',
-  borderRadius: '12px',
-  height: 40,
-})
-
-export const voteDelegateWrapper = style({
-  '@media': {
-    'screen and (max-width: 768px)': {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-    },
-  },
-})
-
-export const voteDelegateTitle = style({
-  '@media': {
-    'screen and (max-width: 768px)': {
-      marginBottom: 24,
-    },
-  },
-})
-
-export const proposalButton = style({
   fontSize: '1rem',
   fontFamily: 'ptRoot!important',
   borderRadius: '12px',
@@ -171,17 +109,6 @@ export const propDataGrid = style([
     },
   },
 ])
-
-export const voteIconsGrid = style({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(5, 1fr)',
-  gap: '0.3rem',
-  '@media': {
-    'screen and (max-width: 768px)': {
-      display: 'none',
-    },
-  },
-})
 
 export const voteModalFieldset = style({
   outline: 'none',

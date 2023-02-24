@@ -5,7 +5,7 @@ import {
   confirmRemoveHeadingStyle,
   confirmRemoveHelper,
   dismissButton,
-} from './styles.css'
+} from './Queue.css'
 
 interface ConfrimRemoveProps {
   handleRemoveTransaction: () => void

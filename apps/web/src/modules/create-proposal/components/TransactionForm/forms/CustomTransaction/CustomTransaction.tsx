@@ -6,7 +6,7 @@ import { AddressType, AddTransactionSection } from 'src/typings'
 
 import { useProposalStore, useCustomTransactionStore } from '../../../../stores'
 import { TransactionType } from '../../../../constants'
-import { customTransactionWrapper, transactionFormWrapper } from './styles.css'
+import { customTransactionWrapper, transactionFormWrapper } from './CustomTransaction.css'
 import { ABI, Address, Arguments, Function, Summary, Value } from './forms'
 import { FormHandler } from './FormHandler'
 import { FormHeading } from './FormHeading'

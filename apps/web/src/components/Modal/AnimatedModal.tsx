@@ -1,4 +1,4 @@
-import { animatedModal, animatedModalContent, animatedModalTrigger } from './styles.css'
+import { animatedModal, animatedModalContent, animatedModalTrigger } from './Modal.css'
 import { Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { ReactElement } from 'react'

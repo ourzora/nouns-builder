@@ -12,21 +12,6 @@ export const infoSectionStyle = style({
   },
 })
 
-export const infoSectionSubStyle = style({
-  display: 'inline-flex',
-  '@media': {
-    '(max-width: 768px)': {
-      paddingLeft: '5px',
-      paddingRight: '5px',
-    },
-  },
-})
-
-export const infoSectionVariants = styleVariants({
-  default: [infoSectionStyle],
-  sub: [infoSectionSubStyle],
-})
-
 export const infoSectionValueWrapperStyle = style({
   width: '100%',
   fontSize: 18,
@@ -47,14 +32,6 @@ export const infoSectionValueVariants = styleVariants({
   sub: [infoSectionValueWrapperStyle, { paddingLeft: 0 }],
 })
 
-export const copyAddressButtonStyle = style({
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
 export const infoSectionLabelStyle = style({
   fontSize: 12,
   fontWeight: 500,
@@ -69,13 +46,6 @@ export const successHeadingStyle = style({
 
 export const infoSectionValueStyle = style({
   fontSize: 18,
-})
-
-export const infoSectionWrapper = style({
-  display: 'flex',
-  overflow: 'hidden',
-  height: 0,
-  width: '100%',
 })
 
 export const reviewSectionStyle = style({
