@@ -27,7 +27,7 @@ import {
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 import { compareAndReturn } from 'src/utils/helpers'
-import { ArtworkUpload } from 'src/modules/create'
+import { ArtworkUpload } from 'src/modules/create-dao'
 
 interface FieldSwitchProps {
   field: {
