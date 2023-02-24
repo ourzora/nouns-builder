@@ -10,7 +10,6 @@ import useSWR, { unstable_serialize } from 'swr'
 import getToken from 'src/data/contract/requests/getToken'
 import SWR_KEYS from 'src/constants/swrKeys'
 import Meta from 'src/components/Layout/Meta'
-import { TokenWithWinner } from 'src/typings'
 import {
   ProposalDescription,
   ProposalHeader,
@@ -24,6 +23,7 @@ import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { TokenWithWinner } from "../../../../modules/dao";
 
 export interface VotePageProps {
   proposalId: string

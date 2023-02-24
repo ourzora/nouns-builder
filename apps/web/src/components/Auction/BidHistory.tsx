@@ -2,7 +2,7 @@ import AuctionAllBids from './AuctionAllBids'
 import { Button, Flex } from '@zoralabs/zord'
 import dynamic from 'next/dynamic'
 import React, { ReactNode } from 'react'
-import { Bid } from 'src/typings'
+import { Bid } from 'src/modules/dao'
 
 const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal'), {
   ssr: false,

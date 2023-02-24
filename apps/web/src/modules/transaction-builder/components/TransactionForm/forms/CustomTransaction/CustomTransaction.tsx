@@ -1,11 +1,13 @@
 import React from 'react'
 import { Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
-
-import { AddressType, AddTransactionSection } from 'src/typings'
-
-import { useProposalStore, useCustomTransactionStore } from '../../../../stores'
-import { TransactionType } from '../../../../constants'
+import { AddressType } from 'src/typings'
+import {
+  useProposalStore,
+  useCustomTransactionStore,
+  TransactionType,
+  AddTransactionSection,
+} from 'src/modules/transaction-builder'
 import { customTransactionWrapper, transactionFormWrapper } from './styles.css'
 import { ABI, Address, Arguments, Function, Summary, Value } from './forms'
 import { FormHandler } from './FormHandler'

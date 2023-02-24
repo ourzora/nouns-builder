@@ -4,7 +4,7 @@ import pickBy from 'lodash/pickBy'
 import isNil from 'lodash/isNil'
 import isUndefined from 'lodash/isUndefined'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-import { AddressType, DaoContractAddresses } from 'src/typings'
+import { AddressType} from 'src/typings'
 import { useContract, useContractReads } from 'wagmi'
 import { Contract } from 'ethers'
 import useSWR from 'swr'
@@ -18,6 +18,7 @@ import {
 import SWR_KEYS from 'src/constants/swrKeys'
 import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
 import { TransactionType, CONTRACT_VERSION_DETAILS, VersionType } from '../constants'
+import { DaoContractAddresses } from "../../dao";
 
 type Proposal = ProposalsWithCalldataQuery['nouns']['nounsProposals']['nodes'][number]
 

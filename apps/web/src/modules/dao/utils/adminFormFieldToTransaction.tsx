@@ -1,8 +1,9 @@
 import { ethers } from 'ethers'
-import { AddressType, DaoContractAddresses, DaoContracts } from 'src/typings'
+import { AddressType} from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
 import { AdminFormValues } from 'src/modules/dao/components/AdminForm'
+import { DaoContractAddresses, DaoContracts } from "../typings";
 
 type FormValuesTransactionMap = {
   [K in keyof AdminFormValues]: {

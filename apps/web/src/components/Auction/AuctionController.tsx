@@ -2,19 +2,18 @@ import React, { Fragment } from 'react'
 import { readContract } from '@wagmi/core'
 import useSWR from 'swr'
 import { Flex, Grid } from '@zoralabs/zord'
-
 import useAuction from 'src/hooks/useAuction'
-import { AddressType, TokenWithWinner } from 'src/typings'
+import { AddressType } from 'src/typings'
 import { auctionAbi } from 'src/data/contract/abis'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/data/contract/requests/getBids'
-
 import { auctionGrid, auctionWrapper, auctionWrapVariants } from './Auction.css'
 import { AuctionDetails, BidAmount, WinningBidder } from './AuctionDetails'
 import AuctionImage from './AuctionImage'
 import AuctionTokenPicker from './AuctionTokenPicker'
 import { ActionsWrapper, BidHistory } from './BidHistory'
 import { CurrentAuction } from './CurrentAuction'
+import { TokenWithWinner } from 'src/modules/dao'
 
 interface AuctionControllerProps {
   auctionAddress: string

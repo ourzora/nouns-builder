@@ -5,10 +5,10 @@ import dayjs from 'dayjs'
 import { v1_1_0, v1_2_0 } from './versions'
 import { Flex, Text } from '@zoralabs/zord'
 
-import { DaoContractAddresses } from 'src/typings'
 import { UpgradeCard } from '../UpgradeCard'
 import { useProposalStore } from '../../stores'
 import { useAvailableUpgrade } from '../../hooks'
+import { DaoContractAddresses } from "../../../dao";
 
 export const VERSION_PROPOSAL_SUMMARY: { [key: string]: string } = {
   '1.2.0': v1_2_0,

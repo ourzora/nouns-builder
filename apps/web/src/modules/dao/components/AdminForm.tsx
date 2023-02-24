@@ -20,7 +20,7 @@ import {
   BuilderTransaction,
   TransactionType,
 } from 'src/modules/transaction-builder'
-import { AddressType, DaoContracts } from 'src/typings'
+import { AddressType} from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
@@ -30,6 +30,7 @@ import {
   generalInfoProps,
   votingSettingsProps,
 } from 'src/modules/create'
+import { DaoContracts } from "../typings";
 
 interface AdminFormProps {
   title?: string

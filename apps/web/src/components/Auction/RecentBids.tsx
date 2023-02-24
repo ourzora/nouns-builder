@@ -7,7 +7,7 @@ import AuctionAllBids from './AuctionAllBids'
 import { recentBid, recentBidder, allRecentBidsButton } from './Auction.css'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import dynamic from 'next/dynamic'
-import { Bid } from 'src/typings'
+import { Bid } from 'src/modules/dao'
 
 const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal'), {
   ssr: false,

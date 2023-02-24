@@ -12,7 +12,7 @@ import dayjs from 'dayjs'
 import { RecentBids } from './RecentBids'
 import { BigNumber, ethers } from 'ethers'
 import { useTimeout } from 'src/hooks/useTimeout'
-import { Bid } from 'src/typings'
+import { Bid } from 'src/modules/dao'
 
 export const CurrentAuction = ({
   tokenId,

@@ -5,7 +5,8 @@ import { readContract } from '@wagmi/core'
 
 import { tokenQuery, tokenWinnerQuery } from 'src/data/graphql/requests/tokenQuery'
 import { tokenAbi } from 'src/data/contract/abis'
-import { AddressType, TokenWithWinner } from 'src/typings'
+import { AddressType} from 'src/typings'
+import { TokenWithWinner } from "../../../modules/dao";
 
 const readTokenContractData = async (
   tokenAddress: AddressType,

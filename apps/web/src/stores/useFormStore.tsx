@@ -1,4 +1,3 @@
-import { DaoContractAddresses } from 'src/typings'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
@@ -13,6 +12,7 @@ import {
   uploadArtworkErrorProps,
   votingSettingsProps,
 } from 'src/modules/create'
+import { DaoContractAddresses } from "../modules/dao";
 
 export interface FormStoreState {
   activeSection: number
