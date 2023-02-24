@@ -16,24 +16,19 @@ export interface ContributionAllocationFormValues {
   nounsAllocation?: allocationProps
 }
 
-export const ContributionForm = ({
-  handleSubmit,
-}: {
+export interface ContributionFormProps {
+  initialValues: ContributionAllocationFormValues
   handleSubmit: (values: ContributionAllocationFormValues) => void
+}
+
+export const ContributionForm: React.FC<ContributionFormProps> = ({
+  initialValues,
+  handleSubmit,
 }) => {
   const contributionAllocation = useFormStore((state) => state.contributionAllocation)
 
   const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS)
   const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS)
-
-  const initialValues = {
-    builderAllocation: contributionAllocation.find(
-      (allocation) => allocation.founderAddress === PUBLIC_BUILDER_ADDRESS
-    ),
-    nounsAllocation: contributionAllocation.find(
-      (allocation) => allocation.founderAddress === PUBLIC_NOUNS_ADDRESS
-    ),
-  }
 
   return (
     <Formik<ContributionAllocationFormValues>

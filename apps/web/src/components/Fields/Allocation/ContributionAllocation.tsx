@@ -131,7 +131,13 @@ const ContributionAllocation = () => {
       </Stack>
 
       <AnimatedModal open={open} size={'auto'} close={() => setOpen(false)}>
-        <ContributionForm handleSubmit={handleSubmit} />
+        <ContributionForm
+          initialValues={{
+            builderAllocation: builderAllocationValue,
+            nounsAllocation: nounsAllocationValue,
+          }}
+          handleSubmit={handleSubmit}
+        />
       </AnimatedModal>
     </>
   )
