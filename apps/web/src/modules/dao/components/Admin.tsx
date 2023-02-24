@@ -24,17 +24,18 @@ import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormField
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
 import isEqual from 'lodash/isEqual'
-import { AuctionSettingsFormValues } from 'src/modules/create'
 
 interface AdminProps {
   title?: string
 }
 
-export interface AdminFormValues
-  extends Omit<generalInfoProps, 'daoName' | 'daoSymbol'>,
-    AuctionSettingsFormValues {
+export interface AdminFormValues extends Omit<generalInfoProps, 'daoName' | 'daoSymbol'> {
   projectDescription: string
   rendererBase: string
+  auctionDuration: Duration
+  auctionReservePrice: number
+  proposalThreshold: number
+  quorumThreshold: number
   votingPeriod: Duration
   votingDelay: Duration
   vetoPower: 1 | 0
