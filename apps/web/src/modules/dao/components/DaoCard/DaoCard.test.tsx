@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react'
 import React from 'react'
 import dayjs from 'dayjs'
 import { describe, expect, it, vi } from 'vitest'
-import { DaoCard } from '.'
+import { DaoCard } from './DaoCard'
 
 describe('Dao card', () => {
   beforeEach(() => {

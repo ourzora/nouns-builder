@@ -13,7 +13,7 @@ import { useAuctionContract } from 'src/hooks'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import {
-  Proposals,
+  Activity,
   PreAuctionForm,
   SmartContracts,
   SectionHandler,
@@ -27,7 +27,7 @@ const DaoPage: NextPageWithLayout = () => {
   const sections = [
     {
       title: 'Activity',
-      component: [<Proposals key={'proposals'} />],
+      component: [<Activity key={'proposals'} />],
     },
     {
       title: 'Admin',

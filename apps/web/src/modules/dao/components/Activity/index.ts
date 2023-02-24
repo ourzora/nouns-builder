@@ -1,1 +1,1 @@
-export * from './Proposals'
+export * from './Activity'

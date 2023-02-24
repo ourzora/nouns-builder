@@ -26,7 +26,7 @@ import { DelegateForm } from './DelegateForm'
 import { Treasury } from './Treasury'
 import { MobileMenu } from './MobileMenu'
 
-export const Proposals: React.FC = () => {
+export const Activity: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const { createProposal } = useProposalStore()
   const { address } = useAccount()

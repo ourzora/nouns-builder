@@ -2,7 +2,7 @@ import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps, NextPage } from 'next'
 import { exploreDaosRequest } from 'src/data/graphql/requests/exploreQueries'
 import { ExplorePageData, MarketSortKey } from 'src/typings'
-import ExploreLayout from 'src/components/Explore/ExploreLayout'
+import { Explore } from 'src/modules/dao'
 import Meta from 'src/components/Layout/Meta'
 import { encodePageNumToEndCursor } from 'src/utils/encodePageNumToEndCursor'
 
@@ -33,13 +33,13 @@ interface ExplorePageProps {
   pageInfo: ExplorePageData['pageInfo']
 }
 
-const Explore: NextPage<ExplorePageProps> = ({ daos, pageInfo }) => {
+const ExplorePage: NextPage<ExplorePageProps> = ({ daos, pageInfo }) => {
   return (
     <Flex direction={'column'} align={'center'} mt={'x5'}>
       <Meta title={'Explore'} type={'website'} slug={'/explore'} />
-      <ExploreLayout daos={daos} pageInfo={pageInfo} />
+      <Explore daos={daos} pageInfo={pageInfo} />
     </Flex>
   )
 }
 
-export default Explore
+export default ExplorePage
