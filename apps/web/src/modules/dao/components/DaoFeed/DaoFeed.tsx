@@ -1,7 +1,7 @@
 import { Button, Flex, Text } from '@zoralabs/zord'
 import React, { Fragment, ReactNode } from 'react'
 import { useRouter } from 'next/router'
-import { daoFeedGrid, emptyTile } from '../../../../components/Home/Homepage.css'
+import { daoFeedGrid, emptyTile } from './DaoFeed.css'
 import { Grid } from '@zoralabs/zord'
 import { DaoFeedCard } from './DaoFeedCard'
 import { DaoProps } from 'src/pages'
