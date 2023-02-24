@@ -3,7 +3,7 @@ import { usePrepareContractWrite, useContractWrite, useSigner } from 'wagmi'
 import { Button, Flex } from '@zoralabs/zord'
 
 import { ContractButton } from 'src/components/ContractButton'
-import { auctionActionButtonVariants } from './Auction.css'
+import { auctionActionButtonVariants } from '../Auction.css'
 import { useDaoStore } from 'src/stores'
 import { auctionAbi } from 'src/data/contract/abis'
 

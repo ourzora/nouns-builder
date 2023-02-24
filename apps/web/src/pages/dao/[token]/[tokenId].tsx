@@ -2,19 +2,18 @@ import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import React from 'react'
 import Meta from 'src/components/Layout/Meta'
-import { useHTMLStripper } from 'src/hooks/useHTMLStripper'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import getToken from 'src/data/contract/requests/getToken'
 import useSWR, { unstable_serialize } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
-import AuctionController from 'src/components/Auction/AuctionController'
+import { Auction } from 'src/modules/dao'
 import {
   AdminForm,
   SmartContracts,
   About,
   Proposals,
   SectionHandler,
-  useVotes
+  useVotes,
 } from 'src/modules/dao'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
@@ -45,8 +44,6 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
     collectionAddress: collection,
     governorAddress: addresses?.governor,
   })
-
-  const stripHTML = useHTMLStripper()
 
   const handleCloseSuccessModal = () => {
     replace(
@@ -92,9 +89,9 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
         type={`${token.name}:nft`}
         image={token.media?.thumbnail || token.image}
         slug={url}
-        description={token.description ? stripHTML(token.description) : ''}
+        description={token.description ?? ''}
       />
-      <AuctionController
+      <Auction
         auctionAddress={addresses.auction}
         collection={query.token as string}
         token={token}

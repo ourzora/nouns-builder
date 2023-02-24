@@ -94,12 +94,12 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
       align={'center'}
     >
       {/* Voting for proposal has not yet started (proposal is Pending) */}
-      {(state === ProposalStatus.Created || state === ProposalStatus.Pending) && (
+      {state === ProposalStatus.Created || state === ProposalStatus.Pending ? (
         <Pending voteStart={voteStart} proposalId={proposalId} />
-      )}
+      ) : null}
 
       {/* Proposal is open but user cannot vote */}
-      {state === ProposalStatus.Active && !votesAvailable && !vote && (
+      {state === ProposalStatus.Active && !votesAvailable && !vote ? (
         <Flex
           direction={{ '@initial': 'column', '@768': 'row' }}
           align={'center'}
@@ -116,10 +116,10 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
             You must hold at least one {daoName} token to vote on proposals
           </Text>
         </Flex>
-      )}
+      ) : null}
 
       {/* Proposal is open and user can vote */}
-      {state === ProposalStatus.Active && votesAvailable && !vote && (
+      {state === ProposalStatus.Active && votesAvailable && !vote ? (
         <Fragment>
           <Flex
             direction={'row'}
@@ -144,23 +144,23 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
             available for {daoName}
           </Text>
         </Fragment>
-      )}
+      ) : null}
 
       {/* User has voted */}
-      {vote && <Vote support={vote.support} weight={vote.weight} />}
+      {vote ? <Vote support={vote.support} weight={vote.weight} /> : null}
 
       {/* Proposal ended and the user did not vote */}
       {state !== ProposalStatus.Active &&
-        state !== ProposalStatus.Created &&
-        state !== ProposalStatus.Pending &&
-        !vote &&
-        votesAvailable !== 0 && (
-          <Flex direction={'row'} align={'center'}>
-            <Text color={'text3'} ml={'x3'}>
-              You did not participate in voting on this proposal
-            </Text>
-          </Flex>
-        )}
+      state !== ProposalStatus.Created &&
+      state !== ProposalStatus.Pending &&
+      !vote &&
+      votesAvailable !== 0 ? (
+        <Flex direction={'row'} align={'center'}>
+          <Text color={'text3'} ml={'x3'}>
+            You did not participate in voting on this proposal
+          </Text>
+        </Flex>
+      ) : null}
 
       <VoteModal
         title={title}

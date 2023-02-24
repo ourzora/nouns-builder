@@ -1,23 +1,19 @@
-import { Avatar } from '../Avatar'
-import { Box, Flex, Text } from '@zoralabs/zord'
-import React from 'react'
-import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { Box, Flex, Text } from '@zoralabs/zord'
+import { Avatar } from 'src/components/Avatar'
+import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { formatCryptoVal } from 'src/utils/numbers'
 import { Icon } from 'src/components/Icon'
+import React from 'react'
 
-interface Bid {
+export interface Bid {
   id: string | number
   bidder: string
   amount: string
   transactionHash: string
 }
 
-interface AuctionAllBidsProps {
-  bids: Bid[]
-}
-
-const BidCard = ({ bid }: { bid: Bid }) => {
+export const BidCard = ({ bid }: { bid: Bid }) => {
   const { displayName, ensAvatar } = useEnsData(bid?.bidder)
 
   return (
@@ -54,27 +50,3 @@ const BidCard = ({ bid }: { bid: Bid }) => {
     </Flex>
   )
 }
-
-const AuctionAllBids: React.FC<AuctionAllBidsProps> = ({ bids }) => {
-  return (
-    <Flex direction={'column'}>
-      {bids.length > 0 ? (
-        <>
-          <Box fontSize={20} mb={'x2'}>
-            Bid History
-          </Box>
-
-          <Flex pb="x4" direction="column" overflowY="auto" style={{ height: 200 }}>
-            {bids.map((bid: Bid) => (
-              <BidCard key={`${bid.bidder}_${bid.amount}_expanded`} bid={bid} />
-            ))}
-          </Flex>
-        </>
-      ) : (
-        <Box fontSize={20}>No bids</Box>
-      )}
-    </Flex>
-  )
-}
-
-export default AuctionAllBids

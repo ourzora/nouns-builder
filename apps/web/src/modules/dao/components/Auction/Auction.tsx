@@ -3,18 +3,20 @@ import { readContract } from '@wagmi/core'
 import useSWR from 'swr'
 import { Flex, Grid } from '@zoralabs/zord'
 
-import { useAuction } from 'src/modules/dao'
 import { AddressType, TokenWithWinner } from 'src/typings'
 import { auctionAbi } from 'src/data/contract/abis'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/data/contract/requests/getBids'
 
+import { useAuction } from '../../hooks'
 import { auctionGrid, auctionWrapper, auctionWrapVariants } from './Auction.css'
-import { AuctionDetails, BidAmount, WinningBidder } from './AuctionDetails'
-import AuctionImage from './AuctionImage'
-import AuctionTokenPicker from './AuctionTokenPicker'
+import { AuctionDetails } from './AuctionDetails'
 import { ActionsWrapper, BidHistory } from './BidHistory'
 import { CurrentAuction } from './CurrentAuction'
+import { BidAmount } from './BidAmount'
+import { WinningBidder } from './WinningBidder'
+import { AuctionImage } from './AuctionImage'
+import { AuctionTokenPicker } from './AuctionTokenPicker'
 
 interface AuctionControllerProps {
   auctionAddress: string
@@ -22,7 +24,7 @@ interface AuctionControllerProps {
   token: TokenWithWinner
 }
 
-const AuctionController: React.FC<AuctionControllerProps> = ({
+export const Auction: React.FC<AuctionControllerProps> = ({
   auctionAddress,
   collection,
   token,
@@ -102,5 +104,3 @@ const AuctionController: React.FC<AuctionControllerProps> = ({
     </Flex>
   )
 }
-
-export default AuctionController
