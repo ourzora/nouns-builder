@@ -2,20 +2,13 @@ import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import React from 'react'
 import Meta from 'src/components/Layout/Meta'
-import { useHTMLStripper } from 'src/hooks/useHTMLStripper'
-import { useVotes } from 'src/hooks/useVotes'
 import { useDaoStore } from 'src/modules/dao'
 import getToken from 'src/data/contract/requests/getToken'
 import useSWR, { unstable_serialize } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
-import AuctionController from 'src/components/Auction/AuctionController'
-import {
-  AdminForm,
-  SmartContracts,
-  About,
-  Proposals,
-  SectionHandler,
-} from 'src/modules/dao'
+import { Auction } from 'src/modules/auction'
+import { Admin, SmartContracts, About, Activity, SectionHandler } from 'src/modules/dao'
+import { useVotes } from 'src/hooks'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
@@ -46,8 +39,6 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
     governorAddress: addresses?.governor,
   })
 
-  const stripHTML = useHTMLStripper()
-
   const handleCloseSuccessModal = () => {
     replace(
       { pathname, query: { token: query.token, tokenId: query.tokenId } },
@@ -64,12 +55,12 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
 
     const proposalsSection = {
       title: 'Activity',
-      component: [<Proposals key={'proposals'} />],
+      component: [<Activity key={'proposals'} />],
     }
 
     const adminSection = {
       title: 'Admin',
-      component: [<AdminForm key={'admin'} />],
+      component: [<Admin key={'admin'} />],
     }
     const smartContractsSection = {
       title: 'Smart Contracts',
@@ -92,9 +83,9 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
         type={`${token.name}:nft`}
         image={token.media?.thumbnail || token.image}
         slug={url}
-        description={token.description ? stripHTML(token.description) : ''}
+        description={token.description ?? ''}
       />
-      <AuctionController
+      <Auction
         auctionAddress={addresses.auction}
         collection={query.token as string}
         token={token}

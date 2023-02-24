@@ -25,7 +25,7 @@ interface TokenContractInterface {
   delegate: (to: Address) => Promise<ContractTransaction | undefined>
 }
 
-const useTokenContract = (): TokenContractInterface => {
+export const useTokenContract = (): TokenContractInterface => {
   const { data: signer } = useSigner()
   const addresses = useDaoStore().addresses
   const account = useAccount()
@@ -68,5 +68,3 @@ const useTokenContract = (): TokenContractInterface => {
     delegate,
   }
 }
-
-export default useTokenContract

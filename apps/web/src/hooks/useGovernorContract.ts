@@ -1,13 +1,13 @@
 import React from 'react'
 import { BigNumber } from 'ethers'
 import { useDaoStore } from 'src/modules/dao'
-import { useProposalTransactions } from 'src/hooks/useProposalTransactions'
 import { useContract, useContractReads, useSigner } from 'wagmi'
 import { governorAbi } from 'src/data/contract/abis'
 import { AddressType, BytesType } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
+import { useProposalTransactions } from './useProposalTransactions'
 
-const useGovernorContract = () => {
+export const useGovernorContract = () => {
   const { addresses } = useDaoStore()
 
   const governorContract = {
@@ -162,5 +162,3 @@ const useGovernorContract = () => {
     proposalVotes,
   }
 }
-
-export default useGovernorContract
