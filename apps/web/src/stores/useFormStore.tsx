@@ -2,17 +2,16 @@ import {
   IPFSUpload,
   OrderedLayersProps,
   allocationProps,
-  auctionSettingsProps,
   DaoContractAddresses,
   generalInfoProps,
   setUpArtworkProps,
   uploadArtworkErrorProps,
-  votingSettingsProps,
 } from 'src/typings'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
+import { AuctionSettingsFormValues } from 'src/modules/create'
 
 export interface FormStoreState {
   activeSection: number
@@ -21,16 +20,14 @@ export interface FormStoreState {
   setFulfilledSections: (section: string) => void
   generalInfo: generalInfoProps
   setGeneralInfo: (generalInfo: generalInfoProps) => void
-  votingSettings: votingSettingsProps
-  setVotingSettings: (votingSettings: votingSettingsProps) => void
   vetoPower: number | undefined
   setVetoPower: (vetoPower: number) => void
   founderAllocation: Array<allocationProps>
   setFounderAllocation: (founderAllocation: Array<allocationProps>) => void
   contributionAllocation: Array<allocationProps>
   setContributionAllocation: (contributionAllocation: Array<allocationProps>) => void
-  auctionSettings: auctionSettingsProps
-  setAuctionSettings: (auctionSettings: auctionSettingsProps) => void
+  auctionSettings: AuctionSettingsFormValues
+  setAuctionSettings: (auctionSettings: AuctionSettingsFormValues) => void
   setUpArtwork: setUpArtworkProps
   setSetUpArtwork: (artwork: setUpArtworkProps) => void
   ipfsUpload: IPFSUpload[]
@@ -61,22 +58,16 @@ const initialState = {
     daoSymbol: '',
     daoWebsite: '',
   },
-  votingSettings: {
-    proposalThreshold: '',
-    quorumThreshold: '',
-  },
   auctionSettings: {
-    maxTokenAllocation: '',
-    allocationFrequency: '',
     auctionDuration: {
-      seconds: '',
-      days: '',
-      hours: '',
-      minutes: '',
+      seconds: undefined,
+      days: undefined,
+      hours: undefined,
+      minutes: undefined,
     },
-    auctionReservePrice: '',
-    proposalThreshold: '',
-    quorumThreshold: '',
+    auctionReservePrice: undefined,
+    proposalThreshold: undefined,
+    quorumThreshold: undefined,
   },
   founderAllocation: [],
   contributionAllocation: [
@@ -95,7 +86,6 @@ const initialState = {
   vetoPower: undefined,
   setUpArtwork: {
     projectDescription: '',
-    unitName: '',
     artwork: [],
     collectionName: '',
     externalUrl: '',
@@ -136,8 +126,7 @@ export const useFormStore = create(
         }))
       },
       setGeneralInfo: (generalInfo: generalInfoProps) => set({ generalInfo }),
-      setVotingSettings: (votingSettings: votingSettingsProps) => set({ votingSettings }),
-      setAuctionSettings: (auctionSettings: auctionSettingsProps) =>
+      setAuctionSettings: (auctionSettings: AuctionSettingsFormValues) =>
         set({ auctionSettings }),
       setFounderAllocation: (founderAllocation: Array<allocationProps>) =>
         set({ founderAllocation }),

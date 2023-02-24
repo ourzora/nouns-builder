@@ -129,7 +129,7 @@ export const Allocation: React.FC<FounderProps> = ({ title }) => {
               {({ remove, push }) => (
                 <FounderAllocation
                   formik={formik}
-                  auctionDuration={auctionDuration}
+                  auctionDuration={auctionDuration!}
                   vetoPower={vetoPower}
                   touched={formik.touched}
                   values={formik.values}

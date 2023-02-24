@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import {
   CreateNavigation,
   Allocation,
-  Auction,
+  AuctionSettings,
   ReviewAndDeploy,
   General,
   Veto,
@@ -47,7 +47,7 @@ const Create: NextPage = () => {
     const auctionSettings: CreateFormSection = {
       title: 'Auction',
       heading: 'Auction Settings',
-      forms: [<Auction key={'auction-settings'} title={''} />],
+      forms: [<AuctionSettings key={'auction-settings'} title={''} />],
     }
 
     const vetoSettings: CreateFormSection = {

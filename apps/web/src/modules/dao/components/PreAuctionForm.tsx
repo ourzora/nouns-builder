@@ -6,14 +6,29 @@ import Form from 'src/components/Fields/Form'
 import { useAuctionContract } from 'src/hooks'
 import { fromSeconds, toSeconds } from 'src/utils/helpers'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import {
-  auctionSettingsFields,
-  validateAuctionSettings,
-} from 'src/components/Fields/fields/auction'
+import { validateAuctionSettings } from 'src/modules/create'
+import { DAYS_HOURS_MINS_SECS, NUMBER } from 'src/components/Fields/types'
 
 interface PreAuctionFormSettingsProps {
   title?: string
 }
+
+export const auctionSettingsFields = [
+  {
+    name: 'auctionDuration',
+    inputLabel: 'Auction Duration',
+    type: DAYS_HOURS_MINS_SECS,
+    helperText: 'How long each auction lasts.',
+    placeholder: ['1', '0', '0', '0'],
+  },
+  {
+    name: 'auctionReservePrice',
+    inputLabel: 'Auction Reserve Price',
+    type: NUMBER,
+    perma: 'ETH',
+    helperText: 'The starting price of an auction. Must be greater than 0.0001 ETH.', // temp until protocol supports 0 ETH reserve price
+  },
+]
 
 export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const {

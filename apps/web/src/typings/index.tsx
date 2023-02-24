@@ -32,23 +32,11 @@ export interface generalInfoProps {
   daoWebsite: string
 }
 
-export interface votingSettingsProps {
-  proposalThreshold: number | string
-  quorumThreshold: number | string
-}
-
-export interface AuctionDuration {
-  seconds: number | string
-  days: number | string
-  hours: number | string
-  minutes: number | string
-}
-
-export interface auctionSettingsProps {
-  auctionDuration: AuctionDuration
-  auctionReservePrice: number | string
-  proposalThreshold: number | string
-  quorumThreshold: number | string
+export interface Duration {
+  seconds?: number
+  days?: number
+  hours?: number
+  minutes?: number
 }
 
 export interface allocationProps {
