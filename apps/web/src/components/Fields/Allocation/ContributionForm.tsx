@@ -1,5 +1,5 @@
 import { Button, Flex, Box, Stack, Text } from '@zoralabs/zord'
-import { Form, Formik, FieldArray, FormikErrors, FormikTouched } from 'formik'
+import { Form, Formik } from 'formik'
 import { useFormStore } from 'src/stores'
 import { yearsAhead } from 'src/utils/helpers'
 import { PUBLIC_NOUNS_ADDRESS, PUBLIC_BUILDER_ADDRESS } from 'src/constants/addresses'
@@ -12,7 +12,8 @@ import { Toggle } from './Toggle'
 import { DaoCopyAddress } from './DaoCopyAddress'
 
 export interface ContributionAllocationFormValues {
-  contributionAllocation: allocationProps[]
+  builderAllocation?: allocationProps
+  nounsAllocation?: allocationProps
 }
 
 export const ContributionForm = ({
@@ -25,27 +26,18 @@ export const ContributionForm = ({
   const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS)
   const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS)
 
-  const getErrorMessage = (
-    index: number,
-    field: keyof allocationProps,
-    errors: FormikErrors<ContributionAllocationFormValues>,
-    touched: FormikTouched<ContributionAllocationFormValues>
-  ) => {
-    if (typeof errors?.contributionAllocation?.[index] === 'string') {
-      return
-    }
-
-    const error = errors?.contributionAllocation?.[index] as FormikErrors<allocationProps>
-    return error?.[field] && touched?.contributionAllocation?.[index]?.[field]
-      ? error?.[field]
-      : undefined
+  const initialValues = {
+    builderAllocation: contributionAllocation.find(
+      (allocation) => allocation.founderAddress === PUBLIC_BUILDER_ADDRESS
+    ),
+    nounsAllocation: contributionAllocation.find(
+      (allocation) => allocation.founderAddress === PUBLIC_NOUNS_ADDRESS
+    ),
   }
 
   return (
     <Formik<ContributionAllocationFormValues>
-      initialValues={{
-        contributionAllocation: contributionAllocation || [],
-      }}
+      initialValues={initialValues}
       enableReinitialize
       validateOnBlur={false}
       validateOnMount={true}
@@ -53,139 +45,152 @@ export const ContributionForm = ({
       validationSchema={validationSchemaContributions}
       onSubmit={handleSubmit}
     >
-      {(formik) => (
-        <Form>
-          <FieldArray name="contributionAllocation">
-            {({ remove, push }) => {
-              const builderFormValue = formik.values.contributionAllocation?.[0]
-              const nounsFormValue =
-                formik.values.contributionAllocation?.[1] ?? undefined
-              return (
-                <Stack>
-                  <Text fontSize={28} fontWeight={'display'} mb={'x4'}>
-                    Change Contributions
-                  </Text>
+      {(formik) => {
+        const builderAllocation = formik.values.builderAllocation
+        const nounsAllocation = formik.values.nounsAllocation
 
-                  <Box mt={'x4'}>
-                    <Text fontWeight={'display'}>Builder Contribution</Text>
-                    <Flex direction={'row'} mt={'x4'}>
-                      <DaoCopyAddress
-                        name="Builder"
-                        image="/builder-avatar-circle.png"
-                        ens={builderDisplayName}
-                        address={PUBLIC_BUILDER_ADDRESS}
-                      />
+        return (
+          <Form>
+            <Stack>
+              <Text fontSize={28} fontWeight={'display'} mb={'x4'}>
+                Change Contributions
+              </Text>
 
-                      <SmartInput
-                        inputLabel={'Percentage'}
-                        id={`contributionAllocation.0.allocation`}
-                        value={builderFormValue.allocation}
-                        type={'number'}
-                        formik={formik}
-                        disabled
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        perma={'%'}
-                        autoSubmit={false}
-                        isAddress={false}
-                      />
+              <Box mt={'x4'}>
+                <Flex justify={'space-between'} mb={'x4'}>
+                  <Text fontWeight={'display'}>Builder Contribution</Text>
 
-                      <Date
-                        id={`contributionAllocation.0.endDate`}
-                        value={builderFormValue.endDate}
-                        inputLabel={'End date'}
-                        formik={formik}
-                        autoSubmit={false}
-                        disabled
-                        errorMessage={''}
-                      />
-                    </Flex>
-                  </Box>
-
-                  <Box
-                    h={'x0'}
-                    borderStyle={'solid'}
-                    borderColor={'border'}
-                    borderWidth={'thin'}
-                    my={'x4'}
+                  <Toggle
+                    on={!!builderAllocation}
+                    onToggle={() => {
+                      formik.setFieldValue(
+                        'builderAllocation',
+                        builderAllocation
+                          ? undefined
+                          : {
+                              founderAddress: PUBLIC_BUILDER_ADDRESS,
+                              allocation: 1,
+                              endDate: yearsAhead(5),
+                            }
+                      )
+                    }}
                   />
+                </Flex>
 
-                  <Box mb={'x4'}>
-                    <Flex justify={'space-between'} mb={'x4'}>
-                      <Text fontWeight={'display'}>Nouns Contribution</Text>
+                {!!builderAllocation && (
+                  <Flex direction={'row'} mt={'x4'}>
+                    <DaoCopyAddress
+                      name="Builder"
+                      image="/builder-avatar-circle.png"
+                      ens={builderDisplayName}
+                      address={PUBLIC_BUILDER_ADDRESS}
+                    />
 
-                      <Toggle
-                        on={!!nounsFormValue}
-                        onToggle={() => {
-                          if (nounsFormValue) {
-                            remove(1)
-                            return
-                          }
-                          push({
-                            founderAddress: PUBLIC_NOUNS_ADDRESS,
-                            allocation: 1,
-                            endDate: yearsAhead(5),
-                          })
-                        }}
-                      />
-                    </Flex>
+                    <SmartInput
+                      inputLabel={'Percentage'}
+                      id={`builderAllocation.allocation`}
+                      value={builderAllocation.allocation}
+                      type={'number'}
+                      formik={formik}
+                      disabled={false}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      perma={'%'}
+                      autoSubmit={false}
+                      isAddress={false}
+                      // @ts-ignore
+                      errorMessage={formik.errors.builderAllocation?.allocation}
+                    />
 
-                    {!!nounsFormValue && (
-                      <Flex direction={'row'} mt={'x4'}>
-                        <DaoCopyAddress
-                          name="Nouns"
-                          image="/nouns-avatar-circle.png"
-                          ens={nounsDisplayName}
-                          address={PUBLIC_NOUNS_ADDRESS}
-                        />
+                    <Date
+                      id={`builderAllocation.endDate`}
+                      value={builderAllocation.endDate}
+                      inputLabel={'End date'}
+                      formik={formik}
+                      autoSubmit={false}
+                      disabled={false}
+                      // @ts-ignore
+                      errorMessage={formik.errors.builderAllocation?.endDate}
+                    />
+                  </Flex>
+                )}
+              </Box>
 
-                        <SmartInput
-                          inputLabel={'Percentage'}
-                          id={`contributionAllocation.1.allocation`}
-                          value={nounsFormValue.allocation}
-                          type={'number'}
-                          formik={formik}
-                          disabled={false}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          perma={'%'}
-                          autoSubmit={false}
-                          isAddress={false}
-                          errorMessage={getErrorMessage(
-                            1,
-                            'allocation',
-                            formik.errors,
-                            formik.touched
-                          )}
-                        />
+              <Box
+                h={'x0'}
+                borderStyle={'solid'}
+                borderColor={'border'}
+                borderWidth={'thin'}
+                my={'x4'}
+              />
 
-                        <Date
-                          id={`contributionAllocation.1.endDate`}
-                          value={formik.values.contributionAllocation[1].endDate}
-                          inputLabel={'End date'}
-                          formik={formik}
-                          autoSubmit={false}
-                          disabled={false}
-                          errorMessage={getErrorMessage(
-                            1,
-                            'endDate',
-                            formik.errors,
-                            formik.touched
-                          )}
-                        />
-                      </Flex>
-                    )}
-                  </Box>
-                </Stack>
-              )
-            }}
-          </FieldArray>
+              <Box mb={'x4'}>
+                <Flex justify={'space-between'} mb={'x4'}>
+                  <Text fontWeight={'display'}>Nouns Contribution</Text>
 
-          <Button borderRadius="curved" type="submit" width={'100%'}>
-            Save and Exit
-          </Button>
-        </Form>
-      )}
+                  <Toggle
+                    on={!!nounsAllocation}
+                    onToggle={() => {
+                      formik.setFieldValue(
+                        'nounsAllocation',
+                        nounsAllocation
+                          ? undefined
+                          : {
+                              founderAddress: PUBLIC_NOUNS_ADDRESS,
+                              allocation: 1,
+                              endDate: yearsAhead(5),
+                            }
+                      )
+                    }}
+                  />
+                </Flex>
+
+                {!!nounsAllocation && (
+                  <Flex direction={'row'} mt={'x4'}>
+                    <DaoCopyAddress
+                      name="Nouns"
+                      image="/nouns-avatar-circle.png"
+                      ens={nounsDisplayName}
+                      address={PUBLIC_NOUNS_ADDRESS}
+                    />
+
+                    <SmartInput
+                      inputLabel={'Percentage'}
+                      id={`nounsAllocation.allocation`}
+                      value={nounsAllocation.allocation}
+                      type={'number'}
+                      formik={formik}
+                      disabled={false}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      perma={'%'}
+                      autoSubmit={false}
+                      isAddress={false}
+                      // @ts-ignore
+                      errorMessage={formik.errors.nounsAllocation?.allocation}
+                    />
+
+                    <Date
+                      id={`nounsAllocation.endDate`}
+                      value={nounsAllocation.endDate}
+                      inputLabel={'End date'}
+                      formik={formik}
+                      autoSubmit={false}
+                      disabled={false}
+                      // @ts-ignore
+                      errorMessage={formik.errors.nounsAllocation?.endDate}
+                    />
+                  </Flex>
+                )}
+              </Box>
+            </Stack>
+
+            <Button borderRadius="curved" type="submit" width={'100%'}>
+              Save and Exit
+            </Button>
+          </Form>
+        )
+      }}
     </Formik>
   )
 }
