@@ -4,7 +4,7 @@ import React from 'react'
 import Form from 'src/components/Fields/Form'
 import { useLayoutStore } from 'src/stores'
 import { ethers } from 'ethers'
-import { useCustomTransactionStore } from 'src/modules/transaction-builder/stores/useCustomTransactionStore'
+import { useCustomTransactionStore } from 'src/modules/create-proposal/stores/useCustomTransactionStore'
 import { AddressType } from 'src/typings'
 
 interface ABIProps {

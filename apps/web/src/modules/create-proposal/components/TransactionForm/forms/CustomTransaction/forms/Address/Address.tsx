@@ -8,7 +8,7 @@ import axios from 'axios'
 import {
   initCustomTransaction,
   useCustomTransactionStore,
-} from 'src/modules/transaction-builder/stores/useCustomTransactionStore'
+} from 'src/modules/create-proposal/stores/useCustomTransactionStore'
 
 interface AddressProps {
   title: string
