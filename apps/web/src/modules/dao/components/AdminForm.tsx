@@ -2,7 +2,11 @@ import { Flex, Stack } from '@zoralabs/zord'
 import { Contract, ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import React from 'react'
-import { adminProposalFields, adminValidationSchema } from './AdminForm.schema'
+import {
+  AdminFormValues,
+  adminProposalFields,
+  adminValidationSchema,
+} from './AdminForm.schema'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { useGovernorContract, useMetadataContract, useAuctionContract } from 'src/hooks'
 import { useDaoStore, useLayoutStore } from 'src/stores'
@@ -15,32 +19,17 @@ import {
   BuilderTransaction,
   TransactionType,
 } from 'src/modules/create-proposal'
-import { AddressType, DaoContracts, Duration } from 'src/typings'
+import { AddressType, DaoContracts } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
 import isEqual from 'lodash/isEqual'
 
-interface AdminProps {
+interface AdminFormProps {
   title?: string
 }
 
-export interface AdminFormValues {
-  daoAvatar: string
-  daoWebsite: string
-  projectDescription: string
-  rendererBase: string
-  auctionDuration: Duration
-  auctionReservePrice: number
-  proposalThreshold: number
-  quorumThreshold: number
-  votingPeriod: Duration
-  votingDelay: Duration
-  vetoPower: 1 | 0
-  vetoer: string
-}
-
-export const AdminForm: React.FC<AdminProps> = () => {
+export const AdminForm: React.FC<AdminFormProps> = () => {
   const {
     query: { token },
     push,

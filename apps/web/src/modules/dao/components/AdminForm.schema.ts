@@ -13,6 +13,22 @@ import {
   ADMIN_VETO_INPUT,
 } from 'src/components/Fields/types'
 import * as Yup from 'yup'
+import { Duration } from 'src/typings'
+
+export interface AdminFormValues {
+  daoAvatar: string
+  daoWebsite: string
+  projectDescription: string
+  rendererBase: string
+  auctionDuration: Duration
+  auctionReservePrice: number
+  proposalThreshold: number
+  quorumThreshold: number
+  votingPeriod: Duration
+  votingDelay: Duration
+  vetoPower: 1 | 0
+  vetoer: string
+}
 
 export const adminValidationSchema = (provider: Provider | undefined) =>
   Yup.object()
