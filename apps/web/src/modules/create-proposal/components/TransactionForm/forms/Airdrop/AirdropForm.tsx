@@ -4,7 +4,7 @@ import { Formik, Form } from 'formik'
 import type { FormikHelpers } from 'formik'
 import { Box, Flex, Button } from '@zoralabs/zord'
 import airdropFormSchema, { AirdropFormValues } from './AirdropForm.schema'
-import Input from 'src/components/Input'
+import Input from 'src/components/Input/Input'
 import { Icon } from 'src/components/Icon'
 
 export interface AirdropFormProps {

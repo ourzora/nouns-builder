@@ -134,7 +134,6 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
 
     setIsProcessing(true)
     const filesArray = Array.from(files).filter((file) => file.name !== '.DS_Store')
-    // const acceptableMIME = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
     const acceptableMIME = ['image/png', 'image/svg+xml']
 
     let collectionName: string = ''
@@ -293,7 +292,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
     const ipfsUploadResponse = await uploadDirectory(
       files.map((file) => ({
         content: file,
-        path: file.webkitRelativePath.split('/').slice(1).join('/'),
+        path: sanitizeFileName(file.webkitRelativePath.split('/').slice(1).join('/')),
       })),
       { cache: false }
     )

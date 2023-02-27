@@ -21,14 +21,6 @@ export const marqueeButton = style({
   },
 })
 
-export const marqueeButtonLink = style({
-  selectors: {
-    '&:hover': {
-      color: '#fff',
-    },
-  },
-})
-
 export const marqueeItemButton = style([
   atoms({
     fontWeight: 'display',
@@ -53,15 +45,6 @@ export const marqueeItemButton = style([
     },
   },
 ])
-
-export const homeAuctionWrapper = style({
-  '@media': {
-    '(max-width: 768px)': {
-      border: 'none',
-      padding: 0,
-    },
-  },
-})
 
 export const getStartedButton = style({
   fontSize: 26,

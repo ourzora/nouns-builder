@@ -1,7 +1,7 @@
 import {
   defaultBackButtonVariants,
   transactionFormButtonWithPrev,
-} from '../../styles.css'
+} from '../../CustomTransaction.css'
 import { Button, Flex, Stack } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React from 'react'

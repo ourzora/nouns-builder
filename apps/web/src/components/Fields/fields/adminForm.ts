@@ -1,24 +1,19 @@
 import { isValidAddress } from 'src/utils/ens'
 import { vetoBurnDelegate } from './veto'
 import { Provider } from '@ethersproject/abstract-provider'
-import {
-  auctionSettingsFields,
-  validateAuctionSettings,
-  votingSettingsFields,
-} from 'src/components/Fields/fields/auction'
+import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
 import {
   DAYS_HOURS_MINS_SECS,
+  NUMBER,
   SINGLE_IMAGE_UPLOAD,
   TEXT,
   TEXTAREA,
 } from 'src/components/Fields/types'
 import * as Yup from 'yup'
 
-export const adminFields = [...auctionSettingsFields]
-
 export const validateAdmin = (provider: Provider | undefined) =>
   Yup.object()
-    .concat(validateAuctionSettings)
+    .concat(auctionSettingsValidationSchema)
     .concat(
       Yup.object()
         .shape({
@@ -61,48 +56,74 @@ export const validateAdmin = (provider: Provider | undefined) =>
     )
 
 export const adminProposalFields = [
-  ...[
-    {
-      name: 'daoAvatar',
-      inputLabel: 'Dao avatar',
-      type: SINGLE_IMAGE_UPLOAD,
-      helperText: 'Upload',
-    },
-    {
-      name: 'projectDescription',
-      inputLabel: 'Collection Description',
-      type: TEXTAREA,
-      placeholder: 'Nouns is an experiment which combines...',
-    },
-    {
-      name: 'daoWebsite',
-      inputLabel: 'Dao Website',
-      type: TEXT,
-      placeholder: 'https://www.nouns.wtf',
-    },
-    {
-      name: 'rendererBase',
-      inputLabel: 'Renderer Base Url',
-      type: TEXT,
-      helperText:
-        'This is the base url of the image stacker used to stack the layers and compose an nft.',
-    },
-  ],
-  ...auctionSettingsFields,
-  ...[
-    ...votingSettingsFields,
-    {
-      name: 'votingPeriod',
-      inputLabel: 'Voting Period',
-      type: DAYS_HOURS_MINS_SECS,
-      helperText: 'The number of blocks that voting for a proposal will take place',
-    },
-    {
-      name: 'votingDelay',
-      inputLabel: 'Voting Delay',
-      type: DAYS_HOURS_MINS_SECS,
-      helperText: 'The number of blocks after a proposal that voting is delayed',
-    },
-    ...vetoBurnDelegate,
-  ],
+  {
+    name: 'daoAvatar',
+    inputLabel: 'Dao avatar',
+    type: SINGLE_IMAGE_UPLOAD,
+    helperText: 'Upload',
+  },
+  {
+    name: 'projectDescription',
+    inputLabel: 'Collection Description',
+    type: TEXTAREA,
+    placeholder: 'Nouns is an experiment which combines...',
+  },
+  {
+    name: 'daoWebsite',
+    inputLabel: 'Dao Website',
+    type: TEXT,
+    placeholder: 'https://www.nouns.wtf',
+  },
+  {
+    name: 'rendererBase',
+    inputLabel: 'Renderer Base Url',
+    type: TEXT,
+    helperText:
+      'This is the base url of the image stacker used to stack the layers and compose an nft.',
+  },
+  {
+    name: 'auctionDuration',
+    inputLabel: 'Auction Duration',
+    type: DAYS_HOURS_MINS_SECS,
+    helperText: 'How long each auction lasts.',
+    placeholder: ['1', '0', '0', '0'],
+  },
+  {
+    name: 'auctionReservePrice',
+    inputLabel: 'Auction Reserve Price',
+    type: NUMBER,
+    perma: 'ETH',
+    helperText: 'The starting price of an auction. Must be greater than 0.0001 ETH.', // temp until protocol supports 0 ETH reserve price
+  },
+  {
+    name: 'proposalThreshold',
+    inputLabel: 'Proposal Threshold',
+    type: NUMBER,
+    perma: '%',
+    step: 0.1,
+    helperText:
+      'This is the percentage of all existing tokens that must be owned by someone attempting to create a proposal. We recommend a starting value of 0.5% to encourage participation.',
+  },
+  {
+    name: 'quorumThreshold',
+    inputLabel: 'Quorum Threshold',
+    type: NUMBER,
+    perma: '%',
+    step: 1,
+    helperText:
+      'This is the percentage of all existing tokens that must vote in a proposal in order for it to pass (as long as a majority of votes approve). We recommend a starting value of 10%.',
+  },
+  {
+    name: 'votingPeriod',
+    inputLabel: 'Voting Period',
+    type: DAYS_HOURS_MINS_SECS,
+    helperText: 'The number of blocks that voting for a proposal will take place',
+  },
+  {
+    name: 'votingDelay',
+    inputLabel: 'Voting Delay',
+    type: DAYS_HOURS_MINS_SECS,
+    helperText: 'The number of blocks after a proposal that voting is delayed',
+  },
+  ...vetoBurnDelegate,
 ]

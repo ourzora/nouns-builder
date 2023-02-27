@@ -12,11 +12,6 @@ export const artworkSettingsBoxDropping = style({
   background: '#1CB687',
 })
 
-export const artworkSettingsBoxError = style({
-  border: '2px solid #ff0015',
-  borderRadius: '10px',
-})
-
 export const artworkSettingsName = style({
   color: '#4D4D4D',
   fontWeight: 700,
@@ -36,10 +31,6 @@ export const artworkSettingsNameDropping = style({
       cursor: 'pointer',
     },
   },
-})
-
-export const artworkSettingsHelperText = style({
-  color: '#808080',
 })
 
 export const artworkSettingsPropertyName = style({
@@ -98,16 +89,6 @@ export const layerSelectStyle = style([
     WebkitAppearance: 'none',
   },
 ])
-
-export const layerSelectInner = style({
-  maxWidth: '50px',
-  overflow: 'hidden',
-})
-
-export const layerSelectWrapperStyle = style({
-  width: '100%',
-  background: '#afe',
-})
 
 export const previewHeadingStyle = style([
   atoms({

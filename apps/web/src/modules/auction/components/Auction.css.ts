@@ -1,5 +1,5 @@
 import { style, styleVariants } from '@vanilla-extract/css'
-import { atoms, media, theme, themeClass, vars } from '@zoralabs/zord'
+import { atoms, media, theme, vars } from '@zoralabs/zord'
 
 export const auctionWrap = atoms({
   flexDirection: 'column',
@@ -51,17 +51,6 @@ export const auctionGrid = style([
     },
   },
 ])
-
-export const auctionHeaderDetails = style({
-  boxSizing: 'border-box',
-  borderBottom: '2px solid #F2F2F2',
-  marginTop: 60,
-  '@media': {
-    'screen and (max-width: 768px)': {
-      flexDirection: 'column',
-    },
-  },
-})
 
 export const auctionText = style({
   whiteSpace: 'nowrap',
@@ -134,39 +123,6 @@ export const auctionTextVariants = styleVariants({
   ],
 })
 
-export const auctionHeaderDetailsInfo = style({
-  gap: '3rem',
-  '@media': {
-    'screen and (max-width: 768px)': {
-      gap: '0.5rem',
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      marginTop: 20,
-    },
-  },
-})
-
-export const auctionHeaderName = style({
-  fontSize: 16,
-  fontWeight: 700,
-})
-
-export const auctionHeaderValue = style({
-  fontWeight: 300,
-  color: '#808080',
-  fontSize: 16,
-})
-
-export const auctionHeaderShareLogo = style({
-  background: '#F1F1F1',
-  borderRadius: 20,
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
 export const auctionDateNavButton = style({
   height: 36,
   minWidth: 36,
@@ -179,41 +135,11 @@ export const auctionDateNavButton = style({
   },
 })
 
-export const titleLink = style({
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
-export const auctionImageWrapperStyle = style({
-  height: 409,
-  width: 409,
-  overflow: 'hidden',
-})
-
 export const auctionWrapper = style({
   width: '100%',
   '@media': {
     '(max-width: 768px)': {
       padding: '0 0rem',
-    },
-  },
-})
-
-export const auctionInfoItem = style({
-  flexDirection: 'column',
-  justifyContent: 'flex-start',
-  width: 'inherit',
-  selectors: {
-    '&:first-child': {
-      '@media': {
-        '(max-width: 768px)': {
-          borderRight: 'none',
-          paddingRight: '0rem',
-        },
-      },
     },
   },
 })
@@ -236,11 +162,6 @@ export const auctionActionButtonVariants = styleVariants({
     auctionActionButton,
     { width: '100%', background: '#F1F1F1', color: '#808080' },
   ],
-})
-
-export const placeBidModalInner = style({
-  width: '50%',
-  margin: '0 auto',
 })
 
 export const bidForm = style({
@@ -271,43 +192,6 @@ export const bidInput = style([
   }),
 ])
 
-export const allBidsButton = style({
-  width: '100%',
-  justifyContent: 'center',
-  borderTop: '2px solid #F2F2F2',
-  cursor: 'pointer',
-})
-
-export const allBidsWrapper = style({
-  // calc 4rem off of the sides of the screen
-  width: 'calc(100vw - 4rem)',
-})
-
-export const viewAllBidsWrapper = style({
-  position: 'relative',
-  opacity: 0,
-  height: 0,
-  '@media': {
-    '(min-width: 768px)': {
-      height: 'initial',
-      opacity: 1,
-    },
-  },
-  selectors: {
-    '&::before': {
-      content: '',
-      display: 'block',
-      position: 'absolute',
-      width: '100%',
-      top: 0,
-      left: 0,
-      right: 0,
-      backgroundColor: vars.color.background2,
-      height: 2,
-    },
-  },
-})
-
 export const auctionImg = style([
   {
     '@media': {
@@ -326,15 +210,6 @@ export const auctionImg = style([
     borderStyle: 'solid',
   }),
 ])
-
-export const auctionInput = style({
-  marginRight: 0,
-  '@media': {
-    '(min-width: 768px)': {
-      marginRight: 8,
-    },
-  },
-})
 
 export const recentBid = style({
   maxWidth: 'calc(912px * .5)',
