@@ -3,22 +3,24 @@ import {
   OrderedLayersProps,
   TokenAllocation,
   DaoContractAddresses,
-  generalInfoProps,
 } from 'src/typings'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
-import { ArtworkFormValues } from 'src/modules/create-dao'
-import { AuctionSettingsFormValues } from 'src/modules/create-dao'
+import {
+  ArtworkFormValues,
+  AuctionSettingsFormValues,
+  GeneralFormValues,
+} from 'src/modules/create-dao'
 
 export interface FormStoreState {
   activeSection: number
   setActiveSection: (activeSection: number) => void
   fulfilledSections: string[]
   setFulfilledSections: (section: string) => void
-  generalInfo: generalInfoProps
-  setGeneralInfo: (generalInfo: generalInfoProps) => void
+  general: GeneralFormValues
+  setGeneral: (general: GeneralFormValues) => void
   vetoPower: number | undefined
   setVetoPower: (vetoPower: number) => void
   founderAllocation: Array<TokenAllocation>
@@ -47,7 +49,7 @@ export interface FormStoreState {
 const initialState = {
   activeSection: 0,
   fulfilledSections: [],
-  generalInfo: {
+  general: {
     daoAvatar: '',
     daoName: '',
     daoSymbol: '',
@@ -118,14 +120,13 @@ export const useFormStore = create(
             : [...state.fulfilledSections],
         }))
       },
-      setGeneralInfo: (generalInfo: generalInfoProps) => set({ generalInfo }),
+      setGeneral: (general: GeneralFormValues) => set({ general }),
       setAuctionSettings: (auctionSettings: AuctionSettingsFormValues) =>
         set({ auctionSettings }),
       setFounderAllocation: (founderAllocation: Array<TokenAllocation>) =>
         set({ founderAllocation }),
       setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) =>
         set({ contributionAllocation }),
-
       nounsAllocationOn: true,
       setNounsAllocationOn: (nounsAllocationOn: boolean) => set({ nounsAllocationOn }),
       setVetoPower: (vetoPower: number) => set({ vetoPower }),

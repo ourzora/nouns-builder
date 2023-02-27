@@ -18,17 +18,20 @@ import {
   BuilderTransaction,
   TransactionType,
 } from 'src/modules/create-proposal'
-import { AddressType, DaoContracts, Duration, generalInfoProps } from 'src/typings'
+import { AddressType, DaoContracts, Duration } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
 import isEqual from 'lodash/isEqual'
+import { GeneralFormValues } from 'src/modules/create-dao'
 
 interface AdminProps {
   title?: string
 }
 
-export interface AdminFormValues extends Omit<generalInfoProps, 'daoName' | 'daoSymbol'> {
+export interface AdminFormValues {
+  daoAvatar: string
+  daoWebsite: string
   projectDescription: string
   rendererBase: string
   auctionDuration: Duration

@@ -52,7 +52,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const {
     founderAllocation,
     contributionAllocation,
-    generalInfo,
+    general,
     auctionSettings,
     setUpArtwork,
     setActiveSection,
@@ -100,11 +100,11 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const tokenParamsHex = abiCoder.encode(
     ['string', 'string', 'string', 'string', 'string', 'string'],
     [
-      sanitizeStringForJSON(generalInfo?.daoName),
-      generalInfo?.daoSymbol.replace('$', ''),
+      sanitizeStringForJSON(general?.daoName),
+      general?.daoSymbol.replace('$', ''),
       sanitizeStringForJSON(setUpArtwork?.projectDescription),
-      generalInfo?.daoAvatar,
-      sanitizeStringForJSON(generalInfo?.daoWebsite),
+      general?.daoAvatar,
+      sanitizeStringForJSON(general?.daoWebsite || ''),
       'https://api.zora.co/renderer/stack-images',
     ]
   )
@@ -193,14 +193,14 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                       width: 'x24',
                       borderRadius: 'round',
                     })}
-                    src={getFetchableUrl(generalInfo.daoAvatar)}
+                    src={getFetchableUrl(general.daoAvatar)}
                     alt=""
                   />
                 }
               />
-              <ReviewItem label="Dao Name" value={generalInfo.daoName} />
-              <ReviewItem label="Dao Symbol" value={generalInfo.daoSymbol} />
-              <ReviewItem label="Dao Website" value={generalInfo.daoWebsite} />
+              <ReviewItem label="Dao Name" value={general.daoName} />
+              <ReviewItem label="Dao Symbol" value={general.daoSymbol} />
+              <ReviewItem label="Dao Website" value={general.daoWebsite} />
             </ReviewSection>
 
             <ReviewSection subHeading="Auction Settings">

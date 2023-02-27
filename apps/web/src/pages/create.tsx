@@ -6,7 +6,7 @@ import {
   Allocation,
   AuctionSettingsForm,
   ReviewAndDeploy,
-  General,
+  GeneralForm,
   Veto,
   FormHandler,
   Artwork,
@@ -41,7 +41,7 @@ const Create: NextPage = () => {
     const createDao: CreateFormSection = {
       title: 'General',
       heading: 'General Settings',
-      forms: [<General key={'general-info'} title={''} />],
+      forms: [<GeneralForm key={'general-info'} title={''} />],
     }
 
     const auctionSettings: CreateFormSection = {

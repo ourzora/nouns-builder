@@ -6,7 +6,7 @@ import DaysHoursMinsSecs from './DaysHoursMinsSecs'
 import MinsSecs from './MinsSecs'
 import Radio from './Radio'
 import Select from './Select'
-import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
+import SingleImageUpload from '../SingleImageUpload/SingleImageUpload'
 import SmartInput from './SmartInput'
 import TextArea from './TextArea'
 import {
@@ -86,20 +86,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   const handleChange = (e: BaseSyntheticEvent) => {
     const { value } = e.target
     if (!formik) return
-    /*
-
-        custom field handling
-
-     */
-    if (field.name === 'daoName') {
-      formik.setFieldValue(
-        'daoSymbol',
-        `$${value
-          .toUpperCase()
-          .replace(/[AEIOU\s]/g, '')
-          .slice(0, 4)}`
-      )
-    }
 
     formik.setFieldValue(field.name, field.type === NUMBER ? parseFloat(value) : value)
   }
