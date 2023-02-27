@@ -39,8 +39,8 @@ export interface Duration {
   minutes?: number
 }
 
-export interface allocationProps {
-  allocation: number | string
+export interface TokenAllocation {
+  allocationPercentage: number | string
   founderAddress: string
   endDate: string
 }

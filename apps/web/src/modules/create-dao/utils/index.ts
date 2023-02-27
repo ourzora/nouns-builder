@@ -1,4 +1,4 @@
-import { allocationProps, Duration } from 'src/typings'
+import { TokenAllocation, Duration } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 
 export const formatAuctionDuration = (duration: Duration): string => {
@@ -30,8 +30,8 @@ export const calculateMaxAllocation = (
 
 export const formatFounderAllocation = ({
   founderAddress,
-  allocation,
+  allocationPercentage,
   endDate,
-}: allocationProps): string => {
-  return `${founderAddress} will receive ${allocation}% of Tokens, until ${endDate}.`
+}: TokenAllocation): string => {
+  return `${founderAddress} will receive ${allocationPercentage}% of Tokens, until ${endDate}.`
 }

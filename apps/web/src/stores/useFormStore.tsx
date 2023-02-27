@@ -1,7 +1,7 @@
 import {
   IPFSUpload,
   OrderedLayersProps,
-  allocationProps,
+  TokenAllocation,
   DaoContractAddresses,
   generalInfoProps,
   setUpArtworkProps,
@@ -11,7 +11,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
-import { AuctionSettingsFormValues } from 'src/modules/create'
+import { AuctionSettingsFormValues } from 'src/modules/create-dao'
 
 export interface FormStoreState {
   activeSection: number
@@ -22,10 +22,10 @@ export interface FormStoreState {
   setGeneralInfo: (generalInfo: generalInfoProps) => void
   vetoPower: number | undefined
   setVetoPower: (vetoPower: number) => void
-  founderAllocation: Array<allocationProps>
-  setFounderAllocation: (founderAllocation: Array<allocationProps>) => void
-  contributionAllocation: Array<allocationProps>
-  setContributionAllocation: (contributionAllocation: Array<allocationProps>) => void
+  founderAllocation: Array<TokenAllocation>
+  setFounderAllocation: (founderAllocation: Array<TokenAllocation>) => void
+  contributionAllocation: Array<TokenAllocation>
+  setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) => void
   auctionSettings: AuctionSettingsFormValues
   setAuctionSettings: (auctionSettings: AuctionSettingsFormValues) => void
   setUpArtwork: setUpArtworkProps
@@ -73,12 +73,12 @@ const initialState = {
   contributionAllocation: [
     {
       founderAddress: PUBLIC_BUILDER_ADDRESS,
-      allocation: 1,
+      allocationPercentage: 1,
       endDate: yearsAhead(5),
     },
     {
       founderAddress: PUBLIC_NOUNS_ADDRESS,
-      allocation: 1,
+      allocationPercentage: 1,
       endDate: yearsAhead(5),
     },
   ],
@@ -128,9 +128,9 @@ export const useFormStore = create(
       setGeneralInfo: (generalInfo: generalInfoProps) => set({ generalInfo }),
       setAuctionSettings: (auctionSettings: AuctionSettingsFormValues) =>
         set({ auctionSettings }),
-      setFounderAllocation: (founderAllocation: Array<allocationProps>) =>
+      setFounderAllocation: (founderAllocation: Array<TokenAllocation>) =>
         set({ founderAllocation }),
-      setContributionAllocation: (contributionAllocation: Array<allocationProps>) =>
+      setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) =>
         set({ contributionAllocation }),
 
       nounsAllocationOn: true,
