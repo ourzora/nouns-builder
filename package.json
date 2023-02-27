@@ -30,10 +30,6 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "packages/ipfs-service/**/*.{js,ts,jsx,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
     "*.json": [
       "prettier --write"
     ]
