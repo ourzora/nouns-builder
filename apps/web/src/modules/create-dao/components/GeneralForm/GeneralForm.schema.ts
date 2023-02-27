@@ -9,7 +9,7 @@ export interface GeneralFormValues {
 
 const re =
   /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/gm
-export const GeneralValidationSchema = Yup.object().shape({
+export const generalValidationSchema = Yup.object().shape({
   daoAvatar: Yup.string(),
   daoName: Yup.string().required('*').max(255),
   daoSymbol: Yup.string()
