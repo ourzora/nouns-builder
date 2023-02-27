@@ -90,7 +90,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const founderParams: FounderParameters = [
     ...founderAllocation,
     ...contributionAllocation,
-  ].map(({ founderAddress, allocation, endDate }) => ({
+  ].map(({ founderAddress, allocationPercentage: allocation, endDate }) => ({
     wallet: founderAddress as AddressType,
     ownershipPct: BigNumber.from(allocation),
     vestExpiry: BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),

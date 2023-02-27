@@ -27,7 +27,14 @@ const allocationSchema = Yup.object().shape({
 })
 
 export const validationSchemaContributions = Yup.object().shape({
-  contributionAllocation: Yup.array().of(allocationSchema),
+  builderAllocation: Yup.object().when({
+    is: (exists: object | undefined) => !!exists,
+    then: allocationSchema,
+  }),
+  nounsAllocation: Yup.object().when({
+    is: (exists: object | undefined) => !!exists,
+    then: allocationSchema,
+  }),
 })
 
 export const validationSchemaFounderAllocation = (signerAddress: string | null) =>
