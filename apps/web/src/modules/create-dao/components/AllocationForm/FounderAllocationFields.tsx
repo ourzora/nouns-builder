@@ -13,7 +13,7 @@ import {
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues
   auctionDuration: Duration
-  vetoPower?: number
+  vetoPower?: boolean
   errors?: FormikErrors<FounderAllocationFormValues>
   touched: FormikTouched<FounderAllocationFormValues>
   formik: FormikProps<FounderAllocationFormValues>
@@ -126,7 +126,7 @@ export const FounderAllocationFields = ({
                   </Button>
                 )}
 
-                {isFounder && vetoPower === 0 && (
+                {isFounder && vetoPower === true && (
                   <Flex align={'center'} color="warning">
                     <Icon size="sm" id="warning-16" fill="warning" />
                     <Flex fontWeight={'display'} ml={'x2'}>

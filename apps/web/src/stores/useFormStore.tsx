@@ -21,8 +21,8 @@ export interface FormStoreState {
   setFulfilledSections: (section: string) => void
   general: GeneralFormValues
   setGeneral: (general: GeneralFormValues) => void
-  vetoPower: number | undefined
-  setVetoPower: (vetoPower: number) => void
+  vetoPower: boolean | undefined
+  setVetoPower: (vetoPower: boolean) => void
   founderAllocation: Array<TokenAllocation>
   setFounderAllocation: (founderAllocation: Array<TokenAllocation>) => void
   contributionAllocation: Array<TokenAllocation>
@@ -129,7 +129,7 @@ export const useFormStore = create(
         set({ contributionAllocation }),
       nounsAllocationOn: true,
       setNounsAllocationOn: (nounsAllocationOn: boolean) => set({ nounsAllocationOn }),
-      setVetoPower: (vetoPower: number) => set({ vetoPower }),
+      setVetoPower: (vetoPower: boolean) => set({ vetoPower }),
       setSetUpArtwork: (artwork: ArtworkFormValues) => set({ setUpArtwork: artwork }),
       setIpfsUpload: (ipfsUpload: IPFSUpload[]) => set({ ipfsUpload }),
       setOrderedLayers: (orderedLayers: OrderedLayersProps[]) => {

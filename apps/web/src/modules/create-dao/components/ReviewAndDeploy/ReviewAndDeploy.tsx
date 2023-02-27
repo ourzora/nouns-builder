@@ -135,9 +135,9 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
         )
       : BigNumber.from('0'),
     vetoer:
-      vetoPower === 0
+      vetoPower === true
         ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
-        : ethers.utils.getAddress(NULL_ADDRESS), // 0 === YES in Radio component
+        : ethers.utils.getAddress(NULL_ADDRESS),
   }
 
   const { config, isError } = usePrepareContractWrite({
