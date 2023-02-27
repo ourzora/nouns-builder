@@ -1,7 +1,7 @@
-import { globalStyle, style } from '@vanilla-extract/css'
+import { globalStyle, style } from "@vanilla-extract/css";
 
-export const flexChildren = style({})
+export const flexChildren = style({});
 
 globalStyle(`${flexChildren} > *`, {
   flex: 1,
-})
+});

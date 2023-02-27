@@ -1,23 +1,23 @@
-import * as SwitchPrimitive from '@radix-ui/react-switch'
+import * as SwitchPrimitive from "@radix-ui/react-switch";
 
-import { switchThumb, switchWrapper } from './Switch.css'
-import { Text, textVariants } from './Text'
-import { Flex } from './Flex'
-import { FieldAnnotation } from './FieldAnnotation'
-import { Stack } from './Stack'
-import { ReactNode } from 'react'
+import { switchThumb, switchWrapper } from "./Switch.css";
+import { Text, textVariants } from "./Text";
+import { Flex } from "./Flex";
+import { FieldAnnotation } from "./FieldAnnotation";
+import { Stack } from "./Stack";
+import { ReactNode } from "react";
 
 export interface SwitchProps {
-  id?: string
-  value?: string
-  label?: string
-  textVariant?: keyof typeof textVariants['variant']
-  description?: string | ReactNode
-  descriptionVariant?: keyof typeof textVariants['variant']
-  disabled?: boolean
-  checked?: boolean
-  defaultChecked?: boolean
-  onChange?: () => void
+  id?: string;
+  value?: string;
+  label?: string;
+  textVariant?: keyof typeof textVariants["variant"];
+  description?: string | ReactNode;
+  descriptionVariant?: keyof typeof textVariants["variant"];
+  disabled?: boolean;
+  checked?: boolean;
+  defaultChecked?: boolean;
+  onChange?: () => void;
 }
 
 export function Switch({
@@ -30,7 +30,7 @@ export function Switch({
   checked,
   disabled,
   onChange,
-  textVariant = 'label-sm',
+  textVariant = "label-sm",
 }: SwitchProps) {
   return (
     <Flex gap="x2">
@@ -62,5 +62,5 @@ export function Switch({
         )}
       </Stack>
     </Flex>
-  )
+  );
 }

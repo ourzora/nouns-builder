@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { SVGProps } from 'react'
+import * as React from "react";
+import { SVGProps } from "react";
 
 const SvgMetamask = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -111,6 +111,6 @@ const SvgMetamask = (props: SVGProps<SVGSVGElement>) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
-export default SvgMetamask
+export default SvgMetamask;

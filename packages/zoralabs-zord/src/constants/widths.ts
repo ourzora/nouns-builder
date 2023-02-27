@@ -1,1 +1,1 @@
-export const MAX_GRID_WIDTH = 1440
+export const MAX_GRID_WIDTH = 1440;

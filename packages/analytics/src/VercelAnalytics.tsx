@@ -1,5 +1,5 @@
-import { Analytics } from '@vercel/analytics/react'
+import { Analytics } from "@vercel/analytics/react";
 
 export function VercelAnalytics() {
-  return <Analytics />
+  return <Analytics />;
 }

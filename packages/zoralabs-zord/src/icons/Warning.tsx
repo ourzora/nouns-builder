@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { SVGProps } from 'react'
+import * as React from "react";
+import { SVGProps } from "react";
 
 const SvgWarning = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -15,6 +15,6 @@ const SvgWarning = (props: SVGProps<SVGSVGElement>) => (
       clipPath="url(#a)"
     />
   </svg>
-)
+);
 
-export default SvgWarning
+export default SvgWarning;

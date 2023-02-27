@@ -1,6 +1,6 @@
-import { Button, Flex, FlexProps, Icon } from '../../elements'
-import * as styles from './Pagination.css'
-import React from 'react'
+import { Button, Flex, FlexProps, Icon } from "../../elements";
+import * as styles from "./Pagination.css";
+import React from "react";
 
 /**
  * Pagination component
@@ -8,11 +8,11 @@ import React from 'react'
  */
 
 export interface PaginationProps extends FlexProps {
-  isFirst: boolean
-  isLast: boolean
-  onNext: () => void
-  onPrevious: () => void
-  totalPages: number
+  isFirst: boolean;
+  isLast: boolean;
+  onNext: () => void;
+  onPrevious: () => void;
+  totalPages: number;
 }
 
 export function Pagination({
@@ -24,7 +24,7 @@ export function Pagination({
   totalPages,
   ...props
 }: PaginationProps) {
-  if (totalPages < 2) return null
+  if (totalPages < 2) return null;
 
   return (
     <Flex align="center" gap="x3" {...props}>
@@ -50,5 +50,5 @@ export function Pagination({
         <Icon id="ArrowRight" size="lg" />
       </Button>
     </Flex>
-  )
+  );
 }

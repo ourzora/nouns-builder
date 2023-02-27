@@ -1,4 +1,8 @@
-import { defaultUploadStyle, singleImageUploadWrapper, uploadErrorBox } from './SingleImageUpload.css'
+import {
+  defaultUploadStyle,
+  singleImageUploadWrapper,
+  uploadErrorBox,
+} from './SingleImageUpload.css'
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import React, { ReactElement, useState, useEffect } from 'react'

@@ -1,7 +1,7 @@
-import Script from 'next/script'
+import Script from "next/script";
 
 export interface SegmentAnalyticsProps {
-  id: string
+  id: string;
 }
 
 export function SegmentAnalytics({ id }: SegmentAnalyticsProps) {
@@ -12,5 +12,5 @@ export function SegmentAnalytics({ id }: SegmentAnalyticsProps) {
       analytics.page();
       }}();
     `}</Script>
-  )
+  );
 }

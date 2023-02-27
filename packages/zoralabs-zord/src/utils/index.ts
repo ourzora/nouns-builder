@@ -1,1 +1,1 @@
-export { colorTheme, colorThemeVars } from './color-theme'
+export { colorTheme, colorThemeVars } from "./color-theme";

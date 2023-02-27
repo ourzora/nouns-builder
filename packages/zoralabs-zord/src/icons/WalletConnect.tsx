@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { SVGProps } from 'react'
+import * as React from "react";
+import { SVGProps } from "react";
 
 const SvgWalletConnect = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -16,6 +16,6 @@ const SvgWalletConnect = (props: SVGProps<SVGSVGElement>) => (
       fill="#3b99fc"
     />
   </svg>
-)
+);
 
-export default SvgWalletConnect
+export default SvgWalletConnect;

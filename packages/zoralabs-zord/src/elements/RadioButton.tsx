@@ -1,19 +1,19 @@
-import { indicator, radio, radioText } from './RadioButton.css'
-import { Text, TextProps } from './Text'
-import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
-import React from 'react'
+import { indicator, radio, radioText } from "./RadioButton.css";
+import { Text, TextProps } from "./Text";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import React from "react";
 
 export interface RadioButtonGroupProps {
-  label?: string
-  name: string
-  defaultValue?: string
+  label?: string;
+  name: string;
+  defaultValue?: string;
 }
 
 export interface RadioButtonProps extends TextProps {
-  id: string
-  value: string
-  label?: string
-  disabled?: boolean
+  id: string;
+  value: string;
+  label?: string;
+  disabled?: boolean;
 }
 
 export function RadioButton({
@@ -27,7 +27,7 @@ export function RadioButton({
   return (
     <Text
       as="label"
-      className={['zord-radiobutton', radioText({ disabled }), className]}
+      className={["zord-radiobutton", radioText({ disabled }), className]}
       aria-label={label}
       variant="label-md"
       htmlFor={id}
@@ -44,5 +44,5 @@ export function RadioButton({
 
       {label}
     </Text>
-  )
+  );
 }

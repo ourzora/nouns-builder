@@ -1,7 +1,7 @@
-import { atoms } from '../atoms'
-import { vars } from '../theme'
-import { style } from '@vanilla-extract/css'
-import { recipe } from '@vanilla-extract/recipes'
+import { atoms } from "../atoms";
+import { vars } from "../theme";
+import { style } from "@vanilla-extract/css";
+import { recipe } from "@vanilla-extract/recipes";
 
 export const inputVariants = {
   sizeVariant: {
@@ -9,7 +9,7 @@ export const inputVariants = {
       {},
       atoms({
         fontSize: 35,
-        fontWeight: 'heading',
+        fontWeight: "heading",
       }),
     ],
     sm: [
@@ -18,33 +18,33 @@ export const inputVariants = {
         paddingBottom: 0,
       },
       atoms({
-        height: 'x6',
+        height: "x6",
       }),
     ],
   },
-}
+};
 
 export const input = recipe({
   base: style([
     {
-      width: '100%',
+      width: "100%",
       lineHeight: 1.3,
       backgroundColor: vars.color.background2,
-      border: '2px solid transparent',
-      outline: 'none',
+      border: "2px solid transparent",
+      outline: "none",
       transition: `background-color 0.1s ease-out`,
       selectors: {
-        '&::placeholder': {
+        "&::placeholder": {
           color: vars.color.tertiary,
         },
-        '&:focus': {
+        "&:focus": {
           borderColor: vars.color.accent,
           backgroundColor: vars.color.background1,
-          outline: 'none',
+          outline: "none",
         },
       },
     },
-    atoms({ padding: 'x3', borderRadius: 'small' }),
+    atoms({ padding: "x3", borderRadius: "small" }),
   ]),
   variants: inputVariants,
-})
+});

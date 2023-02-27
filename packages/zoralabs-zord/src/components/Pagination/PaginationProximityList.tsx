@@ -1,16 +1,16 @@
-import { PaginationEllipsis } from './PaginationEllipsis'
-import { PaginationNumberButton } from './PaginationNumberButton'
-import React from 'react'
+import { PaginationEllipsis } from "./PaginationEllipsis";
+import { PaginationNumberButton } from "./PaginationNumberButton";
+import React from "react";
 
 /**
  * List of pagination numbers, with ellipsis indicators
  */
 
 export interface PaginationProximityListProps {
-  index: number
-  items: number[]
-  setIndex: (index: number) => void
-  totalPages: number
+  index: number;
+  items: number[];
+  setIndex: (index: number) => void;
+  totalPages: number;
 }
 
 export function PaginationProximityList({
@@ -19,7 +19,7 @@ export function PaginationProximityList({
   setIndex,
   totalPages,
 }: PaginationProximityListProps) {
-  if (totalPages < 2 || !items?.length) return null
+  if (totalPages < 2 || !items?.length) return null;
 
   return (
     <>
@@ -35,8 +35,8 @@ export function PaginationProximityList({
           >
             {page + 1}
           </PaginationNumberButton>
-        )
+        );
       })}
     </>
-  )
+  );
 }

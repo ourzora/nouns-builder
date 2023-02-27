@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { SVGProps } from 'react'
+import * as React from "react";
+import { SVGProps } from "react";
 
 const SvgDownload = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -26,6 +26,6 @@ const SvgDownload = (props: SVGProps<SVGSVGElement>) => (
       d="M6.626 9.793a1 1 0 0 1 1.414 0l4.293 4.293 4.293-4.293a1 1 0 1 1 1.414 1.414l-5 5a1 1 0 0 1-1.414 0l-5-5a1 1 0 0 1 0-1.414Z"
     />
   </svg>
-)
+);
 
-export default SvgDownload
+export default SvgDownload;

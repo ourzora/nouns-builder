@@ -1,7 +1,7 @@
-import Script from 'next/script'
+import Script from "next/script";
 
 export interface GoogleAnalyticsProps {
-  id: string
+  id: string;
 }
 
 export function GoogleAnalytics({ id }: GoogleAnalyticsProps) {
@@ -21,5 +21,5 @@ export function GoogleAnalytics({ id }: GoogleAnalyticsProps) {
           `}
       </Script>
     </>
-  )
+  );
 }

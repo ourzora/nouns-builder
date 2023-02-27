@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { SVGProps } from 'react'
+import * as React from "react";
+import { SVGProps } from "react";
 
 const SvgSpinner = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -16,6 +16,6 @@ const SvgSpinner = (props: SVGProps<SVGSVGElement>) => (
     />
     <path d="M24 12h-2A10.011 10.011 0 0 0 12 2V0a12.013 12.013 0 0 1 12 12Z" />
   </svg>
-)
+);
 
-export default SvgSpinner
+export default SvgSpinner;

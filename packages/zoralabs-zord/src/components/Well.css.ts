@@ -1,6 +1,6 @@
-import { atoms } from '../atoms'
+import { atoms } from "../atoms";
 
 export const well = atoms({
-  width: '100%',
-  gap: 'x4',
-})
+  width: "100%",
+  gap: "x4",
+});

@@ -1,27 +1,28 @@
-import { Atoms, atoms } from '../atoms'
-import { Box, BoxDefaultElement, BoxProps } from './Box'
-import { flexChildren } from './Flex.css'
-import clsx from 'clsx'
-import React, { forwardRef } from 'react'
+import { Atoms, atoms } from "../atoms";
+import { Box, BoxDefaultElement, BoxProps } from "./Box";
+import { flexChildren } from "./Flex.css";
+import clsx from "clsx";
+import React, { forwardRef } from "react";
 import type {
   PolymorphicForwardRefExoticComponent,
   PolymorphicPropsWithRef,
   PolymorphicPropsWithoutRef,
-} from 'react-polymorphic-types'
+} from "react-polymorphic-types";
 
 export interface FlexProps extends BoxProps {
-  alignSelf?: Atoms['alignSelf']
-  gap?: Atoms['gap']
-  wrap?: Atoms['flexWrap'] | boolean
-  direction?: Atoms['flexDirection']
-  align?: Atoms['alignItems']
-  justify?: Atoms['justifyContent']
-  placeItems?: Atoms['placeItems']
-  flexChildren?: boolean
+  alignSelf?: Atoms["alignSelf"];
+  gap?: Atoms["gap"];
+  wrap?: Atoms["flexWrap"] | boolean;
+  direction?: Atoms["flexDirection"];
+  align?: Atoms["alignItems"];
+  justify?: Atoms["justifyContent"];
+  placeItems?: Atoms["placeItems"];
+  flexChildren?: boolean;
 }
 
-export type FlexComponentProps<E extends React.ElementType = typeof BoxDefaultElement> =
-  PolymorphicPropsWithRef<FlexProps, E>
+export type FlexComponentProps<
+  E extends React.ElementType = typeof BoxDefaultElement
+> = PolymorphicPropsWithRef<FlexProps, E>;
 
 function InnerFlex<E extends React.ElementType = typeof BoxDefaultElement>(
   {
@@ -38,7 +39,7 @@ function InnerFlex<E extends React.ElementType = typeof BoxDefaultElement>(
   }: PolymorphicPropsWithoutRef<FlexProps, E>,
   ref?: React.ForwardedRef<E>
 ) {
-  const flexWrap = wrap === true ? 'wrap' : wrap === false ? 'nowrap' : wrap
+  const flexWrap = wrap === true ? "wrap" : wrap === false ? "nowrap" : wrap;
   return (
     <Box
       ref={ref}
@@ -58,10 +59,10 @@ function InnerFlex<E extends React.ElementType = typeof BoxDefaultElement>(
       )}
       {...props}
     />
-  )
+  );
 }
 
 export const Flex: PolymorphicForwardRefExoticComponent<
   FlexProps,
   typeof BoxDefaultElement
-> = forwardRef(InnerFlex)
+> = forwardRef(InnerFlex);

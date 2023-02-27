@@ -5,13 +5,12 @@ import { recentBid, allRecentBidsButton } from '../Auction.css'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import dynamic from 'next/dynamic'
 import { Bid } from 'src/typings'
-import { Bidder } from "./Bidder";
+import { Bidder } from './Bidder'
 import { AllBids } from '../AllBids'
 
 const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal'), {
   ssr: false,
 })
-
 
 interface RecentBidsProps {
   bids: Bid[]

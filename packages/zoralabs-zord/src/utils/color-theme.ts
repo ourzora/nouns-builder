@@ -1,4 +1,4 @@
-import mix from './color-blend'
+import mix from "./color-blend";
 
 /*
 
@@ -32,12 +32,12 @@ return (
 */
 
 export function colorThemeVars({
-  foreground = '#000000',
-  background = '#ffffff',
-  accent = '#000000',
-  positive = '#1CB687',
-  negative = '#F03232',
-  warning = '#F5A623',
+  foreground = "#000000",
+  background = "#ffffff",
+  accent = "#000000",
+  positive = "#1CB687",
+  negative = "#F03232",
+  warning = "#F5A623",
 }) {
   return {
     background1: background,
@@ -57,12 +57,12 @@ export function colorThemeVars({
     icon2: mix(0.3, background, foreground),
 
     border: mix(0.9, foreground, background),
-    borderOnImage: foreground + '1a', // 1a = 0.1 opacity
+    borderOnImage: foreground + "1a", // 1a = 0.1 opacity
 
     elevation1: `0px 4px 10px ${foreground}0f`, // 0f = 0.06 opacity
     elevation2: `0px 9px 20px ${foreground}24`, // 24 = 0.14 opacity
 
-    backdrop: foreground + '2b', // 2b = 0.17 opacity
+    backdrop: foreground + "2b", // 2b = 0.17 opacity
 
     accent: accent,
     accentHover: mix(0.2, accent, background),
@@ -105,11 +105,11 @@ export function colorThemeVars({
     warningDisabled: mix(0.7, warning, background),
     onWarning: background,
     onWarningDisabled: mix(0.6, warning, background),
-  }
+  };
 }
 
 export function colorTheme(colorProps: { [x: string]: string }) {
-  const tokens = colorThemeVars(colorProps)
+  const tokens = colorThemeVars(colorProps);
 
   return {
     colors: {
@@ -123,7 +123,7 @@ export function colorTheme(colorProps: { [x: string]: string }) {
       text2: tokens.text2,
       text3: tokens.text3,
       text4: tokens.text4,
-      transparent: 'transparent',
+      transparent: "transparent",
 
       icon1: tokens.icon1,
       icon2: tokens.icon2,
@@ -180,5 +180,5 @@ export function colorTheme(colorProps: { [x: string]: string }) {
       small: tokens.elevation1,
       medium: tokens.elevation2,
     },
-  }
+  };
 }

@@ -1,47 +1,50 @@
-import { Atoms, atoms } from '../atoms'
-import { Box, BoxDefaultElement, BoxProps } from './Box'
-import React, { ElementType, ForwardedRef, forwardRef } from 'react'
+import { Atoms, atoms } from "../atoms";
+import { Box, BoxDefaultElement, BoxProps } from "./Box";
+import React, { ElementType, ForwardedRef, forwardRef } from "react";
 import type {
   PolymorphicForwardRefExoticComponent,
   PolymorphicPropsWithRef,
   PolymorphicPropsWithoutRef,
-} from 'react-polymorphic-types'
+} from "react-polymorphic-types";
 
 function gridShorthand(
-  template?: GridProps['columns'] | GridProps['rows'],
-  auto?: GridProps['autoColumns'] | GridProps['autoRows']
+  template?: GridProps["columns"] | GridProps["rows"],
+  auto?: GridProps["autoColumns"] | GridProps["autoRows"]
 ): [
-  React.CSSProperties['gridTemplateColumns'] | React.CSSProperties['gridTemplateRows'],
-  Atoms['gridAutoColumns'] | Atoms['gridAutoRows']
+  (
+    | React.CSSProperties["gridTemplateColumns"]
+    | React.CSSProperties["gridTemplateRows"]
+  ),
+  Atoms["gridAutoColumns"] | Atoms["gridAutoRows"]
 ] {
-  let gridTemplate
-  if (typeof template === 'number') {
-    gridTemplate = `repeat(${template}, 1fr)`
-  } else if (template === 'auto') {
-    gridTemplate = undefined
+  let gridTemplate;
+  if (typeof template === "number") {
+    gridTemplate = `repeat(${template}, 1fr)`;
+  } else if (template === "auto") {
+    gridTemplate = undefined;
   } else {
-    gridTemplate = template
+    gridTemplate = template;
   }
 
-  const gridAuto = auto === true || template === 'auto' ? 'auto' : auto
+  const gridAuto = auto === true || template === "auto" ? "auto" : auto;
 
-  return [gridTemplate, gridAuto]
+  return [gridTemplate, gridAuto];
 }
 
 export interface GridProps extends BoxProps {
-  gap?: Atoms['gap']
-  align?: Atoms['alignItems']
-  justify?: Atoms['justifyContent']
-  columns?: React.CSSProperties['gridTemplateColumns'] | 'auto'
-  rows?: React.CSSProperties['gridTemplateRows'] | 'auto'
-  autoRows?: Atoms['gridAutoRows'] | true
-  autoColumns?: Atoms['gridAutoColumns'] | true
+  gap?: Atoms["gap"];
+  align?: Atoms["alignItems"];
+  justify?: Atoms["justifyContent"];
+  columns?: React.CSSProperties["gridTemplateColumns"] | "auto";
+  rows?: React.CSSProperties["gridTemplateRows"] | "auto";
+  autoRows?: Atoms["gridAutoRows"] | true;
+  autoColumns?: Atoms["gridAutoColumns"] | true;
 }
 
 export type GridComponentProps<E extends ElementType> = PolymorphicPropsWithRef<
   GridProps,
   E
->
+>;
 
 export function InnerGrid<E extends ElementType>(
   {
@@ -58,15 +61,18 @@ export function InnerGrid<E extends ElementType>(
   }: PolymorphicPropsWithoutRef<GridProps, E>,
   ref?: ForwardedRef<E>
 ) {
-  const [gridTemplateColumns, gridAutoColumns] = gridShorthand(columns, autoColumns)
-  const [gridTemplateRows, gridAutoRows] = gridShorthand(rows, autoRows)
+  const [gridTemplateColumns, gridAutoColumns] = gridShorthand(
+    columns,
+    autoColumns
+  );
+  const [gridTemplateRows, gridAutoRows] = gridShorthand(rows, autoRows);
 
   return (
     <Box
       ref={ref}
       display="grid"
       className={[
-        'zord-grid',
+        "zord-grid",
         atoms({
           gap,
           alignItems,
@@ -79,10 +85,10 @@ export function InnerGrid<E extends ElementType>(
       style={{ gridTemplateColumns, gridTemplateRows, ...style }}
       {...props}
     />
-  )
+  );
 }
 
 export const Grid: PolymorphicForwardRefExoticComponent<
   GridProps,
   typeof BoxDefaultElement
-> = forwardRef(InnerGrid)
+> = forwardRef(InnerGrid);

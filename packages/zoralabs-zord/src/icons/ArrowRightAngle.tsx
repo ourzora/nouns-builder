@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { SVGProps } from 'react'
+import * as React from "react";
+import { SVGProps } from "react";
 
 const SvgArrowRightAngle = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -16,6 +16,6 @@ const SvgArrowRightAngle = (props: SVGProps<SVGSVGElement>) => (
       d="M11.212 3.374h-7.2v-2h10.614v10.615h-2V4.788L1.971 15.443.557 14.029 11.212 3.374Z"
     />
   </svg>
-)
+);
 
-export default SvgArrowRightAngle
+export default SvgArrowRightAngle;

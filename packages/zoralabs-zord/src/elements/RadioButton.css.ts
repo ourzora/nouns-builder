@@ -1,7 +1,7 @@
-import { atoms } from '../atoms'
-import { vars } from '../theme'
-import { style } from '@vanilla-extract/css'
-import { recipe } from '@vanilla-extract/recipes'
+import { atoms } from "../atoms";
+import { vars } from "../theme";
+import { style } from "@vanilla-extract/css";
+import { recipe } from "@vanilla-extract/recipes";
 
 export const radioTextVariants = {
   disabled: {
@@ -10,48 +10,48 @@ export const radioTextVariants = {
         color: vars.color.tertiary,
         opacity: 0.6,
         selectors: {
-          '&:hover': { cursor: 'not-allowed !important' },
+          "&:hover": { cursor: "not-allowed !important" },
         },
       }),
     ],
   },
-}
+};
 
 export const radioText = recipe({
   variants: radioTextVariants,
 
   base: [
     style({
-      display: 'grid',
-      alignItems: 'center',
-      gridTemplateColumns: 'auto 1fr',
+      display: "grid",
+      alignItems: "center",
+      gridTemplateColumns: "auto 1fr",
       borderRadius: vars.radii.normal,
       borderWidth: vars.border.width.normal,
       borderStyle: vars.border.style.solid,
       borderColor: vars.color.secondary,
       flex: 1,
       lineHeight: 1.25,
-      userSelect: 'none',
+      userSelect: "none",
       color: vars.color.primary,
       selectors: {
-        '&:hover': { cursor: 'pointer' },
-        '&:hover:not([disabled])': {
+        "&:hover": { cursor: "pointer" },
+        "&:hover:not([disabled])": {
           backgroundColor: vars.color.background2,
           borderColor: vars.color.background2,
-          cursor: 'pointer',
+          cursor: "pointer",
         },
       },
     }),
     atoms({
-      display: 'flex',
-      gap: 'x3',
-      p: 'x3',
+      display: "flex",
+      gap: "x3",
+      p: "x3",
     }),
   ],
-})
+});
 
 export const radio = style({
-  all: 'unset',
+  all: "unset",
   backgroundColor: vars.color.background1,
   color: vars.color.primary,
   width: vars.space.x3,
@@ -61,9 +61,9 @@ export const radio = style({
   borderStyle: vars.border.style.solid,
   borderColor: vars.color.secondary,
   selectors: {
-    '&:hover': {
+    "&:hover": {
       backgroundColor: vars.color.background2,
-      cursor: 'pointer',
+      cursor: "pointer",
     },
     '&[data-state="checked"]': {
       borderWidth: vars.border.width.thick,
@@ -74,27 +74,27 @@ export const radio = style({
     '&[data-state="checked"]&:hover': {
       borderColor: vars.color.accentHover,
     },
-    '&:disabled&:hover': {
+    "&:disabled&:hover": {
       backgroundColor: vars.color.background1,
-      cursor: 'not-allowed',
+      cursor: "not-allowed",
     },
   },
-})
+});
 
 export const indicator = style({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  width: '100%',
-  height: '100%',
-  position: 'relative',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  height: "100%",
+  position: "relative",
   selectors: {
-    '&::after': {
+    "&::after": {
       content: '""',
-      display: 'block',
+      display: "block",
       width: 12,
       height: 12,
-      borderRadius: '50%',
+      borderRadius: "50%",
       backgroundColor: vars.color.background1,
     },
     '&[data-state="checked"]&::after': {
@@ -102,4 +102,4 @@ export const indicator = style({
       height: 8,
     },
   },
-})
+});

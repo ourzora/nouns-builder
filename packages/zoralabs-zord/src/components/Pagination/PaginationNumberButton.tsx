@@ -1,13 +1,13 @@
-import { Button, ButtonProps } from '../../elements'
-import { vars } from '../../theme.css'
-import * as styles from './Pagination.css'
-import { useCallback } from 'react'
-import React from 'react'
+import { Button, ButtonProps } from "../../elements";
+import { vars } from "../../theme.css";
+import * as styles from "./Pagination.css";
+import { useCallback } from "react";
+import React from "react";
 
 interface PaginationNumberButtonProps extends ButtonProps {
-  active: boolean
-  index: number
-  onClick: (index: number) => void
+  active: boolean;
+  index: number;
+  onClick: (index: number) => void;
 }
 
 export function PaginationNumberButton({
@@ -18,8 +18,8 @@ export function PaginationNumberButton({
   ...props
 }: PaginationNumberButtonProps) {
   const handleClick = useCallback(() => {
-    onClick(index)
-  }, [index, onClick])
+    onClick(index);
+  }, [index, onClick]);
 
   return (
     <Button
@@ -36,5 +36,5 @@ export function PaginationNumberButton({
     >
       {children}
     </Button>
-  )
+  );
 }

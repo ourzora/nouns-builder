@@ -1,3 +1,3 @@
-import { atoms } from '../atoms'
+import { atoms } from "../atoms";
 
-export const container = atoms({ shadow: 'medium' })
+export const container = atoms({ shadow: "medium" });

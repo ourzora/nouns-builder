@@ -1,24 +1,24 @@
-import { atoms } from '../atoms'
-import { vars } from '../theme'
-import { keyframes, style } from '@vanilla-extract/css'
-import { recipe } from '@vanilla-extract/recipes'
+import { atoms } from "../atoms";
+import { vars } from "../theme";
+import { keyframes, style } from "@vanilla-extract/css";
+import { recipe } from "@vanilla-extract/recipes";
 
 export const rotateKeyframes = keyframes({
   from: {
-    transform: 'rotate(0deg)',
+    transform: "rotate(0deg)",
   },
   to: {
-    transform: 'rotate(360deg)',
+    transform: "rotate(360deg)",
   },
-})
+});
 
 export const iconVariants = {
   color: {
     primary: [
       style({
-        color: 'inherit',
+        color: "inherit",
         selectors: {
-          '&:not([disabled]):hover': {
+          "&:not([disabled]):hover": {
             color: vars.color.accentHover,
           },
         },
@@ -46,7 +46,7 @@ export const iconVariants = {
   flip: {
     true: [
       style({
-        transformOrigin: '50%',
+        transformOrigin: "50%",
         transform: `rotate(180deg)`,
       }),
     ],
@@ -54,35 +54,35 @@ export const iconVariants = {
   rotate: {
     true: [
       style({
-        transformOrigin: '50%',
+        transformOrigin: "50%",
         animation: `${rotateKeyframes} 0.5s infinite linear`,
       }),
     ],
   },
-}
+};
 
 export const icon = recipe({
   base: style([
     {
-      position: 'relative',
+      position: "relative",
       selectors: {
-        '&:svg': {
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          transition: 'fill 0.3s ease-out',
-          fill: 'none',
+        "&:svg": {
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+          transition: "fill 0.3s ease-out",
+          fill: "none",
         },
       },
     },
     atoms({
-      display: 'block',
+      display: "block",
     }),
   ]),
 
   variants: iconVariants,
 
   defaultVariants: {
-    size: 'sm',
+    size: "sm",
   },
-})
+});

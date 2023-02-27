@@ -1,31 +1,35 @@
-import { Flex, FlexComponentProps } from '../elements/Flex'
-import { Icon } from '../elements/Icon'
-import { inputContainer, inputField, inputFieldBaseInput } from './InputField.css'
-import React from 'react'
-import { ClassValue } from 'clsx'
+import { Flex, FlexComponentProps } from "../elements/Flex";
+import { Icon } from "../elements/Icon";
+import {
+  inputContainer,
+  inputField,
+  inputFieldBaseInput,
+} from "./InputField.css";
+import React from "react";
+import { ClassValue } from "clsx";
 
-export interface SelectProps extends FlexComponentProps<'select'> {
-  autoFocus?: boolean
-  containerClassName?: ClassValue
-  defaultValue?: string
-  name?: string
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void
-  onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void
-  onFocus?: (e: React.FocusEvent<HTMLSelectElement>) => void
-  variant?: 'sm' | 'lg'
-  disabled?: boolean
-  value?: string | number
+export interface SelectProps extends FlexComponentProps<"select"> {
+  autoFocus?: boolean;
+  containerClassName?: ClassValue;
+  defaultValue?: string;
+  name?: string;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLSelectElement>) => void;
+  variant?: "sm" | "lg";
+  disabled?: boolean;
+  value?: string | number;
 }
 
 export const Select = ({
   className,
   containerClassName,
-  variant = 'sm',
+  variant = "sm",
   children,
   disabled,
   ...props
 }: SelectProps) => {
-  const large = variant === 'lg'
+  const large = variant === "lg";
 
   return (
     <Flex
@@ -33,9 +37,9 @@ export const Select = ({
       w="100%"
       pos="relative"
       align="center"
-      h={large ? 'x16' : 'x10'}
+      h={large ? "x16" : "x10"}
       px="x3"
-      cursor={disabled ? 'not-allowed' : 'auto'}
+      cursor={disabled ? "not-allowed" : "auto"}
     >
       <Flex w="100%" className={[`zord-select`, inputField]}>
         <Flex
@@ -47,7 +51,7 @@ export const Select = ({
           pr="x8"
           fontSize={large ? 20 : 14}
           className={[inputFieldBaseInput, className]}
-          style={{ appearance: 'none' }}
+          style={{ appearance: "none" }}
           disabled={!!disabled}
           {...props}
         >
@@ -66,5 +70,5 @@ export const Select = ({
         />
       </Flex>
     </Flex>
-  )
-}
+  );
+};

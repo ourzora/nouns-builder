@@ -1,23 +1,27 @@
-import { Box, BoxComponentProps, Flex, Text } from './'
-import { FieldAnnotation } from './FieldAnnotation'
-import { textAreaField, textAreaFieldBaseInput, textAreaFieldLabel } from './TextArea.css'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Box, BoxComponentProps, Flex, Text } from "./";
+import { FieldAnnotation } from "./FieldAnnotation";
+import {
+  textAreaField,
+  textAreaFieldBaseInput,
+  textAreaFieldLabel,
+} from "./TextArea.css";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
-export interface TextAreaProps extends BoxComponentProps<'textarea'> {
-  value?: string
-  name: string
-  placeholder?: string
-  label?: string
-  className?: string
-  initialHeight?: number
-  disabled?: boolean
-  indentFields?: boolean
-  error?: string
-  description?: string
-  style?: { [key: string]: number | string }
+export interface TextAreaProps extends BoxComponentProps<"textarea"> {
+  value?: string;
+  name: string;
+  placeholder?: string;
+  label?: string;
+  className?: string;
+  initialHeight?: number;
+  disabled?: boolean;
+  indentFields?: boolean;
+  error?: string;
+  description?: string;
+  style?: { [key: string]: number | string };
 }
 
-const TEXTAREA_HEIGHT = 100
+const TEXTAREA_HEIGHT = 100;
 
 export function TextArea({
   value,
@@ -27,25 +31,30 @@ export function TextArea({
   error,
   className,
   style,
-  placeholder = '',
+  placeholder = "",
   disabled = false,
   indentFields = true,
   initialHeight = TEXTAREA_HEIGHT,
   ...props
 }: TextAreaProps) {
-  const textRef = useRef<HTMLTextAreaElement>(null)
-  const [textAreaHeight, setTextAreaHeight] = useState<string>(`${initialHeight}px`)
+  const textRef = useRef<HTMLTextAreaElement>(null);
+  const [textAreaHeight, setTextAreaHeight] = useState<string>(
+    `${initialHeight}px`
+  );
 
   useEffect(() => {
     // Expand + contract height of <textarea> based on contents
     if (textRef?.current) {
-      const taHeight = Math.max(textRef.current.scrollHeight, initialHeight)
-      setTextAreaHeight(`${taHeight}px`)
+      const taHeight = Math.max(textRef.current.scrollHeight, initialHeight);
+      setTextAreaHeight(`${taHeight}px`);
     }
-  }, [initialHeight, value])
+  }, [initialHeight, value]);
 
   return (
-    <Flex direction="column" className={['zord-textarea', textAreaField, className]}>
+    <Flex
+      direction="column"
+      className={["zord-textarea", textAreaField, className]}
+    >
       {label && (
         <Text
           as="label"
@@ -80,5 +89,5 @@ export function TextArea({
         />
       )}
     </Flex>
-  )
+  );
 }

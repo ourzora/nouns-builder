@@ -1,2 +1,2 @@
-export * from './Pagination'
-export * from './PaginationProximityList'
+export * from "./Pagination";
+export * from "./PaginationProximityList";
