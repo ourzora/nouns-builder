@@ -1,8 +1,9 @@
 import { isValidAddress } from 'src/utils/ens'
-import { vetoBurnDelegate } from './veto'
 import { Provider } from '@ethersproject/abstract-provider'
 import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
 import {
+  ADMIN_VETO_INPUT,
+  ADMIN_VETO_RADIO,
   DAYS_HOURS_MINS_SECS,
   NUMBER,
   SINGLE_IMAGE_UPLOAD,
@@ -125,5 +126,16 @@ export const adminProposalFields = [
     type: DAYS_HOURS_MINS_SECS,
     helperText: 'The number of blocks after a proposal that voting is delayed',
   },
-  ...vetoBurnDelegate,
+  {
+    name: 'vetoPower',
+    inputLabel: 'Veto Power',
+    type: ADMIN_VETO_RADIO,
+    helperText: 'Burn veto power',
+  },
+  {
+    name: 'vetoer',
+    inputLabel: 'Vetoer',
+    type: ADMIN_VETO_INPUT,
+    helperText: 'This is the address that has veto power over any proposal.',
+  },
 ]

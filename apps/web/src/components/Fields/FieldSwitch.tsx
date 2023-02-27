@@ -160,24 +160,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
           placeholder={field.placeholder}
         />
       )
-    /////////////////
-    ////////////////
-    case RADIO:
-      return (
-        <Radio
-          {...formik.getFieldProps(field.name)}
-          inputLabel={field.inputLabel}
-          formik={formik}
-          id={field.name}
-          placeholder={field.placeholder}
-          options={options}
-          errorMessage={
-            formik.touched[field.name] && formik.errors[field.name]
-              ? formik.errors[field.name]
-              : undefined
-          }
-        />
-      ) ///////
     case ADMIN_VETO_RADIO:
       return (
         <AdminVetoRadio

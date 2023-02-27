@@ -16,7 +16,7 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 
-interface FounderProps {
+interface AllocationFormProps {
   title: string
 }
 
@@ -24,7 +24,7 @@ export interface FounderAllocationFormValues {
   founderAllocation: TokenAllocation[]
 }
 
-export const Allocation: React.FC<FounderProps> = ({ title }) => {
+export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
   const formRef = useRef<FormikProps<FounderAllocationFormValues>>(null)
   const [allocationError, setAllocationError] = useState(false)
   const {
