@@ -18,7 +18,7 @@ Nouns Builder is built on Nextjs and the following dependencies:
 
 ### Folder organisation
 
-The app is mostly organised by function and for the larger areas of concern there are specific modules that group code by domain. Grouping by modules enables tightly coupled components, hooks, utils, constants, etc to be co-located.
+The app is mostly organised by function and for the larger areas of concern there are specific modules that group by domain. Grouping by modules enables tightly coupled components, hooks, utils, constants, etc to be co-located.
 
 `components`
 `constants`
