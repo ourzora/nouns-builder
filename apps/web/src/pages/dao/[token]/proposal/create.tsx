@@ -19,7 +19,7 @@ import {
   TRANSACTION_TYPES,
   TransactionType,
   TRANSACTION_FORM_OPTIONS,
-} from 'src/modules/transaction-builder'
+} from 'src/modules/create-proposal'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

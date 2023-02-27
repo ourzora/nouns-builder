@@ -1,4 +1,4 @@
-import { copyButtonVariants } from './styles.css'
+import { copyButtonVariants } from './CopyButton.css'
 import { Box } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React from 'react'

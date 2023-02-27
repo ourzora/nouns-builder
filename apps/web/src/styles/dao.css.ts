@@ -1,9 +1,5 @@
 import { style, styleVariants } from '@vanilla-extract/css'
 
-export const auctionWrapperStyle = style({
-  background: '#F5F5F5',
-})
-
 export const detailsWrapperStyle = style({
   maxWidth: 850,
 })

@@ -1,42 +1,38 @@
 import {
   IPFSUpload,
   OrderedLayersProps,
-  allocationProps,
-  auctionSettingsProps,
+  TokenAllocation,
   DaoContractAddresses,
-  generalInfoProps,
-  setUpArtworkProps,
-  uploadArtworkErrorProps,
-  votingSettingsProps,
 } from 'src/typings'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
+import {
+  ArtworkFormValues,
+  AuctionSettingsFormValues,
+  GeneralFormValues,
+} from 'src/modules/create-dao'
 
 export interface FormStoreState {
   activeSection: number
   setActiveSection: (activeSection: number) => void
   fulfilledSections: string[]
   setFulfilledSections: (section: string) => void
-  generalInfo: generalInfoProps
-  setGeneralInfo: (generalInfo: generalInfoProps) => void
-  votingSettings: votingSettingsProps
-  setVotingSettings: (votingSettings: votingSettingsProps) => void
-  vetoPower: number | undefined
-  setVetoPower: (vetoPower: number) => void
-  founderAllocation: Array<allocationProps>
-  setFounderAllocation: (founderAllocation: Array<allocationProps>) => void
-  contributionAllocation: Array<allocationProps>
-  setContributionAllocation: (contributionAllocation: Array<allocationProps>) => void
-  auctionSettings: auctionSettingsProps
-  setAuctionSettings: (auctionSettings: auctionSettingsProps) => void
-  setUpArtwork: setUpArtworkProps
-  setSetUpArtwork: (artwork: setUpArtworkProps) => void
+  general: GeneralFormValues
+  setGeneral: (general: GeneralFormValues) => void
+  vetoPower: boolean | undefined
+  setVetoPower: (vetoPower: boolean) => void
+  founderAllocation: Array<TokenAllocation>
+  setFounderAllocation: (founderAllocation: Array<TokenAllocation>) => void
+  contributionAllocation: Array<TokenAllocation>
+  setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) => void
+  auctionSettings: AuctionSettingsFormValues
+  setAuctionSettings: (auctionSettings: AuctionSettingsFormValues) => void
+  setUpArtwork: ArtworkFormValues
+  setSetUpArtwork: (artwork: ArtworkFormValues) => void
   ipfsUpload: IPFSUpload[]
   setIpfsUpload: (ipfsUpload: IPFSUpload[]) => void
-  artworkSettings: {}[]
-  setArtworkSettings: (artworkSettings: {}[]) => void
   activeSectionCurrentIndex: number
   setActiveSectionCurrentIndex: (activeSectionCurrentIndex: number) => void
   deployedDao: DaoContractAddresses
@@ -45,8 +41,6 @@ export interface FormStoreState {
   setOrderedLayers: (orderedLayers: OrderedLayersProps[]) => void
   isUploadingToIPFS: boolean
   setIsUploadingToIPFS: (bool: boolean) => void
-  uploadArtworkError: uploadArtworkErrorProps | null | undefined
-  setUploadArtworkError: (uploadArtworkError: uploadArtworkErrorProps | null) => void
   nounsAllocationOn: boolean
   setNounsAllocationOn: (bool: boolean) => void
   resetForm: () => void
@@ -55,39 +49,33 @@ export interface FormStoreState {
 const initialState = {
   activeSection: 0,
   fulfilledSections: [],
-  generalInfo: {
+  general: {
     daoAvatar: '',
     daoName: '',
     daoSymbol: '',
     daoWebsite: '',
   },
-  votingSettings: {
-    proposalThreshold: '',
-    quorumThreshold: '',
-  },
   auctionSettings: {
-    maxTokenAllocation: '',
-    allocationFrequency: '',
     auctionDuration: {
-      seconds: '',
-      days: '',
-      hours: '',
-      minutes: '',
+      seconds: undefined,
+      days: undefined,
+      hours: undefined,
+      minutes: undefined,
     },
-    auctionReservePrice: '',
-    proposalThreshold: '',
-    quorumThreshold: '',
+    auctionReservePrice: undefined,
+    proposalThreshold: undefined,
+    quorumThreshold: undefined,
   },
   founderAllocation: [],
   contributionAllocation: [
     {
       founderAddress: PUBLIC_BUILDER_ADDRESS,
-      allocation: 1,
+      allocationPercentage: 1,
       endDate: yearsAhead(5),
     },
     {
       founderAddress: PUBLIC_NOUNS_ADDRESS,
-      allocation: 1,
+      allocationPercentage: 1,
       endDate: yearsAhead(5),
     },
   ],
@@ -95,7 +83,6 @@ const initialState = {
   vetoPower: undefined,
   setUpArtwork: {
     projectDescription: '',
-    unitName: '',
     artwork: [],
     collectionName: '',
     externalUrl: '',
@@ -109,10 +96,8 @@ const initialState = {
       trait: '',
     },
   ],
-  artworkSettings: [],
   orderedLayers: [],
   isUploadingToIPFS: false,
-  uploadArtworkError: undefined,
   activeSectionCurrentIndex: 0,
   deployedDao: {
     token: undefined,
@@ -135,33 +120,24 @@ export const useFormStore = create(
             : [...state.fulfilledSections],
         }))
       },
-      setGeneralInfo: (generalInfo: generalInfoProps) => set({ generalInfo }),
-      setVotingSettings: (votingSettings: votingSettingsProps) => set({ votingSettings }),
-      setAuctionSettings: (auctionSettings: auctionSettingsProps) =>
+      setGeneral: (general: GeneralFormValues) => set({ general }),
+      setAuctionSettings: (auctionSettings: AuctionSettingsFormValues) =>
         set({ auctionSettings }),
-      setFounderAllocation: (founderAllocation: Array<allocationProps>) =>
+      setFounderAllocation: (founderAllocation: Array<TokenAllocation>) =>
         set({ founderAllocation }),
-      setContributionAllocation: (contributionAllocation: Array<allocationProps>) =>
+      setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) =>
         set({ contributionAllocation }),
-
       nounsAllocationOn: true,
       setNounsAllocationOn: (nounsAllocationOn: boolean) => set({ nounsAllocationOn }),
-      setVetoPower: (vetoPower: number) => set({ vetoPower }),
-      setSetUpArtwork: (setUpArtwork: setUpArtworkProps) => set({ setUpArtwork }),
+      setVetoPower: (vetoPower: boolean) => set({ vetoPower }),
+      setSetUpArtwork: (artwork: ArtworkFormValues) => set({ setUpArtwork: artwork }),
       setIpfsUpload: (ipfsUpload: IPFSUpload[]) => set({ ipfsUpload }),
-      setArtworkSettings: (artworkSettings: {}[]) => {
-        set({
-          artworkSettings,
-        })
-      },
       setOrderedLayers: (orderedLayers: OrderedLayersProps[]) => {
         set({
           orderedLayers,
         })
       },
       setIsUploadingToIPFS: (isUploadingToIPFS: boolean) => set({ isUploadingToIPFS }),
-      setUploadArtworkError: (uploadArtworkError: uploadArtworkErrorProps | null) =>
-        set({ uploadArtworkError }),
       setActiveSectionCurrentIndex: (activeSectionCurrentIndex: number) =>
         set({ activeSectionCurrentIndex }),
       setDeployedDao: (deployedDao: DaoContractAddresses) => {

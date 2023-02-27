@@ -5,19 +5,19 @@ import { fromSeconds } from 'src/utils/helpers'
 export function parseTime(timediff: number, prefix: string) {
   const timeObj = fromSeconds(timediff)
 
-  if (timeObj.days > 0) {
+  if (timeObj.days && timeObj.days > 0) {
     return timeObj.days > 1
       ? `${prefix} in ${timeObj.days} days`
       : `${prefix} in ${timeObj.days} day`
   }
 
-  if (timeObj.hours > 0) {
+  if (timeObj.hours && timeObj.hours > 0) {
     return timeObj.hours > 1
       ? `${prefix} in ${timeObj.hours} hours`
       : `${prefix} in ${timeObj.hours} hour`
   }
 
-  if (timeObj.minutes > 0) {
+  if (timeObj.minutes && timeObj.minutes > 0) {
     return timeObj.minutes > 1
       ? `${prefix} in ${timeObj.minutes} minutes`
       : `${prefix} in ${timeObj.minutes} minute`

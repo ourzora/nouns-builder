@@ -4,9 +4,8 @@ import Date from './Date'
 import DaysHoursMins from './DaysHoursMins'
 import DaysHoursMinsSecs from './DaysHoursMinsSecs'
 import MinsSecs from './MinsSecs'
-import Radio from './Radio'
 import Select from './Select'
-import SingleImageUpload from 'src/components/SingleImageUpload'
+import SingleImageUpload from '../SingleImageUpload/SingleImageUpload'
 import SmartInput from './SmartInput'
 import TextArea from './TextArea'
 import {
@@ -27,7 +26,7 @@ import {
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 import { compareAndReturn } from 'src/utils/helpers'
-import { ArtworkUpload } from 'src/modules/create'
+import { ArtworkUpload } from 'src/modules/create-dao'
 
 interface FieldSwitchProps {
   field: {
@@ -86,20 +85,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   const handleChange = (e: BaseSyntheticEvent) => {
     const { value } = e.target
     if (!formik) return
-    /*
-
-        custom field handling
-
-     */
-    if (field.name === 'daoName') {
-      formik.setFieldValue(
-        'daoSymbol',
-        `$${value
-          .toUpperCase()
-          .replace(/[AEIOU\s]/g, '')
-          .slice(0, 4)}`
-      )
-    }
 
     formik.setFieldValue(field.name, field.type === NUMBER ? parseFloat(value) : value)
   }
@@ -174,24 +159,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
           placeholder={field.placeholder}
         />
       )
-    /////////////////
-    ////////////////
-    case RADIO:
-      return (
-        <Radio
-          {...formik.getFieldProps(field.name)}
-          inputLabel={field.inputLabel}
-          formik={formik}
-          id={field.name}
-          placeholder={field.placeholder}
-          options={options}
-          errorMessage={
-            formik.touched[field.name] && formik.errors[field.name]
-              ? formik.errors[field.name]
-              : undefined
-          }
-        />
-      ) ///////
     case ADMIN_VETO_RADIO:
       return (
         <AdminVetoRadio

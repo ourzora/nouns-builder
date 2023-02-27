@@ -18,11 +18,12 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { getProposals, ProposalsResponse } from 'src/data/graphql/requests/proposalsQuery'
 import { AddressType } from 'src/typings'
 import Pagination from 'src/components/Pagination'
-import { useProposalStore, Upgrade } from 'src/modules/transaction-builder'
-import { useDaoStore, useDelegate } from "src/modules/dao";
+import { ProposalCard } from 'src/modules/proposal'
+import { useProposalStore, Upgrade } from 'src/modules/create-proposal'
 import { Treasury } from './Treasury'
 import { MobileMenu } from './MobileMenu'
-import { ProposalCard } from "src/modules/proposal";
+import { useDaoStore } from 'src/modules/dao/stores'
+import { useDelegate } from 'src/modules/dao/hooks'
 
 export const Activity: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
