@@ -6,13 +6,8 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
-import {
-  adminProposalFields,
-  validateAdmin,
-} from 'src/components/Fields/fields/adminForm'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { useAuctionContract, useGovernorContract, useMetadataContract } from 'src/hooks'
-import { GeneralFormValues } from 'src/modules/create-dao'
 import {
   BuilderTransaction,
   TransactionType,
@@ -25,26 +20,17 @@ import { AddressType, DaoContracts, Duration } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
 
-interface AdminProps {
+import {
+  AdminFormValues,
+  adminProposalFields,
+  adminValidationSchema,
+} from './AdminForm.schema'
+
+interface AdminFormProps {
   title?: string
 }
 
-export interface AdminFormValues {
-  daoAvatar: string
-  daoWebsite: string
-  projectDescription: string
-  rendererBase: string
-  auctionDuration: Duration
-  auctionReservePrice: number
-  proposalThreshold: number
-  quorumThreshold: number
-  votingPeriod: Duration
-  votingDelay: Duration
-  vetoPower: 1 | 0
-  vetoer: string
-}
-
-export const Admin: React.FC<AdminProps> = () => {
+export const AdminForm: React.FC<AdminFormProps> = () => {
   const {
     query: { token },
     push,
@@ -222,7 +208,7 @@ export const Admin: React.FC<AdminProps> = () => {
       <Flex direction={'column'} w={'100%'}>
         <Formik
           initialValues={initialValues}
-          validationSchema={validateAdmin(provider)}
+          validationSchema={adminValidationSchema(provider)}
           onSubmit={(values, formik: FormikValues) =>
             handleUpdateSettings(values, formik)
           }

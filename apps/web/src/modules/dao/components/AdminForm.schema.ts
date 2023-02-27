@@ -9,10 +9,26 @@ import {
   TEXTAREA,
 } from 'src/components/Fields/types'
 import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
+import { Duration } from 'src/typings'
 import { isValidAddress } from 'src/utils/ens'
 import * as Yup from 'yup'
 
-export const validateAdmin = (provider: Provider | undefined) =>
+export interface AdminFormValues {
+  daoAvatar: string
+  daoWebsite: string
+  projectDescription: string
+  rendererBase: string
+  auctionDuration: Duration
+  auctionReservePrice: number
+  proposalThreshold: number
+  quorumThreshold: number
+  votingPeriod: Duration
+  votingDelay: Duration
+  vetoPower: 1 | 0
+  vetoer: string
+}
+
+export const adminValidationSchema = (provider: Provider | undefined) =>
   Yup.object()
     .concat(auctionSettingsValidationSchema)
     .concat(

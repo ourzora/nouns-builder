@@ -7,6 +7,5 @@ module.exports = {
   ],
   rules: {
     'unused-imports/no-unused-imports-ts': 2,
-    'no-console': true
   },
 }

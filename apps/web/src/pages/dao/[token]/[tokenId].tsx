@@ -11,7 +11,13 @@ import getToken from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import { Auction } from 'src/modules/auction'
-import { About, Activity, Admin, SectionHandler, SmartContracts } from 'src/modules/dao'
+import {
+  About,
+  Activity,
+  AdminForm,
+  SectionHandler,
+  SmartContracts,
+} from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import { AddressType } from 'src/typings'
@@ -60,7 +66,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
 
     const adminSection = {
       title: 'Admin',
-      component: [<Admin key={'admin'} />],
+      component: [<AdminForm key={'admin'} />],
     }
     const smartContractsSection = {
       title: 'Smart Contracts',
