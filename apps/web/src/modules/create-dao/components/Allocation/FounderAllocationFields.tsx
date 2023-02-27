@@ -2,8 +2,8 @@ import { Heading, Button, Flex, Text, Paragraph, Stack } from '@zoralabs/zord'
 import { Icon } from 'src/components/Icon'
 import { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import React from 'react'
-import SmartInput from '../SmartInput'
-import DatePicker from '../Date'
+import SmartInput from 'src/components/Fields/SmartInput'
+import DatePicker from 'src/components/Fields/Date'
 import { TokenAllocation, Duration } from 'src/typings'
 import {
   calculateMaxAllocation,
@@ -21,7 +21,7 @@ interface FounderAllocationFieldsProps {
   addFounderAddress: () => void
 }
 
-const FounderAllocationFields = ({
+export const FounderAllocationFields = ({
   values,
   vetoPower,
   auctionDuration,
@@ -172,5 +172,3 @@ const FounderAllocationFields = ({
     </Flex>
   )
 }
-
-export default FounderAllocationFields

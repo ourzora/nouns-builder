@@ -4,9 +4,9 @@ import { yearsAhead } from 'src/utils/helpers'
 import { PUBLIC_NOUNS_ADDRESS, PUBLIC_BUILDER_ADDRESS } from 'src/constants/addresses'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { TokenAllocation } from 'src/typings'
-import { validationSchemaContributions } from '../fields/founder'
-import SmartInput from '../SmartInput'
-import Date from '../Date'
+import { validationSchemaContributions } from './AllocationForm.schema'
+import SmartInput from 'src/components/Fields/SmartInput'
+import Date from 'src/components/Fields/Date'
 import { Toggle } from './Toggle'
 import { DaoCopyAddress } from './DaoCopyAddress'
 
@@ -15,12 +15,12 @@ export interface ContributionAllocationFormValues {
   nounsAllocation?: TokenAllocation
 }
 
-export interface ContributionFormProps {
+export interface ContributionAllocationFormProps {
   initialValues: ContributionAllocationFormValues
   handleSubmit: (values: ContributionAllocationFormValues) => void
 }
 
-export const ContributionForm: React.FC<ContributionFormProps> = ({
+export const ContributionAllocationForm: React.FC<ContributionAllocationFormProps> = ({
   initialValues,
   handleSubmit,
 }) => {

@@ -7,10 +7,13 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { getEnsAddress } from 'src/utils/ens'
 import { Contribution } from './Contribution'
 import { DaoCopyAddress } from './DaoCopyAddress'
-import { ContributionAllocationFormValues, ContributionForm } from './ContributionForm'
+import {
+  ContributionAllocationFormValues,
+  ContributionAllocationForm,
+} from './ContributionAllocationForm'
 import { TokenAllocation } from 'src/typings'
 
-const ContributionAllocation = () => {
+export const ContributionAllocation = () => {
   const [open, setOpen] = useState(false)
   const contributionAllocation = useFormStore((state) => state.contributionAllocation)
   const setContributionAllocation = useFormStore(
@@ -131,7 +134,7 @@ const ContributionAllocation = () => {
       </Stack>
 
       <AnimatedModal open={open} size={'auto'} close={() => setOpen(false)}>
-        <ContributionForm
+        <ContributionAllocationForm
           initialValues={{
             builderAllocation: builderAllocationValue,
             nounsAllocation: nounsAllocationValue,
