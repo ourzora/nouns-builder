@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { Box, Button, Flex } from '@zoralabs/zord'
+import { atoms, Box, Button, Flex } from '@zoralabs/zord'
 
 import { useLayoutStore } from 'src/stores'
 import { useAuctionContract } from 'src/hooks'
@@ -45,15 +45,24 @@ export const PreAuction = () => {
           Start Auction
         </Button>
 
-        <Link
-          href={{
-            pathname: router.pathname,
-            query: { ...query, tab: 'admin' },
-          }}
-          shallow={true}
-        >
-          <Button className={preAuctionButtonVariants['edit']}>Edit Settings</Button>
-        </Link>
+        <Button className={preAuctionButtonVariants['edit']}>
+          <Link
+            href={{
+              pathname: router.pathname,
+              query: { ...query, tab: 'admin' },
+            }}
+            shallow={true}
+            className={atoms({
+              display: 'flex',
+              w: '100%',
+              h: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            })}
+          >
+            Edit Settings
+          </Link>
+        </Button>
 
         <Box className={preAuctionHelperText} mt={'x4'}>
           You can change settings before you start the auction

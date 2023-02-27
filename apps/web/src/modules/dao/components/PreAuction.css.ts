@@ -35,6 +35,8 @@ export const preAuctionButtonVariants = styleVariants({
   edit: [
     preAuctionButton,
     {
+      paddingLeft: 0,
+      paddingRight: 0,
       background: vars.color.background2,
       color: '#000',
       selectors: {
