@@ -15,7 +15,6 @@ export const proposalTileSubtitle = style([
 
 export const proposalTileSubtitleVariants = styleVariants({
   default: [proposalTileSubtitle],
-  // neutral: [proposalTileSubtitle, atoms({ color: 'text3' })],
   for: [proposalTileSubtitle, atoms({ color: 'positive' })],
   against: [proposalTileSubtitle, atoms({ color: 'negative' })],
   abstain: [proposalTileSubtitle, atoms({ color: 'text3' })],

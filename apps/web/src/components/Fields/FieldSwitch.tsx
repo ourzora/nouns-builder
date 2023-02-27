@@ -6,7 +6,7 @@ import DaysHoursMinsSecs from './DaysHoursMinsSecs'
 import MinsSecs from './MinsSecs'
 import Radio from './Radio'
 import Select from './Select'
-import SingleImageUpload from 'src/components/SingleImageUpload'
+import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
 import SmartInput from './SmartInput'
 import TextArea from './TextArea'
 import {
@@ -27,7 +27,7 @@ import {
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 import { compareAndReturn } from 'src/utils/helpers'
-import { ArtworkUpload } from 'src/modules/create'
+import { ArtworkUpload } from 'src/modules/create-dao'
 
 interface FieldSwitchProps {
   field: {

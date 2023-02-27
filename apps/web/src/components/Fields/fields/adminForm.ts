@@ -1,7 +1,7 @@
 import { isValidAddress } from 'src/utils/ens'
 import { vetoBurnDelegate } from './veto'
 import { Provider } from '@ethersproject/abstract-provider'
-import { auctionSettingsValidationSchema } from 'src/modules/create'
+import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
 import {
   DAYS_HOURS_MINS_SECS,
   NUMBER,

@@ -10,7 +10,7 @@ import {
   Veto,
   FormHandler,
   Artwork,
-} from 'src/modules/create'
+} from 'src/modules/create-dao'
 import { Box, Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import { NextPage } from 'next'

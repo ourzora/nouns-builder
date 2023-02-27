@@ -6,7 +6,7 @@ import Form from 'src/components/Fields/Form'
 import { useAuctionContract } from 'src/hooks'
 import { fromSeconds, toSeconds } from 'src/utils/helpers'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { auctionSettingsValidationSchema } from 'src/modules/create'
+import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
 import { DAYS_HOURS_MINS_SECS, NUMBER } from 'src/components/Fields/types'
 
 interface PreAuctionFormSettingsProps {

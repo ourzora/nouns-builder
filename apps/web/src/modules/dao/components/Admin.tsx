@@ -17,9 +17,8 @@ import {
   useProposalStore,
   BuilderTransaction,
   TransactionType,
-} from 'src/modules/transaction-builder'
-import { AddressType, DaoContracts, Duration } from 'src/typings'
-import { generalInfoProps } from 'src/typings'
+} from 'src/modules/create-proposal'
+import { AddressType, DaoContracts, Duration, generalInfoProps } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
