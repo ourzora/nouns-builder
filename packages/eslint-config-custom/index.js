@@ -1,6 +1,10 @@
 module.exports = {
   extends: ['next', 'turbo', 'prettier'],
-  plugins: ['@typescript-eslint', 'unused-imports'],
+  plugins: [
+    '@typescript-eslint',
+    'unused-imports',
+    require('@trivago/prettier-plugin-sort-imports'),
+  ],
   parser: '@typescript-eslint/parser',
   rules: {
     '@next/next/no-html-link-for-pages': 'off',
