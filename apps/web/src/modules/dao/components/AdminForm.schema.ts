@@ -9,8 +9,6 @@ import {
   SINGLE_IMAGE_UPLOAD,
   TEXT,
   TEXTAREA,
-  ADMIN_VETO_RADIO,
-  ADMIN_VETO_INPUT,
 } from 'src/components/Fields/types'
 import * as Yup from 'yup'
 import { Duration } from 'src/typings'
