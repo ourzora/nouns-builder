@@ -1,7 +1,8 @@
-import { auctionImg, tokenImage } from './Auction.css'
+import { Box } from '@zoralabs/zord'
 import Image from 'next/legacy/image'
 import React from 'react'
-import { Box } from '@zoralabs/zord'
+
+import { auctionImg, tokenImage } from './Auction.css'
 
 interface AucitonImageProps {
   image?: string

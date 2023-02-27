@@ -1,24 +1,28 @@
-import { Box, Flex, Stack, Text, Button, theme, Atoms } from '@zoralabs/zord'
+import { Atoms, Box, Button, Flex, Stack, Text, theme } from '@zoralabs/zord'
 import { ContractTransaction } from 'ethers'
+import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { Fragment } from 'react'
-import { Formik, Form as FormikForm, Field } from 'formik'
-import { useSWRConfig } from 'swr'
-import SWR_KEYS from 'src/constants/swrKeys'
 import { useGovernorContract } from 'src/hooks'
+import { BytesType } from 'src/typings'
+import { useSWRConfig } from 'swr'
+
+import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+
+import SWR_KEYS from 'src/constants/swrKeys'
+
 import { Icon } from 'src/components/Icon'
+import { IconType } from 'src/components/Icon/icons'
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
+
 import {
   proposalFormTitle,
   voteModalFieldset,
   voteModalOption,
-  voteModalRadioInput,
   voteModalOptionText,
+  voteModalRadioInput,
   voteModalReason,
 } from 'src/styles/Proposals.css'
-import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-import { BytesType } from 'src/typings'
-import { IconType } from 'src/components/Icon/icons'
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 
 enum Choice {
   AGAINST = '0',

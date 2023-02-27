@@ -1,4 +1,5 @@
 import { assert } from 'vitest'
+
 import { formatDate, unpackOptionalArray } from './helpers'
 
 it('should format the date as a readable string', () => {

@@ -1,5 +1,6 @@
-import { getSdk } from './sdk.generated'
 import { GraphQLClient } from 'graphql-request'
+
+import { getSdk } from './sdk.generated'
 
 export const client = new GraphQLClient('https://api.zora.co/graphql', {
   headers: {

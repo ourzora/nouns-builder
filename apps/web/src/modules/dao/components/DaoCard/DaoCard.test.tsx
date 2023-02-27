@@ -1,7 +1,8 @@
 import { act, render, screen } from '@testing-library/react'
-import React from 'react'
 import dayjs from 'dayjs'
+import React from 'react'
 import { describe, expect, it, vi } from 'vitest'
+
 import { DaoCard } from './DaoCard'
 
 describe('Dao card', () => {

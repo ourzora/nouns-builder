@@ -1,14 +1,19 @@
-import { Box, Flex, Grid, Text, Heading } from '@zoralabs/zord'
+import { Box, Flex, Grid, Text } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import React from 'react'
-import { useDaoStore } from 'src/stores/useDaoStore'
-import { statisticContent } from 'src/styles/About.css'
-import { treasuryWrapper } from 'src/styles/Proposals.css'
-import { formatCryptoVal, numberFormatter } from 'src/utils/numbers'
 import useSWR from 'swr'
 import { useBalance } from 'wagmi'
-import SWR_KEYS from 'src/constants/swrKeys'
+
 import { salesVolumeRequest } from 'src/data/graphql/requests/salesVolumeQuery'
+
+import { useDaoStore } from 'src/stores/useDaoStore'
+
+import SWR_KEYS from 'src/constants/swrKeys'
+
+import { formatCryptoVal, numberFormatter } from 'src/utils/numbers'
+
+import { statisticContent } from 'src/styles/About.css'
+import { treasuryWrapper } from 'src/styles/Proposals.css'
 
 export const Treasury = () => {
   const { addresses } = useDaoStore()

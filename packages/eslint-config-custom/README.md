@@ -7,6 +7,6 @@ This is an eslint configuration file for projects using NextJS
 
 ```js
 module.exports = {
-  extends: ["custom"],
-};
+  extends: ['custom'],
+}
 ```

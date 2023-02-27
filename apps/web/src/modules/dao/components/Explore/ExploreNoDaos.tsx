@@ -1,6 +1,6 @@
-import React from 'react'
 import { Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
+import React from 'react'
 
 const ExploreNoDaos = () => {
   return (

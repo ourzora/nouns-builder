@@ -1,26 +1,29 @@
-import React, { useState } from 'react'
-import { useContractRead, useContract, useSigner } from 'wagmi'
+import { Box, Button, Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { Field, FieldProps, Formik } from 'formik'
 import { useRouter } from 'next/router'
-import { Button, Flex, Box } from '@zoralabs/zord'
-
-import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
+import React, { useState } from 'react'
 import { useGovernorContract } from 'src/hooks'
 import { useDaoStore, useLayoutStore } from 'src/stores'
-import TextInput from 'src/components/Fields/TextInput'
-import { SUCCESS_MESSAGES } from 'src/constants/messages'
-import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
-import { Simulation, SimulationResult } from 'src/services/simulationService'
+import { useContract, useContractRead, useSigner } from 'wagmi'
+
 import { ErrorResult } from 'src/services/errorResult'
+import { Simulation, SimulationResult } from 'src/services/simulationService'
+
+import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
+
+import { SUCCESS_MESSAGES } from 'src/constants/messages'
+
+import TextInput from 'src/components/Fields/TextInput'
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
-import { ERROR_CODE, FormValues, validationSchema } from './fields'
-import { Transactions } from './Transactions'
 import { MarkdownEditor } from './MarkdownEditor'
+import { Transactions } from './Transactions'
+import { ERROR_CODE, FormValues, validationSchema } from './fields'
 
 interface ReviewProposalProps {
   disabled: boolean

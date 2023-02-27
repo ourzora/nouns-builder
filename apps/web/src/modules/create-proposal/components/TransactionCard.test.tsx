@@ -1,8 +1,9 @@
 import { fireEvent, screen } from '@testing-library/react'
 import { render } from 'src/test/utils'
 import { vi } from 'vitest'
-import { TransactionCard } from './TransactionCard'
+
 import { TransactionType } from '../constants'
+import { TransactionCard } from './TransactionCard'
 
 describe('Review Card', () => {
   it('should render a disabled transaction card', () => {

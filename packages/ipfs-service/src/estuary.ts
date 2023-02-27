@@ -1,5 +1,5 @@
-import { TTLCache } from '@brokerloop/ttlcache'
 import { uploadApi } from './api'
+import { TTLCache } from '@brokerloop/ttlcache'
 
 const CACHE_TTL = 1000 * 60 * 60 // 1hr
 const CACHE_KEY = 'EstuaryService:authorize'

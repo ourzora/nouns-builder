@@ -1,14 +1,15 @@
-import * as React from 'react'
-import ReactMde from 'react-mde'
-import ReactMarkdown from 'react-markdown'
-import 'src/components/Fields/styles.css'
-import 'react-mde/lib/styles/css/react-mde-all.css'
-import { ReactElement } from 'react'
 import { Flex, Stack } from '@zoralabs/zord'
-import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
-import { Error } from 'src/components/Fields/Error'
-import remarkGfm from 'remark-gfm'
 import { getFetchableUrl, uploadFile } from 'ipfs-service'
+import * as React from 'react'
+import { ReactElement } from 'react'
+import ReactMarkdown from 'react-markdown'
+import ReactMde from 'react-mde'
+import 'react-mde/lib/styles/css/react-mde-all.css'
+import remarkGfm from 'remark-gfm'
+
+import { Error } from 'src/components/Fields/Error'
+import 'src/components/Fields/styles.css'
+import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
 
 interface MarkdownEditorProps {
   onChange: (value: string) => void

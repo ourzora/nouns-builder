@@ -2,8 +2,9 @@ import { StaticJsonRpcProvider, TransactionReceipt } from '@ethersproject/provid
 import axios from 'axios'
 import { ethers } from 'ethers'
 import { vi } from 'vitest'
+
 import { InvalidRequestError } from './errors'
-import { InsufficientFundsError, simulate, Simulation } from './simulationService'
+import { InsufficientFundsError, Simulation, simulate } from './simulationService'
 
 const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
 

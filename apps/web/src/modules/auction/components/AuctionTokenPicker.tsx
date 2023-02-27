@@ -1,11 +1,13 @@
-import { auctionDateNavButton, auctionTextVariants } from './Auction.css'
 import { Box, Flex, Text } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
+
+import { Icon } from 'src/components/Icon'
 import { OptionalLink } from 'src/components/OptionalLink'
+
+import { auctionDateNavButton, auctionTextVariants } from './Auction.css'
 
 interface AuctionTokenPickerProps {
   collection: string

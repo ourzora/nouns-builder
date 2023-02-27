@@ -1,6 +1,11 @@
-import { isValidAddress } from 'src/utils/ens'
 import { Provider } from '@ethersproject/abstract-provider'
+import { Duration } from 'src/typings'
+import * as Yup from 'yup'
+
+import { isValidAddress } from 'src/utils/ens'
+
 import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
+
 import {
   ADMIN_VETO_INPUT,
   ADMIN_VETO_RADIO,
@@ -10,8 +15,6 @@ import {
   TEXT,
   TEXTAREA,
 } from 'src/components/Fields/types'
-import * as Yup from 'yup'
-import { Duration } from 'src/typings'
 
 export interface AdminFormValues {
   daoAvatar: string

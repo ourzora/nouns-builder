@@ -8,15 +8,20 @@
     "test": "turbo run test",
     "type-check": "turbo run type-check",
     "lint": "turbo run lint",
+    "eslint": "eslint --fix . --ext .ts,.tsx",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "ci": "turbo run lint test"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "eslint": "^8.16.0",
     "eslint-config-custom": "workspace:*",
     "prettier": "^2.5.1",
-    "turbo": "latest"
+    "turbo": "latest",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-unused-imports": "^2.0.0"
   },
   "packageManager": "pnpm@7.15.0"
 }

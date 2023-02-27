@@ -1,5 +1,6 @@
-import React from 'react'
 import { Flex, Stack, Text } from '@zoralabs/zord'
+import React from 'react'
+
 import { TRANSACTION_TYPES, TransactionType } from '../../constants'
 import { TransactionTypeIcon } from '../TransactionTypeIcon'
 

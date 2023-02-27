@@ -1,8 +1,10 @@
-import React from 'react'
-import { Flex, Box, Text, vars } from '@zoralabs/zord'
-import { useRouter } from 'next/router'
+import { Box, Flex, Text, vars } from '@zoralabs/zord'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React from 'react'
+
 import { useLayoutStore } from 'src/stores/useLayoutStore'
+
 import ExploreSortMenu from './ExploreSortMenu'
 
 const ExploreToolbar: React.FC<{}> = () => {

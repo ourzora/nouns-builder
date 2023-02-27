@@ -1,12 +1,14 @@
-import React, { Fragment } from 'react'
 import { Grid } from '@zoralabs/zord'
-import { exploreGrid } from './Explore.css'
-import { ExplorePageData } from 'src/typings'
-import ExploreToolbar from './ExploreToolbar'
-import ExploreNoDaos from './ExploreNoDaos'
-import { DaoCard } from '../DaoCard'
 import { useRouter } from 'next/router'
+import React, { Fragment } from 'react'
+import { ExplorePageData } from 'src/typings'
+
 import Pagination from 'src/components/Pagination'
+
+import { DaoCard } from '../DaoCard'
+import { exploreGrid } from './Explore.css'
+import ExploreNoDaos from './ExploreNoDaos'
+import ExploreToolbar from './ExploreToolbar'
 
 interface ExploreProps {
   daos?: ExplorePageData['daos'] | null

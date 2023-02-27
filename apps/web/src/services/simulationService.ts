@@ -2,6 +2,7 @@ import { StaticJsonRpcProvider } from '@ethersproject/providers'
 import axios from 'axios'
 import { BigNumber, constants, ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
+
 import { InvalidRequestError } from './errors'
 
 export interface SimulationRequestBody {

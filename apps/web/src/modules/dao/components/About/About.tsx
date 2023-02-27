@@ -1,19 +1,25 @@
-import React from 'react'
-import Image from 'next/legacy/image'
-import useSWR from 'swr'
-import { useBalance } from 'wagmi'
-import HtmlReactParser from 'html-react-parser'
 import { Box, Flex, Text } from '@zoralabs/zord'
-import { Avatar } from 'src/components/Avatar/Avatar'
+import HtmlReactParser from 'html-react-parser'
+import { getFetchableUrl } from 'ipfs-service'
+import Image from 'next/legacy/image'
+import React from 'react'
 import { useMetadataContract, useTokenContract } from 'src/hooks'
 import { useDaoStore } from 'src/stores'
-import { about, daoDescription, daoName, daoInfo } from 'src/styles/About.css'
-import { formatCryptoVal } from 'src/utils/numbers'
-import SWR_KEYS from 'src/constants/swrKeys'
-import { getFetchableUrl } from 'ipfs-service'
-import { sdk } from 'src/data/graphql/client'
-import { CHAIN } from 'src/constants/network'
 import type { AddressType } from 'src/typings'
+import useSWR from 'swr'
+import { useBalance } from 'wagmi'
+
+import { sdk } from 'src/data/graphql/client'
+
+import { CHAIN } from 'src/constants/network'
+import SWR_KEYS from 'src/constants/swrKeys'
+
+import { formatCryptoVal } from 'src/utils/numbers'
+
+import { Avatar } from 'src/components/Avatar/Avatar'
+
+import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
+
 import { ExternalLinks } from './ExternalLinks'
 import { Statistic } from './Statistic'
 

@@ -1,8 +1,9 @@
-import React from 'react'
-import { Flex, Box, Text } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import Image from 'next/image'
-import CopyButton from 'src/components/CopyButton/CopyButton'
+import React from 'react'
 import { AddressType } from 'src/typings'
+
+import CopyButton from 'src/components/CopyButton/CopyButton'
 
 export const DaoCopyAddress = ({
   image,

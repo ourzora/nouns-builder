@@ -1,9 +1,9 @@
 import { Wallet as RainbowkitWallet, connectorsForWallets } from '@rainbow-me/rainbowkit'
-import { createClient, configureChains } from 'wagmi'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+import { Wallet, providers } from 'ethers'
+import { configureChains, createClient } from 'wagmi'
 import { foundry } from 'wagmi/chains'
 import { MockConnector } from 'wagmi/connectors/mock'
-import { Wallet, providers } from 'ethers'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
 const ANVIL_URL = foundry.rpcUrls.default.http[0]
 

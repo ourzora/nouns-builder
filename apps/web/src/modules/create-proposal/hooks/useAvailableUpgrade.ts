@@ -1,23 +1,26 @@
-import { auctionAbi, managerAbi } from 'src/data/contract/abis'
-import lt from 'lodash/lt'
-import pickBy from 'lodash/pickBy'
+import { Contract } from 'ethers'
+import intersection from 'lodash/intersection'
 import isNil from 'lodash/isNil'
 import isUndefined from 'lodash/isUndefined'
-import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import lt from 'lodash/lt'
+import pickBy from 'lodash/pickBy'
 import { AddressType, DaoContractAddresses } from 'src/typings'
-import { useContract, useContractReads } from 'wagmi'
-import { Contract } from 'ethers'
 import useSWR from 'swr'
-import intersection from 'lodash/intersection'
+import { useContract, useContractReads } from 'wagmi'
+
+import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { sdk } from 'src/data/graphql/client'
-import { CHAIN } from 'src/constants/network'
 import {
   NounsProposalStatus,
   ProposalsWithCalldataQuery,
 } from 'src/data/graphql/sdk.generated'
+
+import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
+
+import { CONTRACT_VERSION_DETAILS, TransactionType, VersionType } from '../constants'
 import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
-import { TransactionType, CONTRACT_VERSION_DETAILS, VersionType } from '../constants'
 
 type Proposal = ProposalsWithCalldataQuery['nouns']['nounsProposals']['nodes'][number]
 

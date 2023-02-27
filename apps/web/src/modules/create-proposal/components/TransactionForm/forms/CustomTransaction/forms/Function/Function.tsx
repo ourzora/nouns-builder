@@ -1,8 +1,11 @@
-import { transactionFunctionFields, validateTransactionFunction } from './fields'
 import { Flex } from '@zoralabs/zord'
 import React from 'react'
-import Form from 'src/components/Fields/Form'
+
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
+
+import Form from 'src/components/Fields/Form'
+
+import { transactionFunctionFields, validateTransactionFunction } from './fields'
 
 interface FunctionProps {
   title: string

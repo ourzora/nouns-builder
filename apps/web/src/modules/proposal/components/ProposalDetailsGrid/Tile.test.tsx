@@ -1,8 +1,9 @@
-import { Tile } from './Tile'
-import React, { Fragment } from 'react'
 import { screen } from '@testing-library/react'
+import React, { Fragment } from 'react'
 import { render } from 'src/test/utils'
 import { describe, expect, it } from 'vitest'
+
+import { Tile } from './Tile'
 
 describe('proposal tile', () => {
   it('should render a proposal tile', async () => {

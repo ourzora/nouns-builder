@@ -1,29 +1,35 @@
 import { Flex, Stack } from '@zoralabs/zord'
 import { Contract, ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
+import isEqual from 'lodash/isEqual'
+import { useRouter } from 'next/router'
 import React from 'react'
+import { useAuctionContract, useGovernorContract, useMetadataContract } from 'src/hooks'
+import { useDaoStore, useLayoutStore } from 'src/stores'
+import { AddressType, DaoContracts } from 'src/typings'
+
+import { NULL_ADDRESS } from 'src/constants/addresses'
+
+import { getEnsAddress } from 'src/utils/ens'
+import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
+
+import {
+  BuilderTransaction,
+  TransactionType,
+  useProposalStore,
+} from 'src/modules/create-proposal'
+import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
+
+import FieldSwitch from 'src/components/Fields/FieldSwitch'
+import StickySave from 'src/components/Fields/StickySave'
+
+import { sectionWrapperStyle } from 'src/styles/dao.css'
+
 import {
   AdminFormValues,
   adminProposalFields,
   adminValidationSchema,
 } from './AdminForm.schema'
-import { NULL_ADDRESS } from 'src/constants/addresses'
-import { useGovernorContract, useMetadataContract, useAuctionContract } from 'src/hooks'
-import { useDaoStore, useLayoutStore } from 'src/stores'
-import { getEnsAddress } from 'src/utils/ens'
-import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
-import { useRouter } from 'next/router'
-import { sectionWrapperStyle } from 'src/styles/dao.css'
-import {
-  useProposalStore,
-  BuilderTransaction,
-  TransactionType,
-} from 'src/modules/create-proposal'
-import { AddressType, DaoContracts } from 'src/typings'
-import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
-import FieldSwitch from 'src/components/Fields/FieldSwitch'
-import StickySave from 'src/components/Fields/StickySave'
-import isEqual from 'lodash/isEqual'
 
 interface AdminFormProps {
   title?: string

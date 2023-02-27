@@ -1,28 +1,35 @@
 import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import React from 'react'
-import Meta from 'src/components/Layout/Meta'
-import { useDaoStore } from 'src/stores/useDaoStore'
-import getToken from 'src/data/contract/requests/getToken'
+import { useVotes } from 'src/hooks'
+import { AddressType } from 'src/typings'
 import useSWR, { unstable_serialize } from 'swr'
+import { useAccount } from 'wagmi'
+
+import getToken from 'src/data/contract/requests/getToken'
+
+import { useDaoStore } from 'src/stores/useDaoStore'
+
+import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
+
+import { NextPageWithLayout } from 'src/pages/_app'
+
 import { Auction } from 'src/modules/auction'
 import {
-  AdminForm,
-  SmartContracts,
   About,
   Activity,
+  AdminForm,
   SectionHandler,
+  SmartContracts,
 } from 'src/modules/dao'
-import { useVotes } from 'src/hooks'
-import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import { SUCCESS_MESSAGES } from 'src/constants/messages'
-import { useRouter } from 'next/router'
+
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
-import { NextPageWithLayout } from 'src/pages/_app'
-import { useAccount } from 'wagmi'
-import { AddressType } from 'src/typings'
+
+import Meta from 'src/components/Layout/Meta'
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 
 interface TokenPageProps {
   url: string

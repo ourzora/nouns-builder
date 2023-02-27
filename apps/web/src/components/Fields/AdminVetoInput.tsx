@@ -1,3 +1,12 @@
+import { Box, Flex } from '@zoralabs/zord'
+import { FormikProps } from 'formik'
+import { AnimatePresence, motion } from 'framer-motion'
+import React, { ChangeEventHandler, ReactElement, WheelEvent } from 'react'
+
+import { isEmpty, walletSnippet } from 'src/utils/helpers'
+
+import { Icon } from 'src/components/Icon'
+
 import {
   defaultFieldsetStyle,
   defaultHelperTextStyle,
@@ -8,12 +17,6 @@ import {
   inputCheckIcon,
   permaInputPlaceHolderStyle,
 } from './styles.css'
-import { Icon } from 'src/components/Icon'
-import { Box, Flex } from '@zoralabs/zord'
-import { FormikProps } from 'formik'
-import { AnimatePresence, motion } from 'framer-motion'
-import React, { ChangeEventHandler, ReactElement, WheelEvent } from 'react'
-import { isEmpty, walletSnippet } from 'src/utils/helpers'
 
 interface SmartInputProps {
   id: string

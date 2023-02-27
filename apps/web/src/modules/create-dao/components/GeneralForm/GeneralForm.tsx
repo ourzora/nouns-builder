@@ -1,12 +1,16 @@
-import React, { BaseSyntheticEvent } from 'react'
 import { Button, Flex, Stack } from '@zoralabs/zord'
-import { useFormStore } from 'src/stores/useFormStore'
-import { defaultFormButton } from 'src/components/Fields/styles.css'
-import { isEmpty } from 'src/utils/helpers'
-import { GeneralFormValues, generalValidationSchema } from './GeneralForm.schema'
 import { Form, Formik } from 'formik'
+import React, { BaseSyntheticEvent } from 'react'
+
+import { useFormStore } from 'src/stores/useFormStore'
+
+import { isEmpty } from 'src/utils/helpers'
+
 import SmartInput from 'src/components/Fields/SmartInput'
+import { defaultFormButton } from 'src/components/Fields/styles.css'
 import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
+
+import { GeneralFormValues, generalValidationSchema } from './GeneralForm.schema'
 
 interface GeneralFormProps {
   title: string

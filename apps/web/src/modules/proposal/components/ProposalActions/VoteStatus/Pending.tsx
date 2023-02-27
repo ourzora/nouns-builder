@@ -1,10 +1,14 @@
-import React, { Fragment, useEffect, useState } from 'react'
 import { Flex, Text } from '@zoralabs/zord'
+import React, { Fragment, useState } from 'react'
 import { useSWRConfig } from 'swr'
-import SWR_KEYS from 'src/constants/swrKeys'
-import { Countdown } from 'src/components/Countdown'
+
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+
+import SWR_KEYS from 'src/constants/swrKeys'
+
 import { useTimeout } from 'src/hooks/useTimeout'
+
+import { Countdown } from 'src/components/Countdown'
 
 interface PendingProps {
   voteStart: number

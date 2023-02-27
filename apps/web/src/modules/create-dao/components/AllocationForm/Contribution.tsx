@@ -1,5 +1,6 @@
-import React, { ReactNode } from 'react'
 import { Flex, Text } from '@zoralabs/zord'
+import React, { ReactNode } from 'react'
+
 import { formatDate } from 'src/utils/helpers'
 
 export const Contribution = ({

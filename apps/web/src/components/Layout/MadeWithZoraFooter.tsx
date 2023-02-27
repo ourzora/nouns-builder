@@ -1,7 +1,8 @@
-import { Eyebrow, Box, Flex } from '@zoralabs/zord'
+import { Box, Eyebrow, Flex } from '@zoralabs/zord'
 import { Atoms } from '@zoralabs/zord'
-import Zorb from './assets/zorb.svg'
+
 import Noggles from './assets/noggles.svg'
+import Zorb from './assets/zorb.svg'
 import { footerLogo, footerLogoTextLeft, footerLogoTextRight } from './styles.css'
 
 export type MadeWithZoraFooterProps = {

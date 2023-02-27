@@ -1,11 +1,15 @@
+import { Box, Flex, Grid, Text, vars } from '@zoralabs/zord'
 import React from 'react'
-import { Box, Grid, Flex, Text, vars } from '@zoralabs/zord'
-import { about } from 'src/styles/About.css'
 import { useDaoStore, useLayoutStore } from 'src/stores'
+
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { Icon } from 'src/components/Icon'
-import CopyButton from 'src/components/CopyButton/CopyButton'
+
 import { walletSnippet } from 'src/utils/helpers'
+
+import CopyButton from 'src/components/CopyButton/CopyButton'
+import { Icon } from 'src/components/Icon'
+
+import { about } from 'src/styles/About.css'
 
 const ContractLink = ({ title, address }: { title: string; address?: string }) => {
   const { isMobile } = useLayoutStore()

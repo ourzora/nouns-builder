@@ -1,6 +1,8 @@
 import * as Sentry from '@sentry/nextjs'
-import { CHAIN } from 'src/constants/network'
+
 import { sdk } from 'src/data/graphql/client'
+
+import { CHAIN } from 'src/constants/network'
 
 export const getTokenOwners = async (token: [string]) => {
   if (token === null || token === undefined) return

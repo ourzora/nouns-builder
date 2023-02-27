@@ -2,17 +2,20 @@ import { Flex } from '@zoralabs/zord'
 import { utils } from 'ethers'
 import { isEqual } from 'lodash'
 import React from 'react'
-import Form from 'src/components/Fields/Form'
-import { TEXT, TEXTAREA } from 'src/components/Fields/types'
-import { useCustomTransactionStore } from 'src/modules/create-proposal'
+import * as Yup from 'yup'
+
 import {
+  RAW_DATA_KEY,
   matchInputFromName,
   matchTypeParameters,
   normalizePathName,
-  RAW_DATA_KEY,
 } from 'src/utils/formABI'
 import { camelToTitle } from 'src/utils/helpers'
-import * as Yup from 'yup'
+
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
+
+import Form from 'src/components/Fields/Form'
+import { TEXT, TEXTAREA } from 'src/components/Fields/types'
 
 interface ArgumentsProps {
   title: string

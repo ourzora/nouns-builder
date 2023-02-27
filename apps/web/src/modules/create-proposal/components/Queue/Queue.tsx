@@ -1,11 +1,14 @@
-import React from 'react'
 import { Button, Flex, Stack, Text } from '@zoralabs/zord'
-import { TransactionCard, useProposalStore } from 'src/modules/create-proposal'
-import { ConfirmRemove } from './ConfirmRemove'
-import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import React from 'react'
+
+import { TransactionCard, useProposalStore } from 'src/modules/create-proposal'
+
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
+
 import { TransactionType } from '../../constants'
+import { ConfirmRemove } from './ConfirmRemove'
 
 export const Queue = () => {
   const transactions = useProposalStore((state) => state.transactions)

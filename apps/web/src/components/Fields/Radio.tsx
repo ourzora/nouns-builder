@@ -1,7 +1,8 @@
-import { radioStyles } from './styles.css'
 import { Flex, Stack } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import React from 'react'
+
+import { radioStyles } from './styles.css'
 
 interface RadioProps<T> {
   formik: FormikProps<any>

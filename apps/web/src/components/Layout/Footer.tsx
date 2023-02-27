@@ -1,8 +1,9 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
-import React from 'react'
-import { footerWrapper, footerContent, footerLink } from './styles.css'
 import Link from 'next/link'
+import React from 'react'
+
 import MadeWithZoraFooter from './MadeWithZoraFooter'
+import { footerContent, footerLink, footerWrapper } from './styles.css'
 
 const Footer = () => {
   return (

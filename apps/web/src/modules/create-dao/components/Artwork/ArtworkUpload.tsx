@@ -1,4 +1,26 @@
-import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import * as Sentry from '@sentry/nextjs'
+import { Box, Flex, Stack } from '@zoralabs/zord'
+import { FormikProps } from 'formik'
+import { motion } from 'framer-motion'
+import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
+import React, {
+  BaseSyntheticEvent,
+  ChangeEventHandler,
+  ReactElement,
+  useEffect,
+  useState,
+} from 'react'
+import {
+  IPFSUpload,
+  ImageProps,
+  ImagesByTraitProps,
+  SelectedTraitsProps,
+} from 'src/typings'
+
+import { useFormStore } from 'src/stores/useFormStore'
+
+import { sanitizeFileName } from 'src/utils/sanitize'
+
 import {
   artworkPreviewGenerateButton,
   artworkPreviewImageWrapper,
@@ -14,29 +36,11 @@ import {
   uploadErrorBox,
   uploadSuccessBox,
 } from 'src/components/Fields/styles.css'
-import { Box, Flex, Stack } from '@zoralabs/zord'
-import { FormikProps } from 'formik'
-import { motion } from 'framer-motion'
-import React, {
-  BaseSyntheticEvent,
-  ChangeEventHandler,
-  ReactElement,
-  useEffect,
-  useState,
-} from 'react'
+import { Icon } from 'src/components/Icon'
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
+
 import { LayerOrdering } from './LayerOrdering'
 import { Playground } from './Playground'
-import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
-import { useFormStore } from 'src/stores/useFormStore'
-import {
-  IPFSUpload,
-  ImageProps,
-  ImagesByTraitProps,
-  SelectedTraitsProps,
-} from 'src/typings'
-import { sanitizeFileName } from 'src/utils/sanitize'
-import { Icon } from 'src/components/Icon'
-import * as Sentry from '@sentry/nextjs'
 
 interface ArtworkFormProps {
   id: string

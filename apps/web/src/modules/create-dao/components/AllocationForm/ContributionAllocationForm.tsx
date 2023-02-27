@@ -1,14 +1,19 @@
-import { Button, Flex, Box, Stack, Text } from '@zoralabs/zord'
+import { Box, Button, Flex, Stack, Text } from '@zoralabs/zord'
 import { Form, Formik } from 'formik'
-import { yearsAhead } from 'src/utils/helpers'
-import { PUBLIC_NOUNS_ADDRESS, PUBLIC_BUILDER_ADDRESS } from 'src/constants/addresses'
-import { useEnsData } from 'src/hooks/useEnsData'
 import { TokenAllocation } from 'src/typings'
-import { validationSchemaContributions } from './AllocationForm.schema'
-import SmartInput from 'src/components/Fields/SmartInput'
+
+import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
+
+import { yearsAhead } from 'src/utils/helpers'
+
+import { useEnsData } from 'src/hooks/useEnsData'
+
 import Date from 'src/components/Fields/Date'
-import { Toggle } from './Toggle'
+import SmartInput from 'src/components/Fields/SmartInput'
+
+import { validationSchemaContributions } from './AllocationForm.schema'
 import { DaoCopyAddress } from './DaoCopyAddress'
+import { Toggle } from './Toggle'
 
 export interface ContributionAllocationFormValues {
   builderAllocation?: TokenAllocation

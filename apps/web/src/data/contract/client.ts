@@ -1,5 +1,6 @@
 import { getDefaultWallets } from '@rainbow-me/rainbowkit'
 import { createClient } from 'wagmi'
+
 import { chains, provider } from './chains'
 
 const { connectors } = getDefaultWallets({

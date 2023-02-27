@@ -12,11 +12,10 @@ Adding to your project boils down to:
 
 ```tsx
 // pages/_app.tsx
-
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/600.css'
-import '@zoralabs/zord/index.css'
 import { ThemeProvider, lightTheme } from '@zoralabs/zord'
+import '@zoralabs/zord/index.css'
 import type { AppProps } from 'next/app'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -249,7 +248,7 @@ Multiple implementations of a ThemeContract can exist on a single site, and the 
 Each theme maps 1-1 with the ThemeContract:
 
 ```ts
-import { colorTheme, border, ease, radii, size, space, typography } from './tokens'
+import { border, colorTheme, ease, radii, size, space, typography } from './tokens'
 
 export const lightTheme = createTheme(theme, {
   fonts: {

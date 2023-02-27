@@ -1,7 +1,9 @@
 import * as Sentry from '@sentry/nextjs'
-import { CHAIN } from 'src/constants/network'
-import { sdk } from 'src/data/graphql/client'
 import { DaoProps } from 'src/pages'
+
+import { sdk } from 'src/data/graphql/client'
+
+import { CHAIN } from 'src/constants/network'
 
 const brokenImgs = [
   '0xd38f7041d04ecb99404476d79420948158f1e7ad',

@@ -1,5 +1,5 @@
-import React, { ReactNode } from 'react'
 import { Box, Flex } from '@zoralabs/zord'
+import React, { ReactNode } from 'react'
 
 import {
   infoSectionLabelStyle,

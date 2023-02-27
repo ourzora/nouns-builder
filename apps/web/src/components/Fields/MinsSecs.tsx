@@ -1,9 +1,11 @@
-import { NumberInput } from './NumberInput'
-import { defaultInputLabelStyle } from './styles.css'
 import { Box, Grid } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import React, { ChangeEventHandler, ReactElement } from 'react'
+
 import { useLayoutStore } from 'src/stores/useLayoutStore'
+
+import { NumberInput } from './NumberInput'
+import { defaultInputLabelStyle } from './styles.css'
 
 interface TimeBufferProps {
   id: string

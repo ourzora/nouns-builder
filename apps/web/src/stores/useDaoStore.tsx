@@ -1,5 +1,4 @@
 import { DaoContractAddresses } from 'src/typings'
-import { ethers } from 'ethers'
 import { create } from 'zustand'
 
 interface DaoStoreProps {

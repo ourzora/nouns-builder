@@ -1,6 +1,7 @@
-import { Box, Flex, Heading, Label, Paragraph, atoms, Text } from '@zoralabs/zord'
+import { Box, Heading, Label, Paragraph, Text } from '@zoralabs/zord'
 import Head from 'next/head'
 import React from 'react'
+
 import { legalContainer } from 'src/styles/legal.css'
 
 const Legal = () => {

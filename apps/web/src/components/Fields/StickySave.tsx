@@ -1,6 +1,9 @@
 import { Button, Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import React from 'react'
+
+import { Icon } from 'src/components/Icon'
+
 import {
   adminStickySaveButton,
   adminStickySaveWrapper,
@@ -10,7 +13,6 @@ import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
 } from 'src/styles/deploy.css'
-import { Icon } from 'src/components/Icon'
 
 interface StickySaveProps {
   confirmText: string

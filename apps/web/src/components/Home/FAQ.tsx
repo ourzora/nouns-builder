@@ -1,8 +1,11 @@
+import { Box, Flex, Stack, Text } from '@zoralabs/zord'
+
+import { Icon } from 'src/components/Icon'
+
+import { homeSectionHeader, homeSectionWrapper } from 'src/styles/home.css'
+
 import { defaultFileDownloadStyle } from '../Fields/styles.css'
 import Accordion from './accordian'
-import { Icon } from 'src/components/Icon'
-import { Flex, Stack, Text, Box } from '@zoralabs/zord'
-import { homeSectionHeader, homeSectionWrapper } from 'src/styles/home.css'
 
 const FAQ = () => {
   const items = [

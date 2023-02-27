@@ -1,5 +1,5 @@
-import { expect, describe, it } from 'vitest'
-import { getFetchableUrl, ipfsGatewayUrl, IPFS_GATEWAY } from './gateway'
+import { IPFS_GATEWAY, getFetchableUrl, ipfsGatewayUrl } from './gateway'
+import { describe, expect, it } from 'vitest'
 
 const VALID_CID = 'bafkreidgvpkjawlxz6sffxzwgooowe5yt7i6wsyg236mfoks77nywkptdq'
 

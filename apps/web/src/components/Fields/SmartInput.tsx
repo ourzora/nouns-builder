@@ -1,3 +1,17 @@
+import { Box, Flex, atoms } from '@zoralabs/zord'
+import { FormikProps } from 'formik'
+import { motion } from 'framer-motion'
+import React, { ChangeEventHandler, ReactElement, WheelEvent } from 'react'
+import { useLayoutStore } from 'src/stores'
+import useSWR from 'swr'
+
+import SWR_KEYS from 'src/constants/swrKeys'
+
+import { getEnsName } from 'src/utils/ens'
+import { isEmpty } from 'src/utils/helpers'
+
+import { Icon } from 'src/components/Icon'
+
 import {
   defaultFieldsetStyle,
   defaultHelperTextStyle,
@@ -7,16 +21,6 @@ import {
   inputStyleVariants,
   permaInputPlaceHolderStyle,
 } from './styles.css'
-import { Box, Flex, atoms } from '@zoralabs/zord'
-import { FormikProps } from 'formik'
-import { motion } from 'framer-motion'
-import React, { ChangeEventHandler, ReactElement, WheelEvent } from 'react'
-import { useLayoutStore } from 'src/stores'
-import { getEnsName } from 'src/utils/ens'
-import { isEmpty } from 'src/utils/helpers'
-import useSWR from 'swr'
-import SWR_KEYS from 'src/constants/swrKeys'
-import { Icon } from 'src/components/Icon'
 
 interface SmartInputProps {
   id: string

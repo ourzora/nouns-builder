@@ -1,5 +1,5 @@
-import { create } from 'zustand'
 import { CustomTransactionProps } from 'src/typings'
+import { create } from 'zustand'
 
 interface State {
   active: number

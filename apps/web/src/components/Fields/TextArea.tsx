@@ -1,3 +1,7 @@
+import { Box, Flex } from '@zoralabs/zord'
+import { FormikProps } from 'formik'
+import React, { ChangeEventHandler, ReactElement } from 'react'
+
 import {
   defaultHelperTextStyle,
   defaultInputErrorMessageStyle,
@@ -5,9 +9,6 @@ import {
   defaultTextAreaErrorStyle,
   defaultTextAreaStyle,
 } from './styles.css'
-import { Box, Flex } from '@zoralabs/zord'
-import { FormikProps } from 'formik'
-import React, { ChangeEventHandler, ReactElement } from 'react'
 
 interface TextAreaProps {
   id: string

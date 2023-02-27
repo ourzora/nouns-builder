@@ -1,18 +1,22 @@
-import React from 'react'
 import { Flex, Stack } from '@zoralabs/zord'
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
-import { NextPageWithLayout } from 'src/pages/_app'
 import { useRouter } from 'next/router'
+import React from 'react'
 import { useVotes } from 'src/hooks'
 import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 import { useAccount } from 'wagmi'
-import { notFoundWrap } from 'src/styles/404.css'
+
+import { NextPageWithLayout } from 'src/pages/_app'
+
 import {
   CreateProposalHeading,
   ReviewProposalForm,
   useProposalStore,
 } from 'src/modules/create-proposal'
+
+import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+
+import { notFoundWrap } from 'src/styles/404.css'
 
 const ReviewProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

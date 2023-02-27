@@ -1,9 +1,13 @@
-import React, { BaseSyntheticEvent } from "react";
-import { Button } from "@zoralabs/zord";
-import AnimatedModal from "src/components/Modal/AnimatedModal";
-import { useFormStore } from "src/stores/useFormStore";
-import { flatten } from "src/utils/helpers";
-import { Playground } from "../Artwork";
+import { Button } from '@zoralabs/zord'
+import React, { BaseSyntheticEvent } from 'react'
+
+import { useFormStore } from 'src/stores/useFormStore'
+
+import { flatten } from 'src/utils/helpers'
+
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
+
+import { Playground } from '../Artwork'
 
 export const PreviewArtwork: React.FC = () => {
   const { ipfsUpload } = useFormStore()

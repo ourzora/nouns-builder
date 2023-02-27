@@ -1,5 +1,6 @@
 import { theme } from '@zoralabs/zord'
 import { ProposalStatus } from 'src/typings'
+
 import { fromSeconds } from 'src/utils/helpers'
 
 export function parseTime(timediff: number, prefix: string) {

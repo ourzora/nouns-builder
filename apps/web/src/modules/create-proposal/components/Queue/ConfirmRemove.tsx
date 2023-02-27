@@ -1,5 +1,6 @@
-import React from 'react'
 import { Button, Flex } from '@zoralabs/zord'
+import React from 'react'
+
 import {
   confirmButton,
   confirmRemoveHeadingStyle,

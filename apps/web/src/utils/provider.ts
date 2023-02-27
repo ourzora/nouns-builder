@@ -1,6 +1,7 @@
-import { ethers } from 'ethers'
-import { ALCHEMY_RPC_URL } from 'src/constants/rpc'
 import type { Provider } from '@ethersproject/abstract-provider'
+import { ethers } from 'ethers'
+
+import { ALCHEMY_RPC_URL } from 'src/constants/rpc'
 
 let provider: undefined | Provider
 

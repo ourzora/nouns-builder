@@ -1,13 +1,13 @@
 import { Atoms, atoms } from '../atoms'
-import { mixins, MixinsProp } from '../mixins'
+import { MixinsProp, mixins } from '../mixins'
 import * as styles from './Box.css'
 import clsx, { ClassValue } from 'clsx'
 import type { CSSProperties, ElementType, ReactNode } from 'react'
 import React, { forwardRef } from 'react'
 import type {
   PolymorphicForwardRefExoticComponent,
-  PolymorphicPropsWithoutRef,
   PolymorphicPropsWithRef,
+  PolymorphicPropsWithoutRef,
 } from 'react-polymorphic-types'
 
 export interface BoxProps {

@@ -1,7 +1,7 @@
 import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
-import { Bid, BidCard } from "./BidCard";
 
+import { Bid, BidCard } from './BidCard'
 
 interface AuctionAllBidsProps {
   bids: Bid[]

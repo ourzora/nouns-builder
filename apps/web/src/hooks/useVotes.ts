@@ -1,7 +1,8 @@
+import isNil from 'lodash/isNil'
 import { AddressType } from 'src/typings'
 import { useContractReads } from 'wagmi'
+
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
-import isNil from 'lodash/isNil'
 
 export const useVotes = ({
   collectionAddress,

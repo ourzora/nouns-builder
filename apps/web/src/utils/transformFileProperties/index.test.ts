@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest'
-import { ipfsUploadObject, mockIpfsUpload, mockOrderedLayers, mockTraits } from './mock'
-import { transformFileProperties } from './index'
 import { BigNumber } from 'ethers'
+import { describe, expect, it } from 'vitest'
+
+import { transformFileProperties } from './index'
+import { ipfsUploadObject, mockIpfsUpload, mockOrderedLayers, mockTraits } from './mock'
 
 describe('Transform Properties', () => {
   it('should return an empty array given no parameters', () => {

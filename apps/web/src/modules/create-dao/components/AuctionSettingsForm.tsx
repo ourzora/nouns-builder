@@ -1,19 +1,22 @@
-import React, { BaseSyntheticEvent } from 'react'
+import { Button, Flex, Stack } from '@zoralabs/zord'
 import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
-import { Button, Flex, Stack } from '@zoralabs/zord'
+import React, { BaseSyntheticEvent } from 'react'
+
 import { useFormStore } from 'src/stores/useFormStore'
+
+import { isEmpty } from 'src/utils/helpers'
+
+import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
+import SmartInput from 'src/components/Fields/SmartInput'
 import {
   defaultBackButton,
   defaultFormAdvancedToggle,
   defaultFormAdvancedWrapper,
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
-import { isEmpty } from 'src/utils/helpers'
-import { Icon } from 'src/components/Icon'
-import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
-import SmartInput from 'src/components/Fields/SmartInput'
 import { NUMBER } from 'src/components/Fields/types'
+import { Icon } from 'src/components/Icon'
 
 import {
   AuctionSettingsFormValues,

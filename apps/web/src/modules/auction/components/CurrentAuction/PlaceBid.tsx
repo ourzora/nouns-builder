@@ -1,14 +1,18 @@
-import React, { Fragment, memo, useState } from 'react'
-import { BigNumber, ethers } from 'ethers'
-import { useSWRConfig } from 'swr'
-import { useAccount, useBalance, useSigner } from 'wagmi'
 import { Box, Button, Flex } from '@zoralabs/zord'
-import { ContractButton } from 'src/components/ContractButton'
-import { formatCryptoVal } from 'src/utils/numbers'
+import { BigNumber, ethers } from 'ethers'
+import React, { Fragment, memo, useState } from 'react'
 import { useAuctionContract } from 'src/hooks'
 import { useDaoStore } from 'src/stores'
-import SWR_KEYS from 'src/constants/swrKeys'
+import { useSWRConfig } from 'swr'
+import { useAccount, useBalance, useSigner } from 'wagmi'
+
 import getBids from 'src/data/contract/requests/getBids'
+
+import SWR_KEYS from 'src/constants/swrKeys'
+
+import { formatCryptoVal } from 'src/utils/numbers'
+
+import { ContractButton } from 'src/components/ContractButton'
 
 import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'

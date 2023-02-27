@@ -1,18 +1,22 @@
-import React, { ReactNode } from 'react'
+import { Box, Flex, Paragraph, atoms } from '@zoralabs/zord'
 import Image from 'next/image'
-import useSWR from 'swr'
+import React, { ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
-import remarkGfm from 'remark-gfm'
 import rehypeSanitize from 'rehype-sanitize'
-import { atoms, Box, Flex, Paragraph } from '@zoralabs/zord'
-import { DecodedTransactions } from './DecodedTransactions'
-import SWR_KEYS from 'src/constants/swrKeys'
-import { sdk } from 'src/data/graphql/client'
-import { CHAIN } from 'src/constants/network'
-import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
-import { useEnsData } from 'src/hooks/useEnsData'
+import remarkGfm from 'remark-gfm'
 import { Proposal } from 'src/typings'
+import useSWR from 'swr'
+
+import { sdk } from 'src/data/graphql/client'
+import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
+
+import { CHAIN } from 'src/constants/network'
+import SWR_KEYS from 'src/constants/swrKeys'
+
+import { useEnsData } from 'src/hooks/useEnsData'
+
+import { DecodedTransactions } from './DecodedTransactions'
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>

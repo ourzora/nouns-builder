@@ -1,6 +1,7 @@
 import { assert } from 'vitest'
-import { slugify } from './slugify'
 import { describe } from 'vitest'
+
+import { slugify } from './slugify'
 
 describe('Slugify a given string', () => {
   it('should remove spaces from a string and replace with - ', () => {

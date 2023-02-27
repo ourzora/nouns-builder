@@ -1,17 +1,19 @@
-import React, { ReactElement } from 'react'
-import { Flex, Box, Text } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
+import omit from 'lodash/omit'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { ReactElement } from 'react'
+
+import { slugify } from 'src/utils/slugify'
+import { unslugify } from 'src/utils/unslugify'
+
 import {
   sectionHandler,
   sectionNavigation,
   sectionNavigationWrapper,
   sectionTabVariants,
 } from 'src/styles/SectionNavigation.css'
-import { useRouter } from 'next/router'
-import { slugify } from 'src/utils/slugify'
-import Link from 'next/link'
-import { unslugify } from 'src/utils/unslugify'
-import omit from 'lodash/omit'
 
 interface SectionHandlerProps {
   sections: {
