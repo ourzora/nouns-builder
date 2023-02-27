@@ -1,4 +1,4 @@
-export * from './Allocation'
+export * from './AllocationForm'
 export * from './AuctionSettingsForm'
 export * from './AuctionSettingsForm.schema'
 export * from './GeneralForm'

@@ -68,11 +68,6 @@ export const VetoForm: React.FC<VetoFormProps> = ({ title }) => {
                 { value: true, label: 'Yes' },
                 { value: false, label: 'No' },
               ]}
-              errorMessage={
-                formik.touched['vetoPower'] && formik.errors['vetoPower']
-                  ? formik.errors['vetoPower']
-                  : undefined
-              }
             />
             <Flex>
               <Button
