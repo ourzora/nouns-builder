@@ -2,9 +2,9 @@ import { Heading, Button, Flex, Text, Paragraph, Stack } from '@zoralabs/zord'
 import { Icon } from 'src/components/Icon'
 import { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import React from 'react'
-import SmartInput from '../SmartInput'
-import DatePicker from '../Date'
-import { allocationProps, auctionSettingsProps } from 'src/typings'
+import SmartInput from 'src/components/Fields/SmartInput'
+import DatePicker from 'src/components/Fields/Date'
+import { TokenAllocation, Duration } from 'src/typings'
 import {
   calculateMaxAllocation,
   FounderAllocationFormValues,
@@ -12,8 +12,8 @@ import {
 
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues
-  auctionDuration: auctionSettingsProps['auctionDuration']
-  vetoPower?: number
+  auctionDuration: Duration
+  vetoPower?: boolean
   errors?: FormikErrors<FounderAllocationFormValues>
   touched: FormikTouched<FounderAllocationFormValues>
   formik: FormikProps<FounderAllocationFormValues>
@@ -21,7 +21,7 @@ interface FounderAllocationFieldsProps {
   addFounderAddress: () => void
 }
 
-const FounderAllocationFields = ({
+export const FounderAllocationFields = ({
   values,
   vetoPower,
   auctionDuration,
@@ -45,7 +45,7 @@ const FounderAllocationFields = ({
 
           const error =
             typeof errors?.founderAllocation === 'object'
-              ? (errors?.founderAllocation?.[index] as FormikErrors<allocationProps>)
+              ? (errors?.founderAllocation?.[index] as FormikErrors<TokenAllocation>)
               : undefined
 
           const touchedField = touched?.founderAllocation?.[index]
@@ -81,8 +81,8 @@ const FounderAllocationFields = ({
                 <Flex style={{ flex: '1 1 0' }}>
                   <SmartInput
                     inputLabel={'Percentage'}
-                    id={`founderAllocation.${index}.allocation`}
-                    value={founder.allocation}
+                    id={`founderAllocation.${index}.allocationPercentage`}
+                    value={founder.allocationPercentage}
                     type={'number'}
                     formik={formik}
                     disabled={false}
@@ -92,8 +92,8 @@ const FounderAllocationFields = ({
                     autoSubmit={false}
                     isAddress={false}
                     errorMessage={
-                      error?.allocation && touchedField?.allocation
-                        ? error?.allocation
+                      error?.allocationPercentage && touchedField?.allocationPercentage
+                        ? error?.allocationPercentage
                         : undefined
                     }
                   />
@@ -126,7 +126,7 @@ const FounderAllocationFields = ({
                   </Button>
                 )}
 
-                {isFounder && vetoPower === 0 && (
+                {isFounder && vetoPower === true && (
                   <Flex align={'center'} color="warning">
                     <Icon size="sm" id="warning-16" fill="warning" />
                     <Flex fontWeight={'display'} ml={'x2'}>
@@ -135,11 +135,11 @@ const FounderAllocationFields = ({
                   </Flex>
                 )}
 
-                {founder?.allocation && founder?.endDate ? (
+                {founder?.allocationPercentage && founder?.endDate ? (
                   <Text variant="eyebrow" ml={'auto'}>
                     ~{' '}
                     {calculateMaxAllocation(
-                      founder?.allocation,
+                      founder?.allocationPercentage,
                       founder?.endDate,
                       auctionDuration
                     )}{' '}
@@ -172,5 +172,3 @@ const FounderAllocationFields = ({
     </Flex>
   )
 }
-
-export default FounderAllocationFields

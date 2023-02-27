@@ -25,44 +25,17 @@ export interface CreateFormSection {
   forms: ReactElement[]
 }
 
-export interface generalInfoProps {
-  daoAvatar: string
-  daoName: string
-  daoSymbol: string
-  daoWebsite: string
+export interface Duration {
+  seconds?: number
+  days?: number
+  hours?: number
+  minutes?: number
 }
 
-export interface votingSettingsProps {
-  proposalThreshold: number | string
-  quorumThreshold: number | string
-}
-
-export interface AuctionDuration {
-  seconds: number | string
-  days: number | string
-  hours: number | string
-  minutes: number | string
-}
-
-export interface auctionSettingsProps {
-  auctionDuration: AuctionDuration
-  auctionReservePrice: number | string
-  proposalThreshold: number | string
-  quorumThreshold: number | string
-}
-
-export interface allocationProps {
-  allocation: number | string
+export interface TokenAllocation {
+  allocationPercentage: number | string
   founderAddress: string
   endDate: string
-}
-
-export interface setUpArtworkProps {
-  projectDescription: string
-  collectionName: string
-  artwork: { trait: string; properties: string[]; ipfs?: {}[] }[]
-  externalUrl?: string
-  filesLength: string | number
 }
 
 export interface IPFSUpload {
@@ -79,13 +52,6 @@ export interface OrderedLayersProps {
   trait: string
   properties: string[]
   ipfs?: {}[]
-}
-
-export interface uploadArtworkErrorProps {
-  maxTraits?: string | null
-  mime?: string | null
-  directory?: string | null
-  dimensions?: string | null
 }
 
 export interface DragAndDropProps {

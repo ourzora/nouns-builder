@@ -3,11 +3,11 @@ import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import {
   CreateNavigation,
-  Allocation,
-  Auction,
+  AllocationForm,
+  AuctionSettingsForm,
   ReviewAndDeploy,
-  General,
-  Veto,
+  GeneralForm,
+  VetoForm,
   FormHandler,
   Artwork,
 } from 'src/modules/create-dao'
@@ -40,13 +40,13 @@ const Create: NextPage = () => {
     const createDao: CreateFormSection = {
       title: 'General',
       heading: 'General Settings',
-      forms: [<General key={'general-info'} title={''} />],
+      forms: [<GeneralForm key={'general-info'} title={''} />],
     }
 
     const auctionSettings: CreateFormSection = {
       title: 'Auction',
       heading: 'Auction Settings',
-      forms: [<Auction key={'auction-settings'} title={''} />],
+      forms: [<AuctionSettingsForm key={'auction-settings'} title={''} />],
     }
 
     const vetoSettings: CreateFormSection = {
@@ -55,13 +55,13 @@ const Create: NextPage = () => {
       subHeading: [
         'Veto power is useful for addressing security concerns in the early days of your DAO, though as your membership grows, consider revisiting this functionality through a decentralized community vote.',
       ],
-      forms: [<Veto key={'veto-power'} title={''} />],
+      forms: [<VetoForm key={'veto-power'} title={''} />],
     }
 
-    const FounderAllocations: CreateFormSection = {
+    const founderAllocations: CreateFormSection = {
       title: 'Allocation',
       heading: 'Allocation',
-      forms: [<Allocation key={'token-allocations'} title={''} />],
+      forms: [<AllocationForm key={'token-allocations'} title={''} />],
     }
 
     const setUpArtwork: CreateFormSection = {
@@ -80,7 +80,7 @@ const Create: NextPage = () => {
       createDao,
       auctionSettings,
       vetoSettings,
-      FounderAllocations,
+      founderAllocations,
       setUpArtwork,
       reviewAndDeploy,
     ]

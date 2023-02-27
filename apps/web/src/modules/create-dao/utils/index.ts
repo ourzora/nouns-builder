@@ -1,7 +1,7 @@
-import { allocationProps, AuctionDuration, auctionSettingsProps } from 'src/typings'
+import { TokenAllocation, Duration } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 
-export const formatAuctionDuration = (duration: AuctionDuration): string => {
+export const formatAuctionDuration = (duration: Duration): string => {
   const days = `${duration.days || '0'} ${Number(duration.days) === 1 ? 'day' : 'days'}`
   const hours = `${duration.hours || '0'} ${
     Number(duration.hours) === 1 ? 'hour' : 'hours'
@@ -16,7 +16,7 @@ export const formatAuctionDuration = (duration: AuctionDuration): string => {
 export const calculateMaxAllocation = (
   allocation: string | number,
   end: string | number,
-  auctionDuration: auctionSettingsProps['auctionDuration']
+  auctionDuration: Duration
 ) => {
   const auctionDurationInSeconds = toSeconds(auctionDuration)
   const endDate = new Date(end).getTime()
@@ -30,8 +30,8 @@ export const calculateMaxAllocation = (
 
 export const formatFounderAllocation = ({
   founderAddress,
-  allocation,
+  allocationPercentage,
   endDate,
-}: allocationProps): string => {
-  return `${founderAddress} will receive ${allocation}% of Tokens, until ${endDate}.`
+}: TokenAllocation): string => {
+  return `${founderAddress} will receive ${allocationPercentage}% of Tokens, until ${endDate}.`
 }
