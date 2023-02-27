@@ -7,9 +7,13 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { getEnsAddress } from 'src/utils/ens'
 import { Contribution } from './Contribution'
 import { DaoCopyAddress } from './DaoCopyAddress'
-import { ContributionAllocationFormValues, ContributionForm } from './ContributionForm'
+import {
+  ContributionAllocationFormValues,
+  ContributionAllocationForm,
+} from './ContributionAllocationForm'
+import { TokenAllocation } from 'src/typings'
 
-const ContributionAllocation = () => {
+export const ContributionAllocation = () => {
   const [open, setOpen] = useState(false)
   const contributionAllocation = useFormStore((state) => state.contributionAllocation)
   const setContributionAllocation = useFormStore(
@@ -19,12 +23,20 @@ const ContributionAllocation = () => {
   const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS)
   const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS)
 
-  const builderAllocationValue = contributionAllocation[0]
-  const nounsAllocationValue = contributionAllocation[1] ?? undefined
+  const builderAllocationValue = contributionAllocation.find(
+    (allocation) => allocation.founderAddress === PUBLIC_BUILDER_ADDRESS
+  )
+  const nounsAllocationValue = contributionAllocation.find(
+    (allocation) => allocation.founderAddress === PUBLIC_NOUNS_ADDRESS
+  )
 
   const handleSubmit = async ({
-    contributionAllocation,
+    nounsAllocation,
+    builderAllocation,
   }: ContributionAllocationFormValues) => {
+    const contributionAllocation = [builderAllocation, nounsAllocation].filter(
+      Boolean
+    ) as TokenAllocation[]
     const contributionAllocationPromises = contributionAllocation.map((allocation) =>
       getEnsAddress(allocation.founderAddress)
     )
@@ -66,36 +78,45 @@ const ContributionAllocation = () => {
               Percentage
             </Text>
             <Text fontWeight={'display'} style={{ width: '25%' }}>
-              Date
+              End date
             </Text>
           </Flex>
-
-          <Contribution
-            allocation={builderAllocationValue?.allocation}
-            endDate={builderAllocationValue?.endDate}
-            address={
-              <DaoCopyAddress
-                name="Builder"
-                image="/builder-avatar-circle.png"
-                ens={builderDisplayName}
-                address={PUBLIC_BUILDER_ADDRESS}
-              />
-            }
-          />
-
-          {nounsAllocationValue && (
-            <Contribution
-              allocation={nounsAllocationValue?.allocation}
-              endDate={nounsAllocationValue?.endDate}
-              address={
-                <DaoCopyAddress
-                  name="Nouns"
-                  image="/nouns-avatar-circle.png"
-                  ens={nounsDisplayName}
-                  address={PUBLIC_NOUNS_ADDRESS}
+          {builderAllocationValue || nounsAllocationValue ? (
+            <>
+              {builderAllocationValue && (
+                <Contribution
+                  allocation={builderAllocationValue?.allocationPercentage}
+                  endDate={builderAllocationValue?.endDate}
+                  address={
+                    <DaoCopyAddress
+                      name="Builder"
+                      image="/builder-avatar-circle.png"
+                      ens={builderDisplayName}
+                      address={PUBLIC_BUILDER_ADDRESS}
+                    />
+                  }
                 />
-              }
-            />
+              )}
+
+              {nounsAllocationValue && (
+                <Contribution
+                  allocation={nounsAllocationValue?.allocationPercentage}
+                  endDate={nounsAllocationValue?.endDate}
+                  address={
+                    <DaoCopyAddress
+                      name="Nouns"
+                      image="/nouns-avatar-circle.png"
+                      ens={nounsDisplayName}
+                      address={PUBLIC_NOUNS_ADDRESS}
+                    />
+                  }
+                />
+              )}
+            </>
+          ) : (
+            <Text align={'center'} py={'x4'}>
+              No Contributions
+            </Text>
           )}
         </Flex>
 
@@ -113,7 +134,13 @@ const ContributionAllocation = () => {
       </Stack>
 
       <AnimatedModal open={open} size={'auto'} close={() => setOpen(false)}>
-        <ContributionForm handleSubmit={handleSubmit} />
+        <ContributionAllocationForm
+          initialValues={{
+            builderAllocation: builderAllocationValue,
+            nounsAllocation: nounsAllocationValue,
+          }}
+          handleSubmit={handleSubmit}
+        />
       </AnimatedModal>
     </>
   )

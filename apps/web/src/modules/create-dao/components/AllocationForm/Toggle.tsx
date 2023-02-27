@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex } from '@zoralabs/zord'
-import { allocationToggle, allocationToggleButtonVariants } from '../styles.css'
 import { Icon } from 'src/components/Icon'
+import { allocationToggle, allocationToggleButtonVariants } from './Toggle.css'
 
 export const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
   <Flex className={allocationToggle[on ? 'on' : 'off']} onClick={onToggle}>

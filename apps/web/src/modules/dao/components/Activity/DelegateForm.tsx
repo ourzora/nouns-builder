@@ -4,7 +4,7 @@ import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { useState } from 'react'
 import { ContractButton } from 'src/components/ContractButton'
 import SmartInput from 'src/components/Fields/SmartInput'
-import { validateAddress } from 'src/components/Fields/fields/delegate'
+import { delegateValidationSchema } from './DelegateForm.schema'
 import { useTokenContract } from 'src/hooks'
 import { useLayoutStore } from 'src/stores'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
@@ -53,7 +53,7 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
       <Formik
         initialValues={{ address: '' }}
         onSubmit={submitCallback}
-        validationSchema={validateAddress(provider)}
+        validationSchema={delegateValidationSchema(provider)}
       >
         {({ isValid, dirty, values }) => (
           <FormikForm>

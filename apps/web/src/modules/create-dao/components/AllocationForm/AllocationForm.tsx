@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react'
-import { validationSchemaFounderAllocation } from 'src/components/Fields/fields/founder'
+import { validationSchemaFounderAllocation } from './AllocationForm.schema'
 import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import { shallow } from 'zustand/shallow'
 import { getEnsAddress } from 'src/utils/ens'
-import { allocationProps } from 'src/typings'
+import { TokenAllocation } from 'src/typings'
 import { Formik, Form, FieldArray, FormikProps } from 'formik'
 import { Button, Flex } from '@zoralabs/zord'
-import FounderAllocation from 'src/components/Fields/Allocation/FounderAllocation'
-import ContributionAllocation from 'src/components/Fields/Allocation/ContributionAllocation'
+import { FounderAllocationFields } from './FounderAllocationFields'
+import { ContributionAllocation } from './ContributionAllocation'
 import sum from 'lodash/sum'
 import {
   defaultBackButtonVariants,
@@ -16,15 +16,15 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 
-interface FounderProps {
+interface AllocationFormProps {
   title: string
 }
 
 export interface FounderAllocationFormValues {
-  founderAllocation: allocationProps[]
+  founderAllocation: TokenAllocation[]
 }
 
-export const Allocation: React.FC<FounderProps> = ({ title }) => {
+export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
   const formRef = useRef<FormikProps<FounderAllocationFormValues>>(null)
   const [allocationError, setAllocationError] = useState(false)
   const {
@@ -64,14 +64,14 @@ export const Allocation: React.FC<FounderProps> = ({ title }) => {
       ? [
           {
             founderAddress: signerAddress || '',
-            allocation: '',
+            allocationPercentage: '',
             endDate: '',
           },
         ]
       : [
           {
             founderAddress: signerAddress || '',
-            allocation: founderAllocation[0].allocation,
+            allocationPercentage: founderAllocation[0].allocationPercentage,
             endDate: founderAllocation[0].endDate,
           },
           ...founderAllocation.slice(1),
@@ -85,8 +85,8 @@ export const Allocation: React.FC<FounderProps> = ({ title }) => {
     setAllocationError(false)
 
     const totalAllocation = sum(
-      [...founderAllocation, ...contributionAllocation].map(({ allocation }) =>
-        Number(allocation)
+      [...founderAllocation, ...contributionAllocation].map(
+        ({ allocationPercentage: allocation }) => Number(allocation)
       )
     )
     if (totalAllocation > 99) {
@@ -127,9 +127,9 @@ export const Allocation: React.FC<FounderProps> = ({ title }) => {
           <Form>
             <FieldArray name="founderAllocation">
               {({ remove, push }) => (
-                <FounderAllocation
+                <FounderAllocationFields
                   formik={formik}
-                  auctionDuration={auctionDuration}
+                  auctionDuration={auctionDuration!}
                   vetoPower={vetoPower}
                   touched={formik.touched}
                   values={formik.values}
