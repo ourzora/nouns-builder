@@ -2,10 +2,7 @@ import { Flex, Stack } from '@zoralabs/zord'
 import { Contract, ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import React from 'react'
-import {
-  adminProposalFields,
-  validateAdmin,
-} from 'src/components/Fields/fields/adminForm'
+import { adminProposalFields, adminValidationSchema } from './AdminForm.schema'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { useGovernorContract, useMetadataContract, useAuctionContract } from 'src/hooks'
 import { useDaoStore, useLayoutStore } from 'src/stores'
@@ -23,7 +20,6 @@ import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormField
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
 import isEqual from 'lodash/isEqual'
-import { GeneralFormValues } from 'src/modules/create-dao'
 
 interface AdminProps {
   title?: string
@@ -44,7 +40,7 @@ export interface AdminFormValues {
   vetoer: string
 }
 
-export const Admin: React.FC<AdminProps> = () => {
+export const AdminForm: React.FC<AdminProps> = () => {
   const {
     query: { token },
     push,
@@ -222,7 +218,7 @@ export const Admin: React.FC<AdminProps> = () => {
       <Flex direction={'column'} w={'100%'}>
         <Formik
           initialValues={initialValues}
-          validationSchema={validateAdmin(provider)}
+          validationSchema={adminValidationSchema(provider)}
           onSubmit={(values, formik: FormikValues) =>
             handleUpdateSettings(values, formik)
           }
