@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 
-import { TransactionType, TransactionTypeProps } from "../../constants"
+import { TRANSACTION_TYPES, TransactionType, TransactionTypeProps } from '../../constants'
 import { Airdrop, CustomTransaction } from './forms'
 import SendEth from './forms/SendEth/SendEth'
 
