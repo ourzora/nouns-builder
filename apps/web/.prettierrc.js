@@ -2,7 +2,6 @@ module.exports = {
   semi: false,
   singleQuote: true,
   printWidth: 90,
-  'no-console': true,
   importOrderSeparation: true,
   importOrderSortSpecifiers: true,
   importOrder: [
