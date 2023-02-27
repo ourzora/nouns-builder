@@ -4,7 +4,6 @@ import React, { ReactNode } from 'react'
 
 import { homeSectionHeader, homeSectionWrapper } from 'src/styles/home.css'
 
-
 const RecentlyCreated: React.FC<{
   children: ReactNode
 }> = ({ children }) => {

@@ -8,6 +8,9 @@
     "eslint-config-next": "latest",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-react": "7.28.0",
+    "@typescript-eslint/eslint-plugin": "^5.53.0",
+    "@typescript-eslint/parser": "^5.53.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "eslint-config-turbo": "latest"
   },
   "publishConfig": {
