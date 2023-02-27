@@ -5,7 +5,6 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=web...",
-    "prepare": "husky install",
     "test": "turbo run test",
     "type-check": "turbo run type-check",
     "lint": "turbo run lint",
@@ -16,23 +15,8 @@
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.1.2",
     "prettier": "^2.5.1",
     "turbo": "latest"
-  },
-  "lint-staged": {
-    "apps/**/*.{js,ts,jsx,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "packages/zoralabs-zord/**/*.{js,ts,jsx,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.json": [
-      "prettier --write"
-    ]
   },
   "packageManager": "pnpm@7.15.0"
 }
