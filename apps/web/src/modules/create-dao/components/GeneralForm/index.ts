@@ -1,2 +1,2 @@
-export * from './General'
+export * from './GeneralForm'
 export * from './GeneralForm.schema'

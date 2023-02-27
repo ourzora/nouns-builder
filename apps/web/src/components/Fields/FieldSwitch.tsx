@@ -6,6 +6,7 @@ import DaysHoursMinsSecs from './DaysHoursMinsSecs'
 import MinsSecs from './MinsSecs'
 import Radio from './Radio'
 import Select from './Select'
+import SingleImageUpload from '../SingleImageUpload/SingleImageUpload'
 import SmartInput from './SmartInput'
 import TextArea from './TextArea'
 import {
@@ -19,6 +20,7 @@ import {
   NUMBER,
   RADIO,
   SELECT,
+  SINGLE_IMAGE_UPLOAD,
   TEXT,
   TEXTAREA,
 } from './types'
@@ -217,6 +219,17 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
           // ensIsValid={ensIsValid}
           isAddress={field.isAddress}
           disabled={field.disabled}
+        />
+      )
+    /////////
+    case SINGLE_IMAGE_UPLOAD:
+      return (
+        <SingleImageUpload
+          {...formik.getFieldProps(field.name)}
+          formik={formik}
+          id={field.name}
+          inputLabel={field.inputLabel}
+          helperText={field.helperText}
         />
       )
     case SELECT:

@@ -29,8 +29,9 @@ interface AdminProps {
   title?: string
 }
 
-export interface AdminFormValues
-  extends Omit<GeneralFormValues, 'daoName' | 'daoSymbol'> {
+export interface AdminFormValues {
+  daoAvatar: string
+  daoWebsite: string
   projectDescription: string
   rendererBase: string
   auctionDuration: Duration
@@ -168,14 +169,14 @@ export const Admin: React.FC<AdminProps> = () => {
       const transactionProperties = formValuesToTransactionMap[field]
       // @ts-ignore
       const calldata = transactionProperties.constructCalldata(contracts, value)
-      const target = transactionProperties?.getTarget(addresses)
+      const target = transactionProperties.getTarget(addresses)
 
       if (target)
         transactions.push({
           type: TransactionType.CUSTOM,
           transactions: [
             {
-              functionSignature: transactionProperties?.functionSignature as string,
+              functionSignature: transactionProperties.functionSignature,
               target,
               calldata: calldata || '',
               value: '',

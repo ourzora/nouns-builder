@@ -8,11 +8,11 @@ import { Form, Formik } from 'formik'
 import SmartInput from 'src/components/Fields/SmartInput'
 import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
 
-interface TokenSettingsProps {
+interface GeneralFormProps {
   title: string
 }
 
-export const General: React.FC<TokenSettingsProps> = ({ title }) => {
+export const GeneralForm: React.FC<GeneralFormProps> = ({ title }) => {
   const { setGeneral, general, setFulfilledSections, setActiveSection, activeSection } =
     useFormStore()
 
