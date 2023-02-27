@@ -33,7 +33,7 @@ import {
   ImagesByTraitProps,
   SelectedTraitsProps,
 } from 'src/typings'
-import { sanitizeFileName, sanitizeStringForJSON } from 'src/utils/sanitize'
+import { sanitizeFileName } from 'src/utils/sanitize'
 import { Icon } from 'src/components/Icon'
 import * as Sentry from '@sentry/nextjs'
 

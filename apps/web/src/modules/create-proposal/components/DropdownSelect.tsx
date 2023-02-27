@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Box, Flex } from '@zoralabs/zord'
 import { Icon } from 'src/components/Icon'

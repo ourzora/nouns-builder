@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Flex, Box, Text, Label, Paragraph, Button, atoms, Stack } from '@zoralabs/zord'
+import { Flex, Box, Text, Label, Paragraph, Button, atoms } from '@zoralabs/zord'
 import useSWR from 'swr'
 import { sdk } from 'src/data/graphql/client'
 import Image from 'next/image'

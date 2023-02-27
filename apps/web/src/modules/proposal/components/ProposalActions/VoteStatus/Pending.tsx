@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Flex, Text } from '@zoralabs/zord'
 import { useSWRConfig } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'

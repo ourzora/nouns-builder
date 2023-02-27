@@ -7,7 +7,6 @@ import {
 } from './styles.css'
 import { Box } from '@zoralabs/zord'
 import flatpickr from 'flatpickr'
-import { Instance } from 'flatpickr/dist/types/instance'
 import { FormikErrors, FormikProps } from 'formik'
 import React, { ReactElement } from 'react'
 

@@ -1,4 +1,4 @@
-import { Flex, Stack, Text, Box, Grid } from '@zoralabs/zord'
+import { Flex, Stack, Text, Box } from '@zoralabs/zord'
 import React from 'react'
 import { everythingHeading, marqueeItemButton, marqueeItems } from 'src/styles/home.css'
 

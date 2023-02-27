@@ -1,5 +1,5 @@
 import { keyframes, style } from '@vanilla-extract/css'
-import { atoms, theme, vars, color } from '@zoralabs/zord'
+import { atoms, vars, color } from '@zoralabs/zord'
 import * as z from 'src/utils/layers'
 import { NAV_BUTTON_ZINDEX } from 'src/constants/zIndex'
 

@@ -1,6 +1,5 @@
 import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
 import { Button } from '@zoralabs/zord'
-import { useCallback } from 'react'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { marqueeButton } from 'src/styles/home.css'

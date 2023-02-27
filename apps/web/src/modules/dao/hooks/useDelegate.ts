@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer } from 'react'
+import { useCallback, useReducer } from 'react'
 
 interface State {
   newDelegate?: string

@@ -1,6 +1,6 @@
 import { NumberInput } from './NumberInput'
-import { defaultFieldsetStyle, defaultInputLabelStyle } from './styles.css'
-import { Box, Flex, Grid } from '@zoralabs/zord'
+import { defaultInputLabelStyle } from './styles.css'
+import { Flex, Grid } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import React, { ChangeEventHandler, ReactElement } from 'react'
 import { useLayoutStore } from 'src/stores/useLayoutStore'

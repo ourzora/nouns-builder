@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { atoms, media, vars } from '@zoralabs/zord'
+import { atoms } from '@zoralabs/zord'
 
 export const marqueeButton = style({
   fontFamily: 'ptRoot!important',

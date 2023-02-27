@@ -1,7 +1,6 @@
 import { Flex, Stack, Text, Button, mixins } from '@zoralabs/zord'
 import React, { ReactNode } from 'react'
 import { homeSectionHeader, homeSectionWrapper } from 'src/styles/home.css'
-import { exploreCtaContainer } from './Homepage.css'
 import Link from 'next/link'
 
 const RecentlyCreated: React.FC<{

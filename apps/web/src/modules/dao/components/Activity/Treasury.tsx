@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, Text, Heading } from '@zoralabs/zord'
+import { Box, Flex, Grid, Text } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import React from 'react'
 import { useDaoStore } from 'src/stores/useDaoStore'
