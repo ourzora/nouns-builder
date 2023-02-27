@@ -31,18 +31,18 @@ The app is mostly organised by function and for the larger areas of concern ther
 `test`
 `typings`
 `utils`
-`data`
+`data` - network requests
 
-- `graphql`
-- `contract`
+- `graphql` - generated sdk, queries, fragements, and data transformation helpers
+- `contract` - generated abis, contract reads, and data transformation helpers
 
 `modules`
 
-- `auction`
-- `create-dao`
-- `create-proposal`
-- `dao`
-- `proposal`
+- `auction` - a given token auction
+- `create-dao` - create a dao
+- `create-proposal` - create a proposal
+- `dao` - dao entity related (dao activity, dao feed, explore daos)
+- `proposal` - proposal entity related
 
 ### Writing Tests
 
