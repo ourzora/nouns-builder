@@ -1,10 +1,50 @@
-# Nouns Builder
+# Nouns Builder Web App
 
-## Getting set up
+This `README` is intended to provide app specific context.
 
-TODOs
+### App Dependencies
 
-## Testing
+Nouns Builder is built on Nextjs and the following dependencies:
+
+- [graphql-request](https://www.npmjs.com/package/graphql-request) - graphql client
+- [graphql-codegen](https://the-guild.dev/graphql/codegen) - to generate typed graphql queries
+- [swr](https://swr.vercel.app/) - for data fetching and response caching
+- [zustand](https://github.com/pmndrs/zustand) - to manage global and persistent state
+- [vanilla-extract](https://vanilla-extract.style/) - for styles
+- [tenderly](https://docs.tenderly.co/simulations-and-forks/simulation-api) - to simulate transactions
+- [formik](https://formik.org/docs/api/formik)
+- [wagmi](https://wagmi.sh/)
+- [rainbowkit](https://www.rainbowkit.com/)
+
+### Folder organisation
+
+The app is mostly organised by function and for the larger areas of concern there are specific modules that group by domain. Grouping by modules enables tightly coupled components, hooks, utils, constants, etc to be co-located.
+
+`components`
+`constants`
+`hooks`
+`layouts`
+`pages`
+`services`
+`stores`
+`styles`
+`test`
+`typings`
+`utils`
+`data` - network requests
+
+- `graphql` - generated sdk, queries, fragements, and data transformation helpers
+- `contract` - generated abis, contract reads, and data transformation helpers
+
+`modules`
+
+- `auction` - a given token auction
+- `create-dao` - create a dao
+- `create-proposal` - create a proposal
+- `dao` - dao entity related (dao activity, dao feed, explore daos)
+- `proposal` - proposal entity related
+
+### Writing Tests
 
 We use [vitest](https://vitest.dev) to run tests and [react-testing-library](https://testing-library.com/docs/react-testing-library/intro) for rendering react components and hooks. Some tests might require contract reads or writes and can be run against a local ethereum node (using Anvil).
 
@@ -31,28 +71,15 @@ describe('test', () => {
 })
 ```
 
-#### Running tests
+### Generating typed queries
 
-**Note**: To run tests you need to [install anvil](https://github.com/foundry-rs/foundry/tree/master/anvil).
+We use [graphql-codegen](https://www.the-guild.dev/graphql/codegen) to generate typed queries for graphql-request based off of the Zora [api schema](https://api.zora.co/graphql). All queries are defined under `src/data/graphql/queries/` and auto-generated to `src/data/graphql/sdk.generated.ts`. The codegen config is defined in `codegen.yml`.
 
-Once anvil is installed, you can now locally run anvil (from the root directory in the monorepo) in a separate terminal session to start a local ethereum node:
-`pnpm run anvil`
+Note: `sdk.generated.ts` is automatically generated and should not be touched
 
-Now you can run the tests in a separate terminal session:
-`pnpm run test`
-
-You can also run the tests in watchmode, which will react to any source code or test files changing. To do that, run:
-`pnpm run test:watch`
-
-## Graphql codegen
-
-We use [graphql-codegen](https://www.the-guild.dev/graphql/codegen) to generate typed queries for graphql-request based off of the [api schema](https://api.zora.co/graphql). All queries are defined under `src/graphql` and auto-generated to `sdk.ts`. The codegen config is defined in `codegen.yml`.
-
-Note: `sdk.ts` is automatically generated and should not be touched
-
-1. Add query or fragments to `src/graphql`
-2. Run `pnpm run codegen` to re-generate `sdk.ts`
-3. Check in and commit updated `sdk.ts`
+1. Add relevant query/fragment to `src/data/graphql/queries` or `src/data/graphql/fragments`
+2. Run `pnpm run codegen` to re-generate `sdk.generated.ts`
+3. Check in and commit updated `sdk.generated.ts` file
 4. Use the generated sdk query and types (as referenced below)
 
 ```
@@ -75,4 +102,12 @@ query daosByMember($addresses: [String!], $chain: Chain!) {
 sdk.daosByMember({ addresses: ['0x123'], chain: Chain.GOERLI })
 ```
 
-If you use vscode, it might also be helfpul to install the vscode plugin for graphql to pick up syntax highlighting for `.graphql` files.
+Note: If you use vscode, it might also be helfpul to install the vscode plugin for graphql to pick up syntax highlighting for `.graphql` files.
+
+### Styling
+
+TBD
+
+ZORD
+Vanilla Extract
+Atoms

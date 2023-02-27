@@ -7,7 +7,13 @@ import getToken from 'src/data/contract/requests/getToken'
 import useSWR, { unstable_serialize } from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { Auction } from 'src/modules/auction'
-import { Admin, SmartContracts, About, Activity, SectionHandler } from 'src/modules/dao'
+import {
+  AdminForm,
+  SmartContracts,
+  About,
+  Activity,
+  SectionHandler,
+} from 'src/modules/dao'
 import { useVotes } from 'src/hooks'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
@@ -60,7 +66,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
 
     const adminSection = {
       title: 'Admin',
-      component: [<Admin key={'admin'} />],
+      component: [<AdminForm key={'admin'} />],
     }
     const smartContractsSection = {
       title: 'Smart Contracts',
