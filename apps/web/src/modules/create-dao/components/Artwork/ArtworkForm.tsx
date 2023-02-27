@@ -8,7 +8,7 @@ import { useFormStore } from 'src/stores/useFormStore'
 import { Flex, Button } from '@zoralabs/zord'
 
 import { ArtworkUpload } from './ArtworkUpload'
-import { ArtworkFormValues, validationSchemaArtwork } from './Artwork.schema'
+import { ArtworkFormValues, validationSchemaArtwork } from './ArtworkForm.schema'
 
 interface ArtworkProps {
   title: string
