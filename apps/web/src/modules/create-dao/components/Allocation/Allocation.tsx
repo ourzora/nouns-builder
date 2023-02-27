@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { validationSchemaFounderAllocation } from 'src/components/Fields/fields/founder'
+import { validationSchemaFounderAllocation } from './AllocationForm.schema'
 import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import { shallow } from 'zustand/shallow'
@@ -7,8 +7,8 @@ import { getEnsAddress } from 'src/utils/ens'
 import { TokenAllocation } from 'src/typings'
 import { Formik, Form, FieldArray, FormikProps } from 'formik'
 import { Button, Flex } from '@zoralabs/zord'
-import FounderAllocation from 'src/components/Fields/Allocation/FounderAllocation'
-import ContributionAllocation from 'src/components/Fields/Allocation/ContributionAllocation'
+import { FounderAllocationFields } from './FounderAllocationFields'
+import { ContributionAllocation } from './ContributionAllocation'
 import sum from 'lodash/sum'
 import {
   defaultBackButtonVariants,
@@ -127,7 +127,7 @@ export const Allocation: React.FC<FounderProps> = ({ title }) => {
           <Form>
             <FieldArray name="founderAllocation">
               {({ remove, push }) => (
-                <FounderAllocation
+                <FounderAllocationFields
                   formik={formik}
                   auctionDuration={auctionDuration!}
                   vetoPower={vetoPower}
