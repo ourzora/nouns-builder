@@ -3,19 +3,19 @@ import { ContractInterface } from 'ethers'
 import { IPFSUploadResponse } from 'ipfs-service'
 import { ReactElement } from 'react'
 import {
-  tokenAbi,
-  metadataAbi,
   auctionAbi,
-  treasuryAbi,
   governorAbi,
+  metadataAbi,
+  tokenAbi,
+  treasuryAbi,
 } from 'src/data/contract/abis'
 import {
+  ImageMediaEncodingFragment,
+  MarketSortKey,
   ProposalFragment,
   NounsProposalStatus as ProposalStatus,
   ProposalVoteFragment as ProposalVote,
   Support,
-  MarketSortKey,
-  ImageMediaEncodingFragment,
 } from 'src/data/graphql/sdk.generated'
 
 export interface CreateFormSection {

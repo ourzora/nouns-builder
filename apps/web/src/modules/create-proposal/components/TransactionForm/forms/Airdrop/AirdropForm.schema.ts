@@ -1,6 +1,6 @@
-import * as yup from 'yup'
-import { isValidAddress } from 'src/utils/ens'
 import type { AddressType } from 'src/typings'
+import { isValidAddress } from 'src/utils/ens'
+import * as yup from 'yup'
 
 export interface AirdropFormValues {
   recipientAddress?: string | AddressType

@@ -1,15 +1,15 @@
-import React, { Fragment, useEffect, useState } from 'react'
 import { Button, Flex, Text } from '@zoralabs/zord'
-import { ProposalVote, ProposalStatus, Support } from 'src/typings'
-import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
-import { useDaoStore, useLayoutStore } from 'src/stores'
-import { useContractEvent } from 'wagmi'
-import { governorAbi } from 'src/data/contract/abis'
 import { ethers } from 'ethers'
+import React, { Fragment, useEffect, useState } from 'react'
+import { governorAbi } from 'src/data/contract/abis'
+import { useDaoStore, useLayoutStore } from 'src/stores'
+import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
+import { ProposalStatus, ProposalVote, Support } from 'src/typings'
+import { useContractEvent } from 'wagmi'
 
-import VoteModal from './VoteModal'
 import Pending from './Pending'
 import Vote from './Vote'
+import VoteModal from './VoteModal'
 
 type SupportValue = 0 | 1 | 2
 

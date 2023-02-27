@@ -1,14 +1,15 @@
+import { Box, Flex, Stack } from '@zoralabs/zord'
+import { FormikProps } from 'formik'
+import { getFetchableUrl, normalizeIPFSUrl, uploadFile } from 'ipfs-service'
+import Image from 'next/image'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { uploadingSpinner } from 'src/components/Layout/styles.css'
+
 import {
   defaultUploadStyle,
   singleImageUploadWrapper,
   uploadErrorBox,
 } from './SingleImageUpload.css'
-import { Box, Flex, Stack } from '@zoralabs/zord'
-import { FormikProps } from 'formik'
-import React, { ReactElement, useState, useEffect } from 'react'
-import Image from 'next/image'
-import { uploadingSpinner } from 'src/components/Layout/styles.css'
-import { getFetchableUrl, normalizeIPFSUrl, uploadFile } from 'ipfs-service'
 
 interface SingleImageUploadProps {
   formik: FormikProps<any>

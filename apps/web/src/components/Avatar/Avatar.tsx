@@ -1,7 +1,8 @@
-import { avatar, avatarVariants } from './Avatar.css'
 import { Box, BoxProps } from '@zoralabs/zord'
 import { useMemo } from 'react'
 import { gradientForAddress } from 'src/utils/gradient'
+
+import { avatar, avatarVariants } from './Avatar.css'
 
 export interface AvatarProps extends Omit<BoxProps, 'size'> {
   address?: string

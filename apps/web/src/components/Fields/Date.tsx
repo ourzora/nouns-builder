@@ -1,3 +1,8 @@
+import { Box } from '@zoralabs/zord'
+import flatpickr from 'flatpickr'
+import { FormikErrors, FormikProps } from 'formik'
+import React, { ReactElement } from 'react'
+
 import {
   defaultFieldsetStyle,
   defaultInputErrorMessageStyle,
@@ -5,10 +10,6 @@ import {
   defaultInputLabelStyle,
   defaultInputStyle,
 } from './styles.css'
-import { Box } from '@zoralabs/zord'
-import flatpickr from 'flatpickr'
-import { FormikErrors, FormikProps } from 'formik'
-import React, { ReactElement } from 'react'
 
 require('flatpickr/dist/themes/light.css')
 

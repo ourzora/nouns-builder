@@ -1,13 +1,14 @@
-import NavMenu from './NavMenu'
-import NogglesLogo from './assets/builder-framed.svg'
-import TestnetLogo from './assets/testnet.svg'
-import { NavContainer, NavWrapper, navMenuItem } from './styles.css'
 import { Box, Flex, Label, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { NetworkController } from 'src/components/NetworkController'
 import { useIsMounted } from 'src/hooks/useIsMounted'
+
+import NavMenu from './NavMenu'
+import NogglesLogo from './assets/builder-framed.svg'
+import TestnetLogo from './assets/testnet.svg'
+import { NavContainer, NavWrapper, navMenuItem } from './styles.css'
 
 const Nav = () => {
   const { pathname } = useRouter()

@@ -1,10 +1,11 @@
 import { RenderOptions, render } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 import * as React from 'react'
+import { act } from 'react-dom/test-utils'
 import { SWRConfig } from 'swr'
 import { expect } from 'vitest'
-import { useConnect, useDisconnect, WagmiConfig } from 'wagmi'
-import { renderHook, waitFor } from '@testing-library/react'
-import { act } from 'react-dom/test-utils'
+import { WagmiConfig, useConnect, useDisconnect } from 'wagmi'
+
 import { client } from './wagmi'
 
 type ProvidersProps = {

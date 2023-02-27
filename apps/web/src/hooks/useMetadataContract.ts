@@ -1,8 +1,8 @@
-import { useCallback } from 'react'
-import { useContract, useContractReads, useSigner } from 'wagmi'
-import { metadataAbi } from 'src/data/contract/abis'
 import { base64 } from 'ethers/lib/utils'
+import { useCallback } from 'react'
+import { metadataAbi } from 'src/data/contract/abis'
 import type { AddressType } from 'src/typings'
+import { useContract, useContractReads, useSigner } from 'wagmi'
 
 export function useMetadataContract(address?: AddressType) {
   const params = {

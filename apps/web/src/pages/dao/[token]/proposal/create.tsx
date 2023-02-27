@@ -1,25 +1,25 @@
-import React, { useState } from 'react'
-import { useRouter } from 'next/router'
-import TwoColumnLayout from 'src/layouts/TwoColumn'
 import { Flex, Stack } from '@zoralabs/zord'
-import { NextPageWithLayout } from 'src/pages/_app'
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
 import { useVotes } from 'src/hooks'
-import { useDaoStore } from 'src/stores'
-import { useAccount } from 'wagmi'
-import { AddressType } from 'src/typings'
-import { notFoundWrap } from 'src/styles/404.css'
+import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import TwoColumnLayout from 'src/layouts/TwoColumn'
 import {
-  SelectTransactionType,
-  Queue,
   CreateProposalHeading,
-  TransactionTypeIcon,
   DropdownSelect,
-  TransactionForm,
-  TRANSACTION_TYPES,
-  TransactionType,
+  Queue,
+  SelectTransactionType,
   TRANSACTION_FORM_OPTIONS,
+  TRANSACTION_TYPES,
+  TransactionForm,
+  TransactionType,
+  TransactionTypeIcon,
 } from 'src/modules/create-proposal'
+import { NextPageWithLayout } from 'src/pages/_app'
+import { useDaoStore } from 'src/stores'
+import { notFoundWrap } from 'src/styles/404.css'
+import { AddressType } from 'src/typings'
+import { useAccount } from 'wagmi'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

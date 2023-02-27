@@ -1,5 +1,6 @@
-import { ReactNode } from 'react'
 import { Box, Flex } from '@zoralabs/zord'
+import { ReactNode } from 'react'
+
 import { auctionTextVariants } from './Auction.css'
 
 export const AuctionDetail = ({

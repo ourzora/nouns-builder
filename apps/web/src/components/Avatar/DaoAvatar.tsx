@@ -1,9 +1,10 @@
-import { squareAvatar, avatarVariants } from './Avatar.css'
 import { Box, BoxProps } from '@zoralabs/zord'
+import Image from 'next/image'
 import { useMemo } from 'react'
 import { useDaoFeedCard } from 'src/modules/dao'
 import { gradientForAddress } from 'src/utils/gradient'
-import Image from 'next/image'
+
+import { avatarVariants, squareAvatar } from './Avatar.css'
 
 export interface DaoAvatarProps extends Omit<BoxProps, 'size'> {
   collectionAddress: string

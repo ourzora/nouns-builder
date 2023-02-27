@@ -1,5 +1,6 @@
-import { Text, Flex, Paragraph } from '@zoralabs/zord'
+import { Flex, Paragraph, Text } from '@zoralabs/zord'
 import React from 'react'
+
 import { detail } from './DaoCard.css'
 
 export const Detail = ({ title, content }: { title: string; content: string }) => (

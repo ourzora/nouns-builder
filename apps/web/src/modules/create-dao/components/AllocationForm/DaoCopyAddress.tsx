@@ -1,6 +1,6 @@
-import React from 'react'
-import { Flex, Box, Text } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import Image from 'next/image'
+import React from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { AddressType } from 'src/typings'
 

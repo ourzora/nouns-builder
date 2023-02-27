@@ -1,17 +1,18 @@
+import { Button, Flex, Heading, Stack, Text } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { Button, Heading, Flex, Stack, Text } from '@zoralabs/zord'
-import { useFormStore } from 'src/stores'
-import { PUBLIC_NOUNS_ADDRESS, PUBLIC_BUILDER_ADDRESS } from 'src/constants/addresses'
-import { useEnsData } from 'src/hooks/useEnsData'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import { getEnsAddress } from 'src/utils/ens'
-import { Contribution } from './Contribution'
-import { DaoCopyAddress } from './DaoCopyAddress'
-import {
-  ContributionAllocationFormValues,
-  ContributionAllocationForm,
-} from './ContributionAllocationForm'
+import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
+import { useEnsData } from 'src/hooks/useEnsData'
+import { useFormStore } from 'src/stores'
 import { TokenAllocation } from 'src/typings'
+import { getEnsAddress } from 'src/utils/ens'
+
+import { Contribution } from './Contribution'
+import {
+  ContributionAllocationForm,
+  ContributionAllocationFormValues,
+} from './ContributionAllocationForm'
+import { DaoCopyAddress } from './DaoCopyAddress'
 
 export const ContributionAllocation = () => {
   const [open, setOpen] = useState(false)

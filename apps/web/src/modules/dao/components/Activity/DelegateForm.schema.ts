@@ -1,5 +1,5 @@
-import { isValidAddress } from 'src/utils/ens'
 import { Provider } from '@ethersproject/abstract-provider'
+import { isValidAddress } from 'src/utils/ens'
 import * as Yup from 'yup'
 
 export const delegateValidationSchema = (provider: Provider | undefined) =>

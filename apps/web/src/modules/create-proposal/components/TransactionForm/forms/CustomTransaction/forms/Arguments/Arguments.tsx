@@ -6,10 +6,10 @@ import Form from 'src/components/Fields/Form'
 import { TEXT, TEXTAREA } from 'src/components/Fields/types'
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import {
+  RAW_DATA_KEY,
   matchInputFromName,
   matchTypeParameters,
   normalizePathName,
-  RAW_DATA_KEY,
 } from 'src/utils/formABI'
 import { camelToTitle } from 'src/utils/helpers'
 import * as Yup from 'yup'

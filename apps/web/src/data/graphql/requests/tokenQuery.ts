@@ -1,5 +1,5 @@
-import omitBy from 'lodash/omitBy'
 import isUndefined from 'lodash/isUndefined'
+import omitBy from 'lodash/omitBy'
 import { CHAIN } from 'src/constants/network'
 import { sdk } from 'src/data/graphql/client'
 import { ImageMediaEncodingFragment } from 'src/data/graphql/sdk.generated'

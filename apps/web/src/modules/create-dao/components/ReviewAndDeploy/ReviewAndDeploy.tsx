@@ -1,9 +1,14 @@
+import { WriteContractUnpreparedArgs } from '@wagmi/core'
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
+import { getFetchableUrl } from 'ipfs-service'
 import React, { useState } from 'react'
 import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
+import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
+import { managerAbi } from 'src/data/contract/abis'
+import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
 import { useFormStore } from 'src/stores/useFormStore'
 import { useLayoutStore } from 'src/stores/useLayoutStore'
 import {
@@ -12,19 +17,15 @@ import {
   deployCheckboxWrapperStyle,
   deployContractButtonStyle,
 } from 'src/styles/deploy.css'
+import type { AddressType } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
-import { Icon } from 'src/components/Icon'
-import type { AddressType } from 'src/typings'
-import { managerAbi } from 'src/data/contract/abis'
 import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
-import { WriteContractUnpreparedArgs } from '@wagmi/core'
-import { getFetchableUrl } from 'ipfs-service'
-import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
-import { ReviewSection } from './ReviewSection'
-import { ReviewItem } from './ReviewItem'
+
 import { PreviewArtwork } from './PreviewArtwork'
+import { ReviewItem } from './ReviewItem'
+import { ReviewSection } from './ReviewSection'
 import { SuccessfulDeploy } from './SuccessfulDeploy'
 
 type FounderParameters = NonNullable<

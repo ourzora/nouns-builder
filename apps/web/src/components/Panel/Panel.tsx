@@ -1,13 +1,13 @@
+import { Box, Flex } from '@zoralabs/zord'
+import { AnimatePresence, motion } from 'framer-motion'
+import React from 'react'
+import { Icon } from 'src/components/Icon'
 import {
   animatedPanel,
   animatedPanelInner,
   panelCloseButton,
   panelProposalWrapper,
 } from 'src/styles/Proposals.css'
-import { Box, Flex } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
-import React from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 
 const Panel: React.FC<{
   isOpen: boolean

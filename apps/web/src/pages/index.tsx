@@ -1,7 +1,6 @@
 import { Stack } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import React from 'react'
-import { DaoFeed } from 'src/modules/dao'
 import Everything from 'src/components/Home/Everything'
 import FAQ from 'src/components/Home/FAQ'
 import Footer from 'src/components/Home/Footer'
@@ -10,8 +9,9 @@ import Marquee from 'src/components/Home/Marquee'
 import RecentlyCreated from 'src/components/Home/RecentlyCreated'
 import Twitter from 'src/components/Home/Twitter'
 import Meta from 'src/components/Layout/Meta'
-import { AuctionFragment } from 'src/data/graphql/sdk.generated'
 import { highestBidsRequest } from 'src/data/graphql/requests/homepageQuery'
+import { AuctionFragment } from 'src/data/graphql/sdk.generated'
+import { DaoFeed } from 'src/modules/dao'
 
 export type DaoProps = Pick<AuctionFragment, 'collectionAddress'> & {
   auctionAddress: string

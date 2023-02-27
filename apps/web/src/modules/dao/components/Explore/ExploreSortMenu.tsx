@@ -1,6 +1,6 @@
-import React from 'react'
 import { Flex, Select } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
+import React from 'react'
 import { SORT_KEY } from 'src/constants/sortKey'
 
 interface ExploreSortMenuProps {

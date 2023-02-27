@@ -1,3 +1,9 @@
+import { FormikProps } from 'formik'
+import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
+import { ArtworkUpload } from 'src/modules/create-dao'
+import { compareAndReturn } from 'src/utils/helpers'
+
+import SingleImageUpload from '../SingleImageUpload/SingleImageUpload'
 import AdminVetoInput from './AdminVetoInput'
 import AdminVetoRadio from './AdminVetoRadio'
 import Date from './Date'
@@ -5,7 +11,6 @@ import DaysHoursMins from './DaysHoursMins'
 import DaysHoursMinsSecs from './DaysHoursMinsSecs'
 import MinsSecs from './MinsSecs'
 import Select from './Select'
-import SingleImageUpload from '../SingleImageUpload/SingleImageUpload'
 import SmartInput from './SmartInput'
 import TextArea from './TextArea'
 import {
@@ -23,10 +28,6 @@ import {
   TEXT,
   TEXTAREA,
 } from './types'
-import { FormikProps } from 'formik'
-import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
-import { compareAndReturn } from 'src/utils/helpers'
-import { ArtworkUpload } from 'src/modules/create-dao'
 
 interface FieldSwitchProps {
   field: {

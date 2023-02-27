@@ -1,4 +1,5 @@
 import { describe, expect } from 'vitest'
+
 import airdropFormSchema from './AirdropForm.schema'
 
 describe('AirdropForm schema validation', () => {

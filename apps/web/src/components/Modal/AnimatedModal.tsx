@@ -1,8 +1,9 @@
-import { animatedModal, animatedModalContent, animatedModalTrigger } from './Modal.css'
 import { Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
 import { Portal } from 'react-portal'
+
+import { animatedModal, animatedModalContent, animatedModalTrigger } from './Modal.css'
 
 interface AnimatedModalProps {
   children: ReactElement

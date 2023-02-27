@@ -1,9 +1,10 @@
-import SingleImageUpload from './SingleImageUpload'
 import { render, screen, waitFor } from '@testing-library/react'
-import React from 'react'
-import { describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { Formik } from 'formik'
+import React from 'react'
+import { describe, expect, it, vi } from 'vitest'
+
+import SingleImageUpload from './SingleImageUpload'
 
 const mockUploadFn = vi.fn()
 

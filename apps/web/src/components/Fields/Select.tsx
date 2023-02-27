@@ -1,7 +1,8 @@
-import { defaultSelectStyle } from './styles.css'
 import { Flex } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import React, { ReactElement } from 'react'
+
+import { defaultSelectStyle } from './styles.css'
 
 //TODO:: this is very specific logic to selecting from contract.interface.fragments, this component could be abstracted
 const Select: React.FC<{

@@ -1,6 +1,6 @@
-import { ALCHEMY_RPC_URL } from 'src/constants/rpc'
 import { Provider } from '@ethersproject/abstract-provider'
 import { ethers } from 'ethers'
+import { ALCHEMY_RPC_URL } from 'src/constants/rpc'
 
 const defaultProvider: Provider = new ethers.providers.JsonRpcProvider(ALCHEMY_RPC_URL)
 

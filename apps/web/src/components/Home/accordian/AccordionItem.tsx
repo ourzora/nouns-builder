@@ -1,8 +1,9 @@
-import { accordionItem, accordionName } from '../../../styles/home.css'
-import { Icon } from 'src/components/Icon'
-import { Flex, Text, Stack, atoms } from '@zoralabs/zord'
+import { Flex, Stack, Text, atoms } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
+import { Icon } from 'src/components/Icon'
+
+import { accordionItem, accordionName } from '../../../styles/home.css'
 
 const AccordionItem: React.FC<{ title: string; description: ReactElement }> = ({
   title,

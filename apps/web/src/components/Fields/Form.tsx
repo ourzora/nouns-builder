@@ -1,16 +1,9 @@
-import FieldSwitch from './FieldSwitch'
-import {
-  defaultBackButtonVariants,
-  defaultFormButton,
-  defaultFormButtonWithPrev,
-  defaultFormStyleVariants,
-  transactionFormButtonWithPrev,
-} from './styles.css'
-import { Icon } from 'src/components/Icon'
 import { Box, Button, Flex, Stack } from '@zoralabs/zord'
 import { Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
+import { Icon } from 'src/components/Icon'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
   adminStickySaveButton,
@@ -22,7 +15,15 @@ import {
   deployCheckboxStyleVariants,
 } from 'src/styles/deploy.css'
 import { compareAndReturn, isEmpty } from 'src/utils/helpers'
-import { useCustomTransactionStore } from 'src/modules/create-proposal'
+
+import FieldSwitch from './FieldSwitch'
+import {
+  defaultBackButtonVariants,
+  defaultFormButton,
+  defaultFormButtonWithPrev,
+  defaultFormStyleVariants,
+  transactionFormButtonWithPrev,
+} from './styles.css'
 
 interface FieldProps {
   name: string

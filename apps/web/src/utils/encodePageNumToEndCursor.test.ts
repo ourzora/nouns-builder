@@ -1,7 +1,8 @@
-import { assert } from 'vitest'
-import { encodePageNumToEndCursor } from './encodePageNumToEndCursor'
 import { base64 } from 'ethers/lib/utils'
+import { assert } from 'vitest'
 import { describe } from 'vitest'
+
+import { encodePageNumToEndCursor } from './encodePageNumToEndCursor'
 
 const decode = (cursor: string) => {
   let decoded = ''

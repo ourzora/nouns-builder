@@ -1,7 +1,9 @@
+import { GetContractResult } from '@wagmi/core'
+import { ContractTransaction, constants } from 'ethers'
 import { useCallback } from 'react'
-import { constants, ContractTransaction } from 'ethers'
-import { useDaoStore } from 'src/stores/useDaoStore'
 import { tokenAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/stores/useDaoStore'
+import { unpackOptionalArray } from 'src/utils/helpers'
 import {
   Address,
   useAccount,
@@ -10,8 +12,6 @@ import {
   useContractReads,
   useSigner,
 } from 'wagmi'
-import { unpackOptionalArray } from 'src/utils/helpers'
-import { GetContractResult } from '@wagmi/core'
 
 type TokenContract = GetContractResult<typeof tokenAbi>
 

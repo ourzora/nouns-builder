@@ -1,7 +1,8 @@
-import React from 'react'
 import { Box, Flex } from '@zoralabs/zord'
-import { uploadingSpinner, uploadNotificationWrapper } from './styles.css'
+import React from 'react'
 import { useFormStore } from 'src/stores/useFormStore'
+
+import { uploadNotificationWrapper, uploadingSpinner } from './styles.css'
 
 const Uploading = () => {
   const { isUploadingToIPFS } = useFormStore()

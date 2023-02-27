@@ -1,15 +1,16 @@
-import { useCountdown } from 'src/hooks/useCountdown'
 import { Box, Flex, Paragraph } from '@zoralabs/zord'
+import dayjs from 'dayjs'
+import { BigNumberish } from 'ethers'
+import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { auction, daoImage, name, title } from './DaoCard.css'
-import { formatCryptoVal } from 'src/utils/numbers'
-import { BigNumberish } from 'ethers'
-import dayjs from 'dayjs'
-import { Detail } from './Detail'
-import { getFetchableUrl } from 'ipfs-service'
+import { useCountdown } from 'src/hooks/useCountdown'
 import { useIsMounted } from 'src/hooks/useIsMounted'
+import { formatCryptoVal } from 'src/utils/numbers'
+
+import { auction, daoImage, name, title } from './DaoCard.css'
+import { Detail } from './Detail'
 
 interface DaoCardProps {
   collectionAddress: string

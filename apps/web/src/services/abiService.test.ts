@@ -1,9 +1,10 @@
 import axios from 'axios'
+import Redis from 'ioredis'
 import { getProvider } from 'src/utils/provider'
 import { describe, expect, it, vi } from 'vitest'
+
 import { getContractABIByAddress } from './abiService'
 import { BackendFailedError, InvalidRequestError, NotFoundError } from './errors'
-import Redis from 'ioredis'
 
 vi.mock('ioredis', () => {
   const Redis = vi.fn()

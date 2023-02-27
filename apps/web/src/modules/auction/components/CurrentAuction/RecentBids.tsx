@@ -1,12 +1,13 @@
-import React from 'react'
-import { Box, Flex, Text, Stack } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
-import { recentBid, allRecentBidsButton } from '../Auction.css'
-import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
+import { Box, Flex, Stack, Text } from '@zoralabs/zord'
 import dynamic from 'next/dynamic'
+import React from 'react'
+import { Icon } from 'src/components/Icon'
+import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { Bid } from 'src/typings'
-import { Bidder } from './Bidder'
+
 import { AllBids } from '../AllBids'
+import { allRecentBidsButton, recentBid } from '../Auction.css'
+import { Bidder } from './Bidder'
 
 const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal'), {
   ssr: false,

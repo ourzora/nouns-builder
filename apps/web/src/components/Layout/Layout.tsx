@@ -1,11 +1,10 @@
-import React, { ReactNode } from 'react'
-import { useRouter } from 'next/router'
 import { Box } from '@zoralabs/zord'
-import { useSigner } from 'wagmi'
-
+import { useRouter } from 'next/router'
+import React, { ReactNode } from 'react'
 import { useDaoStore } from 'src/stores'
 import { useLayoutStore } from 'src/stores/useLayoutStore'
 import { getProvider } from 'src/utils/provider'
+import { useSigner } from 'wagmi'
 
 import Footer from './Footer'
 import Nav from './Nav'

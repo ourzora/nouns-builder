@@ -1,8 +1,9 @@
-import { connectButtonWrapper } from './styles.css'
 import { ConnectButton as RKConnectButton, useChainModal } from '@rainbow-me/rainbowkit'
 import { Flex, Text } from '@zoralabs/zord'
 import React from 'react'
 import { useAccount, useNetwork } from 'wagmi'
+
+import { connectButtonWrapper } from './styles.css'
 
 export const ConnectButton = () => {
   const { address } = useAccount()

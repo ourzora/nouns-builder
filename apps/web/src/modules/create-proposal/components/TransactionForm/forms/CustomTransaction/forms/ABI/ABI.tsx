@@ -1,11 +1,12 @@
-import { fields, validateABI } from './fields'
 import { Flex } from '@zoralabs/zord'
+import { ethers } from 'ethers'
 import React from 'react'
 import Form from 'src/components/Fields/Form'
-import { useLayoutStore } from 'src/stores'
-import { ethers } from 'ethers'
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
+import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
+
+import { fields, validateABI } from './fields'
 
 interface ABIProps {
   title: string

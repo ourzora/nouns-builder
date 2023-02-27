@@ -1,9 +1,9 @@
 import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps, NextPage } from 'next'
-import { exploreDaosRequest } from 'src/data/graphql/requests/exploreQueries'
-import { ExplorePageData, MarketSortKey } from 'src/typings'
-import { Explore } from 'src/modules/dao'
 import Meta from 'src/components/Layout/Meta'
+import { exploreDaosRequest } from 'src/data/graphql/requests/exploreQueries'
+import { Explore } from 'src/modules/dao'
+import { ExplorePageData, MarketSortKey } from 'src/typings'
 import { encodePageNumToEndCursor } from 'src/utils/encodePageNumToEndCursor'
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

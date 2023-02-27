@@ -1,18 +1,18 @@
-import {
-  IPFSUpload,
-  OrderedLayersProps,
-  TokenAllocation,
-  DaoContractAddresses,
-} from 'src/typings'
-import { create } from 'zustand'
-import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
-import { yearsAhead } from 'src/utils/helpers'
 import {
   ArtworkFormValues,
   AuctionSettingsFormValues,
   GeneralFormValues,
 } from 'src/modules/create-dao'
+import {
+  DaoContractAddresses,
+  IPFSUpload,
+  OrderedLayersProps,
+  TokenAllocation,
+} from 'src/typings'
+import { yearsAhead } from 'src/utils/helpers'
+import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
 
 export interface FormStoreState {
   activeSection: number

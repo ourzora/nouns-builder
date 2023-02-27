@@ -1,7 +1,8 @@
 import { Atoms, Flex, FlexProps, theme } from '@zoralabs/zord'
 import React from 'react'
-import { icons, IconType } from './icons'
+
 import { icon } from './Icon.css'
+import { IconType, icons } from './icons'
 
 type IconProps = FlexProps & {
   id: IconType

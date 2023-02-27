@@ -1,24 +1,24 @@
-import React from 'react'
-import { GetServerSideProps } from 'next'
-import { ethers } from 'ethers'
-import { isAddress } from 'ethers/lib/utils.js'
 import { readContract, readContracts } from '@wagmi/core'
 import { Flex, Text, atoms, theme } from '@zoralabs/zord'
+import { ethers } from 'ethers'
+import { isAddress } from 'ethers/lib/utils.js'
+import { GetServerSideProps } from 'next'
+import React from 'react'
 import Meta from 'src/components/Layout/Meta'
 import NogglesLogo from 'src/components/Layout/assets/builder-framed.svg'
-import { useLayoutStore } from 'src/stores'
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
-import { NextPageWithLayout } from 'src/pages/_app'
-import { useAuctionContract } from 'src/hooks'
-import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { auctionAbi, managerAbi } from 'src/data/contract/abis'
+import { useAuctionContract } from 'src/hooks'
+import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import {
   Activity,
-  PreAuctionForm,
-  SmartContracts,
-  SectionHandler,
   PreAuction,
+  PreAuctionForm,
+  SectionHandler,
+  SmartContracts,
 } from 'src/modules/dao'
+import { NextPageWithLayout } from 'src/pages/_app'
+import { useLayoutStore } from 'src/stores'
 
 const DaoPage: NextPageWithLayout = () => {
   const { signerAddress } = useLayoutStore()

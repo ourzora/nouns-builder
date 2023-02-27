@@ -1,10 +1,10 @@
-import React from 'react'
 import { BigNumber } from 'ethers'
-import { useDaoStore } from 'src/stores/useDaoStore'
-import { useContract, useContractReads, useSigner } from 'wagmi'
+import React from 'react'
 import { governorAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/stores/useDaoStore'
 import { AddressType, BytesType } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
+import { useContract, useContractReads, useSigner } from 'wagmi'
 
 import { useProposalTransactions } from './useProposalTransactions'
 

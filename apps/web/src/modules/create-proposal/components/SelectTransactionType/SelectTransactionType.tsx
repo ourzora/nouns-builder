@@ -1,5 +1,6 @@
-import React from 'react'
 import { Stack, Text } from '@zoralabs/zord'
+import React from 'react'
+
 import { TransactionType } from '../../constants/transactionType'
 import AdminNav from './AdminNav'
 import TransactionTypeCard from './TransactionTypeCard'

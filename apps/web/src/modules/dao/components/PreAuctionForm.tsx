@@ -3,11 +3,11 @@ import { ethers } from 'ethers'
 import { FormikValues } from 'formik'
 import React from 'react'
 import Form from 'src/components/Fields/Form'
-import { useAuctionContract } from 'src/hooks'
-import { fromSeconds, toSeconds } from 'src/utils/helpers'
-import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
 import { DAYS_HOURS_MINS_SECS, NUMBER } from 'src/components/Fields/types'
+import { useAuctionContract } from 'src/hooks'
+import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
+import { sectionWrapperStyle } from 'src/styles/dao.css'
+import { fromSeconds, toSeconds } from 'src/utils/helpers'
 
 interface PreAuctionFormSettingsProps {
   title?: string

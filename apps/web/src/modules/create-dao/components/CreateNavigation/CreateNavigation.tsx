@@ -1,7 +1,8 @@
+import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
 import { flowWrapper } from 'src/styles/styles.css'
-import { Box, Flex } from '@zoralabs/zord'
 import { CreateFormSection } from 'src/typings'
+
 import { NavSection } from './NavSection'
 
 export const CreateNavigation: React.FC<{

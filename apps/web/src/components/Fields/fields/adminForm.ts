@@ -1,6 +1,4 @@
-import { isValidAddress } from 'src/utils/ens'
 import { Provider } from '@ethersproject/abstract-provider'
-import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
 import {
   ADMIN_VETO_INPUT,
   ADMIN_VETO_RADIO,
@@ -10,6 +8,8 @@ import {
   TEXT,
   TEXTAREA,
 } from 'src/components/Fields/types'
+import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
+import { isValidAddress } from 'src/utils/ens'
 import * as Yup from 'yup'
 
 export const validateAdmin = (provider: Provider | undefined) =>

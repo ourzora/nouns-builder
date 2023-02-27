@@ -1,16 +1,17 @@
-import React, { Fragment, useState } from 'react'
-import { ActionsWrapper } from '../BidHistory'
-import { AuctionDetails } from '../AuctionDetails'
-import { Settle } from './Settle'
-import { MemoizedPlaceBid } from './PlaceBid'
 import dayjs from 'dayjs'
-import { RecentBids } from './RecentBids'
 import { BigNumber, ethers } from 'ethers'
+import React, { Fragment, useState } from 'react'
 import { useTimeout } from 'src/hooks/useTimeout'
 import { Bid } from 'src/typings'
+
+import { AuctionDetails } from '../AuctionDetails'
 import { BidAmount } from '../BidAmount'
+import { ActionsWrapper } from '../BidHistory'
 import { WinningBidder } from '../WinningBidder'
 import { AuctionCountdown } from './AuctionCountdown'
+import { MemoizedPlaceBid } from './PlaceBid'
+import { RecentBids } from './RecentBids'
+import { Settle } from './Settle'
 
 export const CurrentAuction = ({
   tokenId,

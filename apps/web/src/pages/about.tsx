@@ -1,10 +1,11 @@
-import { whyCreateButton, whyTextStyle } from '../styles/why.css'
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import Head from 'next/head'
 import Image from 'next/legacy/image'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { ContractButton } from 'src/components/ContractButton'
+
+import { whyCreateButton, whyTextStyle } from '../styles/why.css'
 
 const About = () => {
   const router = useRouter()

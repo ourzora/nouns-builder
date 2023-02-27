@@ -1,13 +1,13 @@
 import { Box } from '@zoralabs/zord'
+import { ContractTransaction } from 'ethers'
 import React, { useState } from 'react'
 import { ContractButton } from 'src/components/ContractButton'
 import { uploadingSpinnerWhite } from 'src/components/Layout/styles.css'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { useGovernorContract } from 'src/hooks'
 import { useLayoutStore } from 'src/stores'
 import { useSWRConfig } from 'swr'
-import SWR_KEYS from 'src/constants/swrKeys'
-import { ContractTransaction } from 'ethers'
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 
 interface GovernorContractButtonProps {
   buttonText: string

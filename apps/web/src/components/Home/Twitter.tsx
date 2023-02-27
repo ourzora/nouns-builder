@@ -1,4 +1,4 @@
-import { Text, Stack, atoms, mixins } from '@zoralabs/zord'
+import { Stack, Text, atoms, mixins } from '@zoralabs/zord'
 import React from 'react'
 
 const Twitter = () => (

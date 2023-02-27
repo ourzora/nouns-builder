@@ -1,5 +1,5 @@
-import React from 'react'
 import { Stack, Text } from '@zoralabs/zord'
+import React from 'react'
 
 export const Alert = () => {
   return (

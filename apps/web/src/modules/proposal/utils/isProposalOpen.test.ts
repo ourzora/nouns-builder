@@ -1,4 +1,5 @@
 import { ProposalStatus } from 'src/typings'
+
 import { isProposalOpen } from './isProposalOpen'
 
 describe('isProposalOpen', () => {

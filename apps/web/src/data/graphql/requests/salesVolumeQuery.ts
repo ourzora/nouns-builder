@@ -1,6 +1,6 @@
+import * as Sentry from '@sentry/nextjs'
 import { CHAIN } from 'src/constants/network'
 import { sdk } from 'src/data/graphql/client'
-import * as Sentry from '@sentry/nextjs'
 
 export const salesVolumeRequest = async (
   collectionAddress: string

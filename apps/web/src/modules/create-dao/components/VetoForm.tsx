@@ -1,15 +1,15 @@
 import { Button, Flex } from '@zoralabs/zord'
+import { Form, Formik } from 'formik'
 import React from 'react'
-import { Formik, Form } from 'formik'
-import * as Yup from 'yup'
-import { useFormStore } from 'src/stores/useFormStore'
 import Radio from 'src/components/Fields/Radio'
 import {
   defaultBackButton,
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
-import { isEmpty } from 'src/utils/helpers'
 import { Icon } from 'src/components/Icon'
+import { useFormStore } from 'src/stores/useFormStore'
+import { isEmpty } from 'src/utils/helpers'
+import * as Yup from 'yup'
 
 interface VetoFormProps {
   title: string

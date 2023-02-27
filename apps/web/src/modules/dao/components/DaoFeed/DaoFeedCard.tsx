@@ -1,7 +1,8 @@
-import { useDaoFeedCard } from '../../hooks'
 import React from 'react'
-import { DaoProps } from 'src/pages'
 import { DaoCard } from 'src/modules/dao'
+import { DaoProps } from 'src/pages'
+
+import { useDaoFeedCard } from '../../hooks'
 
 interface DaoCardProps {
   dao: DaoProps

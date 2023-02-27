@@ -1,10 +1,9 @@
-import React from 'react'
 import { screen } from '@testing-library/react'
 import dayjs from 'dayjs'
-import { describe, expect, it, vi } from 'vitest'
-
+import React from 'react'
 import { render } from 'src/test/utils'
 import { Proposal, ProposalStatus } from 'src/typings'
+import { describe, expect, it, vi } from 'vitest'
 
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
 

@@ -1,12 +1,12 @@
-import { Flex, Box, Label, Paragraph } from '@zoralabs/zord'
+import { Box, Flex, Label, Paragraph } from '@zoralabs/zord'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import React from 'react'
-import dayjs from 'dayjs'
-import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
 import { useIsMounted } from 'src/hooks/useIsMounted'
+import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
 
-import { ProposalStatus } from './ProposalStatus'
 import { statusStyle, titleStyle } from './ProposalCard.css'
+import { ProposalStatus } from './ProposalStatus'
 
 type ProposalCardProps = {
   proposalId: string
