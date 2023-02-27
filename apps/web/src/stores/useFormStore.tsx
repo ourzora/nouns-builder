@@ -4,13 +4,12 @@ import {
   TokenAllocation,
   DaoContractAddresses,
   generalInfoProps,
-  setUpArtworkProps,
-  uploadArtworkErrorProps,
 } from 'src/typings'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { yearsAhead } from 'src/utils/helpers'
+import { ArtworkFormValues } from 'src/modules/create-dao'
 import { AuctionSettingsFormValues } from 'src/modules/create-dao'
 
 export interface FormStoreState {
@@ -28,12 +27,10 @@ export interface FormStoreState {
   setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) => void
   auctionSettings: AuctionSettingsFormValues
   setAuctionSettings: (auctionSettings: AuctionSettingsFormValues) => void
-  setUpArtwork: setUpArtworkProps
-  setSetUpArtwork: (artwork: setUpArtworkProps) => void
+  setUpArtwork: ArtworkFormValues
+  setSetUpArtwork: (artwork: ArtworkFormValues) => void
   ipfsUpload: IPFSUpload[]
   setIpfsUpload: (ipfsUpload: IPFSUpload[]) => void
-  artworkSettings: {}[]
-  setArtworkSettings: (artworkSettings: {}[]) => void
   activeSectionCurrentIndex: number
   setActiveSectionCurrentIndex: (activeSectionCurrentIndex: number) => void
   deployedDao: DaoContractAddresses
@@ -42,8 +39,6 @@ export interface FormStoreState {
   setOrderedLayers: (orderedLayers: OrderedLayersProps[]) => void
   isUploadingToIPFS: boolean
   setIsUploadingToIPFS: (bool: boolean) => void
-  uploadArtworkError: uploadArtworkErrorProps | null | undefined
-  setUploadArtworkError: (uploadArtworkError: uploadArtworkErrorProps | null) => void
   nounsAllocationOn: boolean
   setNounsAllocationOn: (bool: boolean) => void
   resetForm: () => void
@@ -99,10 +94,8 @@ const initialState = {
       trait: '',
     },
   ],
-  artworkSettings: [],
   orderedLayers: [],
   isUploadingToIPFS: false,
-  uploadArtworkError: undefined,
   activeSectionCurrentIndex: 0,
   deployedDao: {
     token: undefined,
@@ -136,21 +129,14 @@ export const useFormStore = create(
       nounsAllocationOn: true,
       setNounsAllocationOn: (nounsAllocationOn: boolean) => set({ nounsAllocationOn }),
       setVetoPower: (vetoPower: number) => set({ vetoPower }),
-      setSetUpArtwork: (setUpArtwork: setUpArtworkProps) => set({ setUpArtwork }),
+      setSetUpArtwork: (artwork: ArtworkFormValues) => set({ setUpArtwork: artwork }),
       setIpfsUpload: (ipfsUpload: IPFSUpload[]) => set({ ipfsUpload }),
-      setArtworkSettings: (artworkSettings: {}[]) => {
-        set({
-          artworkSettings,
-        })
-      },
       setOrderedLayers: (orderedLayers: OrderedLayersProps[]) => {
         set({
           orderedLayers,
         })
       },
       setIsUploadingToIPFS: (isUploadingToIPFS: boolean) => set({ isUploadingToIPFS }),
-      setUploadArtworkError: (uploadArtworkError: uploadArtworkErrorProps | null) =>
-        set({ uploadArtworkError }),
       setActiveSectionCurrentIndex: (activeSectionCurrentIndex: number) =>
         set({ activeSectionCurrentIndex }),
       setDeployedDao: (deployedDao: DaoContractAddresses) => {
