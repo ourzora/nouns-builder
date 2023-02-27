@@ -1,13 +1,11 @@
 import { radioStyles } from './styles.css'
 import { Flex, Stack } from '@zoralabs/zord'
-import { FormikErrors, FormikProps } from 'formik'
+import { FormikProps } from 'formik'
 import React from 'react'
 
 interface RadioProps<T> {
   formik: FormikProps<any>
   id: string
-  errorMessage: string | FormikErrors<any> | string[] | undefined | FormikErrors<any>[]
-  autoSubmit?: boolean
   options: { value: T; label: string }[]
   value?: T
 }
@@ -18,8 +16,8 @@ export function Radio<T extends React.Key | boolean>({
   options,
   value,
 }: React.PropsWithChildren<RadioProps<T>>) {
-  const handleSelection = (key: T) => {
-    formik.setFieldValue(id, key)
+  const handleSelection = (val: T) => {
+    formik.setFieldValue(id, val)
   }
 
   return (
