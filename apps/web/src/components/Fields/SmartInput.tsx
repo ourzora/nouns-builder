@@ -35,7 +35,7 @@ interface SmartInputProps {
   placeholder?: string
   step?: number
   submitCallback?: (values: any) => void
-  disabled: boolean | undefined
+  disabled?: boolean
   disableWheelEvent?: boolean
   isAddress?: boolean
 }

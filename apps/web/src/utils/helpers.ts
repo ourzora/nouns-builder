@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers'
 import { isAddress } from 'ethers/lib/utils'
 import isEqual from 'lodash/isEqual'
+import { Duration } from 'src/typings'
 
 /**
  *
@@ -21,14 +22,7 @@ export const camelToTitle = (camel: string) => {
   covert time { days, hours, minutes, seconds } to seconds
 
 */
-interface toSeconds {
-  days?: number | string
-  hours?: number | string
-  minutes?: number | string
-  seconds?: number | string
-}
-
-export const toSeconds = ({ days, hours, minutes, seconds }: toSeconds) => {
+export const toSeconds = ({ days, hours, minutes, seconds }: Duration): number => {
   let secs = 0
 
   if (!!days) {
@@ -55,7 +49,7 @@ export const toSeconds = ({ days, hours, minutes, seconds }: toSeconds) => {
   covert seconds to { days, hours, minutes }
 
 */
-export const fromSeconds = (value: BigNumber | number | undefined) => {
+export const fromSeconds = (value: BigNumber | number | undefined): Duration => {
   if (!value) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0 }
   }

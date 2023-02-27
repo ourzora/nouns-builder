@@ -18,8 +18,7 @@ import {
   BuilderTransaction,
   TransactionType,
 } from 'src/modules/create-proposal'
-import { AddressType, DaoContracts } from 'src/typings'
-import { generalInfoProps, auctionSettingsProps, votingSettingsProps } from 'src/typings'
+import { AddressType, DaoContracts, Duration, generalInfoProps } from 'src/typings'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
 import StickySave from 'src/components/Fields/StickySave'
@@ -29,24 +28,15 @@ interface AdminProps {
   title?: string
 }
 
-export interface AdminFormValues
-  extends Omit<generalInfoProps, 'daoName' | 'daoSymbol'>,
-    auctionSettingsProps,
-    votingSettingsProps {
+export interface AdminFormValues extends Omit<generalInfoProps, 'daoName' | 'daoSymbol'> {
   projectDescription: string
   rendererBase: string
-  votingPeriod: {
-    days: number
-    hours: number
-    minutes: number
-    seconds: number
-  }
-  votingDelay: {
-    days: number
-    hours: number
-    minutes: number
-    seconds: number
-  }
+  auctionDuration: Duration
+  auctionReservePrice: number
+  proposalThreshold: number
+  quorumThreshold: number
+  votingPeriod: Duration
+  votingDelay: Duration
   vetoPower: 1 | 0
   vetoer: string
 }

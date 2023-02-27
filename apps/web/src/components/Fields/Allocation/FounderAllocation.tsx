@@ -4,7 +4,7 @@ import { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import React from 'react'
 import SmartInput from '../SmartInput'
 import DatePicker from '../Date'
-import { TokenAllocation, AuctionDuration } from 'src/typings'
+import { TokenAllocation, Duration } from 'src/typings'
 import {
   calculateMaxAllocation,
   FounderAllocationFormValues,
@@ -12,7 +12,7 @@ import {
 
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues
-  auctionDuration: AuctionDuration
+  auctionDuration: Duration
   vetoPower?: number
   errors?: FormikErrors<FounderAllocationFormValues>
   touched: FormikTouched<FounderAllocationFormValues>

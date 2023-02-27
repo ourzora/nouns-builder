@@ -1,45 +1,14 @@
-import { DAYS_HOURS_MINS_SECS, NUMBER } from 'src/components/Fields/types'
+import { Duration } from 'src/typings'
 import * as Yup from 'yup'
 
-export const auctionSettingsFields = [
-  {
-    name: 'auctionDuration',
-    inputLabel: 'Auction Duration',
-    type: DAYS_HOURS_MINS_SECS,
-    helperText: 'How long each auction lasts.',
-    placeholder: ['1', '0', '0', '0'],
-  },
-  {
-    name: 'auctionReservePrice',
-    inputLabel: 'Auction Reserve Price',
-    type: NUMBER,
-    perma: 'ETH',
-    helperText: 'The starting price of an auction. Must be greater than 0.0001 ETH.', // temp until protocol supports 0 ETH reserve price
-  },
-]
+export interface AuctionSettingsFormValues {
+  auctionDuration: Duration
+  auctionReservePrice?: number
+  proposalThreshold?: number
+  quorumThreshold?: number
+}
 
-export const votingSettingsFields = [
-  {
-    name: 'proposalThreshold',
-    inputLabel: 'Proposal Threshold',
-    type: NUMBER,
-    perma: '%',
-    step: 0.1,
-    helperText:
-      'This is the percentage of all existing tokens that must be owned by someone attempting to create a proposal. We recommend a starting value of 0.5% to encourage participation.',
-  },
-  {
-    name: 'quorumThreshold',
-    inputLabel: 'Quorum Threshold',
-    type: NUMBER,
-    perma: '%',
-    step: 1,
-    helperText:
-      'This is the percentage of all existing tokens that must vote in a proposal in order for it to pass (as long as a majority of votes approve). We recommend a starting value of 10%.',
-  },
-]
-
-export const validateAuctionSettings = Yup.object().shape({
+export const auctionSettingsValidationSchema = Yup.object().shape({
   auctionDuration: Yup.object()
     .shape({
       seconds: Yup.number()
