@@ -17,7 +17,7 @@ const About = () => {
 
       <Stack align={'center'} pt={'x64'}>
         <Flex width={'x64'}>
-          <Image src="/zouns.png" alt="Nouns" width={256} height={95} />
+          <Image src="/noggles.png" alt="Nouns" width={256} height={95} />
         </Flex>
         <Stack
           fontSize={35}
