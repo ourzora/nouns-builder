@@ -38,14 +38,6 @@ export interface TokenAllocation {
   endDate: string
 }
 
-export interface setUpArtworkProps {
-  projectDescription: string
-  collectionName: string
-  artwork: { trait: string; properties: string[]; ipfs?: {}[] }[]
-  externalUrl?: string
-  filesLength: string | number
-}
-
 export interface IPFSUpload {
   name: string
   webkitRelativePath: string
@@ -60,13 +52,6 @@ export interface OrderedLayersProps {
   trait: string
   properties: string[]
   ipfs?: {}[]
-}
-
-export interface uploadArtworkErrorProps {
-  maxTraits?: string | null
-  mime?: string | null
-  directory?: string | null
-  dimensions?: string | null
 }
 
 export interface DragAndDropProps {

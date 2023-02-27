@@ -10,7 +10,7 @@ const allocationSchema = Yup.object().shape({
       (value: string | undefined) => !!value && isValidAddress(value, getProvider())
     )
     .required('*'),
-  allocation: Yup.number()
+  allocationPercentage: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')
     .min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
