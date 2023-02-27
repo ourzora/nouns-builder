@@ -232,6 +232,7 @@ export const AdminForm: React.FC<AdminFormProps> = () => {
                   disabled={!formik.dirty || changes === 0}
                   saveButtonText={'Create Proposal'}
                   onSave={formik.handleSubmit}
+                  isSubmitting={formik.isSubmitting}
                 />
               </Flex>
             )

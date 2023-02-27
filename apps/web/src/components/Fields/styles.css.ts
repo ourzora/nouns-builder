@@ -10,7 +10,7 @@ export const defaultFormStickyStyle = style({
   },
 })
 
-const flexStyle = style({
+export const flexStyle = style({
   display: 'flex',
   flexDirection: 'column',
 })

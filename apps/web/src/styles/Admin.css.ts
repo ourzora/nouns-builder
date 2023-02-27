@@ -16,7 +16,6 @@ export const adminStickySaveButton = style({
   display: 'flex',
   height: 64,
   width: 566,
-  alignItems: 'center',
   fontFamily: 'Inter, sans-serif!important',
   borderRadius: '12px',
   '@media': {

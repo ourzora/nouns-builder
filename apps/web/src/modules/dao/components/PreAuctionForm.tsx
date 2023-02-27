@@ -1,107 +1,128 @@
-import { Flex } from '@zoralabs/zord'
-import { ethers } from 'ethers'
-import { FormikValues } from 'formik'
-import React from 'react'
-import Form from 'src/components/Fields/Form'
+import React, { BaseSyntheticEvent } from 'react'
+import { BigNumber, ethers } from 'ethers'
+import { Formik, FormikValues } from 'formik'
+import isEqual from 'lodash/isEqual'
+import { Flex, Stack } from '@zoralabs/zord'
+
 import { useAuctionContract } from 'src/hooks'
-import { fromSeconds, toSeconds } from 'src/utils/helpers'
+import { compareAndReturn, fromSeconds, toSeconds } from 'src/utils/helpers'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
-import { DAYS_HOURS_MINS_SECS, NUMBER } from 'src/components/Fields/types'
+import { NUMBER } from 'src/components/Fields/types'
+import StickySave from 'src/components/Fields/StickySave'
+import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
+import SmartInput from 'src/components/Fields/SmartInput'
+
+import { PreAuctionFormValues, preAuctionValidationSchema } from './PreAuctionForm.schema'
 
 interface PreAuctionFormSettingsProps {
   title?: string
 }
 
-export const auctionSettingsFields = [
-  {
-    name: 'auctionDuration',
-    inputLabel: 'Auction Duration',
-    type: DAYS_HOURS_MINS_SECS,
-    helperText: 'How long each auction lasts.',
-    placeholder: ['1', '0', '0', '0'],
-  },
-  {
-    name: 'auctionReservePrice',
-    inputLabel: 'Auction Reserve Price',
-    type: NUMBER,
-    perma: 'ETH',
-    helperText: 'The starting price of an auction. Must be greater than 0.0001 ETH.', // temp until protocol supports 0 ETH reserve price
-  },
-]
-
 export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
-  const {
-    auctionDuration: _auctionDuration,
-    auctionReservePrice,
-    setDuration,
-    setReservePrice,
-  } = useAuctionContract()
+  const { auctionDuration, auctionReservePrice, setDuration, setReservePrice } =
+    useAuctionContract()
 
-  const auctionDuration = React.useMemo(() => {
-    if (!_auctionDuration) return
-
-    return fromSeconds(Number(_auctionDuration))
-  }, [_auctionDuration])
-
-  const reservePrice = React.useMemo(() => {
-    if (!auctionReservePrice) return
-    return parseFloat(ethers.utils.formatUnits(auctionReservePrice))
-  }, [auctionReservePrice])
-
-  const updateMethods: any = {
-    auctionDuration: { callback: setDuration, name: 'setDuration' },
-    auctionReservePrice: { callback: setReservePrice, name: 'setReservePrice' },
+  const initialValues: PreAuctionFormValues = {
+    auctionDuration: fromSeconds(auctionDuration),
+    auctionReservePrice: auctionReservePrice
+      ? parseFloat(ethers.utils.formatUnits(auctionReservePrice))
+      : 0,
   }
 
   const handleUpdateSettings = async (
-    values: { field: string; value: any }[],
-    setHasConfirmed: (hasConfirmed: {
-      state: boolean | null
-      values: {}[] | null
-    }) => void,
-    formik: FormikValues | undefined
+    values: PreAuctionFormValues,
+    formik: FormikValues
   ) => {
-    for (const _value of values) {
-      const field = _value?.field
-      const callback = updateMethods[field]?.callback
-      let value = _value?.value
+    formik.setSubmitting(true)
 
-      if (field === 'auctionDuration') {
-        await callback(toSeconds(value))
-      } else if (field === 'auctionReservePrice') {
-        await callback(ethers.utils.parseEther(value.toString()))
+    try {
+      const newDuration = values.auctionDuration
+      if (!isEqual(newDuration, initialValues['auctionDuration'])) {
+        await setDuration(BigNumber.from(toSeconds(newDuration)))
       }
-    }
 
-    setHasConfirmed({ state: false, values: null })
-    formik?.setSubmitting(true)
+      const newReservePrice = values.auctionReservePrice
+      if (!isEqual(newReservePrice, initialValues['auctionReservePrice'])) {
+        await setReservePrice(ethers.utils.parseEther(newReservePrice.toString()))
+      }
+    } finally {
+      formik.setSubmitting(false)
+    }
   }
 
   return (
     <Flex direction={'column'} className={sectionWrapperStyle['admin']} mx={'auto'}>
       <Flex direction={'column'} w={'100%'}>
-        <Form
+        <Formik
+          initialValues={initialValues}
+          validationSchema={preAuctionValidationSchema}
+          onSubmit={handleUpdateSettings}
           enableReinitialize
-          fields={auctionSettingsFields}
-          initialValues={{
-            auctionDuration: {
-              minutes: auctionDuration?.minutes || 0,
-              days: auctionDuration?.days || 0,
-              hours: auctionDuration?.hours || 0,
-              seconds: auctionDuration?.seconds || 0,
-            },
-            auctionReservePrice: reservePrice || 0,
+          validateOnMount
+        >
+          {(formik) => {
+            const changes = compareAndReturn(formik.initialValues, formik.values).length
+
+            return (
+              <Flex direction={'column'} w={'100%'}>
+                <Stack>
+                  <DaysHoursMinsSecs
+                    {...formik.getFieldProps('auctionDuration')}
+                    inputLabel={'Auction Duration'}
+                    formik={formik}
+                    id={'auctionDuration'}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorMessage={
+                      formik.touched['auctionDuration'] &&
+                      formik.errors['auctionDuration']
+                        ? formik.errors['auctionDuration']
+                        : undefined
+                    }
+                    placeholder={['1', '0', '0', '0']}
+                  />
+
+                  <SmartInput
+                    {...formik.getFieldProps('auctionReservePrice')}
+                    inputLabel={'Auction Reserve Price'}
+                    type={NUMBER}
+                    formik={formik}
+                    id={'auctionReservePrice'}
+                    onChange={({ target }: BaseSyntheticEvent) => {
+                      formik.setFieldValue(
+                        'auctionReservePrice',
+                        parseFloat(target.value)
+                      )
+                    }}
+                    onBlur={formik.handleBlur}
+                    helperText={
+                      'The starting price of an auction. Must be greater than 0.0001 ETH.'
+                    }
+                    errorMessage={
+                      formik.touched['auctionReservePrice'] &&
+                      formik.errors['auctionReservePrice']
+                        ? formik.errors['auctionReservePrice']
+                        : undefined
+                    }
+                    perma={'ETH'}
+                  />
+                </Stack>
+
+                <StickySave
+                  confirmText={`I confirm that I want to change ${changes} ${
+                    !!changes && changes > 1 ? 'parameters' : 'parameter'
+                  }, and understand that there will be ${changes} ${
+                    !!changes && changes > 1 ? 'transactions' : 'transaction'
+                  } I need to sign and pay gas for.`}
+                  disabled={!formik.dirty || changes === 0}
+                  isSubmitting={formik.isSubmitting}
+                  saveButtonText={'Save Changes'}
+                  onSave={formik.handleSubmit}
+                />
+              </Flex>
+            )
           }}
-          validationSchema={auctionSettingsValidationSchema}
-          buttonText={'Continue'}
-          submitCallback={(values, setHasConfirmed, formik) =>
-            handleUpdateSettings(values, setHasConfirmed, formik)
-          }
-          stickySave={true}
-          compareReturn={true}
-          auctioningHasStarted={false}
-        />
+        </Formik>
       </Flex>
     </Flex>
   )

@@ -1,6 +1,6 @@
 import { Button, Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   adminStickySaveButton,
   adminStickySaveWrapper,
@@ -11,11 +11,13 @@ import {
   deployCheckboxStyleVariants,
 } from 'src/styles/deploy.css'
 import { Icon } from 'src/components/Icon'
+import { usePrevious } from 'src/hooks'
 
 interface StickySaveProps {
   confirmText: string
   disabled: boolean
   saveButtonText: string
+  isSubmitting: boolean
   onSave: () => void
 }
 
@@ -32,12 +34,24 @@ const StickySave: React.FC<StickySaveProps> = ({
   confirmText,
   saveButtonText,
   disabled,
+  isSubmitting,
   onSave,
 }) => {
   const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
   const [showConfirmBanner, setShowConfirmBanner] = React.useState<boolean>(false)
+  const previousSubmitting = usePrevious(isSubmitting)
+
+  useEffect(() => {
+    // Once form has finished submitting we want to clear the state
+    if (previousSubmitting === true && isSubmitting === false) {
+      setShowConfirmBanner(false)
+      setHasConfirmed(false)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitting])
 
   const handleConfirm = () => {
+    console.log('confirming', hasConfirmed)
     if (hasConfirmed) {
       setShowConfirmBanner(false)
     }
@@ -45,6 +59,7 @@ const StickySave: React.FC<StickySaveProps> = ({
   }
 
   const handleSave = () => {
+    console.log('saving', hasConfirmed)
     if (!hasConfirmed) {
       setShowConfirmBanner(true)
     } else {
@@ -90,12 +105,17 @@ const StickySave: React.FC<StickySaveProps> = ({
               </Flex>
             </Flex>
           </motion.div>
-          <Flex backgroundColor="background1">
+          <Flex
+            backgroundColor="background1"
+            width={'100%'}
+            direction={'column'}
+            align={'center'}
+          >
             <Button
               className={adminStickySaveButton}
               type={'submit'}
               my={'x3'}
-              disabled={disabled}
+              disabled={disabled || isSubmitting}
               onClick={handleSave}
             >
               {hasConfirmed ? 'Confirm' : saveButtonText}
