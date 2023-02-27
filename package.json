@@ -8,6 +8,7 @@
     "test": "turbo run test",
     "type-check": "turbo run type-check",
     "lint": "turbo run lint",
+    "eslint": "eslint --fix . --ext .ts,.tsx",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "ci": "turbo run lint test"
