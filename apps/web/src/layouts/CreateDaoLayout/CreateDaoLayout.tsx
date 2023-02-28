@@ -1,11 +1,11 @@
 import { Box } from '@zoralabs/zord'
 import React, { ReactElement, ReactNode } from 'react'
 
-import { PageLayout } from '../PageLayout'
+import { LayoutWrapper } from '../LayoutWrapper'
 import { Nav } from './Nav'
 import { Uploading } from './Uploading'
 
-function CreateLayout({ children }: { children: ReactNode }) {
+function CreateDaoLayout({ children }: { children: ReactNode }) {
   return (
     <Box>
       <Nav />
@@ -15,10 +15,10 @@ function CreateLayout({ children }: { children: ReactNode }) {
   )
 }
 
-export function getCreateLayout(page: ReactElement) {
+export function getCreateDaoLayout(page: ReactElement) {
   return (
-    <PageLayout>
-      <CreateLayout>{page}</CreateLayout>
-    </PageLayout>
+    <LayoutWrapper>
+      <CreateDaoLayout>{page}</CreateDaoLayout>
+    </LayoutWrapper>
   )
 }

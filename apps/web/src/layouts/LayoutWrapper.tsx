@@ -4,7 +4,7 @@ import { useSigner } from 'wagmi'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { getProvider } from 'src/utils/provider'
 
-export function PageLayout({ children }: { children: ReactNode }) {
+export function LayoutWrapper({ children }: { children: ReactNode }) {
   const { data: signer, status } = useSigner()
   const { setSigner, setProvider, setSignerAddress } = useLayoutStore()
   const { setIsMobile } = useLayoutStore()

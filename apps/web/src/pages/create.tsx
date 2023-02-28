@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
-import { getCreateLayout } from 'src/layouts/CreateLayout'
+import { getCreateDaoLayout } from 'src/layouts/CreateDaoLayout'
 import {
   AllocationForm,
   Artwork,
@@ -160,6 +160,6 @@ const CreatePage: NextPageWithLayout = () => {
   )
 }
 
-CreatePage.getLayout = getCreateLayout
+CreatePage.getLayout = getCreateDaoLayout
 
 export default CreatePage

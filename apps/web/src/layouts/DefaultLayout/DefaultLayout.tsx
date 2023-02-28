@@ -1,7 +1,7 @@
 import { Box } from '@zoralabs/zord'
 import React, { ReactElement, ReactNode } from 'react'
 
-import { PageLayout } from '../PageLayout'
+import { LayoutWrapper } from '../LayoutWrapper'
 import { Footer } from './Footer'
 import { Nav } from './Nav'
 
@@ -17,8 +17,8 @@ export function DefaultLayout({ children }: { children: ReactNode }) {
 
 export function getDefaultLayout(page: ReactElement) {
   return (
-    <PageLayout>
+    <LayoutWrapper>
       <DefaultLayout>{page}</DefaultLayout>
-    </PageLayout>
+    </LayoutWrapper>
   )
 }

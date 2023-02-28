@@ -2,7 +2,7 @@ import { Box } from '@zoralabs/zord'
 import React, { ReactElement, ReactNode } from 'react'
 
 import { Nav } from '../DefaultLayout/Nav'
-import { PageLayout } from '../PageLayout'
+import { LayoutWrapper } from '../LayoutWrapper'
 import { Footer } from './Footer'
 
 export function HomeLayout({ children }: { children: ReactNode }) {
@@ -17,8 +17,8 @@ export function HomeLayout({ children }: { children: ReactNode }) {
 
 export function getHomeLayout(page: ReactElement) {
   return (
-    <PageLayout>
+    <LayoutWrapper>
       <HomeLayout>{page}</HomeLayout>
-    </PageLayout>
+    </LayoutWrapper>
   )
 }
