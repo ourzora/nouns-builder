@@ -7,7 +7,7 @@ import { Icon } from 'src/components/Icon'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useLayoutStore } from 'src/stores'
 
-import { useDaoStore } from '../../../dao/stores'
+import { useDaoStore } from 'src/modules/dao'
 
 const AdminNav = () => {
   const router = useRouter()

@@ -16,7 +16,7 @@ import { Simulation, SimulationResult } from 'src/services/simulationService'
 import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
-import { useDaoStore } from '../../../dao/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { BuilderTransaction, useProposalStore } from '../../stores'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { MarkdownEditor } from './MarkdownEditor'

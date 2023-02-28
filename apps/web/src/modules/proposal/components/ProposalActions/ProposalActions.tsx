@@ -8,7 +8,7 @@ import { useLayoutStore } from 'src/stores'
 import { Proposal, ProposalStatus, ProposalVote } from 'src/typings'
 import { AddressType } from 'src/typings'
 
-import { useDaoStore } from '../../../dao/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { isProposalOpen, isProposalSuccessful } from '../../utils'
 import { OwnerActions } from './OwnerActions'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
