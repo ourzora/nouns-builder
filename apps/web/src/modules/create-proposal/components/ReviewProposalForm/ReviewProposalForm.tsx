@@ -38,9 +38,8 @@ export const ReviewProposalForm = ({
   const router = useRouter()
   const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
-
-  const signerAddress = await signer?.getAddress()
-  const { proposalThreshold } = useGovernorContract()
+  //@ts-ignore
+  const signerAddress = signer._address
   const { clearProposal } = useProposalStore()
 
   const [error, setError] = useState<string | undefined>()
@@ -50,7 +49,7 @@ export const ReviewProposalForm = ({
   const [proposing, setProposing] = useState<boolean>(false)
 
   const { data: votes, isLoading } = useContractRead({
-    address: addresses?.token as AddressType,
+    address: addresses?.governor as AddressType,
     abi: tokenAbi,
     enabled: !!signerAddress,
     functionName: 'getVotes',
@@ -69,6 +68,12 @@ export const ReviewProposalForm = ({
     signerOrProvider: signer,
   })
 
+  const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
+    address: addresses?.governor as AddressType,
+    abi: governorAbi,
+    functionName: 'proposalThreshold',
+  })
+
   const onSubmit = React.useCallback(
     async (values: FormValues) => {
       setError(undefined)
@@ -82,6 +87,8 @@ export const ReviewProposalForm = ({
         setError(ERROR_CODE.WRONG_NETWORK)
         return
       }
+
+      if (!proposalThreshold) return
 
       const votesToNumber = votes ? votes.toNumber() : 0
       const doesNotHaveEnoughVotes = votesToNumber <= proposalThreshold.toNumber()
@@ -183,9 +190,9 @@ export const ReviewProposalForm = ({
     ]
   )
 
-  if (isLoading) return null
+  if (isLoading || thresholdIsLoading) return null
 
-  const tokensNeeded = proposalThreshold.toNumber() + 1
+  const tokensNeeded = proposalThreshold && proposalThreshold.toNumber() + 1
 
   return (
     <Flex direction={'column'} width={'100%'} pb={'x24'}>
