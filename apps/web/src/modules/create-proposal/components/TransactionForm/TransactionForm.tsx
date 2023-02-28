@@ -24,6 +24,7 @@ export const TransactionForm = ({ type }: TransactionFormProps) => {
     [TransactionType.AIRDROP]: <Airdrop />,
     [TransactionType.SEND_ETH]: <SendEth />,
     [TransactionType.UPGRADE]: null,
+    [TransactionType.NOUNS_CONNECT]: null,
   }
 
   return <>{FORMS[type]}</>
