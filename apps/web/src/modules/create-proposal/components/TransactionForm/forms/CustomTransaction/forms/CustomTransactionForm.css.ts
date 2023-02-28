@@ -1,5 +1,4 @@
-import { style, styleVariants } from '@vanilla-extract/css'
-import { atoms, theme } from '@zoralabs/zord'
+import { style } from '@vanilla-extract/css'
 
 export const transactionFormButtonWithPrev = style({
   marginLeft: 'auto',
