@@ -1,8 +1,9 @@
-import { utils } from 'ethers'
-import { getProvider } from '../utils/provider'
 import axios from 'axios'
+import { utils } from 'ethers'
+
+import { getProvider } from '../utils/provider'
+import { BackendFailedError, InvalidRequestError, NotFoundError } from './errors'
 import { getRedisConnection } from './redisConnection'
-import { InvalidRequestError, BackendFailedError, NotFoundError } from './errors'
 
 const EIP1967_PROXY_STORAGE_SLOT =
   '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc'

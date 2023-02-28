@@ -1,5 +1,6 @@
-import { ReactNode, FC } from 'react'
 import { Box, Grid } from '@zoralabs/zord'
+import { FC, ReactNode } from 'react'
+
 import { useLayoutStore } from 'src/stores'
 
 interface CustomTransactionLayoutProps {

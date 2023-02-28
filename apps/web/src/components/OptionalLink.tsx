@@ -1,5 +1,5 @@
-import { ReactNode } from 'react'
 import Link, { LinkProps } from 'next/link'
+import { ReactNode } from 'react'
 
 export const OptionalLink: React.FC<
   { enabled: boolean; children: ReactNode } & LinkProps

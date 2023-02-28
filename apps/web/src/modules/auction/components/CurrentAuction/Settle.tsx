@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
-import { usePrepareContractWrite, useContractWrite, useSigner } from 'wagmi'
 import { Button, Flex } from '@zoralabs/zord'
+import React, { useState } from 'react'
+import { useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
-import { auctionActionButtonVariants } from '../Auction.css'
-import { useDaoStore } from 'src/stores'
 import { auctionAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/stores'
+
+import { auctionActionButtonVariants } from '../Auction.css'
 
 interface SettleProps {
   isEnding: boolean

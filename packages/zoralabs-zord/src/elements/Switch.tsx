@@ -1,10 +1,9 @@
-import * as SwitchPrimitive from '@radix-ui/react-switch'
-
+import { FieldAnnotation } from './FieldAnnotation'
+import { Flex } from './Flex'
+import { Stack } from './Stack'
 import { switchThumb, switchWrapper } from './Switch.css'
 import { Text, textVariants } from './Text'
-import { Flex } from './Flex'
-import { FieldAnnotation } from './FieldAnnotation'
-import { Stack } from './Stack'
+import * as SwitchPrimitive from '@radix-ui/react-switch'
 import { ReactNode } from 'react'
 
 export interface SwitchProps {

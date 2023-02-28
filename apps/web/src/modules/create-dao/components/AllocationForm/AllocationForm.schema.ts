@@ -1,6 +1,7 @@
+import * as Yup from 'yup'
+
 import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
-import * as Yup from 'yup'
 
 const allocationSchema = Yup.object().shape({
   founderAddress: Yup.string()

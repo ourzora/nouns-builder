@@ -1,6 +1,8 @@
 import { Flex } from '@zoralabs/zord'
+
 import { Icon } from 'src/components/Icon'
-import { TransactionType, TRANSACTION_TYPES } from '../constants'
+
+import { TRANSACTION_TYPES, TransactionType } from '../constants'
 
 interface TransactionTypeIconProps {
   transactionType: TransactionType

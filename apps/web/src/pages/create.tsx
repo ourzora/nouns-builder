@@ -1,20 +1,21 @@
-import React, { useEffect } from 'react'
-import { useAccount } from 'wagmi'
-import { useRouter } from 'next/router'
-import {
-  CreateNavigation,
-  AllocationForm,
-  AuctionSettingsForm,
-  ReviewAndDeploy,
-  GeneralForm,
-  VetoForm,
-  FormHandler,
-  Artwork,
-} from 'src/modules/create-dao'
 import { Box, Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import { NextPage } from 'next'
+import { useRouter } from 'next/router'
+import React, { useEffect } from 'react'
+import { useAccount } from 'wagmi'
+
 import Meta from 'src/components/Layout/Meta'
+import {
+  AllocationForm,
+  Artwork,
+  AuctionSettingsForm,
+  CreateNavigation,
+  FormHandler,
+  GeneralForm,
+  ReviewAndDeploy,
+  VetoForm,
+} from 'src/modules/create-dao'
 import { useFormStore } from 'src/stores/useFormStore'
 import { createWrapperHalf, formWrapper, pageGrid } from 'src/styles/styles.css'
 import { CreateFormSection } from 'src/typings'

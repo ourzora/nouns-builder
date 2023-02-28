@@ -52,7 +52,7 @@ function isNormalizedIPFSURL(url: string | null | undefined): boolean {
 function isGatewayIPFSUrl(url: string | null | undefined): boolean {
   return url && typeof url === 'string'
     ? !isNormalizedIPFSURL(url) && !!url.match(/\/ipfs\//)
-    : false;
+    : false
 }
 
 export function isIPFSUrl(url: string | null | undefined): boolean {

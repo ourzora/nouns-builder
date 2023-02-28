@@ -4,7 +4,6 @@
  */
 import { Box, BoxProps } from '../Box'
 import { separator } from './Separator.css'
-import clsx from 'clsx'
 import React, { ElementType } from 'react'
 import type { PolymorphicPropsWithRef } from 'react-polymorphic-types'
 

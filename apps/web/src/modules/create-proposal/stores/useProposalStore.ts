@@ -1,6 +1,8 @@
 import { create } from 'zustand'
-import { TransactionType } from '../constants'
+
 import { AddressType } from 'src/typings'
+
+import { TransactionType } from '../constants'
 
 export type Transaction = {
   functionSignature: string

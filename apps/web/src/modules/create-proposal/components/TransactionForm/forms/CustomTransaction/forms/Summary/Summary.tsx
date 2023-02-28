@@ -1,16 +1,18 @@
+import { Button, Flex, Stack } from '@zoralabs/zord'
+import { ethers } from 'ethers'
+import React from 'react'
+
+import CopyButton from 'src/components/CopyButton/CopyButton'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
+import { useLayoutStore } from 'src/stores/useLayoutStore'
+import { getEnsAddress } from 'src/utils/ens'
+import { RAW_DATA_KEY, matchTypeParameters, normalizePathName } from 'src/utils/formABI'
+import { walletSnippet } from 'src/utils/helpers'
+
 import {
   defaultBackButtonVariants,
   transactionFormButtonWithPrev,
 } from '../../CustomTransaction.css'
-import { Button, Flex, Stack } from '@zoralabs/zord'
-import { ethers } from 'ethers'
-import React from 'react'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
-import { getEnsAddress } from 'src/utils/ens'
-import { matchTypeParameters, normalizePathName, RAW_DATA_KEY } from 'src/utils/formABI'
-import { useCustomTransactionStore } from 'src/modules/create-proposal'
-import { walletSnippet } from 'src/utils/helpers'
-import CopyButton from 'src/components/CopyButton/CopyButton'
 
 interface SummaryProps {
   title: string

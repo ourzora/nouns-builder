@@ -1,5 +1,6 @@
 import { renderHook } from '@testing-library/react'
 import { BigNumber } from 'ethers'
+
 import { useMinBidIncrement } from './useMinBidIncrement'
 
 describe('calculate min bid increment', () => {

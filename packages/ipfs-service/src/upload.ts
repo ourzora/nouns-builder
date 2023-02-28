@@ -1,8 +1,8 @@
+import { uploadApi } from './api'
+import { authorize } from './estuary'
+import { hashFiles } from './hash'
 import axios from 'axios'
 import { create as createIpfsClient } from 'ipfs-http-client'
-import { authorize } from './estuary'
-import { uploadApi } from './api'
-import { hashFiles } from './hash'
 import last from 'it-last'
 
 const IPFS_API_BASE =

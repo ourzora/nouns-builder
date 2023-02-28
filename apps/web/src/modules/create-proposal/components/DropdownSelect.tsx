@@ -1,12 +1,13 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { Box, Flex } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
+import { AnimatePresence, motion } from 'framer-motion'
+import React, { ReactElement, ReactNode, useState } from 'react'
+
 import {
+  defaultDropdownSelectOptionStyle,
   defaultFieldsetStyle,
   defaultInputLabelStyle,
-  defaultDropdownSelectOptionStyle,
 } from 'src/components/Fields/styles.css'
+import { Icon } from 'src/components/Icon'
 
 export interface SelectOption<T> {
   value: T

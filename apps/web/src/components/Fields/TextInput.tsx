@@ -1,12 +1,13 @@
+import { Box } from '@zoralabs/zord'
+import { FormikProps } from 'formik'
+import React, { ChangeEventHandler, ReactElement } from 'react'
+
+import { Error } from './Error'
 import {
   defaultFieldsetStyle,
   defaultInputLabelStyle,
   inputStyleVariants,
 } from './styles.css'
-import { Error } from './Error'
-import { Box } from '@zoralabs/zord'
-import { FormikProps } from 'formik'
-import React, { ChangeEventHandler, ReactElement } from 'react'
 
 interface TextInputProps {
   id: string

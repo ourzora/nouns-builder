@@ -1,5 +1,6 @@
 import { Atoms, Flex, Text } from '@zoralabs/zord'
 import { ReactNode } from 'react'
+
 import { Icon } from 'src/components/Icon'
 import { IconType } from 'src/components/Icon/icons'
 import { Support } from 'src/typings'

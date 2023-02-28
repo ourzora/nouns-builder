@@ -1,27 +1,29 @@
-import React from 'react'
+import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React from 'react'
+import useSWR from 'swr'
+import { useAccount, useBalance, useDisconnect } from 'wagmi'
+
 import { Avatar } from 'src/components/Avatar'
 import { DaoAvatar } from 'src/components/Avatar/DaoAvatar'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { Icon } from 'src/components/Icon'
 import { NetworkController } from 'src/components/NetworkController'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
+import { useEnsData } from 'src/hooks/useEnsData'
+import { formatCryptoVal } from 'src/utils/numbers'
+
 import { ConnectButton } from './ConnectButton'
 import { CreateDaoButton } from './CreateDaoButton'
-import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
 import {
+  activeNavAvatar,
   disconnectButton,
   myDaosWrapper,
   navButton,
-  activeNavAvatar,
   navMenuBurger,
 } from './styles.css'
-import { useRouter } from 'next/router'
-import { useEnsData } from 'src/hooks/useEnsData'
-import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
-import { formatCryptoVal } from 'src/utils/numbers'
-import useSWR from 'swr'
-import SWR_KEYS from 'src/constants/swrKeys'
-import { useAccount, useBalance, useDisconnect } from 'wagmi'
 
 const NavMenu: React.FC<{}> = () => {
   const [isOpenMenu, setIsOpenMenu] = React.useState(false)

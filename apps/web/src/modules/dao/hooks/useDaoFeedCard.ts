@@ -1,7 +1,8 @@
 import { BigNumber, ethers } from 'ethers'
+import { useContractRead } from 'wagmi'
+
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
-import { useContractRead } from 'wagmi'
 
 interface useDaoCardProps {
   collectionAddress: string

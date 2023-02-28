@@ -1,7 +1,8 @@
-import { defaultInputLabelStyle, radioStyles } from './styles.css'
 import { Flex, Stack } from '@zoralabs/zord'
 import { FormikErrors, FormikProps } from 'formik'
 import React, { ReactElement } from 'react'
+
+import { defaultInputLabelStyle, radioStyles } from './styles.css'
 
 interface BurnVetoRadioProps {
   inputLabel: string | ReactElement

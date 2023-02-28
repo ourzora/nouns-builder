@@ -5,7 +5,7 @@ import { vars } from '../theme.css'
 import * as styles from './Modal.css'
 import * as Dialog from '@radix-ui/react-dialog'
 import clsx from 'clsx'
-import { forwardRef, ComponentProps, ReactNode } from 'react'
+import { ComponentProps, ReactNode, forwardRef } from 'react'
 
 export interface ModalContentProps extends Dialog.DialogContentProps {
   title?: string

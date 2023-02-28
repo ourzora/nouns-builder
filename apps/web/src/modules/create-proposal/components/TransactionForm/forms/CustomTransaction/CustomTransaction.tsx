@@ -1,15 +1,15 @@
-import React from 'react'
 import { Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
+import React from 'react'
 
-import { AddressType, AddTransactionSection } from 'src/typings'
+import { AddTransactionSection, AddressType } from 'src/typings'
 
-import { useProposalStore, useCustomTransactionStore } from '../../../../stores'
 import { TransactionType } from '../../../../constants'
+import { useCustomTransactionStore, useProposalStore } from '../../../../stores'
 import { customTransactionWrapper, transactionFormWrapper } from './CustomTransaction.css'
-import { ABI, Address, Arguments, Function, Summary, Value } from './forms'
 import { FormHandler } from './FormHandler'
 import { FormHeading } from './FormHeading'
+import { ABI, Address, Arguments, Function, Summary, Value } from './forms'
 
 export const CustomTransaction: React.FC = () => {
   const { addTransaction } = useProposalStore()

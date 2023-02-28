@@ -1,7 +1,7 @@
 import { Box } from '../elements'
-import { v4 } from 'uuid'
-import React from 'react'
 import { rotateKeyframes } from '../elements/Icon.css'
+import React from 'react'
+import { v4 } from 'uuid'
 
 export interface SpinnerOGProps {
   size?: number | string

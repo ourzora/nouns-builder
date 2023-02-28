@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react'
-import { useRouter } from 'next/router'
 import { Box } from '@zoralabs/zord'
+import { useRouter } from 'next/router'
+import React, { ReactNode } from 'react'
 import { useSigner } from 'wagmi'
 
 import { useDaoStore } from 'src/stores'

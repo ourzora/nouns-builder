@@ -1,11 +1,13 @@
+import { Box, Button, Flex } from '@zoralabs/zord'
+import { Form, Formik } from 'formik'
+import type { FormikHelpers } from 'formik'
 import { useCallback } from 'react'
 import type { FC } from 'react'
-import { Formik, Form } from 'formik'
-import type { FormikHelpers } from 'formik'
-import { Box, Flex, Button } from '@zoralabs/zord'
-import airdropFormSchema, { AirdropFormValues } from './AirdropForm.schema'
-import Input from 'src/components/Input/Input'
+
 import { Icon } from 'src/components/Icon'
+import Input from 'src/components/Input/Input'
+
+import airdropFormSchema, { AirdropFormValues } from './AirdropForm.schema'
 
 export interface AirdropFormProps {
   onSubmit?: (

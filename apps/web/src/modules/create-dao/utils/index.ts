@@ -1,4 +1,4 @@
-import { TokenAllocation, Duration } from 'src/typings'
+import { Duration, TokenAllocation } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 
 export const formatAuctionDuration = (duration: Duration): string => {

@@ -1,6 +1,7 @@
 import { Flex, atoms } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React from 'react'
+
 import { useLayoutStore } from 'src/stores'
 
 const Marquee = () => {

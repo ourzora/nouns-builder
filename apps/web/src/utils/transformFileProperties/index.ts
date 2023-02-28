@@ -1,6 +1,7 @@
-import { IPFSUpload, OrderedLayersProps } from 'src/typings'
 import { BigNumber } from 'ethers'
 import { normalizeIPFSUrl } from 'ipfs-service'
+
+import { IPFSUpload, OrderedLayersProps } from 'src/typings'
 
 export interface PropertyItem {
   propertyId: BigNumber

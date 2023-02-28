@@ -1,29 +1,29 @@
-import React, { Fragment } from 'react'
+import { readContract, readContracts } from '@wagmi/core'
 import { Flex } from '@zoralabs/zord'
+import { ethers } from 'ethers'
+import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import { readContract, readContracts } from '@wagmi/core'
-import { isAddress } from 'ethers/lib/utils.js'
-import { ethers } from 'ethers'
+import React, { Fragment } from 'react'
 import useSWR, { unstable_serialize } from 'swr'
 
-import getToken from 'src/data/contract/requests/getToken'
-import SWR_KEYS from 'src/constants/swrKeys'
 import Meta from 'src/components/Layout/Meta'
-import { TokenWithWinner } from 'src/typings'
-import {
-  ProposalDescription,
-  ProposalHeader,
-  ProposalActions,
-  ProposalDetailsGrid,
-  isProposalOpen,
-} from 'src/modules/proposal'
-import { propPageWrapper } from 'src/styles/Proposals.css'
+import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
+import getToken from 'src/data/contract/requests/getToken'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import {
+  ProposalActions,
+  ProposalDescription,
+  ProposalDetailsGrid,
+  ProposalHeader,
+  isProposalOpen,
+} from 'src/modules/proposal'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
-import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { propPageWrapper } from 'src/styles/Proposals.css'
+import { TokenWithWinner } from 'src/typings'
 
 export interface VotePageProps {
   proposalId: string

@@ -1,22 +1,22 @@
-import React, { Fragment } from 'react'
 import { readContract } from '@wagmi/core'
-import useSWR from 'swr'
 import { Flex, Grid } from '@zoralabs/zord'
+import React, { Fragment } from 'react'
+import useSWR from 'swr'
 
-import { AddressType, TokenWithWinner } from 'src/typings'
-import { auctionAbi } from 'src/data/contract/abis'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
+import { AddressType, TokenWithWinner } from 'src/typings'
 
-import { auctionGrid, auctionWrapper, auctionWrapVariants } from './Auction.css'
+import { useAuctionEvents } from '../hooks'
+import { auctionGrid, auctionWrapVariants, auctionWrapper } from './Auction.css'
 import { AuctionDetails } from './AuctionDetails'
-import { ActionsWrapper, BidHistory } from './BidHistory'
-import { CurrentAuction } from './CurrentAuction'
-import { BidAmount } from './BidAmount'
-import { WinningBidder } from './WinningBidder'
 import { AuctionImage } from './AuctionImage'
 import { AuctionTokenPicker } from './AuctionTokenPicker'
-import { useAuctionEvents } from '../hooks'
+import { BidAmount } from './BidAmount'
+import { ActionsWrapper, BidHistory } from './BidHistory'
+import { CurrentAuction } from './CurrentAuction'
+import { WinningBidder } from './WinningBidder'
 
 interface AuctionControllerProps {
   auctionAddress: string

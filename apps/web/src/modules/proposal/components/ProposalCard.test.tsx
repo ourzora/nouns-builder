@@ -1,10 +1,12 @@
-import { ProposalCard } from './ProposalCard'
 import { screen } from '@testing-library/react'
-import { render } from 'src/test/utils'
 import dayjs from 'dayjs'
 import React from 'react'
-import { ProposalStatus } from 'src/typings'
 import { describe, expect, it, vi } from 'vitest'
+
+import { render } from 'src/test/utils'
+import { ProposalStatus } from 'src/typings'
+
+import { ProposalCard } from './ProposalCard'
 
 describe('proposaal card', () => {
   const date = new Date(2022, 1, 1)

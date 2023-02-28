@@ -1,5 +1,6 @@
-import { walletSnippet } from 'src/utils/helpers'
 import { useEnsAddress, useEnsAvatar, useEnsName } from 'wagmi'
+
+import { walletSnippet } from 'src/utils/helpers'
 
 export const useEnsData = (address?: string) => {
   const { data: ensName, isLoading: ensNameLoading } = useEnsName({

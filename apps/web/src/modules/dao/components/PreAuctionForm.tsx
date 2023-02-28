@@ -1,16 +1,16 @@
-import React, { BaseSyntheticEvent } from 'react'
+import { Flex, Stack } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
-import { Flex, Stack } from '@zoralabs/zord'
+import React, { BaseSyntheticEvent } from 'react'
 
-import { useAuctionContract } from 'src/hooks'
-import { compareAndReturn, fromSeconds, toSeconds } from 'src/utils/helpers'
-import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { NUMBER } from 'src/components/Fields/types'
-import StickySave from 'src/components/Fields/StickySave'
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
+import StickySave from 'src/components/Fields/StickySave'
+import { NUMBER } from 'src/components/Fields/types'
+import { useAuctionContract } from 'src/hooks'
+import { sectionWrapperStyle } from 'src/styles/dao.css'
+import { compareAndReturn, fromSeconds, toSeconds } from 'src/utils/helpers'
 
 import { PreAuctionFormValues, preAuctionValidationSchema } from './PreAuctionForm.schema'
 

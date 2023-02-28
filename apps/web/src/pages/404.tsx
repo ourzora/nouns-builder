@@ -1,6 +1,7 @@
-import { notFoundWrap } from '../styles/404.css'
 import { Flex } from '@zoralabs/zord'
 import Head from 'next/head'
+
+import { notFoundWrap } from '../styles/404.css'
 
 export default function Custom404() {
   return (

@@ -1,14 +1,16 @@
-import { contractAddressFields, validateContractAddress } from './fields'
 import { Flex } from '@zoralabs/zord'
-import React, { useEffect } from 'react'
-import Form from 'src/components/Fields/Form'
-import { useLayoutStore } from 'src/stores'
-import { isAddress } from 'ethers/lib/utils'
 import axios from 'axios'
+import { isAddress } from 'ethers/lib/utils'
+import React, { useEffect } from 'react'
+
+import Form from 'src/components/Fields/Form'
 import {
   initCustomTransaction,
   useCustomTransactionStore,
 } from 'src/modules/create-proposal'
+import { useLayoutStore } from 'src/stores'
+
+import { contractAddressFields, validateContractAddress } from './fields'
 
 interface AddressProps {
   title: string

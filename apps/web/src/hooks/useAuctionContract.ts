@@ -1,7 +1,8 @@
-import { useCallback } from 'react'
-import { BigNumber, ContractTransaction } from 'ethers'
-import { Address, useContract, useContractReads, useSigner } from 'wagmi'
 import { GetContractResult, ReadContractResult } from '@wagmi/core'
+import { BigNumber, ContractTransaction } from 'ethers'
+import { useCallback } from 'react'
+import { Address, useContract, useContractReads, useSigner } from 'wagmi'
+
 import { auctionAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/stores'
 import { unpackOptionalArray } from 'src/utils/helpers'

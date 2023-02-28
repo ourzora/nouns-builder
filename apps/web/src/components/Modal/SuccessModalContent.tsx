@@ -1,11 +1,13 @@
-import { uploadingSpinner } from '../Layout/styles.css'
 import { Box, Flex } from '@zoralabs/zord'
-import { Icon } from 'src/components/Icon'
 import React, { ReactNode } from 'react'
+
 import {
   confirmRemoveHeadingStyle,
   confirmRemoveHelper,
 } from 'src/components/Fields/styles.css'
+import { Icon } from 'src/components/Icon'
+
+import { uploadingSpinner } from '../Layout/styles.css'
 
 type SuccessModalContentProps = {
   title: string

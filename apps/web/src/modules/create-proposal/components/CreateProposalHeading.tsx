@@ -1,5 +1,6 @@
-import React from 'react'
 import { Stack, Text } from '@zoralabs/zord'
+import React from 'react'
+
 import { ProposalNavigation } from 'src/modules/proposal'
 
 interface CreateProposalHeadingProps {

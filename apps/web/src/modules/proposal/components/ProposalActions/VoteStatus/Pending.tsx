@@ -1,8 +1,9 @@
-import React, { Fragment, useEffect, useState } from 'react'
 import { Flex, Text } from '@zoralabs/zord'
+import React, { Fragment, useState } from 'react'
 import { useSWRConfig } from 'swr'
-import SWR_KEYS from 'src/constants/swrKeys'
+
 import { Countdown } from 'src/components/Countdown'
+import SWR_KEYS from 'src/constants/swrKeys'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { useTimeout } from 'src/hooks/useTimeout'
 

@@ -1,8 +1,10 @@
 import { renderHook, waitFor } from '@testing-library/react'
+import { expect, vi } from 'vitest'
 import { useContractReads } from 'wagmi'
-import { vi, expect } from 'vitest'
-import { useAvailableUpgrade } from './useAvailableUpgrade'
+
 import { DaoContractAddresses } from 'src/typings'
+
+import { useAvailableUpgrade } from './useAvailableUpgrade'
 
 vi.mock('wagmi', async () => {
   const mod = await vi.importActual<typeof import('wagmi')>('wagmi')

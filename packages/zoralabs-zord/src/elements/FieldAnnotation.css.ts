@@ -1,7 +1,7 @@
+import { atoms } from '../atoms.css'
 import { vars } from '../theme'
 import { style } from '@vanilla-extract/css'
 import { recipe } from '@vanilla-extract/recipes'
-import { atoms } from '../atoms.css'
 
 export const annotationVariants = {
   error: {

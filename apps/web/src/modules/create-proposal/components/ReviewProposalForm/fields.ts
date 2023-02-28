@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+
 import { BuilderTransaction } from '../../stores/useProposalStore'
 
 export const ERROR_CODE: Record<string, string> = {

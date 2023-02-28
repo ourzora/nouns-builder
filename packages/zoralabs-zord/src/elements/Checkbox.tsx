@@ -1,9 +1,9 @@
 import {
   checkboxBase,
   checkboxIndicator,
+  indeterminate,
   labelText,
   svg,
-  indeterminate,
 } from './Checkbox.css'
 import { Paragraph } from './Text'
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox'

@@ -1,6 +1,7 @@
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
+
 import MadeWithZoraFooter from 'src/components/Layout/MadeWithZoraFooter'
 import {
   footerHeading,

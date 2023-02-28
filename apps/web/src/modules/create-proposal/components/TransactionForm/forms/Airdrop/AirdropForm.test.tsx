@@ -1,5 +1,6 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect } from 'vitest'
-import { render, screen, fireEvent, createEvent, waitFor } from '@testing-library/react'
+
 import AirdropForm from './AirdropForm'
 
 describe('Airdrop form', () => {

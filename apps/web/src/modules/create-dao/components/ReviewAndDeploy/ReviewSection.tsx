@@ -1,11 +1,12 @@
+import { Flex, atoms } from '@zoralabs/zord'
+import { motion } from 'framer-motion'
 import React, { ReactNode } from 'react'
-import { atoms, Flex } from '@zoralabs/zord'
+
+import { Icon } from 'src/components/Icon'
 import {
   reviewSectionStyleVariants,
   reviewSectionSubHeading,
 } from 'src/styles/deploy.css'
-import { Icon } from 'src/components/Icon'
-import { motion } from 'framer-motion'
 
 export const ReviewSection: React.FC<{
   subHeading: string

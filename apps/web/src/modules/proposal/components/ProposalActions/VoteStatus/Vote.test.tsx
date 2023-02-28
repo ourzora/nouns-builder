@@ -1,7 +1,9 @@
 import { screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import { render } from 'src/test/utils'
 import { Support } from 'src/typings'
-import { describe, expect, it } from 'vitest'
+
 import Vote from './Vote'
 
 describe('VoteStatus', () => {

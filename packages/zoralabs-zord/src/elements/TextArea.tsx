@@ -1,7 +1,7 @@
 import { Box, BoxComponentProps, Flex, Text } from './'
 import { FieldAnnotation } from './FieldAnnotation'
 import { textAreaField, textAreaFieldBaseInput, textAreaFieldLabel } from './TextArea.css'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export interface TextAreaProps extends BoxComponentProps<'textarea'> {
   value?: string

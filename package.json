@@ -6,15 +6,18 @@
     "dev": "turbo run dev",
     "dev:web": "turbo run dev --filter=web...",
     "test": "turbo run test",
+    "prepare": "husky install",
     "type-check": "turbo run type-check",
     "lint": "turbo run lint",
+    "eslint": "eslint --fix . --ext .ts,.tsx",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "ci": "turbo run lint test"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "eslint": "^8.16.0",
     "eslint-config-custom": "workspace:*",
+    "husky": "^8.0.3",
     "prettier": "^2.5.1",
     "turbo": "latest"
   },

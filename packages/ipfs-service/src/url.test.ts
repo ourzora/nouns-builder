@@ -1,5 +1,5 @@
-import { isCID, normalizeIPFSUrl, isNormalizeableIPFSUrl } from './url'
-import { describe, expect, it, test, } from 'vitest'
+import { isCID, isNormalizeableIPFSUrl, normalizeIPFSUrl } from './url'
+import { describe, expect, it } from 'vitest'
 
 const VALID_CID = 'bafkreidgvpkjawlxz6sffxzwgooowe5yt7i6wsyg236mfoks77nywkptdq'
 
@@ -52,7 +52,6 @@ describe('isNormalizeableIPFSUrl', () => {
     expect(isNormalizeableIPFSUrl(invalidUrl)).toBe(false)
   })
 })
-
 
 describe('normalizeIPFSUrl', () => {
   it('handles already normalized urls', () => {

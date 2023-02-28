@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+
 import { CustomTransactionProps } from 'src/typings'
 
 interface State {

@@ -1,4 +1,5 @@
 import { color } from '@zoralabs/zord'
+
 import { IconType } from 'src/components/Icon/icons'
 
 export enum TransactionType {

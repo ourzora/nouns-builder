@@ -1,6 +1,8 @@
 import { BigNumber, utils } from 'ethers'
-import { BuilderTransaction } from '../stores/useProposalStore'
+
 import { AddressType } from 'src/typings'
+
+import { BuilderTransaction } from '../stores/useProposalStore'
 
 interface ProposalTransactions {
   calldata: string[]

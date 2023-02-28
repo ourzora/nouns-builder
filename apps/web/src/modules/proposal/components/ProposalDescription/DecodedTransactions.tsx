@@ -1,11 +1,12 @@
-import { Flex, Stack, Text, atoms, Box } from '@zoralabs/zord'
+import { Box, Flex, Stack, Text, atoms } from '@zoralabs/zord'
+import axios from 'axios'
 import { ethers } from 'ethers'
 import React, { Fragment } from 'react'
-import { ETHERSCAN_BASE_URL, ETHER_ACTOR_BASE_URL } from 'src/constants/etherscan'
 import useSWR from 'swr'
-import axios from 'axios'
-import { walletSnippet } from 'src/utils/helpers'
+
+import { ETHERSCAN_BASE_URL, ETHER_ACTOR_BASE_URL } from 'src/constants/etherscan'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { walletSnippet } from 'src/utils/helpers'
 
 interface DecodedTransactionProps {
   targets: string[]

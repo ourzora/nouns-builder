@@ -1,12 +1,13 @@
-import React from 'react'
-import { Flex, Text, Box } from '@zoralabs/zord'
-import Image from 'next/legacy/image'
-import { Icon } from 'src/components/Icon'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import { getFetchableUrl } from 'ipfs-service'
-import { useDaoStore } from 'src/stores'
-import { useContractReads } from 'wagmi'
-import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
+import Image from 'next/legacy/image'
 import { useRouter } from 'next/router'
+import React from 'react'
+import { useContractReads } from 'wagmi'
+
+import { Icon } from 'src/components/Icon'
+import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/stores'
 
 interface ProposalNavigationProps {
   handleBack?: () => void

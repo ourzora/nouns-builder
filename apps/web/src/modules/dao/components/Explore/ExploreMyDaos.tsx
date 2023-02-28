@@ -1,13 +1,15 @@
-import React from 'react'
-import ExploreToolbar from './ExploreToolbar'
-import { useLayoutStore } from 'src/stores'
-import useSWR from 'swr'
-import { userDaosFilter } from 'src/data/graphql/requests/exploreQueries'
 import { Grid } from '@zoralabs/zord'
-import { DaoCard } from '../DaoCard'
-import ExploreNoDaos from './ExploreNoDaos'
-import { exploreGrid } from './Explore.css'
+import React from 'react'
+import useSWR from 'swr'
+
 import SWR_KEYS from 'src/constants/swrKeys'
+import { userDaosFilter } from 'src/data/graphql/requests/exploreQueries'
+import { useLayoutStore } from 'src/stores'
+
+import { DaoCard } from '../DaoCard'
+import { exploreGrid } from './Explore.css'
+import ExploreNoDaos from './ExploreNoDaos'
+import ExploreToolbar from './ExploreToolbar'
 
 export const ExploreMyDaos = () => {
   const signerAddress = useLayoutStore((state) => state.signerAddress)

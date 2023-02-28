@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers'
 import { isAddress } from 'ethers/lib/utils'
 import isEqual from 'lodash/isEqual'
+
 import { Duration } from 'src/typings'
 
 /**

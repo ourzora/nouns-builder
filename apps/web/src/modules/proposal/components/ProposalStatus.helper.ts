@@ -1,4 +1,5 @@
 import { theme } from '@zoralabs/zord'
+
 import { ProposalStatus } from 'src/typings'
 import { fromSeconds } from 'src/utils/helpers'
 

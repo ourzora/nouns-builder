@@ -1,6 +1,6 @@
-import React from 'react'
 import { Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
+import React from 'react'
 
 export const CreateDaoButton: React.FC = () => {
   return (

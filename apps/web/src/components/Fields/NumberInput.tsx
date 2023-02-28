@@ -1,3 +1,6 @@
+import { Box } from '@zoralabs/zord'
+import React, { InputHTMLAttributes, WheelEvent } from 'react'
+
 import {
   defaultFieldsetStyle,
   errorMessageStyle,
@@ -5,8 +8,6 @@ import {
   numberInputStyle,
   placeholderStyle,
 } from './styles.css'
-import { Box } from '@zoralabs/zord'
-import React, { InputHTMLAttributes, WheelEvent } from 'react'
 
 interface NumberInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string

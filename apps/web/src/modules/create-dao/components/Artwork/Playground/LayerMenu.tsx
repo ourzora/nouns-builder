@@ -1,5 +1,6 @@
 import { Box, Flex, Stack, atoms } from '@zoralabs/zord'
 import React, { BaseSyntheticEvent } from 'react'
+
 import { Icon } from 'src/components/Icon'
 import {
   layerSelectStyle,

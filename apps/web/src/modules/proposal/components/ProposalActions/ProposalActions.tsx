@@ -1,11 +1,12 @@
-import React, { Fragment } from 'react'
 import { Flex } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
+import React, { Fragment } from 'react'
+import { useContractReads } from 'wagmi'
+
+import { governorAbi } from 'src/data/contract/abis'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { Proposal, ProposalStatus, ProposalVote } from 'src/typings'
 import { AddressType } from 'src/typings'
-import { useContractReads } from 'wagmi'
-import { governorAbi } from 'src/data/contract/abis'
 
 import { isProposalOpen, isProposalSuccessful } from '../../utils'
 import { OwnerActions } from './OwnerActions'

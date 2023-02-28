@@ -1,16 +1,16 @@
-import React from 'react'
-import { useRouter } from 'next/router'
+import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
-import { atoms, Box, Button, Flex } from '@zoralabs/zord'
+import { useRouter } from 'next/router'
+import React from 'react'
 
-import { useLayoutStore } from 'src/stores'
 import { useAuctionContract } from 'src/hooks'
+import { useLayoutStore } from 'src/stores'
 
 import {
-  wrapper,
   preAuctionButtonVariants,
   preAuctionHelperText,
   preAuctionWrapper,
+  wrapper,
 } from './PreAuction.css'
 
 export const PreAuction = () => {

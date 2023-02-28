@@ -1,8 +1,8 @@
-import { Flex, Stack, Text, Button, mixins } from '@zoralabs/zord'
-import React, { ReactNode } from 'react'
-import { homeSectionHeader, homeSectionWrapper } from 'src/styles/home.css'
-import { exploreCtaContainer } from './Homepage.css'
+import { Button, Flex, Stack, Text, mixins } from '@zoralabs/zord'
 import Link from 'next/link'
+import React, { ReactNode } from 'react'
+
+import { homeSectionHeader, homeSectionWrapper } from 'src/styles/home.css'
 
 const RecentlyCreated: React.FC<{
   children: ReactNode

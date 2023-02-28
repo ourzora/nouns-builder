@@ -1,4 +1,4 @@
-import { style, globalStyle } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 import { atoms, vars } from '@zoralabs/zord'
 
 export const legalContainer = style([

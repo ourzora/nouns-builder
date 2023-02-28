@@ -1,10 +1,12 @@
 import { Button, Flex, Text } from '@zoralabs/zord'
-import React, { Fragment, ReactNode } from 'react'
-import { useRouter } from 'next/router'
-import { daoFeedGrid, emptyTile } from './DaoFeed.css'
 import { Grid } from '@zoralabs/zord'
-import { DaoFeedCard } from './DaoFeedCard'
+import { useRouter } from 'next/router'
+import React, { Fragment, ReactNode } from 'react'
+
 import { DaoProps } from 'src/pages'
+
+import { daoFeedGrid, emptyTile } from './DaoFeed.css'
+import { DaoFeedCard } from './DaoFeedCard'
 
 export const GridContainer = ({ children }: { children: ReactNode }) => (
   <Flex direction={'row'} justify={'center'} mt={'x3'}>

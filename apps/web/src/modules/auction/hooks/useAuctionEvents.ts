@@ -1,12 +1,13 @@
+import { readContract } from '@wagmi/core'
 import { BigNumber } from 'ethers'
 import { useRouter } from 'next/router'
-import { useContractEvent } from 'wagmi'
-import { readContract } from '@wagmi/core'
-import { useDaoStore } from 'src/stores'
 import { useSWRConfig } from 'swr'
+import { useContractEvent } from 'wagmi'
+
 import SWR_KEYS from 'src/constants/swrKeys'
-import getBids from 'src/data/contract/requests/getBids'
 import { auctionAbi } from 'src/data/contract/abis'
+import getBids from 'src/data/contract/requests/getBids'
+import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
 export const useAuctionEvents = ({
