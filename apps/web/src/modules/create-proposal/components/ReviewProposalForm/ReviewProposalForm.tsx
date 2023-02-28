@@ -38,7 +38,7 @@ export const ReviewProposalForm = ({
   const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
   //@ts-ignore
-  const signerAddress = signer._address
+  const signerAddress = signer?._address
   const { clearProposal } = useProposalStore()
 
   const [error, setError] = useState<string | undefined>()
