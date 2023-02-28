@@ -1,14 +1,11 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import React from 'react'
 
-import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-
-import { formatCryptoVal } from 'src/utils/numbers'
-
-import { useEnsData } from 'src/hooks/useEnsData'
-
 import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
+import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
+import { useEnsData } from 'src/hooks/useEnsData'
+import { formatCryptoVal } from 'src/utils/numbers'
 
 export interface Bid {
   id: string | number

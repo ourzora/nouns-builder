@@ -3,22 +3,18 @@ import HtmlReactParser from 'html-react-parser'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import React from 'react'
-import { useMetadataContract, useTokenContract } from 'src/hooks'
-import { useDaoStore } from 'src/stores'
-import type { AddressType } from 'src/typings'
 import useSWR from 'swr'
 import { useBalance } from 'wagmi'
 
-import { sdk } from 'src/data/graphql/client'
-
+import { Avatar } from 'src/components/Avatar/Avatar'
 import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
-
-import { formatCryptoVal } from 'src/utils/numbers'
-
-import { Avatar } from 'src/components/Avatar/Avatar'
-
+import { sdk } from 'src/data/graphql/client'
+import { useMetadataContract, useTokenContract } from 'src/hooks'
+import { useDaoStore } from 'src/stores'
 import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
+import type { AddressType } from 'src/typings'
+import { formatCryptoVal } from 'src/utils/numbers'
 
 import { ExternalLinks } from './ExternalLinks'
 import { Statistic } from './Statistic'

@@ -1,5 +1,6 @@
-import { AddressType } from 'src/typings'
 import { create } from 'zustand'
+
+import { AddressType } from 'src/typings'
 
 import { TransactionType } from '../constants'
 

@@ -3,12 +3,11 @@ import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useDaoStore } from 'src/stores'
 import { useContractReads } from 'wagmi'
 
-import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
-
 import { Icon } from 'src/components/Icon'
+import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/stores'
 
 interface ProposalNavigationProps {
   handleBack?: () => void

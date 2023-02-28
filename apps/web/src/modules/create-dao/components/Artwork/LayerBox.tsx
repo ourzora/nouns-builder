@@ -1,12 +1,9 @@
 import { Box, Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React from 'react'
-import { DragAndDropProps, ImageProps, OrderedLayersProps } from 'src/typings'
-
-import { useFormStore } from 'src/stores/useFormStore'
 
 import { Icon } from 'src/components/Icon'
-
+import { useFormStore } from 'src/stores/useFormStore'
 import {
   artworkSettingsBox,
   artworkSettingsBoxDropping,
@@ -16,6 +13,7 @@ import {
   artworkSettingsPropertyCount,
   artworkSettingsPropertyName,
 } from 'src/styles/Artwork.css'
+import { DragAndDropProps, ImageProps, OrderedLayersProps } from 'src/typings'
 
 interface SettingsBoxProps {
   trait: string

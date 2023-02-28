@@ -4,11 +4,10 @@ import Image from 'next/image'
 import React, { ReactElement } from 'react'
 import useSWR from 'swr'
 
-import { sdk } from 'src/data/graphql/client'
-import { Chain, SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
-
 import { PUBLIC_BUILDER_TOKEN } from 'src/constants/addresses'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { sdk } from 'src/data/graphql/client'
+import { Chain, SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 
 import { btn, card, content, image } from './UpgradeCard.css'
 

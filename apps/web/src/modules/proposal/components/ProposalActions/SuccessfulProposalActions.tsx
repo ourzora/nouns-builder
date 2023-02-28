@@ -1,7 +1,15 @@
 import { Flex, Text, vars } from '@zoralabs/zord'
 import { BigNumber } from 'ethers'
 import React, { Fragment, useState } from 'react'
+import { useSWRConfig } from 'swr'
+
+import { Countdown } from 'src/components/Countdown'
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { useGovernorContract } from 'src/hooks'
+import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 import {
   AddressType,
   BytesType,
@@ -9,17 +17,6 @@ import {
   ProposalStatus,
   ProposalSucceededStatus,
 } from 'src/typings'
-import { useSWRConfig } from 'swr'
-
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
-
-import SWR_KEYS from 'src/constants/swrKeys'
-
-import { Countdown } from 'src/components/Countdown'
-import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-
-import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 
 import { isProposalSuccessful } from '../../utils'
 import { GovernorContractButton } from '../GovernorContractButton'

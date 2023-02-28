@@ -1,7 +1,8 @@
 import { screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import { render } from 'src/test/utils'
 import { ProposalStatus, Support } from 'src/typings'
-import { describe, expect, it } from 'vitest'
 
 import { VoteStatus } from './VoteStatus'
 

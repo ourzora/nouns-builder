@@ -1,10 +1,9 @@
 import { Box } from '@zoralabs/zord'
 import React from 'react'
-import { DragAndDropProps, ImageProps } from 'src/typings'
-
-import { useFormStore } from 'src/stores/useFormStore'
 
 import { defaultFormHeading } from 'src/components/Fields/styles.css'
+import { useFormStore } from 'src/stores/useFormStore'
+import { DragAndDropProps, ImageProps } from 'src/typings'
 
 import { LayerBox } from './LayerBox'
 

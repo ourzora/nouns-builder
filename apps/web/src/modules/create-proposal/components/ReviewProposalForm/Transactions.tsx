@@ -4,9 +4,8 @@ import { intersection } from 'lodash'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { Simulation } from 'src/services/simulationService'
-
 import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
+import { Simulation } from 'src/services/simulationService'
 
 import { BuilderTransaction } from '../../stores'
 import { SimulationError, TransactionCard } from '../TransactionCard'

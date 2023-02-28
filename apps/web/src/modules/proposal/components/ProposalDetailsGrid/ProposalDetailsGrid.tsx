@@ -1,11 +1,10 @@
 import { Box, Grid } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import React, { useCallback } from 'react'
-import { Proposal } from 'src/typings'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-
 import { propDataGrid } from 'src/styles/Proposals.css'
+import { Proposal } from 'src/typings'
 
 import { Tile } from './Tile'
 import { voteProgress, voteProgressVariants } from './Tile.css'

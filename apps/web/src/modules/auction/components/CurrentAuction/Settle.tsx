@@ -1,11 +1,10 @@
 import { Button, Flex } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { useDaoStore } from 'src/stores'
 import { useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
 
-import { auctionAbi } from 'src/data/contract/abis'
-
 import { ContractButton } from 'src/components/ContractButton'
+import { auctionAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/stores'
 
 import { auctionActionButtonVariants } from '../Auction.css'
 

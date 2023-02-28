@@ -1,13 +1,12 @@
 import { Flex } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { useGovernorContract } from 'src/hooks'
-import { useLayoutStore } from 'src/stores'
-import { BytesType } from 'src/typings'
 
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-
+import { useGovernorContract } from 'src/hooks'
+import { useLayoutStore } from 'src/stores'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
+import { BytesType } from 'src/typings'
 
 import { GovernorContractButton } from '../GovernorContractButton'
 

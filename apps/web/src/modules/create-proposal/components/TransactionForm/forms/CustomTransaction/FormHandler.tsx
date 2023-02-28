@@ -1,9 +1,9 @@
 import { Box } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
-import { AddTransactionSection } from 'src/typings'
 
 import { useFormStore } from 'src/stores/useFormStore'
+import { AddTransactionSection } from 'src/typings'
 
 import { useCustomTransactionStore } from '../../../../stores'
 

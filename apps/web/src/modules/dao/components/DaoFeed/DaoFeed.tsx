@@ -2,6 +2,7 @@ import { Button, Flex, Text } from '@zoralabs/zord'
 import { Grid } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { Fragment, ReactNode } from 'react'
+
 import { DaoProps } from 'src/pages'
 
 import { daoFeedGrid, emptyTile } from './DaoFeed.css'

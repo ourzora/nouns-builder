@@ -11,9 +11,7 @@ import {
 } from 'wagmi'
 
 import { tokenAbi } from 'src/data/contract/abis'
-
 import { useDaoStore } from 'src/stores/useDaoStore'
-
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 type TokenContract = GetContractResult<typeof tokenAbi>

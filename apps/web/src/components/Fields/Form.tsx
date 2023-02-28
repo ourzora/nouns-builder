@@ -3,14 +3,9 @@ import { Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
 
-import { useFormStore } from 'src/stores/useFormStore'
-
-import { compareAndReturn, isEmpty } from 'src/utils/helpers'
-
-import { useCustomTransactionStore } from 'src/modules/create-proposal'
-
 import { Icon } from 'src/components/Icon'
-
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
+import { useFormStore } from 'src/stores/useFormStore'
 import {
   adminStickySaveButton,
   adminStickySaveWrapper,
@@ -20,6 +15,7 @@ import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
 } from 'src/styles/deploy.css'
+import { compareAndReturn, isEmpty } from 'src/utils/helpers'
 
 import FieldSwitch from './FieldSwitch'
 import {

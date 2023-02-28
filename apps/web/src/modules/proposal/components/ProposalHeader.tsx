@@ -1,10 +1,9 @@
 import { Box, Flex, Label, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
-import { Proposal } from 'src/typings'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-
 import { useEnsData } from 'src/hooks/useEnsData'
+import { Proposal } from 'src/typings'
 
 import { ProposalNavigation } from './ProposalNavigation'
 import { ProposalStatus } from './ProposalStatus'

@@ -1,7 +1,8 @@
 import { screen } from '@testing-library/react'
 import React, { Fragment } from 'react'
-import { render } from 'src/test/utils'
 import { describe, expect, it } from 'vitest'
+
+import { render } from 'src/test/utils'
 
 import { Tile } from './Tile'
 

@@ -1,9 +1,9 @@
 import { Grid } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
-import { ExplorePageData } from 'src/typings'
 
 import Pagination from 'src/components/Pagination'
+import { ExplorePageData } from 'src/typings'
 
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'

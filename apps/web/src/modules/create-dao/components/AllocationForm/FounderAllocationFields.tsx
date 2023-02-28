@@ -1,16 +1,15 @@
 import { Button, Flex, Heading, Paragraph, Stack, Text } from '@zoralabs/zord'
 import { FormikErrors, FormikProps, FormikTouched } from 'formik'
 import React from 'react'
-import { Duration, TokenAllocation } from 'src/typings'
-
-import {
-  FounderAllocationFormValues,
-  calculateMaxAllocation,
-} from 'src/modules/create-dao'
 
 import DatePicker from 'src/components/Fields/Date'
 import SmartInput from 'src/components/Fields/SmartInput'
 import { Icon } from 'src/components/Icon'
+import {
+  FounderAllocationFormValues,
+  calculateMaxAllocation,
+} from 'src/modules/create-dao'
+import { Duration, TokenAllocation } from 'src/typings'
 
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues

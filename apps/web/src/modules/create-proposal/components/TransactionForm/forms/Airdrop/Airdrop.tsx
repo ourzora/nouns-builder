@@ -5,17 +5,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import gte from 'lodash/gte'
 import Link from 'next/link'
 import React from 'react'
-import { useDaoStore } from 'src/stores'
-import { AddressType } from 'src/typings'
 import { useContractRead } from 'wagmi'
 
+import { Icon } from 'src/components/Icon'
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
-
+import { useDaoStore } from 'src/stores'
+import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
-
-import { Icon } from 'src/components/Icon'
 
 import { TransactionType } from '../../../../constants'
 import { useAvailableUpgrade } from '../../../../hooks'

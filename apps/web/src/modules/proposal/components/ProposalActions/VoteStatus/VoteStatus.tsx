@@ -1,13 +1,12 @@
 import { Button, Flex, Text } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React, { Fragment, useEffect, useState } from 'react'
-import { useDaoStore, useLayoutStore } from 'src/stores'
-import { ProposalStatus, ProposalVote, Support } from 'src/typings'
 import { useContractEvent } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
-
+import { useDaoStore, useLayoutStore } from 'src/stores'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
+import { ProposalStatus, ProposalVote, Support } from 'src/typings'
 
 import Pending from './Pending'
 import Vote from './Vote'

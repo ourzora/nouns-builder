@@ -3,11 +3,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
-import { CreateFormSection } from 'src/typings'
 import { useAccount } from 'wagmi'
 
-import { useFormStore } from 'src/stores/useFormStore'
-
+import Meta from 'src/components/Layout/Meta'
 import {
   AllocationForm,
   Artwork,
@@ -18,10 +16,9 @@ import {
   ReviewAndDeploy,
   VetoForm,
 } from 'src/modules/create-dao'
-
-import Meta from 'src/components/Layout/Meta'
-
+import { useFormStore } from 'src/stores/useFormStore'
 import { createWrapperHalf, formWrapper, pageGrid } from 'src/styles/styles.css'
+import { CreateFormSection } from 'src/typings'
 
 const Create: NextPage = () => {
   const router = useRouter()

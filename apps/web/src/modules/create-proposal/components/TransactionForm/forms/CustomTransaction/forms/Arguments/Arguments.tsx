@@ -4,6 +4,9 @@ import { isEqual } from 'lodash'
 import React from 'react'
 import * as Yup from 'yup'
 
+import Form from 'src/components/Fields/Form'
+import { TEXT, TEXTAREA } from 'src/components/Fields/types'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import {
   RAW_DATA_KEY,
   matchInputFromName,
@@ -11,11 +14,6 @@ import {
   normalizePathName,
 } from 'src/utils/formABI'
 import { camelToTitle } from 'src/utils/helpers'
-
-import { useCustomTransactionStore } from 'src/modules/create-proposal'
-
-import Form from 'src/components/Fields/Form'
-import { TEXT, TEXTAREA } from 'src/components/Fields/types'
 
 interface ArgumentsProps {
   title: string

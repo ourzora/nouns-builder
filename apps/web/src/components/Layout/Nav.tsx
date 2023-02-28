@@ -3,9 +3,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { useIsMounted } from 'src/hooks/useIsMounted'
-
 import { NetworkController } from 'src/components/NetworkController'
+import { useIsMounted } from 'src/hooks/useIsMounted'
 
 import NavMenu from './NavMenu'
 import NogglesLogo from './assets/builder-framed.svg'

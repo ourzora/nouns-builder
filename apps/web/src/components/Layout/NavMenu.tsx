@@ -5,19 +5,15 @@ import React from 'react'
 import useSWR from 'swr'
 import { useAccount, useBalance, useDisconnect } from 'wagmi'
 
-import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
-
-import SWR_KEYS from 'src/constants/swrKeys'
-
-import { formatCryptoVal } from 'src/utils/numbers'
-
-import { useEnsData } from 'src/hooks/useEnsData'
-
 import { Avatar } from 'src/components/Avatar'
 import { DaoAvatar } from 'src/components/Avatar/DaoAvatar'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { Icon } from 'src/components/Icon'
 import { NetworkController } from 'src/components/NetworkController'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
+import { useEnsData } from 'src/hooks/useEnsData'
+import { formatCryptoVal } from 'src/utils/numbers'
 
 import { ConnectButton } from './ConnectButton'
 import { CreateDaoButton } from './CreateDaoButton'

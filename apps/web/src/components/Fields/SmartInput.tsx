@@ -2,15 +2,13 @@ import { Box, Flex, atoms } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import { motion } from 'framer-motion'
 import React, { ChangeEventHandler, ReactElement, WheelEvent } from 'react'
-import { useLayoutStore } from 'src/stores'
 import useSWR from 'swr'
 
+import { Icon } from 'src/components/Icon'
 import SWR_KEYS from 'src/constants/swrKeys'
-
+import { useLayoutStore } from 'src/stores'
 import { getEnsName } from 'src/utils/ens'
 import { isEmpty } from 'src/utils/helpers'
-
-import { Icon } from 'src/components/Icon'
 
 import {
   defaultFieldsetStyle,

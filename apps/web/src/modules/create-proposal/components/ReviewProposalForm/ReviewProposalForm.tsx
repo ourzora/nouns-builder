@@ -3,21 +3,18 @@ import axios from 'axios'
 import { Field, FieldProps, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useGovernorContract } from 'src/hooks'
-import { useDaoStore, useLayoutStore } from 'src/stores'
-import { AddressType } from 'src/typings'
 import { useContract, useContractRead, useSigner } from 'wagmi'
-
-import { ErrorResult } from 'src/services/errorResult'
-import { Simulation, SimulationResult } from 'src/services/simulationService'
-
-import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
-
-import { SUCCESS_MESSAGES } from 'src/constants/messages'
 
 import TextInput from 'src/components/Fields/TextInput'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
+import { SUCCESS_MESSAGES } from 'src/constants/messages'
+import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
+import { useGovernorContract } from 'src/hooks'
+import { ErrorResult } from 'src/services/errorResult'
+import { Simulation, SimulationResult } from 'src/services/simulationService'
+import { useDaoStore, useLayoutStore } from 'src/stores'
+import { AddressType } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'

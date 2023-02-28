@@ -2,19 +2,15 @@ import { Atoms, Box, Button, Flex, Stack, Text, theme } from '@zoralabs/zord'
 import { ContractTransaction } from 'ethers'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { Fragment } from 'react'
-import { useGovernorContract } from 'src/hooks'
-import { BytesType } from 'src/typings'
 import { useSWRConfig } from 'swr'
-
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
-
-import SWR_KEYS from 'src/constants/swrKeys'
 
 import { Icon } from 'src/components/Icon'
 import { IconType } from 'src/components/Icon/icons'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-
+import SWR_KEYS from 'src/constants/swrKeys'
+import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+import { useGovernorContract } from 'src/hooks'
 import {
   proposalFormTitle,
   voteModalFieldset,
@@ -23,6 +19,7 @@ import {
   voteModalRadioInput,
   voteModalReason,
 } from 'src/styles/Proposals.css'
+import { BytesType } from 'src/typings'
 
 enum Choice {
   AGAINST = '0',

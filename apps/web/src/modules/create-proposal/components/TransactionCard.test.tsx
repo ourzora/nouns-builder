@@ -1,6 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react'
-import { render } from 'src/test/utils'
 import { vi } from 'vitest'
+
+import { render } from 'src/test/utils'
 
 import { TransactionType } from '../constants'
 import { TransactionCard } from './TransactionCard'

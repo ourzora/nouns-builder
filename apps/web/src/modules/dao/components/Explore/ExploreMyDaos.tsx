@@ -1,11 +1,10 @@
 import { Grid } from '@zoralabs/zord'
 import React from 'react'
-import { useLayoutStore } from 'src/stores'
 import useSWR from 'swr'
 
-import { userDaosFilter } from 'src/data/graphql/requests/exploreQueries'
-
 import SWR_KEYS from 'src/constants/swrKeys'
+import { userDaosFilter } from 'src/data/graphql/requests/exploreQueries'
+import { useLayoutStore } from 'src/stores'
 
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'

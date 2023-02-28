@@ -1,13 +1,11 @@
 import { Flex, Stack } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useVotes } from 'src/hooks'
-import { useDaoStore } from 'src/stores'
-import { AddressType } from 'src/typings'
 import { useAccount } from 'wagmi'
 
-import { NextPageWithLayout } from 'src/pages/_app'
-
+import { useVotes } from 'src/hooks'
+import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import TwoColumnLayout from 'src/layouts/TwoColumn'
 import {
   CreateProposalHeading,
   DropdownSelect,
@@ -19,11 +17,10 @@ import {
   TransactionType,
   TransactionTypeIcon,
 } from 'src/modules/create-proposal'
-
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
-import TwoColumnLayout from 'src/layouts/TwoColumn'
-
+import { NextPageWithLayout } from 'src/pages/_app'
+import { useDaoStore } from 'src/stores'
 import { notFoundWrap } from 'src/styles/404.css'
+import { AddressType } from 'src/typings'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

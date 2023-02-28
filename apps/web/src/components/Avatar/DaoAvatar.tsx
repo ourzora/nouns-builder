@@ -2,9 +2,8 @@ import { Box, BoxProps } from '@zoralabs/zord'
 import Image from 'next/image'
 import { useMemo } from 'react'
 
-import { gradientForAddress } from 'src/utils/gradient'
-
 import { useDaoFeedCard } from 'src/modules/dao'
+import { gradientForAddress } from 'src/utils/gradient'
 
 import { avatarVariants, squareAvatar } from './Avatar.css'
 

@@ -2,9 +2,9 @@ import { Box, Flex, Label, Paragraph } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import React from 'react'
-import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
 
 import { useIsMounted } from 'src/hooks/useIsMounted'
+import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
 
 import { statusStyle, titleStyle } from './ProposalCard.css'
 import { ProposalStatus } from './ProposalStatus'

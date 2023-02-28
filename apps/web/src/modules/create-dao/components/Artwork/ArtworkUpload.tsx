@@ -10,16 +10,6 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-import {
-  IPFSUpload,
-  ImageProps,
-  ImagesByTraitProps,
-  SelectedTraitsProps,
-} from 'src/typings'
-
-import { useFormStore } from 'src/stores/useFormStore'
-
-import { sanitizeFileName } from 'src/utils/sanitize'
 
 import {
   artworkPreviewGenerateButton,
@@ -38,6 +28,14 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { useFormStore } from 'src/stores/useFormStore'
+import {
+  IPFSUpload,
+  ImageProps,
+  ImagesByTraitProps,
+  SelectedTraitsProps,
+} from 'src/typings'
+import { sanitizeFileName } from 'src/utils/sanitize'
 
 import { LayerOrdering } from './LayerOrdering'
 import { Playground } from './Playground'

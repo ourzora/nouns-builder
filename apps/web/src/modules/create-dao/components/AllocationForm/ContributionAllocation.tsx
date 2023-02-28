@@ -1,15 +1,12 @@
 import { Button, Flex, Heading, Stack, Text } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { useFormStore } from 'src/stores'
-import { TokenAllocation } from 'src/typings'
-
-import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
-
-import { getEnsAddress } from 'src/utils/ens'
-
-import { useEnsData } from 'src/hooks/useEnsData'
 
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
+import { useEnsData } from 'src/hooks/useEnsData'
+import { useFormStore } from 'src/stores'
+import { TokenAllocation } from 'src/typings'
+import { getEnsAddress } from 'src/utils/ens'
 
 import { Contribution } from './Contribution'
 import {

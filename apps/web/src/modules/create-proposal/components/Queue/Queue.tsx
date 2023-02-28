@@ -3,9 +3,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { TransactionCard, useProposalStore } from 'src/modules/create-proposal'
-
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { TransactionCard, useProposalStore } from 'src/modules/create-proposal'
 
 import { TransactionType } from '../../constants'
 import { ConfirmRemove } from './ConfirmRemove'

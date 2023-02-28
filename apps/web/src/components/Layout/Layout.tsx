@@ -1,11 +1,10 @@
 import { Box } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { ReactNode } from 'react'
-import { useDaoStore } from 'src/stores'
 import { useSigner } from 'wagmi'
 
+import { useDaoStore } from 'src/stores'
 import { useLayoutStore } from 'src/stores/useLayoutStore'
-
 import { getProvider } from 'src/utils/provider'
 
 import Footer from './Footer'

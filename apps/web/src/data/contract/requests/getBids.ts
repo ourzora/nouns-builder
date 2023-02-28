@@ -1,8 +1,8 @@
 import { getContract } from '@wagmi/core'
 import { ethers } from 'ethers'
-import { Bid } from 'src/typings'
 
 import { auctionAbi } from 'src/data/contract/abis'
+import { Bid } from 'src/typings'
 
 import { getProvider } from '../../../utils/provider'
 

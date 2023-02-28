@@ -4,15 +4,13 @@ import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import React from 'react'
-import { useAuctionContract } from 'src/hooks'
-import { useLayoutStore } from 'src/stores'
 
-import { auctionAbi, managerAbi } from 'src/data/contract/abis'
-
+import Meta from 'src/components/Layout/Meta'
+import NogglesLogo from 'src/components/Layout/assets/builder-framed.svg'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-
-import { NextPageWithLayout } from 'src/pages/_app'
-
+import { auctionAbi, managerAbi } from 'src/data/contract/abis'
+import { useAuctionContract } from 'src/hooks'
+import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
 import {
   Activity,
   PreAuction,
@@ -20,11 +18,8 @@ import {
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
-
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
-
-import Meta from 'src/components/Layout/Meta'
-import NogglesLogo from 'src/components/Layout/assets/builder-framed.svg'
+import { NextPageWithLayout } from 'src/pages/_app'
+import { useLayoutStore } from 'src/stores'
 
 const DaoPage: NextPageWithLayout = () => {
   const { signerAddress } = useLayoutStore()

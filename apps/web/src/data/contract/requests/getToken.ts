@@ -2,10 +2,10 @@ import * as Sentry from '@sentry/nextjs'
 import { readContract } from '@wagmi/core'
 import { BigNumber } from 'ethers'
 import { base64 } from 'ethers/lib/utils'
-import { AddressType, TokenWithWinner } from 'src/typings'
 
 import { tokenAbi } from 'src/data/contract/abis'
 import { tokenQuery, tokenWinnerQuery } from 'src/data/graphql/requests/tokenQuery'
+import { AddressType, TokenWithWinner } from 'src/typings'
 
 const readTokenContractData = async (
   tokenAddress: AddressType,

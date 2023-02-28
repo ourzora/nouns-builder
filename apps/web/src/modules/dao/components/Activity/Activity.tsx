@@ -2,28 +2,23 @@ import { Button, Flex, Text } from '@zoralabs/zord'
 import omit from 'lodash/omit'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useVotes } from 'src/hooks'
-import { useDaoStore, useLayoutStore } from 'src/stores'
-import { AddressType } from 'src/typings'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
-
-import { ProposalsResponse, getProposals } from 'src/data/graphql/requests/proposalsQuery'
-
-import SWR_KEYS from 'src/constants/swrKeys'
-
-import { walletSnippet } from 'src/utils/helpers'
-
-import { Upgrade, useProposalStore } from 'src/modules/create-proposal'
-import { ProposalCard } from 'src/modules/proposal'
 
 import { ContractButton } from 'src/components/ContractButton'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import Pagination from 'src/components/Pagination'
-
+import SWR_KEYS from 'src/constants/swrKeys'
+import { ProposalsResponse, getProposals } from 'src/data/graphql/requests/proposalsQuery'
+import { useVotes } from 'src/hooks'
+import { Upgrade, useProposalStore } from 'src/modules/create-proposal'
+import { ProposalCard } from 'src/modules/proposal'
+import { useDaoStore, useLayoutStore } from 'src/stores'
 import { selectDelegateBtn, submitProposalBtn } from 'src/styles/Proposals.css'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
+import { AddressType } from 'src/typings'
+import { walletSnippet } from 'src/utils/helpers'
 
 import { useDelegate } from '../../hooks'
 import { CurrentDelegate } from './CurrentDelegate'

@@ -1,27 +1,23 @@
 import { Box, Button, Flex, Paragraph, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useMetadataContract } from 'src/hooks'
-import { useLayoutStore } from 'src/stores'
-import type { DaoContractAddresses } from 'src/typings'
 import { useContractRead } from 'wagmi'
 
+import CopyButton from 'src/components/CopyButton/CopyButton'
 import { tokenAbi } from 'src/data/contract/abis'
-
+import { useMetadataContract } from 'src/hooks'
+import { useLayoutStore } from 'src/stores'
 import { useDaoStore } from 'src/stores/useDaoStore'
 import { useFormStore } from 'src/stores/useFormStore'
-
-import { walletSnippet } from 'src/utils/helpers'
-import { transformFileProperties } from 'src/utils/transformFileProperties'
-
-import CopyButton from 'src/components/CopyButton/CopyButton'
-
 import {
   deployPendingButtonStyle,
   infoSectionLabelStyle,
   infoSectionValueVariants,
   successHeadingStyle,
 } from 'src/styles/deploy.css'
+import type { DaoContractAddresses } from 'src/typings'
+import { walletSnippet } from 'src/utils/helpers'
+import { transformFileProperties } from 'src/utils/transformFileProperties'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string

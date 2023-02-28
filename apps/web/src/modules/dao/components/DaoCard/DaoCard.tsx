@@ -6,10 +6,9 @@ import Image from 'next/legacy/image'
 import Link from 'next/link'
 import React, { Fragment, useState } from 'react'
 
-import { formatCryptoVal } from 'src/utils/numbers'
-
 import { useCountdown } from 'src/hooks/useCountdown'
 import { useIsMounted } from 'src/hooks/useIsMounted'
+import { formatCryptoVal } from 'src/utils/numbers'
 
 import { auction, daoImage, name, title } from './DaoCard.css'
 import { Detail } from './Detail'

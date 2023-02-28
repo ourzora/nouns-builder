@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import React, { ReactNode } from 'react'
 
 import { Icon } from 'src/components/Icon'
-
 import {
   reviewSectionStyleVariants,
   reviewSectionSubHeading,

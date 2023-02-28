@@ -1,9 +1,8 @@
 import * as Sentry from '@sentry/nextjs'
-import { Proposal } from 'src/typings'
-
-import { sdk } from 'src/data/graphql/client'
 
 import { CHAIN } from 'src/constants/network'
+import { sdk } from 'src/data/graphql/client'
+import { Proposal } from 'src/typings'
 
 export const getProposal = async (proposalId: string): Promise<Proposal | undefined> => {
   try {

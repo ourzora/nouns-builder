@@ -1,9 +1,8 @@
 import * as Sentry from '@sentry/nextjs'
-import { ExplorePageData, MarketSortKey } from 'src/typings'
-
-import { sdk } from 'src/data/graphql/client'
 
 import { CHAIN } from 'src/constants/network'
+import { sdk } from 'src/data/graphql/client'
+import { ExplorePageData, MarketSortKey } from 'src/typings'
 
 export const userDaosFilter = async (
   after: string | null,

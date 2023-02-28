@@ -1,9 +1,8 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import * as Yup from 'yup'
 
-import { isValidAddress } from 'src/utils/ens'
-
 import { TEXT } from 'src/components/Fields/types'
+import { isValidAddress } from 'src/utils/ens'
 
 export const contractAddressFields = [
   {

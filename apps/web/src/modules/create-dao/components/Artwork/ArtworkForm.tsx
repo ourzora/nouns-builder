@@ -3,10 +3,9 @@ import { Form, Formik } from 'formik'
 import isEmpty from 'lodash/isEmpty'
 import React from 'react'
 
-import { useFormStore } from 'src/stores/useFormStore'
-
 import TextArea from 'src/components/Fields/TextArea'
 import { Icon } from 'src/components/Icon'
+import { useFormStore } from 'src/stores/useFormStore'
 
 import { ArtworkFormValues, validationSchemaArtwork } from './ArtworkForm.schema'
 import { ArtworkUpload } from './ArtworkUpload'

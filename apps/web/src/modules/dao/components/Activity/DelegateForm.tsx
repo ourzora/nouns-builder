@@ -1,17 +1,15 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { useState } from 'react'
-import { useTokenContract } from 'src/hooks'
-import { useLayoutStore } from 'src/stores'
 import { Address } from 'wagmi'
-
-import { getEnsAddress } from 'src/utils/ens'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SmartInput from 'src/components/Fields/SmartInput'
 import { Icon } from 'src/components/Icon'
-
+import { useTokenContract } from 'src/hooks'
+import { useLayoutStore } from 'src/stores'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
+import { getEnsAddress } from 'src/utils/ens'
 
 import { delegateValidationSchema } from './DelegateForm.schema'
 

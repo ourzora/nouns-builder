@@ -5,16 +5,14 @@ import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
-import { Proposal } from 'src/typings'
 import useSWR from 'swr'
-
-import { sdk } from 'src/data/graphql/client'
-import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 
 import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
-
+import { sdk } from 'src/data/graphql/client'
+import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { Proposal } from 'src/typings'
 
 import { DecodedTransactions } from './DecodedTransactions'
 

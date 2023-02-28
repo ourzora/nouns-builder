@@ -1,13 +1,12 @@
 import { readContract } from '@wagmi/core'
 import { Flex, Grid } from '@zoralabs/zord'
 import React, { Fragment } from 'react'
-import { AddressType, TokenWithWinner } from 'src/typings'
 import useSWR from 'swr'
 
+import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
-
-import SWR_KEYS from 'src/constants/swrKeys'
+import { AddressType, TokenWithWinner } from 'src/typings'
 
 import { useAuctionEvents } from '../hooks'
 import { auctionGrid, auctionWrapVariants, auctionWrapper } from './Auction.css'

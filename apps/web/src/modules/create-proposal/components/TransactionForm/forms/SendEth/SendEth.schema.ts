@@ -1,6 +1,6 @@
-import type { AddressType } from 'src/typings'
 import * as yup from 'yup'
 
+import type { AddressType } from 'src/typings'
 import { isValidAddress } from 'src/utils/ens'
 
 export interface SendEthValues {

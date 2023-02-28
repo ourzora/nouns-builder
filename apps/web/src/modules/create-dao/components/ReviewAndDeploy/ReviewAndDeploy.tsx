@@ -3,32 +3,26 @@ import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import React, { useState } from 'react'
-import type { AddressType } from 'src/typings'
 import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
 
-import { managerAbi } from 'src/data/contract/abis'
-
-import { useFormStore } from 'src/stores/useFormStore'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
-
-import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-import { NULL_ADDRESS } from 'src/constants/addresses'
-
-import { toSeconds } from 'src/utils/helpers'
-import { sanitizeStringForJSON } from 'src/utils/sanitize'
-
-import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
-
 import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
-
+import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { NULL_ADDRESS } from 'src/constants/addresses'
+import { managerAbi } from 'src/data/contract/abis'
+import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
+import { useFormStore } from 'src/stores/useFormStore'
+import { useLayoutStore } from 'src/stores/useLayoutStore'
 import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
   deployCheckboxWrapperStyle,
   deployContractButtonStyle,
 } from 'src/styles/deploy.css'
+import type { AddressType } from 'src/typings'
+import { toSeconds } from 'src/utils/helpers'
+import { sanitizeStringForJSON } from 'src/utils/sanitize'
 
 import { PreviewArtwork } from './PreviewArtwork'
 import { ReviewItem } from './ReviewItem'

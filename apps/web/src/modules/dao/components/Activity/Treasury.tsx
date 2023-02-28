@@ -4,16 +4,12 @@ import React from 'react'
 import useSWR from 'swr'
 import { useBalance } from 'wagmi'
 
-import { salesVolumeRequest } from 'src/data/graphql/requests/salesVolumeQuery'
-
-import { useDaoStore } from 'src/stores/useDaoStore'
-
 import SWR_KEYS from 'src/constants/swrKeys'
-
-import { formatCryptoVal, numberFormatter } from 'src/utils/numbers'
-
+import { salesVolumeRequest } from 'src/data/graphql/requests/salesVolumeQuery'
+import { useDaoStore } from 'src/stores/useDaoStore'
 import { statisticContent } from 'src/styles/About.css'
 import { treasuryWrapper } from 'src/styles/Proposals.css'
+import { formatCryptoVal, numberFormatter } from 'src/utils/numbers'
 
 export const Treasury = () => {
   const { addresses } = useDaoStore()

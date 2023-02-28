@@ -1,6 +1,7 @@
 import { Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React from 'react'
+
 import { AddTransactionSection, AddressType } from 'src/typings'
 
 import { TransactionType } from '../../../../constants'

@@ -1,9 +1,9 @@
 import { Box, Heading, Text } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
-import { CreateFormSection } from 'src/typings'
 
 import { useFormStore } from 'src/stores/useFormStore'
+import { CreateFormSection } from 'src/typings'
 
 interface FormHandler {
   forms: ReactElement[]

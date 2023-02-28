@@ -1,17 +1,13 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import React from 'react'
-import { useTokenContract } from 'src/hooks'
-
-import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-
-import { walletSnippet } from 'src/utils/helpers'
-
-import { useEnsData } from 'src/hooks/useEnsData'
 
 import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
-
+import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
+import { useTokenContract } from 'src/hooks'
+import { useEnsData } from 'src/hooks/useEnsData'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
+import { walletSnippet } from 'src/utils/helpers'
 
 interface CurrentDelegateProps {
   toggleIsEditing: () => void

@@ -4,26 +4,22 @@ import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useAuctionContract, useGovernorContract, useMetadataContract } from 'src/hooks'
-import { useDaoStore, useLayoutStore } from 'src/stores'
-import { AddressType, DaoContracts } from 'src/typings'
 
+import FieldSwitch from 'src/components/Fields/FieldSwitch'
+import StickySave from 'src/components/Fields/StickySave'
 import { NULL_ADDRESS } from 'src/constants/addresses'
-
-import { getEnsAddress } from 'src/utils/ens'
-import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
-
+import { useAuctionContract, useGovernorContract, useMetadataContract } from 'src/hooks'
 import {
   BuilderTransaction,
   TransactionType,
   useProposalStore,
 } from 'src/modules/create-proposal'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
-
-import FieldSwitch from 'src/components/Fields/FieldSwitch'
-import StickySave from 'src/components/Fields/StickySave'
-
+import { useDaoStore, useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
+import { AddressType, DaoContracts } from 'src/typings'
+import { getEnsAddress } from 'src/utils/ens'
+import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
 
 import {
   AdminFormValues,

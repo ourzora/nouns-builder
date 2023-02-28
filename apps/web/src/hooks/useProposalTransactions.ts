@@ -1,11 +1,10 @@
 import { BigNumber } from 'ethers'
 import React from 'react'
-import { AddressType, BytesType } from 'src/typings'
 import { useContract, useSigner } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
-
 import { useDaoStore } from 'src/stores/useDaoStore'
+import { AddressType, BytesType } from 'src/typings'
 
 export function useProposalTransactions() {
   const { addresses } = useDaoStore()

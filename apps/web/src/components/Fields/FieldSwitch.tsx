@@ -1,9 +1,8 @@
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 
-import { compareAndReturn } from 'src/utils/helpers'
-
 import { ArtworkUpload } from 'src/modules/create-dao'
+import { compareAndReturn } from 'src/utils/helpers'
 
 import SingleImageUpload from '../SingleImageUpload/SingleImageUpload'
 import AdminVetoInput from './AdminVetoInput'

@@ -1,12 +1,11 @@
 import { Flex } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React from 'react'
-import { useLayoutStore } from 'src/stores'
-import { AddressType } from 'src/typings'
-
-import { useCustomTransactionStore } from 'src/modules/create-proposal'
 
 import Form from 'src/components/Fields/Form'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
+import { useLayoutStore } from 'src/stores'
+import { AddressType } from 'src/typings'
 
 import { fields, validateABI } from './fields'
 

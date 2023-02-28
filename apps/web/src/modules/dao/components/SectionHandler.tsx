@@ -5,15 +5,14 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { ReactElement } from 'react'
 
-import { slugify } from 'src/utils/slugify'
-import { unslugify } from 'src/utils/unslugify'
-
 import {
   sectionHandler,
   sectionNavigation,
   sectionNavigationWrapper,
   sectionTabVariants,
 } from 'src/styles/SectionNavigation.css'
+import { slugify } from 'src/utils/slugify'
+import { unslugify } from 'src/utils/unslugify'
 
 interface SectionHandlerProps {
   sections: {

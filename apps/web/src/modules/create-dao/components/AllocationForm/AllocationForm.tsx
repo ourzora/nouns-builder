@@ -2,19 +2,17 @@ import { Button, Flex } from '@zoralabs/zord'
 import { FieldArray, Form, Formik, FormikProps } from 'formik'
 import sum from 'lodash/sum'
 import React, { useRef, useState } from 'react'
-import { useLayoutStore } from 'src/stores'
-import { TokenAllocation } from 'src/typings'
 import { shallow } from 'zustand/shallow'
-
-import { useFormStore } from 'src/stores/useFormStore'
-
-import { getEnsAddress } from 'src/utils/ens'
 
 import {
   defaultBackButtonVariants,
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
+import { useLayoutStore } from 'src/stores'
+import { useFormStore } from 'src/stores/useFormStore'
+import { TokenAllocation } from 'src/typings'
+import { getEnsAddress } from 'src/utils/ens'
 
 import { validationSchemaFounderAllocation } from './AllocationForm.schema'
 import { ContributionAllocation } from './ContributionAllocation'

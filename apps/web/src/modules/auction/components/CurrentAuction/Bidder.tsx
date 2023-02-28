@@ -1,9 +1,8 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import React from 'react'
 
-import { useEnsData } from 'src/hooks/useEnsData'
-
 import { Avatar } from 'src/components/Avatar'
+import { useEnsData } from 'src/hooks/useEnsData'
 
 import { recentBidder } from '../Auction.css'
 

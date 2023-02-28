@@ -2,16 +2,13 @@ import { Flex } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import { FormikValues } from 'formik'
 import React from 'react'
-import { useAuctionContract } from 'src/hooks'
-
-import { fromSeconds, toSeconds } from 'src/utils/helpers'
-
-import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
 
 import Form from 'src/components/Fields/Form'
 import { DAYS_HOURS_MINS_SECS, NUMBER } from 'src/components/Fields/types'
-
+import { useAuctionContract } from 'src/hooks'
+import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
+import { fromSeconds, toSeconds } from 'src/utils/helpers'
 
 interface PreAuctionFormSettingsProps {
   title?: string
