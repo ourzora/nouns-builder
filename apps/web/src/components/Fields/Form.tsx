@@ -8,7 +8,7 @@ import {
 } from './styles.css'
 import { Icon } from 'src/components/Icon'
 import { Box, Button, Flex, Stack } from '@zoralabs/zord'
-import { Formik } from 'formik'
+import { Formik, FormikValues } from 'formik'
 import React, { ReactElement } from 'react'
 import { useFormStore } from 'src/stores/useFormStore'
 import { isEmpty } from 'src/utils/helpers'
@@ -21,15 +21,15 @@ interface FieldProps {
   helperText?: string
 }
 
-interface FormProps {
+interface FormProps<Values> {
   fields: FieldProps[]
-  initialValues: {}
+  initialValues: Values
   validationSchema?: {}
   buttonText?: string
   enableReinitialize?: boolean
   createSectionTitle?: string
   transactionSectionTitle?: string
-  submitCallback: (updates: any) => void
+  submitCallback: (updates: Values) => void
   hasNext?: boolean
   isSubForm?: boolean
   options?: any[] | object
@@ -39,7 +39,7 @@ interface FormProps {
   parentValues?: any
 }
 
-const Form: React.FC<FormProps> = ({
+function Form<Values extends FormikValues>({
   fields,
   initialValues,
   validationSchema,
@@ -55,7 +55,7 @@ const Form: React.FC<FormProps> = ({
   autoSubmit = false,
   innerStyle,
   parentValues,
-}) => {
+}: React.PropsWithChildren<FormProps<Values>>) {
   const {
     setFulfilledSections,
     setActiveSection,
@@ -84,7 +84,7 @@ const Form: React.FC<FormProps> = ({
     handle submit
 
    */
-  const handleSubmit = (_values: {}) => {
+  const handleSubmit = (values: Values) => {
     /*
 
       if createSectionTitle  - if form is apart of FormHandler and needs to progress sections
@@ -92,12 +92,12 @@ const Form: React.FC<FormProps> = ({
      */
     if (createSectionTitle) {
       if (!hasNext) {
-        submitCallback(_values)
+        submitCallback(values)
         setFulfilledSections(createSectionTitle)
         setActiveSection(activeSection + 1)
       } else {
         setActiveSectionCurrentIndex(activeSectionCurrentIndex + 1)
-        submitCallback(_values)
+        submitCallback(values)
       }
     } else if (transactionSectionTitle) {
       /*
@@ -105,11 +105,11 @@ const Form: React.FC<FormProps> = ({
      if transactionSectionTitle  - if form is apart of transaction FormHandler and needs to progress sections
 
     */
-      submitCallback(_values)
+      submitCallback(values)
 
       nextCustomTransactionForm()
     } else {
-      submitCallback(_values)
+      submitCallback(values)
     }
   }
 
@@ -129,7 +129,7 @@ const Form: React.FC<FormProps> = ({
   }
 
   return (
-    <Formik
+    <Formik<Values>
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={handleSubmit}

@@ -51,7 +51,6 @@ const StickySave: React.FC<StickySaveProps> = ({
   }, [isSubmitting])
 
   const handleConfirm = () => {
-    console.log('confirming', hasConfirmed)
     if (hasConfirmed) {
       setShowConfirmBanner(false)
     }
@@ -59,7 +58,6 @@ const StickySave: React.FC<StickySaveProps> = ({
   }
 
   const handleSave = () => {
-    console.log('saving', hasConfirmed)
     if (!hasConfirmed) {
       setShowConfirmBanner(true)
     } else {
