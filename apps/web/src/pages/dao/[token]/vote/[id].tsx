@@ -13,7 +13,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
 import getToken from 'src/data/contract/requests/getToken'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   ProposalActions,
   ProposalDescription,

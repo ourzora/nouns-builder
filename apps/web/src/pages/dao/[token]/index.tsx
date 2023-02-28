@@ -10,7 +10,7 @@ import NogglesLogo from 'src/components/Layout/assets/builder-framed.svg'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { useAuctionContract } from 'src/hooks'
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   Activity,
   PreAuction,

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import { useVotes } from 'src/hooks'
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import { getDaoLayout } from 'src/layouts/DaoLayout'
 import TwoColumnLayout from 'src/layouts/TwoColumn'
 import {
   CreateProposalHeading,

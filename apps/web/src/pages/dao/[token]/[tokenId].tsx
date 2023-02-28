@@ -12,7 +12,7 @@ import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getToken from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
-import { getDaoLayout } from 'src/layouts/DaoLayout/DaoLayout'
+import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { Auction } from 'src/modules/auction'
 import {
   About,
