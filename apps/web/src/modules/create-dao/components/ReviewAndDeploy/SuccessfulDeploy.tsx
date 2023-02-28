@@ -99,7 +99,6 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
           transaction.data
         )
         await wait()
-        setIsPendingTransaction(false)
       } catch (err) {
         console.warn(err)
         setIsPendingTransaction(false)
@@ -107,6 +106,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
       }
     }
 
+    setIsPendingTransaction(false)
     setFulfilledSections(title)
 
     router.push(`/dao/${token}`).then(() => {
