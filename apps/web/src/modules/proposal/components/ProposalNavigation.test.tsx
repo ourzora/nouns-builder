@@ -9,7 +9,7 @@ import { ProposalNavigation } from './ProposalNavigation'
 
 vi.mock('next/router', () => ({ useRouter: vi.fn() }))
 
-vi.mock('src/stores', () => ({
+vi.mock('src/modules/dao', () => ({
   useDaoStore: vi.fn(),
 }))
 

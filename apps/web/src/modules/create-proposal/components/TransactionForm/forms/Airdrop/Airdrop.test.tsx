@@ -7,7 +7,7 @@ import { render } from 'src/test/utils'
 
 import { Airdrop } from './Airdrop'
 
-vi.mock('src/stores', () => ({
+vi.mock('src/modules/dao', () => ({
   useDaoStore: vi.fn(),
 }))
 
