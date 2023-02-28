@@ -10,10 +10,9 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
-import { useGovernorContract } from 'src/hooks'
 import { ErrorResult } from 'src/services/errorResult'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
@@ -38,8 +37,8 @@ export const ReviewProposalForm = ({
   const router = useRouter()
   const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
-  const signerAddress = useLayoutStore((state) => state.signerAddress)
-  const { proposalThreshold } = useGovernorContract()
+  //@ts-ignore
+  const signerAddress = signer?._address
   const { clearProposal } = useProposalStore()
 
   const [error, setError] = useState<string | undefined>()
@@ -68,6 +67,12 @@ export const ReviewProposalForm = ({
     signerOrProvider: signer,
   })
 
+  const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
+    address: addresses?.governor as AddressType,
+    abi: governorAbi,
+    functionName: 'proposalThreshold',
+  })
+
   const onSubmit = React.useCallback(
     async (values: FormValues) => {
       setError(undefined)
@@ -81,6 +86,8 @@ export const ReviewProposalForm = ({
         setError(ERROR_CODE.WRONG_NETWORK)
         return
       }
+
+      if (!proposalThreshold) return
 
       const votesToNumber = votes ? votes.toNumber() : 0
       const doesNotHaveEnoughVotes = votesToNumber <= proposalThreshold.toNumber()
@@ -182,9 +189,9 @@ export const ReviewProposalForm = ({
     ]
   )
 
-  if (isLoading) return null
+  if (isLoading || thresholdIsLoading) return null
 
-  const tokensNeeded = proposalThreshold.toNumber() + 1
+  const tokensNeeded = proposalThreshold && proposalThreshold.toNumber() + 1
 
   return (
     <Flex direction={'column'} width={'100%'} pb={'x24'}>
