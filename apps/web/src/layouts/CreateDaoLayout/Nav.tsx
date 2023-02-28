@@ -5,6 +5,7 @@ import React from 'react'
 import { NetworkController } from 'src/components/NetworkController'
 import { useIsMounted } from 'src/hooks/useIsMounted'
 
+import { NavMenu } from '../DefaultLayout/NavMenu'
 import NogglesLogo from '../assets/builder-framed.svg'
 import TestnetLogo from '../assets/testnet.svg'
 import { NavContainer, NavWrapper } from './Nav.styles.css'
@@ -43,6 +44,12 @@ export const Nav = () => {
               </Box>
             </Flex>
           </Link>
+        </Flex>
+
+        <Flex align="center">
+          <Flex direction={'row'} align={'center'} gap={'x4'}>
+            <NavMenu />
+          </Flex>
         </Flex>
       </Flex>
     </Box>
