@@ -3,9 +3,9 @@ import { motion } from 'framer-motion'
 import React from 'react'
 
 import { Icon } from 'src/components/Icon'
-import { useDaoStore } from 'src/stores/useDaoStore'
 
 import { copyButtonVariants } from './CopyButton.css'
+import { useDaoStore } from "../../modules/dao/stores";
 
 interface CopyButtonProps {
   title?: string

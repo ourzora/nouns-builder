@@ -13,7 +13,7 @@ import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { useGovernorContract } from 'src/hooks'
 import { ErrorResult } from 'src/services/errorResult'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
@@ -21,6 +21,7 @@ import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { MarkdownEditor } from './MarkdownEditor'
 import { Transactions } from './Transactions'
 import { ERROR_CODE, FormValues, validationSchema } from './fields'
+import { useDaoStore } from "../../../dao/stores";
 
 interface ReviewProposalProps {
   disabled: boolean

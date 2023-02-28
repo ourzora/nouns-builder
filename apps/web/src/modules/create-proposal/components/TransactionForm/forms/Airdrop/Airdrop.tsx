@@ -9,7 +9,6 @@ import { useContractRead } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
-import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
@@ -22,6 +21,7 @@ import { Alert } from '../../../Alert'
 import { UpgradeCard } from '../../../UpgradeCard'
 import AirdropForm from './AirdropForm'
 import { AirdropFormValues } from './AirdropForm.schema'
+import { useDaoStore } from "../../../../../dao/stores";
 
 const AIRDROP_CONTRACT_VERSION = '1.2.0'
 

@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react'
 import { useSigner } from 'wagmi'
 
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useLayoutStore } from 'src/stores'
 import { getProvider } from 'src/utils/provider'
+import { useDaoStore } from 'src/modules/dao' 
 
 export function LayoutWrapper({ children }: { children: ReactNode }) {
   const { data: signer, status } = useSigner()

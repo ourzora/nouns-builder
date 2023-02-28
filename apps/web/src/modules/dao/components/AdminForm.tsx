@@ -15,7 +15,7 @@ import {
   useProposalStore,
 } from 'src/modules/create-proposal'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType, DaoContracts } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
@@ -26,6 +26,7 @@ import {
   adminProposalFields,
   adminValidationSchema,
 } from './AdminForm.schema'
+import { useDaoStore } from "../stores";
 
 interface AdminFormProps {
   title?: string

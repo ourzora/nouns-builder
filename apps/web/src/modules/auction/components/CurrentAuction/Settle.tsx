@@ -4,9 +4,9 @@ import { useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { auctionAbi } from 'src/data/contract/abis'
-import { useDaoStore } from 'src/stores'
 
 import { auctionActionButtonVariants } from '../Auction.css'
+import { useDaoStore } from "../../../dao/stores";
 
 interface SettleProps {
   isEnding: boolean

@@ -7,7 +7,6 @@ import { useBalance } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import Input from 'src/components/Input/Input'
-import { useDaoStore } from 'src/stores'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
@@ -15,6 +14,7 @@ import { getProvider } from 'src/utils/provider'
 import { TransactionType } from '../../../../constants/transactionType'
 import { useProposalStore } from '../../../../stores/useProposalStore'
 import sendEthSchema, { SendEthValues } from './SendEth.schema'
+import { useDaoStore } from "../../../../../dao/stores";
 
 const SendEth = () => {
   const { treasury } = useDaoStore((state) => state.addresses)

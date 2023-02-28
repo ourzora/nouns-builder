@@ -18,9 +18,9 @@ import {
   TransactionTypeIcon,
 } from 'src/modules/create-proposal'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { useDaoStore } from 'src/stores'
 import { notFoundWrap } from 'src/styles/404.css'
 import { AddressType } from 'src/typings'
+import { useDaoStore } from "../../../../modules/dao/stores";
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

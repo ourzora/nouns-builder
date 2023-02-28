@@ -1,11 +1,11 @@
 import { screen, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
 
-import { useDaoStore } from 'src/stores'
 import { BUILDER_DAO } from 'src/test/fixtures/dao'
 import { render } from 'src/test/utils'
 
 import { ProposalNavigation } from './ProposalNavigation'
+import { useDaoStore } from "../../dao/stores";
 
 vi.mock('next/router', () => ({ useRouter: vi.fn() }))
 

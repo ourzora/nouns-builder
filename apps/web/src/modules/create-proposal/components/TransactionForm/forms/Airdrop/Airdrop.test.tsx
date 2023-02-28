@@ -1,11 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
 
-import { useDaoStore } from 'src/stores'
 import { BUILDER_DAO } from 'src/test/fixtures/dao'
 import { render } from 'src/test/utils'
 
 import { Airdrop } from './Airdrop'
+import { useDaoStore } from "../../../../../dao/stores";
 
 vi.mock('src/stores', () => ({
   useDaoStore: vi.fn(),

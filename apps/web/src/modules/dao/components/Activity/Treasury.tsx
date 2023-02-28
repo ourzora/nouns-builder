@@ -6,10 +6,10 @@ import { useBalance } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { salesVolumeRequest } from 'src/data/graphql/requests/salesVolumeQuery'
-import { useDaoStore } from 'src/stores/useDaoStore'
 import { statisticContent } from 'src/styles/About.css'
 import { treasuryWrapper } from 'src/styles/Proposals.css'
 import { formatCryptoVal, numberFormatter } from 'src/utils/numbers'
+import { useDaoStore } from "../../stores";
 
 export const Treasury = () => {
   const { addresses } = useDaoStore()

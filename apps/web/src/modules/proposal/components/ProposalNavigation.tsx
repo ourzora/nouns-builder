@@ -7,7 +7,7 @@ import { useContractReads } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from "../../dao/stores";
 
 interface ProposalNavigationProps {
   handleBack?: () => void

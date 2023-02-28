@@ -7,7 +7,6 @@ import CopyButton from 'src/components/CopyButton/CopyButton'
 import { tokenAbi } from 'src/data/contract/abis'
 import { useMetadataContract } from 'src/hooks'
 import { useLayoutStore } from 'src/stores'
-import { useDaoStore } from 'src/stores/useDaoStore'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
   deployPendingButtonStyle,
@@ -18,6 +17,7 @@ import {
 import type { DaoContractAddresses } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
+import { useDaoStore } from "../../../dao/stores";
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string

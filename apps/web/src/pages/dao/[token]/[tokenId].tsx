@@ -22,8 +22,8 @@ import {
   SmartContracts,
 } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { useDaoStore } from 'src/stores/useDaoStore'
 import { AddressType } from 'src/typings'
+import { useDaoStore } from "../../../modules/dao/stores";
 
 interface TokenPageProps {
   url: string

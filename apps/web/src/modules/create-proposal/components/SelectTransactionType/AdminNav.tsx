@@ -5,7 +5,8 @@ import { useContract } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { auctionAbi } from 'src/data/contract/abis'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useLayoutStore } from 'src/stores'
+import { useDaoStore } from "../../../dao/stores";
 
 const AdminNav = () => {
   const router = useRouter()

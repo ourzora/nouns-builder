@@ -14,7 +14,7 @@ import { ProposalsResponse, getProposals } from 'src/data/graphql/requests/propo
 import { useVotes } from 'src/hooks'
 import { Upgrade, useProposalStore } from 'src/modules/create-proposal'
 import { ProposalCard } from 'src/modules/proposal'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useLayoutStore } from 'src/stores'
 import { selectDelegateBtn, submitProposalBtn } from 'src/styles/Proposals.css'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType } from 'src/typings'
@@ -25,6 +25,7 @@ import { CurrentDelegate } from './CurrentDelegate'
 import { DelegateForm } from './DelegateForm'
 import { MobileMenu } from './MobileMenu'
 import { Treasury } from './Treasury'
+import { useDaoStore } from "../../stores";
 
 export const Activity: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
