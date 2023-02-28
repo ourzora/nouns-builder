@@ -8,9 +8,9 @@ import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getBids from 'src/data/contract/requests/getBids'
 import { useAuctionContract } from 'src/hooks'
+import { useDaoStore } from 'src/modules/dao'
 import { formatCryptoVal } from 'src/utils/numbers'
 
-import { useDaoStore } from 'src/modules/dao'
 import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 

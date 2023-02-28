@@ -4,11 +4,11 @@ import React, { Fragment } from 'react'
 import { useContractReads } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { Proposal, ProposalStatus, ProposalVote } from 'src/typings'
 import { AddressType } from 'src/typings'
 
-import { useDaoStore } from 'src/modules/dao'
 import { isProposalOpen, isProposalSuccessful } from '../../utils'
 import { OwnerActions } from './OwnerActions'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'

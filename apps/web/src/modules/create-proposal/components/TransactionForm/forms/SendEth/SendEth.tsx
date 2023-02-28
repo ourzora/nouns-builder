@@ -11,7 +11,7 @@ import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
 
-import { useDaoStore } from '../../../../../dao/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { TransactionType } from '../../../../constants/transactionType'
 import { useProposalStore } from '../../../../stores/useProposalStore'
 import sendEthSchema, { SendEthValues } from './SendEth.schema'

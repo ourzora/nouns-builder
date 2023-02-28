@@ -6,6 +6,7 @@ import { useContractRead } from 'wagmi'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { tokenAbi } from 'src/data/contract/abis'
 import { useMetadataContract } from 'src/hooks'
+import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import {
@@ -17,8 +18,6 @@ import {
 import type { DaoContractAddresses } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
-
-import { useDaoStore } from 'src/modules/dao'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
