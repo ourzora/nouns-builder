@@ -7,11 +7,11 @@ import { useBalance } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import Input from 'src/components/Input/Input'
+import { useDaoStore } from 'src/modules/dao'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
 
-import { useDaoStore } from 'src/modules/dao'
 import { TransactionType } from '../../../../constants/transactionType'
 import { useProposalStore } from '../../../../stores/useProposalStore'
 import sendEthSchema, { SendEthValues } from './SendEth.schema'

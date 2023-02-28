@@ -8,7 +8,7 @@ import { useLayoutStore } from 'src/stores'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 import { ProposalStatus, ProposalVote, Support } from 'src/typings'
 
-import { useDaoStore } from '../../../../dao/stores'
+import { useDaoStore } from 'src/modules/dao'
 import Pending from './Pending'
 import Vote from './Vote'
 import VoteModal from './VoteModal'

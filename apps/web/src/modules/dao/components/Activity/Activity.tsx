@@ -21,7 +21,7 @@ import { AddressType } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 
 import { useDelegate } from '../../hooks'
-import { useDaoStore } from '../../stores'
+import { useDaoStore } from 'src/modules/dao'
 import { CurrentDelegate } from './CurrentDelegate'
 import { DelegateForm } from './DelegateForm'
 import { MobileMenu } from './MobileMenu'

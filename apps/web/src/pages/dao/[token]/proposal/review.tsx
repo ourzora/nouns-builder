@@ -14,7 +14,7 @@ import { NextPageWithLayout } from 'src/pages/_app'
 import { notFoundWrap } from 'src/styles/404.css'
 import { AddressType } from 'src/typings'
 
-import { useDaoStore } from '../../../../modules/dao/stores'
+import { useDaoStore } from 'src/modules/dao'
 
 const ReviewProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

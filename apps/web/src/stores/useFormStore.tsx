@@ -8,12 +8,12 @@ import {
   GeneralFormValues,
 } from 'src/modules/create-dao'
 import {
-  DaoContractAddresses,
   IPFSUpload,
   OrderedLayersProps,
   TokenAllocation,
 } from 'src/typings'
 import { yearsAhead } from 'src/utils/helpers'
+import { DaoContractAddresses } from "../modules/dao";
 
 export interface FormStoreState {
   activeSection: number

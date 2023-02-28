@@ -9,12 +9,12 @@ import { useContractRead } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/modules/dao'
 import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
 
-import { useDaoStore } from 'src/modules/dao'
 import { TransactionType } from '../../../../constants'
 import { useAvailableUpgrade } from '../../../../hooks'
 import { useProposalStore } from '../../../../stores'

@@ -17,11 +17,11 @@ import {
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { AddressType, DaoContracts } from 'src/typings'
+import { AddressType} from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
 
-import { useDaoStore } from '../stores'
+import { DaoContracts, useDaoStore } from "src/modules/dao";
 import {
   AdminFormValues,
   adminProposalFields,

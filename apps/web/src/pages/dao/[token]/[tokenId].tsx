@@ -24,7 +24,7 @@ import {
 import { NextPageWithLayout } from 'src/pages/_app'
 import { AddressType } from 'src/typings'
 
-import { useDaoStore } from '../../../modules/dao/stores'
+import { useDaoStore } from 'src/modules/dao'
 
 interface TokenPageProps {
   url: string
