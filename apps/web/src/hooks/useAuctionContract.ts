@@ -1,5 +1,6 @@
 import { GetContractResult, ReadContractResult } from '@wagmi/core'
 import { BigNumber, ContractTransaction } from 'ethers'
+import React, { useCallback } from 'react'
 import { Address, useContract, useContractReads, useSigner } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'

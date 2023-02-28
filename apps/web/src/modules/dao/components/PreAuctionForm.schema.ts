@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+
 import {
   auctionDurationValidationSchema,
   auctionReservePriceValidationSchema,

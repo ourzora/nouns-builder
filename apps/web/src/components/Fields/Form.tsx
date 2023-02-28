@@ -7,13 +7,12 @@ import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import { useFormStore } from 'src/stores/useFormStore'
 import { isEmpty } from 'src/utils/helpers'
 
-
 import FieldSwitch from './FieldSwitch'
 import {
   defaultBackButtonVariants,
   defaultFormButton,
-  defaultFormButtonWithPrev,  
-  flexStyle,  
+  defaultFormButtonWithPrev,
+  flexStyle,
   transactionFormButtonWithPrev,
 } from './styles.css'
 
