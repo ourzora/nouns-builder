@@ -12,7 +12,6 @@ import { SWRConfig } from 'swr'
 import { WagmiConfig } from 'wagmi'
 
 import { Disclaimer } from 'src/components/Disclaimer'
-import Layout from 'src/components/Layout/Layout'
 import { NetworkController } from 'src/components/NetworkController'
 import { chains } from 'src/data/contract/chains'
 import { client } from 'src/data/contract/client'
@@ -37,9 +36,7 @@ function App({ Component, pageProps, err }: AppPropsWithLayout) {
     <WagmiConfig client={client}>
       <RainbowKitProvider chains={chains} appInfo={{ disclaimer: Disclaimer }}>
         <SWRConfig value={{ fallback }}>
-          {isMounted && (
-            <Layout>{getLayout(<Component {...pageProps} err={err} />)}</Layout>
-          )}
+          {isMounted && getLayout(<Component {...pageProps} err={err} />)}
         </SWRConfig>
         <NetworkController.Mainnet>
           <VercelAnalytics />

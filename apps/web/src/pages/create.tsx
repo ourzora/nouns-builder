@@ -6,6 +6,7 @@ import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 
 import Meta from 'src/components/Layout/Meta'
+import { getCreateLayout } from 'src/layouts/CreateLayout'
 import {
   AllocationForm,
   Artwork,
@@ -20,7 +21,9 @@ import { useFormStore } from 'src/stores/useFormStore'
 import { createWrapperHalf, formWrapper, pageGrid } from 'src/styles/styles.css'
 import { CreateFormSection } from 'src/typings'
 
-const Create: NextPage = () => {
+import { NextPageWithLayout } from './_app'
+
+const CreatePage: NextPageWithLayout = () => {
   const router = useRouter()
   const { activeSection } = useFormStore()
   const { address } = useAccount()
@@ -157,4 +160,7 @@ const Create: NextPage = () => {
     </>
   )
 }
-export default Create
+
+CreatePage.getLayout = getCreateLayout
+
+export default CreatePage

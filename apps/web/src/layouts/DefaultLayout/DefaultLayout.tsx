@@ -8,7 +8,7 @@ import { getProvider } from 'src/utils/provider'
 import { Footer } from './Footer'
 import { Nav } from './Nav'
 
-function DefaultLayout({ children }: { children: ReactNode }) {
+export function DefaultLayout({ children }: { children: ReactNode }) {
   const { data: signer, status } = useSigner()
   const { setSigner, setProvider, setSignerAddress } = useLayoutStore()
   const { setIsMobile } = useLayoutStore()

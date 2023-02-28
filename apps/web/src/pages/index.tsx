@@ -12,12 +12,44 @@ import Twitter from 'src/components/Home/Twitter'
 import Meta from 'src/components/Layout/Meta'
 import { highestBidsRequest } from 'src/data/graphql/requests/homepageQuery'
 import { AuctionFragment } from 'src/data/graphql/sdk.generated'
+import { getDefaultLayout } from 'src/layouts/DefaultLayout'
 import { DaoFeed } from 'src/modules/dao'
+
+import { NextPageWithLayout } from './_app'
 
 export type DaoProps = Pick<AuctionFragment, 'collectionAddress'> & {
   auctionAddress: string
   name?: string
 }
+
+const HomePage: NextPageWithLayout<{
+  featuredDaos: DaoProps[]
+  statusCode: number
+}> = ({ featuredDaos, statusCode }) => {
+  return (
+    <>
+      <Meta title={'Nouns your ideas'} type={'website'} slug={'/'} />
+
+      <Stack align={'center'}>
+        <Marquee />
+        <GetStarted />
+        {featuredDaos && (
+          <RecentlyCreated>
+            <DaoFeed featuredDaos={featuredDaos} error={statusCode} />
+          </RecentlyCreated>
+        )}
+        <Everything />
+        <FAQ />
+        <Twitter />
+        <Footer />
+      </Stack>
+    </>
+  )
+}
+
+HomePage.getLayout = getDefaultLayout
+
+export default HomePage
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   if (process.env.NEXT_PUBLIC_CHAIN_ID === '1') {
@@ -56,32 +88,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       featuredDaos: [],
     },
   }
-}
-
-export default function HomePage({
-  featuredDaos,
-  statusCode,
-}: {
-  featuredDaos: DaoProps[]
-  statusCode: number
-}) {
-  return (
-    <>
-      <Meta title={'Nouns your ideas'} type={'website'} slug={'/'} />
-
-      <Stack align={'center'}>
-        <Marquee />
-        <GetStarted />
-        {featuredDaos && (
-          <RecentlyCreated>
-            <DaoFeed featuredDaos={featuredDaos} error={statusCode} />
-          </RecentlyCreated>
-        )}
-        <Everything />
-        <FAQ />
-        <Twitter />
-        <Footer />
-      </Stack>
-    </>
-  )
 }

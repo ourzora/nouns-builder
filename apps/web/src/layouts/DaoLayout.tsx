@@ -7,6 +7,8 @@ import { managerAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
+import { DefaultLayout } from './DefaultLayout'
+
 function DaoLayout({ children }: { children: ReactNode }) {
   const {
     query: { token },
@@ -40,5 +42,9 @@ function DaoLayout({ children }: { children: ReactNode }) {
 }
 
 export function getDaoLayout(page: ReactElement) {
-  return <DaoLayout>{page}</DaoLayout>
+  return (
+    <DefaultLayout>
+      <DaoLayout>{page}</DaoLayout>
+    </DefaultLayout>
+  )
 }
