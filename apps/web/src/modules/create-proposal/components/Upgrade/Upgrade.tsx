@@ -4,11 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import React from 'react'
 
+import { DaoContractAddresses } from '../../../dao'
 import { useAvailableUpgrade } from '../../hooks'
 import { useProposalStore } from '../../stores'
 import { UpgradeCard } from '../UpgradeCard'
 import { v1_1_0, v1_2_0 } from './versions'
-import { DaoContractAddresses } from "../../../dao";
 
 export const VERSION_PROPOSAL_SUMMARY: { [key: string]: string } = {
   '1.2.0': v1_2_0,

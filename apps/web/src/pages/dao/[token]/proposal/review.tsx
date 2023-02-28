@@ -10,11 +10,10 @@ import {
   ReviewProposalForm,
   useProposalStore,
 } from 'src/modules/create-proposal'
+import { useDaoStore } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { notFoundWrap } from 'src/styles/404.css'
 import { AddressType } from 'src/typings'
-
-import { useDaoStore } from 'src/modules/dao'
 
 const ReviewProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

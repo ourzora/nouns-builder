@@ -1,14 +1,15 @@
-import { ContractInterface } from "ethers";
-import { IPFSUploadResponse } from "ipfs-service";
-import { ReactElement } from "react";
+import { ContractInterface } from 'ethers'
+import { IPFSUploadResponse } from 'ipfs-service'
+import { ReactElement } from 'react'
+
 import {
   ImageMediaEncodingFragment,
   MarketSortKey,
-  NounsProposalStatus as ProposalStatus,
   ProposalFragment,
+  NounsProposalStatus as ProposalStatus,
   ProposalVoteFragment as ProposalVote,
-  Support
-} from "src/data/graphql/sdk.generated";
+  Support,
+} from 'src/data/graphql/sdk.generated'
 
 export interface CreateFormSection {
   title: string
@@ -186,4 +187,3 @@ export const enum NETWORK {
 export type AddressType = `0x${string}`
 
 export type BytesType = `0x${string}`
-

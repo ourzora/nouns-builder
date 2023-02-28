@@ -11,11 +11,11 @@ import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { sdk } from 'src/data/graphql/client'
 import { useMetadataContract, useTokenContract } from 'src/hooks'
+import { useDaoStore } from 'src/modules/dao'
 import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
 import type { AddressType } from 'src/typings'
 import { formatCryptoVal } from 'src/utils/numbers'
 
-import { useDaoStore } from 'src/modules/dao'
 import { ExternalLinks } from './ExternalLinks'
 import { Statistic } from './Statistic'
 

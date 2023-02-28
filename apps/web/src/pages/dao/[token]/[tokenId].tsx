@@ -21,10 +21,9 @@ import {
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
+import { useDaoStore } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { AddressType } from 'src/typings'
-
-import { useDaoStore } from 'src/modules/dao'
 
 interface TokenPageProps {
   url: string

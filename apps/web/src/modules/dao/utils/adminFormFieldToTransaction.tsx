@@ -1,10 +1,10 @@
 import { ethers } from 'ethers'
 
-import { AddressType} from 'src/typings'
+import { AdminFormValues } from 'src/modules/dao/components/AdminForm.schema'
+import { DaoContractAddresses, DaoContracts } from 'src/modules/dao/stores'
+import { AddressType } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
-
-import { AdminFormValues } from '../components/AdminForm.schema'
 
 type FormValuesTransactionMap = {
   [K in keyof AdminFormValues]: {

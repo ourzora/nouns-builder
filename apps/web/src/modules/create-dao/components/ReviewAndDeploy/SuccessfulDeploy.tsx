@@ -6,7 +6,7 @@ import { useContractRead } from 'wagmi'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { tokenAbi } from 'src/data/contract/abis'
 import { useMetadataContract } from 'src/hooks'
-import { DaoContractAddresses, useDaoStore } from "src/modules/dao";
+import { DaoContractAddresses, useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { useFormStore } from 'src/stores/useFormStore'
 import {

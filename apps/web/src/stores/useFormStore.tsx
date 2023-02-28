@@ -7,13 +7,10 @@ import {
   AuctionSettingsFormValues,
   GeneralFormValues,
 } from 'src/modules/create-dao'
-import {
-  IPFSUpload,
-  OrderedLayersProps,
-  TokenAllocation,
-} from 'src/typings'
+import { IPFSUpload, OrderedLayersProps, TokenAllocation } from 'src/typings'
 import { yearsAhead } from 'src/utils/helpers'
-import { DaoContractAddresses } from "../modules/dao";
+
+import { DaoContractAddresses } from '../modules/dao'
 
 export interface FormStoreState {
   activeSection: number

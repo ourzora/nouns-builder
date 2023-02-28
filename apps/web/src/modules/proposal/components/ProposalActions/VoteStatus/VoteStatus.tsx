@@ -4,11 +4,11 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useContractEvent } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 import { ProposalStatus, ProposalVote, Support } from 'src/typings'
 
-import { useDaoStore } from 'src/modules/dao'
 import Pending from './Pending'
 import Vote from './Vote'
 import VoteModal from './VoteModal'

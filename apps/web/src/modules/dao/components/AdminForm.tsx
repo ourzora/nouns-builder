@@ -14,14 +14,14 @@ import {
   TransactionType,
   useProposalStore,
 } from 'src/modules/create-proposal'
+import { DaoContracts, useDaoStore } from 'src/modules/dao'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { AddressType} from 'src/typings'
+import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
 
-import { DaoContracts, useDaoStore } from "src/modules/dao";
 import {
   AdminFormValues,
   adminProposalFields,
