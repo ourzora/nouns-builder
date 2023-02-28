@@ -1,7 +1,6 @@
 import {
   WriteContractUnpreparedArgs,
   prepareWriteContract,
-  waitForTransaction,
   writeContract,
 } from '@wagmi/core'
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
@@ -151,8 +150,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
         signer: signer,
         args: [founderParams, tokenParams, auctionParams, govParams],
       })
-      const { hash } = await writeContract(config)
-      transaction = await waitForTransaction({ hash })
+      const { wait } = await writeContract(config)
+      transaction = await wait()
     } catch (e) {
       setIsPendingTransaction(false)
       return
