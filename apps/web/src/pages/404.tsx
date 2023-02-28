@@ -1,9 +1,11 @@
 import { Flex } from '@zoralabs/zord'
 import Head from 'next/head'
 
+import { getDefaultLayout } from 'src/layouts/DefaultLayout'
+
 import { notFoundWrap } from '../styles/404.css'
 
-export default function Custom404() {
+const Custom404Page = () => {
   return (
     <>
       <Head>
@@ -14,3 +16,7 @@ export default function Custom404() {
     </>
   )
 }
+
+Custom404Page.getLayout = getDefaultLayout
+
+export default Custom404Page
