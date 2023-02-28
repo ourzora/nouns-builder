@@ -1,9 +1,10 @@
 import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
 
+import { Spinner } from 'src/components/Spinner'
 import { useFormStore } from 'src/stores/useFormStore'
 
-import { uploadNotificationWrapper, uploadingSpinner } from './Nav.styles.css'
+import { uploadNotificationWrapper } from './Nav.styles.css'
 
 export const Uploading = () => {
   const { isUploadingToIPFS } = useFormStore()
@@ -24,7 +25,8 @@ export const Uploading = () => {
         >
           <Flex align={'center'} justify={'center'}>
             <Box fontSize={14}>Uploading Artwork to IPFS</Box>
-            <Box className={uploadingSpinner} mx={'x4'} />
+
+            <Spinner mx={'x4'} />
           </Flex>
         </Flex>
       )}
