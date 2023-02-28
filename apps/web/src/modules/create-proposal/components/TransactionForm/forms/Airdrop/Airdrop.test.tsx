@@ -4,8 +4,8 @@ import { vi } from 'vitest'
 import { BUILDER_DAO } from 'src/test/fixtures/dao'
 import { render } from 'src/test/utils'
 
+import { useDaoStore } from '../../../../../dao/stores'
 import { Airdrop } from './Airdrop'
-import { useDaoStore } from "../../../../../dao/stores";
 
 vi.mock('src/stores', () => ({
   useDaoStore: vi.fn(),

@@ -21,11 +21,11 @@ import { AddressType } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 
 import { useDelegate } from '../../hooks'
+import { useDaoStore } from '../../stores'
 import { CurrentDelegate } from './CurrentDelegate'
 import { DelegateForm } from './DelegateForm'
 import { MobileMenu } from './MobileMenu'
 import { Treasury } from './Treasury'
-import { useDaoStore } from "../../stores";
 
 export const Activity: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)

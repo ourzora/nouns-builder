@@ -23,7 +23,8 @@ import {
 } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { AddressType } from 'src/typings'
-import { useDaoStore } from "../../../modules/dao/stores";
+
+import { useDaoStore } from '../../../modules/dao/stores'
 
 interface TokenPageProps {
   url: string

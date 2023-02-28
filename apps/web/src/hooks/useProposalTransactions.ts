@@ -3,8 +3,8 @@ import React from 'react'
 import { useContract, useSigner } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/modules/dao'
 import { AddressType, BytesType } from 'src/typings'
-import { useDaoStore } from 'src/modules/dao' 
 
 export function useProposalTransactions() {
   const { addresses } = useDaoStore()

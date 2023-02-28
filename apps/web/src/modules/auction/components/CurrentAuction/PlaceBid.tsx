@@ -10,9 +10,9 @@ import getBids from 'src/data/contract/requests/getBids'
 import { useAuctionContract } from 'src/hooks'
 import { formatCryptoVal } from 'src/utils/numbers'
 
+import { useDaoStore } from '../../../dao/stores'
 import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
-import { useDaoStore } from "../../../dao/stores";
 
 interface PlaceBidProps {
   tokenId: string

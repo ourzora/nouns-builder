@@ -1,9 +1,10 @@
-import { DaoContractAddresses } from "../../../typings";
-import { create } from "zustand";
+import { create } from 'zustand'
+
+import { DaoContractAddresses } from '../../../typings'
 
 interface DaoStoreProps {
-  addresses: DaoContractAddresses;
-  setAddresses: (addresses: DaoContractAddresses) => void;
+  addresses: DaoContractAddresses
+  setAddresses: (addresses: DaoContractAddresses) => void
 }
 
 export const useDaoStore = create<DaoStoreProps>((set) => ({
@@ -12,7 +13,7 @@ export const useDaoStore = create<DaoStoreProps>((set) => ({
     metadata: undefined,
     auction: undefined,
     treasury: undefined,
-    governor: undefined
+    governor: undefined,
   },
-  setAddresses: (addresses: DaoContractAddresses) => set({ addresses })
-}));
+  setAddresses: (addresses: DaoContractAddresses) => set({ addresses }),
+}))

@@ -17,7 +17,8 @@ import {
 import type { DaoContractAddresses } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
-import { useDaoStore } from "../../../dao/stores";
+
+import { useDaoStore } from '../../../dao/stores'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string

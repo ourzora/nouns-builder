@@ -7,7 +7,8 @@ import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useLayoutStore } from 'src/stores'
 import { about } from 'src/styles/About.css'
 import { walletSnippet } from 'src/utils/helpers'
-import { useDaoStore } from "../stores";
+
+import { useDaoStore } from '../stores'
 
 const ContractLink = ({ title, address }: { title: string; address?: string }) => {
   const { isMobile } = useLayoutStore()

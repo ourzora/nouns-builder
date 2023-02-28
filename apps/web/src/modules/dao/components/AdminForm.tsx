@@ -21,12 +21,12 @@ import { AddressType, DaoContracts } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
 
+import { useDaoStore } from '../stores'
 import {
   AdminFormValues,
   adminProposalFields,
   adminValidationSchema,
 } from './AdminForm.schema'
-import { useDaoStore } from "../stores";
 
 interface AdminFormProps {
   title?: string

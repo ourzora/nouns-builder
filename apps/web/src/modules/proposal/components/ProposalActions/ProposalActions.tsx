@@ -8,11 +8,11 @@ import { useLayoutStore } from 'src/stores'
 import { Proposal, ProposalStatus, ProposalVote } from 'src/typings'
 import { AddressType } from 'src/typings'
 
+import { useDaoStore } from '../../../dao/stores'
 import { isProposalOpen, isProposalSuccessful } from '../../utils'
 import { OwnerActions } from './OwnerActions'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
 import { VoteStatus } from './VoteStatus'
-import { useDaoStore } from "../../../dao/stores";
 
 interface ProposalActionsProps {
   daoName?: string

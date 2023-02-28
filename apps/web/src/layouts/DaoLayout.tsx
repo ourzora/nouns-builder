@@ -4,10 +4,10 @@ import { useContractRead } from 'wagmi'
 
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { managerAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/modules/dao'
 import { AddressType } from 'src/typings'
 
 import { DefaultLayout } from './DefaultLayout'
-import { useDaoStore } from 'src/modules/dao' 
 
 function DaoLayout({ children }: { children: ReactNode }) {
   const {

@@ -14,6 +14,7 @@ import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
 
+import { useDaoStore } from '../../../../../dao/stores'
 import { TransactionType } from '../../../../constants'
 import { useAvailableUpgrade } from '../../../../hooks'
 import { useProposalStore } from '../../../../stores'
@@ -21,7 +22,6 @@ import { Alert } from '../../../Alert'
 import { UpgradeCard } from '../../../UpgradeCard'
 import AirdropForm from './AirdropForm'
 import { AirdropFormValues } from './AirdropForm.schema'
-import { useDaoStore } from "../../../../../dao/stores";
 
 const AIRDROP_CONTRACT_VERSION = '1.2.0'
 

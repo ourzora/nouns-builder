@@ -20,7 +20,8 @@ import {
 import { NextPageWithLayout } from 'src/pages/_app'
 import { notFoundWrap } from 'src/styles/404.css'
 import { AddressType } from 'src/typings'
-import { useDaoStore } from "../../../../modules/dao/stores";
+
+import { useDaoStore } from '../../../../modules/dao/stores'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()

@@ -15,9 +15,9 @@ import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
 import type { AddressType } from 'src/typings'
 import { formatCryptoVal } from 'src/utils/numbers'
 
+import { useDaoStore } from '../../stores'
 import { ExternalLinks } from './ExternalLinks'
 import { Statistic } from './Statistic'
-import { useDaoStore } from "../../stores";
 
 export const About: React.FC = () => {
   const {
