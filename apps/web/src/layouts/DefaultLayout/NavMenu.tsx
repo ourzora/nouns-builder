@@ -15,7 +15,7 @@ import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { formatCryptoVal } from 'src/utils/numbers'
 
-import { ConnectButton } from '../../layouts/DefaultLayout/ConnectButton'
+import { ConnectButton } from './ConnectButton'
 import { CreateDaoButton } from './CreateDaoButton'
 import {
   activeNavAvatar,
@@ -23,9 +23,9 @@ import {
   myDaosWrapper,
   navButton,
   navMenuBurger,
-} from './styles.css'
+} from './Nav.styles.css'
 
-const NavMenu: React.FC<{}> = () => {
+export const NavMenu = () => {
   const [isOpenMenu, setIsOpenMenu] = React.useState(false)
   const [viewAll, setViewAll] = React.useState(false)
   const [activeDropdown, setActiveDropdown] = React.useState<
@@ -287,5 +287,3 @@ const NavMenu: React.FC<{}> = () => {
     </Flex>
   )
 }
-
-export default NavMenu

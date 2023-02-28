@@ -1,28 +1,18 @@
 import { Box } from '@zoralabs/zord'
-import { useRouter } from 'next/router'
-import React, { ReactNode } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { useSigner } from 'wagmi'
 
-import { useDaoStore } from 'src/stores'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
+import { useDaoStore, useLayoutStore } from 'src/stores'
 import { getProvider } from 'src/utils/provider'
 
-import Footer from './Footer'
-import Nav from './Nav'
-import Uploading from './Uploading'
+import { Footer } from './Footer'
+import { Nav } from './Nav'
 
-interface LayoutProps {
-  children: ReactNode
-}
-
-const Layout = ({ children }: LayoutProps) => {
+function DefaultLayout({ children }: { children: ReactNode }) {
   const { data: signer, status } = useSigner()
   const { setSigner, setProvider, setSignerAddress } = useLayoutStore()
   const { setIsMobile } = useLayoutStore()
   const { addresses } = useDaoStore()
-  const router = useRouter()
-  const pathname = router.pathname
-  const noFooter = pathname === '/create' || pathname === '/'
 
   // store signer, signerAddress and provider in store
   React.useEffect(() => {
@@ -49,11 +39,12 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <Box>
       <Nav />
-      <Box px={router.pathname.includes('create') ? 'x0' : 'x4'}>{children}</Box>
-      <Uploading />
-      {!noFooter && <Footer />}
+      <Box px={'x4'}>{children}</Box>
+      <Footer />
     </Box>
   )
 }
 
-export default Layout
+export function getDefaultLayout(page: ReactElement) {
+  return <DefaultLayout>{page}</DefaultLayout>
+}
