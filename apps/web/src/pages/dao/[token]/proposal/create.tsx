@@ -5,7 +5,6 @@ import { useAccount } from 'wagmi'
 
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import TwoColumnLayout from 'src/layouts/TwoColumn'
 import {
   CreateProposalHeading,
   DropdownSelect,
@@ -16,6 +15,7 @@ import {
   TransactionForm,
   TransactionType,
   TransactionTypeIcon,
+  TwoColumnLayout,
 } from 'src/modules/create-proposal'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { useDaoStore } from 'src/stores'
