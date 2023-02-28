@@ -16,11 +16,15 @@ import {
   NounsProposalStatus,
   ProposalsWithCalldataQuery,
 } from 'src/data/graphql/sdk.generated'
-import { AddressType } from 'src/typings'
-
+import {
+  BuilderTransaction,
+  CONTRACT_VERSION_DETAILS,
+  Transaction,
+  TransactionType,
+  VersionType,
+} from 'src/modules/create-proposal'
 import { DaoContractAddresses } from 'src/modules/dao'
-import { CONTRACT_VERSION_DETAILS, TransactionType, VersionType } from '../constants'
-import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
+import { AddressType } from 'src/typings'
 
 type Proposal = ProposalsWithCalldataQuery['nouns']['nounsProposals']['nodes'][number]
 
