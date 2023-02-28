@@ -38,7 +38,10 @@ export const ReviewProposalForm = ({
   const router = useRouter()
   const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
-  const signerAddress = useLayoutStore((state) => state.signerAddress)
+
+  //@ts-ignore
+  const signerAddress = signer?._address as AddressType
+
   const { proposalThreshold } = useGovernorContract()
   const { clearProposal } = useProposalStore()
 
