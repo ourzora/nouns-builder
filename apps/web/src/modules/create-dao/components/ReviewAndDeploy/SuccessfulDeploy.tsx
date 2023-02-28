@@ -91,7 +91,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     }
 
     setIsPendingTransaction(true)
-    for (const transaction of transactions) {
+    for await (const transaction of transactions) {
       try {
         const { wait } = await metadataContract.addProperties(
           transaction.names,
