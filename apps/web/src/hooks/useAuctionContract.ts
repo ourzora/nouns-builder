@@ -1,6 +1,5 @@
 import { GetContractResult, ReadContractResult } from '@wagmi/core'
-import { BigNumber } from 'ethers'
-import { useCallback } from 'react'
+import { BigNumber, ContractTransaction } from 'ethers'
 import { Address, useContract, useContractReads, useSigner } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
@@ -19,10 +18,12 @@ interface AuctionContractInterface {
   auctionReservePrice?: BigNumber
   minBidIncrement?: BigNumber
   timeBuffer?: BigNumber
-  setDuration: (duration: BigNumber) => void
-  setTimeBuffer: (buffer: BigNumber) => void
-  setMinBidIncrementPercentage: (minBidIncrementPercentage: BigNumber) => void
-  setReservePrice: (reservePrice: BigNumber) => void
+  setDuration: (duration: BigNumber) => Promise<ContractTransaction | undefined>
+  setTimeBuffer: (buffer: BigNumber) => Promise<ContractTransaction | undefined>
+  setMinBidIncrementPercentage: (
+    minBidIncrementPercentage: BigNumber
+  ) => Promise<ContractTransaction | undefined>
+  setReservePrice: (reservePrice: BigNumber) => Promise<ContractTransaction | undefined>
 }
 
 export const useAuctionContract = (): AuctionContractInterface => {

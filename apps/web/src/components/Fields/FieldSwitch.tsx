@@ -2,7 +2,6 @@ import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 
 import { ArtworkUpload } from 'src/modules/create-dao'
-import { compareAndReturn } from 'src/utils/helpers'
 
 import SingleImageUpload from '../SingleImageUpload/SingleImageUpload'
 import AdminVetoInput from './AdminVetoInput'
@@ -47,8 +46,6 @@ interface FieldSwitchProps {
   formik: FormikProps<any>
   autoSubmit?: boolean
   children?: ReactNode
-  setHasConfirmed?: (hasConfirmed: { state: boolean | null; values: {}[] }) => void
-  hasConfirmed?: { state: boolean | null; values: {}[] | null }
   options?: any[] | {}
   submitCallback?: (values: any) => void
   parentValues?: any
@@ -59,25 +56,9 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   formik,
   autoSubmit,
   submitCallback,
-  setHasConfirmed,
-  hasConfirmed,
   options,
   parentValues,
 }) => {
-  React.useEffect(() => {
-    /*
-
-      compare initial values against entered values
-      and null confirmation of changes on value change
-
-    */
-    if (!!hasConfirmed?.state && !!setHasConfirmed) {
-      let updates = compareAndReturn(formik.initialValues, formik.values)
-
-      setHasConfirmed({ state: hasConfirmed.state, values: updates })
-    }
-  }, [formik.values])
-
   /*
 
         handle smartInput onChange
