@@ -1,10 +1,14 @@
-import { WriteContractUnpreparedArgs } from '@wagmi/core'
+import {
+  WriteContractUnpreparedArgs,
+  prepareWriteContract,
+  waitForTransaction,
+  writeContract,
+} from '@wagmi/core'
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import React, { useState } from 'react'
-import { useContractEvent, useContractWrite } from 'wagmi'
-import { usePrepareContractWrite } from 'wagmi'
+import { useSigner } from 'wagmi'
 
 import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
@@ -13,7 +17,6 @@ import { NULL_ADDRESS } from 'src/constants/addresses'
 import { managerAbi } from 'src/data/contract/abis'
 import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
 import { useFormStore } from 'src/stores/useFormStore'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
 import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
@@ -47,7 +50,7 @@ const DEPLOYMENT_ERROR = {
 }
 
 export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
-  const { signer, signerAddress } = useLayoutStore()
+  const { data: signer } = useSigner()
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [hasConfirmed, setHasConfirmed] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
@@ -67,24 +70,6 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     vetoPower,
   } = useFormStore()
 
-  useContractEvent({
-    address: PUBLIC_MANAGER_ADDRESS!,
-    abi: managerAbi,
-    eventName: 'DAODeployed',
-    listener(token, metadata, auction, treasury, governor) {
-      setDeployedDao({
-        token,
-        metadata,
-        auction,
-        treasury,
-        governor,
-      })
-      setIsPendingTransaction(false)
-      setFulfilledSections(title)
-    },
-  })
-
-  /* handle section navigation */
   const handlePrev = () => {
     setActiveSection(activeSection - 1)
   }
@@ -142,18 +127,10 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
         : ethers.utils.getAddress(NULL_ADDRESS),
   }
 
-  const { config, isError } = usePrepareContractWrite({
-    address: PUBLIC_MANAGER_ADDRESS,
-    abi: managerAbi,
-    functionName: 'deploy',
-    args: [founderParams, tokenParams, auctionParams, govParams],
-  })
-
-  const { writeAsync } = useContractWrite(config)
-
   const handleDeploy = async () => {
     setDeploymentError(undefined)
 
+    const signerAddress = await signer?.getAddress()
     if (founderParams[0].wallet !== signerAddress) {
       setDeploymentError(DEPLOYMENT_ERROR.MISMATCHING_SIGNER)
       return
@@ -164,19 +141,50 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       return
     }
 
-    if (isError) {
-      setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
+    setIsPendingTransaction(true)
+    let transaction
+    try {
+      const config = await prepareWriteContract({
+        address: PUBLIC_MANAGER_ADDRESS,
+        abi: managerAbi,
+        functionName: 'deploy',
+        signer: signer,
+        args: [founderParams, tokenParams, auctionParams, govParams],
+      })
+      const { hash } = await writeContract(config)
+      transaction = await waitForTransaction({ hash })
+    } catch (e) {
+      setIsPendingTransaction(false)
       return
     }
 
-    try {
-      setIsPendingTransaction(true)
-      const txn = await writeAsync?.()
-      await txn?.wait()
-    } catch (e) {
-      console.error(e)
+    const iface = new ethers.utils.Interface(managerAbi)
+
+    const deployedAddresses = transaction?.logs
+      .map((log) => {
+        let parsed
+        try {
+          parsed = iface.parseLog({ topics: log.topics, data: log.data })
+        } catch {}
+        return parsed
+      })
+      .find((parsedLog) => parsedLog?.name === 'DAODeployed')?.args
+
+    if (!deployedAddresses) {
+      setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
       setIsPendingTransaction(false)
+      return
     }
+
+    setDeployedDao({
+      token: deployedAddresses[0],
+      metadata: deployedAddresses[1],
+      auction: deployedAddresses[2],
+      treasury: deployedAddresses[3],
+      governor: deployedAddresses[4],
+    })
+    setIsPendingTransaction(false)
+    setFulfilledSections(title)
   }
 
   return (
