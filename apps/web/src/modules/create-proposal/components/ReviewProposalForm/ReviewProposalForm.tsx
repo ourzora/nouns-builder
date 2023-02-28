@@ -10,10 +10,9 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
-import { useGovernorContract } from 'src/hooks'
 import { ErrorResult } from 'src/services/errorResult'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
@@ -49,7 +48,7 @@ export const ReviewProposalForm = ({
   const [proposing, setProposing] = useState<boolean>(false)
 
   const { data: votes, isLoading } = useContractRead({
-    address: addresses?.governor as AddressType,
+    address: addresses?.token as AddressType,
     abi: tokenAbi,
     enabled: !!signerAddress,
     functionName: 'getVotes',
