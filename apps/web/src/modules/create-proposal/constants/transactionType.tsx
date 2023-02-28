@@ -40,7 +40,7 @@ export const TRANSACTION_TYPES = {
     iconBackdrop: color.ghostHover,
   },
   [TransactionType.CUSTOM]: {
-    title: 'Custom Proposal',
+    title: 'Custom Transaction',
     subTitle: 'Create any other kind of transaction',
     icon: 'plus',
     iconBackdrop: color.ghostHover,
