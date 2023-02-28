@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 
 import { Duration } from 'src/typings'
+import { durationValidationSchema } from 'src/utils/yup'
 
 export interface AuctionSettingsFormValues {
   auctionDuration: Duration
@@ -9,38 +10,13 @@ export interface AuctionSettingsFormValues {
   quorumThreshold?: number
 }
 
-export const auctionDurationValidationSchema = Yup.object()
-  .shape({
-    seconds: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .min(0, '>= 0')
-      .max(60, '<= 60 seconds'),
-    minutes: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .min(0, '>= 0')
-      .max(60, '<= 60 minutes'),
-    days: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .min(0, '>= 0'),
-    hours: Yup.number()
-      .transform((value) => (isNaN(value) ? undefined : value))
-      .min(0, '>= 0')
-      .max(24, '<= 24 hours'),
-  })
-  .test('valueCheck', 'Value below minimum', (value) => {
-    const values = Object.values(value).map((num) => {
-      return Number.isNaN(num) || typeof num === 'undefined' ? 0 : num
-    })
-    return values.filter((val) => val > 0).length > 0
-  })
-
 export const auctionReservePriceValidationSchema = Yup.number()
   .transform((value) => (isNaN(value) ? undefined : value))
   .required('*')
   .min(0.0001, '> 0.0001 ETH') // temp until protocol supports 0 ETH reserve price
 
 export const auctionSettingsValidationSchema = Yup.object().shape({
-  auctionDuration: auctionDurationValidationSchema,
+  auctionDuration: durationValidationSchema,
   auctionReservePrice: auctionReservePriceValidationSchema,
   proposalThreshold: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))

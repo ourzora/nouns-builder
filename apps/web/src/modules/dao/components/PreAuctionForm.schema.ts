@@ -1,10 +1,8 @@
 import * as Yup from 'yup'
 
-import {
-  auctionDurationValidationSchema,
-  auctionReservePriceValidationSchema,
-} from 'src/modules/create-dao'
+import { auctionReservePriceValidationSchema } from 'src/modules/create-dao'
 import { Duration } from 'src/typings'
+import { durationValidationSchema } from 'src/utils/yup'
 
 export interface PreAuctionFormValues {
   auctionDuration: Duration
@@ -12,6 +10,6 @@ export interface PreAuctionFormValues {
 }
 
 export const preAuctionValidationSchema = Yup.object().shape({
-  auctionDuration: auctionDurationValidationSchema,
+  auctionDuration: durationValidationSchema,
   auctionReservePrice: auctionReservePriceValidationSchema,
 })
