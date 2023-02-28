@@ -4,7 +4,6 @@ import React from 'react'
 
 import Everything from 'src/components/Home/Everything'
 import FAQ from 'src/components/Home/FAQ'
-import Footer from 'src/components/Home/Footer'
 import GetStarted from 'src/components/Home/GetStarted'
 import Marquee from 'src/components/Home/Marquee'
 import RecentlyCreated from 'src/components/Home/RecentlyCreated'
@@ -12,7 +11,7 @@ import Twitter from 'src/components/Home/Twitter'
 import Meta from 'src/components/Layout/Meta'
 import { highestBidsRequest } from 'src/data/graphql/requests/homepageQuery'
 import { AuctionFragment } from 'src/data/graphql/sdk.generated'
-import { getDefaultLayout } from 'src/layouts/DefaultLayout'
+import { getHomeLayout } from 'src/layouts/HomeLayout'
 import { DaoFeed } from 'src/modules/dao'
 
 import { NextPageWithLayout } from './_app'
@@ -41,13 +40,12 @@ const HomePage: NextPageWithLayout<{
         <Everything />
         <FAQ />
         <Twitter />
-        <Footer />
       </Stack>
     </>
   )
 }
 
-HomePage.getLayout = getDefaultLayout
+HomePage.getLayout = getHomeLayout
 
 export default HomePage
 
