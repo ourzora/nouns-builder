@@ -2,7 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { expect, vi } from 'vitest'
 import { useContractReads } from 'wagmi'
 
-import { DaoContractAddresses } from '../../dao'
+import { DaoContractAddresses } from 'src/modules/dao'
 import { useAvailableUpgrade } from './useAvailableUpgrade'
 
 vi.mock('wagmi', async () => {

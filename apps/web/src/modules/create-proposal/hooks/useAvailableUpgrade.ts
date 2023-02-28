@@ -18,7 +18,7 @@ import {
 } from 'src/data/graphql/sdk.generated'
 import { AddressType } from 'src/typings'
 
-import { DaoContractAddresses } from '../../dao'
+import { DaoContractAddresses } from 'src/modules/dao'
 import { CONTRACT_VERSION_DETAILS, TransactionType, VersionType } from '../constants'
 import { BuilderTransaction, Transaction } from '../stores/useProposalStore'
 

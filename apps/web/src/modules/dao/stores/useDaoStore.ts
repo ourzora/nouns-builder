@@ -26,7 +26,7 @@ export interface DaoContracts {
   governorContract?: GetContractResult<typeof governorAbi>
 }
 
-interface DaoStoreProps {
+export interface DaoStoreProps {
   addresses: DaoContractAddresses
   setAddresses: (addresses: DaoContractAddresses) => void
 }
