@@ -17,7 +17,6 @@ import {
   DAYS_HOURS_MINS_SECS,
   MINS_SECS,
   NUMBER,
-  RADIO,
   SELECT,
   SINGLE_IMAGE_UPLOAD,
   TEXT,
@@ -25,7 +24,6 @@ import {
 } from './types'
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
-import { compareAndReturn } from 'src/utils/helpers'
 import { ArtworkUpload } from 'src/modules/create-dao'
 
 interface FieldSwitchProps {
@@ -46,8 +44,6 @@ interface FieldSwitchProps {
   formik: FormikProps<any>
   autoSubmit?: boolean
   children?: ReactNode
-  setHasConfirmed?: (hasConfirmed: { state: boolean | null; values: {}[] }) => void
-  hasConfirmed?: { state: boolean | null; values: {}[] | null }
   options?: any[] | {}
   submitCallback?: (values: any) => void
   parentValues?: any
@@ -58,25 +54,9 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   formik,
   autoSubmit,
   submitCallback,
-  setHasConfirmed,
-  hasConfirmed,
   options,
   parentValues,
 }) => {
-  React.useEffect(() => {
-    /*
-
-      compare initial values against entered values
-      and null confirmation of changes on value change
-
-    */
-    if (!!hasConfirmed?.state && !!setHasConfirmed) {
-      let updates = compareAndReturn(formik.initialValues, formik.values)
-
-      setHasConfirmed({ state: hasConfirmed.state, values: updates })
-    }
-  }, [formik.values])
-
   /*
 
         handle smartInput onChange
