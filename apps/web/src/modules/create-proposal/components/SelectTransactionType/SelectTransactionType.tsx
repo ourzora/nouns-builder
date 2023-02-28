@@ -1,7 +1,8 @@
-import { Stack, Text } from '@zoralabs/zord'
+import { Flex, Stack, Text } from '@zoralabs/zord'
 import React from 'react'
 
-import { TransactionType } from '../../constants/transactionType'
+import { TRANSACTION_TYPES, TransactionType } from '../../constants/transactionType'
+import { TransactionTypeIcon } from '../TransactionTypeIcon'
 import AdminNav from './AdminNav'
 import TransactionTypeCard from './TransactionTypeCard'
 
@@ -27,6 +28,15 @@ export const SelectTransactionType: React.FC<SelectTransactionTypeProps> = ({
           onClick={() => onSelect(transactionType)}
         />
       ))}
+      <Flex gap={'x4'} align={'center'} cursor={'pointer'}>
+        <TransactionTypeIcon transactionType={TransactionType.NOUNS_CONNECT} large />
+        <Stack>
+          <Text variant={'label-lg'} mb={'x1'}>
+            {TRANSACTION_TYPES[TransactionType.NOUNS_CONNECT].title}
+          </Text>
+          <Text>{TRANSACTION_TYPES[TransactionType.NOUNS_CONNECT].subTitle}</Text>
+        </Stack>
+      </Flex>
       <AdminNav />
     </Stack>
   )
