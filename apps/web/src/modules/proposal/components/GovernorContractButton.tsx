@@ -4,11 +4,12 @@ import React, { useState } from 'react'
 import { useSWRConfig } from 'swr'
 
 import { ContractButton } from 'src/components/ContractButton'
-import { uploadingSpinnerWhite } from 'src/components/Layout/styles.css'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { useGovernorContract } from 'src/hooks'
 import { useLayoutStore } from 'src/stores'
+
+import { uploadingSpinnerWhite } from './GovernorContractButton.css'
 
 interface GovernorContractButtonProps {
   buttonText: string

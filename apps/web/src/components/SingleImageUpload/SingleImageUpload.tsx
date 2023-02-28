@@ -4,12 +4,11 @@ import { getFetchableUrl, normalizeIPFSUrl, uploadFile } from 'ipfs-service'
 import Image from 'next/image'
 import React, { ReactElement, useEffect, useState } from 'react'
 
-import { uploadingSpinner } from 'src/components/Layout/styles.css'
-
 import {
   defaultUploadStyle,
   singleImageUploadWrapper,
   uploadErrorBox,
+  uploadingSpinner,
 } from './SingleImageUpload.css'
 
 interface SingleImageUploadProps {

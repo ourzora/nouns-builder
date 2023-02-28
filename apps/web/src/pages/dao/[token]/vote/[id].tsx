@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 import useSWR, { unstable_serialize } from 'swr'
 
-import Meta from 'src/components/Layout/Meta'
+import { Meta } from 'src/components/Meta'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'

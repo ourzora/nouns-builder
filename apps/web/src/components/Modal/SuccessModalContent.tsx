@@ -7,7 +7,7 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 
-import { uploadingSpinner } from '../Layout/styles.css'
+import { uploadingSpinner } from './Modal.css'
 
 type SuccessModalContentProps = {
   title: string

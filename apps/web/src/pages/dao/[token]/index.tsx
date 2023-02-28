@@ -5,12 +5,12 @@ import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import React from 'react'
 
-import Meta from 'src/components/Layout/Meta'
-import NogglesLogo from 'src/components/Layout/assets/builder-framed.svg'
+import { Meta } from 'src/components/Meta'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { useAuctionContract } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
+import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 import {
   Activity,
   PreAuction,

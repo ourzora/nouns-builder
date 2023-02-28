@@ -1,11 +1,10 @@
 import { Box, Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
-import { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 
-import Meta from 'src/components/Layout/Meta'
+import { Meta } from 'src/components/Meta'
 import { getCreateLayout } from 'src/layouts/CreateLayout'
 import {
   AllocationForm,

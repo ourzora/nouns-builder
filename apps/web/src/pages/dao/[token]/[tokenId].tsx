@@ -5,7 +5,7 @@ import React from 'react'
 import useSWR, { unstable_serialize } from 'swr'
 import { useAccount } from 'wagmi'
 
-import Meta from 'src/components/Layout/Meta'
+import { Meta } from 'src/components/Meta'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'

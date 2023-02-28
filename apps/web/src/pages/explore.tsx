@@ -1,7 +1,7 @@
 import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 
-import Meta from 'src/components/Layout/Meta'
+import { Meta } from 'src/components/Meta'
 import { exploreDaosRequest } from 'src/data/graphql/requests/exploreQueries'
 import { getDefaultLayout } from 'src/layouts/DefaultLayout'
 import { Explore } from 'src/modules/dao'

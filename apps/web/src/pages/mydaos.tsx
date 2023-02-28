@@ -1,7 +1,7 @@
 import { Flex } from '@zoralabs/zord'
 import { NextPage } from 'next'
 
-import Meta from 'src/components/Layout/Meta'
+import { Meta } from 'src/components/Meta'
 import { ExploreMyDaos } from 'src/modules/dao'
 
 const MyDaosPage: NextPage<{}> = () => {
