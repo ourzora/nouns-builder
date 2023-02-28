@@ -28,15 +28,30 @@ export const SelectTransactionType: React.FC<SelectTransactionTypeProps> = ({
           onClick={() => onSelect(transactionType)}
         />
       ))}
-      <Flex gap={'x4'} align={'center'} cursor={'pointer'}>
-        <TransactionTypeIcon transactionType={TransactionType.NOUNS_CONNECT} large />
-        <Stack>
-          <Text variant={'label-lg'} mb={'x1'}>
-            {TRANSACTION_TYPES[TransactionType.NOUNS_CONNECT].title}
-          </Text>
-          <Text>{TRANSACTION_TYPES[TransactionType.NOUNS_CONNECT].subTitle}</Text>
-        </Stack>
-      </Flex>
+      <Flex
+        borderWidth={'thin'}
+        borderStyle={'solid'}
+        borderColor={'ghostHover'}
+        mt={'x4'}
+        mb={'x4'}
+      />
+      <a href={'https://www.nounsconnect.wtf/'} target={'_blank'}>
+        <Flex gap={'x4'} align={'center'} cursor={'pointer'} mb={'x8'}>
+          <TransactionTypeIcon
+            transactionType={TransactionType.NOUNS_CONNECT}
+            large
+            border
+          />
+          <Stack>
+            <Text variant={'label-lg'} mb={'x1'}>
+              {TRANSACTION_TYPES[TransactionType.NOUNS_CONNECT].title}
+            </Text>
+            <Text style={{ lineHeight: '24px' }}>
+              {TRANSACTION_TYPES[TransactionType.NOUNS_CONNECT].subTitle}
+            </Text>
+          </Stack>
+        </Flex>
+      </a>
       <AdminNav />
     </Stack>
   )
