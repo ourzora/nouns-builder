@@ -158,13 +158,13 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       return
     }
 
-    const iface = new ethers.utils.Interface(managerAbi)
+    const managerInterface = new ethers.utils.Interface(managerAbi)
 
     const deployedAddresses = transaction?.logs
       .map((log) => {
         let parsed
         try {
-          parsed = iface.parseLog({ topics: log.topics, data: log.data })
+          parsed = managerInterface.parseLog({ topics: log.topics, data: log.data })
         } catch {}
         return parsed
       })
