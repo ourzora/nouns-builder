@@ -9,7 +9,7 @@ interface MetaProps {
   description?: string
 }
 
-const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description }) => {
+export const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description }) => {
   const isTestnet = process.env.NEXT_PUBLIC_CHAIN_ID === '5' ? true : false
 
   return (
@@ -50,5 +50,3 @@ const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description }) =>
     </Head>
   )
 }
-
-export default Meta

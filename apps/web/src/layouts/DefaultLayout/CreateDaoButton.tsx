@@ -2,7 +2,7 @@ import { Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
-export const CreateDaoButton: React.FC = () => {
+export const CreateDaoButton = () => {
   return (
     <Link href="/create" passHref>
       <Flex

@@ -2,7 +2,7 @@ import { Box, Flex, Stack } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
-import MadeWithZoraFooter from 'src/components/Layout/MadeWithZoraFooter'
+import { MadeWithZoraFooter } from '../DefaultLayout/MadeWithZoraFooter'
 import {
   footerHeading,
   footerLeftWrapper,
@@ -10,9 +10,9 @@ import {
   getStartedButton,
   homeFooterInnerWrapper,
   homeFooterLinks,
-} from 'src/styles/home.css'
+} from './Footer.css'
 
-const Footer = () => {
+export const Footer = () => {
   return (
     <Stack mt={'x13'} w={'100vw'} backgroundColor={'onNeutral'} pt={'x6'}>
       <Flex
@@ -77,5 +77,3 @@ const Footer = () => {
     </Stack>
   )
 }
-
-export default Footer

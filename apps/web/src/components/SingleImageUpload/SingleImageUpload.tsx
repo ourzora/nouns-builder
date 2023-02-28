@@ -4,7 +4,7 @@ import { getFetchableUrl, normalizeIPFSUrl, uploadFile } from 'ipfs-service'
 import Image from 'next/image'
 import React, { ReactElement, useEffect, useState } from 'react'
 
-import { uploadingSpinner } from 'src/components/Layout/styles.css'
+import { Spinner } from 'src/components/Spinner'
 
 import {
   defaultUploadStyle,
@@ -83,9 +83,7 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
           className={singleImageUploadWrapper}
           htmlFor="file-upload"
         >
-          {isUploading && (
-            <Flex alignSelf={'center'} className={uploadingSpinner} m={'x0'} />
-          )}
+          {isUploading && <Spinner alignSelf={'center'} m={'x0'} />}
 
           {!isUploading && isMounted && !!value && (
             <Image

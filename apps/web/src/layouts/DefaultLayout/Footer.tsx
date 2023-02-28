@@ -2,10 +2,10 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
-import MadeWithZoraFooter from './MadeWithZoraFooter'
-import { footerContent, footerLink, footerWrapper } from './styles.css'
+import { MadeWithZoraFooter } from './MadeWithZoraFooter'
+import { footerContent, footerLink, footerWrapper } from './Nav.styles.css'
 
-const Footer = () => {
+export const Footer = () => {
   return (
     <Box w="100%" as="footer" className={footerWrapper}>
       <Box className={footerContent} w="100%" m="auto">
@@ -72,5 +72,3 @@ const Footer = () => {
     </Box>
   )
 }
-
-export default Footer

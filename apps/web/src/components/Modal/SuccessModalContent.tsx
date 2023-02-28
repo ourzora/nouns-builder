@@ -1,4 +1,4 @@
-import { Box, Flex } from '@zoralabs/zord'
+import { Flex } from '@zoralabs/zord'
 import React, { ReactNode } from 'react'
 
 import {
@@ -6,8 +6,7 @@ import {
   confirmRemoveHelper,
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
-
-import { uploadingSpinner } from '../Layout/styles.css'
+import { Spinner } from 'src/components/Spinner'
 
 type SuccessModalContentProps = {
   title: string
@@ -41,7 +40,9 @@ const SuccessModalContent: React.FC<SuccessModalContentProps> = ({
           <Icon id="check" fill="onAccent" />
         </Flex>
       )}
-      {pending && <Box className={uploadingSpinner} mx={'x4'} />}
+
+      {pending && <Spinner mx={'x4'} />}
+
       <Flex className={confirmRemoveHeadingStyle} mb={'x2'}>
         {title}
       </Flex>

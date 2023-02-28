@@ -5,10 +5,12 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 import { ContractButton } from 'src/components/ContractButton'
+import { getDefaultLayout } from 'src/layouts/DefaultLayout'
 
 import { whyCreateButton, whyTextStyle } from '../styles/why.css'
+import { NextPageWithLayout } from './_app'
 
-const About = () => {
+const AboutPage: NextPageWithLayout = () => {
   const router = useRouter()
 
   return (
@@ -118,4 +120,6 @@ const About = () => {
   )
 }
 
-export default About
+AboutPage.getLayout = getDefaultLayout
+
+export default AboutPage

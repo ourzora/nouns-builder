@@ -23,9 +23,9 @@ import {
   myDaosWrapper,
   navButton,
   navMenuBurger,
-} from './styles.css'
+} from './Nav.styles.css'
 
-const NavMenu: React.FC<{}> = () => {
+export const NavMenu = () => {
   const [isOpenMenu, setIsOpenMenu] = React.useState(false)
   const [viewAll, setViewAll] = React.useState(false)
   const [activeDropdown, setActiveDropdown] = React.useState<
@@ -287,5 +287,3 @@ const NavMenu: React.FC<{}> = () => {
     </Flex>
   )
 }
-
-export default NavMenu

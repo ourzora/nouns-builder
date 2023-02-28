@@ -1,28 +1,14 @@
-import { Box } from '@zoralabs/zord'
-import { useRouter } from 'next/router'
 import React, { ReactNode } from 'react'
 import { useSigner } from 'wagmi'
 
-import { useDaoStore } from 'src/stores'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
+import { useDaoStore, useLayoutStore } from 'src/stores'
 import { getProvider } from 'src/utils/provider'
 
-import Footer from './Footer'
-import Nav from './Nav'
-import Uploading from './Uploading'
-
-interface LayoutProps {
-  children: ReactNode
-}
-
-const Layout = ({ children }: LayoutProps) => {
+export function LayoutWrapper({ children }: { children: ReactNode }) {
   const { data: signer, status } = useSigner()
   const { setSigner, setProvider, setSignerAddress } = useLayoutStore()
   const { setIsMobile } = useLayoutStore()
   const { addresses } = useDaoStore()
-  const router = useRouter()
-  const pathname = router.pathname
-  const noFooter = pathname === '/create' || pathname === '/'
 
   // store signer, signerAddress and provider in store
   React.useEffect(() => {
@@ -41,18 +27,10 @@ const Layout = ({ children }: LayoutProps) => {
       setIsMobile(window.innerWidth <= 768)
     }
   }, [])
+
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768)
   }
 
-  return (
-    <Box>
-      <Nav />
-      <Box px={router.pathname.includes('create') ? 'x0' : 'x4'}>{children}</Box>
-      <Uploading />
-      {!noFooter && <Footer />}
-    </Box>
-  )
+  return <>{children}</>
 }
-
-export default Layout

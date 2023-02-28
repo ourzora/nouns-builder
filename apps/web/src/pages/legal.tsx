@@ -2,9 +2,12 @@ import { Box, Heading, Label, Paragraph, Text } from '@zoralabs/zord'
 import Head from 'next/head'
 import React from 'react'
 
+import { getDefaultLayout } from 'src/layouts/DefaultLayout'
 import { legalContainer } from 'src/styles/legal.css'
 
-const Legal = () => {
+import { NextPageWithLayout } from './_app'
+
+const LegalPage: NextPageWithLayout = () => {
   return (
     <>
       <Head>
@@ -566,4 +569,6 @@ const Legal = () => {
   )
 }
 
-export default Legal
+LegalPage.getLayout = getDefaultLayout
+
+export default LegalPage

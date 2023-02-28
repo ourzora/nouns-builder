@@ -1,9 +1,9 @@
 import { Box, Eyebrow, Flex } from '@zoralabs/zord'
 import { Atoms } from '@zoralabs/zord'
 
-import Noggles from './assets/noggles.svg'
-import Zorb from './assets/zorb.svg'
-import { footerLogo, footerLogoTextLeft, footerLogoTextRight } from './styles.css'
+import Noggles from '../assets/noggles.svg'
+import Zorb from '../assets/zorb.svg'
+import { footerLogo, footerLogoTextLeft, footerLogoTextRight } from './Nav.styles.css'
 
 export type MadeWithZoraFooterProps = {
   backgroundColor: Atoms['backgroundColor']
@@ -11,7 +11,7 @@ export type MadeWithZoraFooterProps = {
   mb?: Atoms['mb']
 }
 
-const MadeWithZoraFooter = ({
+export const MadeWithZoraFooter = ({
   backgroundColor,
   color,
   mb = 'x4',
@@ -53,5 +53,3 @@ const MadeWithZoraFooter = ({
     </Flex>
   )
 }
-
-export default MadeWithZoraFooter
