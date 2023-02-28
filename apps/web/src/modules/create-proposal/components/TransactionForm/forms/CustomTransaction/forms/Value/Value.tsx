@@ -1,16 +1,12 @@
 import { Flex } from '@zoralabs/zord'
 import React from 'react'
 
-import Form from 'src/components/Fields/Form'
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
 
+import { CustomTransactionForm } from '../CustomTransactionForm'
 import { transactionValueFields, validateTransactionValue } from './fields'
 
-interface ValueProps {
-  title: string
-}
-
-export const Value: React.FC<ValueProps> = ({ title }) => {
+export const Value: React.FC<{}> = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
   const initialValues = {
     transactionValue: customTransaction?.value || '',
@@ -28,14 +24,11 @@ export const Value: React.FC<ValueProps> = ({ title }) => {
 
   return (
     <Flex direction={'column'}>
-      <Form
+      <CustomTransactionForm
         initialValues={initialValues}
         fields={transactionValueFields}
         validationSchema={validateTransactionValue}
         submitCallback={(values) => submitCallback(values)}
-        transactionSectionTitle={title}
-        isSubForm={true}
-        buttonText={'Next'}
       />
     </Flex>
   )

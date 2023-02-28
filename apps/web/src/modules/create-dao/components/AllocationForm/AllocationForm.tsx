@@ -5,7 +5,7 @@ import React, { useRef, useState } from 'react'
 import { shallow } from 'zustand/shallow'
 
 import {
-  defaultBackButtonVariants,
+  defaultBackButton,
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
@@ -165,7 +165,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
           minW={'x15'}
           type="button"
           onClick={handlePrev}
-          className={defaultBackButtonVariants['default']}
+          className={defaultBackButton}
           aria-label="Back"
         >
           <Icon id="arrowLeft" />

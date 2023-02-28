@@ -4,7 +4,6 @@ import { isEqual } from 'lodash'
 import React from 'react'
 import * as Yup from 'yup'
 
-import Form from 'src/components/Fields/Form'
 import { TEXT, TEXTAREA } from 'src/components/Fields/types'
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import {
@@ -15,11 +14,9 @@ import {
 } from 'src/utils/formABI'
 import { camelToTitle } from 'src/utils/helpers'
 
-interface ArgumentsProps {
-  title: string
-}
+import { CustomTransactionForm } from '../CustomTransactionForm'
 
-export const Arguments: React.FC<ArgumentsProps> = ({ title }) => {
+export const Arguments: React.FC<{}> = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
 
   /*
@@ -196,14 +193,11 @@ export const Arguments: React.FC<ArgumentsProps> = ({ title }) => {
 
   return (
     <Flex direction={'column'}>
-      <Form
+      <CustomTransactionForm
         initialValues={initialValues}
         validationSchema={validationSchema}
         fields={fields}
         submitCallback={submitCallback}
-        transactionSectionTitle={title}
-        isSubForm={true}
-        buttonText={'Next'}
         validateOnBlur={true}
       />
     </Flex>

@@ -30,32 +30,32 @@ export const CustomTransaction: React.FC = () => {
   const sections: AddTransactionSection[] = React.useMemo(() => {
     const address: AddTransactionSection = {
       title: 'Address',
-      forms: [<Address key={'address'} title={''} />],
+      forms: [<Address key={'address'} />],
     }
 
     const abi: AddTransactionSection = {
       title: 'ABI Interface',
-      forms: [<ABI key={'abi'} title={''} />],
+      forms: [<ABI key={'abi'} />],
     }
 
     const fn: AddTransactionSection = {
       title: 'Function',
-      forms: [<Function key={'function'} title={''} />],
+      forms: [<Function key={'function'} />],
     }
 
     const args: AddTransactionSection = {
       title: 'Arguments',
-      forms: [<Arguments key={'arguments'} title={''} />],
+      forms: [<Arguments key={'arguments'} />],
     }
 
     const value: AddTransactionSection = {
       title: 'Value',
-      forms: [<Value key={'arguments'} title={''} />],
+      forms: [<Value key={'arguments'} />],
     }
 
     const summary: AddTransactionSection = {
       title: 'Summary',
-      forms: [<Summary key={'summary'} title={''} />],
+      forms: [<Summary key={'summary'} />],
     }
 
     return [address, abi, fn, args, value, summary]

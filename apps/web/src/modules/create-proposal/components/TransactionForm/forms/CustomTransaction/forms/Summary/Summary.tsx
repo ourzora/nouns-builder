@@ -15,11 +15,10 @@ import {
 } from '../../CustomTransaction.css'
 
 interface SummaryProps {
-  title: string
   setIsOpen?: (bool: boolean) => void
 }
 
-export const Summary: React.FC<SummaryProps> = ({ title, setIsOpen }) => {
+export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
   const { signer, provider } = useLayoutStore()
   const { customTransaction, composeCustomTransaction, previous } =
     useCustomTransactionStore()

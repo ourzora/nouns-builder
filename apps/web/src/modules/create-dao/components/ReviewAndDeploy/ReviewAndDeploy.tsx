@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { useContractEvent, useContractWrite } from 'wagmi'
 import { usePrepareContractWrite } from 'wagmi'
 
-import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
+import { defaultBackButton } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
@@ -287,7 +287,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 minH={'x15'}
                 minW={'x15'}
                 onClick={() => handlePrev()}
-                className={defaultBackButtonVariants['default']}
+                className={defaultBackButton}
               >
                 <Icon id="arrowLeft" />
               </Flex>

@@ -2,18 +2,14 @@ import { Flex } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React from 'react'
 
-import Form from 'src/components/Fields/Form'
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
+import { CustomTransactionForm } from '../CustomTransactionForm'
 import { fields, validateABI } from './fields'
 
-interface ABIProps {
-  title: string
-}
-
-export const ABI: React.FC<ABIProps> = ({ title }) => {
+export const ABI: React.FC<{}> = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
   const { provider } = useLayoutStore()
   const initialValues = {
@@ -59,14 +55,11 @@ export const ABI: React.FC<ABIProps> = ({ title }) => {
 
   return (
     <Flex direction={'column'}>
-      <Form
+      <CustomTransactionForm
         initialValues={initialValues}
         fields={fields}
         validationSchema={validateABI(provider)}
         submitCallback={(values) => submitCallback(values)}
-        transactionSectionTitle={title}
-        isSubForm={true}
-        buttonText={'Next'}
       />
     </Flex>
   )
