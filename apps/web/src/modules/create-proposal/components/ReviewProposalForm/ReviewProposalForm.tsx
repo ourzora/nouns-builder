@@ -39,9 +39,7 @@ export const ReviewProposalForm = ({
   const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
 
-  //@ts-ignore
-  const signerAddress = signer?._address as AddressType
-
+  const signerAddress = await signer?.getAddress()
   const { proposalThreshold } = useGovernorContract()
   const { clearProposal } = useProposalStore()
 
