@@ -75,7 +75,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const transactions = React.useMemo(() => {
     if (!orderedLayers || !ipfsUpload) return
 
-    return transformFileProperties(orderedLayers, ipfsUpload, 500)
+    return transformFileProperties(orderedLayers, ipfsUpload, 2)
   }, [orderedLayers, ipfsUpload])
 
   const handleDeployMetadata = async () => {
@@ -216,7 +216,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
         size={'lg'}
         borderRadius={'curved'}
         className={isPendingTransaction ? deployPendingButtonStyle : undefined}
-        disabled={!transactions}
+        disabled={!transactions || isPendingTransaction}
         onClick={handleDeployMetadata}
         w={'100%'}
         mt={'x8'}
