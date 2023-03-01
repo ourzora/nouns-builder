@@ -6,7 +6,7 @@ import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import { CustomTransactionForm } from '../CustomTransactionForm'
 import { transactionFunctionFields, validateTransactionFunction } from './fields'
 
-export const Function: React.FC<{}> = () => {
+export const Function = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
 
   const initialValues = {

@@ -16,7 +16,7 @@ import { camelToTitle } from 'src/utils/helpers'
 
 import { CustomTransactionForm } from '../CustomTransactionForm'
 
-export const Arguments: React.FC<{}> = () => {
+export const Arguments = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
 
   /*

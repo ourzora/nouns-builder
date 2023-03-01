@@ -12,7 +12,7 @@ import { useLayoutStore } from 'src/stores'
 import { CustomTransactionForm } from '../CustomTransactionForm'
 import { contractAddressFields, validateContractAddress } from './fields'
 
-export const Address: React.FC<{}> = () => {
+export const Address = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
   const { provider } = useLayoutStore()
   const initialValues = {

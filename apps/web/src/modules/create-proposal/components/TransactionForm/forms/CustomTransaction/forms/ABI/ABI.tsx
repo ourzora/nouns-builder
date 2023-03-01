@@ -9,7 +9,7 @@ import { AddressType } from 'src/typings'
 import { CustomTransactionForm } from '../CustomTransactionForm'
 import { fields, validateABI } from './fields'
 
-export const ABI: React.FC<{}> = () => {
+export const ABI = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
   const { provider } = useLayoutStore()
   const initialValues = {

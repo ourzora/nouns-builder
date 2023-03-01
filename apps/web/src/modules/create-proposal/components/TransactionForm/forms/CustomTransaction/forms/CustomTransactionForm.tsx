@@ -1,5 +1,5 @@
 import { Button, Flex, Stack } from '@zoralabs/zord'
-import { Formik, FormikValues } from 'formik'
+import { Form, Formik, FormikValues } from 'formik'
 import React, { ReactElement } from 'react'
 
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
@@ -63,7 +63,7 @@ export function CustomTransactionForm<Values extends FormikValues>({
     >
       {(formik) => {
         return (
-          <Flex as={'div'} direction={'column'} w={'100%'}>
+          <Form>
             <Stack>
               {fields.map((f, i) => (
                 <FieldSwitch
@@ -95,15 +95,14 @@ export function CustomTransactionForm<Values extends FormikValues>({
               <Button
                 h={'x15'}
                 className={transactionFormButtonWithPrev}
-                type={'button'}
-                onClick={() => handleSubmit(formik.values)}
+                type={'submit'}
                 disabled={!isEmpty(formik.errors) || formik.isSubmitting}
                 onMouseDown={mouseDownEvent}
               >
                 Next
               </Button>
             </Flex>
-          </Flex>
+          </Form>
         )
       }}
     </Formik>
