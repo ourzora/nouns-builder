@@ -12,7 +12,7 @@ export const TwoColumnLayout: FC<CustomTransactionLayoutProps> = ({
   leftColumn,
   rightColumn,
 }) => {
-  const isMobile = useLayoutStore(state => state.isMobile)
+  const isMobile = useLayoutStore((state) => state.isMobile)
 
   return (
     <Box w={'100%'} mx={'auto'}>

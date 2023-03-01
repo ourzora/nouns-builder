@@ -40,7 +40,10 @@ export const SelectTransactionType: React.FC<SelectTransactionTypeProps> = ({
         target={'_blank'}
         className={atoms({ mb: 'x8' })}
       >
-        <TransactionTypeCard transactionType={TransactionType.NOUNS_CONNECT} />
+        <TransactionTypeCard
+          transactionType={TransactionType.NOUNS_CONNECT}
+          onClick={() => {}}
+        />
       </a>
       <AdminNav />
     </Stack>
