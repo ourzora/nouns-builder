@@ -48,7 +48,6 @@
     "lodash": "^4.17.21",
     "multiformats": "9.9.0",
     "next": "^13.0.3",
-    "next-transpile-modules": "^9.0.0",
     "raw-loader": "^4.0.2",
     "react": "^18.2.0",
     "react-content-loader": "^6.0.2",

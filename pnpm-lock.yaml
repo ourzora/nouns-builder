@@ -71,7 +71,6 @@ importers:
       lodash: ^4.17.21
       multiformats: 9.9.0
       next: ^13.0.3
-      next-transpile-modules: ^9.0.0
       raw-loader: ^4.0.2
       react: ^18.2.0
       react-content-loader: ^6.0.2
@@ -126,7 +125,6 @@ importers:
       lodash: 4.17.21
       multiformats: 9.9.0
       next: 13.1.6_pjwopsidmaokadturxaafygjp4
-      next-transpile-modules: 9.1.0
       raw-loader: 4.0.2_webpack@5.75.0
       react: 18.2.0
       react-content-loader: 6.2.0_react@18.2.0
@@ -12663,14 +12661,6 @@ packages:
 
   /neo-async/2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
-    dev: false
-
-  /next-transpile-modules/9.1.0:
-    resolution: {integrity: sha512-yzJji65xDqcIqjvx5vPJcs1M+MYQTzLM1pXH/qf8Q88ohx+bwVGDc1AeV+HKr1NwvMCNTpwVPSFI7cA5WdyeWA==}
-    deprecated: All features of next-transpile-modules are now natively built-in Next.js 13.1. Please use Next's transpilePackages option :)
-    dependencies:
-      enhanced-resolve: 5.12.0
-      escalade: 3.1.1
     dev: false
 
   /next/13.1.6_biqbaboplfbrettd7655fr4n2y:

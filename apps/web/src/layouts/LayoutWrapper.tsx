@@ -35,7 +35,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
     setIsMobile(window.innerWidth <= 768)
   }
 
-  //@ts-ignore isBlocked(signer?._address)
+  //@ts-ignore
   if (isBlocked(signer?._address)) return <Blocked />
 
   return <>{children}</>

@@ -20,7 +20,6 @@ module.exports = withTM({
 
 Then you can use the provided React hook to check an address against the block list.
 
-
 ```ts
 import { useBlocklist } from 'blocklist'
 
@@ -29,18 +28,18 @@ const { address } = useAccount()
 const isBlocked = useBlocklist(address)
 
 useEffect(() => {
-  if(isBlocked) {
+  if (isBlocked) {
     // do something
   }
 }, [isBlocked])
 ```
 
-There is also a simple imperative function to perform this check  synchronously.
+There is also a simple imperative function to perform this check synchronously.
 
 ```ts
 import { isBlocked } from 'blocklist'
 
-if(isBlocked('0x...')) {
+if (isBlocked('0x...')) {
   // do something
 }
 ```
