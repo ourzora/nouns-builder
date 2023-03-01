@@ -6,7 +6,7 @@ import { TransactionTypeIcon } from '../TransactionTypeIcon'
 
 interface TransactionTypeCardProps {
   transactionType: TransactionType
-  onClick: () => void
+  onClick?: () => void
 }
 
 const TransactionTypeCard: React.FC<TransactionTypeCardProps> = ({

@@ -15,6 +15,7 @@ export interface TransactionTypeProps {
   subTitle: string
   icon: IconType
   iconBackdrop: string
+  iconBorder?: boolean
 }
 
 export interface TransactionTypesPropsMap {
@@ -52,5 +53,6 @@ export const TRANSACTION_TYPES = {
       'Connect your DAO to create NFT collections, payment splits, transfer tokens and more',
     icon: 'nounsConnect',
     iconBackdrop: color.background1,
+    iconBorder: true
   },
 } as TransactionTypesPropsMap

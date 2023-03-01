@@ -1,8 +1,8 @@
-import { Flex, Stack, Text } from '@zoralabs/zord'
+import { Flex, Stack, Text, atoms } from '@zoralabs/zord'
 import React from 'react'
 
-import { TRANSACTION_TYPES, TransactionType } from '../../constants/transactionType'
-import { TransactionTypeIcon } from '../TransactionTypeIcon'
+import { TransactionType } from 'src/modules/create-proposal'
+
 import AdminNav from './AdminNav'
 import TransactionTypeCard from './TransactionTypeCard'
 
@@ -35,22 +35,12 @@ export const SelectTransactionType: React.FC<SelectTransactionTypeProps> = ({
         mt={'x4'}
         mb={'x4'}
       />
-      <a href={'https://www.nounsconnect.wtf/'} target={'_blank'}>
-        <Flex gap={'x4'} align={'center'} cursor={'pointer'} mb={'x8'}>
-          <TransactionTypeIcon
-            transactionType={TransactionType.NOUNS_CONNECT}
-            large
-            border
-          />
-          <Stack>
-            <Text variant={'label-lg'} mb={'x1'}>
-              {TRANSACTION_TYPES[TransactionType.NOUNS_CONNECT].title}
-            </Text>
-            <Text style={{ lineHeight: '24px' }}>
-              {TRANSACTION_TYPES[TransactionType.NOUNS_CONNECT].subTitle}
-            </Text>
-          </Stack>
-        </Flex>
+      <a
+        href={'https://www.nounsconnect.wtf/'}
+        target={'_blank'}
+        className={atoms({ mb: 'x8' })}
+      >
+        <TransactionTypeCard transactionType={TransactionType.NOUNS_CONNECT} />
       </a>
       <AdminNav />
     </Stack>
