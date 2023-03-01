@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 
-import { TransactionType } from '../../constants'
+import { TransactionType } from 'src/modules/create-proposal'
+
 import { Airdrop, CustomTransaction } from './forms'
 import SendEth from './forms/SendEth/SendEth'
 
@@ -24,7 +25,6 @@ export const TransactionForm = ({ type }: TransactionFormProps) => {
     [TransactionType.AIRDROP]: <Airdrop />,
     [TransactionType.SEND_ETH]: <SendEth />,
     [TransactionType.UPGRADE]: null,
-    [TransactionType.NOUNS_CONNECT]: null,
   }
 
   return <>{FORMS[type]}</>
