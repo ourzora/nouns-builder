@@ -1,7 +1,7 @@
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useAuctionContract } from 'src/hooks'
 import { useLayoutStore } from 'src/stores'
@@ -18,16 +18,21 @@ export const PreAuction = () => {
   const { query } = router
   const { signer } = useLayoutStore()
   const { contract: auctionContract } = useAuctionContract()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   /* handle start of auction  */
   const handleStartAuction = React.useCallback(async () => {
     if (!auctionContract || !signer) return
 
+    setIsLoading(true)
     try {
       const { wait } = await auctionContract.unpause()
       await wait()
+      setIsLoading(false)
     } catch (e) {
       console.error(e)
+      setIsLoading(false)
+      return
     }
 
     const auction = await auctionContract.auction()
@@ -39,6 +44,8 @@ export const PreAuction = () => {
     <Flex className={wrapper}>
       <Flex direction={'column'} justify={'center'} className={preAuctionWrapper}>
         <Button
+          disabled={isLoading}
+          loading={isLoading}
           onClick={handleStartAuction}
           className={preAuctionButtonVariants['start']}
         >

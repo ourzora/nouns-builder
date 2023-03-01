@@ -8,6 +8,7 @@ import { useDaoStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
 import { DefaultLayout } from './DefaultLayout'
+import { LayoutWrapper } from './LayoutWrapper'
 
 function DaoLayout({ children }: { children: ReactNode }) {
   const {
@@ -43,8 +44,10 @@ function DaoLayout({ children }: { children: ReactNode }) {
 
 export function getDaoLayout(page: ReactElement) {
   return (
-    <DefaultLayout>
-      <DaoLayout>{page}</DaoLayout>
-    </DefaultLayout>
+    <LayoutWrapper>
+      <DefaultLayout>
+        <DaoLayout>{page}</DaoLayout>
+      </DefaultLayout>
+    </LayoutWrapper>
   )
 }
