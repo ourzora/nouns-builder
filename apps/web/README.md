@@ -20,29 +20,26 @@ Nouns Builder is built on Nextjs and the following dependencies:
 
 The app is mostly organised by function and for the larger areas of concern there are specific modules that group by domain. Grouping by modules enables tightly coupled components, hooks, utils, constants, etc to be co-located.
 
-`components`
-`constants`
-`hooks`
-`layouts`
-`pages`
-`services`
-`stores`
-`styles`
-`test`
-`typings`
-`utils`
-`data` - network requests
-
-- `graphql` - generated sdk, queries, fragements, and data transformation helpers
-- `contract` - generated abis, contract reads, and data transformation helpers
-
-`modules`
-
-- `auction` - a given token auction
-- `create-dao` - create a dao
-- `create-proposal` - create a proposal
-- `dao` - dao entity related (dao activity, dao feed, explore daos)
-- `proposal` - proposal entity related
+- `components` - shared components
+- `constants` - shared constants
+- `hooks` - shared hooks
+- `layouts` - page layouts and associated components
+- `pages` - nextjs page and api routes
+- `services` - api route services
+- `stores` - shared zustand stores
+- `styles`
+- `test` - test setup and utilities
+- `typings` - shared global types
+- `utils` - shared utilities
+- `data` - network requests
+  - `graphql` - generated sdk, queries, fragements, and data transformation helpers
+  - `contract` - generated abis, contract reads, and data transformation helpers
+- `modules`
+  - `auction` - a given token auction
+  - `create-dao` - create a dao flow
+  - `create-proposal` - create a proposal flow
+  - `dao` - dao entity related components, hooks, stores, etc.
+  - `proposal` - proposal entity related components, hooks, stores, etc.
 
 ### Writing Tests
 
@@ -71,7 +68,7 @@ describe('test', () => {
 })
 ```
 
-### Generating typed queries
+### Generating typed graphql queries
 
 We use [graphql-codegen](https://www.the-guild.dev/graphql/codegen) to generate typed queries for graphql-request based off of the Zora [api schema](https://api.zora.co/graphql). All queries are defined under `src/data/graphql/queries/` and auto-generated to `src/data/graphql/sdk.generated.ts`. The codegen config is defined in `codegen.yml`.
 
@@ -106,8 +103,12 @@ Note: If you use vscode, it might also be helfpul to install the vscode plugin f
 
 ### Styling
 
-TBD
+Nouns Builder relies on vanilla extract for styles. We use a combination of Zord and custom styles where needed. You can reference the `Styling with Zord` section in the [Zord README](/packages/zoralabs-zord/README.md) on how best to use Zord.
 
-ZORD
-Vanilla Extract
-Atoms
+We recommend that styles are applied via Zord in-line utilities firstly, and if needed, you can add
+
+> Note: The `styles` folder contains legacy styles and we recommend that if a style sheet is added, then it is coupled with the component.
+
+### ESLint & Prettier
+
+We use [Husky](https://github.com/typicode/husky) to run ESLint and prettier formatting on pre-push. Please ensure any changes you introduce do not add any further lint warnings.
