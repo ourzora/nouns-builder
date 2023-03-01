@@ -1,7 +1,7 @@
 import { Box, Grid } from '@zoralabs/zord'
 import { FC, ReactNode } from 'react'
 
-import { useLayoutStore } from 'src/stores'
+import { twoColumnLayout } from './TwoColumnLayout.css'
 
 interface CustomTransactionLayoutProps {
   leftColumn?: ReactNode
@@ -12,13 +12,14 @@ export const TwoColumnLayout: FC<CustomTransactionLayoutProps> = ({
   leftColumn,
   rightColumn,
 }) => {
-  const isMobile = useLayoutStore((state) => state.isMobile)
-
-  console.log('is', isMobile)
   return (
     <Box w={'100%'} mx={'auto'}>
       <Box>
-        <Grid columns={`repeat(2, minmax(0, 1fr))`} justify={'space-between'} gap={'x16'}>
+        <Grid
+          justify={'space-between'}
+          gap={'x16'}
+          className={twoColumnLayout}
+        >
           {leftColumn && <Box w={'100%'}>{leftColumn}</Box>}
           {rightColumn && <Box w={'100%'}>{rightColumn}</Box>}
         </Grid>
