@@ -20,6 +20,7 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
     setFulfilledSections,
     activeSection,
     setActiveSection,
+    ipfsUpload,
     isUploadingToIPFS,
   } = useFormStore()
 
@@ -104,7 +105,10 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
               minH={'x15'}
               type="submit"
               disabled={
-                !isEmpty(formik.errors) || formik.isSubmitting || isUploadingToIPFS
+                !isEmpty(formik.errors) ||
+                formik.isSubmitting ||
+                isUploadingToIPFS ||
+                ipfsUpload.length === 0
               }
             >
               Continue
