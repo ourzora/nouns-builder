@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
+import { TransactionType } from '../../constants'
 
-import { TransactionType } from 'src/modules/create-proposal'
 
 import { Airdrop, CustomTransaction } from './forms'
 import SendEth from './forms/SendEth/SendEth'
