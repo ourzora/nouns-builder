@@ -7,7 +7,6 @@ export enum TransactionType {
   AIRDROP = 'airdrop',
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
-  NOUNS_CONNECT = 'nouns-connect',
 }
 
 export interface TransactionTypeProps {
@@ -46,13 +45,5 @@ export const TRANSACTION_TYPES = {
     subTitle: 'Create any other kind of transaction',
     icon: 'plus',
     iconBackdrop: color.ghostHover,
-  },
-  [TransactionType.NOUNS_CONNECT]: {
-    title: 'Use NounsConnect',
-    subTitle:
-      'Connect your DAO to create NFT collections, payment splits, transfer tokens and more',
-    icon: 'nounsConnect',
-    iconBackdrop: color.background1,
-    iconBorder: true,
   },
 } as TransactionTypesPropsMap

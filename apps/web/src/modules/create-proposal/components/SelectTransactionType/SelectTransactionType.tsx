@@ -1,9 +1,10 @@
-import { Flex, Stack, Text, atoms } from '@zoralabs/zord'
+import { Flex, Stack, Text } from '@zoralabs/zord'
 import React from 'react'
 
 import { TransactionType } from 'src/modules/create-proposal'
 
 import AdminNav from './AdminNav'
+import { NounsConnect } from './NounsConnect'
 import TransactionTypeCard from './TransactionTypeCard'
 
 interface SelectTransactionTypeProps {
@@ -35,16 +36,7 @@ export const SelectTransactionType: React.FC<SelectTransactionTypeProps> = ({
         mt={'x4'}
         mb={'x4'}
       />
-      <a
-        href={'https://www.nounsconnect.wtf/'}
-        target={'_blank'}
-        className={atoms({ mb: 'x8' })}
-      >
-        <TransactionTypeCard
-          transactionType={TransactionType.NOUNS_CONNECT}
-          onClick={() => {}}
-        />
-      </a>
+      <NounsConnect />
       <AdminNav />
     </Stack>
   )

@@ -7,13 +7,11 @@ import { TRANSACTION_TYPES, TransactionType } from '../constants'
 interface TransactionTypeIconProps {
   transactionType: TransactionType
   large?: boolean
-  iconBorder?: boolean
 }
 
 export const TransactionTypeIcon: React.FC<TransactionTypeIconProps> = ({
   transactionType,
   large,
-  iconBorder,
 }) => {
   return (
     <Flex
@@ -26,9 +24,6 @@ export const TransactionTypeIcon: React.FC<TransactionTypeIconProps> = ({
       my={'x4'}
       minH={large ? 'x13' : 'x10'}
       minW={large ? 'x13' : 'x10'}
-      borderWidth={iconBorder ? 'normal' : 'none'}
-      borderStyle={iconBorder ? 'solid' : undefined}
-      borderColor={iconBorder ? 'ghostHover' : 'transparent'}
     >
       <Icon id={TRANSACTION_TYPES[transactionType].icon} fill={'transparent'} />
     </Flex>
