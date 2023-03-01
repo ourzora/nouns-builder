@@ -18,7 +18,7 @@ const TransactionTypeCard: React.FC<TransactionTypeCardProps> = ({
       <TransactionTypeIcon
         transactionType={transactionType}
         large
-        iconBorder={TRANSACTION_TYPES[transactionType].iconBorder}
+        iconBorder={TRANSACTION_TYPES[transactionType]?.iconBorder}
       />
       <Stack>
         <Text variant={'label-lg'} mb={'x1'}>
