@@ -641,7 +641,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
       {((uploadArtworkError || ipfsUploadError) && (
         <Box py={'x4'} className={uploadErrorBox}>
           {ipfsUploadError && (
-            <Box>There was an issue uploading to ipfs. Please try again.</Box>
+            <Box>There was an issue uploading your files to ipfs. Please try again.</Box>
           )}
 
           <Box as={'ul'} m={'x0'}>
