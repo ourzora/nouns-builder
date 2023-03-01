@@ -7,12 +7,10 @@ import { CustomTransaction } from './CustomTransaction'
 import { PauseAuctions } from './PauseAuctions'
 import { SendEth } from './SendEth'
 
-type TransactionFormType = {
-  [key in TransactionType]: ReactNode
-}
+export type TransactionFormType = typeof TRANSACTION_FORM_OPTIONS[number]
 
 interface TransactionFormProps {
-  type: TransactionType
+  type: TransactionFormType
 }
 
 export const TRANSACTION_FORM_OPTIONS = [
@@ -20,15 +18,14 @@ export const TRANSACTION_FORM_OPTIONS = [
   TransactionType.AIRDROP,
   TransactionType.PAUSE_AUCTIONS,
   TransactionType.CUSTOM,
-]
+] as const
 
 export const TransactionForm = ({ type }: TransactionFormProps) => {
-  const FORMS: TransactionFormType = {
+  const FORMS: { [key in TransactionFormType]: ReactNode } = {
     [TransactionType.CUSTOM]: <CustomTransaction />,
     [TransactionType.AIRDROP]: <Airdrop />,
     [TransactionType.SEND_ETH]: <SendEth />,
     [TransactionType.PAUSE_AUCTIONS]: <PauseAuctions />,
-    [TransactionType.UPGRADE]: null,
   }
 
   return <>{FORMS[type]}</>
