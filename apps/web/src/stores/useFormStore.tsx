@@ -89,14 +89,7 @@ const initialState = {
     externalUrl: '',
     filesLength: '',
   },
-  ipfsUpload: [
-    {
-      name: '',
-      webkitRelativePath: '',
-      ipfs: null,
-      trait: '',
-    },
-  ],
+  ipfsUpload: [],
   orderedLayers: [],
   isUploadingToIPFS: false,
   activeSectionCurrentIndex: 0,

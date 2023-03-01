@@ -324,6 +324,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
         setIpfsUpload(ipfs)
         setIsUploadingToIPFS(false)
       } catch (err) {
+        setIpfsUpload([])
         setIsUploadingToIPFS(false)
         Sentry.captureException(err)
         await Sentry.flush(2000)

@@ -40,6 +40,7 @@ interface ReviewAndDeploy {
 }
 
 const DEPLOYMENT_ERROR = {
+  MISSING_IPFS_ARTWORK: `Oops! It looks like your artwork wasn't correctly uploaded to ipfs. Please go back to the artwork step to re-upload your artwork before proceeding.`,
   MISMATCHING_SIGNER:
     'Oops! It looks like the founder address submitted is different than the current signer address. Please go back to the allocation step and re-submit the founder address.',
   NO_FOUNDER:
@@ -64,7 +65,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     fulfilledSections,
     deployedDao,
     setDeployedDao,
-    isUploadingToIPFS,
+    ipfsUpload,
     setFulfilledSections,
     vetoPower,
   } = useFormStore()
@@ -137,6 +138,11 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
     if (founderParams.length === 0) {
       setDeploymentError(DEPLOYMENT_ERROR.NO_FOUNDER)
+      return
+    }
+
+    if (ipfsUpload.length === 0) {
+      setDeploymentError(DEPLOYMENT_ERROR.MISSING_IPFS_ARTWORK)
       return
     }
 
@@ -308,9 +314,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
               <Button
                 onClick={handleDeploy}
                 w={'100%'}
-                disabled={
-                  isUploadingToIPFS || !signer || !hasConfirmed || isPendingTransaction
-                }
+                disabled={!signer || !hasConfirmed || isPendingTransaction}
                 className={
                   deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']
                 }
