@@ -15,11 +15,7 @@ export const TwoColumnLayout: FC<CustomTransactionLayoutProps> = ({
   return (
     <Box w={'100%'} mx={'auto'}>
       <Box>
-        <Grid
-          justify={'space-between'}
-          gap={'x16'}
-          className={twoColumnLayout}
-        >
+        <Grid justify={'space-between'} gap={'x16'} className={twoColumnLayout}>
           {leftColumn && <Box w={'100%'}>{leftColumn}</Box>}
           {rightColumn && <Box w={'100%'}>{rightColumn}</Box>}
         </Grid>

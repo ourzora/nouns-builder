@@ -7,7 +7,7 @@ query activeAuctions($chain: Chain!) {
       filter: { nounsMarketType: NOUNS_BUILDER_AUCTION, status: ACTIVE }
     ) {
       nodes {
-        ...Auct ion
+        ...Auction
       }
     }
   }
