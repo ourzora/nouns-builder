@@ -15,7 +15,11 @@ const TransactionTypeCard: React.FC<TransactionTypeCardProps> = ({
 }) => {
   return (
     <Flex gap={'x4'} align={'center'} onClick={onClick} cursor={'pointer'}>
-      <TransactionTypeIcon transactionType={transactionType} large />
+      <TransactionTypeIcon
+        transactionType={transactionType}
+        large
+        iconBorder={TRANSACTION_TYPES[transactionType].iconBorder}
+      />
       <Stack>
         <Text variant={'label-lg'} mb={'x1'}>
           {TRANSACTION_TYPES[transactionType].title}
