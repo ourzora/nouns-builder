@@ -75,7 +75,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const transactions = React.useMemo(() => {
     if (!orderedLayers || !ipfsUpload) return
 
-    return transformFileProperties(orderedLayers, ipfsUpload, 2)
+    return transformFileProperties(orderedLayers, ipfsUpload, 500)
   }, [orderedLayers, ipfsUpload])
 
   const handleDeployMetadata = async () => {
