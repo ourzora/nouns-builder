@@ -1,8 +1,11 @@
+import { isBlocked } from 'blocklist'
 import React, { ReactNode } from 'react'
 import { useSigner } from 'wagmi'
 
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { getProvider } from 'src/utils/provider'
+
+import { Blocked } from './Blocked'
 
 export function LayoutWrapper({ children }: { children: ReactNode }) {
   const { data: signer, status } = useSigner()
@@ -31,6 +34,9 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768)
   }
+
+  //@ts-ignore isBlocked(signer?._address)
+  if (isBlocked(signer?._address)) return <Blocked />
 
   return <>{children}</>
 }
