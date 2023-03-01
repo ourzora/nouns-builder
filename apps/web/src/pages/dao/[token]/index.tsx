@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import React from 'react'
+import { useAccount } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
@@ -19,10 +20,9 @@ import {
   SmartContracts,
 } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { useLayoutStore } from 'src/stores'
 
 const DaoPage: NextPageWithLayout = () => {
-  const { signerAddress } = useLayoutStore()
+  const { address: signerAddress } = useAccount()
   const { owner } = useAuctionContract()
 
   const sections = [

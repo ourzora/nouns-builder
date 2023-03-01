@@ -159,15 +159,22 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
     const managerInterface = new ethers.utils.Interface(managerAbi)
 
-    const deployedAddresses = transaction?.logs
-      .map((log) => {
-        let parsed
-        try {
-          parsed = managerInterface.parseLog({ topics: log.topics, data: log.data })
-        } catch {}
-        return parsed
+    //keccak256 hashed value of DAODeployed(address,address,address,address,address)
+    const deployEvent = transaction?.logs.find(
+      (log) =>
+        log?.topics[0]?.toLowerCase() ===
+        '0x456d2baf5a87d70e586ec06fb91c2d7849778dd41d80fa826a6ea5bf8d28e3a6'
+    )
+
+    let parsedEvent
+    try {
+      parsedEvent = managerInterface.parseLog({
+        topics: deployEvent?.topics || [],
+        data: deployEvent?.data || '',
       })
-      .find((parsedLog) => parsedLog?.name === 'DAODeployed')?.args
+    } catch {}
+
+    const deployedAddresses = parsedEvent?.args
 
     if (!deployedAddresses) {
       setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
@@ -301,7 +308,9 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
               <Button
                 onClick={handleDeploy}
                 w={'100%'}
-                disabled={isUploadingToIPFS || !signer || !hasConfirmed}
+                disabled={
+                  isUploadingToIPFS || !signer || !hasConfirmed || isPendingTransaction
+                }
                 className={
                   deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']
                 }
