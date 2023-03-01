@@ -14,6 +14,7 @@ export const TwoColumnLayout: FC<CustomTransactionLayoutProps> = ({
 }) => {
   const isMobile = useLayoutStore((state) => state.isMobile)
 
+  console.log('is', isMobile)
   return (
     <Box w={'100%'} mx={'auto'}>
       <Box>
