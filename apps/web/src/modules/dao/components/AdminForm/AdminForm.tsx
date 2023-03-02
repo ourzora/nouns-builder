@@ -63,7 +63,7 @@ export const AdminForm: React.FC<AdminFormProps> = () => {
     address: addresses.auction,
   }
 
-  const { data, isLoading } = useContractReads({
+  const { data } = useContractReads({
     contracts: [
       { ...auctionContractParams, functionName: 'duration' },
       { ...auctionContractParams, functionName: 'reservePrice' },
