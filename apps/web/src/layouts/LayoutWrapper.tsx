@@ -1,9 +1,14 @@
+import { Box, Stack } from '@zoralabs/zord'
+import { isBlocked } from 'blocklist'
 import React, { ReactNode } from 'react'
 import { useSigner } from 'wagmi'
 
+import { Skull } from 'src/components/Skull'
 import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { getProvider } from 'src/utils/provider'
+
+import { DefaultLayout } from './DefaultLayout'
 
 export function LayoutWrapper({ children }: { children: ReactNode }) {
   const { data: signer, status } = useSigner()
@@ -32,6 +37,17 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768)
   }
+
+  //@ts-ignore
+  if (isBlocked(signer?._address))
+    return (
+      <DefaultLayout>
+        <Stack align={'center'} py={'x32'}>
+          <Skull />
+          <Box>Access Denied</Box>
+        </Stack>
+      </DefaultLayout>
+    )
 
   return <>{children}</>
 }
