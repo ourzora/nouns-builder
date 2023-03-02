@@ -4,10 +4,11 @@ import React from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { about } from 'src/styles/About.css'
 import { walletSnippet } from 'src/utils/helpers'
+
+import { useDaoStore } from '../stores'
 
 const ContractLink = ({ title, address }: { title: string; address?: string }) => {
   const { isMobile } = useLayoutStore()
