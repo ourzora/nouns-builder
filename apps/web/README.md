@@ -105,9 +105,51 @@ Note: If you use vscode, it might also be helfpul to install the vscode plugin f
 
 Nouns Builder relies on vanilla extract for styles. We use a combination of Zord and custom styles where needed. You can reference the `Styling with Zord` section in the [Zord README](/packages/zoralabs-zord/README.md) on how best to use Zord.
 
-We recommend that styles are applied via Zord in-line utilities firstly, and if needed, you can add
+> Note: The `styles` folder contains legacy page style sheets, going forward only any globally applied styles should be further added there.
 
-> Note: The `styles` folder contains legacy styles and we recommend that if a style sheet is added, then it is coupled with the component.
+Styles should be firstly be applied via Zord in-line utilities (Box, Flex, Grid, etc). If further styles are needed (ie pseudo-class selectors, pseudo-element selectors), then styles can be applied via `className` and should be co-located with the relevant component.
+
+### Contract Versioning
+
+The abis used should always be based off of the latest release of [the Nouns Builder protocol](https://github.com/ourzora/nouns-protocol/releases). When the latest available `contractVersion` is upgraded on the contract level, the front-end needs to reflect to the new available versions accordingly.
+
+> Note: Protocol upgrades are always additive and non-breaking changes.
+
+> Note: The following changes should happen prior to upgrade the Builder manager contract version.
+
+##### To reflect these changes:
+
+Bump the nouns-protocol package version in `package.json` to the latest release
+
+```
+"@zoralabs/nouns-protocol": "1.2.0",
+```
+
+Re-generate the abis once the updates are installed
+
+```
+pnpm run generate-abis
+```
+
+Add the version [release notes](https://github.com/ourzora/nouns-protocol/releases) in `versions` for the upgrade proposal for a given version.
+
+```
+![](https://i.imgur.com/HrQKZMG.png)
+
+## Summary
+This proposal upgrades the DAO to V1.x.0 to add several features, improvements and bug fixes.
+
+### Feature 1
+Etc
+```
+
+Add version number to the constants
+
+```
+export const versions = ['1.1.0', '1.2.0', '1.x.0'] as const
+```
+
+The upgrade card feature will automatically pick up these upgrades and make them available once the contract versions are upgrade on the builer manager contract.
 
 ### ESLint & Prettier
 

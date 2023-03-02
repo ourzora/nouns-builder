@@ -1,18 +1,15 @@
-## Problem
+## Description
 
-Describe what initiated this change.
+<!--- Describe your changes. -->
 
-## Solution
+## Motivation & context
 
-Describe the proposed solution.
-
-## Risks
-
-Are there open questions, risks or edge cases to watch for?
+<!--- Why is this change required? What problem does it solve? -->
+<!--- If it fixes an open issue, please link to the issue here. -->
 
 ## Code review
 
-Any notes for code review?
+<!--- Any notes for code review? -->
 
 ## Type of change
 
