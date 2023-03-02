@@ -24,30 +24,30 @@ export const SendEth = () => {
     amount: 0,
   }
 
-  const handleSubmit = useCallback(
-    async (values: SendEthValues, actions: FormikHelpers<SendEthValues>) => {
-      if (!values.amount || !values.recipientAddress) return
+  const handleSubmit = async (
+    values: SendEthValues,
+    actions: FormikHelpers<SendEthValues>
+  ) => {
+    if (!values.amount || !values.recipientAddress) return
 
-      const target = await getEnsAddress(values.recipientAddress, getProvider())
-      const value = values.amount.toString()
+    const target = await getEnsAddress(values.recipientAddress, getProvider())
+    const value = values.amount.toString()
 
-      addTransaction({
-        type: TransactionType.SEND_ETH,
-        summary: `Send ${value} ETH to ${walletSnippet(target)}`,
-        transactions: [
-          {
-            functionSignature: 'sendEth(address)',
-            target: ethers.utils.getAddress(target),
-            value,
-            calldata: '0x',
-          },
-        ],
-      })
+    addTransaction({
+      type: TransactionType.SEND_ETH,
+      summary: `Send ${value} ETH to ${walletSnippet(target)}`,
+      transactions: [
+        {
+          functionSignature: 'sendEth(address)',
+          target: ethers.utils.getAddress(target),
+          value,
+          calldata: '0x',
+        },
+      ],
+    })
 
-      actions.resetForm()
-    },
-    []
-  )
+    actions.resetForm()
+  }
 
   return (
     <Box w={'100%'}>
