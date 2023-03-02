@@ -23,43 +23,6 @@ export const NavWrapper = style([
   },
 ])
 
-export const navBorderBox = style([
-  atoms({
-    borderRadius: 'curved',
-    borderColor: 'tertiary',
-    borderWidth: 'normal',
-    px: 'x4',
-    ml: 'x4',
-  }),
-  {
-    border: '2px solid #F2F2F2',
-  },
-])
-
-export const networkButton = style([
-  atoms({
-    display: 'flex',
-    flexDirection: 'row',
-    width: '100%',
-    p: 'x2',
-    my: 'x1',
-    alignItems: 'center',
-    borderColor: 'transparent',
-    borderRadius: 'curved',
-    cursor: 'pointer',
-  }),
-  {
-    selectors: {
-      '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      },
-      '&:hover:disabled': {
-        backgroundColor: 'rgba(255, 0, 0, 0.1)',
-      },
-    },
-  },
-])
-
 export const navButton = style({
   selectors: {
     '&[data-active="true"]': {
@@ -122,14 +85,6 @@ export const navMenuBurger = style([
   },
 ])
 
-export const overflowNavButton = style({
-  selectors: {
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
-
 export const disconnectButton = style([
   atoms({
     cursor: 'pointer',
@@ -145,47 +100,6 @@ export const disconnectButton = style([
     color: 'red',
   },
 ])
-
-export const uploadNotificationWrapper = style({
-  '@media': {
-    '(max-width: 768px)': {
-      background: '#fff',
-      bottom: 0,
-      paddingTop: 5,
-      paddingBottom: 5,
-    },
-  },
-})
-
-export const mobileNav = style({
-  width: 240,
-  fontWeight: 700,
-})
-
-export const menuButtonLine = style([
-  atoms({ backgroundColor: 'primary' }),
-  {
-    borderRadius: 12,
-    display: 'block',
-    height: 2,
-    width: '1rem',
-  },
-])
-
-export const menuButton = style({
-  height: 32,
-  backgroundColor: 'transparent',
-  marginLeft: '0.5rem',
-  selectors: {
-    '&[data-toggled="true"]': {
-      backgroundColor: 'initial',
-    },
-  },
-})
-
-export const mobileMenuWrapper = style({
-  borderRadius: 12,
-})
 
 export const footerLink = style([
   atoms({

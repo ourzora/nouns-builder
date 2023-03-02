@@ -23,6 +23,7 @@ import Globe from './assets/globe.svg'
 import HandlebarCircle from './assets/handlebar-circle.svg'
 import Move from './assets/move.svg'
 import NewWindow from './assets/new-window.svg'
+import NounsConnect from './assets/nouns-connect.svg'
 import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
 import Trash from './assets/trash.svg'
@@ -55,6 +56,7 @@ export const icons = {
   globe: Globe,
   move: Move,
   newWindow: NewWindow,
+  nounsConnect: NounsConnect,
   plus: Plus,
   refresh: Refresh,
   trash: Trash,
