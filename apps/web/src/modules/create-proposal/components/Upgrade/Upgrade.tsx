@@ -4,8 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import React from 'react'
 
-import { DaoContractAddresses } from 'src/typings'
-
+import { DaoContractAddresses } from '../../../dao'
 import { useAvailableUpgrade } from '../../hooks'
 import { useProposalStore } from '../../stores'
 import { UpgradeCard } from '../UpgradeCard'

@@ -34,7 +34,7 @@ const LegalPage: NextPageWithLayout = () => {
               </Text>
               <Text display="inline">
                 ) and Nouns Connect (
-                <Text as="a" display="inline" href="https://nouns.build">
+                <Text as="a" display="inline" href="https://www.nounsconnect.wtf/">
                   https://www.nounsconnect.wtf/
                 </Text>
                 ), collectively a hosted user interface (the “Interface” or “App”) offered

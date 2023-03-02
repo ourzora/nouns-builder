@@ -7,12 +7,8 @@ import {
   AuctionSettingsFormValues,
   GeneralFormValues,
 } from 'src/modules/create-dao'
-import {
-  DaoContractAddresses,
-  IPFSUpload,
-  OrderedLayersProps,
-  TokenAllocation,
-} from 'src/typings'
+import { DaoContractAddresses } from 'src/modules/dao'
+import { IPFSUpload, OrderedLayersProps, TokenAllocation } from 'src/typings'
 import { yearsAhead } from 'src/utils/helpers'
 
 export interface FormStoreState {
@@ -89,14 +85,7 @@ const initialState = {
     externalUrl: '',
     filesLength: '',
   },
-  ipfsUpload: [
-    {
-      name: '',
-      webkitRelativePath: '',
-      ipfs: null,
-      trait: '',
-    },
-  ],
+  ipfsUpload: [],
   orderedLayers: [],
   isUploadingToIPFS: false,
   activeSectionCurrentIndex: 0,

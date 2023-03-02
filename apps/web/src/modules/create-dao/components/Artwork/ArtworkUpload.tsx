@@ -52,10 +52,10 @@ interface ArtworkFormProps {
 }
 
 interface ArtworkUploadError {
-  maxTraits?: string | null
-  mime?: string | null
-  directory?: string | null
-  dimensions?: string | null
+  maxTraits?: string
+  mime?: string
+  directory?: string
+  dimensions?: string
 }
 
 export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
@@ -77,6 +77,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
   const [uploadArtworkError, setUploadArtworkError] = useState<
     ArtworkUploadError | undefined
   >()
+  const [ipfsUploadError, setIpfsUploadError] = useState<boolean>(false)
 
   const { artwork } = setUpArtwork
 
@@ -317,13 +318,17 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
     if (!filesArray || !!uploadArtworkError) return
 
     const handleUpload = async (filesArray: File[]) => {
+      setIpfsUploadError(false)
       const files = filesArray.filter((file) => file.name !== '.DS_Store')
+
       try {
         setIsUploadingToIPFS(true)
         const ipfs = await uploadToIPFS(files)
         setIpfsUpload(ipfs)
         setIsUploadingToIPFS(false)
       } catch (err) {
+        setIpfsUpload([])
+        setIpfsUploadError(true)
         setIsUploadingToIPFS(false)
         Sentry.captureException(err)
         await Sentry.flush(2000)
@@ -633,13 +638,17 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
           }}
         />
       </div>
-      {(uploadArtworkError && (
-        <Box p={'x4'} fontSize={12} className={uploadErrorBox}>
+      {((uploadArtworkError || ipfsUploadError) && (
+        <Box py={'x4'} className={uploadErrorBox}>
+          {ipfsUploadError && (
+            <Box>There was an issue uploading your files to ipfs. Please try again.</Box>
+          )}
+
           <Box as={'ul'} m={'x0'}>
-            {uploadArtworkError.maxTraits && <li>{uploadArtworkError.maxTraits}</li>}
-            {uploadArtworkError.mime && <li>{uploadArtworkError.mime}</li>}
-            {uploadArtworkError.directory && <li>{uploadArtworkError.directory}</li>}
-            {uploadArtworkError.dimensions && <li>{uploadArtworkError.dimensions}</li>}
+            {uploadArtworkError?.maxTraits && <li>{uploadArtworkError.maxTraits}</li>}
+            {uploadArtworkError?.mime && <li>{uploadArtworkError.mime}</li>}
+            {uploadArtworkError?.directory && <li>{uploadArtworkError.directory}</li>}
+            {uploadArtworkError?.dimensions && <li>{uploadArtworkError.dimensions}</li>}
           </Box>
         </Box>
       )) ||

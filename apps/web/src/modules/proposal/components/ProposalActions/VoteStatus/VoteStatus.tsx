@@ -4,7 +4,8 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useContractEvent } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
+import { useLayoutStore } from 'src/stores'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 import { ProposalStatus, ProposalVote, Support } from 'src/typings'
 

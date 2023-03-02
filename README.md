@@ -2,8 +2,10 @@
 
 This is Nouns Builder front-end mono-repo. You can find Nouns Builder deployed on:
 
-[Mainnet](nous.build)
-[Testnet](testnet.nouns.build)
+- [Mainnet](nous.build)
+- [Testnet](testnet.nouns.build)
+
+For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://docs.zora.co/docs/smart-contracts/nouns-builder/intro). You can also find the [contract code here](https://github.com/ourzora/nouns-protocol).
 
 ### Apps and packages in this repository include:
 
@@ -21,15 +23,17 @@ This is Nouns Builder front-end mono-repo. You can find Nouns Builder deployed o
 
 ## Quickstart
 
-- Clone this repo
+- Clone this repo locally
 - [Install pnpm](https://pnpm.io/installation#using-corepack)
 - Run `pnpm i` to install dependencies for all projects
-- Install [anvil via foundryup](https://github.com/foundry-rs/foundry/blob/master/README.md#installation)
+- Add the necessary environment variables to your `.env.local` as defined below
 - Run `pnpm dev` to start watching and building
 
 ## Environment variables
 
-This app has several third party api keys that you need in order to run Builder. We ask that you supply your own secrets locally for running in development environment.
+This app has several third party api keys that you need in order to run Builder. We ask that you supply your own secrets locally for running in development environment. Non-secret environment variables are already included in the `.env` files in this repo.
+
+You can add the following variables to a `.env.local` file.
 
 ```
 #alchemy
@@ -55,7 +59,7 @@ TENDERLY_USER=
 
 ## Running tests
 
-**Note**: To run tests you need to [install anvil](https://github.com/foundry-rs/foundry/tree/master/anvil).
+> Note: to run tests you need to [install anvil](https://github.com/foundry-rs/foundry/blob/master/README.md#installation).
 
 Once anvil is installed, you can now locally run anvil (from the root directory in the monorepo) in a separate terminal session to start a local ethereum node:
 `pnpm run anvil`
@@ -68,7 +72,7 @@ You can also run the tests in watchmode, which will react to any source code or 
 
 ## Contributions
 
-TBD
+Please refer to our [contributions guideline](/.github/contributing.md) on how best to contribute.
 
 ## Community
 

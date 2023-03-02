@@ -9,7 +9,7 @@ import { getFetchableUrl } from 'ipfs-service'
 import React, { useState } from 'react'
 import { useSigner } from 'wagmi'
 
-import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
+import { defaultBackButton } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
@@ -40,6 +40,7 @@ interface ReviewAndDeploy {
 }
 
 const DEPLOYMENT_ERROR = {
+  MISSING_IPFS_ARTWORK: `Oops! It looks like your artwork wasn't correctly uploaded to ipfs. Please go back to the artwork step to re-upload your artwork before proceeding.`,
   MISMATCHING_SIGNER:
     'Oops! It looks like the founder address submitted is different than the current signer address. Please go back to the allocation step and re-submit the founder address.',
   NO_FOUNDER:
@@ -64,7 +65,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     fulfilledSections,
     deployedDao,
     setDeployedDao,
-    isUploadingToIPFS,
+    ipfsUpload,
     setFulfilledSections,
     vetoPower,
   } = useFormStore()
@@ -137,6 +138,11 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
     if (founderParams.length === 0) {
       setDeploymentError(DEPLOYMENT_ERROR.NO_FOUNDER)
+      return
+    }
+
+    if (ipfsUpload.length === 0) {
+      setDeploymentError(DEPLOYMENT_ERROR.MISSING_IPFS_ARTWORK)
       return
     }
 
@@ -301,16 +307,14 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 minH={'x15'}
                 minW={'x15'}
                 onClick={() => handlePrev()}
-                className={defaultBackButtonVariants['default']}
+                className={defaultBackButton}
               >
                 <Icon id="arrowLeft" />
               </Flex>
               <Button
                 onClick={handleDeploy}
                 w={'100%'}
-                disabled={
-                  isUploadingToIPFS || !signer || !hasConfirmed || isPendingTransaction
-                }
+                disabled={!signer || !hasConfirmed || isPendingTransaction}
                 className={
                   deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']
                 }

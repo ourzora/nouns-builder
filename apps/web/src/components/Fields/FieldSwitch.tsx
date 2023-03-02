@@ -1,11 +1,6 @@
 import { FormikProps } from 'formik'
 import React, { BaseSyntheticEvent, ReactElement, ReactNode } from 'react'
 
-import { ArtworkUpload } from 'src/modules/create-dao'
-
-import SingleImageUpload from '../SingleImageUpload/SingleImageUpload'
-import AdminVetoInput from './AdminVetoInput'
-import AdminVetoRadio from './AdminVetoRadio'
 import Date from './Date'
 import DaysHoursMins from './DaysHoursMins'
 import DaysHoursMinsSecs from './DaysHoursMinsSecs'
@@ -14,16 +9,12 @@ import Select from './Select'
 import SmartInput from './SmartInput'
 import TextArea from './TextArea'
 import {
-  ADMIN_VETO_INPUT,
-  ADMIN_VETO_RADIO,
-  ARTWORK,
   DATE,
   DAYS_HOURS_MINS,
   DAYS_HOURS_MINS_SECS,
   MINS_SECS,
   NUMBER,
   SELECT,
-  SINGLE_IMAGE_UPLOAD,
   TEXT,
   TEXTAREA,
 } from './types'
@@ -72,23 +63,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
   }
 
   switch (field.type) {
-    case ARTWORK:
-      return (
-        <ArtworkUpload
-          {...formik.getFieldProps(field.name)}
-          inputLabel={field.inputLabel}
-          formik={formik}
-          id={field.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          helperText={field.helperText}
-          errorMessage={
-            formik.touched[field.name] && formik.errors[field.name]
-              ? formik.errors[field.name]
-              : undefined
-          }
-        />
-      )
     case DATE:
       return (
         <Date
@@ -139,60 +113,6 @@ const FieldSwitch: React.FC<FieldSwitchProps> = ({
               : undefined
           }
           placeholder={field.placeholder}
-        />
-      )
-    case ADMIN_VETO_RADIO:
-      return (
-        <AdminVetoRadio
-          {...formik.getFieldProps(field.name)}
-          inputLabel={field.inputLabel}
-          formik={formik}
-          id={field.name}
-          errorMessage={
-            formik.touched[field.name] && formik.errors[field.name]
-              ? formik.errors[field.name]
-              : undefined
-          }
-        />
-      )
-    case ADMIN_VETO_INPUT:
-      return (
-        <AdminVetoInput
-          {...formik.getFieldProps(field.name)}
-          inputLabel={field.inputLabel}
-          type={field.type}
-          formik={formik}
-          id={field.name}
-          onChange={(e: BaseSyntheticEvent) => {
-            handleChange(e)
-          }}
-          onBlur={formik.handleBlur}
-          helperText={field.helperText}
-          errorMessage={
-            formik.values[field.name] && formik.errors[field.name]
-              ? formik.errors[field.name]
-              : undefined
-          }
-          autoSubmit={autoSubmit}
-          submitCallback={submitCallback}
-          max={field.max}
-          perma={field.perma}
-          placeholder={field.placeholder}
-          step={field.step}
-          // ensIsValid={ensIsValid}
-          isAddress={field.isAddress}
-          disabled={field.disabled}
-        />
-      )
-    /////////
-    case SINGLE_IMAGE_UPLOAD:
-      return (
-        <SingleImageUpload
-          {...formik.getFieldProps(field.name)}
-          formik={formik}
-          id={field.name}
-          inputLabel={field.inputLabel}
-          helperText={field.helperText}
         />
       )
     case SELECT:

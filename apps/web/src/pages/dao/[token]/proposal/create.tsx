@@ -17,8 +17,8 @@ import {
   TransactionTypeIcon,
   TwoColumnLayout,
 } from 'src/modules/create-proposal'
+import { useDaoStore } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { useDaoStore } from 'src/stores'
 import { notFoundWrap } from 'src/styles/404.css'
 import { AddressType } from 'src/typings'
 

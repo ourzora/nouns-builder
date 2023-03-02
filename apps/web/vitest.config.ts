@@ -8,6 +8,7 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   root: '.',
   plugins: [react(), vanillaExtractPlugin(), svgr({ exportAsDefault: true })],
+  assetsInclude: ['**/*.md'],
   test: {
     globals: true,
     environment: 'jsdom',

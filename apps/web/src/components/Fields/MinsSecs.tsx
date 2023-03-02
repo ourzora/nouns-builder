@@ -43,7 +43,7 @@ const MinsSecs: React.FC<TimeBufferProps> = ({
   return (
     <Box mb={'x3'}>
       <label className={defaultInputLabelStyle}>{inputLabel}</label>
-      <Grid columns={isMobile ? '1fr' : '1fr 1fr'} gap={'x5'}>
+      <Grid columns={isMobile ? '1fr' : '1fr 1fr'} gap={'x5'} mb={'x8'}>
         <NumberInput
           errorMessage={errorMessage?.minutes}
           hasError={minutesHasError}

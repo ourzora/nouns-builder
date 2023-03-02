@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { Address, useContract, useContractReads, useSigner } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 type AuctionContract = GetContractResult<typeof auctionAbi>

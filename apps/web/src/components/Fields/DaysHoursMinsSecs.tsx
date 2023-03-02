@@ -33,6 +33,8 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
     formik.setFieldValue(`${id}.${type}`, parseInt(value))
   }
 
+  const valueHasError = typeof errorMessage === 'string'
+
   const daysHasError = React.useMemo(() => {
     return errorMessage?.days?.length > 0
   }, [errorMessage])
@@ -50,13 +52,13 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
   }, [errorMessage])
 
   return (
-    <Flex direction={'column'} mb={'x3'}>
+    <Flex direction={'column'} mb={'x8'}>
       <label className={defaultInputLabelStyle}>{inputLabel}</label>
-      <Grid columns={isMobile ? '1fr 1fr' : '1fr 1fr 1fr 1fr'} gap={'x5'}>
+      <Grid columns={isMobile ? '1fr 1fr' : '1fr 1fr 1fr 1fr'} gap={'x5'} mb={'x3'}>
         <NumberInput
           label={'[Days]'}
           placeholder={'3'}
-          hasError={daysHasError}
+          hasError={valueHasError || daysHasError}
           errorMessage={errorMessage?.days}
           onChange={(e) => handleChange(e, 'days')}
           value={days}
@@ -67,7 +69,7 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
         <NumberInput
           label={'[Hours]'}
           placeholder={'0'}
-          hasError={hoursHasError}
+          hasError={valueHasError || hoursHasError}
           errorMessage={errorMessage?.hours}
           onChange={(e) => handleChange(e, 'hours')}
           value={hours}
@@ -79,7 +81,7 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
           label={'[Minutes]'}
           placeholder={'0'}
           errorMessage={errorMessage?.minutes}
-          hasError={minutesHasError}
+          hasError={valueHasError || minutesHasError}
           onChange={(e) => handleChange(e, 'minutes')}
           value={minutes}
           step={1}
@@ -90,13 +92,15 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
           label={'[Seconds]'}
           placeholder={'0'}
           errorMessage={errorMessage?.seconds}
-          hasError={secondsHasError}
+          hasError={valueHasError || secondsHasError}
           onChange={(e) => handleChange(e, 'seconds')}
           value={seconds}
           step={1}
           min={0}
         />
       </Grid>
+
+      {valueHasError && <Flex color="negative">{errorMessage}</Flex>}
     </Flex>
   )
 }

@@ -7,7 +7,7 @@ import { useContractEvent } from 'wagmi'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
-import { useDaoStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { AddressType } from 'src/typings'
 
 export const useAuctionEvents = ({
