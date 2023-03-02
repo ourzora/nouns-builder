@@ -16,7 +16,7 @@ export const auctionReservePriceValidationSchema = Yup.number()
   .min(0.0001, '> 0.0001 ETH') // temp until protocol supports 0 ETH reserve price
 
 export const auctionSettingsValidationSchema = Yup.object().shape({
-  auctionDuration: durationValidationSchema,
+  auctionDuration: durationValidationSchema(),
   auctionReservePrice: auctionReservePriceValidationSchema,
   proposalThreshold: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))

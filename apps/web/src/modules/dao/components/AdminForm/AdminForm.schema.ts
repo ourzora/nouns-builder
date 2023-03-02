@@ -21,6 +21,9 @@ export interface AdminFormValues {
   vetoer: string
 }
 
+const twentyFourWeeks = 60 * 60 * 24 * 7 * 24
+const tenMinutes = 60 * 10
+
 export const adminValidationSchema = (provider: Provider | undefined) =>
   Yup.object()
     .concat(auctionSettingsValidationSchema)
@@ -37,8 +40,14 @@ export const adminValidationSchema = (provider: Provider | undefined) =>
             (value: string | undefined) => !!value && isValidAddress(value, provider)
           )
           .required('*'),
-        votingDelay: durationValidationSchema,
-        votingPeriod: durationValidationSchema,
+        votingDelay: durationValidationSchema(
+          { value: 1, description: '1 second' },
+          { value: twentyFourWeeks, description: '24 weeks' }
+        ),
+        votingPeriod: durationValidationSchema(
+          { value: tenMinutes, description: '10 minutes' },
+          { value: twentyFourWeeks, description: '24 weeks' }
+        ),
         vetoPower: Yup.bool().required('*'),
       })
     )

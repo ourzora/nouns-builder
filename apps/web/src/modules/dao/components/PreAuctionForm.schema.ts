@@ -10,6 +10,6 @@ export interface PreAuctionFormValues {
 }
 
 export const preAuctionValidationSchema = Yup.object().shape({
-  auctionDuration: durationValidationSchema,
+  auctionDuration: durationValidationSchema(),
   auctionReservePrice: auctionReservePriceValidationSchema,
 })
