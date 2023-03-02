@@ -2,7 +2,6 @@ import { Box, Button, Flex } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import { Form, Formik } from 'formik'
 import type { FormikHelpers } from 'formik'
-import { useCallback } from 'react'
 import { useBalance } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
