@@ -47,11 +47,9 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
   })
 
   const handleCloseSuccessModal = () => {
-    replace(
-      { pathname, query: { token: query.token, tokenId: query.tokenId } },
-      undefined,
-      { shallow: true }
-    )
+    replace({ pathname, query: { token: collection, tokenId } }, undefined, {
+      shallow: true,
+    })
   }
 
   const sections = React.useMemo(() => {
@@ -67,7 +65,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
 
     const adminSection = {
       title: 'Admin',
-      component: [<AdminForm key={'admin'} />],
+      component: [<AdminForm key={'admin'} collectionAddress={collection} />],
     }
     const smartContractsSection = {
       title: 'Smart Contracts',
@@ -92,12 +90,12 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
         slug={url}
         description={token.description ?? ''}
       />
-      <Auction
-        auctionAddress={addresses.auction}
-        collection={query.token as string}
-        token={token}
+      <Auction auctionAddress={addresses.auction} collection={collection} token={token} />
+      <SectionHandler
+        sections={sections}
+        activeTab={query?.tab ? (query.tab as string) : undefined}
+        collectionAddress={collection}
       />
-      <SectionHandler sections={sections} />
 
       <AnimatedModal
         open={query?.message === SUCCESS_MESSAGES.PROPOSAL_SUBMISSION_SUCCESS}

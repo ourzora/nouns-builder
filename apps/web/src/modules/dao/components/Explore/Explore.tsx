@@ -17,9 +17,7 @@ interface ExploreProps {
 
 export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo }) => {
   const router = useRouter()
-  const pathname = router.query.address
-    ? `/explore/${router.query.address}`
-    : router.pathname
+  const { pathname } = router
 
   const handlePageBack = React.useCallback(() => {
     // user is on the first page
