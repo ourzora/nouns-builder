@@ -1,19 +1,21 @@
-import { WriteContractUnpreparedArgs } from '@wagmi/core'
+import {
+  WriteContractUnpreparedArgs,
+  prepareWriteContract,
+  writeContract,
+} from '@wagmi/core'
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import React, { useState } from 'react'
-import { useContractEvent, useContractWrite } from 'wagmi'
-import { usePrepareContractWrite } from 'wagmi'
+import { useSigner } from 'wagmi'
 
-import { defaultBackButtonVariants } from 'src/components/Fields/styles.css'
+import { defaultBackButton } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { managerAbi } from 'src/data/contract/abis'
 import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
 import { useFormStore } from 'src/stores/useFormStore'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
 import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
@@ -38,6 +40,7 @@ interface ReviewAndDeploy {
 }
 
 const DEPLOYMENT_ERROR = {
+  MISSING_IPFS_ARTWORK: `Oops! It looks like your artwork wasn't correctly uploaded to ipfs. Please go back to the artwork step to re-upload your artwork before proceeding.`,
   MISMATCHING_SIGNER:
     'Oops! It looks like the founder address submitted is different than the current signer address. Please go back to the allocation step and re-submit the founder address.',
   NO_FOUNDER:
@@ -47,7 +50,7 @@ const DEPLOYMENT_ERROR = {
 }
 
 export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
-  const { signer, signerAddress } = useLayoutStore()
+  const { data: signer } = useSigner()
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [hasConfirmed, setHasConfirmed] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
@@ -62,29 +65,11 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     fulfilledSections,
     deployedDao,
     setDeployedDao,
-    isUploadingToIPFS,
+    ipfsUpload,
     setFulfilledSections,
     vetoPower,
   } = useFormStore()
 
-  useContractEvent({
-    address: PUBLIC_MANAGER_ADDRESS!,
-    abi: managerAbi,
-    eventName: 'DAODeployed',
-    listener(token, metadata, auction, treasury, governor) {
-      setDeployedDao({
-        token,
-        metadata,
-        auction,
-        treasury,
-        governor,
-      })
-      setIsPendingTransaction(false)
-      setFulfilledSections(title)
-    },
-  })
-
-  /* handle section navigation */
   const handlePrev = () => {
     setActiveSection(activeSection - 1)
   }
@@ -142,18 +127,10 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
         : ethers.utils.getAddress(NULL_ADDRESS),
   }
 
-  const { config, isError } = usePrepareContractWrite({
-    address: PUBLIC_MANAGER_ADDRESS,
-    abi: managerAbi,
-    functionName: 'deploy',
-    args: [founderParams, tokenParams, auctionParams, govParams],
-  })
-
-  const { writeAsync } = useContractWrite(config)
-
   const handleDeploy = async () => {
     setDeploymentError(undefined)
 
+    const signerAddress = await signer?.getAddress()
     if (founderParams[0].wallet !== signerAddress) {
       setDeploymentError(DEPLOYMENT_ERROR.MISMATCHING_SIGNER)
       return
@@ -164,19 +141,62 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       return
     }
 
-    if (isError) {
-      setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
+    if (ipfsUpload.length === 0) {
+      setDeploymentError(DEPLOYMENT_ERROR.MISSING_IPFS_ARTWORK)
       return
     }
 
+    setIsPendingTransaction(true)
+    let transaction
     try {
-      setIsPendingTransaction(true)
-      const txn = await writeAsync?.()
-      await txn?.wait()
+      const config = await prepareWriteContract({
+        address: PUBLIC_MANAGER_ADDRESS,
+        abi: managerAbi,
+        functionName: 'deploy',
+        signer: signer,
+        args: [founderParams, tokenParams, auctionParams, govParams],
+      })
+      const { wait } = await writeContract(config)
+      transaction = await wait()
     } catch (e) {
-      console.error(e)
       setIsPendingTransaction(false)
+      return
     }
+
+    const managerInterface = new ethers.utils.Interface(managerAbi)
+
+    //keccak256 hashed value of DAODeployed(address,address,address,address,address)
+    const deployEvent = transaction?.logs.find(
+      (log) =>
+        log?.topics[0]?.toLowerCase() ===
+        '0x456d2baf5a87d70e586ec06fb91c2d7849778dd41d80fa826a6ea5bf8d28e3a6'
+    )
+
+    let parsedEvent
+    try {
+      parsedEvent = managerInterface.parseLog({
+        topics: deployEvent?.topics || [],
+        data: deployEvent?.data || '',
+      })
+    } catch {}
+
+    const deployedAddresses = parsedEvent?.args
+
+    if (!deployedAddresses) {
+      setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
+      setIsPendingTransaction(false)
+      return
+    }
+
+    setDeployedDao({
+      token: deployedAddresses[0],
+      metadata: deployedAddresses[1],
+      auction: deployedAddresses[2],
+      treasury: deployedAddresses[3],
+      governor: deployedAddresses[4],
+    })
+    setIsPendingTransaction(false)
+    setFulfilledSections(title)
   }
 
   return (
@@ -287,14 +307,14 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 minH={'x15'}
                 minW={'x15'}
                 onClick={() => handlePrev()}
-                className={defaultBackButtonVariants['default']}
+                className={defaultBackButton}
               >
                 <Icon id="arrowLeft" />
               </Flex>
               <Button
                 onClick={handleDeploy}
                 w={'100%'}
-                disabled={isUploadingToIPFS || !signer || !hasConfirmed}
+                disabled={!signer || !hasConfirmed || isPendingTransaction}
                 className={
                   deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']
                 }

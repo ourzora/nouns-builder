@@ -48,7 +48,7 @@ const DaysHoursMins: React.FC<DaysHoursMinsProps> = ({
   return (
     <Flex direction={'column'} mb={'x3'}>
       <label className={defaultInputLabelStyle}>{inputLabel}</label>
-      <Grid columns={isMobile ? '1fr' : '1fr 1fr 1fr'} gap={'x5'}>
+      <Grid columns={isMobile ? '1fr' : '1fr 1fr 1fr'} gap={'x5'} mb={'x8'}>
         <NumberInput
           label={'[Days]'}
           placeholder={'1'}

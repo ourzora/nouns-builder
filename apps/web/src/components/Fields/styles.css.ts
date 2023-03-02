@@ -1,25 +1,6 @@
 import { style, styleVariants } from '@vanilla-extract/css'
 import { atoms, theme } from '@zoralabs/zord'
 
-export const defaultFormStickyStyle = style({
-  paddingBottom: 100,
-  '@media': {
-    '(max-width: 768px)': {
-      paddingBottom: 150,
-    },
-  },
-})
-
-export const flexStyle = style({
-  display: 'flex',
-  flexDirection: 'column',
-})
-
-export const defaultFormStyleVariants = styleVariants({
-  default: [flexStyle],
-  sticky: [flexStyle, defaultFormStickyStyle],
-})
-
 export const defaultFormAdvancedWrapper = style({
   overflow: 'hidden',
 })
@@ -148,42 +129,11 @@ export const defaultBackButton = style([
   },
 ])
 
-export const defaultBackButtonVariants = styleVariants({
-  default: [defaultBackButton],
-  transaction: [
-    {
-      background: '#f2f2f2',
-      boxSizing: 'border-box',
-      width: 'auto',
-      height: 40,
-      borderRadius: '8px',
-      color: '#B3B3B3',
-      selectors: {
-        '&:hover': {
-          cursor: 'pointer',
-          color: '#000',
-        },
-      },
-    },
-  ],
-})
-
 export const defaultFormButtonWithPrev = style({
   width: 'calc(100% - 68px)',
   borderRadius: '10px',
   height: 60,
   marginLeft: 8,
-})
-
-export const transactionFormButtonWithPrev = style({
-  marginLeft: 'auto',
-  fontFamily: 'Inter, sans-serif!important',
-  fontSize: 16,
-  borderRadius: '8px',
-  padding: '8px 16px',
-  height: 'auto',
-  minWidth: 66,
-  // maxWidth: 66,
 })
 
 export const defaultFormButton = style({

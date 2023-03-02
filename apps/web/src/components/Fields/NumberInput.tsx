@@ -27,7 +27,7 @@ const NumberInput = ({
   ...rest
 }: NumberInputProps) => {
   return (
-    <Box as="fieldset" className={defaultFieldsetStyle} mb={'x8'}>
+    <Box as="fieldset" className={defaultFieldsetStyle}>
       {errorMessage && (
         <Box
           position={'absolute'}

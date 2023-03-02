@@ -38,12 +38,16 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
     try {
       const newDuration = values.auctionDuration
       if (!isEqual(newDuration, initialValues['auctionDuration'])) {
-        await setDuration(BigNumber.from(toSeconds(newDuration)))
+        const durationTxn = await setDuration(BigNumber.from(toSeconds(newDuration)))
+        await durationTxn?.wait()
       }
 
       const newReservePrice = values.auctionReservePrice
       if (!isEqual(newReservePrice, initialValues['auctionReservePrice'])) {
-        await setReservePrice(ethers.utils.parseEther(newReservePrice.toString()))
+        const reservePriceTxn = await setReservePrice(
+          ethers.utils.parseEther(newReservePrice.toString())
+        )
+        await reservePriceTxn?.wait()
       }
     } finally {
       formik.setSubmitting(false)

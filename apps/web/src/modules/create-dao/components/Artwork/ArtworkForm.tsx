@@ -15,8 +15,14 @@ interface ArtworkProps {
 }
 
 export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
-  const { setUpArtwork, setFulfilledSections, activeSection, setActiveSection } =
-    useFormStore()
+  const {
+    setUpArtwork,
+    setFulfilledSections,
+    activeSection,
+    setActiveSection,
+    ipfsUpload,
+    isUploadingToIPFS,
+  } = useFormStore()
 
   const initialValues = {
     projectDescription: setUpArtwork?.projectDescription || '',
@@ -98,7 +104,12 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
               ml={'x2'}
               minH={'x15'}
               type="submit"
-              disabled={!isEmpty(formik.errors) || formik.isSubmitting}
+              disabled={
+                !isEmpty(formik.errors) ||
+                formik.isSubmitting ||
+                isUploadingToIPFS ||
+                ipfsUpload.length === 0
+              }
             >
               Continue
             </Button>

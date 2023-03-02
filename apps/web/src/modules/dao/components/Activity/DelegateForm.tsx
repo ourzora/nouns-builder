@@ -32,7 +32,11 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
 
     setIsLoading(true)
     try {
-      await delegate((await getEnsAddress(values.address, provider)) as Address)
+      const txn = await delegate(
+        (await getEnsAddress(values.address, provider)) as Address
+      )
+      await txn?.wait()
+
       handleUpdate(values.address)
     } catch (e) {
       console.error(e)

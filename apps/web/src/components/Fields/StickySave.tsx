@@ -114,6 +114,7 @@ const StickySave: React.FC<StickySaveProps> = ({
               className={adminStickySaveButton}
               type={'submit'}
               my={'x3'}
+              loading={isSubmitting}
               disabled={disabled || isSubmitting}
               onClick={handleSave}
             >
