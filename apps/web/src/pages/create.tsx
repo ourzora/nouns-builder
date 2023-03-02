@@ -44,13 +44,13 @@ const CreatePage: NextPageWithLayout = () => {
     const createDao: CreateFormSection = {
       title: 'General',
       heading: 'General Settings',
-      form: <GeneralForm key={'general-info'} title={''} />,
+      form: <GeneralForm key={'general-info'} title={'General'} />,
     }
 
     const auctionSettings: CreateFormSection = {
       title: 'Auction',
       heading: 'Auction Settings',
-      form: <AuctionSettingsForm key={'auction-settings'} title={''} />,
+      form: <AuctionSettingsForm key={'auction-settings'} title={'Auction'} />,
     }
 
     const vetoSettings: CreateFormSection = {
@@ -58,25 +58,25 @@ const CreatePage: NextPageWithLayout = () => {
       heading: 'Veto Power',
       subHeading:
         'Veto power is useful for addressing security concerns in the early days of your DAO, though as your membership grows, consider revisiting this functionality through a decentralized community vote.',
-      form: <VetoForm key={'veto-power'} title={''} />,
+      form: <VetoForm key={'veto-power'} title={'Veto'} />,
     }
 
     const founderAllocations: CreateFormSection = {
       title: 'Allocation',
       heading: 'Allocation',
-      form: <AllocationForm key={'token-allocations'} title={''} />,
+      form: <AllocationForm key={'token-allocations'} title={'Allocation'} />,
     }
 
     const setUpArtwork: CreateFormSection = {
       title: 'Artwork',
       heading: 'Artwork Setup',
-      form: <Artwork key={'set-up-artwork'} title={''} />,
+      form: <Artwork key={'set-up-artwork'} title={'Artwork'} />,
     }
 
     const reviewAndDeploy: CreateFormSection = {
       title: 'Deploy',
       subHeading: '[Confirm your contract settings before deploying your DAO]',
-      form: <ReviewAndDeploy key={'review-and-deploy'} title={''} />,
+      form: <ReviewAndDeploy key={'review-and-deploy'} title={'Deploy'} />,
     }
 
     return [
