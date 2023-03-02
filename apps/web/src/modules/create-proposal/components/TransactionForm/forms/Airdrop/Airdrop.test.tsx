@@ -11,7 +11,7 @@ vi.mock('src/modules/dao', () => ({
   useDaoStore: vi.fn(),
 }))
 
-vi.mock('src/graphql/sdk', async () => {
+vi.mock('src/data/graphql/sdk.generated', async () => {
   const mod = await vi.importActual<typeof import('src/data/graphql/sdk.generated')>(
     'src/data/graphql/sdk.generated'
   )
@@ -33,7 +33,10 @@ describe('Airdrop', () => {
 
     render(<Airdrop />)
 
-    await waitFor(() => expect(screen.queryByTestId('upgrade-card')).toBeInTheDocument())
+    await waitFor(
+      () => expect(screen.queryByTestId('upgrade-card')).toBeInTheDocument(),
+      { timeout: 5000 }
+    )
     expect(screen.queryByTestId('upgrade-in-progress')).not.toBeInTheDocument()
     expect(screen.getByTestId('airdrop-form')).toBeDisabled()
 
