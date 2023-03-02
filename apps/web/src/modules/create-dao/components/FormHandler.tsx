@@ -1,13 +1,10 @@
 import { Box, Heading, Text } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
-import React, { ReactElement } from 'react'
+import React from 'react'
 
-interface FormHandlerProps {
-  form: ReactElement
-  title: string
-  heading?: string | string[]
-  subHeading?: string | string[]
-}
+import { CreateFormSection } from '../types'
+
+interface FormHandlerProps extends CreateFormSection {}
 
 export const FormHandler = ({ form, title, heading, subHeading }: FormHandlerProps) => {
   return (

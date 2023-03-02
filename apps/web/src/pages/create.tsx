@@ -55,10 +55,9 @@ const CreatePage: NextPageWithLayout = () => {
 
     const vetoSettings: CreateFormSection = {
       title: 'Veto',
-      heading: ['Veto Power', 'Would you like to include veto power?'],
-      subHeading: [
+      heading: 'Veto Power',
+      subHeading:
         'Veto power is useful for addressing security concerns in the early days of your DAO, though as your membership grows, consider revisiting this functionality through a decentralized community vote.',
-      ],
       form: <VetoForm key={'veto-power'} title={''} />,
     }
 
@@ -70,7 +69,7 @@ const CreatePage: NextPageWithLayout = () => {
 
     const setUpArtwork: CreateFormSection = {
       title: 'Artwork',
-      heading: ['Artwork Setup', 'Layer Ordering'],
+      heading: 'Artwork Setup',
       form: <Artwork key={'set-up-artwork'} title={''} />,
     }
 
