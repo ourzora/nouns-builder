@@ -5,7 +5,7 @@ import React, { ChangeEventHandler, ReactElement } from 'react'
 import { useLayoutStore } from 'src/stores/useLayoutStore'
 
 import { NumberInput } from './NumberInput'
-import { defaultInputLabelStyle, errorMessageStyle } from './styles.css'
+import { defaultInputLabelStyle } from './styles.css'
 
 interface DaysHoursMinsProps {
   id: string
