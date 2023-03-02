@@ -43,7 +43,10 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
     }
 
     try {
-      const decoded = await axios(`${ETHER_ACTOR_BASE_URL}/decode/${target}/${calldata}`)
+      const decoded = await axios.post(`${ETHER_ACTOR_BASE_URL}/decode`, {
+        calldata: calldata,
+        contract: target,
+      })
 
       if (decoded?.data?.statusCode) return calldata
 
