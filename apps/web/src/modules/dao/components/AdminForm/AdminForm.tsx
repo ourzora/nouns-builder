@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
 import React, { BaseSyntheticEvent } from 'react'
+import { useContractReads } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import Radio from 'src/components/Fields/Radio'
@@ -25,8 +26,9 @@ import { useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
-import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
+import { compareAndReturn, fromSeconds, unpackOptionalArray } from 'src/utils/helpers'
 
+import { auctionAbi } from '../../../../data/contract/abis'
 import { DaoContracts, useDaoStore } from '../../stores'
 import { AdminFormValues, adminValidationSchema } from './AdminForm.schema'
 
@@ -54,11 +56,21 @@ export const AdminForm: React.FC<AdminFormProps> = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const provider = useLayoutStore((state) => state.provider)
 
-  const {
-    contract: auctionContract,
-    auctionDuration,
-    auctionReservePrice,
-  } = useAuctionContract()
+  const { contract: auctionContract } = useAuctionContract()
+
+  const auctionContractParams = {
+    abi: auctionAbi,
+    address: addresses.auction,
+  }
+
+  const { data, isLoading } = useContractReads({
+    contracts: [
+      { ...auctionContractParams, functionName: 'duration' },
+      { ...auctionContractParams, functionName: 'reservePrice' },
+    ],
+  })
+
+  const [auctionDuration, auctionReservePrice] = unpackOptionalArray(data, 2)
 
   const {
     contract: governorContract,

@@ -1,14 +1,17 @@
+import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import React, { Fragment, memo, useState } from 'react'
 import { useSWRConfig } from 'swr'
-import { useAccount, useBalance, useSigner } from 'wagmi'
+import { useAccount, useBalance, useContractReads, useSigner } from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
-import { useAuctionContract } from 'src/hooks'
 import { useDaoStore } from 'src/modules/dao'
+import { AddressType } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useMinBidIncrement } from '../../hooks'
@@ -22,18 +25,23 @@ interface PlaceBidProps {
 export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
   const { address } = useAccount()
-  const { data: balance, isError } = useBalance({ address: address })
+  const { data: balance } = useBalance({ address: address })
   const { mutate } = useSWRConfig()
-  const {
-    contract: auctionContract,
-    auctionReservePrice,
-    minBidIncrement,
-  } = useAuctionContract()
   const { addresses } = useDaoStore()
-
   const [creatingBid, setCreatingBid] = useState(false)
   const [bidAmount, setBidAmount] = React.useState<string | undefined>(undefined)
 
+  const auctionContractParams = {
+    abi: auctionAbi,
+    address: addresses.auction,
+  }
+  const { data } = useContractReads({
+    contracts: [
+      { ...auctionContractParams, functionName: 'reservePrice' },
+      { ...auctionContractParams, functionName: 'minBidIncrement' },
+    ],
+  })
+  const [auctionReservePrice, minBidIncrement] = unpackOptionalArray(data, 2)
   const { minBidAmount } = useMinBidIncrement({
     highestBid,
     reservePrice: auctionReservePrice,
@@ -42,11 +50,19 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
 
   const createBid = React.useCallback(
     async (id: string, bid: { value: BigNumber }) => {
-      if (!auctionContract || !signer || creatingBid) return
+      if (!signer || creatingBid) return
       try {
         setCreatingBid(true)
 
-        const { wait } = await auctionContract.createBid(BigNumber.from(id), bid)
+        const config = await prepareWriteContract({
+          abi: auctionAbi,
+          address: addresses.auction as AddressType,
+          functionName: 'createBid',
+          signer: signer,
+          args: [BigNumber.from(id)],
+          overrides: { value: ethers.utils.parseEther(bid.toString()) },
+        })
+        const { wait } = await writeContract(config)
         await wait()
         setCreatingBid(false)
 
@@ -57,7 +73,7 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
         setCreatingBid(false)
       }
     },
-    [auctionContract, signer, addresses, creatingBid, tokenId, mutate]
+    [signer, addresses, creatingBid, tokenId, mutate]
   )
 
   const handleCreateBid = React.useCallback(async () => {
