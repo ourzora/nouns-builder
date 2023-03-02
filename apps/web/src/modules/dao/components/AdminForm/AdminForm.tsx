@@ -21,12 +21,13 @@ import {
   useProposalStore,
 } from 'src/modules/create-proposal'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { AddressType, DaoContracts } from 'src/typings'
+import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
 
+import { DaoContracts, useDaoStore } from '../../stores'
 import { AdminFormValues, adminValidationSchema } from './AdminForm.schema'
 
 interface AdminFormProps {

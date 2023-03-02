@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react'
 import { useSigner } from 'wagmi'
 
-import { useDaoStore, useLayoutStore } from 'src/stores'
+import { useDaoStore } from 'src/modules/dao'
+import { useLayoutStore } from 'src/stores'
 import { getProvider } from 'src/utils/provider'
 
 export function LayoutWrapper({ children }: { children: ReactNode }) {
