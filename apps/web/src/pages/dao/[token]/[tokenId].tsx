@@ -75,7 +75,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
     const publicSections = [aboutSection, proposalsSection, smartContractsSection]
 
     return hasThreshold ? [...publicSections, adminSection] : publicSections
-  }, [hasThreshold])
+  }, [hasThreshold, collection])
 
   if (!token || !addresses.auction) {
     return null
