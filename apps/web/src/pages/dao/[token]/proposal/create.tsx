@@ -1,6 +1,6 @@
 import { Flex, Stack } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 
 import { useVotes } from 'src/hooks'
@@ -16,6 +16,7 @@ import {
   TransactionType,
   TransactionTypeIcon,
   TwoColumnLayout,
+  useProposalStore,
 } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
@@ -26,6 +27,13 @@ const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
   const { query } = router
   const [transactionType, setTransactionType] = useState<TransactionType | undefined>()
+  const transactions = useProposalStore((state) => state.transactions)
+
+  useEffect(() => {
+    if (transactions.length && !transactionType) {
+      setTransactionType(transactions[0].type)
+    }
+  }, [transactions, transactionType, setTransactionType])
 
   const { addresses } = useDaoStore()
   const { address } = useAccount()
