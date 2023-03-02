@@ -3,10 +3,10 @@ import { isBlocked } from 'blocklist'
 import React, { ReactNode } from 'react'
 import { useSigner } from 'wagmi'
 
+import { Skull } from 'src/components/Skull'
 import { useDaoStore, useLayoutStore } from 'src/stores'
 import { getProvider } from 'src/utils/provider'
 
-import { Skull } from '../components/Skull'
 import { DefaultLayout } from './DefaultLayout'
 
 export function LayoutWrapper({ children }: { children: ReactNode }) {
