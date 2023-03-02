@@ -4,7 +4,7 @@ import { AddressType, DaoContractAddresses, DaoContracts } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
 
-import { AdminFormValues } from '../components/AdminForm.schema'
+import { AdminFormValues } from '../components/AdminForm'
 
 type FormValuesTransactionMap = {
   [K in keyof AdminFormValues]: {
