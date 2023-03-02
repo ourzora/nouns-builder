@@ -6,7 +6,7 @@ import { useBalance } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import Input from 'src/components/Input/Input'
-import { TransactionType, useProposalStore } from 'src/modules/create-proposal'
+import { TransactionType, useProposalStore } from 'src/modules/create-proposal/index'
 import { useDaoStore } from 'src/modules/dao'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'

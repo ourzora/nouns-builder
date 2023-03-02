@@ -4,8 +4,8 @@ import React from 'react'
 
 import { AddTransactionSection, AddressType } from 'src/typings'
 
-import { TransactionType } from '../../../../constants'
-import { useCustomTransactionStore, useProposalStore } from '../../../../stores'
+import { TransactionType } from '../../../constants'
+import { useCustomTransactionStore, useProposalStore } from '../../../stores'
 import { customTransactionWrapper, transactionFormWrapper } from './CustomTransaction.css'
 import { FormHandler } from './FormHandler'
 import { FormHeading } from './FormHeading'

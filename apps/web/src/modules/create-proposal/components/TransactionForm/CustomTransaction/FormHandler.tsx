@@ -5,7 +5,7 @@ import React, { ReactElement } from 'react'
 import { useFormStore } from 'src/stores/useFormStore'
 import { AddTransactionSection } from 'src/typings'
 
-import { useCustomTransactionStore } from '../../../../stores'
+import { useCustomTransactionStore } from '../../../stores'
 
 interface FormHandler {
   forms: ReactElement[]
