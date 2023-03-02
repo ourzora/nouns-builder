@@ -12,7 +12,6 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { sdk } from 'src/data/graphql/client'
 import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
-import type { AddressType } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -28,11 +27,11 @@ export const About: React.FC = () => {
 
   const tokenContractParams = {
     abi: tokenAbi,
-    address: token as AddressType,
+    address: token as Address,
   }
   const metadataContractParams = {
     abi: metadataAbi,
-    address: metadata as AddressType,
+    address: metadata as Address,
   }
 
   const { data: contractData } = useContractReads({

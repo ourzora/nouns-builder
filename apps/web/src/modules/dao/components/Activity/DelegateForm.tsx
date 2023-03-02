@@ -1,7 +1,7 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { useState } from 'react'
-import { Address, useContract } from 'wagmi'
+import { Address, useContract, useSigner } from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -27,8 +27,13 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
   const [isLoading, setIsLoading] = useState(false)
   const { addresses } = useDaoStore()
   const { provider } = useLayoutStore()
+  const { data: signer } = useSigner()
 
-  const tokenContract = useContract({ abi: tokenAbi, address: addresses.token })
+  const tokenContract = useContract({
+    abi: tokenAbi,
+    address: addresses.token,
+    signerOrProvider: signer,
+  })
 
   const submitCallback = async (values: AddressFormProps) => {
     if (!values.address || !tokenContract) return

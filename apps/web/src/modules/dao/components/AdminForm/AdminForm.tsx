@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
 import React, { BaseSyntheticEvent } from 'react'
-import { useContract, useContractReads } from 'wagmi'
+import { Address, useContract, useContractReads } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import Radio from 'src/components/Fields/Radio'
@@ -24,7 +24,6 @@ import {
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds, unpackOptionalArray } from 'src/utils/helpers'
 
@@ -62,12 +61,12 @@ export const AdminForm: React.FC<AdminFormProps> = () => {
 
   const governorContractParams = {
     abi: governorAbi,
-    address: addresses?.governor as AddressType,
+    address: addresses?.governor as Address,
   }
 
   const metadataContractParams = {
     abi: metadataAbi,
-    address: addresses?.metadata as AddressType,
+    address: addresses?.metadata as Address,
   }
 
   const auctionContract = useContract(auctionContractParams)
@@ -137,7 +136,7 @@ export const AdminForm: React.FC<AdminFormProps> = () => {
 
   const withPauseUnpause = (
     transactions: BuilderTransaction[],
-    auctionAddress: AddressType,
+    auctionAddress: Address,
     auctionContract?: Contract
   ) => {
     const targetAddresses = transactions
@@ -230,7 +229,7 @@ export const AdminForm: React.FC<AdminFormProps> = () => {
 
     const transactionsWithPauseUnpause = withPauseUnpause(
       transactions,
-      addresses?.auction as AddressType,
+      addresses?.auction as Address,
       auctionContract ?? undefined
     )
 

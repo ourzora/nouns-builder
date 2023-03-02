@@ -3,10 +3,9 @@ import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
-import { useLayoutStore } from 'src/stores'
 
 import { useDaoStore } from '../stores'
 import {
@@ -19,7 +18,7 @@ import {
 export const PreAuction = () => {
   const router = useRouter()
   const { query } = router
-  const { signer } = useLayoutStore()
+  const { data: signer } = useSigner()
   const { addresses } = useDaoStore()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 

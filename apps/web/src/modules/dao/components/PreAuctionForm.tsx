@@ -3,7 +3,7 @@ import { BigNumber, ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
-import { useContract, useContractReads } from 'wagmi'
+import { useContract, useContractReads, useSigner } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -27,13 +27,17 @@ interface PreAuctionFormSettingsProps {
 
 export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const { addresses } = useDaoStore()
+  const { data: signer } = useSigner()
 
   const auctionContractParams = {
     abi: auctionAbi,
     address: addresses.auction,
   }
 
-  const auctionContract = useContract(auctionContractParams)
+  const auctionContract = useContract({
+    ...auctionContractParams,
+    signerOrProvider: signer,
+  })
 
   const { data } = useContractReads({
     contracts: [
