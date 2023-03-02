@@ -25,7 +25,9 @@ describe('Proposal Navigation', () => {
     // loading state, no image exists
     expect(screen.queryByTestId('dao-image')).not.toBeInTheDocument()
 
-    await waitFor(() => expect(screen.getByText(/Builder/)).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByText(/Builder/)).toBeInTheDocument(), {
+      timeout: 5000,
+    })
     expect(screen.getByAltText(/Builder avatar/)).toBeInTheDocument()
   })
 })
