@@ -1,12 +1,11 @@
 import { Flex } from '@zoralabs/zord'
 import React, { useState } from 'react'
+import { Address } from 'wagmi'
 
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
-import { useGovernorContract } from 'src/hooks'
 import { useLayoutStore } from 'src/stores'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
-import { BytesType } from 'src/typings'
 
 import { GovernorContractButton } from '../GovernorContractButton'
 
@@ -20,15 +19,10 @@ const Cancel: React.FC<{
   proposalId: string
   onSuccess: () => void
 }> = (props) => {
-  const { cancel } = useGovernorContract()
-
-  const cancelTransaction = async () => {
-    return await cancel(props.proposalId as BytesType)
-  }
-
   return (
     <GovernorContractButton
-      proposalTransaction={cancelTransaction}
+      functionName="cancel"
+      args={[props.proposalId as Address]}
       buttonText="Cancel Proposal"
       buttonClassName={proposalActionButtonVariants['cancel']}
       {...props}
@@ -40,15 +34,10 @@ const Veto: React.FC<{
   proposalId: string
   onSuccess: () => void
 }> = (props) => {
-  const { veto } = useGovernorContract()
-
-  const vetoTransaction = async () => {
-    return await veto(props.proposalId as BytesType)
-  }
-
   return (
     <GovernorContractButton
-      proposalTransaction={vetoTransaction}
+      functionName="veto"
+      args={[props.proposalId as Address]}
       buttonText="Veto"
       buttonClassName={proposalActionButtonVariants['veto']}
       {...props}
