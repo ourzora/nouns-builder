@@ -43,7 +43,7 @@ export function GovernorContractButton<
 
   const [isPending, setIsPending] = useState<boolean>(false)
 
-  const { config, error } = usePrepareContractWrite({
+  const { config, isError } = usePrepareContractWrite({
     enabled: !!addresses?.governor,
     address: addresses?.governor,
     abi: governorAbi,
@@ -54,11 +54,10 @@ export function GovernorContractButton<
   const { writeAsync } = useContractWrite(config)
 
   const handleClick = async () => {
-    if (writeAsync === undefined) return
-
     try {
       setIsPending(true)
-      await writeAsync()
+      const txn = await writeAsync?.()
+      await txn?.wait()
 
       await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(proposalId))
       setIsPending(false)
@@ -73,7 +72,7 @@ export function GovernorContractButton<
     <ContractButton
       handleClick={handleClick}
       className={buttonClassName}
-      disabled={isPending || !!error}
+      disabled={isPending || isError}
     >
       {isPending ? <Box className={uploadingSpinnerWhite} /> : buttonText}
     </ContractButton>
