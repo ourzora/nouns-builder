@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 import React from 'react'
 
 import { Icon } from 'src/components/Icon'
-import { useFormStore } from 'src/stores/useFormStore'
 import {
   artworkSettingsBox,
   artworkSettingsBoxDropping,
@@ -14,6 +13,8 @@ import {
   artworkSettingsPropertyName,
 } from 'src/styles/Artwork.css'
 import { DragAndDropProps, ImageProps, OrderedLayersProps } from 'src/typings'
+
+import { useFormStore } from '../../stores'
 
 interface SettingsBoxProps {
   trait: string

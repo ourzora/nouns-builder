@@ -4,10 +4,10 @@ import React, { useState } from 'react'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { useFormStore } from 'src/stores'
 import { TokenAllocation } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 
+import { useFormStore } from '../../stores'
 import { Contribution } from './Contribution'
 import {
   ContributionAllocationForm,

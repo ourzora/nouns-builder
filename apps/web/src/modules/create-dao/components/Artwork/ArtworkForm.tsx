@@ -5,8 +5,8 @@ import React from 'react'
 
 import TextArea from 'src/components/Fields/TextArea'
 import { Icon } from 'src/components/Icon'
-import { useFormStore } from 'src/stores/useFormStore'
 
+import { useFormStore } from '../../stores'
 import { ArtworkFormValues, validationSchemaArtwork } from './ArtworkForm.schema'
 import { ArtworkUpload } from './ArtworkUpload'
 

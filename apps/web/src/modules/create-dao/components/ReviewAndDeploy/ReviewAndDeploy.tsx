@@ -15,7 +15,6 @@ import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { managerAbi } from 'src/data/contract/abis'
 import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
-import { useFormStore } from 'src/stores/useFormStore'
 import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
@@ -26,6 +25,7 @@ import type { AddressType } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
 
+import { useFormStore } from '../../stores'
 import { PreviewArtwork } from './PreviewArtwork'
 import { ReviewItem } from './ReviewItem'
 import { ReviewSection } from './ReviewSection'
