@@ -24,8 +24,8 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
   
    */
   const formatSendEth = (value: string) => {
-       const amount = ethers.utils.formatEther(value)
-     return {
+    const amount = ethers.utils.formatEther(value)
+    return {
       functionName: 'Transfer',
       name: 'Transfer',
       args: {
