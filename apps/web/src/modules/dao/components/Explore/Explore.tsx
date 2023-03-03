@@ -3,17 +3,14 @@ import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 
 import Pagination from 'src/components/Pagination'
-import { ExplorePageData } from 'src/typings'
+import { ExploreDaosResponse } from 'src/data/graphql/requests/exploreQueries'
 
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'
 import ExploreNoDaos from './ExploreNoDaos'
 import ExploreToolbar from './ExploreToolbar'
 
-interface ExploreProps {
-  daos?: ExplorePageData['daos'] | null
-  pageInfo?: ExplorePageData['pageInfo'] | null
-}
+interface ExploreProps extends ExploreDaosResponse {}
 
 export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo }) => {
   const router = useRouter()

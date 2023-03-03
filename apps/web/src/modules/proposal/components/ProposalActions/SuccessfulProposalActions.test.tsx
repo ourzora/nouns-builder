@@ -3,8 +3,9 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { Proposal } from 'src/data/graphql/requests/proposalQuery'
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 import { render } from 'src/test/utils'
-import { Proposal, ProposalStatus } from 'src/typings'
 
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
 
@@ -25,7 +26,7 @@ describe('proposal status', () => {
         proposal={
           {
             proposalId: '0x9ddab946',
-            status: ProposalStatus.Succeeded,
+            status: NounsProposalStatus.Succeeded,
             calldatas: [
               '0x1e83409a000000000000000000000000dc9b96ea4966d063dd5c8dbaf08fe59062091b6d',
             ],
@@ -49,7 +50,7 @@ describe('proposal status', () => {
         proposal={
           {
             proposalId: '0x9ddab946',
-            status: ProposalStatus.Queued,
+            status: NounsProposalStatus.Queued,
             calldatas: [
               '0x1e83409a000000000000000000000000dc9b96ea4966d063dd5c8dbaf08fe59062091b6d',
             ],
@@ -76,7 +77,7 @@ describe('proposal status', () => {
         proposal={
           {
             proposalId: '0x9ddab946',
-            status: ProposalStatus.Executable,
+            status: NounsProposalStatus.Executable,
             calldatas: [
               '0x1e83409a000000000000000000000000dc9b96ea4966d063dd5c8dbaf08fe59062091b6d',
             ],

@@ -3,8 +3,8 @@ import dayjs from 'dayjs'
 import Link from 'next/link'
 import React from 'react'
 
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 import { useIsMounted } from 'src/hooks/useIsMounted'
-import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
 
 import { statusStyle, titleStyle } from './ProposalCard.css'
 import { ProposalStatus } from './ProposalStatus'
@@ -13,7 +13,7 @@ type ProposalCardProps = {
   proposalId: string
   title: string
   proposalNumber: number
-  status: ProposalStatusEnum
+  status: NounsProposalStatus
   timeCreated: number
   voteEnd: number
   voteStart: number

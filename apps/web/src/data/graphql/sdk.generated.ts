@@ -2286,6 +2286,13 @@ export type ImageMediaEncodingFragment = {
   thumbnail?: string | null
 }
 
+export type PageInfoFragment = {
+  __typename?: 'PageInfo'
+  limit: number
+  endCursor?: string | null
+  hasNextPage: boolean
+}
+
 export type ProposalFragment = {
   __typename: 'NounsProposal'
   abstainVotes: number
@@ -2440,8 +2447,8 @@ export type ExploreDaosPageQuery = {
       pageInfo: {
         __typename?: 'PageInfo'
         limit: number
-        hasNextPage: boolean
         endCursor?: string | null
+        hasNextPage: boolean
       }
     }
   }
@@ -2469,8 +2476,8 @@ export type ExploreTokensQuery = {
     pageInfo: {
       __typename?: 'PageInfo'
       limit: number
-      hasNextPage: boolean
       endCursor?: string | null
+      hasNextPage: boolean
     }
   }
 }
@@ -2490,8 +2497,8 @@ export type MyDaosPageQuery = {
       pageInfo: {
         __typename?: 'PageInfo'
         limit: number
-        hasNextPage: boolean
         endCursor?: string | null
+        hasNextPage: boolean
       }
     }
   }
@@ -2610,8 +2617,8 @@ export type ProposalsQuery = {
       pageInfo: {
         __typename?: 'PageInfo'
         limit: number
-        hasNextPage: boolean
         endCursor?: string | null
+        hasNextPage: boolean
       }
     }
   }
@@ -2786,6 +2793,13 @@ export const DaoFragmentDoc = gql`
     auctionAddress
   }
 `
+export const PageInfoFragmentDoc = gql`
+  fragment PageInfo on PageInfo {
+    limit
+    endCursor
+    hasNextPage
+  }
+`
 export const ProposalFragmentDoc = gql`
   fragment Proposal on NounsProposal {
     __typename
@@ -2942,13 +2956,12 @@ export const ExploreDaosPageDocument = gql`
           }
         }
         pageInfo {
-          limit
-          hasNextPage
-          endCursor
+          ...PageInfo
         }
       }
     }
   }
+  ${PageInfoFragmentDoc}
 `
 export const ExploreTokensDocument = gql`
   query exploreTokens($chain: Chain!, $tokens: [TokenInput!]) {
@@ -2968,12 +2981,11 @@ export const ExploreTokensDocument = gql`
         }
       }
       pageInfo {
-        limit
-        hasNextPage
-        endCursor
+        ...PageInfo
       }
     }
   }
+  ${PageInfoFragmentDoc}
 `
 export const MyDaosPageDocument = gql`
   query myDaosPage($address: [String!], $chain: Chain!) {
@@ -2987,13 +2999,12 @@ export const MyDaosPageDocument = gql`
           collectionAddress
         }
         pageInfo {
-          limit
-          hasNextPage
-          endCursor
+          ...PageInfo
         }
       }
     }
   }
+  ${PageInfoFragmentDoc}
 `
 export const NftCountDocument = gql`
   query nftCount(
@@ -3047,14 +3058,13 @@ export const ProposalsDocument = gql`
           }
         }
         pageInfo {
-          limit
-          hasNextPage
-          endCursor
+          ...PageInfo
         }
       }
     }
   }
   ${ProposalFragmentDoc}
+  ${PageInfoFragmentDoc}
 `
 export const ProposalsWithCalldataDocument = gql`
   query proposalsWithCalldata($token: [String!], $chain: Chain!) {

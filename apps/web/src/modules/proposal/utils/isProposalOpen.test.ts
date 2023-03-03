@@ -1,21 +1,21 @@
-import { ProposalStatus } from 'src/typings'
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 
 import { isProposalOpen } from './isProposalOpen'
 
 describe('isProposalOpen', () => {
   it('should return true if proposal is open', () => {
-    expect(isProposalOpen(ProposalStatus.Created)).toBe(true)
-    expect(isProposalOpen(ProposalStatus.Active)).toBe(true)
-    expect(isProposalOpen(ProposalStatus.Queued)).toBe(true)
-    expect(isProposalOpen(ProposalStatus.Succeeded)).toBe(true)
-    expect(isProposalOpen(ProposalStatus.Pending)).toBe(true)
-    expect(isProposalOpen(ProposalStatus.Executable)).toBe(true)
+    expect(isProposalOpen(NounsProposalStatus.Created)).toBe(true)
+    expect(isProposalOpen(NounsProposalStatus.Active)).toBe(true)
+    expect(isProposalOpen(NounsProposalStatus.Queued)).toBe(true)
+    expect(isProposalOpen(NounsProposalStatus.Succeeded)).toBe(true)
+    expect(isProposalOpen(NounsProposalStatus.Pending)).toBe(true)
+    expect(isProposalOpen(NounsProposalStatus.Executable)).toBe(true)
   })
 
   it('should return false if proposal is not open', () => {
-    expect(isProposalOpen(ProposalStatus.Executed)).toBe(false)
-    expect(isProposalOpen(ProposalStatus.Defeated)).toBe(false)
-    expect(isProposalOpen(ProposalStatus.Canceled)).toBe(false)
-    expect(isProposalOpen(ProposalStatus.Expired)).toBe(false)
+    expect(isProposalOpen(NounsProposalStatus.Executed)).toBe(false)
+    expect(isProposalOpen(NounsProposalStatus.Defeated)).toBe(false)
+    expect(isProposalOpen(NounsProposalStatus.Canceled)).toBe(false)
+    expect(isProposalOpen(NounsProposalStatus.Expired)).toBe(false)
   })
 })

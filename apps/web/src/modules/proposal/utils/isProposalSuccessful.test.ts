@@ -1,21 +1,21 @@
-import { ProposalStatus } from 'src/typings'
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 
 import { isProposalSuccessful } from './isProposalSuccessful'
 
 describe('isSucceededStatus', () => {
   it('should return ProposalSucceededStatus if proposal is successful', () => {
-    expect(isProposalSuccessful(ProposalStatus.Succeeded)).toBe(true)
-    expect(isProposalSuccessful(ProposalStatus.Queued)).toBe(true)
-    expect(isProposalSuccessful(ProposalStatus.Executable)).toBe(true)
+    expect(isProposalSuccessful(NounsProposalStatus.Succeeded)).toBe(true)
+    expect(isProposalSuccessful(NounsProposalStatus.Queued)).toBe(true)
+    expect(isProposalSuccessful(NounsProposalStatus.Executable)).toBe(true)
   })
 
   it('should return false if proposal is not successful', () => {
-    expect(isProposalSuccessful(ProposalStatus.Executed)).toBe(false)
-    expect(isProposalSuccessful(ProposalStatus.Defeated)).toBe(false)
-    expect(isProposalSuccessful(ProposalStatus.Canceled)).toBe(false)
-    expect(isProposalSuccessful(ProposalStatus.Expired)).toBe(false)
-    expect(isProposalSuccessful(ProposalStatus.Pending)).toBe(false)
-    expect(isProposalSuccessful(ProposalStatus.Created)).toBe(false)
-    expect(isProposalSuccessful(ProposalStatus.Active)).toBe(false)
+    expect(isProposalSuccessful(NounsProposalStatus.Executed)).toBe(false)
+    expect(isProposalSuccessful(NounsProposalStatus.Defeated)).toBe(false)
+    expect(isProposalSuccessful(NounsProposalStatus.Canceled)).toBe(false)
+    expect(isProposalSuccessful(NounsProposalStatus.Expired)).toBe(false)
+    expect(isProposalSuccessful(NounsProposalStatus.Pending)).toBe(false)
+    expect(isProposalSuccessful(NounsProposalStatus.Created)).toBe(false)
+    expect(isProposalSuccessful(NounsProposalStatus.Active)).toBe(false)
   })
 })

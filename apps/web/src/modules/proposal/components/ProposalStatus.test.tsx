@@ -3,8 +3,8 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 import { render } from 'src/test/utils'
-import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
 
 import { ProposalStatus } from './ProposalStatus'
 
@@ -22,7 +22,7 @@ describe('proposal status', () => {
   it('should render a succeeded proposal', async () => {
     render(
       <ProposalStatus
-        state={ProposalStatusEnum.Succeeded}
+        state={NounsProposalStatus.Succeeded}
         voteEnd={dayjs('2/1/21').unix()}
         voteStart={dayjs('1/1/21').unix()}
         showTime
@@ -36,7 +36,7 @@ describe('proposal status', () => {
   it('should render a defeated proposal', async () => {
     render(
       <ProposalStatus
-        state={ProposalStatusEnum.Defeated}
+        state={NounsProposalStatus.Defeated}
         voteEnd={dayjs('2/1/21').unix()}
         voteStart={dayjs('1/1/21').unix()}
         showTime
@@ -50,7 +50,7 @@ describe('proposal status', () => {
   it('should render a cancelled proposal', async () => {
     render(
       <ProposalStatus
-        state={ProposalStatusEnum.Canceled}
+        state={NounsProposalStatus.Canceled}
         voteEnd={dayjs('2/1/21').unix()}
         voteStart={dayjs('1/1/21').unix()}
         showTime
@@ -64,7 +64,7 @@ describe('proposal status', () => {
   it('should render a pending proposal that has not started', async () => {
     render(
       <ProposalStatus
-        state={ProposalStatusEnum.Pending}
+        state={NounsProposalStatus.Pending}
         voteEnd={dayjs(date).add(5, 'day').unix()}
         voteStart={dayjs(date).add(3, 'day').unix()}
         showTime
@@ -78,7 +78,7 @@ describe('proposal status', () => {
   it('should render an active proposal that ends in 1 day', async () => {
     render(
       <ProposalStatus
-        state={ProposalStatusEnum.Active}
+        state={NounsProposalStatus.Active}
         voteEnd={dayjs(date).add(1, 'day').unix()}
         voteStart={dayjs(date).subtract(1, 'day').unix()}
         showTime
@@ -92,7 +92,7 @@ describe('proposal status', () => {
   it('should render a queued proposal that expires in 14 days', async () => {
     render(
       <ProposalStatus
-        state={ProposalStatusEnum.Queued}
+        state={NounsProposalStatus.Queued}
         voteEnd={dayjs(date).subtract(2, 'day').unix()}
         voteStart={dayjs(date).subtract(4, 'day').unix()}
         expiresAt={dayjs(date).add(14, 'day').unix()}
@@ -107,7 +107,7 @@ describe('proposal status', () => {
   it('should render an executable proposal that expires in 14 days', async () => {
     render(
       <ProposalStatus
-        state={ProposalStatusEnum.Executable}
+        state={NounsProposalStatus.Executable}
         voteEnd={dayjs(date).subtract(2, 'day').unix()}
         voteStart={dayjs(date).subtract(4, 'day').unix()}
         expiresAt={dayjs(date).add(14, 'day').unix()}

@@ -4,10 +4,14 @@ import React, { Fragment } from 'react'
 import { useContractReads } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
+import { Proposal } from 'src/data/graphql/requests/proposalQuery'
+import {
+  NounsProposalStatus,
+  ProposalVoteFragment as ProposalVote,
+} from 'src/data/graphql/sdk.generated'
 import { useDaoStore } from 'src/modules/dao'
 import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
-import { Proposal, ProposalStatus, ProposalVote } from 'src/typings'
 import { AddressType } from 'src/typings'
 
 import { OwnerActions } from './OwnerActions'
@@ -66,8 +70,8 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const isVetoer = signerAddress === vetoer
 
   const shouldShowActions =
-    status === ProposalStatus.Active ||
-    status === ProposalStatus.Pending ||
+    status === NounsProposalStatus.Active ||
+    status === NounsProposalStatus.Pending ||
     signerVote ||
     votesAvailable !== 0 ||
     isProposer ||

@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
+import { NounsProposalStatus, Support } from 'src/data/graphql/sdk.generated'
 import { render } from 'src/test/utils'
-import { ProposalStatus, Support } from 'src/typings'
 
 import { VoteStatus } from './VoteStatus'
 
@@ -13,7 +13,7 @@ describe('VoteStatus', () => {
         votesAvailable={0}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={ProposalStatus.Created}
+        state={NounsProposalStatus.Created}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />
@@ -27,7 +27,7 @@ describe('VoteStatus', () => {
         votesAvailable={0}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={ProposalStatus.Pending}
+        state={NounsProposalStatus.Pending}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />
@@ -41,7 +41,7 @@ describe('VoteStatus', () => {
         votesAvailable={0}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={ProposalStatus.Active}
+        state={NounsProposalStatus.Active}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />
@@ -58,7 +58,7 @@ describe('VoteStatus', () => {
         votesAvailable={2}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={ProposalStatus.Active}
+        state={NounsProposalStatus.Active}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />
@@ -82,7 +82,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
-          state={ProposalStatus.Succeeded}
+          state={NounsProposalStatus.Succeeded}
           daoName={'xcz'}
           title={'Upgrade xcz'}
         />
@@ -105,7 +105,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
-          state={ProposalStatus.Queued}
+          state={NounsProposalStatus.Queued}
           daoName={'xcz'}
           title={'Upgrade xcz'}
         />
@@ -128,7 +128,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
-          state={ProposalStatus.Active}
+          state={NounsProposalStatus.Active}
           daoName={'xcz'}
           title={'Upgrade xcz'}
         />
@@ -145,7 +145,7 @@ describe('VoteStatus', () => {
         votesAvailable={1}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={ProposalStatus.Executed}
+        state={NounsProposalStatus.Executed}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />

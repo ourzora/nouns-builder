@@ -9,9 +9,7 @@ query myDaosPage($address: [String!], $chain: Chain!) {
         collectionAddress
       }
       pageInfo {
-        limit
-        hasNextPage
-        endCursor
+        ...PageInfo
       }
     }
   }
