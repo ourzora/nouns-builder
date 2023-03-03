@@ -1,48 +1,25 @@
 import { Box, Heading, Text } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
-import React, { ReactElement } from 'react'
+import React from 'react'
 
-import { useFormStore } from 'src/stores/useFormStore'
-import { CreateFormSection } from 'src/typings'
+import { CreateFormSection } from '../types'
 
-interface FormHandler {
-  forms: ReactElement[]
-  title: string
-  heading?: string | string[]
-  subHeading?: string | string[]
-  sections: CreateFormSection[]
-}
+interface FormHandlerProps extends CreateFormSection {}
 
-export const FormHandler: React.FC<FormHandler> = ({
-  forms,
-  title,
-  heading,
-  subHeading,
-}) => {
-  const { activeSectionCurrentIndex, setActiveSectionCurrentIndex } = useFormStore()
-
-  /*  initialize first form in forms array */
-  React.useEffect(() => {
-    setActiveSectionCurrentIndex(0)
-  }, [setActiveSectionCurrentIndex])
-
+export const FormHandler = ({ form, title, heading, subHeading }: FormHandlerProps) => {
   return (
     <Box>
       <Text variant={'eyebrow'}>Create A dao</Text>
       <Heading as={'h3'} mt={'x0'} mb={'x8'} fontSize={40}>
-        {!heading
-          ? title
-          : Array.isArray(heading)
-          ? heading[activeSectionCurrentIndex]
-          : heading}
+        {!heading ? title : heading}
       </Heading>
       {subHeading && (
         <Box mb={'x7'} color={'text2'}>
-          {Array.isArray(subHeading) ? subHeading[activeSectionCurrentIndex] : subHeading}
+          {subHeading}
         </Box>
       )}
       <motion.div
-        key={activeSectionCurrentIndex}
+        key={title}
         variants={{
           exit: {
             y: 10,
@@ -61,9 +38,7 @@ export const FormHandler: React.FC<FormHandler> = ({
         animate="open"
         exit="exit"
       >
-        {!!forms?.[activeSectionCurrentIndex] && (
-          <>{React.cloneElement(forms[activeSectionCurrentIndex], { title })}</>
-        )}
+        {form}
       </motion.div>
     </Box>
   )

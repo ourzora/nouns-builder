@@ -6,7 +6,6 @@ import { useContract, useContractRead, useSigner } from 'wagmi'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { DaoContractAddresses, useDaoStore } from 'src/modules/dao'
-import { useFormStore } from 'src/stores/useFormStore'
 import {
   deployPendingButtonStyle,
   infoSectionLabelStyle,
@@ -15,6 +14,8 @@ import {
 } from 'src/styles/deploy.css'
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
+
+import { useFormStore } from '../../stores'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string

@@ -26,7 +26,7 @@ export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
           router.push({
             pathname: `/dao/[token]`,
             query: {
-              token: router.query?.token,
+              token: proposal.collectionAddress,
             },
           })
         }}

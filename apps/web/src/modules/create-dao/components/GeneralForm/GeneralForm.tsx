@@ -5,9 +5,9 @@ import React, { BaseSyntheticEvent } from 'react'
 import SmartInput from 'src/components/Fields/SmartInput'
 import { defaultFormButton } from 'src/components/Fields/styles.css'
 import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
-import { useFormStore } from 'src/stores/useFormStore'
 import { isEmpty } from 'src/utils/helpers'
 
+import { useFormStore } from '../../stores'
 import { GeneralFormValues, generalValidationSchema } from './GeneralForm.schema'
 
 interface GeneralFormProps {

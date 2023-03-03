@@ -1,13 +1,12 @@
 import { Flex } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
-import React from 'react'
+import React, { ReactNode } from 'react'
 
-import { AddTransactionSection, AddressType } from 'src/typings'
+import { AddressType } from 'src/typings'
 
 import { TransactionType } from '../../../../constants'
 import { useCustomTransactionStore, useProposalStore } from '../../../../stores'
 import { customTransactionWrapper, transactionFormWrapper } from './CustomTransaction.css'
-import { FormHandler } from './FormHandler'
 import { FormHeading } from './FormHeading'
 import { ABI, Address, Arguments, Function, Summary, Value } from './forms'
 
@@ -20,42 +19,35 @@ export const CustomTransaction: React.FC = () => {
     reset,
   } = useCustomTransactionStore()
 
-  /*
-
-  Initialize Form Sections
-    - order of returned array defines order of sections
-    - multiple forms per section supported
-*/
-
-  const sections: AddTransactionSection[] = React.useMemo(() => {
-    const address: AddTransactionSection = {
+  const sections: Array<{ title: string; form: ReactNode }> = React.useMemo(() => {
+    const address = {
       title: 'Address',
-      forms: [<Address key={'address'} />],
+      form: <Address key={'address'} />,
     }
 
-    const abi: AddTransactionSection = {
+    const abi = {
       title: 'ABI Interface',
-      forms: [<ABI key={'abi'} />],
+      form: <ABI key={'abi'} />,
     }
 
-    const fn: AddTransactionSection = {
+    const fn = {
       title: 'Function',
-      forms: [<Function key={'function'} />],
+      form: <Function key={'function'} />,
     }
 
-    const args: AddTransactionSection = {
+    const args = {
       title: 'Arguments',
-      forms: [<Arguments key={'arguments'} />],
+      form: <Arguments key={'arguments'} />,
     }
 
-    const value: AddTransactionSection = {
+    const value = {
       title: 'Value',
-      forms: [<Value key={'arguments'} />],
+      form: <Value key={'arguments'} />,
     }
 
-    const summary: AddTransactionSection = {
+    const summary = {
       title: 'Summary',
-      forms: [<Summary key={'summary'} />],
+      form: <Summary key={'summary'} />,
     }
 
     return [address, abi, fn, args, value, summary]
@@ -152,13 +144,7 @@ export const CustomTransaction: React.FC = () => {
             animate="open"
             exit="closed"
           >
-            <FormHandler
-              forms={sections[activeCustomTransactionSection].forms}
-              title={sections[activeCustomTransactionSection].title}
-              heading={sections[activeCustomTransactionSection]?.heading}
-              subHeading={sections[activeCustomTransactionSection]?.subHeading}
-              sections={sections}
-            />
+            {sections[activeCustomTransactionSection].form}
           </motion.div>
         </Flex>
       </Flex>
