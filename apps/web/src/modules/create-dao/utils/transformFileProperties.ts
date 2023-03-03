@@ -125,7 +125,7 @@ export function transformFileProperties(
             ...uploadsToPropertyItems(remainingUploads, traitIndex, isNewProperty),
           ]
 
-          remainingUploads = []
+          remainingUploads = [];
         }
       }
     }

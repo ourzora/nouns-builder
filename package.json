@@ -14,6 +14,11 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "ci": "turbo run lint test"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "format . && git add -A ."
+    }
+  },
   "devDependencies": {
     "eslint": "^8.16.0",
     "eslint-config-custom": "workspace:*",
