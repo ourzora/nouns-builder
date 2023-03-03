@@ -1,14 +1,14 @@
 import { BigNumber } from 'ethers'
 import { describe, expect, it } from 'vitest'
 
-import { IPFSUpload, OrderedLayersProps } from 'src/typings'
-
+import { IPFSUpload } from '../components'
+import { OrderedTraits } from '../components/Artwork/LayerBox'
 import { transformFileProperties } from './transformFileProperties'
 
 export const mockTraits = ['backgrounds', 'bodies', 'heads', 'glasses', 'shirt']
 export const layerProperties = ['property-one', 'property-two', 'property-three']
 
-export const mockOrderedLayers = (traits: string[]): OrderedLayersProps[] => {
+export const mockOrderedLayers = (traits: string[]): OrderedTraits => {
   return traits.map((trait) => {
     return { trait: trait, properties: layerProperties }
   })
