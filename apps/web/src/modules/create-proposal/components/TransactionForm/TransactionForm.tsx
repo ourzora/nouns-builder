@@ -2,7 +2,9 @@ import React, { ReactNode } from 'react'
 
 import { TransactionType } from 'src/modules/create-proposal/constants'
 
-import { Airdrop, CustomTransaction, SendEth } from './forms'
+import { Airdrop } from './Airdrop'
+import { CustomTransaction } from './CustomTransaction'
+import { SendEth } from './SendEth'
 
 type TransactionFormType = {
   [key in TransactionType]: ReactNode
