@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import React from 'react'
 
 import CopyButton from 'src/components/CopyButton/CopyButton'
-import { useCustomTransactionStore } from 'src/modules/create-proposal/index'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import { useLayoutStore } from 'src/stores/useLayoutStore'
 import { getEnsAddress } from 'src/utils/ens'
 import { RAW_DATA_KEY, matchTypeParameters, normalizePathName } from 'src/utils/formABI'

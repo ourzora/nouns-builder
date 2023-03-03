@@ -2,7 +2,7 @@ import { Flex } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React from 'react'
 
-import { useCustomTransactionStore } from 'src/modules/create-proposal/index'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 

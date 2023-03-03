@@ -6,7 +6,7 @@ import React, { useEffect } from 'react'
 import {
   initCustomTransaction,
   useCustomTransactionStore,
-} from 'src/modules/create-proposal/index'
+} from 'src/modules/create-proposal'
 import { useLayoutStore } from 'src/stores'
 
 import { CustomTransactionForm } from '../CustomTransactionForm'

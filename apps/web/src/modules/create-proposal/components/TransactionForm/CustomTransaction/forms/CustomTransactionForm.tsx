@@ -3,7 +3,7 @@ import { Form, Formik, FormikValues } from 'formik'
 import React, { ReactElement } from 'react'
 
 import FieldSwitch from 'src/components/Fields/FieldSwitch'
-import { useCustomTransactionStore } from 'src/modules/create-proposal/index'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import { isEmpty } from 'src/utils/helpers'
 
 import { backButton, transactionFormButtonWithPrev } from './CustomTransactionForm.css'

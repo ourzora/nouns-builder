@@ -5,7 +5,7 @@ import React from 'react'
 import * as Yup from 'yup'
 
 import { TEXT, TEXTAREA } from 'src/components/Fields/types'
-import { useCustomTransactionStore } from 'src/modules/create-proposal/index'
+import { useCustomTransactionStore } from 'src/modules/create-proposal'
 import {
   RAW_DATA_KEY,
   matchInputFromName,
