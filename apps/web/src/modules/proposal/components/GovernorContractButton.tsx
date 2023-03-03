@@ -1,46 +1,64 @@
+import { PrepareWriteContractConfig, Signer } from '@wagmi/core'
 import { Box } from '@zoralabs/zord'
-import { ContractTransaction } from 'ethers'
 import React, { useState } from 'react'
 import { useSWRConfig } from 'swr'
+import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { governorAbi } from 'src/data/contract/abis'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
-import { useGovernorContract } from 'src/hooks'
-import { useLayoutStore } from 'src/stores'
+import { useDaoStore } from 'src/stores'
 
 import { uploadingSpinnerWhite } from './GovernorContractButton.css'
 
-interface GovernorContractButtonProps {
+type GovernorContractButtonProps<
+  TFunctionName extends string = string,
+  TChainId extends number = number,
+  TSigner extends Signer = Signer
+> = Pick<
+  PrepareWriteContractConfig<typeof governorAbi, TFunctionName, TChainId, TSigner>,
+  'args' | 'functionName'
+> & {
+  proposalId: string
   buttonText: string
   buttonClassName: string
-  proposalId: string
-  proposalTransaction: () => Promise<ContractTransaction | undefined>
   onSuccess: () => void
 }
 
-export const GovernorContractButton: React.FC<GovernorContractButtonProps> = ({
+export function GovernorContractButton<
+  TFunctionName extends string = string,
+  TChainId extends number = number,
+  TSigner extends Signer = Signer
+>({
+  functionName,
+  args,
+  proposalId,
   buttonText,
   buttonClassName,
-  proposalId,
-  proposalTransaction,
   onSuccess,
-}) => {
-  const signer = useLayoutStore((state) => state.signer)
-  const { contract: governorContract } = useGovernorContract()
+}: GovernorContractButtonProps) {
+  const { addresses } = useDaoStore()
   const { mutate } = useSWRConfig()
 
   const [isPending, setIsPending] = useState<boolean>(false)
 
-  const handleProposalTransaction = React.useCallback(async () => {
-    const isWrongNetwork =
-      (await signer?.provider?.getCode(governorContract?.address || '')) === '0x'
-    if (!proposalId || isWrongNetwork) return
+  const { config, isError } = usePrepareContractWrite({
+    enabled: !!addresses?.governor,
+    address: addresses?.governor,
+    abi: governorAbi,
+    functionName: functionName,
+    args: args,
+  })
 
+  const { writeAsync } = useContractWrite(config)
+
+  const handleClick = async () => {
     try {
-      const tx = await proposalTransaction()
       setIsPending(true)
-      await (tx as ContractTransaction)?.wait()
+      const txn = await writeAsync?.()
+      await txn?.wait()
+
       await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(proposalId))
       setIsPending(false)
       onSuccess()
@@ -48,13 +66,13 @@ export const GovernorContractButton: React.FC<GovernorContractButtonProps> = ({
       setIsPending(false)
       console.log('err', err)
     }
-  }, [signer, governorContract, proposalId, proposalTransaction, onSuccess, mutate])
+  }
 
   return (
     <ContractButton
-      handleClick={handleProposalTransaction}
+      handleClick={handleClick}
       className={buttonClassName}
-      disabled={isPending}
+      disabled={isPending || isError}
     >
       {isPending ? <Box className={uploadingSpinnerWhite} /> : buttonText}
     </ContractButton>
