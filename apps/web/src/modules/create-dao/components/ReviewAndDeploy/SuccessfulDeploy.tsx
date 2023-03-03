@@ -13,9 +13,9 @@ import {
   successHeadingStyle,
 } from 'src/styles/deploy.css'
 import { walletSnippet } from 'src/utils/helpers'
-import { transformFileProperties } from 'src/utils/transformFileProperties'
 
 import { useFormStore } from '../../stores'
+import { transformFileProperties } from '../../utils'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
