@@ -2,7 +2,7 @@ import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
 
 import { Spinner } from 'src/components/Spinner'
-import { useFormStore } from 'src/stores/useFormStore'
+import { useFormStore } from 'src/modules/create-dao'
 
 import { uploadNotificationWrapper } from './Nav.styles.css'
 

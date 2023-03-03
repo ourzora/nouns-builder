@@ -10,15 +10,15 @@ import {
   AllocationForm,
   Artwork,
   AuctionSettingsForm,
+  CreateFormSection,
   CreateNavigation,
   FormHandler,
   GeneralForm,
   ReviewAndDeploy,
   VetoForm,
+  useFormStore,
 } from 'src/modules/create-dao'
-import { useFormStore } from 'src/stores/useFormStore'
 import { createWrapperHalf, formWrapper, pageGrid } from 'src/styles/styles.css'
-import { CreateFormSection } from 'src/typings'
 
 import { NextPageWithLayout } from './_app'
 
@@ -44,40 +44,39 @@ const CreatePage: NextPageWithLayout = () => {
     const createDao: CreateFormSection = {
       title: 'General',
       heading: 'General Settings',
-      forms: [<GeneralForm key={'general-info'} title={''} />],
+      form: <GeneralForm key={'general-info'} title={'General'} />,
     }
 
     const auctionSettings: CreateFormSection = {
       title: 'Auction',
       heading: 'Auction Settings',
-      forms: [<AuctionSettingsForm key={'auction-settings'} title={''} />],
+      form: <AuctionSettingsForm key={'auction-settings'} title={'Auction'} />,
     }
 
     const vetoSettings: CreateFormSection = {
       title: 'Veto',
-      heading: ['Veto Power', 'Would you like to include veto power?'],
-      subHeading: [
+      heading: 'Veto Power',
+      subHeading:
         'Veto power is useful for addressing security concerns in the early days of your DAO, though as your membership grows, consider revisiting this functionality through a decentralized community vote.',
-      ],
-      forms: [<VetoForm key={'veto-power'} title={''} />],
+      form: <VetoForm key={'veto-power'} title={'Veto'} />,
     }
 
     const founderAllocations: CreateFormSection = {
       title: 'Allocation',
       heading: 'Allocation',
-      forms: [<AllocationForm key={'token-allocations'} title={''} />],
+      form: <AllocationForm key={'token-allocations'} title={'Allocation'} />,
     }
 
     const setUpArtwork: CreateFormSection = {
       title: 'Artwork',
-      heading: ['Artwork Setup', 'Layer Ordering'],
-      forms: [<Artwork key={'set-up-artwork'} title={''} />],
+      heading: 'Artwork Setup',
+      form: <Artwork key={'set-up-artwork'} title={'Artwork'} />,
     }
 
     const reviewAndDeploy: CreateFormSection = {
       title: 'Deploy',
       subHeading: '[Confirm your contract settings before deploying your DAO]',
-      forms: [<ReviewAndDeploy key={'review-and-deploy'} title={''} />],
+      form: <ReviewAndDeploy key={'review-and-deploy'} title={'Deploy'} />,
     }
 
     return [
@@ -145,11 +144,10 @@ const CreatePage: NextPageWithLayout = () => {
                 exit="exit"
               >
                 <FormHandler
-                  forms={sections[activeSection]?.forms}
+                  form={sections[activeSection]?.form}
                   title={sections[activeSection]?.title}
                   heading={sections[activeSection]?.heading}
                   subHeading={sections[activeSection]?.subHeading}
-                  sections={sections}
                 />
               </motion.div>
             </AnimatePresence>

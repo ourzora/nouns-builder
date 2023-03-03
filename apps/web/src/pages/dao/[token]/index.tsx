@@ -1,29 +1,43 @@
-import { readContract, readContracts } from '@wagmi/core'
+import { Address, readContract, readContracts } from '@wagmi/core'
 import { Flex, Text, atoms, theme } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import React from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
-import { useAuctionContract } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 import {
   Activity,
+  DaoContractAddresses,
   PreAuction,
   PreAuctionForm,
   SectionHandler,
   SmartContracts,
+  useDaoStore,
 } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
 
-const DaoPage: NextPageWithLayout = () => {
+interface DaoPageProps {
+  addresses: DaoContractAddresses
+  collectionAddress: Address
+}
+
+const DaoPage: NextPageWithLayout<DaoPageProps> = ({ collectionAddress }) => {
+  const { query } = useRouter()
   const { address: signerAddress } = useAccount()
-  const { owner } = useAuctionContract()
+  const { addresses } = useDaoStore()
+
+  const { data: owner } = useContractRead({
+    abi: auctionAbi,
+    address: addresses.auction,
+    functionName: 'owner',
+  })
 
   const sections = [
     {
@@ -66,9 +80,14 @@ const DaoPage: NextPageWithLayout = () => {
     <Flex direction="column" pb="x30">
       <Meta title={'dao page'} slug={'/'} />
 
-      <PreAuction />
+      <PreAuction collectionAddress={collectionAddress} />
 
-      <SectionHandler sections={sections} />
+      <SectionHandler
+        sections={sections}
+        collectionAddress={collectionAddress}
+        activeTab={query?.tab ? (query.tab as string) : undefined}
+        preAuction={true}
+      />
     </Flex>
   )
 }
@@ -78,9 +97,9 @@ DaoPage.getLayout = getDaoLayout
 export default DaoPage
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const daoAddress = context?.params?.token as string
+  const collectionAddress = context?.params?.token as string
 
-  if (!isAddress(daoAddress)) {
+  if (!isAddress(collectionAddress)) {
     return {
       notFound: true,
     }
@@ -91,7 +110,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       abi: managerAbi,
       address: PUBLIC_MANAGER_ADDRESS,
       functionName: 'getAddresses',
-      args: [daoAddress],
+      args: [collectionAddress],
     })
     const hasMissingAddresses = Object.values(addresses).includes(
       ethers.constants.AddressZero
@@ -124,13 +143,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       return {
         props: {
           addresses,
+          collectionAddress,
         },
       }
     }
 
     return {
       redirect: {
-        destination: `/dao/${daoAddress}/${auction.tokenId}`,
+        destination: `/dao/${collectionAddress}/${auction.tokenId}`,
         permanent: false,
       },
     }

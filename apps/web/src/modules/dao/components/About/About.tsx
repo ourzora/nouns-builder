@@ -4,18 +4,19 @@ import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import React from 'react'
 import useSWR from 'swr'
-import { useBalance } from 'wagmi'
+import { Address, useBalance, useContractReads } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar/Avatar'
 import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { sdk } from 'src/data/graphql/client'
-import { useMetadataContract, useTokenContract } from 'src/hooks'
 import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
-import type { AddressType } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useDaoStore } from '../../stores'
+import { parseContractURI } from '../../utils'
 import { ExternalLinks } from './ExternalLinks'
 import { Statistic } from './Statistic'
 
@@ -23,11 +24,33 @@ export const About: React.FC = () => {
   const {
     addresses: { token, treasury, metadata },
   } = useDaoStore()
-  const { name, totalSupply } = useTokenContract()
-  const { daoImage, description, contractURI } = useMetadataContract(
-    metadata as AddressType
+
+  const tokenContractParams = {
+    abi: tokenAbi,
+    address: token as Address,
+  }
+  const metadataContractParams = {
+    abi: metadataAbi,
+    address: metadata as Address,
+  }
+
+  const { data: contractData } = useContractReads({
+    contracts: [
+      { ...tokenContractParams, functionName: 'name' },
+      { ...tokenContractParams, functionName: 'totalSupply' },
+      { ...metadataContractParams, functionName: 'contractImage' },
+      { ...metadataContractParams, functionName: 'description' },
+      { ...metadataContractParams, functionName: 'contractURI' },
+    ],
+  })
+
+  const [name, totalSupply, daoImage, description, contractURI] = unpackOptionalArray(
+    contractData,
+    5
   )
-  const { data: balance } = useBalance({ address: treasury as `0x${string}` })
+  const parsedContractURI = parseContractURI(contractURI)
+
+  const { data: balance } = useBalance({ address: treasury as Address })
 
   const { data } = useSWR(token ? [SWR_KEYS.DAO_INFO, token] : null, async (_, token) => {
     const res = await sdk.daoInfo({
@@ -77,7 +100,7 @@ export const About: React.FC = () => {
         </Flex>
 
         <Box display={{ '@initial': 'none', '@768': 'block' }}>
-          <ExternalLinks links={{ website: contractURI?.external_url }} />
+          <ExternalLinks links={{ website: parsedContractURI?.external_url }} />
         </Box>
       </Flex>
 
@@ -93,7 +116,7 @@ export const About: React.FC = () => {
           address={treasury}
         />
         <Statistic title="Owners" content={data?.ownerCount} />
-        <Statistic title="Total supply" content={totalSupply} />
+        <Statistic title="Total supply" content={totalSupply?.toNumber()} />
       </Flex>
 
       {typeof description !== 'undefined' && description !== null ? (
@@ -108,7 +131,7 @@ export const About: React.FC = () => {
         mt={{ '@initial': 'x4', '@768': 'x6' }}
         display={{ '@initial': 'block', '@768': 'none' }}
       >
-        <ExternalLinks links={{ website: contractURI?.external_url }} />
+        <ExternalLinks links={{ website: parsedContractURI?.external_url }} />
       </Box>
     </Box>
   )

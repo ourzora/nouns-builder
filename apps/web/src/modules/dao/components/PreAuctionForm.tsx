@@ -3,15 +3,22 @@ import { BigNumber, ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
+import { useContract, useContractReads, useSigner } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
 import StickySave from 'src/components/Fields/StickySave'
 import { NUMBER } from 'src/components/Fields/types'
-import { useAuctionContract } from 'src/hooks'
+import { auctionAbi } from 'src/data/contract/abis'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { compareAndReturn, fromSeconds, toSeconds } from 'src/utils/helpers'
+import {
+  compareAndReturn,
+  fromSeconds,
+  toSeconds,
+  unpackOptionalArray,
+} from 'src/utils/helpers'
 
+import { useDaoStore } from '../stores'
 import { PreAuctionFormValues, preAuctionValidationSchema } from './PreAuctionForm.schema'
 
 interface PreAuctionFormSettingsProps {
@@ -19,8 +26,27 @@ interface PreAuctionFormSettingsProps {
 }
 
 export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
-  const { auctionDuration, auctionReservePrice, setDuration, setReservePrice } =
-    useAuctionContract()
+  const { addresses } = useDaoStore()
+  const { data: signer } = useSigner()
+
+  const auctionContractParams = {
+    abi: auctionAbi,
+    address: addresses.auction,
+  }
+
+  const auctionContract = useContract({
+    ...auctionContractParams,
+    signerOrProvider: signer,
+  })
+
+  const { data } = useContractReads({
+    contracts: [
+      { ...auctionContractParams, functionName: 'duration' },
+      { ...auctionContractParams, functionName: 'reservePrice' },
+    ],
+  })
+
+  const [auctionDuration, auctionReservePrice] = unpackOptionalArray(data, 2)
 
   const initialValues: PreAuctionFormValues = {
     auctionDuration: fromSeconds(auctionDuration),
@@ -38,13 +64,15 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
     try {
       const newDuration = values.auctionDuration
       if (!isEqual(newDuration, initialValues['auctionDuration'])) {
-        const durationTxn = await setDuration(BigNumber.from(toSeconds(newDuration)))
+        const durationTxn = await auctionContract?.setDuration(
+          BigNumber.from(toSeconds(newDuration))
+        )
         await durationTxn?.wait()
       }
 
       const newReservePrice = values.auctionReservePrice
       if (!isEqual(newReservePrice, initialValues['auctionReservePrice'])) {
-        const reservePriceTxn = await setReservePrice(
+        const reservePriceTxn = await auctionContract?.setReservePrice(
           ethers.utils.parseEther(newReservePrice.toString())
         )
         await reservePriceTxn?.wait()

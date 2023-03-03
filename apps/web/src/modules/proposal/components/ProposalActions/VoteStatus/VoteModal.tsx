@@ -1,16 +1,18 @@
 import { Atoms, Box, Button, Flex, Stack, Text, theme } from '@zoralabs/zord'
-import { ContractTransaction } from 'ethers'
+import { BigNumber, ContractTransaction } from 'ethers'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { Fragment } from 'react'
 import { useSWRConfig } from 'swr'
+import { Address, useContract, useSigner } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { IconType } from 'src/components/Icon/icons'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { governorAbi } from 'src/data/contract/abis'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
-import { useGovernorContract } from 'src/hooks'
+import { useDaoStore } from 'src/modules/dao'
 import {
   proposalFormTitle,
   voteModalFieldset,
@@ -39,8 +41,15 @@ const VoteModal: React.FC<{
   showVoteModal: boolean
   setShowVoteModal: (show: boolean) => void
 }> = ({ title, proposalId, votesAvailable, showVoteModal, setShowVoteModal }) => {
+  const { addresses } = useDaoStore()
+  const { data: signer } = useSigner()
   const { mutate } = useSWRConfig()
-  const { castVote, castVoteWithReason } = useGovernorContract()
+
+  const contract = useContract({
+    address: addresses?.governor as Address,
+    abi: governorAbi,
+    signerOrProvider: signer,
+  })
   const [isCastVoteSuccess, setIsCastVoteSuccess] = React.useState<boolean>(false)
 
   const initialValues: FormValues = {
@@ -48,34 +57,27 @@ const VoteModal: React.FC<{
     reason: '',
   }
 
-  const handleSubmit = React.useCallback(
-    async (values: FormValues) => {
-      const params = {
-        proposalId,
-        support: Number(values.choice),
-        reason: values.reason,
-      }
+  const handleSubmit = async (values: FormValues) => {
+    if (!contract) return
 
-      let vote: Promise<ContractTransaction | undefined>
-      if (params.reason.length > 0) {
-        vote = castVoteWithReason(
-          params.proposalId as BytesType,
-          params.support,
-          params.reason
-        )
-      } else {
-        vote = castVote(params.proposalId as BytesType, params.support)
-      }
+    let vote: Promise<ContractTransaction | undefined>
+    if (values.reason.length > 0) {
+      vote = contract.castVoteWithReason(
+        proposalId as BytesType,
+        BigNumber.from(values.choice),
+        values.reason
+      )
+    } else {
+      vote = contract.castVote(proposalId as BytesType, BigNumber.from(values.choice))
+    }
 
-      const tx = await vote
-      await tx?.wait()
+    const tx = await vote
+    await tx?.wait()
 
-      await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(proposalId))
+    await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(proposalId))
 
-      setIsCastVoteSuccess(true)
-    },
-    [proposalId, castVoteWithReason, castVote, setIsCastVoteSuccess, mutate]
-  )
+    setIsCastVoteSuccess(true)
+  }
 
   const voteOptions = [
     {

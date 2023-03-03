@@ -30,16 +30,12 @@ export interface FormStoreState {
   setSetUpArtwork: (artwork: ArtworkFormValues) => void
   ipfsUpload: IPFSUpload[]
   setIpfsUpload: (ipfsUpload: IPFSUpload[]) => void
-  activeSectionCurrentIndex: number
-  setActiveSectionCurrentIndex: (activeSectionCurrentIndex: number) => void
   deployedDao: DaoContractAddresses
   setDeployedDao: (deployedDao: DaoContractAddresses) => void
   orderedLayers: OrderedLayersProps[]
   setOrderedLayers: (orderedLayers: OrderedLayersProps[]) => void
   isUploadingToIPFS: boolean
   setIsUploadingToIPFS: (bool: boolean) => void
-  nounsAllocationOn: boolean
-  setNounsAllocationOn: (bool: boolean) => void
   resetForm: () => void
 }
 
@@ -76,7 +72,6 @@ const initialState = {
       endDate: yearsAhead(5),
     },
   ],
-  nounsAllocationOn: true,
   vetoPower: undefined,
   setUpArtwork: {
     projectDescription: '',
@@ -88,7 +83,6 @@ const initialState = {
   ipfsUpload: [],
   orderedLayers: [],
   isUploadingToIPFS: false,
-  activeSectionCurrentIndex: 0,
   deployedDao: {
     token: undefined,
     metadata: undefined,
@@ -117,8 +111,6 @@ export const useFormStore = create(
         set({ founderAllocation }),
       setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) =>
         set({ contributionAllocation }),
-      nounsAllocationOn: true,
-      setNounsAllocationOn: (nounsAllocationOn: boolean) => set({ nounsAllocationOn }),
       setVetoPower: (vetoPower: boolean) => set({ vetoPower }),
       setSetUpArtwork: (artwork: ArtworkFormValues) => set({ setUpArtwork: artwork }),
       setIpfsUpload: (ipfsUpload: IPFSUpload[]) => set({ ipfsUpload }),
@@ -128,8 +120,6 @@ export const useFormStore = create(
         })
       },
       setIsUploadingToIPFS: (isUploadingToIPFS: boolean) => set({ isUploadingToIPFS }),
-      setActiveSectionCurrentIndex: (activeSectionCurrentIndex: number) =>
-        set({ activeSectionCurrentIndex }),
       setDeployedDao: (deployedDao: DaoContractAddresses) => {
         set({
           deployedDao,

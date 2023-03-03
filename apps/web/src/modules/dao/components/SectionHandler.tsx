@@ -1,6 +1,5 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
-import omit from 'lodash/omit'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { ReactElement } from 'react'
@@ -19,6 +18,10 @@ interface SectionHandlerProps {
     title: string
     component: ReactElement[]
   }[]
+  collectionAddress: string
+  tokenId?: string
+  activeTab?: string
+  preAuction?: boolean
 }
 
 interface activeSectionProps {
@@ -26,9 +29,14 @@ interface activeSectionProps {
   component: React.ReactElement[]
 }
 
-export const SectionHandler: React.FC<SectionHandlerProps> = ({ sections }) => {
+export const SectionHandler: React.FC<SectionHandlerProps> = ({
+  sections,
+  collectionAddress,
+  tokenId,
+  activeTab,
+  preAuction = false,
+}) => {
   const router = useRouter()
-  const { query } = router
 
   /*
 
@@ -47,16 +55,15 @@ export const SectionHandler: React.FC<SectionHandlerProps> = ({ sections }) => {
   )
 
   const activeSection: activeSectionProps | undefined = React.useMemo(() => {
-    const isPreAuction = !query.tokenId
     const activity = tab('Activity')
     const about = tab('About')
 
-    if (!query.tab) {
-      return isPreAuction ? activity : about
+    if (!activeTab) {
+      return preAuction ? activity : about
     }
 
-    return tab(unslugify(query.tab as string)) ?? activity
-  }, [query, tab])
+    return tab(unslugify(activeTab)) ?? activity
+  }, [preAuction, activeTab, tab])
 
   return (
     <>
@@ -73,9 +80,10 @@ export const SectionHandler: React.FC<SectionHandlerProps> = ({ sections }) => {
               return (
                 <Link
                   href={{
-                    pathname: router.pathname,
+                    pathname: tokenId
+                      ? `/dao/${collectionAddress}/${tokenId}`
+                      : `/dao/${collectionAddress}`,
                     query: {
-                      ...omit(query, ['page']),
                       tab: slugify(section.title),
                     },
                   }}
