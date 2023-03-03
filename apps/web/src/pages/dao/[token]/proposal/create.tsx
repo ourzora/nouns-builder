@@ -26,6 +26,7 @@ import { AddressType } from 'src/typings'
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
   const { query } = router
+  const collectionAddress = query?.token as AddressType
   const [transactionType, setTransactionType] = useState<TransactionType | undefined>()
   const transactions = useProposalStore((state) => state.transactions)
 
@@ -84,7 +85,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
               <TransactionForm type={transactionType} />
             </Stack>
           }
-          rightColumn={<Queue />}
+          rightColumn={<Queue collectionAddress={collectionAddress} />}
         />
       ) : (
         <TwoColumnLayout

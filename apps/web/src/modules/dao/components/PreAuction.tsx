@@ -13,9 +13,12 @@ import {
   wrapper,
 } from './PreAuction.css'
 
-export const PreAuction = () => {
+interface PreAuctionProps {
+  collectionAddress: string
+}
+
+export const PreAuction: React.FC<PreAuctionProps> = ({ collectionAddress }) => {
   const router = useRouter()
-  const { query } = router
   const { signer } = useLayoutStore()
   const { contract: auctionContract } = useAuctionContract()
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -37,8 +40,8 @@ export const PreAuction = () => {
 
     const auction = await auctionContract.auction()
     const tokenId: number = auction?.tokenId?.toNumber()
-    router.push(`/dao/${router.query?.token}/${tokenId}`)
-  }, [auctionContract, signer, router])
+    router.push(`/dao/${collectionAddress}/${tokenId}`)
+  }, [auctionContract, signer, router, collectionAddress])
 
   return (
     <Flex className={wrapper}>
@@ -56,7 +59,7 @@ export const PreAuction = () => {
           <Link
             href={{
               pathname: router.pathname,
-              query: { ...query, tab: 'admin' },
+              query: { token: collectionAddress, tab: 'admin' },
             }}
             shallow={true}
             className={atoms({
