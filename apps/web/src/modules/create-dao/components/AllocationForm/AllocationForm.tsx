@@ -10,10 +10,10 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
-import { useFormStore } from 'src/stores/useFormStore'
 import { TokenAllocation } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 
+import { useFormStore } from '../../stores'
 import { validationSchemaFounderAllocation } from './AllocationForm.schema'
 import { ContributionAllocation } from './ContributionAllocation'
 import { FounderAllocationFields } from './FounderAllocationFields'

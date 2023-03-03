@@ -9,8 +9,9 @@ import {
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
-import { useFormStore } from 'src/stores/useFormStore'
 import { isEmpty } from 'src/utils/helpers'
+
+import { useFormStore } from '../stores'
 
 interface VetoFormProps {
   title: string

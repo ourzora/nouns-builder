@@ -11,13 +11,6 @@ import {
   Support,
 } from 'src/data/graphql/sdk.generated'
 
-export interface CreateFormSection {
-  title: string
-  heading?: string | string[]
-  subHeading?: string | string[]
-  forms: ReactElement[]
-}
-
 export interface Duration {
   seconds?: number
   days?: number

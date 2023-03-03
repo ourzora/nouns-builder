@@ -28,7 +28,6 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import { useFormStore } from 'src/stores/useFormStore'
 import {
   IPFSUpload,
   ImageProps,
@@ -37,6 +36,7 @@ import {
 } from 'src/typings'
 import { sanitizeFileName } from 'src/utils/sanitize'
 
+import { useFormStore } from '../../stores'
 import { LayerOrdering } from './LayerOrdering'
 import { Playground } from './Playground'
 

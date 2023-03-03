@@ -8,7 +8,6 @@ import { tokenAbi } from 'src/data/contract/abis'
 import { useMetadataContract } from 'src/hooks'
 import { DaoContractAddresses, useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
-import { useFormStore } from 'src/stores/useFormStore'
 import {
   deployPendingButtonStyle,
   infoSectionLabelStyle,
@@ -17,6 +16,8 @@ import {
 } from 'src/styles/deploy.css'
 import { walletSnippet } from 'src/utils/helpers'
 import { transformFileProperties } from 'src/utils/transformFileProperties'
+
+import { useFormStore } from '../../stores'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
