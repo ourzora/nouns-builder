@@ -19,6 +19,7 @@ interface SectionHandlerProps {
     component: ReactElement[]
   }[]
   collectionAddress: string
+  tokenId?: string
   activeTab?: string
   preAuction?: boolean
 }
@@ -31,6 +32,7 @@ interface activeSectionProps {
 export const SectionHandler: React.FC<SectionHandlerProps> = ({
   sections,
   collectionAddress,
+  tokenId,
   activeTab,
   preAuction = false,
 }) => {
@@ -78,9 +80,10 @@ export const SectionHandler: React.FC<SectionHandlerProps> = ({
               return (
                 <Link
                   href={{
-                    pathname: router.pathname,
+                    pathname: tokenId
+                      ? `/dao/${collectionAddress}/${tokenId}`
+                      : `/dao/${collectionAddress}`,
                     query: {
-                      token: collectionAddress,
                       tab: slugify(section.title),
                     },
                   }}
