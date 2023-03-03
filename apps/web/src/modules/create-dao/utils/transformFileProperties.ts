@@ -79,8 +79,8 @@ export function transformFileProperties(
       currentTransaction.names = [...currentTransaction.names, trait]
     } else {
       // We need to split the trait up across multiple transactions
-      let remainingUploads = [...uploads]
-      let isNewProperty = true
+      let remainingUploads = [...uploads];
+      let isNewProperty = true;
 
       while (remainingUploads.length > 0) {
         // If isNewProperty = false, we index based on the whole list of properties
@@ -113,11 +113,11 @@ export function transformFileProperties(
           currentTransaction = { names: [], items: [], data }
 
           // Set isNewProperty to false
-          isNewProperty = false
+          isNewProperty = false;
 
           // update remainingUploads and availableSpaceInCurrentTransaction
-          remainingUploads = remainingUploads.slice(availableSpaceInCurrentTransaction)
-          availableSpaceInCurrentTransaction = maxFilesPerTransaction
+          remainingUploads = remainingUploads.slice(availableSpaceInCurrentTransaction);
+          availableSpaceInCurrentTransaction = maxFilesPerTransaction;
         } else {
           // remaining uploads will fit in current transaction
           currentTransaction.items = [
@@ -125,20 +125,20 @@ export function transformFileProperties(
             ...uploadsToPropertyItems(remainingUploads, traitIndex, isNewProperty),
           ]
 
-          remainingUploads = []
+          remainingUploads = [];
         }
       }
     }
 
     // catch the case in which we have exactly 500 uploads in the current transaction
     if (currentTransaction.items.length === maxFilesPerTransaction) {
-      transactions.push(currentTransaction)
+      transactions.push(currentTransaction);
       currentTransaction = { names: [], items: [], data }
     }
   }
 
   if (currentTransaction.items.length > 0) {
-    transactions.push(currentTransaction)
+    transactions.push(currentTransaction);
   }
 
   return transactions
