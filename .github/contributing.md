@@ -1,15 +1,22 @@
-gm builders, thank you for considering contributing to Nouns Builder. Please review this document before submitting a pull request. (Read time: 5 minutes)
+# Contributing to Nouns Builder
 
-If you want to contribute, but don't know where to start, you can create [a new discussion]()
+We appreciate your interest in improving Nouns Builder. We're excited to help you get started!
 
-> Please start a discussion or ask first before starting work such as _task #1, task #2, task #3_ etc. We want to provide you with all the necessary information that will be helpful as you start investing time and effort into a new feature.
+Before you start, we recommend reviewing the [code of conduct]() for this project.  
 
 ---
+### How can I contribute?
+There are a few ways to contribute and help improve Nouns Builder. Some ways include:
+1. Reporting bugs
+2. Suggesting new ideas
+3. Submitting pull requests to improve the frontend
 
-### Quickstart
+If you're ready to contribute to the source code, please follow this [README](https://github.com/ourzora/nouns-builder/blob/main/README.md) to get up and running locally.
 
-Please follow the [README](/README.md) to on how to get up and running locally
+If you're unsure where to begin, we highly recommend starting [a new discussion](). 
 
+You can also find other contributors in our [public Discord channel](https://discord.gg/JpMKps2W). Feel free to also reach out to us on [Twitter](https://twitter.com/nounsbuilder) if you have any questions.
+  
 ---
 
 ### Submitting a pull request
@@ -20,3 +27,5 @@ When you're ready to submit a pull request, please consider that:
 - Pull request titles should use the [imperative mood](https://en.wikipedia.org/wiki/Imperative_mood) (e.g., `Add something`, `Fix something`).
 
 When you submit a pull request, GitHub will automatically lint, build, test your changes, and deploy to a preview branch on Vercel.
+
+  
