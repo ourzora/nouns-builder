@@ -95,6 +95,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
         sections={sections}
         activeTab={query?.tab ? (query.tab as string) : undefined}
         collectionAddress={collection}
+        tokenId={tokenId}
       />
 
       <AnimatedModal
