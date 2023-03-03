@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import { describe, expect, it } from 'vitest'
 
-import { IPFSUpload, OrderedLayersProps } from 'src/typings'
+import { IPFSUpload, OrderedLayersProps, AddressType } from 'src/typings'
 
 import { transformFileProperties } from './transformFileProperties'
 
@@ -20,8 +20,8 @@ export const mockIpfsUpload = (
 ): IPFSUpload[] => {
   let upload = []
   for (let i = 0; i < filesUploadCount; i++) {
-    const random = (max: any[]) => Math.floor(Math.random() * max.length)
-    const randomTrait = traits[random(traits)]
+    const random = (max: any[]) => Math.floor(Math.random() * max.length);
+    const randomTrait = traits[random(traits)];
 
     upload.push(ipfsUploadObject(randomTrait))
   }
