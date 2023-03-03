@@ -7,7 +7,7 @@ const { NEXT_PUBLIC_SENTRY_DSN, SENTRY_ORG, SENTRY_PROJECT } = process.env
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['ipfs-service', 'analytics'],
+  transpilePackages: ['ipfs-service', 'analytics', 'blocklist'],
   env: {
     ETHERSCAN_API_KEY: process.env.ETHERSCAN_API_KEY,
   },
