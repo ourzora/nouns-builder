@@ -5,12 +5,11 @@ import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
-import { useAuctionContract } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 import {
@@ -20,6 +19,7 @@ import {
   PreAuctionForm,
   SectionHandler,
   SmartContracts,
+  useDaoStore,
 } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
 
@@ -31,7 +31,13 @@ interface DaoPageProps {
 const DaoPage: NextPageWithLayout<DaoPageProps> = ({ collectionAddress }) => {
   const { query } = useRouter()
   const { address: signerAddress } = useAccount()
-  const { owner } = useAuctionContract()
+  const { addresses } = useDaoStore()
+
+  const { data: owner } = useContractRead({
+    abi: auctionAbi,
+    address: addresses.auction,
+    functionName: 'owner',
+  })
 
   const sections = [
     {

@@ -1,21 +1,35 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
+import { constants } from 'ethers'
 import React from 'react'
+import { useAccount, useContractRead } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { useTokenContract } from 'src/hooks'
+import { tokenAbi } from 'src/data/contract/abis'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
 import { walletSnippet } from 'src/utils/helpers'
+
+import { useDaoStore } from '../../stores'
 
 interface CurrentDelegateProps {
   toggleIsEditing: () => void
 }
 
 export const CurrentDelegate = ({ toggleIsEditing }: CurrentDelegateProps) => {
-  const { delegateAddress } = useTokenContract()
-  const { ensName, ensAvatar } = useEnsData(delegateAddress as string)
+  const { addresses } = useDaoStore()
+  const { address: signerAddress } = useAccount()
+
+  const { data: delegateAddress } = useContractRead({
+    abi: tokenAbi,
+    address: addresses.token,
+    functionName: 'delegates',
+    args: [signerAddress || constants.AddressZero],
+    enabled: !!signerAddress,
+  })
+
+  const { ensName, ensAvatar } = useEnsData(delegateAddress)
 
   return (
     <Flex direction={'column'} width={'100%'}>

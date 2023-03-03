@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
 import React, { BaseSyntheticEvent } from 'react'
+import { Address, useContract, useContractReads } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import Radio from 'src/components/Fields/Radio'
@@ -14,7 +15,7 @@ import TextArea from 'src/components/Fields/TextArea'
 import { NUMBER, TEXT } from 'src/components/Fields/types'
 import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
 import { NULL_ADDRESS } from 'src/constants/addresses'
-import { useAuctionContract, useGovernorContract, useMetadataContract } from 'src/hooks'
+import { auctionAbi, governorAbi, metadataAbi } from 'src/data/contract/abis'
 import {
   BuilderTransaction,
   TransactionType,
@@ -23,9 +24,8 @@ import {
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
-import { compareAndReturn, fromSeconds } from 'src/utils/helpers'
+import { compareAndReturn, fromSeconds, unpackOptionalArray } from 'src/utils/helpers'
 
 import { DaoContracts, useDaoStore } from '../../stores'
 import { AdminFormValues, adminValidationSchema } from './AdminForm.schema'
@@ -51,33 +51,59 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
   const addresses = useDaoStore((state) => state.addresses)
   const provider = useLayoutStore((state) => state.provider)
 
-  const {
-    contract: auctionContract,
+  const auctionContractParams = {
+    abi: auctionAbi,
+    address: addresses.auction,
+  }
+
+  const governorContractParams = {
+    abi: governorAbi,
+    address: addresses?.governor as Address,
+  }
+
+  const metadataContractParams = {
+    abi: metadataAbi,
+    address: addresses?.metadata as Address,
+  }
+
+  const auctionContract = useContract(auctionContractParams)
+  const governorContract = useContract(governorContractParams)
+  const metadataContract = useContract(metadataContractParams)
+
+  const { data } = useContractReads({
+    contracts: [
+      { ...auctionContractParams, functionName: 'duration' },
+      { ...auctionContractParams, functionName: 'reservePrice' },
+      { ...governorContractParams, functionName: 'vetoer' },
+      { ...governorContractParams, functionName: 'votingPeriod' },
+      { ...governorContractParams, functionName: 'votingDelay' },
+      { ...governorContractParams, functionName: 'quorumThresholdBps' },
+      { ...governorContractParams, functionName: 'proposalThresholdBps' },
+      { ...metadataContractParams, functionName: 'contractImage' },
+      { ...metadataContractParams, functionName: 'projectURI' },
+      { ...metadataContractParams, functionName: 'rendererBase' },
+      { ...metadataContractParams, functionName: 'description' },
+    ],
+  })
+
+  const [
     auctionDuration,
     auctionReservePrice,
-  } = useAuctionContract()
-
-  const {
-    contract: governorContract,
     vetoer,
     votingPeriod,
     votingDelay,
     quorumVotesBps,
     proposalThresholdBps,
-  } = useGovernorContract()
-
-  const {
-    contract: metadataContract,
     daoImage,
     daoWebsite,
     rendererBase,
     description,
-  } = useMetadataContract(addresses?.metadata as AddressType)
+  ] = unpackOptionalArray(data, 11)
 
   const contracts: DaoContracts = {
-    auctionContract,
-    governorContract,
-    metadataContract,
+    auctionContract: auctionContract ?? undefined,
+    governorContract: governorContract ?? undefined,
+    metadataContract: metadataContract ?? undefined,
   }
 
   const initialValues: AdminFormValues = {
@@ -107,7 +133,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
 
   const withPauseUnpause = (
     transactions: BuilderTransaction[],
-    auctionAddress: AddressType,
+    auctionAddress: Address,
     auctionContract?: Contract
   ) => {
     const targetAddresses = transactions
@@ -200,8 +226,8 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
 
     const transactionsWithPauseUnpause = withPauseUnpause(
       transactions,
-      addresses?.auction as AddressType,
-      auctionContract
+      addresses?.auction as Address,
+      auctionContract ?? undefined
     )
 
     createProposal({
