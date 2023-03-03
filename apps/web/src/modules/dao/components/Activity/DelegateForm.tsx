@@ -1,16 +1,17 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { useState } from 'react'
-import { Address } from 'wagmi'
+import { Address, useContract, useSigner } from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SmartInput from 'src/components/Fields/SmartInput'
 import { Icon } from 'src/components/Icon'
-import { useTokenContract } from 'src/hooks'
+import { tokenAbi } from 'src/data/contract/abis'
 import { useLayoutStore } from 'src/stores'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
 import { getEnsAddress } from 'src/utils/ens'
 
+import { useDaoStore } from '../../stores'
 import { delegateValidationSchema } from './DelegateForm.schema'
 
 interface AddressFormProps {
@@ -24,15 +25,22 @@ interface DelegateFormProps {
 
 export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) => {
   const [isLoading, setIsLoading] = useState(false)
-  const { delegate } = useTokenContract()
+  const { addresses } = useDaoStore()
   const { provider } = useLayoutStore()
+  const { data: signer } = useSigner()
+
+  const tokenContract = useContract({
+    abi: tokenAbi,
+    address: addresses.token,
+    signerOrProvider: signer,
+  })
 
   const submitCallback = async (values: AddressFormProps) => {
-    if (!values.address) return
+    if (!values.address || !tokenContract) return
 
     setIsLoading(true)
     try {
-      const txn = await delegate(
+      const txn = await tokenContract.delegate(
         (await getEnsAddress(values.address, provider)) as Address
       )
       await txn?.wait()
@@ -96,7 +104,7 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
                     submitCallback(values)
                   }}
                   style={{ flex: 'auto' }}
-                  disabled={!dirty || !isValid}
+                  disabled={!dirty || !isValid || !tokenContract}
                   size="lg"
                 >
                   Update delegate

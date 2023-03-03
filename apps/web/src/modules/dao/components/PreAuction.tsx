@@ -1,11 +1,13 @@
+import { readContract } from '@wagmi/core'
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
 
-import { useAuctionContract } from 'src/hooks'
-import { useLayoutStore } from 'src/stores'
+import { auctionAbi } from 'src/data/contract/abis'
 
+import { useDaoStore } from '../stores'
 import {
   preAuctionButtonVariants,
   preAuctionHelperText,
@@ -19,18 +21,26 @@ interface PreAuctionProps {
 
 export const PreAuction: React.FC<PreAuctionProps> = ({ collectionAddress }) => {
   const router = useRouter()
-  const { signer } = useLayoutStore()
-  const { contract: auctionContract } = useAuctionContract()
+  const { data: signer } = useSigner()
+  const { addresses } = useDaoStore()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  /* handle start of auction  */
-  const handleStartAuction = React.useCallback(async () => {
-    if (!auctionContract || !signer) return
+  const { config, isError } = usePrepareContractWrite({
+    enabled: !!addresses.auction,
+    abi: auctionAbi,
+    address: addresses.auction,
+    functionName: 'unpause',
+    signer: signer,
+  })
 
+  const { writeAsync } = useContractWrite(config)
+
+  /* handle start of auction  */
+  const handleStartAuction = async () => {
     setIsLoading(true)
     try {
-      const { wait } = await auctionContract.unpause()
-      await wait()
+      const txn = await writeAsync?.()
+      await txn?.wait()
       setIsLoading(false)
     } catch (e) {
       console.error(e)
@@ -38,16 +48,21 @@ export const PreAuction: React.FC<PreAuctionProps> = ({ collectionAddress }) => 
       return
     }
 
-    const auction = await auctionContract.auction()
-    const tokenId: number = auction?.tokenId?.toNumber()
+    const auction = await readContract({
+      address: addresses.auction!,
+      abi: auctionAbi,
+      functionName: 'auction',
+    })
+
+    const tokenId = auction?.tokenId?.toString()
     router.push(`/dao/${collectionAddress}/${tokenId}`)
-  }, [auctionContract, signer, router, collectionAddress])
+  }
 
   return (
     <Flex className={wrapper}>
       <Flex direction={'column'} justify={'center'} className={preAuctionWrapper}>
         <Button
-          disabled={isLoading}
+          disabled={isLoading || !signer || !writeAsync || isError}
           loading={isLoading}
           onClick={handleStartAuction}
           className={preAuctionButtonVariants['start']}
