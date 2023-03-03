@@ -8,10 +8,11 @@ import { useLayoutStore } from 'src/stores/useLayoutStore'
 import ExploreSortMenu from './ExploreSortMenu'
 
 interface ExploreToolbarProps {
-  myDaos?: boolean
+  title: string
+  showSort?: boolean
 }
 
-const ExploreToolbar: React.FC<ExploreToolbarProps> = ({ myDaos = false }) => {
+const ExploreToolbar: React.FC<ExploreToolbarProps> = ({ title, showSort = false }) => {
   const router = useRouter()
   const signerAddress = useLayoutStore((state) => state.signerAddress)
 
@@ -25,9 +26,9 @@ const ExploreToolbar: React.FC<ExploreToolbarProps> = ({ myDaos = false }) => {
     >
       <Flex direction={'row'} w={'100%'} justify={'space-between'}>
         <Box fontSize={28} mb={'x8'}>
-          {myDaos ? 'My DAOs' : 'DAOs'}
+          {title}
         </Box>
-        {!myDaos && (
+        {showSort && (
           <ExploreSortMenu choice={(router.query?.sortKey as string) || 'CREATED'} />
         )}
       </Flex>

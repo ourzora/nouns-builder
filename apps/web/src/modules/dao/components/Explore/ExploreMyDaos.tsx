@@ -22,7 +22,7 @@ export const ExploreMyDaos = () => {
 
   return (
     <>
-      <ExploreToolbar myDaos={true} />
+      <ExploreToolbar title={'My DAOs'} />
       {data?.daos?.length ? (
         <Grid className={exploreGrid} mb={'x16'}>
           {data.daos.map((dao) => (

@@ -75,7 +75,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo }) => {
 
   return (
     <Fragment>
-      <ExploreToolbar />
+      <ExploreToolbar title={'DAOs'} showSort />
       {daos?.length ? (
         <Fragment>
           <Grid className={exploreGrid}>
