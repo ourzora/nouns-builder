@@ -1,6 +1,5 @@
 import { Button, Flex, Stack, Text } from '@zoralabs/zord'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React from 'react'
 
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
@@ -9,12 +8,14 @@ import { TransactionCard, useProposalStore } from 'src/modules/create-proposal'
 import { TransactionType } from '../../constants'
 import { ConfirmRemove } from './ConfirmRemove'
 
-export const Queue = () => {
+interface QueueProps {
+  collectionAddress: string
+}
+
+export const Queue: React.FC<QueueProps> = ({ collectionAddress }) => {
   const transactions = useProposalStore((state) => state.transactions)
   const removeTransaction = useProposalStore((state) => state.removeTransaction)
   const removeAllTransactions = useProposalStore((state) => state.removeAllTransactions)
-
-  const { query } = useRouter()
 
   const [openConfirm, setOpenConfirm] = React.useState<boolean>(false)
   const [removeIndex, setRemoveIndex] = React.useState<number | null>(null)
@@ -76,7 +77,7 @@ export const Queue = () => {
 
       <Link
         href={{
-          pathname: `/dao/${query.token}/proposal/review`,
+          pathname: `/dao/${collectionAddress}/proposal/review`,
         }}
       >
         <Flex

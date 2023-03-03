@@ -2,21 +2,15 @@ import { Flex, Text, vars } from '@zoralabs/zord'
 import { BigNumber } from 'ethers'
 import React, { Fragment, useState } from 'react'
 import { useSWRConfig } from 'swr'
+import { Address } from 'wagmi'
 
 import { Countdown } from 'src/components/Countdown'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
-import { useGovernorContract } from 'src/hooks'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
-import {
-  AddressType,
-  BytesType,
-  Proposal,
-  ProposalStatus,
-  ProposalSucceededStatus,
-} from 'src/typings'
+import { BytesType, Proposal, ProposalStatus, ProposalSucceededStatus } from 'src/typings'
 
 import { isProposalSuccessful } from '../../utils'
 import { GovernorContractButton } from '../GovernorContractButton'
@@ -29,15 +23,10 @@ const Queue: React.FC<{
   proposalId: string
   onSuccess: () => void
 }> = (props) => {
-  const { queue } = useGovernorContract()
-
-  const queueTransaction = async () => {
-    return await queue(props.proposalId as BytesType)
-  }
-
   return (
     <GovernorContractButton
-      proposalTransaction={queueTransaction}
+      functionName="queue"
+      args={[props.proposalId as Address]}
       buttonText="Queue"
       buttonClassName={proposalActionButtonVariants['queue']}
       {...props}
@@ -48,21 +37,16 @@ const Queue: React.FC<{
 const Execute: React.FC<{
   proposalId: string
   onSuccess: () => void
-  proposer: AddressType
+  proposer: Address
   descriptionHash: BytesType
   calldatas: BytesType[]
-  targets: AddressType[]
+  targets: Address[]
   values: BigNumber[]
 }> = ({ proposer, descriptionHash, calldatas, targets, values, ...props }) => {
-  const { execute } = useGovernorContract()
-
-  const executeTransaction = async () => {
-    return await execute(targets, values, calldatas, descriptionHash, proposer)
-  }
-
   return (
     <GovernorContractButton
-      proposalTransaction={executeTransaction}
+      functionName="execute"
+      args={[targets, values, calldatas, descriptionHash, proposer]}
       buttonText="Execute"
       buttonClassName={proposalActionButtonVariants['execute']}
       {...props}
@@ -206,11 +190,11 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
                   subtitle: 'You’ve successfully executed this proposal',
                 })
               }
-              targets={targets as AddressType[]}
+              targets={targets as Address[]}
               values={values.map((v) => BigNumber.from(v))}
               calldatas={calldatas.map((c) => c as BytesType)}
               descriptionHash={descriptionHash as BytesType}
-              proposer={proposer as AddressType}
+              proposer={proposer as Address}
             />
           </Flex>
 

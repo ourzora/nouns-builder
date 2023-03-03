@@ -15,9 +15,12 @@ import {
   wrapper,
 } from './PreAuction.css'
 
-export const PreAuction = () => {
+interface PreAuctionProps {
+  collectionAddress: string
+}
+
+export const PreAuction: React.FC<PreAuctionProps> = ({ collectionAddress }) => {
   const router = useRouter()
-  const { query } = router
   const { data: signer } = useSigner()
   const { addresses } = useDaoStore()
   const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -52,7 +55,7 @@ export const PreAuction = () => {
     })
 
     const tokenId = auction?.tokenId?.toString()
-    router.push(`/dao/${router.query?.token}/${tokenId}`)
+    router.push(`/dao/${collectionAddress}/${tokenId}`)
   }
 
   return (
@@ -71,7 +74,7 @@ export const PreAuction = () => {
           <Link
             href={{
               pathname: router.pathname,
-              query: { ...query, tab: 'admin' },
+              query: { token: collectionAddress, tab: 'admin' },
             }}
             shallow={true}
             className={atoms({

@@ -31,7 +31,7 @@ import { DaoContracts, useDaoStore } from '../../stores'
 import { AdminFormValues, adminValidationSchema } from './AdminForm.schema'
 
 interface AdminFormProps {
-  title?: string
+  collectionAddress: string
 }
 
 const vetoerAnimation = {
@@ -44,11 +44,8 @@ const vetoerAnimation = {
   },
 }
 
-export const AdminForm: React.FC<AdminFormProps> = () => {
-  const {
-    query: { token },
-    push,
-  } = useRouter()
+export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
+  const { push } = useRouter()
 
   const createProposal = useProposalStore((state) => state.createProposal)
   const addresses = useDaoStore((state) => state.addresses)
@@ -240,7 +237,7 @@ export const AdminForm: React.FC<AdminFormProps> = () => {
       transactions: transactionsWithPauseUnpause,
     })
 
-    push(`/dao/${token}/proposal/review`)
+    push(`/dao/${collectionAddress}/proposal/review`)
   }
 
   return (

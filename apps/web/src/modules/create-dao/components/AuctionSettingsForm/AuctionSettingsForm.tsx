@@ -13,9 +13,9 @@ import {
 } from 'src/components/Fields/styles.css'
 import { NUMBER } from 'src/components/Fields/types'
 import { Icon } from 'src/components/Icon'
-import { useFormStore } from 'src/stores/useFormStore'
 import { isEmpty } from 'src/utils/helpers'
 
+import { useFormStore } from '../../stores'
 import {
   AuctionSettingsFormValues,
   auctionSettingsValidationSchema,

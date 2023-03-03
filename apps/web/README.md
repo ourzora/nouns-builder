@@ -20,29 +20,26 @@ Nouns Builder is built on Nextjs and the following dependencies:
 
 The app is mostly organised by function and for the larger areas of concern there are specific modules that group by domain. Grouping by modules enables tightly coupled components, hooks, utils, constants, etc to be co-located.
 
-`components`
-`constants`
-`hooks`
-`layouts`
-`pages`
-`services`
-`stores`
-`styles`
-`test`
-`typings`
-`utils`
-`data` - network requests
-
-- `graphql` - generated sdk, queries, fragements, and data transformation helpers
-- `contract` - generated abis, contract reads, and data transformation helpers
-
-`modules`
-
-- `auction` - a given token auction
-- `create-dao` - create a dao
-- `create-proposal` - create a proposal
-- `dao` - dao entity related (dao activity, dao feed, explore daos)
-- `proposal` - proposal entity related
+- `components` - shared components
+- `constants` - shared constants
+- `hooks` - shared hooks
+- `layouts` - page layouts and associated components
+- `pages` - nextjs page and api routes
+- `services` - api route services
+- `stores` - shared zustand stores
+- `styles`
+- `test` - test setup and utilities
+- `typings` - shared global types
+- `utils` - shared utilities
+- `data` - network requests
+  - `graphql` - generated sdk, queries, fragements, and data transformation helpers
+  - `contract` - generated abis, contract reads, and data transformation helpers
+- `modules`
+  - `auction` - a given token auction
+  - `create-dao` - create a dao flow
+  - `create-proposal` - create a proposal flow
+  - `dao` - dao entity related components, hooks, stores, etc.
+  - `proposal` - proposal entity related components, hooks, stores, etc.
 
 ### Writing Tests
 
@@ -71,7 +68,7 @@ describe('test', () => {
 })
 ```
 
-### Generating typed queries
+### Generating typed graphql queries
 
 We use [graphql-codegen](https://www.the-guild.dev/graphql/codegen) to generate typed queries for graphql-request based off of the Zora [api schema](https://api.zora.co/graphql). All queries are defined under `src/data/graphql/queries/` and auto-generated to `src/data/graphql/sdk.generated.ts`. The codegen config is defined in `codegen.yml`.
 
@@ -106,8 +103,54 @@ Note: If you use vscode, it might also be helfpul to install the vscode plugin f
 
 ### Styling
 
-TBD
+Nouns Builder relies on vanilla extract for styles. We use a combination of Zord and custom styles where needed. You can reference the `Styling with Zord` section in the [Zord README](/packages/zoralabs-zord/README.md) on how best to use Zord.
 
-ZORD
-Vanilla Extract
-Atoms
+> Note: The `styles` folder contains legacy page style sheets, going forward only any globally applied styles should be further added there.
+
+Styles should be firstly be applied via Zord in-line utilities (Box, Flex, Grid, etc). If further styles are needed (ie pseudo-class selectors, pseudo-element selectors), then styles can be applied via `className` and should be co-located with the relevant component.
+
+### Contract Versioning
+
+The abis used should always be based off of the latest release of [the Nouns Builder protocol](https://github.com/ourzora/nouns-protocol/releases). When the latest available `contractVersion` is upgraded on the contract level, the front-end needs to reflect to the new available versions accordingly.
+
+> Note: Protocol upgrades are always additive and non-breaking changes.
+
+> Note: The following changes should happen prior to upgrade the Builder manager contract version.
+
+##### To reflect these changes:
+
+Bump the nouns-protocol package version in `package.json` to the latest release
+
+```
+"@zoralabs/nouns-protocol": "1.2.0",
+```
+
+Re-generate the abis once the updates are installed
+
+```
+pnpm run generate-abis
+```
+
+Add the version [release notes](https://github.com/ourzora/nouns-protocol/releases) in `versions` for the upgrade proposal for a given version.
+
+```
+![](https://i.imgur.com/HrQKZMG.png)
+
+## Summary
+This proposal upgrades the DAO to V1.x.0 to add several features, improvements and bug fixes.
+
+### Feature 1
+Etc
+```
+
+Add version number to the constants
+
+```
+export const versions = ['1.1.0', '1.2.0', '1.x.0'] as const
+```
+
+The upgrade card feature will automatically pick up these upgrades and make them available once the contract versions are upgrade on the builer manager contract.
+
+### ESLint & Prettier
+
+We use [Husky](https://github.com/typicode/husky) to run ESLint and prettier formatting on pre-push. Please ensure any changes you introduce do not add any further lint warnings.

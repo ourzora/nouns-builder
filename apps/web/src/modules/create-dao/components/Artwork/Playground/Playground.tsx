@@ -1,7 +1,6 @@
 import { Button, Flex } from '@zoralabs/zord'
 import React, { BaseSyntheticEvent } from 'react'
 
-import { useFormStore } from 'src/stores/useFormStore'
 import {
   previewGridWrapperStyle,
   previewHeadingStyle,
@@ -11,6 +10,7 @@ import {
 } from 'src/styles/Artwork.css'
 import { ImagesByTraitProps, PlaygroundProps, SelectedTraitsProps } from 'src/typings'
 
+import { useFormStore } from '../../../stores'
 import { ImageGrid } from './ImageGrid'
 import { LayerMenu } from './LayerMenu'
 
