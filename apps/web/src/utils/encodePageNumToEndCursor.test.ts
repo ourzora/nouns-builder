@@ -5,18 +5,18 @@ import { describe } from 'vitest'
 import { encodePageNumToEndCursor } from './encodePageNumToEndCursor'
 
 const decode = (cursor: string) => {
-  let decoded = ''
+  let decoded = '';
   for (const char of base64.decode(cursor)) {
-    decoded += String.fromCharCode(char)
+    decoded += String.fromCharCode(char);
   }
-  return decoded
+  return decoded;
 }
 
 describe('Encode Page Number to End Cursor String', () => {
   it('should, given no page parameter and a limit of 20, return a skip of 0', () => {
     const result = encodePageNumToEndCursor(20, '')
-    let decoded = decode(result)
-    assert.equal(decoded, '{"skip":0}')
+    let decoded = decode(result);
+    assert.equal(decoded, '{"skip":0}');
   })
 
   it('should, given a page of 2 and a limit of 20, return a skip of 20', () => {
