@@ -88,7 +88,8 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
       return
     }
 
-    if (tokenOwner !== signer) {
+    const signerAddress = await signer?.getAddress()
+    if (tokenOwner !== signerAddress) {
       setDeploymentError(DEPLOYMENT_ERROR.MISMATCHING_SIGNER)
       return
     }
