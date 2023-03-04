@@ -120,6 +120,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const tokenData = await getToken(token, auction.tokenId.toString())
 
+    if (proposal?.collectionAddress !== token) {
+      return {
+        notFound: true,
+      }
+    }
+
     return {
       props: {
         fallback: {
