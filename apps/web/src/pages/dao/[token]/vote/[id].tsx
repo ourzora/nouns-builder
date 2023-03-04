@@ -23,22 +23,23 @@ import {
 } from 'src/modules/proposal'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { propPageWrapper } from 'src/styles/Proposals.css'
-import { TokenWithWinner } from 'src/typings'
+import { AddressType, TokenWithWinner } from 'src/typings'
 
 export interface VotePageProps {
   proposalId: string
   daoName?: string
-  token?: TokenWithWinner
+  token?: { data: TokenWithWinner; address: AddressType }
 }
 
 const VotePage: NextPageWithLayout<VotePageProps> = ({ proposalId, token, daoName }) => {
   const { query } = useRouter()
 
-  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, proposalId], (_, id) =>
-    getProposal(id)
+  const { data: proposal } = useSWR(
+    [SWR_KEYS.PROPOSAL, proposalId, token?.address],
+    (_, id) => getProposal(id)
   )
 
-  if (!proposal) {
+  if (!proposal || proposal?.collectionAddress !== token?.address) {
     return null
   }
 
@@ -49,7 +50,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({ proposalId, token, daoNam
       <Meta
         title={proposal.title}
         slug={'/vote/'}
-        image={token?.media?.original || (token?.image as string)}
+        image={token?.data?.media?.original || (token?.data?.image as string)}
         description={`Check out this proposal from ${daoName}`}
       />
 
@@ -119,14 +120,14 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     })
 
     const tokenData = await getToken(token, auction.tokenId.toString())
-
     return {
       props: {
         fallback: {
-          [unstable_serialize([SWR_KEYS.PROPOSAL, proposal?.proposalId])]: proposal,
+          [unstable_serialize([SWR_KEYS.PROPOSAL, proposal?.proposalId, token])]:
+            proposal,
         },
         proposalId: id,
-        token: tokenData,
+        token: { data: tokenData, address: token },
         daoName,
       },
     }
