@@ -129,7 +129,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         fallback: {
-          [unstable_serialize([SWR_KEYS.PROPOSAL, proposal?.proposalId, token])]:
+          [unstable_serialize([SWR_KEYS.PROPOSAL, proposal?.proposalId])]:
             proposal,
         },
         proposalId: id,
