@@ -5,7 +5,7 @@ This is Nouns Builder front-end mono-repo. You can find Nouns Builder deployed o
 - [Mainnet](nous.build)
 - [Testnet](testnet.nouns.build)
 
-For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://docs.zora.co/docs/smart-contracts/nouns-builder/intro). You can also find the [contract code here](https://github.com/ourzora/nouns-protocol).
+For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://docs.zora.co/docs/smart-contracts/nouns-builder/intro). You can also find [Nouns Protocol here](https://github.com/ourzora/nouns-protocol).
 
 ### Apps and packages in this repository include:
 
@@ -24,11 +24,62 @@ For an introduction to Nouns Builder and its concept, you can find further [docu
 
 ## Quickstart
 
-- Clone this repo locally
-- [Install pnpm](https://pnpm.io/installation#using-corepack)
-- Run `pnpm i` to install dependencies for all projects
-- Add the necessary environment variables to your `.env.local` as defined in the step below
-- Run `pnpm dev` to start watching and building
+#### Get up and running
+
+1. Clone this repo locally and [install pnpm](https://pnpm.io/installation#using-corepack)
+
+2. Add the necessary environment variables to the following files:
+
+```
+  .env.local
+  apps/web/env.local
+```
+
+3. Install dependencies across all apps and packages
+
+```
+pnpm i
+```
+
+4. Once environment variables are defined, you can run the app in dev mode
+
+```
+pnpm dev
+```
+
+#### Linting and formatting
+
+> Note: linting and prettier formatting are automatically run on pre-push hooks
+
+To lint:
+
+```
+pnpm run lint
+```
+
+To format
+
+```
+pnpm run format
+```
+
+To run type checks
+
+```
+pnpm run type-check
+```
+
+#### To create and run a production build
+
+```
+pnpm run build
+```
+
+then
+
+```
+pnpm run start
+```
 
 ## Environment variables
 
@@ -37,15 +88,18 @@ This app has several third party api keys that you need in order to run Builder.
 You need add the following variables to a `.env.local` file in this root directory (needed to run anvil)
 
 ```
+
 #alchemy
 PRIVATE_ALCHEMY_ID=<ALCHEMY_API_KEY>
 ANVIL_FORK_URL=https://eth-mainnet.alchemyapi.io/v2/$PRIVATE_ALCHEMY_ID
 ANVIL_BLOCK_NUMBER=8305745
+
 ```
 
 You need to add the following app variables in a `.env.local` file within `apps/web` directory
 
 ```
+
 #alchemy
 NEXT_PUBLIC_ALCHEMY_ID=<ALCHEMY_API_KEY>
 
@@ -62,6 +116,7 @@ NEXT_PUBLIC_ZORA_API_KEY=
 TENDERLY_ACCESS_KEY=<API_KEY>
 TENDERLY_PROJECT=<PROJECT_NAME>
 TENDERLY_USER=<ACCOUNT_NAME>
+
 ```
 
 ## Running tests

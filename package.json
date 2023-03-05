@@ -4,7 +4,6 @@
     "anvil": "source .env.local && anvil --fork-url $ANVIL_FORK_URL --fork-block-number $ANVIL_BLOCK_NUMBER",
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "dev:web": "turbo run dev --filter=web...",
     "test": "turbo run test",
     "prepare": "husky install",
     "type-check": "turbo run type-check",
