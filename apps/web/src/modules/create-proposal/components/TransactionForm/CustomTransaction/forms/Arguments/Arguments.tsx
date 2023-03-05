@@ -1,6 +1,6 @@
 import { Flex } from '@zoralabs/zord'
 import { utils } from 'ethers'
-import { isEqual } from 'lodash'
+import isEqual from 'lodash/isEqual'
 import React from 'react'
 import * as Yup from 'yup'
 
