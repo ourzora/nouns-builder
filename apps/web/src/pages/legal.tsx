@@ -29,12 +29,17 @@ const LegalPage: NextPageWithLayout = () => {
           <Box as="section" mt="x4">
             <Paragraph>
               <Text display="inline">Thank you for using Nouns Builder (</Text>
-              <Text as="a" display="inline" href="https://nouns.build">
+              <Text as="a" target="_blank" display="inline" href="https://nouns.build">
                 https://nouns.build/
               </Text>
               <Text display="inline">
                 ) and Nouns Connect (
-                <Text as="a" display="inline" href="https://www.nounsconnect.wtf/">
+                <Text
+                  target="_blank"
+                  as="a"
+                  display="inline"
+                  href="https://www.nounsconnect.wtf/"
+                >
                   https://www.nounsconnect.wtf/
                 </Text>
                 ), collectively a hosted user interface (the “Interface” or “App”) offered
@@ -44,6 +49,16 @@ const LegalPage: NextPageWithLayout = () => {
                 Organizations (“DAOs”) adopting technical, structural, and governance
                 characteristics modeled after the NounsDAO. The Interface provides one
                 method for accessing the Protocol, but it is not the only way to do so.
+                The underlying code for the Nouns Builder interface is also open source
+                and available at{' '}
+                <Text
+                  target="_blank"
+                  as="a"
+                  display="inline"
+                  href="https://github.com/ourzora/nouns-builder"
+                >
+                  https://github.com/ourzora/nouns-builder
+                </Text>
               </Text>
             </Paragraph>
 
