@@ -1,6 +1,6 @@
 import { Box, BoxProps } from './Box'
 import { input, inputVariants } from './Input.css'
-import React, { ElementType, forwardRef } from 'react'
+import React, { ElementType, forwardRef, RefObject } from 'react'
 import type {
   PolymorphicForwardRefExoticComponent,
   PolymorphicPropsWithRef,
