@@ -139,7 +139,3 @@ Nouns Builder is deployed on [Vercel](https://vercel.com/). Any pull requests wi
 ## Contributions
 
 Please refer to our [contributions guideline](/.github/contributing.md) on how best to contribute.
-
-## Community
-
-TBD
