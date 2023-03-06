@@ -29,13 +29,20 @@ const LegalPage: NextPageWithLayout = () => {
           <Box as="section" mt="x4">
             <Paragraph>
               <Text display="inline">Thank you for using Nouns Builder (</Text>
-              <Text as="a" target="_blank" display="inline" href="https://nouns.build">
+              <Text
+                as="a"
+                rel="noreferrer noopener"
+                target="_blank"
+                display="inline"
+                href="https://nouns.build"
+              >
                 https://nouns.build/
               </Text>
               <Text display="inline">
                 ) and Nouns Connect (
                 <Text
                   target="_blank"
+                  rel="noreferrer noopener"
                   as="a"
                   display="inline"
                   href="https://www.nounsconnect.wtf/"
@@ -53,6 +60,7 @@ const LegalPage: NextPageWithLayout = () => {
                 and available at{' '}
                 <Text
                   target="_blank"
+                  rel="noreferrer noopener"
                   as="a"
                   display="inline"
                   href="https://github.com/ourzora/nouns-builder"
