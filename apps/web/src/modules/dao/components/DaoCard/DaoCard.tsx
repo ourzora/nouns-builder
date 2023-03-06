@@ -16,6 +16,7 @@ import { Detail } from './Detail'
 interface DaoCardProps {
   collectionAddress: string
   tokenName?: string
+  tokenId?: string
   tokenImage?: string
   collectionName?: string
   bid?: BigNumberish
@@ -31,6 +32,7 @@ export const DaoCard = ({
   collectionAddress,
   tokenName,
   tokenImage,
+  tokenId,
   collectionName,
   bid,
   endTime,
@@ -48,7 +50,7 @@ export const DaoCard = ({
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
 
   return (
-    <Link href={`/dao/${collectionAddress}`}>
+    <Link href={`/dao/${collectionAddress}/${tokenId}`}>
       <Box borderRadius="curved" height={'100%'} overflow="hidden">
         <Box
           backgroundColor="background2"

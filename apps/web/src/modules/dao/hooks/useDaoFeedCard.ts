@@ -9,15 +9,6 @@ interface useDaoCardProps {
   auctionAddress: string
 }
 
-interface AuctionProps {
-  tokenId: BigNumber
-  highestBid: BigNumber
-  highestBidder: string
-  startTime: number
-  endTime: number
-  settled: boolean
-}
-
 export const useDaoFeedCard = ({
   collectionAddress,
   auctionAddress,
@@ -68,5 +59,6 @@ export const useDaoFeedCard = ({
       : undefined,
     tokenUri: decode(token),
     endTime: auction?.endTime || 0,
+    tokenId: auction?.tokenId,
   }
 }
