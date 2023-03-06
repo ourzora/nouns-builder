@@ -50,7 +50,7 @@ export const DaoCard = ({
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
 
   return (
-    <Link href={`/dao/${collectionAddress}/${tokenId}`}>
+    <Link href={`/dao/${collectionAddress}/${tokenId}`} prefetch={false}>
       <Box borderRadius="curved" height={'100%'} overflow="hidden">
         <Box
           backgroundColor="background2"
