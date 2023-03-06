@@ -1,6 +1,6 @@
 import { Flex, Stack } from '@zoralabs/zord'
 import { Field } from 'formik'
-import { intersection } from 'lodash'
+import intersection from 'lodash/intersection'
 import { useRouter } from 'next/router'
 import React from 'react'
 

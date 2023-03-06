@@ -42,9 +42,19 @@ const nextConfig = {
       use: 'raw-loader',
     })
 
-    // Hot-fix for $RefreshReg issues: https://github.com/vanilla-extract-css/vanilla-extract/issues/679#issuecomment-1402839249
+    //Tree-shake barrel files: https://github.com/vercel/next.js/issues/12557
+    config.module.rules.push({
+      test: [
+        /src\/data\/contract\/abis\/index.ts/i,
+        /(src\/components).*\index.ts$/,
+        /(src\/modules).*\index.ts$/,
+      ],
+      sideEffects: false,
+    })
+
     return {
       ...config,
+      // Hot-fix for $RefreshReg issues: https://github.com/vanilla-extract-css/vanilla-extract/issues/679#issuecomment-1402839249
       mode: dev ? 'production' : config.mode,
     }
   },
@@ -59,8 +69,12 @@ const sentryWebpackPluginOptions = {
   urlPrefix: '~/_next',
 }
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const sentryEnabled = NEXT_PUBLIC_SENTRY_DSN && SENTRY_ORG && SENTRY_PROJECT
-const enhancedConfig = withVanillaExtract(nextConfig)
+const enhancedConfig = withBundleAnalyzer(withVanillaExtract(nextConfig))
 
 module.exports = sentryEnabled
   ? withSentryConfig(enhancedConfig, sentryWebpackPluginOptions)
