@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/nextjs'
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import { motion } from 'framer-motion'
-import { getFetchableUrl, uploadDirectory } from 'ipfs-service'
+import { IPFSUploadResponse, getFetchableUrl, uploadDirectory } from 'ipfs-service'
 import React, {
   BaseSyntheticEvent,
   ChangeEventHandler,
@@ -28,12 +28,6 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import {
-  IPFSUpload,
-  ImageProps,
-  ImagesByTraitProps,
-  SelectedTraitsProps,
-} from 'src/typings'
 import { sanitizeFileName } from 'src/utils/sanitize'
 
 import { useFormStore } from '../../stores'
@@ -50,12 +44,44 @@ interface ArtworkFormProps {
   errorMessage?: any
   helperText?: string
 }
-
 interface ArtworkUploadError {
   maxTraits?: string
   mime?: string
   directory?: string
   dimensions?: string
+}
+
+export interface IPFSUpload {
+  name: string
+  webkitRelativePath: string
+  ipfs: IPFSUploadResponse | null
+  trait: string
+  type?: string
+  content?: File
+  blob?: Blob | string
+}
+
+export interface ImagesByTraitProps {
+  trait: string
+  images: ImageProps[]
+}
+
+export interface ImageProps {
+  cid?: string
+  name: string
+  trait: string
+  uri: string
+  url?: string
+  path?: string
+  content?: File
+  blob?: Blob | string
+}
+
+export interface SelectedTraitsProps {
+  picker: string
+  trait: string
+  uri: string
+  content: File
 }
 
 export const ArtworkUpload: React.FC<ArtworkFormProps> = ({

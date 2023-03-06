@@ -9,7 +9,9 @@ import {
   FounderAllocationFormValues,
   calculateMaxAllocation,
 } from 'src/modules/create-dao'
-import { Duration, TokenAllocation } from 'src/typings'
+import { Duration } from 'src/typings'
+
+import { TokenAllocation } from '../AllocationForm'
 
 interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues

@@ -12,9 +12,33 @@ import {
   artworkSettingsPropertyCount,
   artworkSettingsPropertyName,
 } from 'src/styles/Artwork.css'
-import { DragAndDropProps, ImageProps, OrderedLayersProps } from 'src/typings'
 
 import { useFormStore } from '../../stores'
+import { ImageProps } from '../Artwork'
+
+interface Trait {
+  trait: string
+  properties: string[]
+  ipfs?: {}[]
+}
+
+export type OrderedTraits = Array<Trait>
+
+export interface DragAndDropProps {
+  draggedFrom?: number
+  draggedTo?: number | null
+  isDragging?: boolean
+  originalOrder?: {
+    trait: string
+    properties: string[]
+    ipfs?: {}[]
+  }[]
+  updatedOrder?: {
+    trait: string
+    properties: string[]
+    ipfs?: {}[]
+  }[]
+}
 
 interface SettingsBoxProps {
   trait: string
@@ -22,7 +46,7 @@ interface SettingsBoxProps {
   ipfs: ImageProps[]
   setDragAndDrop: (props: DragAndDropProps) => void
   dragAndDrop: DragAndDropProps | null
-  orderedLayers: OrderedLayersProps[]
+  orderedLayers: OrderedTraits
   index: number
 }
 
@@ -112,7 +136,7 @@ export const LayerBox: React.FC<SettingsBoxProps> = ({
     })
   }
 
-  const getLayerName = (idx: number, layers?: Array<OrderedLayersProps>): string => {
+  const getLayerName = (idx: number, layers?: OrderedTraits): string => {
     if (idx === 0) {
       return 'Top layer'
     }

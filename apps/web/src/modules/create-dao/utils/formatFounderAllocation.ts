@@ -1,4 +1,4 @@
-import { TokenAllocation } from 'src/typings'
+import { TokenAllocation } from '../components/AllocationForm'
 
 export const formatFounderAllocation = ({
   founderAddress,
