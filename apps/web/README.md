@@ -53,8 +53,9 @@ import { screen, waitFor } from '@testing-library/react'
 import { useBlockNumber } from 'wagmi'
 import { describe, expect, it } from 'vitest'
 import { render } from 'src/test/utils'
-describe('test', () => {
-  it('should render wagmi', async () => {
+
+describe('Block Number', () => {
+  it('should render the current block number', async () => {
     const BlockNumber = () => {
       const { data, isLoading, isError } = useBlockNumber()
       if (isLoading) return <div>Fetching block number…</div>
@@ -70,11 +71,11 @@ describe('test', () => {
 
 ### Generating typed graphql queries
 
-We use [graphql-codegen](https://www.the-guild.dev/graphql/codegen) to generate typed queries for graphql-request based off of the Zora [api schema](https://api.zora.co/graphql). All queries are defined under `src/data/graphql/queries/` and auto-generated to `src/data/graphql/sdk.generated.ts`. The codegen config is defined in `codegen.yml`.
+We use [graphql-codegen](https://www.the-guild.dev/graphql/codegen) to generate typed queries for [graphql-request](https://github.com/jasonkuhrt/graphql-request) based off of the Zora [api schema](https://api.zora.co/graphql). The codegen config is defined in `codegen.yml`.
 
-Note: `sdk.generated.ts` is automatically generated and should not be touched
+In order to generate a new query:
 
-1. Add relevant query/fragment to `src/data/graphql/queries` or `src/data/graphql/fragments`
+1. Add relevant queries or fragments to `src/data/graphql/queries` or `src/data/graphql/fragments`
 2. Run `pnpm run codegen` to re-generate `sdk.generated.ts`
 3. Check in and commit updated `sdk.generated.ts` file
 4. Use the generated sdk query and types (as referenced below)
@@ -99,7 +100,9 @@ query daosByMember($addresses: [String!], $chain: Chain!) {
 sdk.daosByMember({ addresses: ['0x123'], chain: Chain.GOERLI })
 ```
 
-Note: If you use vscode, it might also be helfpul to install the vscode plugin for graphql to pick up syntax highlighting for `.graphql` files.
+> Note: `sdk.generated.ts` is auto-generated and should not be touched
+
+> Note: If you use vscode, it might also be helfpul to install the vscode plugin for graphql to pick up syntax highlighting for `.graphql` files.
 
 ### Styling
 
