@@ -41,6 +41,22 @@ The app is mostly organised by function and for the larger areas of concern ther
   - `dao` - dao entity related components, hooks, stores, etc.
   - `proposal` - proposal entity related components, hooks, stores, etc.
 
+### Chain Environment
+
+Nouns Builder currently only supports two networks: `mainnet` and `goerli testnet`. The environment variables indicated below dictate the network that the app interacts with.
+
+You can swap out the environment variables as defined below to run against mainnnet or testnet locally.
+
+```
+# the default chain id defined in .env, to run against testnet
+NEXT_PUBLIC_ALCHEMY_ID=<TESTNET_ALCHEMY_API_KEY>
+NEXT_PUBLIC_CHAIN_ID=5
+
+# to run against mainnet locally
+NEXT_PUBLIC_ALCHEMY_ID=<MAINNET_ALCHEMY_API_KEY>
+NEXT_PUBLIC_CHAIN_ID=1
+```
+
 ### Writing Tests
 
 We use [vitest](https://vitest.dev) to run tests and [react-testing-library](https://testing-library.com/docs/react-testing-library/intro) for rendering react components and hooks. Some tests might require contract reads or writes and can be run against a local ethereum node (using Anvil).
