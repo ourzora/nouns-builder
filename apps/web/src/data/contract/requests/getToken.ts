@@ -4,8 +4,15 @@ import { BigNumber } from 'ethers'
 import { base64 } from 'ethers/lib/utils'
 
 import { tokenAbi } from 'src/data/contract/abis'
-import { tokenQuery, tokenWinnerQuery } from 'src/data/graphql/requests/tokenQuery'
-import { AddressType, TokenWithWinner } from 'src/typings'
+import {
+  Token,
+  TokenWinner,
+  tokenQuery,
+  tokenWinnerQuery,
+} from 'src/data/graphql/requests/tokenQuery'
+import { AddressType } from 'src/typings'
+
+export interface TokenWithWinner extends Token, TokenWinner {}
 
 const readTokenContractData = async (
   tokenAddress: AddressType,

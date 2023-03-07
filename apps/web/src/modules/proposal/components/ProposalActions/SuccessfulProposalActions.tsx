@@ -8,11 +8,12 @@ import { Countdown } from 'src/components/Countdown'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+import { Proposal, getProposal } from 'src/data/graphql/requests/proposalQuery'
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
-import { BytesType, Proposal, ProposalStatus, ProposalSucceededStatus } from 'src/typings'
+import { BytesType } from 'src/typings'
 
-import { isProposalSuccessful } from '../../utils'
+import { ProposalSucceededStatus, isProposalSuccessful } from '../../utils'
 import { GovernorContractButton } from '../GovernorContractButton'
 
 interface SuccessfulProposalActionsProps {
@@ -89,13 +90,13 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
   } = proposal
 
   const getBorderColor = (state: ProposalSucceededStatus) => {
-    if (state === ProposalStatus.Succeeded) {
+    if (state === NounsProposalStatus.Succeeded) {
       return '#F2E2F7'
     }
-    if (state === ProposalStatus.Queued) {
+    if (state === NounsProposalStatus.Queued) {
       return vars.color.border
     }
-    if (state === ProposalStatus.Executable) {
+    if (state === NounsProposalStatus.Executable) {
       return '#D3E5FB'
     }
   }
@@ -119,7 +120,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
       }}
     >
       {/* proposal is in queue-able state */}
-      {status === ProposalStatus.Succeeded && (
+      {status === NounsProposalStatus.Succeeded && (
         <Fragment>
           <Flex w={{ '@initial': '100%', '@768': 'auto' }} justify={'center'}>
             <Queue
@@ -145,7 +146,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
       )}
 
       {/* has been queued, countdown to executable */}
-      {status === ProposalStatus.Queued && (
+      {status === NounsProposalStatus.Queued && (
         <Fragment>
           <Flex
             w={{ '@initial': '100%', '@768': 'auto' }}
@@ -179,7 +180,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
       )}
 
       {/* proposal is in executable state */}
-      {status === ProposalStatus.Executable && (
+      {status === NounsProposalStatus.Executable && (
         <Fragment>
           <Flex w={{ '@initial': '100%', '@768': 'auto' }} justify={'center'}>
             <Execute

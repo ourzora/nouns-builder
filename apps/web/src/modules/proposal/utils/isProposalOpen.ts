@@ -1,13 +1,13 @@
-import { ProposalStatus } from 'src/typings'
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 
-export const isProposalOpen = (state: ProposalStatus): boolean => {
+export const isProposalOpen = (state: NounsProposalStatus): boolean => {
   if (
-    state === ProposalStatus.Created ||
-    state === ProposalStatus.Queued ||
-    state === ProposalStatus.Succeeded ||
-    state === ProposalStatus.Active ||
-    state === ProposalStatus.Pending ||
-    state === ProposalStatus.Executable
+    state === NounsProposalStatus.Created ||
+    state === NounsProposalStatus.Queued ||
+    state === NounsProposalStatus.Succeeded ||
+    state === NounsProposalStatus.Active ||
+    state === NounsProposalStatus.Pending ||
+    state === NounsProposalStatus.Executable
   ) {
     return true
   }

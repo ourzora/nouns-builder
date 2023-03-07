@@ -15,9 +15,7 @@ query exploreTokens($chain: Chain!, $tokens: [TokenInput!]) {
       }
     }
     pageInfo {
-      limit
-      hasNextPage
-      endCursor
+      ...PageInfo
     }
   }
 }

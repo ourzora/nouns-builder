@@ -24,9 +24,7 @@ query exploreDaosPage(
         }
       }
       pageInfo {
-        limit
-        hasNextPage
-        endCursor
+        ...PageInfo
       }
     }
   }

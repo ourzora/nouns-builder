@@ -2,12 +2,12 @@ import { Box, Flex, Label, Paragraph } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import React from 'react'
 
-import { ProposalStatus as ProposalStatusEnum } from 'src/typings'
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 
 import { parseBgColor, parseState, parseTime } from './ProposalStatus.helper'
 
 type StatusProps = {
-  state: ProposalStatusEnum
+  state: NounsProposalStatus
   voteEnd: number
   voteStart: number
   expiresAt?: number
@@ -38,8 +38,8 @@ export const ProposalStatus: React.FC<StatusProps> = ({
       direction={flipped ? { '@768': 'row-reverse' } : {}}
     >
       {(!!state ||
-        state === ProposalStatusEnum.Created ||
-        state === ProposalStatusEnum.Pending) && (
+        state === NounsProposalStatus.Created ||
+        state === NounsProposalStatus.Pending) && (
         <Box
           py={'x1'}
           px={'x3'}
@@ -53,17 +53,18 @@ export const ProposalStatus: React.FC<StatusProps> = ({
           <Label size="sm">{parseState(state)}</Label>
         </Box>
       )}
-      {state === ProposalStatusEnum.Pending && showTime && (
+      {state === NounsProposalStatus.Pending && showTime && (
         <Paragraph color="text3" data-testid="time-prefix">
           {parseTime(diffStart, 'Starts')}
         </Paragraph>
       )}
-      {state === ProposalStatusEnum.Active && showTime && (
+      {state === NounsProposalStatus.Active && showTime && (
         <Paragraph color="text3" data-testid="time-prefix">
           {parseTime(diffEnd, 'Ends')}
         </Paragraph>
       )}
-      {(state === ProposalStatusEnum.Queued || state === ProposalStatusEnum.Executable) &&
+      {(state === NounsProposalStatus.Queued ||
+        state === NounsProposalStatus.Executable) &&
         showTime && (
           <Paragraph color="text3" data-testid="time-prefix">
             {parseTime(diffExpiration, 'Expires')}

@@ -2,7 +2,7 @@ import { Button, Flex } from '@zoralabs/zord'
 import dynamic from 'next/dynamic'
 import { ReactNode } from 'react'
 
-import { Bid } from 'src/typings'
+import { Bid } from 'src/data/contract/requests/getBids'
 
 import { AllBids } from './AllBids'
 

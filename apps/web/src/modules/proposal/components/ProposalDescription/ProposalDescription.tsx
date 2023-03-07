@@ -10,9 +10,9 @@ import useSWR from 'swr'
 import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { sdk } from 'src/data/graphql/client'
+import { Proposal } from 'src/data/graphql/requests/proposalQuery'
 import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { Proposal } from 'src/typings'
 
 import { DecodedTransactions } from './DecodedTransactions'
 

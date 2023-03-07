@@ -4,7 +4,21 @@ import omitBy from 'lodash/omitBy'
 import { CHAIN } from 'src/constants/network'
 import { sdk } from 'src/data/graphql/client'
 import { ImageMediaEncodingFragment } from 'src/data/graphql/sdk.generated'
-import { Token, TokenWinner } from 'src/typings'
+
+export interface Token {
+  id: string
+  name?: string
+  image?: string
+  description?: string
+  owner?: string
+  media?: ImageMediaEncodingFragment
+  mintDate?: string
+}
+
+export interface TokenWinner {
+  highestBidder?: string
+  price?: number
+}
 
 export const tokenQuery = async (
   address: string,

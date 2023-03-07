@@ -2,18 +2,18 @@ import { Flex } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 
 import { Meta } from 'src/components/Meta'
-import { exploreDaosRequest } from 'src/data/graphql/requests/exploreQueries'
+import {
+  ExploreDaosResponse,
+  exploreDaosRequest,
+} from 'src/data/graphql/requests/exploreQueries'
+import { MarketSortKey } from 'src/data/graphql/sdk.generated'
 import { getDefaultLayout } from 'src/layouts/DefaultLayout'
 import { Explore } from 'src/modules/dao'
-import { ExplorePageData, MarketSortKey } from 'src/typings'
 import { encodePageNumToEndCursor } from 'src/utils/encodePageNumToEndCursor'
 
 import { NextPageWithLayout } from './_app'
 
-interface ExplorePageProps {
-  daos: ExplorePageData['daos']
-  pageInfo: ExplorePageData['pageInfo']
-}
+interface ExplorePageProps extends ExploreDaosResponse {}
 
 const ExplorePage: NextPageWithLayout<ExplorePageProps> = ({ daos, pageInfo }) => {
   return (

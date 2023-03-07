@@ -14,9 +14,7 @@ query proposals($token: [String!], $chain: Chain!, $pagination: PaginationInput!
         }
       }
       pageInfo {
-        limit
-        hasNextPage
-        endCursor
+        ...PageInfo
       }
     }
   }
