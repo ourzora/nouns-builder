@@ -41,6 +41,22 @@ The app is mostly organised by function and for the larger areas of concern ther
   - `dao` - dao entity related components, hooks, stores, etc.
   - `proposal` - proposal entity related components, hooks, stores, etc.
 
+### Chain Environment
+
+Nouns Builder currently only supports two networks: `mainnet` and `goerli testnet`. The environment variables indicated below dictate the network that the app interacts with.
+
+You can swap out the environment variables as defined below to run against mainnnet or testnet locally.
+
+```
+# the default chain id defined in .env, to run against testnet
+NEXT_PUBLIC_ALCHEMY_ID=<TESTNET_ALCHEMY_API_KEY>
+NEXT_PUBLIC_CHAIN_ID=5
+
+# to run against mainnet locally
+NEXT_PUBLIC_ALCHEMY_ID=<MAINNET_ALCHEMY_API_KEY>
+NEXT_PUBLIC_CHAIN_ID=1
+```
+
 ### Writing Tests
 
 We use [vitest](https://vitest.dev) to run tests and [react-testing-library](https://testing-library.com/docs/react-testing-library/intro) for rendering react components and hooks. Some tests might require contract reads or writes and can be run against a local ethereum node (using Anvil).
@@ -53,8 +69,9 @@ import { screen, waitFor } from '@testing-library/react'
 import { useBlockNumber } from 'wagmi'
 import { describe, expect, it } from 'vitest'
 import { render } from 'src/test/utils'
-describe('test', () => {
-  it('should render wagmi', async () => {
+
+describe('Block Number', () => {
+  it('should render the current block number', async () => {
     const BlockNumber = () => {
       const { data, isLoading, isError } = useBlockNumber()
       if (isLoading) return <div>Fetching block number…</div>
@@ -70,11 +87,11 @@ describe('test', () => {
 
 ### Generating typed graphql queries
 
-We use [graphql-codegen](https://www.the-guild.dev/graphql/codegen) to generate typed queries for graphql-request based off of the Zora [api schema](https://api.zora.co/graphql). All queries are defined under `src/data/graphql/queries/` and auto-generated to `src/data/graphql/sdk.generated.ts`. The codegen config is defined in `codegen.yml`.
+We use [graphql-codegen](https://www.the-guild.dev/graphql/codegen) to generate typed queries for [graphql-request](https://github.com/jasonkuhrt/graphql-request) based off of the Zora [api schema](https://api.zora.co/graphql). The codegen config is defined in `codegen.yml`.
 
-Note: `sdk.generated.ts` is automatically generated and should not be touched
+In order to generate a new query:
 
-1. Add relevant query/fragment to `src/data/graphql/queries` or `src/data/graphql/fragments`
+1. Add relevant queries or fragments to `src/data/graphql/queries` or `src/data/graphql/fragments`
 2. Run `pnpm run codegen` to re-generate `sdk.generated.ts`
 3. Check in and commit updated `sdk.generated.ts` file
 4. Use the generated sdk query and types (as referenced below)
@@ -99,7 +116,9 @@ query daosByMember($addresses: [String!], $chain: Chain!) {
 sdk.daosByMember({ addresses: ['0x123'], chain: Chain.GOERLI })
 ```
 
-Note: If you use vscode, it might also be helfpul to install the vscode plugin for graphql to pick up syntax highlighting for `.graphql` files.
+> Note: `sdk.generated.ts` is auto-generated and should not be touched
+
+> Note: If you use vscode, it might also be helfpul to install the vscode plugin for graphql to pick up syntax highlighting for `.graphql` files.
 
 ### Styling
 

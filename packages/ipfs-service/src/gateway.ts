@@ -1,6 +1,7 @@
 import { isNormalizeableIPFSUrl, normalizeIPFSUrl } from './url'
 
-export const IPFS_GATEWAY = process.env.NEXT_PUBLIC_IPFS_GATEWAY || 'https://ipfs.zora.co'
+export const IPFS_GATEWAY =
+  process.env.NEXT_PUBLIC_IPFS_GATEWAY || 'https://ipfs.decentralized-content.com'
 
 export function ipfsGatewayUrl(url: string | null | undefined) {
   if (!url || typeof url !== 'string') return undefined
