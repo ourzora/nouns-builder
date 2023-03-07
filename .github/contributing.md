@@ -1,14 +1,24 @@
-gm builders, thank you for considering contributing to Nouns Builder. Please review this document before submitting a pull request. (Read time: 5 minutes)
+# Contributing to Nouns Builder
 
-If you want to contribute, but don't know where to start, you can create [a new discussion]()
+We appreciate your interest in improving Nouns Builder. We're excited to help you get started!
 
-> Please start a discussion or ask first before starting work such as _task #1, task #2, task #3_ etc. We want to provide you with all the necessary information that will be helpful as you start investing time and effort into a new feature.
+Before you start, we recommend reviewing the [code of conduct](./code_of_conduct.md) for this project.
 
 ---
 
-### Quickstart
+### How can I contribute?
 
-Please follow the [README](/README.md) to on how to get up and running locally
+There are a few ways to contribute and help improve Nouns Builder. Some ways include:
+
+1. Reporting bugs
+2. Suggesting new ideas
+3. Submitting pull requests to improve the frontend
+
+If you're ready to contribute to the source code, please follow this [README](../README.md) to get up and running locally.
+
+If you're unsure where to begin, we highly recommend starting [a new discussion](https://github.com/ourzora/nouns-builder/discussions).
+
+You can also find other contributors in our [public Discord channel](https://discord.gg/JpMKps2W). Feel free to also reach out to us on [Twitter](https://twitter.com/nounsbuilder) if you have any questions.
 
 ---
 

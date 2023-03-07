@@ -78,6 +78,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo }) => {
           <Grid className={exploreGrid}>
             {daos?.map((dao) => (
               <DaoCard
+                tokenId={dao.tokenId ?? undefined}
                 key={dao.collectionAddress}
                 tokenImage={dao.image ?? undefined}
                 tokenName={dao.name ?? undefined}

@@ -119,6 +119,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const tokenData = await getToken(token, auction.tokenId.toString())
 
+    if (
+      ethers.utils.getAddress(proposal?.collectionAddress) !==
+      ethers.utils.getAddress(token)
+    ) {
+      return {
+        notFound: true,
+      }
+    }
+
     return {
       props: {
         fallback: {

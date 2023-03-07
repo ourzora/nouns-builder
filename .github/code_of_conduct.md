@@ -1,4 +1,4 @@
-#ZORA Open Source Code of Conduct
+# ZORA Open Source Code of Conduct
 
 ### Our Pledge
 
