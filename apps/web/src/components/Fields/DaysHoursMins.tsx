@@ -45,8 +45,6 @@ const DaysHoursMins: React.FC<DaysHoursMinsProps> = ({
     return errorMessage?.minutes?.length > 0
   }, [errorMessage])
 
-  console.log('husky')
-
   return (
     <Flex direction={'column'} mb={'x3'}>
       <label className={defaultInputLabelStyle}>{inputLabel}</label>
