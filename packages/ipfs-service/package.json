@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@brokerloop/ttlcache": "^3.2.3",
-    "axios": "^1.1.3",
     "ipfs-core-types": "^0.13.0",
     "ipfs-http-client": "^59.0.0",
     "it-last": "^2.0.0",
