@@ -1,6 +1,6 @@
 import { Box } from '@zoralabs/zord'
 import flatpickr from 'flatpickr'
-import { FormikErrors, FormikProps } from 'formik'
+import { FormikErrors, FormikProps, FormikHelpers, FormikValues } from 'formik'
 import React, { ReactElement } from 'react'
 
 import {
@@ -47,7 +47,7 @@ const Date: React.FC<DateProps> = ({
 
         if (autoSubmit && formik) {
           setTimeout(() => {
-            formik.submitForm()
+            formik.submitForm();
           }, 100)
         }
       },
