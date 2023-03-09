@@ -1,6 +1,6 @@
 import { Flex, Grid } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
-import React, { ChangeEventHandler, ReactElement, useState } from 'react'
+import React, { ChangeEventHandler, ReactElement } from 'react'
 
 import { useLayoutStore } from 'src/stores/useLayoutStore'
 
@@ -38,11 +38,11 @@ const DaysHoursMins: React.FC<DaysHoursMinsProps> = ({
   }, [errorMessage])
 
   const hoursHasError = React.useMemo(() => {
-    return errorMessage?.hours?.length > 0;
+    return errorMessage?.hours?.length > 0
   }, [errorMessage])
 
   const minutesHasError = React.useMemo(() => {
-    return errorMessage?.minutes?.length > 0;
+    return errorMessage?.minutes?.length > 0
   }, [errorMessage])
 
   console.log('test husky')
