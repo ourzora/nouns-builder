@@ -16,9 +16,11 @@ export const ExploreMyDaos = () => {
 
   const { data } = useSWR(
     signerAddress ? SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string) : null,
-    () => userDaosFilter('', signerAddress as string),
+    () => userDaosFilter(null, signerAddress as string),
     { revalidateOnFocus: false }
   )
+
+  if (!data) return null
 
   return (
     <>
@@ -27,6 +29,7 @@ export const ExploreMyDaos = () => {
         <Grid className={exploreGrid} mb={'x16'}>
           {data.daos.map((dao) => (
             <DaoCard
+              tokenId={dao.tokenId ?? undefined}
               key={dao.collectionAddress}
               tokenImage={dao.image ?? undefined}
               tokenName={dao.name ?? undefined}

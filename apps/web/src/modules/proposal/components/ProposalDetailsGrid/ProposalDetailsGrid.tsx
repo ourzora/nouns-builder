@@ -3,8 +3,8 @@ import dayjs from 'dayjs'
 import React, { useCallback } from 'react'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
+import { Proposal } from 'src/data/graphql/requests/proposalQuery'
 import { propDataGrid } from 'src/styles/Proposals.css'
-import { Proposal } from 'src/typings'
 
 import { Tile } from './Tile'
 import { voteProgress, voteProgressVariants } from './Tile.css'

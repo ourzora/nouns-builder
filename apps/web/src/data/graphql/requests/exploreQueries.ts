@@ -2,13 +2,30 @@ import * as Sentry from '@sentry/nextjs'
 
 import { CHAIN } from 'src/constants/network'
 import { sdk } from 'src/data/graphql/client'
-import { ExplorePageData, MarketSortKey } from 'src/typings'
+
+import { MarketSortKey, PageInfoFragment as PageInfo } from '../sdk.generated'
+
+interface Dao {
+  tokenId: string | null
+  collectionName: string | null
+  collectionAddress: string | null
+  name: string | null
+  image: string | null
+  endTime: number | null
+  highestBidder: string | null
+  highestBidPrice: number | null
+}
+
+export interface ExploreDaosResponse {
+  daos: Dao[]
+  pageInfo: PageInfo
+}
 
 export const userDaosFilter = async (
   after: string | null,
   address: string,
   sortKey?: MarketSortKey
-): Promise<ExplorePageData | undefined> => {
+): Promise<ExploreDaosResponse | undefined> => {
   if (!address) return
 
   try {
@@ -91,7 +108,7 @@ export const exploreDaosRequest = async (
   after: string | null,
   collectionAddresses: string[] = [],
   sortKey: MarketSortKey = MarketSortKey.Created
-): Promise<ExplorePageData | undefined> => {
+): Promise<ExploreDaosResponse | undefined> => {
   try {
     const data = await sdk.exploreDaosPage({
       chain: CHAIN,
@@ -135,7 +152,7 @@ export const exploreDaosRequest = async (
       return acc
     }, {})
 
-    const daosArray: ExplorePageData['daos'] = Object.values(daosWithTokens)
+    const daosArray: Dao[] = Object.values(daosWithTokens)
 
     return { daos: daosArray, pageInfo: data?.nouns?.nounsMarkets?.pageInfo }
   } catch (error) {

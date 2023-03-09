@@ -2,7 +2,20 @@ import * as Sentry from '@sentry/nextjs'
 
 import { CHAIN } from 'src/constants/network'
 import { sdk } from 'src/data/graphql/client'
-import { Proposal } from 'src/typings'
+import {
+  ProposalFragment,
+  ProposalVoteFragment as ProposalVote,
+} from 'src/data/graphql/sdk.generated'
+
+export interface Proposal extends Omit<ProposalFragment, 'executableFrom' | 'expiresAt'> {
+  executableFrom?: number
+  expiresAt?: number
+  transactionInfo: {
+    blockNumber: number
+    transactionHash?: string | null
+  }
+  votes?: ProposalVote[]
+}
 
 export const getProposal = async (proposalId: string): Promise<Proposal | undefined> => {
   try {

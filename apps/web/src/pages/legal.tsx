@@ -22,7 +22,7 @@ const LegalPage: NextPageWithLayout = () => {
                 Nouns Builder Terms of Service
               </Heading>
 
-              <Text>Last Updated: January 31, 2022</Text>
+              <Text>Last Updated: March 6, 2023</Text>
             </Box>
           </header>
 
