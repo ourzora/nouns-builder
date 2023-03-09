@@ -42,8 +42,10 @@ const DaysHoursMins: React.FC<DaysHoursMinsProps> = ({
   }, [errorMessage])
 
   const minutesHasError = React.useMemo(() => {
-    return errorMessage?.minutes?.length > 0;
+    return errorMessage?.minutes?.length > 0
   }, [errorMessage])
+
+  console.log('husky')
 
   return (
     <Flex direction={'column'} mb={'x3'}>
