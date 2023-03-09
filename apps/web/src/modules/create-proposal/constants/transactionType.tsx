@@ -7,6 +7,7 @@ export enum TransactionType {
   AIRDROP = 'airdrop',
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
+  UPDATE_MINTER = 'update-minter',
 }
 
 export interface TransactionTypeProps {

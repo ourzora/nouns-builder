@@ -1,4 +1,4 @@
-import { Flex } from '@zoralabs/zord'
+import { Flex, color } from '@zoralabs/zord'
 
 import { Icon } from 'src/components/Icon'
 
@@ -20,12 +20,18 @@ export const TransactionTypeIcon: React.FC<TransactionTypeIconProps> = ({
       h={large ? 'x13' : 'x10'}
       w={large ? 'x13' : 'x10'}
       borderRadius={'round'}
-      style={{ backgroundColor: TRANSACTION_TYPES[transactionType].iconBackdrop }}
+      style={{
+        backgroundColor:
+          TRANSACTION_TYPES[transactionType]?.iconBackdrop ?? color.ghostHover,
+      }}
       my={'x4'}
       minH={large ? 'x13' : 'x10'}
       minW={large ? 'x13' : 'x10'}
     >
-      <Icon id={TRANSACTION_TYPES[transactionType].icon} fill={'transparent'} />
+      <Icon
+        id={TRANSACTION_TYPES[transactionType]?.icon ?? 'plus'}
+        fill={'transparent'}
+      />
     </Flex>
   )
 }

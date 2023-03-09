@@ -1,15 +1,14 @@
 import { Flex, Stack, Text } from '@zoralabs/zord'
 import React from 'react'
 
-import { TransactionType } from 'src/modules/create-proposal'
-
+import { TRANSACTION_FORM_OPTIONS, TransactionFormType } from '../TransactionForm'
 import AdminNav from './AdminNav'
 import { NounsConnect } from './NounsConnect'
 import TransactionTypeCard from './TransactionTypeCard'
 
 interface SelectTransactionTypeProps {
-  transactionTypes: TransactionType[]
-  onSelect: (value: TransactionType) => void
+  transactionTypes: typeof TRANSACTION_FORM_OPTIONS
+  onSelect: (value: TransactionFormType) => void
 }
 
 export const SelectTransactionType: React.FC<SelectTransactionTypeProps> = ({

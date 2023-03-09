@@ -107,10 +107,23 @@ export const Airdrop: React.FC = () => {
 
     const unit = amount > 1 ? 'tokens' : 'token'
 
+    const doesNotContainUpdateMinter =
+      transactions.findIndex(
+        (transaction) => transaction.type === TransactionType.UPDATE_MINTER
+      ) === -1
+
+    if (!isMinter && doesNotContainUpdateMinter) {
+      addTransaction({
+        type: TransactionType.UPDATE_MINTER,
+        summary: `Updateminters to set the DAO treasury as sender`,
+        transactions: [updateMinterTransaction],
+      })
+    }
+
     addTransaction({
       type: TransactionType.AIRDROP,
       summary: `Airdrop ${amount} ${unit} to ${walletSnippet(recipient)}`,
-      transactions: [...(!isMinter ? [updateMinterTransaction] : []), airdropTransaction],
+      transactions: [airdropTransaction],
     })
 
     actions.resetForm()
