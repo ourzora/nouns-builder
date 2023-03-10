@@ -9,6 +9,7 @@ import useSWR, { unstable_serialize } from 'swr'
 
 import { Meta } from 'src/components/Meta'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
 import getToken, { TokenWithWinner } from 'src/data/contract/requests/getToken'
@@ -72,6 +73,12 @@ VotePage.getLayout = getDaoLayout
 export default VotePage
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { maxAge, swr } = CACHE_TIMES.PROPOSAL
+  context.res.setHeader(
+    'Cache-Control',
+    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+  )
+
   const token = context?.params?.token as string
   const id = context?.params?.id as string
 

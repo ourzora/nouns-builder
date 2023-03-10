@@ -9,6 +9,7 @@ import { useAccount, useContractRead } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
@@ -97,6 +98,12 @@ DaoPage.getLayout = getDaoLayout
 export default DaoPage
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { maxAge, swr } = CACHE_TIMES.DAO_INFO
+  context.res.setHeader(
+    'Cache-Control',
+    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+  )
+
   const collectionAddress = context?.params?.token as string
 
   if (!isAddress(collectionAddress)) {
