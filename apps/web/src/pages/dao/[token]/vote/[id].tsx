@@ -14,6 +14,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
 import getToken, { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   ProposalActions,
@@ -73,12 +74,6 @@ VotePage.getLayout = getDaoLayout
 export default VotePage
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { maxAge, swr } = CACHE_TIMES.PROPOSAL
-  context.res.setHeader(
-    'Cache-Control',
-    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
-  )
-
   const token = context?.params?.token as string
   const id = context?.params?.id as string
 
@@ -108,6 +103,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         notFound: true,
       }
     }
+
+    const isProposalInProgress =
+      proposal.status === NounsProposalStatus.Active ||
+      NounsProposalStatus.Created ||
+      NounsProposalStatus.Executable ||
+      NounsProposalStatus.Pending ||
+      NounsProposalStatus.Queued
+
+    const { maxAge, swr } = isProposalInProgress
+      ? CACHE_TIMES.IN_PROGRESS_PROPOSAL
+      : CACHE_TIMES.SETTLED_PROPOSAL
+
+    context.res.setHeader(
+      'Cache-Control',
+      `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+    )
 
     const [auction, daoName] = await readContracts({
       contracts: [
