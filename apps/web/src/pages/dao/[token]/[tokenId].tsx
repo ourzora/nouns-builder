@@ -8,6 +8,7 @@ import { useAccount } from 'wagmi'
 import { Meta } from 'src/components/Meta'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
+import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getToken from 'src/data/contract/requests/getToken'
@@ -121,7 +122,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   res,
   resolvedUrl,
 }) => {
-  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
+  const { maxAge, swr } = CACHE_TIMES.TOKEN_INFO
+  res.setHeader(
+    'Cache-Control',
+    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+  )
 
   const collection = params?.token as AddressType
   const tokenId = params?.tokenId as string

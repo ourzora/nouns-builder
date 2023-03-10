@@ -9,6 +9,7 @@ import useSWR, { unstable_serialize } from 'swr'
 
 import { Meta } from 'src/components/Meta'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
 import getToken, { TokenWithWinner } from 'src/data/contract/requests/getToken'
@@ -101,6 +102,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         notFound: true,
       }
     }
+
+    const { maxAge, swr } = isProposalOpen(proposal.status)
+      ? CACHE_TIMES.IN_PROGRESS_PROPOSAL
+      : CACHE_TIMES.SETTLED_PROPOSAL
+
+    context.res.setHeader(
+      'Cache-Control',
+      `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+    )
 
     const [auction, daoName] = await readContracts({
       contracts: [
