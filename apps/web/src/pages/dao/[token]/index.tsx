@@ -98,6 +98,7 @@ export default DaoPage
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const collectionAddress = context?.params?.token as string
+  const tab = context?.query?.tab as string
 
   if (!isAddress(collectionAddress)) {
     return {
@@ -150,7 +151,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       redirect: {
-        destination: `/dao/${collectionAddress}/${auction.tokenId}`,
+        destination: `/dao/${collectionAddress}/${auction.tokenId}${
+          tab ? `?tab=${tab}` : ''
+        }`,
         permanent: false,
       },
     }
