@@ -104,14 +104,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
-    const isProposalInProgress =
-      proposal.status === NounsProposalStatus.Active ||
-      NounsProposalStatus.Created ||
-      NounsProposalStatus.Executable ||
-      NounsProposalStatus.Pending ||
-      NounsProposalStatus.Queued
-
-    const { maxAge, swr } = isProposalInProgress
+    const { maxAge, swr } = isProposalOpen(proposal.status)
       ? CACHE_TIMES.IN_PROGRESS_PROPOSAL
       : CACHE_TIMES.SETTLED_PROPOSAL
 
