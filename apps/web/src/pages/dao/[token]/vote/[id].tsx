@@ -14,7 +14,6 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
 import getToken, { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   ProposalActions,
