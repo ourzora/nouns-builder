@@ -27,6 +27,7 @@ export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
             pathname: `/dao/[token]`,
             query: {
               token: proposal.collectionAddress,
+              tab: 'activity',
             },
           })
         }}
