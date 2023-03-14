@@ -1,4 +1,4 @@
-import { Box, Button } from '@zoralabs/zord'
+import { Box, Button, Paragraph } from '@zoralabs/zord'
 import { useContract, useContractRead } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
@@ -18,8 +18,6 @@ export const PauseAuctions = () => {
   })
 
   const handlePauseAuctionsTransaction = () => {
-    if (paused || typeof auctionContract === 'undefined') return
-
     const pause = {
       target: auction as AddressType,
       functionSignature: 'pause()',
@@ -36,12 +34,20 @@ export const PauseAuctions = () => {
 
   return (
     <Box w={'100%'}>
+      {paused && (
+        <Box mb={'x8'}>
+          <Paragraph size="md" color="negative">
+            It looks like auctions are already paused for this DAO.
+          </Paragraph>
+        </Box>
+      )}
       <Button
         variant={'outline'}
         borderRadius={'curved'}
         w={'100%'}
         type="button"
         onClick={handlePauseAuctionsTransaction}
+        disabled={paused || typeof auctionContract === 'undefined'}
       >
         Add Transaction to Queue
       </Button>
