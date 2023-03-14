@@ -43,7 +43,8 @@ export const Auction: React.FC<AuctionControllerProps> = ({
     { revalidateOnFocus: true }
   )
 
-  const isTokenActiveAuction = !!auction?.tokenId && auction.tokenId.eq(token.id)
+  const isTokenActiveAuction =
+    !auction?.settled && !!auction?.tokenId && auction.tokenId.eq(token.id)
 
   useAuctionEvents({
     collection,
