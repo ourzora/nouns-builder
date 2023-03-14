@@ -29,14 +29,13 @@ type AppPropsWithLayout = AppProps & {
 }
 
 function App({ Component, pageProps, err }: AppPropsWithLayout) {
-  const isMounted = useIsMounted()
   const getLayout = Component.getLayout ?? ((page) => page)
   const fallback = pageProps?.fallback ?? {}
   return (
     <WagmiConfig client={client}>
       <RainbowKitProvider chains={chains} appInfo={{ disclaimer: Disclaimer }}>
         <SWRConfig value={{ fallback }}>
-          {isMounted && getLayout(<Component {...pageProps} err={err} />)}
+          {getLayout(<Component {...pageProps} err={err} />)}
         </SWRConfig>
         <NetworkController.Mainnet>
           <VercelAnalytics />
