@@ -15,7 +15,6 @@ import { Disclaimer } from 'src/components/Disclaimer'
 import { NetworkController } from 'src/components/NetworkController'
 import { chains } from 'src/data/contract/chains'
 import { client } from 'src/data/contract/client'
-import { useIsMounted } from 'src/hooks/useIsMounted'
 import 'src/styles/globals.css'
 import 'src/styles/styles.css'
 
