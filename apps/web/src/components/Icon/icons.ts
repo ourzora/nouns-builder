@@ -19,6 +19,7 @@ import Dots from './assets/dots.svg'
 import Download from './assets/download.svg'
 import Eth from './assets/eth.svg'
 import External from './assets/external-16.svg'
+import Github from './assets/github.svg'
 import Globe from './assets/globe.svg'
 import HandlebarCircle from './assets/handlebar-circle.svg'
 import Move from './assets/move.svg'
@@ -51,6 +52,7 @@ export const icons = {
   dots: Dots,
   download: Download,
   'external-16': External,
+  github: Github,
   eth: Eth,
   handlebarCircle: HandlebarCircle,
   globe: Globe,
