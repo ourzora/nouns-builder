@@ -1,13 +1,10 @@
-import { Flex } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import { ReactElement, ReactNode, useEffect } from 'react'
-import { useContractRead } from 'wagmi'
+import useSWR from 'swr'
 
-import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-import { managerAbi } from 'src/data/contract/abis'
+import SWR_KEYS from 'src/constants/swrKeys'
+import getAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useDaoStore } from 'src/modules/dao'
-import { notFoundWrap } from 'src/styles/404.css'
 import { AddressType } from 'src/typings'
 
 import { DefaultLayout } from './DefaultLayout'
@@ -20,13 +17,10 @@ function DaoLayout({ children }: { children: ReactNode }) {
 
   const setAddresses = useDaoStore((state) => state.setAddresses)
 
-  const { data } = useContractRead({
-    enabled: !!token,
-    abi: managerAbi,
-    address: PUBLIC_MANAGER_ADDRESS,
-    functionName: 'getAddresses',
-    args: [token as AddressType],
-  })
+  const { data } = useSWR(
+    token ? [SWR_KEYS.DAO_ADDRESSES, token] : null,
+    async () => await getAddresses(token as AddressType)
+  )
 
   useEffect(() => {
     if (data) {
@@ -39,13 +33,6 @@ function DaoLayout({ children }: { children: ReactNode }) {
       })
     }
   }, [setAddresses, data, token])
-
-  if (!data) return null
-
-  const hasMissingAddresses = Object.values(data).includes(ethers.constants.AddressZero)
-  if (hasMissingAddresses) {
-    return <Flex className={notFoundWrap}>404 - Page Not Found</Flex>
-  }
 
   return <>{children}</>
 }

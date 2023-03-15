@@ -8,6 +8,10 @@ export const CACHE_TIMES = {
     maxAge: ONE_MINUTE,
     swr: ONE_DAY,
   },
+  DAO_PROPOSAL: {
+    maxAge: ONE_MINUTE,
+    swr: ONE_DAY,
+  },
   TOKEN_INFO: {
     maxAge: ONE_MINUTE,
     swr: ONE_DAY,

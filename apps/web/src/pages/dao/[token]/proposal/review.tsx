@@ -1,8 +1,13 @@
 import { Flex, Stack } from '@zoralabs/zord'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { unstable_serialize } from 'swr'
 import { useAccount } from 'wagmi'
 
+import { CACHE_TIMES } from 'src/constants/cacheTimes'
+import SWR_KEYS from 'src/constants/swrKeys'
+import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
@@ -57,3 +62,28 @@ const ReviewProposalPage: NextPageWithLayout = () => {
 ReviewProposalPage.getLayout = getDaoLayout
 
 export default ReviewProposalPage
+
+export const getServerSideProps: GetServerSideProps = async ({ res, params }) => {
+  const { maxAge, swr } = CACHE_TIMES.DAO_PROPOSAL
+  res.setHeader(
+    'Cache-Control',
+    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+  )
+
+  const collection = params?.token as AddressType
+  const addresses = await getDAOAddresses(collection)
+
+  if (!addresses) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: {
+      fallback: {
+        [unstable_serialize([SWR_KEYS.DAO_ADDRESSES, collection])]: addresses,
+      },
+    },
+  }
+}

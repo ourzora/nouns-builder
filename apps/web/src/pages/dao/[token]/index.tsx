@@ -1,16 +1,17 @@
-import { Address, readContract, readContracts } from '@wagmi/core'
+import { Address, readContracts } from '@wagmi/core'
 import { Flex, Text, atoms, theme } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { unstable_serialize } from 'swr'
 import { useAccount, useContractRead } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
-import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
-import { auctionAbi, managerAbi } from 'src/data/contract/abis'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { auctionAbi } from 'src/data/contract/abis'
+import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 import {
@@ -114,16 +115,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
-    const addresses = await readContract({
-      abi: managerAbi,
-      address: PUBLIC_MANAGER_ADDRESS,
-      functionName: 'getAddresses',
-      args: [collectionAddress],
-    })
-    const hasMissingAddresses = Object.values(addresses).includes(
-      ethers.constants.AddressZero
-    )
-    if (hasMissingAddresses) {
+    const addresses = await getDAOAddresses(collectionAddress)
+    if (!addresses) {
       return {
         notFound: true,
       }
@@ -150,7 +143,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!initialized) {
       return {
         props: {
-          addresses,
+          [unstable_serialize([SWR_KEYS.DAO_ADDRESSES, collectionAddress])]: addresses,
           collectionAddress,
         },
       }
