@@ -34,10 +34,16 @@ export const PauseAuctions = () => {
 
   return (
     <Box w={'100%'}>
-      {paused && (
+      {paused ? (
         <Box mb={'x8'}>
           <Paragraph size="md" color="negative">
             It looks like auctions are already paused for this DAO.
+          </Paragraph>
+        </Box>
+      ) : (
+        <Box mb={'x8'}>
+          <Paragraph size="md" color="text1">
+            No further input required for this transaction.
           </Paragraph>
         </Box>
       )}
