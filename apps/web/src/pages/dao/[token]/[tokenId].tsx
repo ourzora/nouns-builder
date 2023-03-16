@@ -153,7 +153,6 @@ export const getServerSideProps: GetServerSideProps = async ({
       props: {
         fallback: {
           [unstable_serialize([SWR_KEYS.TOKEN, collection, tokenId])]: token,
-          [unstable_serialize([SWR_KEYS.DAO_ADDRESSES, collection])]: addresses,
         },
         url: resolvedUrl,
         collection,

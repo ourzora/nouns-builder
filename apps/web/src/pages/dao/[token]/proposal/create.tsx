@@ -2,11 +2,9 @@ import { Flex, Stack } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { unstable_serialize } from 'swr'
 import { useAccount } from 'wagmi'
 
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
-import SWR_KEYS from 'src/constants/swrKeys'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -128,9 +126,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res, params }) =>
 
   return {
     props: {
-      fallback: {
-        [unstable_serialize([SWR_KEYS.DAO_ADDRESSES, collection])]: addresses,
-      },
+      addresses,
     },
   }
 }

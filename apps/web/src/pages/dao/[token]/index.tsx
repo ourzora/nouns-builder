@@ -4,12 +4,10 @@ import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { unstable_serialize } from 'swr'
 import { useAccount, useContractRead } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
-import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -143,7 +141,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!initialized) {
       return {
         props: {
-          [unstable_serialize([SWR_KEYS.DAO_ADDRESSES, collectionAddress])]: addresses,
+          addresses,
           collectionAddress,
         },
       }

@@ -133,10 +133,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {
         fallback: {
           [unstable_serialize([SWR_KEYS.PROPOSAL, proposal?.proposalId])]: proposal,
-          [unstable_serialize([SWR_KEYS.DAO_ADDRESSES, token])]: daoContractAddresses,
         },
         proposalId: id,
         token: tokenData,
+        addresses: daoContractAddresses,
         daoName,
       },
     }
