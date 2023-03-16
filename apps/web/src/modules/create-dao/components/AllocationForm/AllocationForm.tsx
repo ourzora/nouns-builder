@@ -10,7 +10,6 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
-import { TokenAllocation } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 
 import { useFormStore } from '../../stores'
@@ -20,6 +19,12 @@ import { FounderAllocationFields } from './FounderAllocationFields'
 
 interface AllocationFormProps {
   title: string
+}
+
+export interface TokenAllocation {
+  allocationPercentage: number | string
+  founderAddress: string
+  endDate: string
 }
 
 export interface FounderAllocationFormValues {

@@ -1,7 +1,8 @@
 import { BigNumber } from 'ethers'
 import { normalizeIPFSUrl } from 'ipfs-service'
 
-import { IPFSUpload, OrderedLayersProps } from 'src/typings'
+import { IPFSUpload } from '../components/Artwork'
+import { OrderedTraits } from '../components/Artwork/LayerBox'
 
 export interface PropertyItem {
   propertyId: BigNumber
@@ -35,7 +36,7 @@ function uploadsToPropertyItems(
 }
 
 export function transformFileProperties(
-  orderedLayers: OrderedLayersProps[],
+  orderedLayers: OrderedTraits,
   ipfsUpload: IPFSUpload[],
   maxFilesPerTransaction = 500
 ): Properties[] {
