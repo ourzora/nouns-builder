@@ -1,6 +1,8 @@
-import { Box, Flex, Stack } from '@zoralabs/zord'
+import { Box, Flex, Grid, Stack } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
+
+import { Icon } from 'src/components/Icon'
 
 import { MadeWithZoraFooter } from '../DefaultLayout/MadeWithZoraFooter'
 import {
@@ -67,6 +69,36 @@ export const Footer = () => {
               Terms of Service
             </Box>
           </Link>
+          <Grid columns={3} gap="x3">
+            <a href={'https://twitter.com/nounsbuilder'} target="_blank" rel="noreferrer">
+              <Icon
+                id="twitter"
+                backgroundColor="background1"
+                borderRadius="round"
+                p="x2"
+              />
+            </a>
+            <a href={'https://discord.gg/C6Zmt8aakt'} target="_blank" rel="noreferrer">
+              <Icon
+                id="discord"
+                backgroundColor="background1"
+                borderRadius="round"
+                p="x2"
+              />
+            </a>
+            <a
+              href={' https://github.com/ourzora/nouns-builder'}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Icon
+                id="github"
+                backgroundColor="background1"
+                borderRadius="round"
+                p="x2"
+              />
+            </a>
+          </Grid>
         </Stack>
       </Flex>
       <MadeWithZoraFooter
