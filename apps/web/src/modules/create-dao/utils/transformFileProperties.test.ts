@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import { describe, expect, it } from 'vitest'
 
-import { IPFSUpload } from '../components'
+import { IPFSUpload } from '../components/Artwork'
 import { OrderedTraits } from '../components/Artwork/LayerBox'
 import { transformFileProperties } from './transformFileProperties'
 

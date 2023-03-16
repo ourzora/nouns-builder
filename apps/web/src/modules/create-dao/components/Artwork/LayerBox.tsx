@@ -28,19 +28,11 @@ export interface DragAndDropProps {
   draggedFrom?: number
   draggedTo?: number | null
   isDragging?: boolean
-  originalOrder?: {
-    trait: string
-    properties: string[]
-    ipfs?: {}[]
-  }[]
-  updatedOrder?: {
-    trait: string
-    properties: string[]
-    ipfs?: {}[]
-  }[]
+  originalOrder?: OrderedTraits
+  updatedOrder?: OrderedTraits
 }
 
-interface SettingsBoxProps {
+interface LayerBoxProps {
   trait: string
   properties: string[]
   ipfs: ImageProps[]
@@ -50,7 +42,7 @@ interface SettingsBoxProps {
   index: number
 }
 
-export const LayerBox: React.FC<SettingsBoxProps> = ({
+export const LayerBox: React.FC<LayerBoxProps> = ({
   trait,
   properties,
   ipfs,
