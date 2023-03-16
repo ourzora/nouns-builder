@@ -8,11 +8,15 @@ import {
   previewModalWrapperStyle,
   previewWrapperInnerStyle,
 } from 'src/styles/Artwork.css'
-import { ImagesByTraitProps, PlaygroundProps, SelectedTraitsProps } from 'src/typings'
 
 import { useFormStore } from '../../../stores'
+import { ImageProps, ImagesByTraitProps, SelectedTraitsProps } from '../ArtworkUpload'
 import { ImageGrid } from './ImageGrid'
 import { LayerMenu } from './LayerMenu'
+
+export interface PlaygroundProps {
+  images: ImageProps[]
+}
 
 export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
   const { orderedLayers } = useFormStore()
