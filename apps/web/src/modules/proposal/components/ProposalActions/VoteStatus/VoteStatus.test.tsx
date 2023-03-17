@@ -13,6 +13,7 @@ describe('VoteStatus', () => {
         votesAvailable={0}
         proposalId={'0x12'}
         voteStart={1630000000}
+        timeCreated={1630000000}
         state={NounsProposalStatus.Created}
         daoName={'xcz'}
         title={'Upgrade xcz'}
@@ -27,6 +28,7 @@ describe('VoteStatus', () => {
         votesAvailable={0}
         proposalId={'0x12'}
         voteStart={1630000000}
+        timeCreated={1630000000}
         state={NounsProposalStatus.Pending}
         daoName={'xcz'}
         title={'Upgrade xcz'}
@@ -41,6 +43,7 @@ describe('VoteStatus', () => {
         votesAvailable={0}
         proposalId={'0x12'}
         voteStart={1630000000}
+        timeCreated={1630000000}
         state={NounsProposalStatus.Active}
         daoName={'xcz'}
         title={'Upgrade xcz'}
@@ -48,7 +51,9 @@ describe('VoteStatus', () => {
     )
 
     expect(
-      screen.getByText('You must hold at least one xcz token to vote on proposals')
+      screen.getByText(
+        'You must hold at least one xcz token by block 1630000000 to vote on proposals'
+      )
     ).toBeInTheDocument()
   })
 
@@ -58,6 +63,7 @@ describe('VoteStatus', () => {
         votesAvailable={2}
         proposalId={'0x12'}
         voteStart={1630000000}
+        timeCreated={1630000000}
         state={NounsProposalStatus.Active}
         daoName={'xcz'}
         title={'Upgrade xcz'}
@@ -82,6 +88,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
+          timeCreated={1630000000}
           state={NounsProposalStatus.Succeeded}
           daoName={'xcz'}
           title={'Upgrade xcz'}
@@ -105,6 +112,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
+          timeCreated={1630000000}
           state={NounsProposalStatus.Queued}
           daoName={'xcz'}
           title={'Upgrade xcz'}
@@ -128,6 +136,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
+          timeCreated={1630000000}
           state={NounsProposalStatus.Active}
           daoName={'xcz'}
           title={'Upgrade xcz'}
@@ -145,6 +154,7 @@ describe('VoteStatus', () => {
         votesAvailable={1}
         proposalId={'0x12'}
         voteStart={1630000000}
+        timeCreated={1630000000}
         state={NounsProposalStatus.Executed}
         daoName={'xcz'}
         title={'Upgrade xcz'}

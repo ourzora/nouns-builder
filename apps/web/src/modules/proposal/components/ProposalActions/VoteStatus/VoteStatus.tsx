@@ -1,4 +1,5 @@
 import { Button, Flex, Text } from '@zoralabs/zord'
+import dayjs from 'dayjs'
 import { ethers } from 'ethers'
 import React, { Fragment, useEffect, useState } from 'react'
 import { useContractEvent } from 'wagmi'
@@ -28,6 +29,7 @@ interface VoteStatusProps {
   votesAvailable: number
   proposalId: string
   voteStart: number
+  timeCreated: number
   state: NounsProposalStatus
   title: string
   daoName?: string
@@ -42,6 +44,7 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
   state,
   daoName,
   title,
+  timeCreated,
 }) => {
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const { governor } = useDaoStore((state) => state.addresses)
@@ -120,7 +123,8 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
             Submit Vote
           </Flex>
           <Text color={'text3'}>
-            You must hold at least one {daoName} token to vote on proposals
+            You must hold at least one {daoName} token by{' '}
+            {dayjs.unix(timeCreated).format('MMM, D, YYYY')} to vote on proposals
           </Text>
         </Flex>
       ) : null}
