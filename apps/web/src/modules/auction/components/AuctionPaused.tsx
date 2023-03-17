@@ -58,7 +58,7 @@ export const AuctionPaused = () => {
   return (
     <Stack align={'center'} w="100%" mt="x7">
       <Box color="text3" fontSize={18}>
-        Auctions have been paused
+        Auctions have been paused.
       </Box>
       <Link
         shallow={!pausedProposal?.proposalId}
