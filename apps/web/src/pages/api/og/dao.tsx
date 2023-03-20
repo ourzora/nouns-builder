@@ -1,21 +1,21 @@
 import { ImageResponse } from '@vercel/og'
 
-import NogglesLogo from '../../../../src/layouts/assets/builder-framed.svg'
+import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 
 export const config = {
   runtime: 'edge',
 }
 
 const ptRootRegular = fetch(
-  new URL('../../../../public/fonts/pt-root-ui_regular.ttf', import.meta.url)
+  new URL('public/fonts/pt-root-ui_regular.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const ptRootMedium = fetch(
-  new URL('../../../../public/fonts/pt-root-ui_medium.ttf', import.meta.url)
+  new URL('public/fonts/pt-root-ui_medium.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const ptRootBold = fetch(
-  new URL('../../../../public/fonts/pt-root-ui_bold.ttf', import.meta.url)
+  new URL('public/fonts/pt-root-ui_bold.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 export default async function handler() {
@@ -23,17 +23,17 @@ export default async function handler() {
     name: 'the park dao',
     image:
       'https://nouns.build/_next/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeibarawmcql724nufftadir52qwj36t7bwycrq7seuajaugxfdriwu%2Fdall__e_2022-09-26_15.05.42_-_golden_gate_park_black_and_white_photo_san_francisco_.png&w=128&q=75',
-    treasury: '24.7 ETH',
+    treasury: '12 ETH',
     owners: '76',
     totalSupply: '159',
     proposals: '19',
   }
 
-  const ptRootRegularData = await ptRootRegular
-  const ptRootMediumData = await ptRootMedium
-  const ptRootBoldData = await ptRootBold
-
-  console.log('ptRootRegularData', ptRootRegularData)
+  const [ptRootRegularData, ptRootMediumData, ptRootBoldData] = await Promise.all([
+    ptRootRegular,
+    ptRootMedium,
+    ptRootBold,
+  ])
 
   const daoDataWithLabel = (label: string, data: string) => {
     return (
