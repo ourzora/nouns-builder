@@ -1,5 +1,8 @@
 import { ImageResponse } from '@vercel/og'
+import { getFetchableUrl } from 'ipfs-service/src/gateway'
+import { NextRequest } from 'next/server'
 
+import { DaoOgMetadata } from 'src/data/contract/requests/getDaoOgMetadata'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 
 export const config = {
@@ -18,16 +21,13 @@ const ptRootBold = fetch(
   new URL('public/fonts/pt-root-ui_bold.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer())
 
-export default async function handler() {
-  const data = {
-    name: 'the park dao',
-    image:
-      'https://nouns.build/_next/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeibarawmcql724nufftadir52qwj36t7bwycrq7seuajaugxfdriwu%2Fdall__e_2022-09-26_15.05.42_-_golden_gate_park_black_and_white_photo_san_francisco_.png&w=128&q=75',
-    treasury: '12 ETH',
-    owners: '76',
-    totalSupply: '159',
-    proposals: '19',
-  }
+export default async function handler(req: NextRequest) {
+  const { searchParams } = new URL(req.url)
+  const rawData = searchParams.get('data')
+
+  if (!rawData) return new Response(undefined, { status: 400 })
+
+  const data: DaoOgMetadata = JSON.parse(rawData)
 
   const [ptRootRegularData, ptRootMediumData, ptRootBoldData] = await Promise.all([
     ptRootRegular,
@@ -95,16 +95,16 @@ export default async function handler() {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <img
             alt="user image"
-            src={data.image}
+            src={getFetchableUrl(data.daoImage)}
             style={{ height: '180px', borderRadius: '9999px', marginRight: '50px' }}
           />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <p style={{ fontSize: '28px', fontWeight: 700 }}>{data.name}</p>
             <div style={{ display: 'flex' }}>
-              {daoDataWithLabel('Treasury', data.treasury)}
-              {daoDataWithLabel('Owners', data.owners)}
-              {daoDataWithLabel('Total supply', data.totalSupply)}
-              {daoDataWithLabel('Proposals', data.proposals)}
+              {daoDataWithLabel('Treasury', data.treasuryBalance)}
+              {daoDataWithLabel('Owners', data.ownerCount.toString())}
+              {daoDataWithLabel('Total supply', data.totalSupply || '0')}
+              {daoDataWithLabel('Proposals', data.proposalCount.toString())}
             </div>
           </div>
         </div>

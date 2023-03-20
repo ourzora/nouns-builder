@@ -9,6 +9,15 @@ import { formatCryptoVal } from 'src/utils/numbers'
 
 import { metadataAbi, tokenAbi } from '../abis'
 
+export type DaoOgMetadata = {
+  ownerCount: number
+  treasuryBalance: string
+  proposalCount: number
+  name: string | undefined
+  totalSupply: string | undefined
+  daoImage: string | undefined
+}
+
 const getOwnerCount = async (token: string) => {
   return sdk
     .daoInfo({ collectionAddress: token, chain: CHAIN })
@@ -25,8 +34,7 @@ const getTreasuryBalance = async (treasury: string) => {
   const balance = await fetchBalance({
     address: treasury as Address,
   })
-
-  return balance?.formatted ? formatCryptoVal(balance?.formatted) : 0
+  return formatCryptoVal(balance?.formatted)
 }
 
 const getContractMetadata = async (token: string, metadata: string) => {
@@ -51,16 +59,20 @@ const getContractMetadata = async (token: string, metadata: string) => {
 
   return {
     name,
-    totalSupply,
+    totalSupply: totalSupply?.toString(),
     daoImage,
   }
 }
 
-const getDaoOgMetadata = async (token: string, metadata: string) => {
+const getDaoOgMetadata = async (
+  token: string,
+  metadata: string,
+  treasury: string
+): Promise<DaoOgMetadata> => {
   const [contractMetadata, treasuryBalance, ownerCount, proposalCount] =
     await Promise.all([
       getContractMetadata(token, metadata),
-      getTreasuryBalance(token),
+      getTreasuryBalance(treasury),
       getOwnerCount(token),
       getProposalCount(token),
     ])

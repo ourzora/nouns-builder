@@ -12,6 +12,9 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
+import getDaoOgMetadata, {
+  DaoOgMetadata,
+} from 'src/data/contract/requests/getDaoOgMetadata'
 import getToken from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -32,6 +35,7 @@ interface TokenPageProps {
   collection: AddressType
   tokenId: string
   addresses: DaoContractAddresses
+  daoOgMetadata: DaoOgMetadata
 }
 
 const TokenPage: NextPageWithLayout<TokenPageProps> = ({
@@ -39,6 +43,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   collection,
   tokenId,
   addresses,
+  daoOgMetadata,
 }) => {
   const { query, replace, pathname } = useRouter()
   const { address } = useAccount()
@@ -93,7 +98,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       <Meta
         title={token.name || ''}
         type={`${token.name}:nft`}
-        image={token.media?.thumbnail || token.image}
+        image={`/api/og/dao?data=${encodeURIComponent(JSON.stringify(daoOgMetadata))}`}
         slug={url}
         description={token.description ?? ''}
       />
@@ -143,6 +148,12 @@ export const getServerSideProps: GetServerSideProps = async ({
       getDAOAddresses(collection),
     ])
 
+    const daoOgMetadata = await getDaoOgMetadata(
+      collection,
+      addresses?.metadata as string,
+      addresses?.treasury as string
+    )
+
     if (!(addresses && token)) {
       return {
         notFound: true,
@@ -158,6 +169,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         collection,
         tokenId,
         addresses,
+        daoOgMetadata,
       },
     }
   } catch (e) {
