@@ -1,60 +1,29 @@
-import { Flex } from '@zoralabs/zord'
-import { ethers } from 'ethers'
-import { useRouter } from 'next/router'
-import { ReactElement, ReactNode, useEffect } from 'react'
-import { useContractRead } from 'wagmi'
+import { ReactElement, ReactNode } from 'react'
 
-import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-import { managerAbi } from 'src/data/contract/abis'
-import { useDaoStore } from 'src/modules/dao'
-import { notFoundWrap } from 'src/styles/404.css'
-import { AddressType } from 'src/typings'
+import { DaoContractAddresses, useDaoStore } from 'src/modules/dao'
 
 import { DefaultLayout } from './DefaultLayout'
 import { LayoutWrapper } from './LayoutWrapper'
 
-function DaoLayout({ children }: { children: ReactNode }) {
-  const {
-    query: { token },
-  } = useRouter()
-
-  const setAddresses = useDaoStore((state) => state.setAddresses)
-
-  const { data } = useContractRead({
-    enabled: !!token,
-    abi: managerAbi,
-    address: PUBLIC_MANAGER_ADDRESS,
-    functionName: 'getAddresses',
-    args: [token as AddressType],
-  })
-
-  useEffect(() => {
-    if (data) {
-      setAddresses({
-        token: token as AddressType,
-        auction: data?.auction,
-        governor: data?.governor,
-        metadata: data?.metadata,
-        treasury: data?.treasury,
-      })
-    }
-  }, [setAddresses, data, token])
-
-  if (!data) return null
-
-  const hasMissingAddresses = Object.values(data).includes(ethers.constants.AddressZero)
-  if (hasMissingAddresses) {
-    return <Flex className={notFoundWrap}>404 - Page Not Found</Flex>
-  }
+function DaoLayout({
+  children,
+  addresses,
+}: {
+  children: ReactNode
+  addresses: DaoContractAddresses
+}) {
+  useDaoStore((state) => (state.addresses = addresses))
 
   return <>{children}</>
 }
 
 export function getDaoLayout(page: ReactElement) {
+  const addresses = page.props?.addresses ?? {}
+
   return (
     <LayoutWrapper>
       <DefaultLayout>
-        <DaoLayout>{page}</DaoLayout>
+        <DaoLayout addresses={addresses}>{page}</DaoLayout>
       </DefaultLayout>
     </LayoutWrapper>
   )

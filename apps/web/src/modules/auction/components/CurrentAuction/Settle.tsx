@@ -1,6 +1,11 @@
 import { Button, Flex } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
+import {
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+  useSigner,
+} from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -17,11 +22,18 @@ export const Settle = ({ isEnding }: SettleProps) => {
   const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
 
+  const { data: paused } = useContractRead({
+    enabled: !!addresses?.auction,
+    address: addresses?.auction,
+    abi: auctionAbi,
+    functionName: 'paused',
+  })
+
   const { config, error } = usePrepareContractWrite({
     enabled: !!addresses?.auction,
     address: addresses?.auction,
     abi: auctionAbi,
-    functionName: 'settleCurrentAndCreateNewAuction',
+    functionName: paused ? 'settleAuction' : 'settleCurrentAndCreateNewAuction',
   })
 
   const { writeAsync } = useContractWrite(config)

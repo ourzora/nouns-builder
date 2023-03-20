@@ -2,10 +2,10 @@ import { Box } from '@zoralabs/zord'
 import React from 'react'
 
 import { defaultFormHeading } from 'src/components/Fields/styles.css'
-import { DragAndDropProps, ImageProps } from 'src/typings'
 
 import { useFormStore } from '../../stores'
-import { LayerBox } from './LayerBox'
+import { ImageProps } from '../Artwork'
+import { DragAndDropProps, LayerBox } from './LayerBox'
 
 interface LayerOrderingProps {
   title?: string

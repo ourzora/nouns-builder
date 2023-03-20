@@ -25,6 +25,7 @@ import HandlebarCircle from './assets/handlebar-circle.svg'
 import Move from './assets/move.svg'
 import NewWindow from './assets/new-window.svg'
 import NounsConnect from './assets/nouns-connect.svg'
+import Pause from './assets/pause.svg'
 import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
 import Trash from './assets/trash.svg'
@@ -59,6 +60,7 @@ export const icons = {
   move: Move,
   newWindow: NewWindow,
   nounsConnect: NounsConnect,
+  pause: Pause,
   plus: Plus,
   refresh: Refresh,
   trash: Trash,
