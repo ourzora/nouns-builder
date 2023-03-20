@@ -53,10 +53,10 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   return (
     <Fragment>
       <Meta
-        title={proposal.title}
+        title={`Prop ${proposal.proposalNumber} - ${proposal.title}`}
         slug={'/vote/'}
         image={ogImageURL}
-        description={`Check out this proposal from ${daoName}`}
+        description={`View this proposal from ${daoName}`}
       />
 
       <Flex position="relative" direction="column" pb="x30">

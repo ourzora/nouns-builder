@@ -31,6 +31,7 @@ import { AddressType } from 'src/typings'
 interface TokenPageProps {
   url: string
   collection: AddressType
+  collectionName: string
   tokenId: string
   addresses: DaoContractAddresses
   ogImageURL: string
@@ -39,6 +40,7 @@ interface TokenPageProps {
 const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   url,
   collection,
+  collectionName,
   tokenId,
   addresses,
   ogImageURL,
@@ -94,8 +96,8 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   return (
     <Flex direction="column" pb="x30">
       <Meta
-        title={token.name || ''}
-        type={`${token.name}:nft`}
+        title={collectionName || ''}
+        type={`${collectionName}:nft`}
         image={ogImageURL}
         slug={url}
         description={token.description ?? ''}
@@ -171,6 +173,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         },
         url: resolvedUrl,
         collection,
+        collectionName: daoOgMetadata.name,
         tokenId,
         addresses,
         ogImageURL,
