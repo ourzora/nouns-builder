@@ -12,9 +12,7 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
-import getDaoOgMetadata, {
-  DaoOgMetadata,
-} from 'src/data/contract/requests/getDaoOgMetadata'
+import getDaoOgMetadata from 'src/data/contract/requests/getDaoOgMetadata'
 import getToken from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -35,7 +33,7 @@ interface TokenPageProps {
   collection: AddressType
   tokenId: string
   addresses: DaoContractAddresses
-  daoOgMetadata: DaoOgMetadata
+  ogImageURL: string
 }
 
 const TokenPage: NextPageWithLayout<TokenPageProps> = ({
@@ -43,7 +41,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   collection,
   tokenId,
   addresses,
-  daoOgMetadata,
+  ogImageURL,
 }) => {
   const { query, replace, pathname } = useRouter()
   const { address } = useAccount()
@@ -98,7 +96,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       <Meta
         title={token.name || ''}
         type={`${token.name}:nft`}
-        image={`/api/og/dao?data=${encodeURIComponent(JSON.stringify(daoOgMetadata))}`}
+        image={ogImageURL}
         slug={url}
         description={token.description ?? ''}
       />
@@ -130,6 +128,7 @@ export default TokenPage
 
 export const getServerSideProps: GetServerSideProps = async ({
   params,
+  req,
   res,
   resolvedUrl,
 }) => {
@@ -160,6 +159,11 @@ export const getServerSideProps: GetServerSideProps = async ({
       }
     }
 
+    const protocol = process.env.VERCEL_ENV !== 'production' ? 'http' : 'https'
+    const ogImageURL = `${protocol}://${
+      req.headers.host
+    }/api/og/dao?data=${encodeURIComponent(JSON.stringify(daoOgMetadata))}`
+
     return {
       props: {
         fallback: {
@@ -169,7 +173,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         collection,
         tokenId,
         addresses,
-        daoOgMetadata,
+        ogImageURL,
       },
     }
   } catch (e) {

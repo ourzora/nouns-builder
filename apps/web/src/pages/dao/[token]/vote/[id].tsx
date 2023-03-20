@@ -28,7 +28,7 @@ import { propPageWrapper } from 'src/styles/Proposals.css'
 export interface VotePageProps {
   proposalId: string
   daoName?: string
-  daoImage?: string
+  ogImageURL?: string
   token?: TokenWithWinner
 }
 
@@ -36,7 +36,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   proposalId,
   token,
   daoName,
-  daoImage,
+  ogImageURL,
 }) => {
   const { query } = useRouter()
 
@@ -55,13 +55,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
       <Meta
         title={proposal.title}
         slug={'/vote/'}
-        image={`/api/og/proposal?data=${encodeURIComponent(
-          JSON.stringify({
-            proposal,
-            daoName,
-            daoImage,
-          })
-        )}`}
+        image={ogImageURL}
         description={`Check out this proposal from ${daoName}`}
       />
 
@@ -146,6 +140,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
+    const protocol = process.env.VERCEL_ENV !== 'production' ? 'http' : 'https'
+    const ogImageURL = `${protocol}://${
+      context.req.headers.host
+    }/api/og/proposal?data=${encodeURIComponent(
+      JSON.stringify({
+        proposal,
+        daoName,
+        daoImage,
+      })
+    )}`
+
+    console.log('ogImageURL', ogImageURL)
+
     return {
       props: {
         fallback: {
@@ -155,7 +162,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         token: tokenData,
         addresses: daoContractAddresses,
         daoName,
-        daoImage,
+        ogImageURL,
       },
     }
   } catch (error: any) {
