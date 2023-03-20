@@ -140,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
-    const protocol = process.env.VERCEL_ENV !== 'production' ? 'http' : 'https'
+    const protocol = process.env.VERCEL_ENV === 'development' ? 'http' : 'https'
     const ogImageURL = `${protocol}://${
       context.req.headers.host
     }/api/og/proposal?data=${encodeURIComponent(
