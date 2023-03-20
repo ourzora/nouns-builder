@@ -11,6 +11,7 @@ import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
+import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import getToken from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -19,10 +20,10 @@ import {
   About,
   Activity,
   AdminForm,
+  DaoContractAddresses,
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
-import { useDaoStore } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { AddressType } from 'src/typings'
 
@@ -30,11 +31,16 @@ interface TokenPageProps {
   url: string
   collection: AddressType
   tokenId: string
+  addresses: DaoContractAddresses
 }
 
-const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenId }) => {
+const TokenPage: NextPageWithLayout<TokenPageProps> = ({
+  url,
+  collection,
+  tokenId,
+  addresses,
+}) => {
   const { query, replace, pathname } = useRouter()
-  const addresses = useDaoStore((state) => state.addresses)
   const { address } = useAccount()
 
   const { data: token } = useSWR([SWR_KEYS.TOKEN, collection, tokenId], (_, id) =>
@@ -131,22 +137,32 @@ export const getServerSideProps: GetServerSideProps = async ({
   const collection = params?.token as AddressType
   const tokenId = params?.tokenId as string
 
-  const token = await getToken(collection, tokenId)
+  try {
+    const [token, addresses] = await Promise.all([
+      getToken(collection, tokenId),
+      getDAOAddresses(collection),
+    ])
 
-  if (!token) {
+    if (!(addresses && token)) {
+      return {
+        notFound: true,
+      }
+    }
+
+    return {
+      props: {
+        fallback: {
+          [unstable_serialize([SWR_KEYS.TOKEN, collection, tokenId])]: token,
+        },
+        url: resolvedUrl,
+        collection,
+        tokenId,
+        addresses,
+      },
+    }
+  } catch (e) {
     return {
       notFound: true,
     }
-  }
-
-  return {
-    props: {
-      fallback: {
-        [unstable_serialize([SWR_KEYS.TOKEN, collection, tokenId])]: token,
-      },
-      url: resolvedUrl,
-      collection,
-      tokenId,
-    },
   }
 }
