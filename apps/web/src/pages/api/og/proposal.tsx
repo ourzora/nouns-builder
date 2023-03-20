@@ -3,14 +3,71 @@ import { getFetchableUrl } from 'ipfs-service/src/gateway'
 import { NextRequest } from 'next/server'
 
 import { Proposal } from 'src/data/graphql/requests/proposalQuery'
+import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
-import {
-  parseBgColor,
-  parseState,
-} from 'src/modules/proposal/components/ProposalStatus.helper'
 
 export const config = {
   runtime: 'edge',
+  unstable_allowDynamic: ['../../packages/zoralabs-zord/dist/index.js'],
+}
+
+export function parseState(state: NounsProposalStatus) {
+  switch (state) {
+    case NounsProposalStatus.Created:
+    case NounsProposalStatus.Pending:
+      return 'Pending'
+    case NounsProposalStatus.Active:
+      return 'Active'
+    case NounsProposalStatus.Canceled:
+      return 'Cancelled'
+    case NounsProposalStatus.Defeated:
+      return 'Defeated'
+    case NounsProposalStatus.Succeeded:
+      return 'Succeeded'
+    case NounsProposalStatus.Queued:
+    case NounsProposalStatus.Executable:
+      return 'Queued'
+    case NounsProposalStatus.Expired:
+      return 'Expired'
+    case NounsProposalStatus.Executed:
+      return 'Executed'
+    case NounsProposalStatus.Vetoed:
+      return 'Vetoed'
+    default:
+      return 'Loading'
+  }
+}
+
+export function parseBgColor(state: NounsProposalStatus) {
+  switch (state) {
+    case NounsProposalStatus.Created:
+    case NounsProposalStatus.Pending:
+    case NounsProposalStatus.Active:
+    case NounsProposalStatus.Succeeded:
+      return {
+        borderColor: 'rgba(28, 182, 135, 0.1)',
+        color: '#1CB687',
+      }
+    case NounsProposalStatus.Defeated:
+      return {
+        borderColor: 'rgba(240, 50, 50, 0.1)',
+        color: '#F03232',
+      }
+    case NounsProposalStatus.Executed:
+      return {
+        borderColor: 'rgba(37, 124, 237, 0.1)',
+        color: '#257CED',
+      }
+    case NounsProposalStatus.Queued:
+    case NounsProposalStatus.Executable:
+      return {
+        borderColor: '#F2E2F7',
+        color: '#D16BE1',
+      }
+    case NounsProposalStatus.Expired:
+    default:
+      return { borderColor: '#F2F2F2', color: '#B3B3B3' }
+  }
 }
 
 const ptRootRegular = fetch(
