@@ -8,6 +8,7 @@ import GetStarted from 'src/components/Home/GetStarted'
 import Marquee from 'src/components/Home/Marquee'
 import RecentlyCreated from 'src/components/Home/RecentlyCreated'
 import Twitter from 'src/components/Home/Twitter'
+import VisitAlternate from 'src/components/Home/VisitAlternate'
 import { Meta } from 'src/components/Meta'
 import { highestBidsRequest } from 'src/data/graphql/requests/homepageQuery'
 import { AuctionFragment } from 'src/data/graphql/sdk.generated'
@@ -32,6 +33,7 @@ const HomePage: NextPageWithLayout<{
       <Stack align={'center'}>
         <Marquee />
         <GetStarted />
+        <VisitAlternate />
         {featuredDaos && (
           <RecentlyCreated>
             <DaoFeed featuredDaos={featuredDaos} error={statusCode} />
