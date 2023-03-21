@@ -29,8 +29,8 @@ export const FormHandler = ({
           >
             <Flex align={'center'} color={'text3'}>
               <Text
-                fontWeight={'paragraph'}
-                fontSize={16}
+                fontWeight={'heading'}
+                fontSize={12}
                 className={atoms({ textDecoration: 'underline' })}
               >
                 How to create a DAO?
