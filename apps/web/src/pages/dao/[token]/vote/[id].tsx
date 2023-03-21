@@ -1,4 +1,4 @@
-import { readContract, readContracts } from '@wagmi/core'
+import { readContracts } from '@wagmi/core'
 import { Flex } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
@@ -8,10 +8,10 @@ import React, { Fragment } from 'react'
 import useSWR, { unstable_serialize } from 'swr'
 
 import { Meta } from 'src/components/Meta'
-import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
+import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
+import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import getToken, { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -84,20 +84,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   try {
     const [daoContractAddresses, proposal] = await Promise.all([
-      readContract({
-        abi: managerAbi,
-        address: PUBLIC_MANAGER_ADDRESS,
-        functionName: 'getAddresses',
-        args: [token],
-      }),
+      getDAOAddresses(token),
       getProposal(id),
     ])
-
-    const hasMissingAddresses = Object.values(daoContractAddresses).includes(
-      ethers.constants.AddressZero
-    )
     // 404 page if no proposal is found or any of the dao addresses are missing
-    if (!proposal || hasMissingAddresses) {
+    if (!(daoContractAddresses && proposal)) {
       return {
         notFound: true,
       }
@@ -145,6 +136,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
         proposalId: id,
         token: tokenData,
+        addresses: daoContractAddresses,
         daoName,
       },
     }
