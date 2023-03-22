@@ -151,8 +151,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       })
     )}`
 
-    console.log('ogImageURL', ogImageURL)
-
     return {
       props: {
         fallback: {
