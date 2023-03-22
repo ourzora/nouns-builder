@@ -10,7 +10,7 @@ import useSWR, { unstable_serialize } from 'swr'
 import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
+import { auctionAbi, metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import getToken, { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
@@ -28,10 +28,16 @@ import { propPageWrapper } from 'src/styles/Proposals.css'
 export interface VotePageProps {
   proposalId: string
   daoName?: string
+  ogImageURL?: string
   token?: TokenWithWinner
 }
 
-const VotePage: NextPageWithLayout<VotePageProps> = ({ proposalId, token, daoName }) => {
+const VotePage: NextPageWithLayout<VotePageProps> = ({
+  proposalId,
+  token,
+  daoName,
+  ogImageURL,
+}) => {
   const { query } = useRouter()
 
   const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, proposalId], (_, id) =>
@@ -47,10 +53,10 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({ proposalId, token, daoNam
   return (
     <Fragment>
       <Meta
-        title={proposal.title}
+        title={`Prop ${proposal.proposalNumber} - ${proposal.title}`}
         slug={'/vote/'}
-        image={token?.media?.original || (token?.image as string)}
-        description={`Check out this proposal from ${daoName}`}
+        image={ogImageURL}
+        description={`View this proposal from ${daoName}`}
       />
 
       <Flex position="relative" direction="column" pb="x30">
@@ -103,7 +109,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
     )
 
-    const [auction, daoName] = await readContracts({
+    const [auction, daoName, daoImage] = await readContracts({
       contracts: [
         {
           abi: auctionAbi,
@@ -114,6 +120,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           abi: tokenAbi,
           address: token,
           functionName: 'name',
+        },
+        {
+          abi: metadataAbi,
+          address: daoContractAddresses.metadata,
+          functionName: 'contractImage',
         },
       ],
     })
@@ -129,6 +140,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
+    const protocol = process.env.VERCEL_ENV === 'development' ? 'http' : 'https'
+    const ogImageURL = `${protocol}://${
+      context.req.headers.host
+    }/api/og/proposal?data=${encodeURIComponent(
+      JSON.stringify({
+        proposal,
+        daoName,
+        daoImage,
+      })
+    )}`
+
     return {
       props: {
         fallback: {
@@ -138,6 +160,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         token: tokenData,
         addresses: daoContractAddresses,
         daoName,
+        ogImageURL,
       },
     }
   } catch (error: any) {
