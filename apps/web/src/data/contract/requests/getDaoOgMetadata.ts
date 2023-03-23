@@ -26,7 +26,7 @@ const getOwnerCount = async (token: string) => {
 
 const getProposalCount = async (token: string) => {
   return getProposals([token], 1).then((x) =>
-    x.proposals ? x.proposals[0].proposalNumber : 0
+    x.proposals && x.proposals.length > 0 ? x.proposals[0].proposalNumber : 0
   )
 }
 
