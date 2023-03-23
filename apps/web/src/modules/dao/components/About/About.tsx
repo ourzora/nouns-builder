@@ -11,6 +11,7 @@ import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { sdk } from 'src/data/graphql/client'
+import { useLayoutStore } from 'src/stores'
 import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
@@ -25,6 +26,7 @@ export const About: React.FC = () => {
   const {
     addresses: { token, treasury, metadata },
   } = useDaoStore()
+  const { isMobile } = useLayoutStore()
 
   const tokenContractParams = {
     abi: tokenAbi,
@@ -127,25 +129,25 @@ export const About: React.FC = () => {
         </Box>
       ) : null}
 
-      {typeof founders !== 'undefined' && founders.length > 0 ? (
-        <>
-          <Text variant="heading-xs" mt="x16" style={{ fontWeight: 800 }}>
-            Founders
-          </Text>
-          <Grid columns={2} mt="x6" gap="x4">
-            {founders.map((founder) => (
-              <Founder {...founder} />
-            ))}
-          </Grid>
-        </>
-      ) : null}
-
       <Box
         mt={{ '@initial': 'x4', '@768': 'x6' }}
         display={{ '@initial': 'block', '@768': 'none' }}
       >
         <ExternalLinks links={{ website: parsedContractURI?.external_url }} />
       </Box>
+
+      {typeof founders !== 'undefined' && founders.length > 0 ? (
+        <>
+          <Text variant="heading-xs" mt="x16" style={{ fontWeight: 800 }}>
+            Founders
+          </Text>
+          <Grid columns={isMobile ? 1 : 2} mt="x6" gap="x4">
+            {founders.map((founder) => (
+              <Founder {...founder} />
+            ))}
+          </Grid>
+        </>
+      ) : null}
     </Box>
   )
 }
