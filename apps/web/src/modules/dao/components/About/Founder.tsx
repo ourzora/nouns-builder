@@ -1,6 +1,7 @@
-import { Flex, Text } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 
 import { Avatar } from 'src/components/Avatar'
+import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks'
 import { AddressType } from 'src/typings'
@@ -8,10 +9,16 @@ import { AddressType } from 'src/typings'
 interface FounderProps {
   wallet: AddressType
   ownershipPct: number
+  vestExpiry: number
 }
 
-export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct }) => {
+export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct, vestExpiry }) => {
   const { displayName, ensAvatar } = useEnsData(wallet as string)
+  const vestDate = new Date(vestExpiry * 1000).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
   return (
     <Flex
       as="a"
@@ -35,7 +42,14 @@ export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct }) => {
           <Text fontWeight={'display'}>{displayName}</Text>
         </Flex>
       </Flex>
-      <Text fontWeight={'display'}>{ownershipPct}%</Text>
+      <Flex align={'center'} justify="center">
+        <Text fontWeight={'display'} mr="x2">
+          {ownershipPct}%
+        </Text>
+        <Box title={`In effect until ${vestDate}`}>
+          <Icon id="info-16" size="sm" />
+        </Box>
+      </Flex>
     </Flex>
   )
 }
