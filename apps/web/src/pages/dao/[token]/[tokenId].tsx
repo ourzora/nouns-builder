@@ -93,6 +93,10 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
     return null
   }
 
+  const description = token.description ?? ''
+  const ogDescription =
+    description.length > 111 ? `${description.slice(0, 111)}...` : description
+
   return (
     <Flex direction="column" pb="x30">
       <Meta
@@ -100,7 +104,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         type={`${collectionName}:nft`}
         image={ogImageURL}
         slug={url}
-        description={token.description ?? ''}
+        description={ogDescription}
       />
       <Auction auctionAddress={addresses.auction} collection={collection} token={token} />
       <SectionHandler
