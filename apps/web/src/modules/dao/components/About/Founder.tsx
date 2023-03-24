@@ -21,10 +21,6 @@ export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct, vestExpi
   })
   return (
     <Flex
-      as="a"
-      target="_blank"
-      rel="noreferrer noopener"
-      href={`${ETHERSCAN_BASE_URL}/address/${wallet}`}
       direction={'row'}
       align={'center'}
       justify={'space-between'}
@@ -36,17 +32,25 @@ export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct, vestExpi
       p="x4"
       px="x6"
     >
-      <Flex direction={'row'} align={'center'} cursor={'pointer'}>
+      <Flex direction={'row'} align={'center'}>
         <Avatar address={wallet} src={ensAvatar} size={'40'} />
         <Flex direction={'column'} ml={'x2'}>
-          <Text fontWeight={'display'}>{displayName}</Text>
+          <Text
+            as="a"
+            target="_blank"
+            rel="noreferrer noopener"
+            href={`${ETHERSCAN_BASE_URL}/address/${wallet}`}
+            fontWeight={'display'}
+          >
+            {displayName}
+          </Text>
         </Flex>
       </Flex>
       <Flex align={'center'} justify="center">
         <Text fontWeight={'display'} mr="x2">
           {ownershipPct}%
         </Text>
-        <Box title={`In effect until ${vestDate}`}>
+        <Box title={`In effect until ${vestDate}`} cursor="pointer">
           <Icon id="info-16" size="sm" />
         </Box>
       </Flex>
