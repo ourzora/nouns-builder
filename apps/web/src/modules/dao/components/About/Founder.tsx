@@ -1,4 +1,5 @@
-import { Box, Flex, Text } from '@zoralabs/zord'
+import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
+import { useState } from 'react'
 
 import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
@@ -13,6 +14,7 @@ interface FounderProps {
 }
 
 export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct, vestExpiry }) => {
+  const [showTooltip, setShowTooltip] = useState(false)
   const { displayName, ensAvatar } = useEnsData(wallet as string)
   const vestDate = new Date(vestExpiry * 1000).toLocaleDateString(undefined, {
     year: 'numeric',
@@ -50,9 +52,17 @@ export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct, vestExpi
         <Text fontWeight={'display'} mr="x2">
           {ownershipPct}%
         </Text>
-        <Box title={`In effect until ${vestDate}`} cursor="pointer">
+        <Box
+          cursor="pointer"
+          style={{ zIndex: 102 }}
+          onMouseOver={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
           <Icon id="info-16" size="sm" />
         </Box>
+        <PopUp open={showTooltip} trigger={<></>}>
+          <Box>{`In effect until ${vestDate}`}</Box>
+        </PopUp>
       </Flex>
     </Flex>
   )
