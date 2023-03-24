@@ -96,7 +96,14 @@ export default async function handler(req: NextRequest) {
           <img
             alt="user image"
             src={getFetchableUrl(data.daoImage)}
-            style={{ height: '180px', borderRadius: '9999px', marginRight: '50px' }}
+            style={{
+              height: '180px',
+              width: '180px',
+              borderRadius: '9999px',
+              marginRight: '50px',
+              objectFit: 'cover',
+              objectPosition: 'center',
+            }}
           />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <p style={{ fontSize: '28px', fontWeight: 700 }}>{data.name}</p>

@@ -85,7 +85,10 @@ const ptRootBold = fetch(
 export type ProposalOgMetadata = {
   daoName: string
   daoImage: string
-  proposal: Proposal
+  proposal: Pick<
+    Proposal,
+    'proposalNumber' | 'title' | 'status' | 'forVotes' | 'againstVotes' | 'abstainVotes'
+  >
 }
 
 export default async function handler(req: NextRequest) {
@@ -152,7 +155,14 @@ export default async function handler(req: NextRequest) {
           <img
             alt="user image"
             src={getFetchableUrl(data.daoImage)}
-            style={{ height: '52px', borderRadius: '9999px', marginRight: '10px' }}
+            style={{
+              height: '52px',
+              width: '52px',
+              borderRadius: '9999px',
+              marginRight: '10px',
+              objectFit: 'cover',
+              objectPosition: 'center',
+            }}
           />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <p style={{ fontSize: '28px', fontWeight: 700 }}>{data.daoName}</p>
