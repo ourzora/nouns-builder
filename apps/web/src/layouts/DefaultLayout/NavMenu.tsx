@@ -221,13 +221,6 @@ export const NavMenu = () => {
               direction={'column'}
               gap={'x2'}
             >
-              <Link href={'/explore'}>
-                <Flex display="flex" align="center" justify={'center'} py={'x2'}>
-                  <Text cursor={'pointer'} fontWeight={'display'}>
-                    Explore
-                  </Text>
-                </Flex>
-              </Link>
               <Link href={'/about'}>
                 <Flex display="flex" align="center" justify={'center'} py={'x2'}>
                   <Text cursor={'pointer'} fontWeight={'display'}>
@@ -235,6 +228,24 @@ export const NavMenu = () => {
                   </Text>
                 </Flex>
               </Link>
+              <Link href={'/explore'}>
+                <Flex display="flex" align="center" justify={'center'} py={'x2'}>
+                  <Text cursor={'pointer'} fontWeight={'display'}>
+                    Explore
+                  </Text>
+                </Flex>
+              </Link>
+              <a
+                href="https://docs.zora.co/docs/smart-contracts/nouns-builder/intro"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <Flex display="flex" align="center" justify={'center'} py={'x2'}>
+                  <Text cursor={'pointer'} fontWeight={'display'}>
+                    Docs
+                  </Text>
+                </Flex>
+              </a>
               <Box
                 color="border"
                 borderStyle="solid"

@@ -1,15 +1,19 @@
-import { Button, Flex } from '@zoralabs/zord'
+import { Button, Flex, atoms } from '@zoralabs/zord'
 import { Form, Formik } from 'formik'
-import React from 'react'
+import { motion } from 'framer-motion'
+import React, { BaseSyntheticEvent } from 'react'
 import * as Yup from 'yup'
 
 import Radio from 'src/components/Fields/Radio'
+import SmartInput from 'src/components/Fields/SmartInput'
 import {
   defaultBackButton,
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
+import { getEnsAddress, isValidAddress } from 'src/utils/ens'
 import { isEmpty } from 'src/utils/helpers'
+import { getProvider } from 'src/utils/provider'
 
 import { useFormStore } from '../stores'
 
@@ -19,28 +23,53 @@ interface VetoFormProps {
 
 interface VetoFromValues {
   vetoPower?: boolean
+  vetoerAddress: string
+}
+
+const animation = {
+  init: {
+    height: 0,
+  },
+  open: {
+    height: 'auto',
+  },
 }
 
 export const vetoValidationSchema = Yup.object().shape({
   vetoPower: Yup.boolean().required(),
+  vetoerAddress: Yup.string().when('vetoPower', {
+    is: true,
+    then: Yup.string()
+      .required('*')
+      .test(
+        'isValidAddress',
+        'invalid address',
+        (value: string | undefined) => !!value && isValidAddress(value, getProvider())
+      ),
+  }),
 })
 
 export const VetoForm: React.FC<VetoFormProps> = ({ title }) => {
   const {
     vetoPower,
     setVetoPower,
+    vetoerAddress,
+    setVetoerAddress,
     setFulfilledSections,
     activeSection,
     setActiveSection,
   } = useFormStore()
   const initialValues: VetoFromValues = {
     vetoPower: vetoPower,
+    vetoerAddress: vetoerAddress,
   }
 
-  const handleSubmit = (values: VetoFromValues) => {
+  const handleSubmit = async (values: VetoFromValues) => {
     const vetoPower = values.vetoPower
+    const vetoerAddress = await getEnsAddress(values.vetoerAddress)
     if (vetoPower !== undefined) {
       setVetoPower(vetoPower)
+      setVetoerAddress(vetoerAddress)
       setFulfilledSections(title)
       setActiveSection(activeSection + 1)
     }
@@ -71,6 +100,34 @@ export const VetoForm: React.FC<VetoFormProps> = ({ title }) => {
                 { value: false, label: 'No' },
               ]}
             />
+            <motion.div
+              className={atoms({ overflow: 'hidden' })}
+              variants={animation}
+              initial={'init'}
+              animate={formik.values.vetoPower ? 'open' : 'init'}
+            >
+              <SmartInput
+                {...formik.getFieldProps('vetoerAddress')}
+                formik={formik}
+                inputLabel="Veto address"
+                helperText="You may assign veto power to a multisig."
+                onChange={({ target }: BaseSyntheticEvent) => {
+                  formik.setFieldValue('vetoerAddress', target.value)
+                }}
+                id="vetoerAddress"
+                type={'text'}
+                placeholder={'0x... or .eth'}
+                onBlur={formik.handleBlur}
+                autoSubmit={false}
+                isAddress={true}
+                errorMessage={
+                  formik.touched['vetoerAddress'] && formik.errors['vetoerAddress']
+                    ? formik.errors['vetoerAddress']
+                    : undefined
+                }
+              />
+            </motion.div>
+
             <Flex>
               <Button
                 justify={'center'}

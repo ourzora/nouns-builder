@@ -43,6 +43,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
     activeSection,
     setFulfilledSections,
     vetoPower,
+    vetoerAddress,
     auctionSettings: { auctionDuration },
   } = useFormStore(
     (state) => ({
@@ -53,6 +54,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
       activeSection: state.activeSection,
       setFulfilledSections: state.setFulfilledSections,
       vetoPower: state.vetoPower,
+      vetoerAddress: state.vetoerAddress,
       auctionSettings: state.auctionSettings,
     }),
     shallow
@@ -142,6 +144,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
                   formik={formik}
                   auctionDuration={auctionDuration!}
                   vetoPower={vetoPower}
+                  vetoerAddress={vetoerAddress}
                   touched={formik.touched}
                   values={formik.values}
                   errors={formik.errors}
