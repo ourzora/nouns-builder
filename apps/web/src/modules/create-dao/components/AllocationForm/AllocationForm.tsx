@@ -25,6 +25,7 @@ export interface TokenAllocation {
   allocationPercentage: number | string
   founderAddress: string
   endDate: string
+  admin?: boolean
 }
 
 export interface FounderAllocationFormValues {
@@ -75,6 +76,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
             founderAddress: signerAddress || '',
             allocationPercentage: '',
             endDate: '',
+            admin: true,
           },
         ]
       : [
@@ -82,6 +84,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
             founderAddress: signerAddress || '',
             allocationPercentage: founderAllocation[0].allocationPercentage,
             endDate: founderAllocation[0].endDate,
+            admin: true,
           },
           ...founderAllocation.slice(1),
         ]
@@ -110,6 +113,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
     setFounderAllocation(
       founderAllocation.map((allocation, idx) => ({
         ...allocation,
+        admin: undefined,
         founderAddress: founderAllocationAddresses[idx],
       }))
     )
