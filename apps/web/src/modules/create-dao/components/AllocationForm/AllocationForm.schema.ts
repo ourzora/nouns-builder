@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
 
-const allocationSchema = Yup.object().shape({
+export const allocationSchema = Yup.object().shape({
   founderAddress: Yup.string()
     .test(
       'isValidAddress',

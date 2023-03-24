@@ -1,6 +1,6 @@
 import { Flex, Stack } from '@zoralabs/zord'
-import { Contract, ethers } from 'ethers'
-import { Formik, FormikValues } from 'formik'
+import { BigNumber, Contract, ethers } from 'ethers'
+import { FieldArray, Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
@@ -15,7 +15,8 @@ import TextArea from 'src/components/Fields/TextArea'
 import { NUMBER, TEXT } from 'src/components/Fields/types'
 import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
 import { NULL_ADDRESS } from 'src/constants/addresses'
-import { auctionAbi, governorAbi, metadataAbi } from 'src/data/contract/abis'
+import { auctionAbi, governorAbi, metadataAbi, tokenAbi } from 'src/data/contract/abis'
+import { TokenAllocation } from 'src/modules/create-dao'
 import {
   BuilderTransaction,
   TransactionType,
@@ -24,11 +25,13 @@ import {
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { useLayoutStore } from 'src/stores'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
+import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds, unpackOptionalArray } from 'src/utils/helpers'
 
 import { DaoContracts, useDaoStore } from '../../stores'
 import { AdminFormValues, adminValidationSchema } from './AdminForm.schema'
+import { AdminFounderAllocationFields } from './AdminFounderAllocationFields'
 
 interface AdminFormProps {
   collectionAddress: string
@@ -66,9 +69,15 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     address: addresses?.metadata as Address,
   }
 
+  const tokenContractParams = {
+    abi: tokenAbi,
+    address: addresses?.token as Address,
+  }
+
   const auctionContract = useContract(auctionContractParams)
   const governorContract = useContract(governorContractParams)
   const metadataContract = useContract(metadataContractParams)
+  const tokenContract = useContract(tokenContractParams)
 
   const { data } = useContractReads({
     contracts: [
@@ -83,6 +92,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       { ...metadataContractParams, functionName: 'projectURI' },
       { ...metadataContractParams, functionName: 'rendererBase' },
       { ...metadataContractParams, functionName: 'description' },
+      { ...tokenContractParams, functionName: 'getFounders' },
     ],
   })
 
@@ -98,12 +108,14 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     daoWebsite,
     rendererBase,
     description,
-  ] = unpackOptionalArray(data, 11)
+    founders,
+  ] = unpackOptionalArray(data, 12)
 
   const contracts: DaoContracts = {
     auctionContract: auctionContract ?? undefined,
     governorContract: governorContract ?? undefined,
     metadataContract: metadataContract ?? undefined,
+    tokenContract: tokenContract ?? undefined,
   }
 
   const initialValues: AdminFormValues = {
@@ -121,6 +133,12 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     quorumThreshold: Number(quorumVotesBps) / 100 || 0,
     votingPeriod: fromSeconds(votingPeriod && Number(votingPeriod)),
     votingDelay: fromSeconds(votingDelay && Number(votingDelay)),
+    founderAllocation:
+      founders?.map((x) => ({
+        founderAddress: x.wallet,
+        allocationPercentage: x.ownershipPct,
+        endDate: new Date(x.vestExpiry * 1000).toISOString(),
+      })) || [],
     vetoPower: !!vetoer && vetoer !== NULL_ADDRESS,
     vetoer: vetoer || '',
 
@@ -189,6 +207,19 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
         value = await getEnsAddress(value as string, provider)
       }
 
+      if (field === 'founderAllocation') {
+        // @ts-ignore
+        value = (value as TokenAllocation[]).map(
+          ({ founderAddress, allocationPercentage, endDate }) => ({
+            wallet: founderAddress as AddressType,
+            ownershipPct: allocationPercentage
+              ? BigNumber.from(allocationPercentage)
+              : BigNumber.from(0),
+            vestExpiry: BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
+          })
+        )
+      }
+
       const transactionProperties = formValuesToTransactionMap[field]
       // @ts-ignore
       const calldata = transactionProperties.constructCalldata(contracts, value)
@@ -253,8 +284,15 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
           validateOnMount
         >
           {(formik) => {
-            const changes = compareAndReturn(formik.initialValues, formik.values).length
-
+            const founderChanges = isEqual(
+              formik.initialValues.founderAllocation,
+              formik.values.founderAllocation
+            )
+              ? 0
+              : 1
+            const changes =
+              compareAndReturn(formik.initialValues, formik.values).length +
+              founderChanges
             return (
               <Flex direction={'column'} w={'100%'}>
                 <Stack>
@@ -390,6 +428,23 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
                     onBlur={formik.handleBlur}
                     errorMessage={formik.errors['votingDelay']}
                   />
+
+                  <FieldArray name="founderAllocation">
+                    {({ remove, push }) => (
+                      <AdminFounderAllocationFields
+                        formik={formik}
+                        auctionDuration={fromSeconds(auctionDuration)}
+                        touched={formik.touched}
+                        values={formik.values}
+                        errors={formik.errors}
+                        removeFounderAddress={remove}
+                        addFounderAddress={() =>
+                          push({ founderAddress: '', allocation: '', endDate: '' })
+                        }
+                      />
+                    )}
+                  </FieldArray>
+
                   <Radio
                     {...formik.getFieldProps('vetoPower')}
                     formik={formik}
