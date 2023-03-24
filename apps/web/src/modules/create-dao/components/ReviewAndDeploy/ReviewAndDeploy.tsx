@@ -70,6 +70,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     ipfsUpload,
     setFulfilledSections,
     vetoPower,
+    vetoerAddress,
   } = useFormStore()
 
   const handlePrev = () => {
@@ -125,7 +126,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       : BigNumber.from('0'),
     vetoer:
       vetoPower === true
-        ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
+        ? ethers.utils.getAddress(vetoerAddress as AddressType)
         : ethers.utils.getAddress(NULL_ADDRESS),
   }
 
