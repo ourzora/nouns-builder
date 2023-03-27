@@ -31,7 +31,7 @@ export const AdminFounderAllocationFields = ({
   addFounderAddress,
 }: AdminFounderAllocationFieldsProps) => {
   return (
-    <Flex position={'relative'} direction={'column'} w={'100%'} mb="x6">
+    <Flex position={'relative'} direction={'column'} w={'100%'}>
       <Stack>
         {values.founderAllocation.map((founder, index) => {
           const error =
@@ -135,7 +135,7 @@ export const AdminFounderAllocationFields = ({
           onClick={addFounderAddress}
         >
           <Icon id="plus" />
-          <Flex>Add Founder</Flex>
+          <Flex>Add Address</Flex>
         </Button>
       </Flex>
 

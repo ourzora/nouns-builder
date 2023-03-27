@@ -14,9 +14,9 @@ export const allocationSchema = Yup.object().shape({
   allocationPercentage: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')
+    .integer('Must be whole number')
     .min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
-    .max(100, '< 100')
-    .integer('Must be whole number'),
+    .max(100, '< 100'),
   endDate: Yup.string()
     .required('*')
     .test('isDateInFuture', 'Must be in future', (value: string | undefined) => {

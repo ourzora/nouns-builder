@@ -1,4 +1,4 @@
-import { Flex, Stack } from '@zoralabs/zord'
+import { Flex, Stack, Text } from '@zoralabs/zord'
 import { BigNumber, Contract, ethers } from 'ethers'
 import { FieldArray, Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -32,6 +32,7 @@ import { compareAndReturn, fromSeconds, unpackOptionalArray } from 'src/utils/he
 import { DaoContracts, useDaoStore } from '../../stores'
 import { AdminFormValues, adminValidationSchema } from './AdminForm.schema'
 import { AdminFounderAllocationFields } from './AdminFounderAllocationFields'
+import { Section } from './Section'
 
 interface AdminFormProps {
   collectionAddress: string
@@ -296,192 +297,219 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
             return (
               <Flex direction={'column'} w={'100%'}>
                 <Stack>
-                  <SingleImageUpload
-                    {...formik.getFieldProps('daoAvatar')}
-                    formik={formik}
-                    id={'daoAvatar'}
-                    inputLabel={'Dao avatar'}
-                    helperText={'Upload'}
-                  />
+                  <Text variant="heading-sm">Admin</Text>
+                  <Text
+                    borderColor="border"
+                    borderStyle="solid"
+                    borderWidth="normal"
+                    borderRadius="curved"
+                    color="text3"
+                    px="x6"
+                    py="x4"
+                    mt="x2"
+                  >
+                    Adding changes to the DAO settings now will create a proposal.
+                  </Text>
 
-                  <TextArea
-                    {...formik.getFieldProps('projectDescription')}
-                    inputLabel={'Collection Description'}
-                    formik={formik}
-                    id={'projectDescription'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['projectDescription']}
-                    placeholder={'Nouns is an experiment which combines...'}
-                  />
+                  <Section title="General Settings">
+                    <SingleImageUpload
+                      {...formik.getFieldProps('daoAvatar')}
+                      formik={formik}
+                      id={'daoAvatar'}
+                      inputLabel={'Dao avatar'}
+                      helperText={'Upload'}
+                    />
 
-                  <SmartInput
-                    {...formik.getFieldProps('daoWebsite')}
-                    inputLabel={'Dao Website'}
-                    type={TEXT}
-                    formik={formik}
-                    id={'daoWebsite'}
-                    onChange={({ target }: BaseSyntheticEvent) => {
-                      formik.setFieldValue('daoWebsite', target.value)
-                    }}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['daoWebsite']}
-                    placeholder={'https://www.nouns.wtf'}
-                  />
+                    <TextArea
+                      {...formik.getFieldProps('projectDescription')}
+                      inputLabel={'Collection Description'}
+                      formik={formik}
+                      id={'projectDescription'}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['projectDescription']}
+                      placeholder={'Nouns is an experiment which combines...'}
+                    />
 
-                  <SmartInput
-                    {...formik.getFieldProps('rendererBase')}
-                    inputLabel={'Renderer Base Url'}
-                    type={TEXT}
-                    formik={formik}
-                    id={'rendererBase'}
-                    onChange={({ target }: BaseSyntheticEvent) => {
-                      formik.setFieldValue('rendererBase', target.value)
-                    }}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['rendererBase']}
-                    helperText={
-                      'This is the base url of the image stacker used to stack the layers and compose an nft.'
-                    }
-                  />
+                    <SmartInput
+                      {...formik.getFieldProps('daoWebsite')}
+                      inputLabel={'Dao Website'}
+                      type={TEXT}
+                      formik={formik}
+                      id={'daoWebsite'}
+                      onChange={({ target }: BaseSyntheticEvent) => {
+                        formik.setFieldValue('daoWebsite', target.value)
+                      }}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['daoWebsite']}
+                      placeholder={'https://www.nouns.wtf'}
+                    />
 
-                  <DaysHoursMinsSecs
-                    {...formik.getFieldProps('auctionDuration')}
-                    inputLabel={'Auction Duration'}
-                    formik={formik}
-                    id={'auctionDuration'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['auctionDuration']}
-                    placeholder={['1', '0', '0', '0']}
-                  />
+                    <SmartInput
+                      {...formik.getFieldProps('rendererBase')}
+                      inputLabel={'Renderer Base Url'}
+                      type={TEXT}
+                      formik={formik}
+                      id={'rendererBase'}
+                      onChange={({ target }: BaseSyntheticEvent) => {
+                        formik.setFieldValue('rendererBase', target.value)
+                      }}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['rendererBase']}
+                      helperText={
+                        'This is the base url of the image stacker used to stack the layers and compose an nft.'
+                      }
+                    />
+                  </Section>
 
-                  <SmartInput
-                    {...formik.getFieldProps('auctionReservePrice')}
-                    inputLabel={'Auction Reserve Price'}
-                    type={NUMBER}
-                    formik={formik}
-                    id={'auctionReservePrice'}
-                    onChange={({ target }: BaseSyntheticEvent) => {
-                      formik.setFieldValue(
-                        'auctionReservePrice',
-                        parseFloat(target.value)
-                      )
-                    }}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['auctionReservePrice']}
-                    perma={'ETH'}
-                  />
+                  <Section title="Auction Settings">
+                    <DaysHoursMinsSecs
+                      {...formik.getFieldProps('auctionDuration')}
+                      inputLabel={'Auction Duration'}
+                      formik={formik}
+                      id={'auctionDuration'}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['auctionDuration']}
+                      placeholder={['1', '0', '0', '0']}
+                    />
 
-                  <SmartInput
-                    {...formik.getFieldProps('proposalThreshold')}
-                    inputLabel={'Proposal Threshold'}
-                    type={NUMBER}
-                    formik={formik}
-                    id={'proposalThreshold'}
-                    onChange={({ target }: BaseSyntheticEvent) => {
-                      formik.setFieldValue('proposalThreshold', parseFloat(target.value))
-                    }}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['proposalThreshold']}
-                    perma={'%'}
-                    step={0.1}
-                    helperText={
-                      'This is the percentage of all existing tokens that must be owned by someone attempting to create a proposal. We recommend a starting value of 0.5% to encourage participation.'
-                    }
-                  />
+                    <SmartInput
+                      {...formik.getFieldProps('auctionReservePrice')}
+                      inputLabel={'Auction Reserve Price'}
+                      type={NUMBER}
+                      formik={formik}
+                      id={'auctionReservePrice'}
+                      onChange={({ target }: BaseSyntheticEvent) => {
+                        formik.setFieldValue(
+                          'auctionReservePrice',
+                          parseFloat(target.value)
+                        )
+                      }}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['auctionReservePrice']}
+                      perma={'ETH'}
+                    />
+                  </Section>
 
-                  <SmartInput
-                    {...formik.getFieldProps('quorumThreshold')}
-                    inputLabel={'Quorum Threshold'}
-                    type={NUMBER}
-                    formik={formik}
-                    id={'quorumThreshold'}
-                    onChange={({ target }: BaseSyntheticEvent) => {
-                      formik.setFieldValue('quorumThreshold', parseFloat(target.value))
-                    }}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['quorumThreshold']}
-                    perma={'%'}
-                    step={1}
-                    helperText={
-                      'This is the percentage of all existing tokens that must vote in a proposal in order for it to pass (as long as a majority of votes approve). We recommend a starting value of 10%.'
-                    }
-                  />
+                  <Section title="Governance Settings">
+                    <SmartInput
+                      {...formik.getFieldProps('proposalThreshold')}
+                      inputLabel={'Proposal Threshold'}
+                      type={NUMBER}
+                      formik={formik}
+                      id={'proposalThreshold'}
+                      onChange={({ target }: BaseSyntheticEvent) => {
+                        formik.setFieldValue(
+                          'proposalThreshold',
+                          parseFloat(target.value)
+                        )
+                      }}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['proposalThreshold']}
+                      perma={'%'}
+                      step={0.1}
+                      helperText={
+                        'This is the percentage of all existing tokens that must be owned by someone attempting to create a proposal. We recommend a starting value of 0.5% to encourage participation.'
+                      }
+                    />
 
-                  <DaysHoursMinsSecs
-                    {...formik.getFieldProps('votingPeriod')}
-                    inputLabel={'Voting Period'}
-                    formik={formik}
-                    id={'votingPeriod'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['votingPeriod']}
-                  />
+                    <SmartInput
+                      {...formik.getFieldProps('quorumThreshold')}
+                      inputLabel={'Quorum Threshold'}
+                      type={NUMBER}
+                      formik={formik}
+                      id={'quorumThreshold'}
+                      onChange={({ target }: BaseSyntheticEvent) => {
+                        formik.setFieldValue('quorumThreshold', parseFloat(target.value))
+                      }}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['quorumThreshold']}
+                      perma={'%'}
+                      step={1}
+                      helperText={
+                        'This is the percentage of all existing tokens that must vote in a proposal in order for it to pass (as long as a majority of votes approve). We recommend a starting value of 10%.'
+                      }
+                    />
 
-                  <DaysHoursMinsSecs
-                    {...formik.getFieldProps('votingDelay')}
-                    inputLabel={'Voting Delay'}
-                    formik={formik}
-                    id={'votingDelay'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    errorMessage={formik.errors['votingDelay']}
-                  />
+                    <DaysHoursMinsSecs
+                      {...formik.getFieldProps('votingPeriod')}
+                      inputLabel={'Voting Period'}
+                      formik={formik}
+                      id={'votingPeriod'}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['votingPeriod']}
+                    />
 
-                  <FieldArray name="founderAllocation">
-                    {({ remove, push }) => (
-                      <AdminFounderAllocationFields
-                        formik={formik}
-                        auctionDuration={fromSeconds(auctionDuration)}
-                        touched={formik.touched}
-                        values={formik.values}
-                        errors={formik.errors}
-                        removeFounderAddress={remove}
-                        addFounderAddress={() =>
-                          push({ founderAddress: '', allocation: '', endDate: '' })
-                        }
-                      />
+                    <DaysHoursMinsSecs
+                      {...formik.getFieldProps('votingDelay')}
+                      inputLabel={'Voting Delay'}
+                      formik={formik}
+                      id={'votingDelay'}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      errorMessage={formik.errors['votingDelay']}
+                    />
+                  </Section>
+
+                  <Section title="Veto Settings">
+                    <Radio
+                      {...formik.getFieldProps('vetoPower')}
+                      formik={formik}
+                      inputLabel={'Veto Power'}
+                      id={'vetoPower'}
+                      options={[
+                        { value: true, label: 'Yes' },
+                        { value: false, label: 'No' },
+                      ]}
+                      flexDirection={'row'}
+                    />
+
+                    {formik.values['vetoPower'] === true && (
+                      <AnimatePresence>
+                        <motion.div
+                          initial={'init'}
+                          animate={'open'}
+                          exit={'init'}
+                          variants={vetoerAnimation}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <SmartInput
+                            {...formik.getFieldProps('vetoer')}
+                            inputLabel="Vetoer"
+                            type={TEXT}
+                            id="vetoer"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            errorMessage={formik.errors['vetoer']}
+                            isAddress={true}
+                            helperText={
+                              'This is the address that has veto power over any proposal.'
+                            }
+                          />
+                        </motion.div>
+                      </AnimatePresence>
                     )}
-                  </FieldArray>
+                  </Section>
 
-                  <Radio
-                    {...formik.getFieldProps('vetoPower')}
-                    formik={formik}
-                    inputLabel={'Veto Power'}
-                    id={'vetoPower'}
-                    options={[
-                      { value: true, label: 'Yes' },
-                      { value: false, label: 'No' },
-                    ]}
-                    flexDirection={'row'}
-                  />
-
-                  {formik.values['vetoPower'] === true && (
-                    <AnimatePresence>
-                      <motion.div
-                        initial={'init'}
-                        animate={'open'}
-                        exit={'init'}
-                        variants={vetoerAnimation}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <SmartInput
-                          {...formik.getFieldProps('vetoer')}
-                          inputLabel="Vetoer"
-                          type={TEXT}
-                          id="vetoer"
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}
-                          errorMessage={formik.errors['vetoer']}
-                          isAddress={true}
-                          helperText={
-                            'This is the address that has veto power over any proposal.'
+                  <Section title="Alloction Settings">
+                    <FieldArray name="founderAllocation">
+                      {({ remove, push }) => (
+                        <AdminFounderAllocationFields
+                          formik={formik}
+                          auctionDuration={fromSeconds(auctionDuration)}
+                          touched={formik.touched}
+                          values={formik.values}
+                          errors={formik.errors}
+                          removeFounderAddress={remove}
+                          addFounderAddress={() =>
+                            push({ founderAddress: '', allocation: '', endDate: '' })
                           }
                         />
-                      </motion.div>
-                    </AnimatePresence>
-                  )}
+                      )}
+                    </FieldArray>
+                  </Section>
                 </Stack>
 
                 <StickySave
