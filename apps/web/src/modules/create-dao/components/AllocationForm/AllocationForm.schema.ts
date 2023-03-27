@@ -1,14 +1,28 @@
+import { debounce } from 'lodash'
 import * as Yup from 'yup'
 
 import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
+
+const validateAddress = async (
+  value: string | undefined,
+  res: (value: boolean | PromiseLike<boolean>) => void
+) => {
+  try {
+    res(!!value && (await isValidAddress(value, getProvider())))
+  } catch (err) {
+    res(false)
+  }
+}
+
+export const deboucedValidateAddress = debounce(validateAddress, 500)
 
 const allocationSchema = Yup.object().shape({
   founderAddress: Yup.string()
     .test(
       'isValidAddress',
       'invalid address',
-      (value: string | undefined) => !!value && isValidAddress(value, getProvider())
+      (value) => new Promise((res) => deboucedValidateAddress(value, res))
     )
     .required('*'),
   allocationPercentage: Yup.number()
