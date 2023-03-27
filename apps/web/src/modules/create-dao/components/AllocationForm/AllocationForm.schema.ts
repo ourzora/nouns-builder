@@ -14,7 +14,10 @@ const allocationSchema = Yup.object().shape({
   allocationPercentage: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')
-    .min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
+    .when('admin', (admin, schema) => {
+      if (!admin) return schema.min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
+      return schema
+    })
     .max(100, '< 100')
     .integer('Must be whole number'),
   endDate: Yup.string()
@@ -25,6 +28,7 @@ const allocationSchema = Yup.object().shape({
       const now = new Date()
       return date > now
     }),
+  admin: Yup.boolean(),
 })
 
 export const validationSchemaContributions = Yup.object().shape({

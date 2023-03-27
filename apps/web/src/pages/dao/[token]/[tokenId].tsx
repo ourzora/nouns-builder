@@ -12,6 +12,7 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
+import getDaoOgMetadata from 'src/data/contract/requests/getDaoOgMetadata'
 import getToken from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -30,15 +31,19 @@ import { AddressType } from 'src/typings'
 interface TokenPageProps {
   url: string
   collection: AddressType
+  collectionName: string
   tokenId: string
   addresses: DaoContractAddresses
+  ogImageURL: string
 }
 
 const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   url,
   collection,
+  collectionName,
   tokenId,
   addresses,
+  ogImageURL,
 }) => {
   const { query, replace, pathname } = useRouter()
   const { address } = useAccount()
@@ -88,14 +93,18 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
     return null
   }
 
+  const description = token.description ?? ''
+  const ogDescription =
+    description.length > 111 ? `${description.slice(0, 111)}...` : description
+
   return (
     <Flex direction="column" pb="x30">
       <Meta
-        title={token.name || ''}
-        type={`${token.name}:nft`}
-        image={token.media?.thumbnail || token.image}
+        title={collectionName || ''}
+        type={`${collectionName}:nft`}
+        image={ogImageURL}
         slug={url}
-        description={token.description ?? ''}
+        description={ogDescription}
       />
       <Auction auctionAddress={addresses.auction} collection={collection} token={token} />
       <SectionHandler
@@ -125,6 +134,7 @@ export default TokenPage
 
 export const getServerSideProps: GetServerSideProps = async ({
   params,
+  req,
   res,
   resolvedUrl,
 }) => {
@@ -143,11 +153,22 @@ export const getServerSideProps: GetServerSideProps = async ({
       getDAOAddresses(collection),
     ])
 
+    const daoOgMetadata = await getDaoOgMetadata(
+      collection,
+      addresses?.metadata as string,
+      addresses?.treasury as string
+    )
+
     if (!(addresses && token)) {
       return {
         notFound: true,
       }
     }
+
+    const protocol = process.env.VERCEL_ENV === 'development' ? 'http' : 'https'
+    const ogImageURL = `${protocol}://${
+      req.headers.host
+    }/api/og/dao?data=${encodeURIComponent(JSON.stringify(daoOgMetadata))}`
 
     return {
       props: {
@@ -156,8 +177,10 @@ export const getServerSideProps: GetServerSideProps = async ({
         },
         url: resolvedUrl,
         collection,
+        collectionName: daoOgMetadata.name,
         tokenId,
         addresses,
+        ogImageURL,
       },
     }
   } catch (e) {
