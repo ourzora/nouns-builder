@@ -298,17 +298,8 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
               <Flex direction={'column'} w={'100%'}>
                 <Stack>
                   <Text variant="heading-sm">Admin</Text>
-                  <Text
-                    borderColor="border"
-                    borderStyle="solid"
-                    borderWidth="normal"
-                    borderRadius="curved"
-                    color="text3"
-                    px="x6"
-                    py="x4"
-                    mt="x2"
-                  >
-                    Adding changes to the DAO settings now will create a proposal.
+                  <Text color="text3" mt="x2">
+                    Editing DAO settings will create a proposal.
                   </Text>
 
                   <Section title="General Settings">
