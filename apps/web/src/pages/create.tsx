@@ -144,6 +144,7 @@ const CreatePage: NextPageWithLayout = () => {
                 exit="exit"
               >
                 <FormHandler
+                  sectionIndex={activeSection}
                   form={sections[activeSection]?.form}
                   title={sections[activeSection]?.title}
                   heading={sections[activeSection]?.heading}

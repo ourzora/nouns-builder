@@ -49,12 +49,19 @@ export const Nav = () => {
         <Flex align="center">
           <Flex direction={'row'} align={'center'} gap={'x4'}>
             <Flex display={{ '@initial': 'none', '@768': 'flex' }} gap={'x4'}>
-              <Link href={'/explore'}>
-                <Label className={navMenuItem}>Explore</Label>
-              </Link>
               <Link href={'/about'}>
                 <Label className={navMenuItem}>About</Label>
               </Link>
+              <Link href={'/explore'}>
+                <Label className={navMenuItem}>Explore</Label>
+              </Link>
+              <a
+                href="https://docs.zora.co/docs/smart-contracts/nouns-builder/intro"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <Label className={navMenuItem}>Docs</Label>
+              </a>
             </Flex>
 
             <NavMenu />

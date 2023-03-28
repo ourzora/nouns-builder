@@ -85,7 +85,10 @@ const ptRootBold = fetch(
 export type ProposalOgMetadata = {
   daoName: string
   daoImage: string
-  proposal: Proposal
+  proposal: Pick<
+    Proposal,
+    'proposalNumber' | 'title' | 'status' | 'forVotes' | 'againstVotes' | 'abstainVotes'
+  >
 }
 
 export default async function handler(req: NextRequest) {

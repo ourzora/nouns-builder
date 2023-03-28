@@ -23,6 +23,7 @@ import {
   isProposalOpen,
 } from 'src/modules/proposal'
 import { NextPageWithLayout } from 'src/pages/_app'
+import { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 
 export interface VotePageProps {
@@ -140,16 +141,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
+    const ogMetadata: ProposalOgMetadata = {
+      proposal: {
+        proposalNumber: proposal.proposalNumber,
+        title: proposal.title,
+        status: proposal.status,
+        forVotes: proposal.forVotes,
+        againstVotes: proposal.againstVotes,
+        abstainVotes: proposal.abstainVotes,
+      },
+      daoName,
+      daoImage,
+    }
+
     const protocol = process.env.VERCEL_ENV === 'development' ? 'http' : 'https'
     const ogImageURL = `${protocol}://${
       context.req.headers.host
-    }/api/og/proposal?data=${encodeURIComponent(
-      JSON.stringify({
-        proposal,
-        daoName,
-        daoImage,
-      })
-    )}`
+    }/api/og/proposal?data=${encodeURIComponent(JSON.stringify(ogMetadata))}`
 
     return {
       props: {

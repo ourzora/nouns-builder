@@ -23,6 +23,8 @@ export interface FormStoreState {
   setGeneral: (general: GeneralFormValues) => void
   vetoPower: boolean | undefined
   setVetoPower: (vetoPower: boolean) => void
+  vetoerAddress: string
+  setVetoerAddress: (vetoerAddress: string) => void
   founderAllocation: Array<TokenAllocation>
   setFounderAllocation: (founderAllocation: Array<TokenAllocation>) => void
   contributionAllocation: Array<TokenAllocation>
@@ -76,6 +78,7 @@ const initialState = {
     },
   ],
   vetoPower: undefined,
+  vetoerAddress: '',
   setUpArtwork: {
     projectDescription: '',
     artwork: [],
@@ -115,6 +118,7 @@ export const useFormStore = create(
       setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) =>
         set({ contributionAllocation }),
       setVetoPower: (vetoPower: boolean) => set({ vetoPower }),
+      setVetoerAddress: (vetoerAddress: string) => set({ vetoerAddress }),
       setSetUpArtwork: (artwork: ArtworkFormValues) => set({ setUpArtwork: artwork }),
       setIpfsUpload: (ipfsUpload: IPFSUpload[]) => set({ ipfsUpload }),
       setOrderedLayers: (orderedLayers: OrderedTraits) => {
