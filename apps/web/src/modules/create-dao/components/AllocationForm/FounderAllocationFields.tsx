@@ -17,6 +17,7 @@ interface FounderAllocationFieldsProps {
   values: FounderAllocationFormValues
   auctionDuration: Duration
   vetoPower?: boolean
+  vetoerAddress: string
   errors?: FormikErrors<FounderAllocationFormValues>
   touched: FormikTouched<FounderAllocationFormValues>
   formik: FormikProps<FounderAllocationFormValues>
@@ -27,6 +28,7 @@ interface FounderAllocationFieldsProps {
 export const FounderAllocationFields = ({
   values,
   vetoPower,
+  vetoerAddress,
   auctionDuration,
   errors,
   touched,
@@ -45,6 +47,7 @@ export const FounderAllocationFields = ({
       <Stack>
         {values.founderAllocation.map((founder, index) => {
           const isFounder = index === 0
+          const isVetoer = vetoPower && vetoerAddress === founder.founderAddress
 
           const error =
             typeof errors?.founderAllocation === 'object'
@@ -129,8 +132,12 @@ export const FounderAllocationFields = ({
                   </Button>
                 )}
 
-                {isFounder && vetoPower === true && (
-                  <Flex align={'center'} color="warning">
+                {isVetoer && (
+                  <Flex
+                    align={'center'}
+                    ml={isFounder ? undefined : 'x2'}
+                    color="warning"
+                  >
                     <Icon size="sm" id="warning-16" fill="warning" />
                     <Flex fontWeight={'display'} ml={'x2'}>
                       This address has proposal veto power

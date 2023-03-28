@@ -124,7 +124,9 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
           uri: upload?.ipfs?.uri || '',
           url: encodeURI(
             getFetchableUrl(upload?.ipfs?.uri) +
-              `/${upload.webkitRelativePath.split('/').slice(1).join('/')}` || ''
+              `/${sanitizeFileName(
+                upload.webkitRelativePath.split('/').slice(1).join('/')
+              )}` || ''
           ),
           path: upload.webkitRelativePath,
           content: upload?.content,
