@@ -45,20 +45,33 @@ const readTokenContractData = async (
   }
 }
 
+const logError = async (e: unknown) => {
+  console.error(e)
+  Sentry.captureException(e)
+  await Sentry.flush(2000)
+  return
+}
+
 const getToken = async (
   tokenAddress: AddressType,
   id: string
 ): Promise<TokenWithWinner | undefined> => {
   try {
-    const [token, tokenWinner] = await Promise.all([
-      await tokenQuery(tokenAddress, id),
-      await tokenWinnerQuery(tokenAddress, id),
-    ])
+    let tokenData: TokenWithWinner = { id }
 
-    const tokenData: TokenWithWinner = {
-      id,
-      ...token,
-      ...tokenWinner,
+    try {
+      const [token, tokenWinner] = await Promise.all([
+        await tokenQuery(tokenAddress, id),
+        await tokenWinnerQuery(tokenAddress, id),
+      ])
+
+      tokenData = {
+        id,
+        ...token,
+        ...tokenWinner,
+      }
+    } catch (e) {
+      await logError(e)
     }
 
     // fallback contract data, i.e. for when the data returned from the zora API has not
@@ -77,9 +90,7 @@ const getToken = async (
 
     return tokenData
   } catch (e) {
-    console.error(e)
-    Sentry.captureException(e)
-    await Sentry.flush(2000)
+    await logError(e)
     return
   }
 }
