@@ -106,6 +106,15 @@ export const formValuesToTransactionMap: FormValuesTransactionMap = {
         toSeconds(value),
       ]),
   },
+  founderAllocation: {
+    functionSignature: 'updateFounders',
+    getTarget: (addresses) => addresses.token as AddressType,
+    constructCalldata: ({ tokenContract }, value) =>
+      tokenContract?.interface.encodeFunctionData(
+        'updateFounders((address,uint256,uint256)[])',
+        [value]
+      ),
+  },
   vetoPower: {
     functionSignature: 'burnVetoer',
     getTarget: (addresses) => addresses.governor as AddressType,

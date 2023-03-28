@@ -17,7 +17,7 @@ const validateAddress = async (
 
 export const deboucedValidateAddress = debounce(validateAddress, 500)
 
-const allocationSchema = Yup.object().shape({
+export const allocationSchema = Yup.object().shape({
   founderAddress: Yup.string()
     .test(
       'isValidAddress',
@@ -28,12 +28,12 @@ const allocationSchema = Yup.object().shape({
   allocationPercentage: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')
+    .integer('Must be whole number')
+    .max(100, '< 100')
     .when('admin', (admin, schema) => {
       if (!admin) return schema.min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
       return schema
-    })
-    .max(100, '< 100')
-    .integer('Must be whole number'),
+    }),
   endDate: Yup.string()
     .required('*')
     .test('isDateInFuture', 'Must be in future', (value: string | undefined) => {
