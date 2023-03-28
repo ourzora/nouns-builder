@@ -142,9 +142,11 @@ export const About: React.FC = () => {
             Founders
           </Text>
           <Grid columns={isMobile ? 1 : 2} mt="x6" gap="x4">
-            {founders.map((founder) => (
-              <Founder {...founder} />
-            ))}
+            {founders
+              .filter((founder) => founder.ownershipPct > 0)
+              .map((founder) => (
+                <Founder key={founder.wallet} {...founder} />
+              ))}
           </Grid>
         </>
       ) : null}
