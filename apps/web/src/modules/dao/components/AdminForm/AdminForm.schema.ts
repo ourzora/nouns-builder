@@ -1,7 +1,8 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import * as Yup from 'yup'
 
-import { auctionSettingsValidationSchema } from 'src/modules/create-dao'
+import { TokenAllocation, auctionSettingsValidationSchema } from 'src/modules/create-dao'
+import { allocationSchema } from 'src/modules/create-dao/components/AllocationForm/AllocationForm.schema'
 import { Duration } from 'src/typings'
 import { isValidAddress } from 'src/utils/ens'
 import { durationValidationSchema, urlValidationSchema } from 'src/utils/yup'
@@ -17,6 +18,7 @@ export interface AdminFormValues {
   quorumThreshold: number
   votingPeriod: Duration
   votingDelay: Duration
+  founderAllocation: TokenAllocation[]
   vetoPower: boolean
   vetoer: string
 }
@@ -48,6 +50,16 @@ export const adminValidationSchema = (provider: Provider | undefined) =>
           { value: tenMinutes, description: '10 minutes' },
           { value: twentyFourWeeks, description: '24 weeks' }
         ),
+        founderAllocation: Yup.array()
+          .of(allocationSchema)
+          .test(
+            'unique',
+            'Founder allocation addresses should be unique.',
+            function (values) {
+              const addresses = values?.map((v) => v.founderAddress)
+              return values?.length === new Set(addresses)?.size
+            }
+          ),
         vetoPower: Yup.bool().required('*'),
       })
     )

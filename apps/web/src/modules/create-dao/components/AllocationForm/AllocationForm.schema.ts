@@ -1,25 +1,39 @@
+import { debounce } from 'lodash'
 import * as Yup from 'yup'
 
 import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
 
-const allocationSchema = Yup.object().shape({
+const validateAddress = async (
+  value: string | undefined,
+  res: (value: boolean | PromiseLike<boolean>) => void
+) => {
+  try {
+    res(!!value && (await isValidAddress(value, getProvider())))
+  } catch (err) {
+    res(false)
+  }
+}
+
+export const deboucedValidateAddress = debounce(validateAddress, 500)
+
+export const allocationSchema = Yup.object().shape({
   founderAddress: Yup.string()
     .test(
       'isValidAddress',
       'invalid address',
-      (value: string | undefined) => !!value && isValidAddress(value, getProvider())
+      (value) => new Promise((res) => deboucedValidateAddress(value, res))
     )
     .required('*'),
   allocationPercentage: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')
+    .integer('Must be whole number')
+    .max(100, '< 100')
     .when('admin', (admin, schema) => {
       if (!admin) return schema.min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
       return schema
-    })
-    .max(100, '< 100')
-    .integer('Must be whole number'),
+    }),
   endDate: Yup.string()
     .required('*')
     .test('isDateInFuture', 'Must be in future', (value: string | undefined) => {

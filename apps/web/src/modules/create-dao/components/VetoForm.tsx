@@ -11,11 +11,11 @@ import {
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
-import { getEnsAddress, isValidAddress } from 'src/utils/ens'
+import { getEnsAddress } from 'src/utils/ens'
 import { isEmpty } from 'src/utils/helpers'
-import { getProvider } from 'src/utils/provider'
 
 import { useFormStore } from '../stores'
+import { deboucedValidateAddress } from './AllocationForm/AllocationForm.schema'
 
 interface VetoFormProps {
   title: string
@@ -44,7 +44,7 @@ export const vetoValidationSchema = Yup.object().shape({
       .test(
         'isValidAddress',
         'invalid address',
-        (value: string | undefined) => !!value && isValidAddress(value, getProvider())
+        (value) => new Promise((res) => deboucedValidateAddress(value, res))
       ),
   }),
 })
