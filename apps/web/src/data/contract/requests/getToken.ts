@@ -56,24 +56,24 @@ const getToken = async (
   tokenAddress: AddressType,
   id: string
 ): Promise<TokenWithWinner | undefined> => {
+  let tokenData: TokenWithWinner = { id }
+
   try {
-    let tokenData: TokenWithWinner = { id }
+    const [token, tokenWinner] = await Promise.all([
+      await tokenQuery(tokenAddress, id),
+      await tokenWinnerQuery(tokenAddress, id),
+    ])
 
-    try {
-      const [token, tokenWinner] = await Promise.all([
-        await tokenQuery(tokenAddress, id),
-        await tokenWinnerQuery(tokenAddress, id),
-      ])
-
-      tokenData = {
-        id,
-        ...token,
-        ...tokenWinner,
-      }
-    } catch (e) {
-      await logError(e)
+    tokenData = {
+      id,
+      ...token,
+      ...tokenWinner,
     }
+  } catch (e) {
+    await logError(e)
+  }
 
+  try {
     // fallback contract data, i.e. for when the data returned from the zora API has not
     // caught up to the latest token data
     if (!tokenData?.name || !tokenData?.image || !tokenData.description) {
