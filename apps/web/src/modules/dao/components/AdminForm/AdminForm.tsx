@@ -484,7 +484,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
                     )}
                   </Section>
 
-                  <Section title="Alloction Settings">
+                  <Section title="Allocation Settings">
                     <FieldArray name="founderAllocation">
                       {({ remove, push }) => (
                         <AdminFounderAllocationFields
