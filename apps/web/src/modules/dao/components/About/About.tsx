@@ -136,18 +136,23 @@ export const About: React.FC = () => {
         <ExternalLinks links={{ website: parsedContractURI?.external_url }} />
       </Box>
 
+      <Text variant="heading-xs" mt="x16" style={{ fontWeight: 800 }}>
+        Founders
+      </Text>
+
       {typeof founders !== 'undefined' && founders.length > 0 ? (
-        <>
-          <Text variant="heading-xs" mt="x16" style={{ fontWeight: 800 }}>
-            Founders
-          </Text>
-          <Grid columns={isMobile ? 1 : 2} mt="x6" gap="x4">
-            {founders.map((founder) => (
-              <Founder {...founder} />
+        <Grid columns={isMobile ? 1 : 2} mt="x6" gap="x4">
+          {founders
+            .filter((founder) => founder.ownershipPct > 0)
+            .map((founder) => (
+              <Founder key={founder.wallet} {...founder} />
             ))}
-          </Grid>
-        </>
-      ) : null}
+        </Grid>
+      ) : (
+        <Text mt="x2" color="text3">
+          No founders allocation set.
+        </Text>
+      )}
     </Box>
   )
 }

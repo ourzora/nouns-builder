@@ -8,6 +8,7 @@ const SWR_KEYS = {
   PROPOSALS_CALLDATAS: 'proposals-calldatas',
   PROPOSALS_TRANSACTIONS: 'proposal-transaction-data',
   ENS: 'ens',
+  EXPLORE: 'explore',
   TOKEN: 'token',
   AUCTION: 'auction',
   DAO_INFO: 'dao-info',
