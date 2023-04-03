@@ -41,11 +41,7 @@ export const vetoValidationSchema = Yup.object().shape({
     is: true,
     then: Yup.string()
       .required('*')
-      .test(
-        'isValidAddress',
-        'invalid address',
-        (value) => new Promise((res) => deboucedValidateAddress(value, res))
-      ),
+      .test('isValidAddress', 'invalid address', deboucedValidateAddress),
   }),
 })
 
