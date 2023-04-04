@@ -47,6 +47,8 @@ const DEPLOYMENT_ERROR = {
     'Oops! It looks like you have no founders set. Please go back to the allocation step and add at least one founder address.',
   GENERIC:
     'Oops! Looks like there was a problem handling the dao deployment. Please ensure that input data from all the previous steps is correct',
+  INVALID_ALLOCATION_PERCENTAGE:
+    'Oops! Looks like there are undefined founder allocation values. Please go back to the allocation step to ensure that valid allocation values are set.',
 }
 
 export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
@@ -68,6 +70,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     ipfsUpload,
     setFulfilledSections,
     vetoPower,
+    vetoerAddress,
   } = useFormStore()
 
   const handlePrev = () => {
@@ -79,7 +82,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     ...contributionAllocation,
   ].map(({ founderAddress, allocationPercentage: allocation, endDate }) => ({
     wallet: founderAddress as AddressType,
-    ownershipPct: BigNumber.from(allocation),
+    ownershipPct: allocation ? BigNumber.from(allocation) : BigNumber.from(0),
     vestExpiry: BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
   }))
 
@@ -123,12 +126,21 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       : BigNumber.from('0'),
     vetoer:
       vetoPower === true
-        ? ethers.utils.getAddress(founderParams?.[0].wallet as AddressType)
+        ? ethers.utils.getAddress(vetoerAddress as AddressType)
         : ethers.utils.getAddress(NULL_ADDRESS),
   }
 
   const handleDeploy = async () => {
     setDeploymentError(undefined)
+
+    if (
+      [...founderAllocation, ...contributionAllocation].find(
+        (founder) => typeof founder.allocationPercentage === 'undefined'
+      )
+    ) {
+      setDeploymentError(DEPLOYMENT_ERROR.INVALID_ALLOCATION_PERCENTAGE)
+      return
+    }
 
     const signerAddress = await signer?.getAddress()
     if (founderParams[0].wallet !== signerAddress) {

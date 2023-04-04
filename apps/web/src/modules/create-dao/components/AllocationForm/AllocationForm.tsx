@@ -10,7 +10,6 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
-import { TokenAllocation } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 
 import { useFormStore } from '../../stores'
@@ -20,6 +19,13 @@ import { FounderAllocationFields } from './FounderAllocationFields'
 
 interface AllocationFormProps {
   title: string
+}
+
+export interface TokenAllocation {
+  allocationPercentage: number | string
+  founderAddress: string
+  endDate: string
+  admin?: boolean
 }
 
 export interface FounderAllocationFormValues {
@@ -37,6 +43,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
     activeSection,
     setFulfilledSections,
     vetoPower,
+    vetoerAddress,
     auctionSettings: { auctionDuration },
   } = useFormStore(
     (state) => ({
@@ -47,6 +54,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
       activeSection: state.activeSection,
       setFulfilledSections: state.setFulfilledSections,
       vetoPower: state.vetoPower,
+      vetoerAddress: state.vetoerAddress,
       auctionSettings: state.auctionSettings,
     }),
     shallow
@@ -68,6 +76,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
             founderAddress: signerAddress || '',
             allocationPercentage: '',
             endDate: '',
+            admin: true,
           },
         ]
       : [
@@ -75,6 +84,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
             founderAddress: signerAddress || '',
             allocationPercentage: founderAllocation[0].allocationPercentage,
             endDate: founderAllocation[0].endDate,
+            admin: true,
           },
           ...founderAllocation.slice(1),
         ]
@@ -103,6 +113,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
     setFounderAllocation(
       founderAllocation.map((allocation, idx) => ({
         ...allocation,
+        admin: undefined,
         founderAddress: founderAllocationAddresses[idx],
       }))
     )
@@ -133,6 +144,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
                   formik={formik}
                   auctionDuration={auctionDuration!}
                   vetoPower={vetoPower}
+                  vetoerAddress={vetoerAddress}
                   touched={formik.touched}
                   values={formik.values}
                   errors={formik.errors}

@@ -1,33 +1,45 @@
 import { Flex, atoms } from '@zoralabs/zord'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import React from 'react'
 
 import { useLayoutStore } from 'src/stores'
+
+import {
+  BlueSun,
+  BlueWheel,
+  Collective,
+  Creation,
+  GreenClover,
+  NounsGlasses,
+  Of,
+  Possibilities,
+  PurpleGalaxy,
+  PurpleStar,
+  The,
+  Unlock,
+} from './Marquee.css'
 
 const Marquee = () => {
   const { isMobile } = useLayoutStore()
   return (
     <Flex direction={'column'} align={'center'} mt={{ '@initial': 'x4', '@768': 'x32' }}>
       <Flex gap={'x2'} mb={'x1'}>
-        <img
-          src={'/home/unlock.svg'}
-          alt={'unlock'}
-          width={isMobile ? '130px' : 'auto'}
-        />
+        <Image src={'/home/unlock.svg'} alt={'unlock'} className={Unlock} />
         <motion.div
           className={atoms({ display: 'flex', alignItems: 'center' })}
           animate={{ rotate: 360 }}
           transition={{ ease: 'linear', duration: 2, repeat: Infinity }}
         >
-          <img
+          <Image
             src={'/home/purple_galaxy.svg'}
             alt={'purple galaxy icon'}
-            width={isMobile ? '34px' : 'auto'}
+            className={PurpleGalaxy}
           />
         </motion.div>
       </Flex>
       <Flex gap={'x2'} mb={'x1'}>
-        <img src={'/home/the.svg'} alt={'the'} width={isMobile ? '62px' : 'auto'} />
+        <Image src={'/home/the.svg'} alt={'the'} className={The} />
         <motion.div
           className={atoms({ display: 'flex', alignItems: 'center' })}
           animate={{ rotate: [36, 72, 108, 144, 180, 216, 252, 288, 324, 396] }}
@@ -37,20 +49,16 @@ const Marquee = () => {
             repeat: Infinity,
           }}
         >
-          <img
-            src={'/home/blue_wheel.svg'}
-            alt={'blue wheel'}
-            width={isMobile ? '36px' : 'auto'}
-          />
+          <Image src={'/home/blue_wheel.svg'} alt={'blue wheel'} className={BlueWheel} />
         </motion.div>
-        <img
+        <Image
           src={'/home/possibilities.svg'}
           alt={'possibilities'}
-          width={isMobile ? '225px' : 'auto'}
+          className={Possibilities}
         />
       </Flex>
       <Flex gap={'x2'} mb={'x1'}>
-        <img src={'/home/of.svg'} alt={'of'} width={isMobile ? '38px' : 'auto'} />
+        <Image src={'/home/of.svg'} alt={'of'} className={Of} />
         <motion.div
           className={atoms({ display: 'flex', alignItems: 'center' })}
           animate={{ rotate: -360 }}
@@ -60,17 +68,13 @@ const Marquee = () => {
             repeat: Infinity,
           }}
         >
-          <img
+          <Image
             src={'/home/green_clover.svg'}
             alt={'green clover icon'}
-            width={isMobile ? '36px' : 'auto'}
+            className={GreenClover}
           />
         </motion.div>
-        <img
-          src={'/home/collective.svg'}
-          alt={'collective'}
-          width={isMobile ? '180px' : 'auto'}
-        />
+        <Image src={'/home/collective.svg'} alt={'collective'} className={Collective} />
 
         <Flex
           ml={isMobile ? 'x4' : 'x12'}
@@ -95,10 +99,10 @@ const Marquee = () => {
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <img
+            <Image
               src={'/home/purple_star.svg'}
               alt={'purple star icon'}
-              width={isMobile ? '36px' : 'auto'}
+              className={PurpleStar}
             />
           </motion.div>
           <motion.div
@@ -119,25 +123,17 @@ const Marquee = () => {
             }}
             transition={{ duration: 2, repeat: Infinity, delay: 1 }}
           >
-            <img
-              src={'/home/blue_sun.svg'}
-              alt={'blue sun icon'}
-              width={isMobile ? '36px' : 'auto'}
-            />
+            <Image src={'/home/blue_sun.svg'} alt={'blue sun icon'} className={BlueSun} />
           </motion.div>
         </Flex>
       </Flex>
       <Flex gap={'x2'} mb={'x1'}>
-        <img
+        <Image
           src={'/home/nouns_glasses.svg'}
           alt={'small nouns glasses logo'}
-          width={isMobile ? '62px' : 'auto'}
+          className={NounsGlasses}
         />
-        <img
-          src={'/home/creation.svg'}
-          alt={'creation'}
-          width={isMobile ? '157px' : 'auto'}
-        />
+        <Image src={'/home/creation.svg'} alt={'creation'} className={Creation} />
       </Flex>
     </Flex>
   )

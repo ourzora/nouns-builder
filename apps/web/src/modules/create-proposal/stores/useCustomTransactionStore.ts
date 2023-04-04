@@ -1,6 +1,23 @@
+import { ContractInterface } from 'ethers'
 import { create } from 'zustand'
 
-import { CustomTransactionProps } from 'src/typings'
+interface CustomTransactionProps {
+  contract?: {
+    address: string
+    abi: ContractInterface
+    fragments: readonly any[]
+    functions: {}
+  }
+  address: string
+  arguments?: any
+  function: {
+    name: string
+    inputs: any[]
+  }
+  calldata?: string
+  value: string
+  customABI?: string
+}
 
 interface State {
   active: number

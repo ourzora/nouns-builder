@@ -2,8 +2,8 @@
 
 This is Nouns Builder front-end mono-repo. You can find Nouns Builder deployed on:
 
-- [Mainnet](nous.build)
-- [Goerli testnet](testnet.nouns.build)
+- [Mainnet](//nouns.build)
+- [Goerli testnet](//testnet.nouns.build)
 
 For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://docs.zora.co/docs/smart-contracts/nouns-builder/intro). You can also find [Nouns Protocol here](https://github.com/ourzora/nouns-protocol).
 
@@ -79,7 +79,6 @@ This app has several third party api keys that you need in order to run Builder:
 - [alchemy](https://www.alchemy.com/) as the main rpc node provider in addition to mainnet forks for testing
 - [tenderly](https://docs.tenderly.co/simulations-and-forks/simulation-api) in order to simulate transactions
 - [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dyanamically fetch abis
-- a redis instance to cache fetched abis from etherscan
 
 We ask that you supply your own secrets locally for running in development environment. Non-secret environment variables are already included in the `.env` files in this repo.
 
@@ -98,19 +97,17 @@ Add the following variables to `apps/web/.env.local`:
 #alchemy
 NEXT_PUBLIC_ALCHEMY_ID=<ALCHEMY_API_KEY>
 
-#etherscan
-ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
-
-#redis uri
-PRIVATE_REDIS_CONNECTION_URI=<REDIS_URI_INSTANCE>
-
-#optional zora api key
-NEXT_PUBLIC_ZORA_API_KEY=
 
 #tenderly
 TENDERLY_ACCESS_KEY=<API_KEY>
 TENDERLY_PROJECT=<PROJECT_NAME>
 TENDERLY_USER=<ACCOUNT_NAME>
+
+#etherscan (optional to run locally, this is for dynamically fetching abis in the custom transaction builder)
+ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
+
+#optional zora api key
+NEXT_PUBLIC_ZORA_API_KEY=
 ```
 
 ## Running tests
