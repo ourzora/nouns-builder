@@ -7,11 +7,11 @@ import { CustomTransaction } from './CustomTransaction'
 import { PauseAuctions } from './PauseAuctions'
 import { SendEth } from './SendEth'
 
-export type TransactionFormType = typeof TRANSACTION_FORM_OPTIONS[number]
-
 interface TransactionFormProps {
   type: TransactionFormType
 }
+
+export type TransactionFormType = typeof TRANSACTION_FORM_OPTIONS[number]
 
 export const TRANSACTION_FORM_OPTIONS = [
   TransactionType.SEND_ETH,

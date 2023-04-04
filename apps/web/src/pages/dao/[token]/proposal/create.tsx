@@ -28,7 +28,6 @@ import { AddressType } from 'src/typings'
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
   const { query } = router
-  const collectionAddress = query?.token as AddressType
   const [transactionType, setTransactionType] = useState<
     TransactionFormType | undefined
   >()
@@ -36,7 +35,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
 
   useEffect(() => {
     if (transactions.length && !transactionType) {
-      setTransactionType(transactions[0].type)
+      setTransactionType(transactions[0].type as TransactionFormType)
     }
   }, [transactions, transactionType, setTransactionType])
 
