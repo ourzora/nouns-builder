@@ -15,15 +15,14 @@ const validateAddress = async (
   }
 }
 
-export const deboucedValidateAddress = debounce(validateAddress, 500)
+export const deboucedValidateAddress = async (value: string | undefined) => {
+  const debouncedFn = debounce(validateAddress, 500)
+  return await new Promise<boolean>((res) => debouncedFn(value, res))
+}
 
 export const allocationSchema = Yup.object().shape({
   founderAddress: Yup.string()
-    .test(
-      'isValidAddress',
-      'invalid address',
-      (value) => new Promise((res) => deboucedValidateAddress(value, res))
-    )
+    .test('isValidAddress', 'invalid address', deboucedValidateAddress)
     .required('*'),
   allocationPercentage: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
