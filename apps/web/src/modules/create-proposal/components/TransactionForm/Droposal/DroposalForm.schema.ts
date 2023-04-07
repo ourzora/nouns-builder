@@ -1,0 +1,65 @@
+import { debounce } from 'lodash'
+import * as yup from 'yup'
+
+import { isValidAddress } from 'src/utils/ens'
+import { getProvider } from 'src/utils/provider'
+
+export interface DroposalFormValues {
+  name: string
+  symbol: string
+  description: string
+  media: string
+  cover: string
+  pricePerMint?: number
+  maxPerAddress?: number
+  maxSupply?: number
+  royaltyPercentage: number
+  fundsRecipient: string
+  publicSaleStart: string
+  publicSaleEnd: string
+}
+
+const validateAddress = async (
+  value: string | undefined,
+  res: (value: boolean | PromiseLike<boolean>) => void
+) => {
+  try {
+    res(!!value && (await isValidAddress(value, getProvider())))
+  } catch (err) {
+    res(false)
+  }
+}
+
+export const deboucedValidateAddress = debounce(validateAddress, 500)
+
+const droposalFormSchema = yup.object({
+  name: yup.string().required('*'),
+  symbol: yup.string(),
+  description: yup.string().required('*'),
+  media: yup.string().required('*'),
+  cover: yup.string(),
+  pricePerMint: yup.number().required('*'),
+  maxPerAddress: yup.number().integer('Must be whole number'),
+  maxSupply: yup.number().integer('Must be whole number'),
+  royaltyPercentage: yup.number().required('*'),
+  fundsRecipient: yup
+    .string()
+    .required('*')
+    .test(
+      'isValidAddress',
+      'invalid address',
+      (value) => new Promise((res) => deboucedValidateAddress(value, res))
+    ),
+  publicSaleStart: yup.string().required('*'),
+  publicSaleEnd: yup
+    .string()
+    .required('*')
+    .test('isDateInFuture', 'Must be in future', (value: string | undefined) => {
+      if (!value) return false
+      const date = new Date(value)
+      const now = new Date()
+      return date > now
+    }),
+})
+
+export default droposalFormSchema

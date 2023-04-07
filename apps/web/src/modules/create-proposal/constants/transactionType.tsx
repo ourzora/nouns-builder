@@ -5,6 +5,7 @@ import { IconType } from 'src/components/Icon/icons'
 export enum TransactionType {
   SEND_ETH = 'send-eth',
   AIRDROP = 'airdrop',
+  DROPOSAL = 'droposal',
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
   PAUSE_AUCTIONS = 'pause-auctions',
@@ -34,6 +35,12 @@ export const TRANSACTION_TYPES = {
     subTitle: 'Create a free Airdrop for selected addresses',
     icon: 'airdrop',
     iconBackdrop: 'rgba(28, 182, 135, 0.1)',
+  },
+  [TransactionType.DROPOSAL]: {
+    title: 'Drop a Collection',
+    subTitle: 'Create an NFT colleciton controlled by the DAO',
+    icon: 'copy',
+    iconBackdrop: 'rgba(115, 17, 255, 0.1)',
   },
   [TransactionType.UPGRADE]: {
     title: 'Upgrade Proposal',
