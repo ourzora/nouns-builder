@@ -54,7 +54,10 @@ export const Queue: React.FC<QueueProps> = ({ setQueueModalOpen }) => {
               <TransactionCard
                 key={`${transaction.type}-${i}`}
                 handleRemove={() => confirmRemoveTransaction(i)}
-                disabled={transaction.type === TransactionType.UPGRADE}
+                disabled={
+                  transaction.type === TransactionType.UPGRADE ||
+                  transaction.type === TransactionType.UPDATE_MINTER
+                }
                 transaction={transaction}
               />
             ))

@@ -8,6 +8,7 @@ export enum TransactionType {
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
   PAUSE_AUCTIONS = 'pause-auctions',
+  UPDATE_MINTER = 'update-minter',
 }
 
 export interface TransactionTypeProps {
