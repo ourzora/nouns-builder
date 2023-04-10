@@ -13,6 +13,7 @@ import { useAuctionEvents } from '../hooks'
 import { auctionGrid, auctionWrapVariants, auctionWrapper } from './Auction.css'
 import { AuctionDetails } from './AuctionDetails'
 import { AuctionImage } from './AuctionImage'
+import { AuctionPaused } from './AuctionPaused'
 import { AuctionTokenPicker } from './AuctionTokenPicker'
 import { BidAmount } from './BidAmount'
 import { ActionsWrapper, BidHistory } from './BidHistory'
@@ -43,7 +44,8 @@ export const Auction: React.FC<AuctionControllerProps> = ({
     { revalidateOnFocus: true }
   )
 
-  const isTokenActiveAuction = !!auction?.tokenId && auction.tokenId.eq(token.id)
+  const isTokenActiveAuction =
+    !auction?.settled && !!auction?.tokenId && auction.tokenId.eq(token.id)
 
   useAuctionEvents({
     collection,
@@ -98,6 +100,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
               <ActionsWrapper>
                 <BidHistory bids={bids || []} />
               </ActionsWrapper>
+              <AuctionPaused />
             </Fragment>
           )}
         </Flex>

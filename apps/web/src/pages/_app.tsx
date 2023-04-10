@@ -15,7 +15,6 @@ import { Disclaimer } from 'src/components/Disclaimer'
 import { NetworkController } from 'src/components/NetworkController'
 import { chains } from 'src/data/contract/chains'
 import { client } from 'src/data/contract/client'
-import { useIsMounted } from 'src/hooks/useIsMounted'
 import 'src/styles/globals.css'
 import 'src/styles/styles.css'
 
@@ -29,14 +28,13 @@ type AppPropsWithLayout = AppProps & {
 }
 
 function App({ Component, pageProps, err }: AppPropsWithLayout) {
-  const isMounted = useIsMounted()
   const getLayout = Component.getLayout ?? ((page) => page)
   const fallback = pageProps?.fallback ?? {}
   return (
     <WagmiConfig client={client}>
       <RainbowKitProvider chains={chains} appInfo={{ disclaimer: Disclaimer }}>
         <SWRConfig value={{ fallback }}>
-          {isMounted && getLayout(<Component {...pageProps} err={err} />)}
+          {getLayout(<Component {...pageProps} err={err} />)}
         </SWRConfig>
         <NetworkController.Mainnet>
           <VercelAnalytics />

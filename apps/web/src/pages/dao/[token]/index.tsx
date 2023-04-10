@@ -1,6 +1,5 @@
-import { Address, readContract, readContracts } from '@wagmi/core'
+import { Address, readContracts } from '@wagmi/core'
 import { Flex, Text, atoms, theme } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
@@ -8,8 +7,9 @@ import React from 'react'
 import { useAccount, useContractRead } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
-import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-import { auctionAbi, managerAbi } from 'src/data/contract/abis'
+import { CACHE_TIMES } from 'src/constants/cacheTimes'
+import { auctionAbi } from 'src/data/contract/abis'
+import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 import {
@@ -97,7 +97,14 @@ DaoPage.getLayout = getDaoLayout
 export default DaoPage
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { maxAge, swr } = CACHE_TIMES.DAO_INFO
+  context.res.setHeader(
+    'Cache-Control',
+    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+  )
+
   const collectionAddress = context?.params?.token as string
+  const tab = context?.query?.tab as string
 
   if (!isAddress(collectionAddress)) {
     return {
@@ -106,16 +113,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
-    const addresses = await readContract({
-      abi: managerAbi,
-      address: PUBLIC_MANAGER_ADDRESS,
-      functionName: 'getAddresses',
-      args: [collectionAddress],
-    })
-    const hasMissingAddresses = Object.values(addresses).includes(
-      ethers.constants.AddressZero
-    )
-    if (hasMissingAddresses) {
+    const addresses = await getDAOAddresses(collectionAddress)
+    if (!addresses) {
       return {
         notFound: true,
       }
@@ -150,7 +149,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       redirect: {
-        destination: `/dao/${collectionAddress}/${auction.tokenId}`,
+        destination: `/dao/${collectionAddress}/${auction.tokenId}${
+          tab ? `?tab=${tab}` : ''
+        }`,
         permanent: false,
       },
     }

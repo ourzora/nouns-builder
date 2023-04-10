@@ -2,14 +2,17 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
+import { DaoContractAddresses } from 'src/modules/dao'
+import { yearsAhead } from 'src/utils/helpers'
+
 import {
   ArtworkFormValues,
   AuctionSettingsFormValues,
   GeneralFormValues,
-} from 'src/modules/create-dao'
-import { DaoContractAddresses } from 'src/modules/dao'
-import { IPFSUpload, OrderedLayersProps, TokenAllocation } from 'src/typings'
-import { yearsAhead } from 'src/utils/helpers'
+  IPFSUpload,
+  TokenAllocation,
+} from '../components'
+import { OrderedTraits } from '../components/Artwork/LayerBox'
 
 export interface FormStoreState {
   activeSection: number
@@ -20,6 +23,8 @@ export interface FormStoreState {
   setGeneral: (general: GeneralFormValues) => void
   vetoPower: boolean | undefined
   setVetoPower: (vetoPower: boolean) => void
+  vetoerAddress: string
+  setVetoerAddress: (vetoerAddress: string) => void
   founderAllocation: Array<TokenAllocation>
   setFounderAllocation: (founderAllocation: Array<TokenAllocation>) => void
   contributionAllocation: Array<TokenAllocation>
@@ -32,8 +37,8 @@ export interface FormStoreState {
   setIpfsUpload: (ipfsUpload: IPFSUpload[]) => void
   deployedDao: DaoContractAddresses
   setDeployedDao: (deployedDao: DaoContractAddresses) => void
-  orderedLayers: OrderedLayersProps[]
-  setOrderedLayers: (orderedLayers: OrderedLayersProps[]) => void
+  orderedLayers: OrderedTraits
+  setOrderedLayers: (orderedLayers: OrderedTraits) => void
   isUploadingToIPFS: boolean
   setIsUploadingToIPFS: (bool: boolean) => void
   resetForm: () => void
@@ -73,6 +78,7 @@ const initialState = {
     },
   ],
   vetoPower: undefined,
+  vetoerAddress: '',
   setUpArtwork: {
     projectDescription: '',
     artwork: [],
@@ -112,9 +118,10 @@ export const useFormStore = create(
       setContributionAllocation: (contributionAllocation: Array<TokenAllocation>) =>
         set({ contributionAllocation }),
       setVetoPower: (vetoPower: boolean) => set({ vetoPower }),
+      setVetoerAddress: (vetoerAddress: string) => set({ vetoerAddress }),
       setSetUpArtwork: (artwork: ArtworkFormValues) => set({ setUpArtwork: artwork }),
       setIpfsUpload: (ipfsUpload: IPFSUpload[]) => set({ ipfsUpload }),
-      setOrderedLayers: (orderedLayers: OrderedLayersProps[]) => {
+      setOrderedLayers: (orderedLayers: OrderedTraits) => {
         set({
           orderedLayers,
         })

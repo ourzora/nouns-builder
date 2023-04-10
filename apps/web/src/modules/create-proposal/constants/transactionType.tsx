@@ -7,6 +7,7 @@ export enum TransactionType {
   AIRDROP = 'airdrop',
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
+  PAUSE_AUCTIONS = 'pause-auctions',
 }
 
 export interface TransactionTypeProps {
@@ -39,6 +40,12 @@ export const TRANSACTION_TYPES = {
     subTitle: 'Create a proposal to upgrade',
     icon: 'plus',
     iconBackdrop: color.ghostHover,
+  },
+  [TransactionType.PAUSE_AUCTIONS]: {
+    title: 'Pause Auctions',
+    subTitle: 'Create a proposal to pause auctions',
+    icon: 'pause',
+    iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
   [TransactionType.CUSTOM]: {
     title: 'Custom Transaction',

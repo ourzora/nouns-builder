@@ -8,8 +8,11 @@ import { useAccount } from 'wagmi'
 import { Meta } from 'src/components/Meta'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
+import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
+import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
+import getDaoOgMetadata from 'src/data/contract/requests/getDaoOgMetadata'
 import getToken from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -18,22 +21,31 @@ import {
   About,
   Activity,
   AdminForm,
+  DaoContractAddresses,
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
-import { useDaoStore } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { AddressType } from 'src/typings'
 
 interface TokenPageProps {
   url: string
   collection: AddressType
+  collectionName: string
   tokenId: string
+  addresses: DaoContractAddresses
+  ogImageURL: string
 }
 
-const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenId }) => {
+const TokenPage: NextPageWithLayout<TokenPageProps> = ({
+  url,
+  collection,
+  collectionName,
+  tokenId,
+  addresses,
+  ogImageURL,
+}) => {
   const { query, replace, pathname } = useRouter()
-  const addresses = useDaoStore((state) => state.addresses)
   const { address } = useAccount()
 
   const { data: token } = useSWR([SWR_KEYS.TOKEN, collection, tokenId], (_, id) =>
@@ -81,14 +93,18 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({ url, collection, tokenI
     return null
   }
 
+  const description = token.description ?? ''
+  const ogDescription =
+    description.length > 111 ? `${description.slice(0, 111)}...` : description
+
   return (
     <Flex direction="column" pb="x30">
       <Meta
-        title={token.name || ''}
-        type={`${token.name}:nft`}
-        image={token.media?.thumbnail || token.image}
+        title={collectionName || ''}
+        type={`${collectionName}:nft`}
+        image={ogImageURL}
         slug={url}
-        description={token.description ?? ''}
+        description={ogDescription}
       />
       <Auction auctionAddress={addresses.auction} collection={collection} token={token} />
       <SectionHandler
@@ -118,30 +134,58 @@ export default TokenPage
 
 export const getServerSideProps: GetServerSideProps = async ({
   params,
+  req,
   res,
   resolvedUrl,
 }) => {
-  res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59')
+  const { maxAge, swr } = CACHE_TIMES.TOKEN_INFO
+  res.setHeader(
+    'Cache-Control',
+    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+  )
 
   const collection = params?.token as AddressType
   const tokenId = params?.tokenId as string
 
-  const token = await getToken(collection, tokenId)
+  try {
+    const [token, addresses] = await Promise.all([
+      getToken(collection, tokenId),
+      getDAOAddresses(collection),
+    ])
 
-  if (!token) {
+    const daoOgMetadata = await getDaoOgMetadata(
+      collection,
+      addresses?.metadata as string,
+      addresses?.treasury as string
+    )
+
+    if (!(addresses && token)) {
+      return {
+        notFound: true,
+      }
+    }
+
+    const protocol = process.env.VERCEL_ENV === 'development' ? 'http' : 'https'
+    const ogImageURL = `${protocol}://${
+      req.headers.host
+    }/api/og/dao?data=${encodeURIComponent(JSON.stringify(daoOgMetadata))}`
+
+    return {
+      props: {
+        fallback: {
+          [unstable_serialize([SWR_KEYS.TOKEN, collection, tokenId])]: token,
+        },
+        url: resolvedUrl,
+        collection,
+        collectionName: daoOgMetadata.name,
+        tokenId,
+        addresses,
+        ogImageURL,
+      },
+    }
+  } catch (e) {
     return {
       notFound: true,
     }
-  }
-
-  return {
-    props: {
-      fallback: {
-        [unstable_serialize([SWR_KEYS.TOKEN, collection, tokenId])]: token,
-      },
-      url: resolvedUrl,
-      collection,
-      tokenId,
-    },
   }
 }

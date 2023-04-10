@@ -19,11 +19,14 @@ import Dots from './assets/dots.svg'
 import Download from './assets/download.svg'
 import Eth from './assets/eth.svg'
 import External from './assets/external-16.svg'
+import Github from './assets/github.svg'
 import Globe from './assets/globe.svg'
 import HandlebarCircle from './assets/handlebar-circle.svg'
+import Info16 from './assets/info-16.svg'
 import Move from './assets/move.svg'
 import NewWindow from './assets/new-window.svg'
 import NounsConnect from './assets/nouns-connect.svg'
+import Pause from './assets/pause.svg'
 import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
 import Trash from './assets/trash.svg'
@@ -51,12 +54,15 @@ export const icons = {
   dots: Dots,
   download: Download,
   'external-16': External,
+  github: Github,
   eth: Eth,
   handlebarCircle: HandlebarCircle,
+  'info-16': Info16,
   globe: Globe,
   move: Move,
   newWindow: NewWindow,
   nounsConnect: NounsConnect,
+  pause: Pause,
   plus: Plus,
   refresh: Refresh,
   trash: Trash,

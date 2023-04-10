@@ -3,18 +3,22 @@ import React from 'react'
 
 import { ProposalNavigation } from 'src/modules/proposal'
 
+import { TransactionType } from '../constants'
+
 interface CreateProposalHeadingProps {
   title: string
+  transactionType?: TransactionType
   align?: 'center' | 'left'
 }
 
 export const CreateProposalHeading: React.FC<CreateProposalHeadingProps> = ({
   title,
+  transactionType,
   align = 'left',
 }) => {
   return (
     <Stack mx={'auto'} pb={'x8'} w={'100%'}>
-      <ProposalNavigation />
+      <ProposalNavigation transactionType={transactionType} />
       <Text
         fontSize={35}
         fontWeight={'label'}

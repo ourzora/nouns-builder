@@ -30,3 +30,11 @@ When you're ready to submit a pull request, please consider that:
 - Pull request titles should use the [imperative mood](https://en.wikipedia.org/wiki/Imperative_mood) (e.g., `Add something`, `Fix something`).
 
 When you submit a pull request, GitHub will automatically lint, build, test your changes, and deploy to a preview branch on Vercel.
+
+---
+
+### Nouns Builder designs
+
+We have also made the tool's design files public - feel free to view the [Figma file](https://www.figma.com/file/gyRt2DgZobN8HwobPnxLrA/Nouns-Builder-Designs---Public?node-id=3-3856&t=4Zi0my9FefgfEjXa-4).
+
+If you have any suggestions about the designs, feel free to also start [a new discussion](https://github.com/ourzora/nouns-builder/discussions).

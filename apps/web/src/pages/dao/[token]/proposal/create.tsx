@@ -1,14 +1,16 @@
 import { Flex, Stack } from '@zoralabs/zord'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 
+import { CACHE_TIMES } from 'src/constants/cacheTimes'
+import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   CreateProposalHeading,
   DropdownSelect,
-  Queue,
   SelectTransactionType,
   TRANSACTION_FORM_OPTIONS,
   TRANSACTION_TYPES,
@@ -26,7 +28,6 @@ import { AddressType } from 'src/typings'
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
   const { query } = router
-  const collectionAddress = query?.token as AddressType
   const [transactionType, setTransactionType] = useState<TransactionType | undefined>()
   const transactions = useProposalStore((state) => state.transactions)
 
@@ -72,7 +73,10 @@ const CreateProposalPage: NextPageWithLayout = () => {
       style={{ maxWidth: 1060 }}
       mx="auto"
     >
-      <CreateProposalHeading title={'Create Proposal'} />
+      <CreateProposalHeading
+        title={'Create Proposal'}
+        transactionType={transactionType}
+      />
       {transactionType ? (
         <TwoColumnLayout
           leftColumn={
@@ -85,7 +89,6 @@ const CreateProposalPage: NextPageWithLayout = () => {
               <TransactionForm type={transactionType} />
             </Stack>
           }
-          rightColumn={<Queue collectionAddress={collectionAddress} />}
         />
       ) : (
         <TwoColumnLayout
@@ -104,3 +107,26 @@ const CreateProposalPage: NextPageWithLayout = () => {
 CreateProposalPage.getLayout = getDaoLayout
 
 export default CreateProposalPage
+
+export const getServerSideProps: GetServerSideProps = async ({ res, params }) => {
+  const { maxAge, swr } = CACHE_TIMES.DAO_PROPOSAL
+  res.setHeader(
+    'Cache-Control',
+    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+  )
+
+  const collection = params?.token as AddressType
+  const addresses = await getDAOAddresses(collection)
+
+  if (!addresses) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: {
+      addresses,
+    },
+  }
+}
