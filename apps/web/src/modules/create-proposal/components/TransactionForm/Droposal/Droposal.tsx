@@ -31,6 +31,7 @@ export const Droposal: React.FC = () => {
       maxSupply: editionSize,
       royaltyPercentage,
       fundsRecipient,
+      defaultAdmin,
       pricePerMint: publicSalePrice,
       maxPerAddress: maxSalePurchasePerAddress,
       publicSaleStart,
@@ -42,7 +43,6 @@ export const Droposal: React.FC = () => {
     } = values
 
     const royaltyBPS = royaltyPercentage * 100
-    const defaultAdmin = treasury
     const salesConfig = [
       ethers.utils.parseEther((publicSalePrice || 0).toString()),
       maxSalePurchasePerAddress,

@@ -1,3 +1,4 @@
+import { Box } from '@zoralabs/zord'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/image'
 import { useMemo } from 'react'
@@ -35,5 +36,5 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({
     return <Video url={fetchableMediaURL} />
   }
 
-  return null
+  return <Box backgroundColor="backdrop" w="100%" h="100%" />
 }

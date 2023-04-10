@@ -7,6 +7,7 @@ import TextArea from 'src/components/Fields/TextArea'
 import { DATE, NUMBER, TEXT } from 'src/components/Fields/types'
 import SingleMediaUpload from 'src/components/SingleMediaUpload/SingleMediaUpload'
 import { DropdownSelect } from 'src/modules/create-proposal'
+import { useDaoStore } from 'src/modules/dao'
 
 import { defaultInputLabelStyle } from './Droposal.css'
 import droposalFormSchema, { DroposalFormValues } from './DroposalForm.schema'
@@ -27,6 +28,7 @@ const editionSizeOptions = [
 
 export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
   const [editionType, setEditionType] = useState<string>('fixed')
+  const { treasury } = useDaoStore((x) => x.addresses)
 
   const initialValues: DroposalFormValues = {
     name: '',
@@ -35,6 +37,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
     mediaUrl: '',
     coverUrl: '',
     fundsRecipient: '',
+    defaultAdmin: treasury || '',
     publicSaleStart: '',
     publicSaleEnd: '',
     royaltyPercentage: 5,
@@ -290,6 +293,26 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     errorMessage={
                       formik.touched['fundsRecipient'] && formik.errors['fundsRecipient']
                         ? formik.errors['fundsRecipient']
+                        : undefined
+                    }
+                  />
+
+                  <SmartInput
+                    {...formik.getFieldProps('defaultAdmin')}
+                    inputLabel={'Default admin address'}
+                    placeholder={'0x... or .eth'}
+                    type={TEXT}
+                    formik={formik}
+                    id={'defaultAdmin'}
+                    isAddress={true}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    helperText={
+                      'The address that will manage the edition. It can be your personal wallet, a multisignature wallet, or the DAO treasury.'
+                    }
+                    errorMessage={
+                      formik.touched['defaultAdmin'] && formik.errors['defaultAdmin']
+                        ? formik.errors['defaultAdmin']
                         : undefined
                     }
                   />

@@ -16,6 +16,7 @@ export interface DroposalFormValues {
   maxSupply?: number
   royaltyPercentage: number
   fundsRecipient: string
+  defaultAdmin: string
   publicSaleStart: string
   publicSaleEnd: string
 }
@@ -44,6 +45,14 @@ const droposalFormSchema = yup.object({
   maxPerAddress: yup.number().integer('Must be whole number'),
   maxSupply: yup.number().integer('Must be whole number'),
   royaltyPercentage: yup.number().required('*'),
+  defaultAdmin: yup
+    .string()
+    .required('*')
+    .test(
+      'isValidAddress',
+      'invalid address',
+      (value) => new Promise((res) => deboucedValidateAddress(value, res))
+    ),
   fundsRecipient: yup
     .string()
     .required('*')
