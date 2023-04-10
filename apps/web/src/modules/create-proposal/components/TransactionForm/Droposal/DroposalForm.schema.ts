@@ -8,8 +8,9 @@ export interface DroposalFormValues {
   name: string
   symbol: string
   description: string
-  media: string
-  cover: string
+  mediaUrl: string
+  mediaType?: string
+  coverUrl: string
   pricePerMint?: number
   maxPerAddress?: number
   maxSupply?: number
@@ -36,8 +37,9 @@ const droposalFormSchema = yup.object({
   name: yup.string().required('*'),
   symbol: yup.string(),
   description: yup.string().required('*'),
-  media: yup.string().required('*'),
-  cover: yup.string(),
+  mediaUrl: yup.string().required('*'),
+  mediaType: yup.string(),
+  coverUrl: yup.string(),
   pricePerMint: yup.number().required('*'),
   maxPerAddress: yup.number().integer('Must be whole number'),
   maxSupply: yup.number().integer('Must be whole number'),

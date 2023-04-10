@@ -36,6 +36,9 @@ export const Droposal: React.FC = () => {
       publicSaleStart,
       publicSaleEnd,
       description,
+      mediaUrl,
+      mediaType,
+      coverUrl,
     } = values
 
     const royaltyBPS = royaltyPercentage * 100
@@ -49,8 +52,8 @@ export const Droposal: React.FC = () => {
       0, // presaleEnd
       ethers.constants.HashZero, // presaleMerkleRoot
     ]
-    const animationUri = ''
-    const imageUri = ''
+    const animationUri = mediaType?.startsWith('image') ? '' : mediaUrl
+    const imageUri = mediaType?.startsWith('image') ? mediaUrl : coverUrl
 
     const createEdition = {
       target: PUBLIC_ZORA_NFT_CREATOR as AddressType,
