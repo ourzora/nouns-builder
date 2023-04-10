@@ -103,7 +103,7 @@ const SingleMediaUpload: React.FC<SingleImageUploadProps> = ({
           position={'relative'}
           justify={'center'}
           className={singleMediaUploadWrapper}
-          htmlFor="file-upload"
+          htmlFor={`file-upload-${id}`}
         >
           {!isUploading && isMounted && !value && (
             <Flex mx="x4" align={'center'} justify={'space-between'}>
@@ -143,8 +143,8 @@ const SingleMediaUpload: React.FC<SingleImageUploadProps> = ({
 
           <input
             className={defaultUploadStyle}
-            id="file-upload"
-            data-testid="file-upload"
+            id={`file-upload-${id}`}
+            data-testid={`file-upload-${id}`}
             name="file"
             type="file"
             multiple={true}

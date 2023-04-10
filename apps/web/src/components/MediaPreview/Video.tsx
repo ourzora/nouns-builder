@@ -1,16 +1,21 @@
 export interface VideoProps {
-  url: string
+  src: string
 }
 
-export const Video: React.FC<VideoProps> = ({ url }) => {
+export const Video: React.FC<VideoProps> = ({ src }) => {
   return (
     <video
-      src={url}
+      src={src}
       autoPlay
       loop
       muted={true}
       playsInline
-      style={{ objectFit: 'contain' }}
+      style={{
+        objectFit: 'cover',
+        borderRadius: '10px',
+        height: '400px',
+        width: '400px',
+      }}
     />
   )
 }

@@ -51,7 +51,7 @@ export const TRANSACTION_TYPES = {
   [TransactionType.PAUSE_AUCTIONS]: {
     title: 'Pause Auctions',
     subTitle: 'Create a proposal to pause auctions',
-    icon: 'pause',
+    icon: 'pauseTemplate',
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
   [TransactionType.CUSTOM]: {

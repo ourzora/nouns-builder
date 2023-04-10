@@ -1,8 +1,6 @@
-import { debounce } from 'lodash'
 import * as yup from 'yup'
 
-import { isValidAddress } from 'src/utils/ens'
-import { getProvider } from 'src/utils/provider'
+import { deboucedValidateAddress } from 'src/modules/create-dao/components/AllocationForm/AllocationForm.schema'
 
 export interface DroposalFormValues {
   name: string
@@ -21,19 +19,6 @@ export interface DroposalFormValues {
   publicSaleEnd: string
 }
 
-const validateAddress = async (
-  value: string | undefined,
-  res: (value: boolean | PromiseLike<boolean>) => void
-) => {
-  try {
-    res(!!value && (await isValidAddress(value, getProvider())))
-  } catch (err) {
-    res(false)
-  }
-}
-
-export const deboucedValidateAddress = debounce(validateAddress, 500)
-
 const droposalFormSchema = yup.object({
   name: yup.string().required('*'),
   symbol: yup.string(),
@@ -48,19 +33,11 @@ const droposalFormSchema = yup.object({
   defaultAdmin: yup
     .string()
     .required('*')
-    .test(
-      'isValidAddress',
-      'invalid address',
-      (value) => new Promise((res) => deboucedValidateAddress(value, res))
-    ),
+    .test('isValidAddress', 'invalid address', deboucedValidateAddress),
   fundsRecipient: yup
     .string()
     .required('*')
-    .test(
-      'isValidAddress',
-      'invalid address',
-      (value) => new Promise((res) => deboucedValidateAddress(value, res))
-    ),
+    .test('isValidAddress', 'invalid address', deboucedValidateAddress),
   publicSaleStart: yup.string().required('*'),
   publicSaleEnd: yup
     .string()

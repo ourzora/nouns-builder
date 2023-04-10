@@ -1,8 +1,9 @@
 import { Box } from '@zoralabs/zord'
 import { getFetchableUrl } from 'ipfs-service'
-import Image from 'next/image'
 import { useMemo } from 'react'
 
+import { Audio } from './Audio'
+import { Image } from './Image'
 import { Video } from './Video'
 
 export interface MediaPreviewProps {
@@ -19,22 +20,17 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({
   const fetchableMediaURL = useMemo(() => getFetchableUrl(mediaUrl) || '', [mediaUrl])
   const fetchableCoverURL = useMemo(() => getFetchableUrl(coverUrl) || '', [coverUrl])
 
-  if (mediaType?.startsWith('image')) {
-    return (
-      <Image
-        src={fetchableMediaURL}
-        fill
-        alt="Preview"
-        style={{
-          objectFit: 'contain',
-        }}
-      />
-    )
+  if (fetchableMediaURL && mediaType?.startsWith('image')) {
+    return <Image src={fetchableMediaURL} />
   }
 
-  if (mediaType?.startsWith('video')) {
-    return <Video url={fetchableMediaURL} />
+  if (fetchableMediaURL && mediaType?.startsWith('video')) {
+    return <Video src={fetchableMediaURL} />
   }
 
-  return <Box backgroundColor="backdrop" w="100%" h="100%" />
+  if (fetchableMediaURL && mediaType?.startsWith('audio')) {
+    return <Audio src={fetchableMediaURL} cover={fetchableCoverURL} />
+  }
+
+  return <Box backgroundColor="background2" w="100%" h="100%" borderRadius={'curved'} />
 }

@@ -26,7 +26,9 @@ import Info16 from './assets/info-16.svg'
 import Move from './assets/move.svg'
 import NewWindow from './assets/new-window.svg'
 import NounsConnect from './assets/nouns-connect.svg'
+import PauseTemplate from './assets/pause-template.svg'
 import Pause from './assets/pause.svg'
+import Play from './assets/play.svg'
 import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
 import Trash from './assets/trash.svg'
@@ -63,6 +65,8 @@ export const icons = {
   newWindow: NewWindow,
   nounsConnect: NounsConnect,
   pause: Pause,
+  pauseTemplate: PauseTemplate,
+  play: Play,
   plus: Plus,
   refresh: Refresh,
   trash: Trash,
