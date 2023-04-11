@@ -1,5 +1,4 @@
 import { Button, Flex, Stack, Text } from '@zoralabs/zord'
-import Link from 'next/link'
 import React from 'react'
 
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
@@ -9,10 +8,10 @@ import { TransactionType } from '../../constants'
 import { ConfirmRemove } from './ConfirmRemove'
 
 interface QueueProps {
-  collectionAddress: string
+  setQueueModalOpen: (value: boolean) => void
 }
 
-export const Queue: React.FC<QueueProps> = ({ collectionAddress }) => {
+export const Queue: React.FC<QueueProps> = ({ setQueueModalOpen }) => {
   const transactions = useProposalStore((state) => state.transactions)
   const removeTransaction = useProposalStore((state) => state.removeTransaction)
   const removeAllTransactions = useProposalStore((state) => state.removeAllTransactions)
@@ -39,14 +38,7 @@ export const Queue: React.FC<QueueProps> = ({ collectionAddress }) => {
   }
 
   return (
-    <Stack
-      style={{ maxWidth: 500, borderRadius: 16 }}
-      borderWidth={'normal'}
-      borderStyle={'solid'}
-      borderColor={'ghostHover'}
-      p={'x6'}
-      pb={'x12'}
-    >
+    <Stack style={{ maxWidth: 500, borderRadius: 16 }}>
       <Flex justify={'space-between'}>
         <Text fontWeight={'label'} fontSize={20} style={{ lineHeight: '32px' }} mb={'x6'}>
           Review Queue
@@ -57,15 +49,19 @@ export const Queue: React.FC<QueueProps> = ({ collectionAddress }) => {
       </Flex>
 
       <Stack gap={'x4'}>
-        {transactions &&
-          transactions.map((transaction, i) => (
-            <TransactionCard
-              key={`${transaction.type}-${i}`}
-              handleRemove={() => confirmRemoveTransaction(i)}
-              disabled={transaction.type === TransactionType.UPGRADE}
-              transaction={transaction}
-            />
-          ))}
+        {transactions
+          ? transactions.map((transaction, i) => (
+              <TransactionCard
+                key={`${transaction.type}-${i}`}
+                handleRemove={() => confirmRemoveTransaction(i)}
+                disabled={
+                  transaction.type === TransactionType.UPGRADE ||
+                  transaction.type === TransactionType.UPDATE_MINTER
+                }
+                transaction={transaction}
+              />
+            ))
+          : null}
       </Stack>
       <Stack
         borderWidth={'thin'}
@@ -74,30 +70,7 @@ export const Queue: React.FC<QueueProps> = ({ collectionAddress }) => {
         mt={'x6'}
         mb={'x8'}
       />
-
-      <Link
-        href={{
-          pathname: `/dao/${collectionAddress}/proposal/review`,
-        }}
-      >
-        <Flex
-          as={'button'}
-          py={'x4'}
-          px={'x6'}
-          mt={'x10'}
-          align={'center'}
-          justify={'center'}
-          disabled={transactions.length === 0}
-          borderRadius={'curved'}
-          backgroundColor={'accent'}
-          color={'onAccent'}
-          borderWidth={'none'}
-          cursor={'pointer'}
-          w={'100%'}
-        >
-          <Text variant={'label-lg'}>Review Proposal</Text>
-        </Flex>
-      </Link>
+      <Button onClick={() => setQueueModalOpen(false)}>Close</Button>
       <AnimatedModal close={() => setOpenConfirm(false)} open={openConfirm}>
         <ConfirmRemove
           handleRemoveTransaction={handleRemoveTransaction}

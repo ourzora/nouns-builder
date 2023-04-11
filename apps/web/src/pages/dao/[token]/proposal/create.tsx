@@ -11,12 +11,11 @@ import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   CreateProposalHeading,
   DropdownSelect,
-  Queue,
   SelectTransactionType,
   TRANSACTION_FORM_OPTIONS,
   TRANSACTION_TYPES,
   TransactionForm,
-  TransactionType,
+  TransactionFormType,
   TransactionTypeIcon,
   TwoColumnLayout,
   useProposalStore,
@@ -29,13 +28,14 @@ import { AddressType } from 'src/typings'
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
   const { query } = router
-  const collectionAddress = query?.token as AddressType
-  const [transactionType, setTransactionType] = useState<TransactionType | undefined>()
+  const [transactionType, setTransactionType] = useState<
+    TransactionFormType | undefined
+  >()
   const transactions = useProposalStore((state) => state.transactions)
 
   useEffect(() => {
     if (transactions.length && !transactionType) {
-      setTransactionType(transactions[0].type)
+      setTransactionType(transactions[0].type as TransactionFormType)
     }
   }, [transactions, transactionType, setTransactionType])
 
@@ -48,7 +48,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
     collectionAddress: query?.token as AddressType,
   })
 
-  const createSelectOption = (type: TransactionType) => ({
+  const createSelectOption = (type: TransactionFormType) => ({
     value: type,
     label: TRANSACTION_TYPES[type].title,
     icon: <TransactionTypeIcon transactionType={type} />,
@@ -56,7 +56,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
 
   const options = TRANSACTION_FORM_OPTIONS.map(createSelectOption)
 
-  const handleDropdownOnChange = (value: TransactionType) => {
+  const handleDropdownOnChange = (value: TransactionFormType) => {
     setTransactionType(value)
   }
 
@@ -75,7 +75,10 @@ const CreateProposalPage: NextPageWithLayout = () => {
       style={{ maxWidth: 1060 }}
       mx="auto"
     >
-      <CreateProposalHeading title={'Create Proposal'} />
+      <CreateProposalHeading
+        title={'Create Proposal'}
+        transactionType={transactionType}
+      />
       {transactionType ? (
         <TwoColumnLayout
           leftColumn={
@@ -88,7 +91,6 @@ const CreateProposalPage: NextPageWithLayout = () => {
               <TransactionForm type={transactionType} />
             </Stack>
           }
-          rightColumn={<Queue collectionAddress={collectionAddress} />}
         />
       ) : (
         <TwoColumnLayout

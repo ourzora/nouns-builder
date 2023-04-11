@@ -15,6 +15,7 @@ import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
 
 import { DecodedTransactions } from './DecodedTransactions'
+import { proposalDescription } from './ProposalDescription.css'
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>
@@ -56,6 +57,7 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
       <Section title="Description">
         <Paragraph overflow={'auto'}>
           <ReactMarkdown
+            className={proposalDescription}
             rehypePlugins={[rehypeRaw, rehypeSanitize]}
             remarkPlugins={[remarkGfm]}
           >
