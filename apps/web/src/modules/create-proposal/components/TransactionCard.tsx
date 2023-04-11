@@ -86,7 +86,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
             )}
             {handleRemove && (
               <Flex onClick={handleRemove} cursor={'pointer'} data-testid="remove">
-                <Icon id={'cross'} />
+                <Icon id={'trash'} />
               </Flex>
             )}
           </Flex>
