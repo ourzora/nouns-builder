@@ -85,15 +85,11 @@ export const CustomTransaction: React.FC = () => {
     }
 
     if (customTransaction?.contract) {
-      const fns: [string, any][] = Object.entries(customTransaction?.contract?.functions)
-      const signature = fns.filter(
-        (fn) => fn[1].name === customTransaction.function.name
-      )?.[0]?.[0]
       return {
         type: TransactionType.CUSTOM,
         transactions: [
           {
-            functionSignature: signature,
+            functionSignature: customTransaction.function.name,
             target: customTransaction?.address as AddressType,
             calldata: customTransaction?.calldata,
             value: customTransaction?.value,
