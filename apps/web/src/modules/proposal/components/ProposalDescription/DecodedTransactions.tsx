@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import React, { Fragment } from 'react'
 import useSWR from 'swr'
 
-import { ETHERSCAN_BASE_URL, ETHER_ACTOR_BASE_URL } from 'src/constants/etherscan'
+import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { walletSnippet } from 'src/utils/helpers'
 
@@ -43,7 +43,7 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
     }
 
     try {
-      const decoded = await axios.post(`${ETHER_ACTOR_BASE_URL}/decode`, {
+      const decoded = await axios.post('/api/decode', {
         calldata: calldata,
         contract: target,
       })
