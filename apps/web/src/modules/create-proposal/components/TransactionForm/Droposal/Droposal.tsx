@@ -15,7 +15,6 @@ import { DroposalFormValues } from './DroposalForm.schema'
 
 export const Droposal: React.FC = () => {
   const addTransaction = useProposalStore((state) => state.addTransaction)
-  const { treasury } = useDaoStore((state) => state.addresses)
   const zoraNFTCreatorContract = useContract({
     abi: zoraNFTCreatorAbi,
     address: PUBLIC_ZORA_NFT_CREATOR,

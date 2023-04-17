@@ -37,10 +37,10 @@ export const TRANSACTION_TYPES = {
     iconBackdrop: 'rgba(28, 182, 135, 0.1)',
   },
   [TransactionType.DROPOSAL]: {
-    title: 'Drop a Collection',
-    subTitle: 'Create an NFT colleciton controlled by the DAO',
-    icon: 'copy',
-    iconBackdrop: 'rgba(115, 17, 255, 0.1)',
+    title: 'Droposal: Single edition',
+    subTitle: 'Create an NFT collection controlled by the DAO',
+    icon: 'collection',
+    iconBackdrop: 'rgba(137, 58, 199, 0.1);',
   },
   [TransactionType.UPGRADE]: {
     title: 'Upgrade Proposal',

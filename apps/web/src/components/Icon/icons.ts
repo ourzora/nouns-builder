@@ -10,6 +10,7 @@ import ChevronLeft from './assets/chevron-left.svg'
 import ChevronRight from './assets/chevron-right.svg'
 import ChevronUp from './assets/chevron-up.svg'
 import Code from './assets/code.svg'
+import Collection from './assets/collection.svg'
 import Copy from './assets/copy.svg'
 import Cross16 from './assets/cross-16.svg'
 import Cross from './assets/cross.svg'
@@ -48,6 +49,7 @@ export const icons = {
   chevronRight: ChevronRight,
   chevronUp: ChevronUp,
   code: Code,
+  collection: Collection,
   copy: Copy,
   cross: Cross,
   'cross-16': Cross16,

@@ -8,6 +8,7 @@ import { DATE, NUMBER, TEXT } from 'src/components/Fields/types'
 import SingleMediaUpload from 'src/components/SingleMediaUpload/SingleMediaUpload'
 import { DropdownSelect } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
+import { useLayoutStore } from 'src/stores'
 
 import { defaultInputLabelStyle } from './Droposal.css'
 import droposalFormSchema, { DroposalFormValues } from './DroposalForm.schema'
@@ -29,6 +30,7 @@ const editionSizeOptions = [
 export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
   const [editionType, setEditionType] = useState<string>('fixed')
   const { treasury } = useDaoStore((x) => x.addresses)
+  const isMobile = useLayoutStore((x) => x.isMobile)
 
   const initialValues: DroposalFormValues = {
     name: '',
@@ -78,7 +80,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
 
           return (
             <>
-              <DroposalPreview formik={formik} />
+              {!isMobile && <DroposalPreview formik={formik} />}
               <Box
                 data-testid="droposal-form"
                 as={'fieldset'}
