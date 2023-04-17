@@ -7,7 +7,6 @@ import { PUBLIC_ZORA_NFT_CREATOR } from 'src/constants/addresses'
 import { zoraNFTCreatorAbi } from 'src/data/contract/abis/ZoraNFTCreator'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
-import { useDaoStore } from 'src/modules/dao'
 import { AddressType } from 'src/typings'
 
 import { DroposalForm } from './DroposalForm'
