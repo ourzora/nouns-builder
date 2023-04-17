@@ -14,8 +14,9 @@ import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
-import { OwnerActions } from './OwnerActions'
+import { CancelAction } from './CancelAction'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
+import { VetoAction } from './VetoAction'
 import { VoteStatus } from './VoteStatus'
 
 interface ProposalActionsProps {
@@ -30,7 +31,8 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const addresses = useDaoStore((state) => state.addresses)
 
-  const { proposer, title, voteStart, proposalId, timeCreated, status } = proposal
+  const { proposer, title, voteStart, proposalId, proposalNumber, timeCreated, status } =
+    proposal
 
   const { data } = useContractReads({
     enabled: !!signerAddress,
@@ -110,14 +112,10 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
           title={title}
         />
 
-        {(showCancel || showVeto) && (
-          <OwnerActions
-            proposalId={proposalId}
-            showCancel={showCancel}
-            showVeto={showVeto}
-          />
-        )}
+        {showCancel && <CancelAction proposalId={proposalId} />}
       </Flex>
+
+      {showVeto && <VetoAction proposalId={proposalId} proposalNumber={proposalNumber} />}
     </Fragment>
   )
 }
