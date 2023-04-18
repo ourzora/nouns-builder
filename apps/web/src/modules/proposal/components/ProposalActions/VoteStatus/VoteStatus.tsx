@@ -160,8 +160,7 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
       {state !== NounsProposalStatus.Active &&
       state !== NounsProposalStatus.Created &&
       state !== NounsProposalStatus.Pending &&
-      !vote &&
-      votesAvailable !== 0 ? (
+      !vote ? (
         <Flex direction={'row'} align={'center'}>
           <Text color={'text3'} ml={'x3'}>
             You did not participate in voting on this proposal
