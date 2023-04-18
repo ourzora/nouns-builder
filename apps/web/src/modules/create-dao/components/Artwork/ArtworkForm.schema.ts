@@ -1,13 +1,13 @@
 import * as Yup from 'yup'
 
-interface Artwork {
+export interface ArtworkType {
   trait: string
   properties: string[]
 }
 
 export interface ArtworkFormValues {
   projectDescription: string
-  artwork: Array<Artwork>
+  artwork: Array<ArtworkType>
   filesLength: number | string
   externalUrl?: string
   collectionName?: string

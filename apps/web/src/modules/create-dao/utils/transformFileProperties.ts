@@ -1,7 +1,8 @@
 import { BigNumber } from 'ethers'
 import { normalizeIPFSUrl } from 'ipfs-service'
 
-import { IPFSUpload } from '../components/Artwork'
+import { IPFSUpload } from 'src/hooks'
+
 import { OrderedTraits } from '../components/Artwork/LayerBox'
 
 export interface PropertyItem {

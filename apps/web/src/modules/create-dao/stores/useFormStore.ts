@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
+import { IPFSUpload } from 'src/hooks'
 import { DaoContractAddresses } from 'src/modules/dao'
 import { yearsAhead } from 'src/utils/helpers'
 
@@ -9,7 +10,6 @@ import {
   ArtworkFormValues,
   AuctionSettingsFormValues,
   GeneralFormValues,
-  IPFSUpload,
   TokenAllocation,
 } from '../components'
 import { OrderedTraits } from '../components/Artwork/LayerBox'
