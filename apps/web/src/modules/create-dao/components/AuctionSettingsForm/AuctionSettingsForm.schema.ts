@@ -26,7 +26,7 @@ export const auctionSettingsValidationSchema = Yup.object().shape({
   quorumThreshold: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')
-    .min(2, '>= 2%')
+    .test('greaterThanMin', '>= 2%', (value) => (value ? value >= 2 : false))
     .moreThan(
       Yup.ref('proposalThreshold'),
       'Quorum threshold must be greater than proposal threshold'
