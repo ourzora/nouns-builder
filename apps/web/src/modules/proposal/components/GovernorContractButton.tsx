@@ -1,5 +1,5 @@
 import { PrepareWriteContractConfig, Signer } from '@wagmi/core'
-import { Box } from '@zoralabs/zord'
+import { Box, ButtonProps } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import { useSWRConfig } from 'swr'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
@@ -22,9 +22,9 @@ type GovernorContractButtonProps<
 > & {
   proposalId: string
   buttonText: string
-  buttonClassName: string
+  buttonClassName?: string
   onSuccess: () => void
-}
+} & ButtonProps
 
 export function GovernorContractButton<
   TFunctionName extends string = string,
@@ -37,6 +37,7 @@ export function GovernorContractButton<
   buttonText,
   buttonClassName,
   onSuccess,
+  ...rest
 }: GovernorContractButtonProps) {
   const { addresses } = useDaoStore()
   const { mutate } = useSWRConfig()
@@ -73,6 +74,7 @@ export function GovernorContractButton<
       handleClick={handleClick}
       className={buttonClassName}
       disabled={isPending || isError}
+      {...rest}
     >
       {isPending ? <Box className={uploadingSpinnerWhite} /> : buttonText}
     </ContractButton>

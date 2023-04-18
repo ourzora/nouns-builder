@@ -31,7 +31,8 @@ import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
 import Trash from './assets/trash.svg'
 import Twitter from './assets/twitter.svg'
-import Warning from './assets/warning-16.svg'
+import Warning16 from './assets/warning-16.svg'
+import Warning from './assets/warning.svg'
 
 export const icons = {
   airdrop: Airdrop,
@@ -68,7 +69,7 @@ export const icons = {
   trash: Trash,
   twitter: Twitter,
   warning: Warning,
-  'warning-16': Warning,
+  'warning-16': Warning16,
 }
 
 export type IconType = keyof typeof icons

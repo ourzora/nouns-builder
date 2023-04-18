@@ -197,15 +197,6 @@ export const proposalActionButtonVariants = styleVariants({
       minWidth: 149,
     },
   ],
-  veto: [
-    proposalActionButton,
-    atoms({
-      backgroundColor: 'negative',
-    }),
-    {
-      minWidth: 65,
-    },
-  ],
   queue: [
     proposalActionButton,
     {
