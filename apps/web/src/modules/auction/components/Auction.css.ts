@@ -162,6 +162,8 @@ export const auctionActionButtonVariants = styleVariants({
     auctionActionButton,
     { width: '100%', background: '#F1F1F1', color: '#808080' },
   ],
+  connect: [auctionActionButton],
+  wrongNetwork: [auctionActionButton],
 })
 
 export const bidForm = style({

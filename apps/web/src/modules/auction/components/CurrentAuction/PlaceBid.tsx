@@ -3,7 +3,14 @@ import { Box, Button, Flex } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import React, { Fragment, memo, useState } from 'react'
 import { useSWRConfig } from 'swr'
-import { Address, useAccount, useBalance, useContractReads, useSigner } from 'wagmi'
+import {
+  Address,
+  useAccount,
+  useBalance,
+  useContractReads,
+  useNetwork,
+  useSigner,
+} from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -15,6 +22,7 @@ import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
+import { ConnectButton } from './ConnectButton'
 
 interface PlaceBidProps {
   tokenId: string
@@ -24,6 +32,7 @@ interface PlaceBidProps {
 export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
   const { address } = useAccount()
+  const { chain } = useNetwork()
   const { data: balance } = useBalance({ address: address })
   const { mutate } = useSWRConfig()
   const { addresses } = useDaoStore()
@@ -78,6 +87,7 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
 
   const isMinBid = Number(bidAmount) >= minBidAmount
   const formattedMinBid = formatCryptoVal(minBidAmount)
+  const showConnectButton = !address || chain?.unsupported
 
   return (
     <Flex
@@ -105,14 +115,18 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
             </Box>
           </form>
 
-          <ContractButton
-            className={auctionActionButtonVariants['bid']}
-            handleClick={handleCreateBid}
-            disabled={!isMinBid || !bidAmount || !signer}
-            mt={{ '@initial': 'x2', '@768': 'x0' }}
-          >
-            Place bid
-          </ContractButton>
+          {showConnectButton ? (
+            <ConnectButton />
+          ) : (
+            <ContractButton
+              className={auctionActionButtonVariants['bid']}
+              handleClick={handleCreateBid}
+              disabled={!isMinBid || !bidAmount || !signer}
+              mt={{ '@initial': 'x2', '@768': 'x0' }}
+            >
+              Place bid
+            </ContractButton>
+          )}
         </Fragment>
       ) : (
         <Button className={auctionActionButtonVariants['bidding']} disabled>
