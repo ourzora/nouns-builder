@@ -1,4 +1,4 @@
-import { Flex } from '@zoralabs/zord'
+import { Box } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import { Address } from 'wagmi'
 
@@ -9,7 +9,7 @@ import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 
 import { GovernorContractButton } from '../GovernorContractButton'
 
-interface CancelActionProps {
+interface CancelButtonProps {
   proposalId: string
   showCancel?: boolean
   showVeto?: boolean
@@ -25,12 +25,13 @@ const Cancel: React.FC<{
       args={[props.proposalId as Address]}
       buttonText="Cancel Proposal"
       buttonClassName={proposalActionButtonVariants['cancel']}
+      w={'100%'}
       {...props}
     />
   )
 }
 
-export const CancelAction: React.FC<CancelActionProps> = ({ proposalId }) => {
+export const CancelButton: React.FC<CancelButtonProps> = ({ proposalId }) => {
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
   const [modalContent, setModalContent] = useState({ title: '', subtitle: '' })
   const isMobile = useLayoutStore((state) => state.isMobile)
@@ -47,11 +48,8 @@ export const CancelAction: React.FC<CancelActionProps> = ({ proposalId }) => {
 
   return (
     <>
-      <Flex
-        direction={{ '@initial': 'column-reverse', '@768': 'row' }}
+      <Box
         w={{ '@initial': '100%', '@768': 'auto' }}
-        gap={'x2'}
-        justify={'flex-end'}
         pt={{ '@initial': 'x3', '@768': 'x0' }}
         style={{
           borderTop: isMobile ? '2px solid #F2F2F2' : 'none',
@@ -66,7 +64,7 @@ export const CancelAction: React.FC<CancelActionProps> = ({ proposalId }) => {
             })
           }
         />
-      </Flex>
+      </Box>
 
       <AnimatedModal size={'small'} open={showSuccessModal} close={onSuccessModalClose}>
         <SuccessModalContent

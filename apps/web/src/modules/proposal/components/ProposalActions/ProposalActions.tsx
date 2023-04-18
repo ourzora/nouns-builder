@@ -14,7 +14,7 @@ import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
-import { CancelAction } from './CancelAction'
+import { CancelButton } from './CancelButton'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
 import { VetoAction } from './VetoAction'
 import { VoteStatus } from './VoteStatus'
@@ -112,7 +112,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
           title={title}
         />
 
-        {showCancel && <CancelAction proposalId={proposalId} />}
+        {showCancel && <CancelButton proposalId={proposalId} />}
       </Flex>
 
       {showVeto && <VetoAction proposalId={proposalId} proposalNumber={proposalNumber} />}
