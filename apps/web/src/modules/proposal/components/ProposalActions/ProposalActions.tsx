@@ -74,10 +74,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const shouldShowActions =
     status === NounsProposalStatus.Active ||
     status === NounsProposalStatus.Pending ||
-    signerVote ||
-    votesAvailable !== 0 ||
-    isProposer ||
-    isVetoer
+    signerAddress
 
   if (!shouldShowActions) return null
 
