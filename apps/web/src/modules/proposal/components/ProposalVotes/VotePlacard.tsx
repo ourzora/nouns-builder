@@ -1,4 +1,5 @@
 import { Flex, Grid, Text, atoms } from '@zoralabs/zord'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo, useState } from 'react'
 
 import { Avatar } from 'src/components/Avatar'
@@ -6,6 +7,22 @@ import { ProposalVoteFragment, Support } from 'src/data/graphql/sdk.generated'
 import { useEnsData } from 'src/hooks'
 import { useLayoutStore } from 'src/stores'
 import { walletSnippet } from 'src/utils/helpers'
+
+const variants = {
+  inital: {
+    height: 0,
+    overflow: 'hidden',
+    transition: {
+      animate: 'easeInOut',
+    },
+  },
+  animate: {
+    height: 'auto',
+    transition: {
+      animate: 'easeInOut',
+    },
+  },
+}
 
 export interface VotePlacardProps {
   vote: ProposalVoteFragment
@@ -21,6 +38,7 @@ export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) =>
     const base = atoms({
       borderStyle: 'solid',
       borderRadius: 'phat',
+      borderWidth: 'thin',
       py: 'x1',
       px: 'x3',
       mr: 'x2',
@@ -44,12 +62,13 @@ export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) =>
       onClick={() => (vote.reason ? setOpen((x) => !x) : null)}
       columns={7}
       gap={isMobile ? 'x1' : 'x0'}
-      backgroundColor="transparent"
+      backgroundColor="background1"
       cursor={vote.reason ? 'pointer' : 'auto'}
       align={'center'}
       mb="x2"
       px={isMobile ? 'x2' : 'x6'}
       py="x6"
+      color="text1"
       borderStyle="solid"
       borderColor="border"
       borderRadius="curved"
@@ -92,25 +111,36 @@ export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) =>
         )}
       </Flex>
 
-      {open && vote.reason && (
-        <Text
-          variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
-          borderRadius="curved"
-          mt="x4"
-          p="x6"
-          textAlign={'left'}
-          style={{
-            fontWeight: 400,
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word',
-            minWidth: '80%',
-            gridColumn: isMobile ? 'span 7 / span 7' : '2 / span 6',
-            backgroundColor: '#F9F9F9',
-          }}
-        >
-          {vote.reason}
-        </Text>
-      )}
+      <AnimatePresence initial={false}>
+        {open && vote.reason && (
+          <motion.div
+            variants={variants}
+            initial={'inital'}
+            animate={'animate'}
+            exit={'inital'}
+            style={{
+              gridColumn: isMobile ? 'span 7 / span 7' : '2 / span 6',
+            }}
+          >
+            <Text
+              variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
+              borderRadius="curved"
+              mt="x4"
+              p="x6"
+              textAlign={'left'}
+              style={{
+                fontWeight: 400,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                minWidth: '80%',
+                backgroundColor: '#F9F9F9',
+              }}
+            >
+              {vote.reason}
+            </Text>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </Grid>
   )
 }
