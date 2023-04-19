@@ -14,7 +14,7 @@ export interface VotePlacardProps {
 
 export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) => {
   const { ensName, ensAvatar } = useEnsData(vote.voter)
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   const { isMobile } = useLayoutStore()
 
   const supportStyle = useMemo(() => {
@@ -63,8 +63,8 @@ export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) =>
         {vote.support}
       </Text>
       <Flex align={'center'} style={{ gridColumn: 'span 4 / span 4' }}>
-        <Avatar address={vote.voter} src={ensAvatar} size={isMobile ? '24' : '40'} />
-        <Text variant={isMobile ? 'label-md' : 'label-lg'} ml="x2">
+        <Avatar address={vote.voter} src={ensAvatar} size={isMobile ? '24' : '32'} />
+        <Text variant={isMobile ? 'label-sm' : 'label-md'} ml="x2">
           {ensName || walletSnippet(vote.voter)}
         </Text>
       </Flex>
