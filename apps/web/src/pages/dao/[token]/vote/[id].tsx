@@ -1,5 +1,5 @@
 import { readContracts } from '@wagmi/core'
-import { Flex } from '@zoralabs/zord'
+import { Box, Flex } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
@@ -15,6 +15,7 @@ import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import getToken, { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { getProposal } from 'src/data/graphql/requests/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
+import { SectionHandler } from 'src/modules/dao'
 import {
   ProposalActions,
   ProposalDescription,
@@ -22,6 +23,7 @@ import {
   ProposalHeader,
   isProposalOpen,
 } from 'src/modules/proposal'
+import { ProposalVotes } from 'src/modules/proposal/components/ProposalVotes'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { propPageWrapper } from 'src/styles/Proposals.css'
@@ -45,6 +47,22 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
     getProposal(id)
   )
 
+  const sections = React.useMemo(() => {
+    if (!proposal) return []
+    return [
+      {
+        title: 'Details',
+        component: [
+          <ProposalDescription proposal={proposal} collection={query?.token as string} />,
+        ],
+      },
+      {
+        title: 'Votes',
+        component: [<ProposalVotes proposal={proposal} />],
+      },
+    ]
+  }, [proposal])
+
   if (!proposal) {
     return null
   }
@@ -60,17 +78,23 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
         description={`View this proposal from ${daoName}`}
       />
 
-      <Flex position="relative" direction="column" pb="x30">
+      <Flex position="relative" direction="column">
         <Flex className={propPageWrapper} gap={{ '@initial': 'x2', '@768': 'x4' }}>
           <ProposalHeader proposal={proposal} />
 
           {displayActions && <ProposalActions daoName={daoName} proposal={proposal} />}
 
           <ProposalDetailsGrid proposal={proposal} />
-
-          <ProposalDescription proposal={proposal} collection={query?.token as string} />
         </Flex>
       </Flex>
+
+      <Box mt="x12" pb="x30">
+        <SectionHandler
+          sections={sections}
+          activeTab={query?.tab ? (query.tab as string) : 'Details'}
+          basePath={`/dao/${query?.token}/vote/${query?.id}`}
+        />
+      </Box>
     </Fragment>
   )
 }

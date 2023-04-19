@@ -1,0 +1,116 @@
+import { Flex, Grid, Text, atoms } from '@zoralabs/zord'
+import { useMemo, useState } from 'react'
+
+import { Avatar } from 'src/components/Avatar'
+import { ProposalVoteFragment, Support } from 'src/data/graphql/sdk.generated'
+import { useEnsData } from 'src/hooks'
+import { useLayoutStore } from 'src/stores'
+import { walletSnippet } from 'src/utils/helpers'
+
+export interface VotePlacardProps {
+  vote: ProposalVoteFragment
+  totalVotes: number
+}
+
+export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) => {
+  const { ensName, ensAvatar } = useEnsData(vote.voter)
+  const [open, setOpen] = useState(false)
+  const { isMobile } = useLayoutStore()
+
+  const supportStyle = useMemo(() => {
+    const base = atoms({
+      borderStyle: 'solid',
+      borderRadius: 'phat',
+      py: 'x1',
+      px: 'x3',
+      mr: 'x2',
+    })
+
+    switch (vote.support) {
+      case Support.For:
+        return [base, atoms({ color: 'positive', borderColor: 'positiveDisabled' })]
+      case Support.Against:
+        return [base, atoms({ color: 'negative', borderColor: 'negativeDisabled' })]
+      case Support.Abstain:
+        return [base, atoms({ color: 'text3', borderColor: 'border' })]
+    }
+  }, [vote.support])
+
+  const votePercentage = ((100 * vote.weight) / totalVotes).toFixed(2)
+
+  return (
+    <Grid
+      as="button"
+      onClick={() => (vote.reason ? setOpen((x) => !x) : null)}
+      columns={7}
+      gap={isMobile ? 'x1' : 'x0'}
+      backgroundColor="transparent"
+      cursor={vote.reason ? 'pointer' : 'auto'}
+      align={'center'}
+      mb="x2"
+      px={isMobile ? 'x2' : 'x6'}
+      py="x6"
+      borderStyle="solid"
+      borderColor="border"
+      borderRadius="curved"
+      w="100%"
+    >
+      <Text
+        fontSize={isMobile ? 12 : 14}
+        style={{ width: 'max-content' }}
+        className={supportStyle}
+      >
+        {vote.support}
+      </Text>
+      <Flex align={'center'} style={{ gridColumn: 'span 4 / span 4' }}>
+        <Avatar address={vote.voter} src={ensAvatar} size={isMobile ? '24' : '40'} />
+        <Text variant={isMobile ? 'label-md' : 'label-lg'} ml="x2">
+          {ensName || walletSnippet(vote.voter)}
+        </Text>
+      </Flex>
+
+      <Flex
+        align={'center'}
+        style={{ gridColumn: 'span 2 / span 2', justifyContent: 'end' }}
+      >
+        <Text variant={isMobile ? 'label-sm' : 'label-md'} mr={isMobile ? 'x2' : 'x6'}>
+          {vote.weight} {vote.weight === 1 ? 'Vote' : 'Votes'}
+        </Text>
+        {!isMobile && (
+          <Text
+            style={{ fontWeight: 500 }}
+            fontSize={12}
+            borderStyle="solid"
+            borderColor="border"
+            color="text4"
+            borderRadius="phat"
+            py="x1"
+            px="x2"
+          >
+            {votePercentage}%
+          </Text>
+        )}
+      </Flex>
+
+      {(isMobile || open) && vote.reason && (
+        <Text
+          variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
+          borderRadius="curved"
+          mt="x4"
+          p="x6"
+          textAlign={'left'}
+          style={{
+            fontWeight: 400,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            minWidth: '80%',
+            gridColumn: isMobile ? 'span 7 / span 7' : '2 / span 6',
+            backgroundColor: '#F9F9F9',
+          }}
+        >
+          {vote.reason}
+        </Text>
+      )}
+    </Grid>
+  )
+}
