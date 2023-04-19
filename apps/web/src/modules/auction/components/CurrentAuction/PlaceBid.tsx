@@ -22,7 +22,6 @@ import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
-import { ConnectButton } from './ConnectButton'
 
 interface PlaceBidProps {
   tokenId: string
@@ -87,7 +86,14 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
 
   const isMinBid = Number(bidAmount) >= minBidAmount
   const formattedMinBid = formatCryptoVal(minBidAmount)
-  const showConnectButton = !address || chain?.unsupported
+
+  const buttonText = !address
+    ? 'Connect wallet'
+    : chain?.unsupported
+    ? 'Wrong network'
+    : 'Place bid'
+  const variant = !address ? 'connect' : chain?.unsupported ? 'wrongNetwork' : 'bid'
+  const isDisabled = address && !chain?.unsupported ? !isMinBid || !bidAmount : false
 
   return (
     <Flex
@@ -115,18 +121,14 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
             </Box>
           </form>
 
-          {showConnectButton ? (
-            <ConnectButton />
-          ) : (
-            <ContractButton
-              className={auctionActionButtonVariants['bid']}
-              handleClick={handleCreateBid}
-              disabled={!isMinBid || !bidAmount || !signer}
-              mt={{ '@initial': 'x2', '@768': 'x0' }}
-            >
-              Place bid
-            </ContractButton>
-          )}
+          <ContractButton
+            className={auctionActionButtonVariants[variant]}
+            handleClick={handleCreateBid}
+            disabled={isDisabled}
+            mt={{ '@initial': 'x2', '@768': 'x0' }}
+          >
+            {buttonText}
+          </ContractButton>
         </Fragment>
       ) : (
         <Button className={auctionActionButtonVariants['bidding']} disabled>

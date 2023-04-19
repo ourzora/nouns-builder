@@ -163,7 +163,17 @@ export const auctionActionButtonVariants = styleVariants({
     { width: '100%', background: '#F1F1F1', color: '#808080' },
   ],
   connect: [auctionActionButton],
-  wrongNetwork: [auctionActionButton],
+  wrongNetwork: [
+    auctionActionButton,
+    atoms({ backgroundColor: 'negative', color: 'text1' }),
+    {
+      selectors: {
+        '&:hover': {
+          backgroundColor: '#E42D2D !important',
+        },
+      },
+    },
+  ],
 })
 
 export const bidForm = style({
