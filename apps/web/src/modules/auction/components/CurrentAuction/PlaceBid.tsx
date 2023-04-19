@@ -3,7 +3,14 @@ import { Box, Button, Flex } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import React, { Fragment, memo, useState } from 'react'
 import { useSWRConfig } from 'swr'
-import { Address, useAccount, useBalance, useContractReads, useSigner } from 'wagmi'
+import {
+  Address,
+  useAccount,
+  useBalance,
+  useContractReads,
+  useNetwork,
+  useSigner,
+} from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -24,6 +31,7 @@ interface PlaceBidProps {
 export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
   const { address } = useAccount()
+  const { chain } = useNetwork()
   const { data: balance } = useBalance({ address: address })
   const { mutate } = useSWRConfig()
   const { addresses } = useDaoStore()
@@ -108,7 +116,7 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
           <ContractButton
             className={auctionActionButtonVariants['bid']}
             handleClick={handleCreateBid}
-            disabled={!isMinBid || !bidAmount || !signer}
+            disabled={address && !chain?.unsupported ? !isMinBid || !bidAmount : false}
             mt={{ '@initial': 'x2', '@768': 'x0' }}
           >
             Place bid
