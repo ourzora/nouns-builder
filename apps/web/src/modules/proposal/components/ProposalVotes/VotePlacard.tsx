@@ -92,7 +92,7 @@ export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) =>
         )}
       </Flex>
 
-      {(isMobile || open) && vote.reason && (
+      {open && vote.reason && (
         <Text
           variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
           borderRadius="curved"
