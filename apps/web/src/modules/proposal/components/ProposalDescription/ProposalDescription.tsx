@@ -13,6 +13,7 @@ import { sdk } from 'src/data/graphql/client'
 import { Proposal } from 'src/data/graphql/requests/proposalQuery'
 import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { propPageWrapper } from 'src/styles/Proposals.css'
 
 import { DecodedTransactions } from './DecodedTransactions'
 import { proposalDescription } from './ProposalDescription.css'
@@ -53,48 +54,50 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   )
 
   return (
-    <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
-      <Section title="Description">
-        <Paragraph overflow={'auto'}>
-          <ReactMarkdown
-            className={proposalDescription}
-            rehypePlugins={[rehypeRaw, rehypeSanitize]}
-            remarkPlugins={[remarkGfm]}
-          >
-            {description}
-          </ReactMarkdown>
-        </Paragraph>
-      </Section>
+    <Flex className={propPageWrapper}>
+      <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
+        <Section title="Description">
+          <Paragraph overflow={'auto'}>
+            <ReactMarkdown
+              className={proposalDescription}
+              rehypePlugins={[rehypeRaw, rehypeSanitize]}
+              remarkPlugins={[remarkGfm]}
+            >
+              {description}
+            </ReactMarkdown>
+          </Paragraph>
+        </Section>
 
-      <Section title="Proposer">
-        <Flex direction={'row'} placeItems={'center'}>
-          <Box
-            backgroundColor="background2"
-            width={'x8'}
-            height={'x8'}
-            mr={'x2'}
-            borderRadius={'small'}
-            position="relative"
-          >
-            {!!tokenImage && !error && (
-              <Image
-                alt="proposer"
-                src={tokenImage}
-                quality={50}
-                width={128}
-                height={128}
-                className={atoms({ borderRadius: 'small' })}
-              />
-            )}
-          </Box>
+        <Section title="Proposer">
+          <Flex direction={'row'} placeItems={'center'}>
+            <Box
+              backgroundColor="background2"
+              width={'x8'}
+              height={'x8'}
+              mr={'x2'}
+              borderRadius={'small'}
+              position="relative"
+            >
+              {!!tokenImage && !error && (
+                <Image
+                  alt="proposer"
+                  src={tokenImage}
+                  quality={50}
+                  width={128}
+                  height={128}
+                  className={atoms({ borderRadius: 'small' })}
+                />
+              )}
+            </Box>
 
-          <Box>{displayName}</Box>
-        </Flex>
-      </Section>
+            <Box>{displayName}</Box>
+          </Flex>
+        </Section>
 
-      <Section title="Proposed Transactions">
-        <DecodedTransactions targets={targets} calldatas={calldatas} values={values} />
-      </Section>
+        <Section title="Proposed Transactions">
+          <DecodedTransactions targets={targets} calldatas={calldatas} values={values} />
+        </Section>
+      </Flex>
     </Flex>
   )
 }

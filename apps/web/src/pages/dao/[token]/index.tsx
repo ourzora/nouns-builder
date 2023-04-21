@@ -76,6 +76,8 @@ const DaoPage: NextPageWithLayout<DaoPageProps> = ({ collectionAddress }) => {
     )
   }
 
+  const activeTab = query?.tab ? (query.tab as string) : 'Activity'
+
   return (
     <Flex direction="column" pb="x30">
       <Meta title={'dao page'} slug={'/'} />
@@ -84,9 +86,8 @@ const DaoPage: NextPageWithLayout<DaoPageProps> = ({ collectionAddress }) => {
 
       <SectionHandler
         sections={sections}
-        collectionAddress={collectionAddress}
-        activeTab={query?.tab ? (query.tab as string) : undefined}
-        preAuction={true}
+        activeTab={activeTab}
+        basePath={`/dao/${collectionAddress}`}
       />
     </Flex>
   )

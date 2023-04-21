@@ -97,6 +97,8 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   const ogDescription =
     description.length > 111 ? `${description.slice(0, 111)}...` : description
 
+  const activeTab = query?.tab ? (query.tab as string) : 'About'
+
   return (
     <Flex direction="column" pb="x30">
       <Meta
@@ -109,9 +111,8 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       <Auction auctionAddress={addresses.auction} collection={collection} token={token} />
       <SectionHandler
         sections={sections}
-        activeTab={query?.tab ? (query.tab as string) : undefined}
-        collectionAddress={collection}
-        tokenId={tokenId}
+        activeTab={activeTab}
+        basePath={`/dao/${collection}/${tokenId}`}
       />
 
       <AnimatedModal

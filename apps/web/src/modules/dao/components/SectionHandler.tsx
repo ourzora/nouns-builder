@@ -1,7 +1,6 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { ReactElement } from 'react'
 
 import {
@@ -18,10 +17,8 @@ interface SectionHandlerProps {
     title: string
     component: ReactElement[]
   }[]
-  collectionAddress: string
-  tokenId?: string
-  activeTab?: string
-  preAuction?: boolean
+  activeTab: string
+  basePath: string
 }
 
 interface activeSectionProps {
@@ -31,18 +28,12 @@ interface activeSectionProps {
 
 export const SectionHandler: React.FC<SectionHandlerProps> = ({
   sections,
-  collectionAddress,
-  tokenId,
   activeTab,
-  preAuction = false,
+  basePath,
 }) => {
-  const router = useRouter()
-
   /*
 
     handle active session if:
-    - no tab query param is defined (pre auction start)
-    - no tab query param defined (post auction start)
     - query tab is defined
     - unknown query tab is set
 
@@ -55,15 +46,8 @@ export const SectionHandler: React.FC<SectionHandlerProps> = ({
   )
 
   const activeSection: activeSectionProps | undefined = React.useMemo(() => {
-    const activity = tab('Activity')
-    const about = tab('About')
-
-    if (!activeTab) {
-      return preAuction ? activity : about
-    }
-
-    return tab(unslugify(activeTab)) ?? activity
-  }, [preAuction, activeTab, tab])
+    return tab(unslugify(activeTab))
+  }, [activeTab, tab])
 
   return (
     <>
@@ -80,9 +64,7 @@ export const SectionHandler: React.FC<SectionHandlerProps> = ({
               return (
                 <Link
                   href={{
-                    pathname: tokenId
-                      ? `/dao/${collectionAddress}/${tokenId}`
-                      : `/dao/${collectionAddress}`,
+                    pathname: basePath,
                     query: {
                       tab: slugify(section.title),
                     },
