@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import React from 'react'
 
 import { Icon } from 'src/components/Icon'
+import { ImageProps } from 'src/hooks'
 import {
   artworkSettingsBox,
   artworkSettingsBoxDropping,
@@ -14,7 +15,6 @@ import {
 } from 'src/styles/Artwork.css'
 
 import { useFormStore } from '../../stores'
-import { ImageProps } from '../Artwork'
 
 interface Trait {
   trait: string

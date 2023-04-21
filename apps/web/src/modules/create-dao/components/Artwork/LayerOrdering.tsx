@@ -2,9 +2,9 @@ import { Box } from '@zoralabs/zord'
 import React from 'react'
 
 import { defaultFormHeading } from 'src/components/Fields/styles.css'
+import { ImageProps } from 'src/hooks'
 
 import { useFormStore } from '../../stores'
-import { ImageProps } from '../Artwork'
 import { DragAndDropProps, LayerBox } from './LayerBox'
 
 interface LayerOrderingProps {
