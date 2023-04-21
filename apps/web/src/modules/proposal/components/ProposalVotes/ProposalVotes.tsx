@@ -1,4 +1,4 @@
-import { Flex } from '@zoralabs/zord'
+import { Flex, Text } from '@zoralabs/zord'
 import { useMemo } from 'react'
 
 import { Proposal } from 'src/data/graphql/requests/proposalQuery'
@@ -16,11 +16,17 @@ export const ProposalVotes: React.FC<ProposalVotesProps> = ({ proposal }) => {
     return proposal.votes.reduce((acc, vote) => acc + vote.weight, 0)
   }, [proposal.votes])
 
+  const hasVotes = proposal.votes?.length || 0 > 0
+
   return (
     <Flex className={propPageWrapper}>
-      {proposal.votes?.map((vote) => (
-        <VotePlacard vote={vote} totalVotes={totalVotes} />
-      ))}
+      {hasVotes ? (
+        proposal.votes?.map((vote) => <VotePlacard vote={vote} totalVotes={totalVotes} />)
+      ) : (
+        <Text textAlign={'center'} color="text3" mt="x4">
+          No votes yet for this proposal.
+        </Text>
+      )}
     </Flex>
   )
 }

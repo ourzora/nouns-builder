@@ -112,7 +112,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       <SectionHandler
         sections={sections}
         activeTab={activeTab}
-        basePath={tokenId ? `/dao/${collection}/${tokenId}` : `/dao/${collection}`}
+        basePath={`/dao/${collection}/${tokenId}`}
       />
 
       <AnimatedModal
