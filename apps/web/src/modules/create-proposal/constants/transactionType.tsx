@@ -38,9 +38,9 @@ export const TRANSACTION_TYPES = {
   },
   [TransactionType.DROPOSAL]: {
     title: 'Droposal: Single edition',
-    subTitle: 'Create an NFT collection controlled by the DAO',
+    subTitle: 'Create a droposal for a Single-edition ERC721 collection',
     icon: 'collection',
-    iconBackdrop: 'rgba(137, 58, 199, 0.1);',
+    iconBackdrop: 'rgba(0, 163, 255, 0.1)',
   },
   [TransactionType.UPGRADE]: {
     title: 'Upgrade Proposal',

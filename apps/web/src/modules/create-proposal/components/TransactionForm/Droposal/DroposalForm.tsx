@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react'
 
 import SmartInput from 'src/components/Fields/SmartInput'
 import TextArea from 'src/components/Fields/TextArea'
+import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
 import { DATE, NUMBER, TEXT } from 'src/components/Fields/types'
 import SingleMediaUpload from 'src/components/SingleMediaUpload/SingleMediaUpload'
 import { DropdownSelect } from 'src/modules/create-proposal'
@@ -81,6 +82,21 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
           return (
             <>
               {!isMobile && <DroposalPreview formik={formik} />}
+              <Text
+                mb="x8"
+                ml="x2"
+                style={{ marginTop: -30 }}
+                className={defaultHelperTextStyle}
+              >
+                This droposal uses the ZORA 721 Contract.{' '}
+                <a
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  href="https://docs.zora.co/docs/smart-contracts/creator-tools/ZoraNFTCreator"
+                >
+                  Lean more
+                </a>
+              </Text>
               <Box
                 data-testid="droposal-form"
                 as={'fieldset'}
@@ -164,15 +180,29 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     id={'pricePerMint'}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    helperText={
-                      'Collectors pay an additional 0.000777 ETH fee mint fee to Zora.'
-                    }
                     errorMessage={
                       formik.touched['pricePerMint'] && formik.errors['pricePerMint']
                         ? formik.errors['pricePerMint']
                         : undefined
                     }
                   />
+
+                  <Text
+                    mb="x8"
+                    ml="x2"
+                    style={{ marginTop: -30 }}
+                    className={defaultHelperTextStyle}
+                  >
+                    Zora charges a small flat fee 0.000777 ETH per NFT minted to
+                    collectors.{' '}
+                    <a
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      href="https://support.zora.co/en/articles/4981037-zora-mint-collect-fees"
+                    >
+                      Learn more
+                    </a>
+                  </Text>
 
                   <label className={defaultInputLabelStyle}>Edition type</label>
 
