@@ -44,6 +44,9 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
     publicSaleStart: '',
     publicSaleEnd: '',
     royaltyPercentage: 5,
+    pricePerMint: 0,
+    maxPerAddress: 1,
+    maxSupply: 10,
   }
 
   const handleSubmit = useCallback(
@@ -354,7 +357,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     variant={'outline'}
                     borderRadius={'curved'}
                     type="submit"
-                    disabled={!formik.isValid || disabled}
+                    disabled={disabled}
                   >
                     Add Transaction to Queue
                   </Button>

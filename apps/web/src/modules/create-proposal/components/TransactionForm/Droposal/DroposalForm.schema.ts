@@ -9,9 +9,9 @@ export interface DroposalFormValues {
   mediaUrl: string
   mediaType?: string
   coverUrl: string
-  pricePerMint?: number
-  maxPerAddress?: number
-  maxSupply?: number
+  pricePerMint: number
+  maxPerAddress: number
+  maxSupply: number
   royaltyPercentage: number
   fundsRecipient: string
   defaultAdmin: string
@@ -21,7 +21,7 @@ export interface DroposalFormValues {
 
 const droposalFormSchema = yup.object({
   name: yup.string().required('*'),
-  symbol: yup.string(),
+  symbol: yup.string().required('*'),
   description: yup.string().required('*'),
   mediaUrl: yup.string().required('*'),
   mediaType: yup.string(),
