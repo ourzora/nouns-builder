@@ -9,6 +9,7 @@ export enum TransactionType {
   UPGRADE = 'upgrade',
   PAUSE_AUCTIONS = 'pause-auctions',
   UPDATE_MINTER = 'update-minter',
+  REPLACE_ARTWORK = 'replace-artwork',
 }
 
 export interface TransactionTypeProps {
@@ -46,6 +47,12 @@ export const TRANSACTION_TYPES = {
     title: 'Pause Auctions',
     subTitle: 'Create a proposal to pause auctions',
     icon: 'pause',
+    iconBackdrop: 'rgba(236, 113, 75, 0.1)',
+  },
+  [TransactionType.REPLACE_ARTWORK]: {
+    title: 'Replace Artwork',
+    subTitle: 'Create a proposal to replace artwork',
+    icon: 'refresh',
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
   [TransactionType.CUSTOM]: {
