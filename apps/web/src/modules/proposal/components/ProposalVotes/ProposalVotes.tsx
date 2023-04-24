@@ -21,7 +21,9 @@ export const ProposalVotes: React.FC<ProposalVotesProps> = ({ proposal }) => {
   return (
     <Flex className={propPageWrapper}>
       {hasVotes ? (
-        proposal.votes?.map((vote) => <VotePlacard vote={vote} totalVotes={totalVotes} />)
+        proposal.votes
+          ?.map((vote) => <VotePlacard vote={vote} totalVotes={totalVotes} />)
+          .reverse()
       ) : (
         <Text textAlign={'center'} color="text3" mt="x4">
           No votes yet for this proposal.
