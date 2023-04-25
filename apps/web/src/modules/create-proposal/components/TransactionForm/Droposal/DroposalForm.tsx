@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import { Form, Formik, FormikHelpers } from 'formik'
 import { useCallback, useState } from 'react'
+import { useAccount } from 'wagmi'
 
 import SmartInput from 'src/components/Fields/SmartInput'
 import TextArea from 'src/components/Fields/TextArea'
@@ -29,7 +30,9 @@ const editionSizeOptions = [
 ]
 
 export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
-  const [editionType, setEditionType] = useState<string>('fixed')
+  const [editionType, setEditionType] = useState('fixed')
+  const [isIPFSUploading, setIsIPFSUploading] = useState(false)
+  const { address: user } = useAccount()
   const { treasury } = useDaoStore((x) => x.addresses)
   const isMobile = useLayoutStore((x) => x.isMobile)
 
@@ -39,8 +42,8 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
     description: '',
     mediaUrl: '',
     coverUrl: '',
-    fundsRecipient: '',
-    defaultAdmin: treasury || '',
+    fundsRecipient: treasury || '',
+    defaultAdmin: user || '',
     publicSaleStart: '',
     publicSaleEnd: '',
     royaltyPercentage: 5,
@@ -68,6 +71,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
       >
         {(formik) => {
           const handleMediaUploadStart = (media: File) => {
+            setIsIPFSUploading(true)
             formik.setFieldValue('mediaType', media.type)
           }
 
@@ -162,6 +166,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     id="mediaUrl"
                     inputLabel={'Media'}
                     onUploadStart={handleMediaUploadStart}
+                    onUploadSettled={() => setIsIPFSUploading(false)}
                   />
 
                   {showCover && (
@@ -170,6 +175,8 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                       formik={formik}
                       id="coverUrl"
                       inputLabel={'Cover'}
+                      onUploadStart={() => setIsIPFSUploading(true)}
+                      onUploadSettled={() => setIsIPFSUploading(false)}
                     />
                   )}
 
@@ -323,7 +330,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     helperText={
-                      'The address that will receive any withdrawals and royalties. It can be your personal wallet, a multisignature wallet, or an external splits contract.'
+                      'The DAO treasury address is set as the default payout address. This address will receive any withdrawals and royalties. It can be your personal wallet, a multisignature wallet, or an external splits contract.'
                     }
                     errorMessage={
                       formik.touched['fundsRecipient'] && formik.errors['fundsRecipient']
@@ -343,7 +350,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     helperText={
-                      'The address that will manage the edition. It can be your personal wallet, a multisignature wallet, or the DAO treasury.'
+                      'The wallet you have connected to nouns.build is set as the default admin address. This address will manage the edition. It can be your personal wallet, a multisignature wallet, or the DAO treasury.'
                     }
                     errorMessage={
                       formik.touched['defaultAdmin'] && formik.errors['defaultAdmin']
@@ -357,7 +364,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     variant={'outline'}
                     borderRadius={'curved'}
                     type="submit"
-                    disabled={disabled}
+                    disabled={disabled || isIPFSUploading}
                   >
                     Add Transaction to Queue
                   </Button>

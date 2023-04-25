@@ -18,6 +18,7 @@ interface SingleImageUploadProps {
   inputLabel: string | ReactElement
   value: string
   onUploadStart?: (value: File) => void
+  onUploadSettled?: () => void
 }
 
 const SingleMediaUpload: React.FC<SingleImageUploadProps> = ({
@@ -25,6 +26,7 @@ const SingleMediaUpload: React.FC<SingleImageUploadProps> = ({
   formik,
   inputLabel,
   onUploadStart,
+  onUploadSettled,
   value,
 }) => {
   const acceptableMIME = [
@@ -71,7 +73,7 @@ const SingleMediaUpload: React.FC<SingleImageUploadProps> = ({
         setIsUploading(true)
         setFileName(input.name)
 
-        if (onUploadStart) onUploadStart(input)
+        onUploadStart?.(input)
 
         const { cid } = await uploadFile(_input[0], {
           cache: true,
@@ -87,6 +89,8 @@ const SingleMediaUpload: React.FC<SingleImageUploadProps> = ({
           ...err,
           message: `Sorry, there was an error with our file uploading service. ${err?.message}`,
         })
+      } finally {
+        onUploadSettled?.()
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
