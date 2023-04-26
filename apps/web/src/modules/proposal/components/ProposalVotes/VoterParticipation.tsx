@@ -39,7 +39,9 @@ export const VoterParticipation: React.FC<VoterParticipationProps> = ({
         <Text
           variant="heading-md"
           style={{ fontWeight: 600 }}
-          className={VoterParticipationVariants[variant]}
+          className={
+            VoterParticipationVariants[participation >= 20 ? 'positive' : 'neutral']
+          }
           mt="x4"
         >
           {maxVotes ? participation.toPrecision(3) : '--'}%
