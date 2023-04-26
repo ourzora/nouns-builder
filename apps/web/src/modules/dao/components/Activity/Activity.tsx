@@ -42,7 +42,7 @@ export const Activity: React.FC = () => {
     (_, token, page) => getProposals([token], LIMIT, Number(page))
   )
 
-  const { isOwner, hasThreshold } = useVotes({
+  const { isOwner, isDelegating, hasThreshold } = useVotes({
     governorAddress: addresses?.governor,
     signerAddress: address,
     collectionAddress: query?.token as AddressType,
@@ -137,7 +137,7 @@ export const Activity: React.FC = () => {
           </Text>
 
           <Flex justify={'center'} align={'center'}>
-            {isOwner ? (
+            {isOwner || isDelegating ? (
               <>
                 {!isMobile ? (
                   <ContractButton
@@ -161,7 +161,7 @@ export const Activity: React.FC = () => {
               </>
             ) : null}
 
-            {!hasThreshold && !isMobile && (
+            {!isDelegating && !hasThreshold && !isMobile && (
               <Flex mr={'x4'} color={'tertiary'}>
                 You have no votes.
               </Flex>
