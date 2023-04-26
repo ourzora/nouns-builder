@@ -68,6 +68,7 @@ export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) =>
       mb="x2"
       px={isMobile ? 'x2' : 'x6'}
       py="x6"
+      mt="x4"
       color="text1"
       borderStyle="solid"
       borderColor="border"
