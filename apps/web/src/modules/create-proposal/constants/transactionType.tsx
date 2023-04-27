@@ -5,6 +5,7 @@ import { IconType } from 'src/components/Icon/icons'
 export enum TransactionType {
   SEND_ETH = 'send-eth',
   AIRDROP = 'airdrop',
+  DROPOSAL = 'droposal',
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
   PAUSE_AUCTIONS = 'pause-auctions',
@@ -36,6 +37,12 @@ export const TRANSACTION_TYPES = {
     icon: 'airdrop',
     iconBackdrop: 'rgba(28, 182, 135, 0.1)',
   },
+  [TransactionType.DROPOSAL]: {
+    title: 'Droposal: Single edition',
+    subTitle: 'Create a droposal for a Single-edition ERC721 collection',
+    icon: 'collection',
+    iconBackdrop: 'rgba(0, 163, 255, 0.1)',
+  },
   [TransactionType.UPGRADE]: {
     title: 'Upgrade Proposal',
     subTitle: 'Create a proposal to upgrade',
@@ -45,7 +52,7 @@ export const TRANSACTION_TYPES = {
   [TransactionType.PAUSE_AUCTIONS]: {
     title: 'Pause Auctions',
     subTitle: 'Create a proposal to pause auctions',
-    icon: 'pause',
+    icon: 'pauseTemplate',
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
   [TransactionType.CUSTOM]: {
