@@ -77,7 +77,7 @@ export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) =>
     >
       <Text
         fontSize={isMobile ? 12 : 14}
-        style={{ width: 'max-content' }}
+        style={{ width: 'max-content', fontWeight: 600 }}
         className={supportStyle}
       >
         {vote.support}
