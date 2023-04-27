@@ -2,13 +2,12 @@ import { Box, Flex, Stack, atoms } from '@zoralabs/zord'
 import React, { BaseSyntheticEvent } from 'react'
 
 import { Icon } from 'src/components/Icon'
+import { ImageProps } from 'src/hooks'
 import {
   layerSelectStyle,
   selectTraitNameStyle,
   selectTraitNameWrapper,
 } from 'src/styles/Artwork.css'
-
-import { ImageProps } from '../ArtworkUpload'
 
 interface layerProps {
   trait: string

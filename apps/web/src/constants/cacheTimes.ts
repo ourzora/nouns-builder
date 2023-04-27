@@ -24,4 +24,8 @@ export const CACHE_TIMES = {
     maxAge: ONE_DAY,
     swr: ONE_WEEK,
   },
+  DECODE: {
+    maxAge: ONE_DAY,
+    swr: ONE_WEEK,
+  },
 }

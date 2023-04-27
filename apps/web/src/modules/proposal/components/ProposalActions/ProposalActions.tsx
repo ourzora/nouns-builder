@@ -14,8 +14,9 @@ import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
-import { OwnerActions } from './OwnerActions'
+import { CancelButton } from './CancelButton'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
+import { VetoAction } from './VetoAction'
 import { VoteStatus } from './VoteStatus'
 
 interface ProposalActionsProps {
@@ -30,7 +31,8 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const addresses = useDaoStore((state) => state.addresses)
 
-  const { proposer, title, voteStart, proposalId, timeCreated, status } = proposal
+  const { proposer, title, voteStart, proposalId, proposalNumber, timeCreated, status } =
+    proposal
 
   const { data } = useContractReads({
     enabled: !!signerAddress,
@@ -72,10 +74,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const shouldShowActions =
     status === NounsProposalStatus.Active ||
     status === NounsProposalStatus.Pending ||
-    signerVote ||
-    votesAvailable !== 0 ||
-    isProposer ||
-    isVetoer
+    signerAddress
 
   if (!shouldShowActions) return null
 
@@ -110,14 +109,10 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
           title={title}
         />
 
-        {(showCancel || showVeto) && (
-          <OwnerActions
-            proposalId={proposalId}
-            showCancel={showCancel}
-            showVeto={showVeto}
-          />
-        )}
+        {showCancel && <CancelButton proposalId={proposalId} />}
       </Flex>
+
+      {showVeto && <VetoAction proposalId={proposalId} proposalNumber={proposalNumber} />}
     </Fragment>
   )
 }

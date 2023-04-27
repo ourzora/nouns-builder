@@ -1,6 +1,7 @@
-import { Button, Flex, Stack, Text } from '@zoralabs/zord'
+import { Box, Button, Flex, Stack, Text } from '@zoralabs/zord'
 import React from 'react'
 
+import { Icon } from 'src/components/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { TransactionCard, useProposalStore } from 'src/modules/create-proposal'
 
@@ -43,9 +44,15 @@ export const Queue: React.FC<QueueProps> = ({ setQueueModalOpen }) => {
         <Text fontWeight={'label'} fontSize={20} style={{ lineHeight: '32px' }} mb={'x6'}>
           Review Queue
         </Text>
-        <Button variant="ghost" size="sm" onClick={handleClearAll}>
-          Clear All
-        </Button>
+        <Box
+          as="button"
+          onClick={() => setQueueModalOpen(false)}
+          backgroundColor="transparent"
+          borderColor="transparent"
+          cursor={'pointer'}
+        >
+          <Icon id="cross-16" />
+        </Box>
       </Flex>
 
       <Stack gap={'x4'}>
@@ -54,7 +61,10 @@ export const Queue: React.FC<QueueProps> = ({ setQueueModalOpen }) => {
               <TransactionCard
                 key={`${transaction.type}-${i}`}
                 handleRemove={() => confirmRemoveTransaction(i)}
-                disabled={transaction.type === TransactionType.UPGRADE}
+                disabled={
+                  transaction.type === TransactionType.UPGRADE ||
+                  transaction.type === TransactionType.UPDATE_MINTER
+                }
                 transaction={transaction}
               />
             ))
@@ -67,7 +77,9 @@ export const Queue: React.FC<QueueProps> = ({ setQueueModalOpen }) => {
         mt={'x6'}
         mb={'x8'}
       />
-      <Button onClick={() => setQueueModalOpen(false)}>Close</Button>
+      <Button variant="outline" onClick={handleClearAll}>
+        Clear queue
+      </Button>
       <AnimatedModal close={() => setOpenConfirm(false)} open={openConfirm}>
         <ConfirmRemove
           handleRemoveTransaction={handleRemoveTransaction}
