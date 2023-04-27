@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import React, { BaseSyntheticEvent, ChangeEventHandler, ReactElement } from 'react'
 
 import { ArtworkPreview, ArtworkUpload as UploadComponent } from 'src/components/Artwork'
+import { LayerOrdering } from 'src/components/Artwork/LayerOrdering'
 import { IPFSUpload, useArtworkPreview, useArtworkUpload } from 'src/hooks'
 import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkStore'
 
@@ -133,6 +134,15 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
 
   const showPreview = setUpArtwork.artwork.length > 0
 
+  const layerOrdering = (
+    <LayerOrdering
+      images={images}
+      artwork={artwork}
+      orderedLayers={orderedLayers}
+      setOrderedLayers={setOrderedLayers}
+    />
+  )
+
   return (
     <>
       <UploadComponent
@@ -146,6 +156,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
         uploadArtworkError={uploadArtworkError}
         images={images}
         fileType={fileInfo?.fileType}
+        layerOrdering={layerOrdering}
       />
       {showPreview && (
         <motion.div

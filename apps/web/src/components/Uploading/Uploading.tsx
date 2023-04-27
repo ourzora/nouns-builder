@@ -2,13 +2,10 @@ import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
 
 import { Spinner } from 'src/components/Spinner'
-import { useFormStore } from 'src/modules/create-dao'
 
-import { uploadNotificationWrapper } from './Nav.styles.css'
+import { uploadNotificationWrapper } from './Uploading.css'
 
-export const Uploading = () => {
-  const { isUploadingToIPFS } = useFormStore()
-
+export const Uploading = ({ isUploadingToIPFS }: { isUploadingToIPFS: boolean }) => {
   return (
     <>
       {isUploadingToIPFS && (

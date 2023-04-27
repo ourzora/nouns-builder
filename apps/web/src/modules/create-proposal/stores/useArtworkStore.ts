@@ -1,8 +1,8 @@
 import { create } from 'zustand'
 
+import { OrderedTraits } from 'src/components/Artwork/LayerBox'
 import { IPFSUpload } from 'src/hooks'
 import { ArtworkType } from 'src/modules/create-dao/components'
-import { OrderedTraits } from 'src/modules/create-dao/components/Artwork/LayerBox'
 
 export interface ArtworkFormValues {
   artwork: Array<ArtworkType>

@@ -14,8 +14,6 @@ import {
   artworkSettingsPropertyName,
 } from 'src/styles/Artwork.css'
 
-import { useFormStore } from '../../stores'
-
 interface Trait {
   trait: string
   properties: string[]
@@ -39,6 +37,7 @@ interface LayerBoxProps {
   setDragAndDrop: (props: DragAndDropProps) => void
   dragAndDrop: DragAndDropProps | null
   orderedLayers: OrderedTraits
+  setOrderedLayers: (orderedLayers: OrderedTraits) => void
   index: number
 }
 
@@ -49,10 +48,9 @@ export const LayerBox: React.FC<LayerBoxProps> = ({
   setDragAndDrop,
   dragAndDrop,
   orderedLayers,
+  setOrderedLayers,
   index,
 }) => {
-  const { setOrderedLayers } = useFormStore()
-
   /*  toggle property animation  */
   const [isOpen, setIsOpen] = React.useState(false)
   const propertiesVariants = {

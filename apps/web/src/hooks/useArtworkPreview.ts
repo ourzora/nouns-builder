@@ -1,6 +1,6 @@
 import React, { BaseSyntheticEvent } from 'react'
 
-import { OrderedTraits } from 'src/modules/create-dao/components/Artwork/LayerBox'
+import { OrderedTraits } from 'src/components/Artwork/LayerBox'
 
 import { ImageProps } from './useArtworkUpload'
 
@@ -36,6 +36,7 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
 
   const imagesByTrait = React.useMemo(() => {
     if (!images) return
+
     return images.reduce((acc: ImagesByTraitProps[] = [], image) => {
       const trait = image.trait
       const index = acc.findIndex((e: any) => e?.trait === trait)
