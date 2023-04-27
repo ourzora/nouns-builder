@@ -9,15 +9,19 @@ import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkSt
 import { ArtworkUpload } from './ArtworkUpload'
 import { ArtworkFormValues, validationSchemaArtwork } from './ReplaceArtworkForm.schema'
 
-export const ReplaceArtworkForm = () => {
+export interface ReplaceArtworkFormProps {
+  handleSubmit: (values: ArtworkFormValues) => void
+}
+
+export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
+  handleSubmit,
+}) => {
   const { ipfsUpload, isUploadingToIPFS, setUpArtwork } = useArtworkStore()
 
   const initialValues = {
     artwork: setUpArtwork?.artwork || [],
     filesLength: setUpArtwork?.filesLength || '',
   }
-
-  const handleSubmit = (_values: ArtworkFormValues) => {}
 
   return (
     <Box w={'100%'}>
