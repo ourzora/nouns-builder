@@ -22,6 +22,18 @@ interface Trait {
 
 export type OrderedTraits = Array<Trait>
 
+export const getLayerName = (idx: number, layers?: OrderedTraits): string => {
+  if (idx === 0) {
+    return 'Top layer'
+  }
+
+  if (layers && idx === layers.length - 1) {
+    return 'Base layer'
+  }
+
+  return `Layer #${idx}`
+}
+
 export interface DragAndDropProps {
   draggedFrom?: number
   draggedTo?: number | null
@@ -124,18 +136,6 @@ export const LayerBox: React.FC<LayerBoxProps> = ({
       draggedTo: null,
       isDragging: false,
     })
-  }
-
-  const getLayerName = (idx: number, layers?: OrderedTraits): string => {
-    if (idx === 0) {
-      return 'Top layer'
-    }
-
-    if (layers && idx === layers.length - 1) {
-      return 'Base layer'
-    }
-
-    return `Layer #${idx}`
   }
 
   /*  listen for if section is being dropped in drop area */

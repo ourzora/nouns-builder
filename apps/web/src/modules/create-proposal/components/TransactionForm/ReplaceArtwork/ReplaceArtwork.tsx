@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 import React, { useMemo } from 'react'
 import useSWR from 'swr'
 
+import { getLayerName } from 'src/components/Artwork/LayerBox'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi } from 'src/data/contract/abis'
 import { getPropertyItemsCount } from 'src/data/contract/requests/getPropertyItemsCount'
@@ -15,9 +16,11 @@ import { AddressType } from 'src/typings'
 import { ReplaceArtworkForm } from './ReplaceArtworkForm'
 
 export const ReplaceArtwork = () => {
-  const { orderedLayers, ipfsUpload } = useArtworkStore()
+  const { orderedLayers, ipfsUpload, isUploadingToIPFS } = useArtworkStore()
   const addresses = useDaoStore((x) => x.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
+
+  const contractOrderedLayers = [...orderedLayers].reverse() // traits in the contract are reversed
 
   const { data } = useSWR(
     addresses.metadata ? SWR_KEYS.ARTWORK_PROPERTY_ITEMS_COUNT : undefined,
@@ -34,13 +37,19 @@ export const ReplaceArtwork = () => {
     return orderedLayers.length >= propertiesCount
   }, [propertiesCount, orderedLayers])
 
-  const isPropertiesItemsCountValid = useMemo(() => {
-    return orderedLayers.reverse().some((x, i) => {
-      return propertyItemsCount ? x.properties.length >= propertyItemsCount[i] : false
+  const invalidPropertyIndex = useMemo(() => {
+    if (!propertyItemsCount || propertyItemsCount.length < 1) return -1
+    return contractOrderedLayers.findIndex((x, i) => {
+      console.log(x.properties.length, propertyItemsCount[i])
+      return x.properties.length < propertyItemsCount[i]
     })
-  }, [orderedLayers])
+  }, [orderedLayers, propertyItemsCount])
 
-  const isValid = isPropertyCountValid && isPropertiesItemsCountValid
+  const isValid =
+    isPropertyCountValid &&
+    invalidPropertyIndex < 0 &&
+    !isUploadingToIPFS &&
+    ipfsUpload.length !== 0
 
   const transactions = React.useMemo(() => {
     if (!orderedLayers || !ipfsUpload) return
@@ -76,5 +85,28 @@ export const ReplaceArtwork = () => {
     })
   }
 
-  return <ReplaceArtworkForm handleSubmit={handleReplaceArtworkTransaction} />
+  const hasInvalidProperty = invalidPropertyIndex >= 0 && propertyItemsCount
+  const invalidPropertyOrderedLayersIndex =
+    orderedLayers.length - invalidPropertyIndex - 1
+
+  return (
+    <ReplaceArtworkForm
+      disabled={!isValid}
+      isPropertyCountValid={isPropertyCountValid}
+      invalidProperty={
+        hasInvalidProperty
+          ? {
+              currentLayerName: getLayerName(
+                invalidPropertyOrderedLayersIndex,
+                orderedLayers
+              ),
+              nextName: contractOrderedLayers[invalidPropertyIndex].trait,
+              currentVariantCount: propertyItemsCount[invalidPropertyIndex],
+            }
+          : undefined
+      }
+      propertiesCount={propertiesCount || 0}
+      handleSubmit={handleReplaceArtworkTransaction}
+    />
+  )
 }

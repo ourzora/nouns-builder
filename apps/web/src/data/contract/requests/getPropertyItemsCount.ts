@@ -12,13 +12,15 @@ export const getPropertyItemsCount = async (metadataAddress: AddressType) => {
     functionName: 'propertiesCount',
   }).then((x) => x.toNumber())
 
-  const contracts = Array(propertiesCount).map((_, i) => {
-    return {
-      ...baseParams,
-      functionName: 'itemsCount',
-      args: [i],
-    }
-  })
+  const contracts = Array(propertiesCount)
+    .fill(0)
+    .map((_, i) => {
+      return {
+        ...baseParams,
+        functionName: 'itemsCount',
+        args: [i],
+      }
+    })
 
   const propertyItemsCount = (await readContracts({
     contracts,
