@@ -18,6 +18,7 @@ export interface ArtworkStore {
   setOrderedLayers: (orderedLayers: OrderedTraits) => void
   isUploadingToIPFS: boolean
   setIsUploadingToIPFS: (bool: boolean) => void
+  resetForm: () => void
 }
 
 const initialState = {

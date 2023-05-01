@@ -19,6 +19,7 @@ export const Uploading = ({ isUploadingToIPFS }: { isUploadingToIPFS: boolean })
           align={'flex-end'}
           justify={'flex-end'}
           right={'x8'}
+          style={{ zIndex: 100 }}
         >
           <Flex align={'center'} justify={'center'}>
             <Box fontSize={14}>Uploading Artwork to IPFS</Box>

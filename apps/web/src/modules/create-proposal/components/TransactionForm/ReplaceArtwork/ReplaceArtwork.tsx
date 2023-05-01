@@ -16,7 +16,7 @@ import { AddressType } from 'src/typings'
 import { ReplaceArtworkForm } from './ReplaceArtworkForm'
 
 export const ReplaceArtwork = () => {
-  const { orderedLayers, ipfsUpload, isUploadingToIPFS } = useArtworkStore()
+  const { orderedLayers, ipfsUpload, isUploadingToIPFS, resetForm } = useArtworkStore()
   const addresses = useDaoStore((x) => x.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
@@ -83,6 +83,8 @@ export const ReplaceArtwork = () => {
       summary: 'Replace artwork',
       transactions: formattedTransactions,
     })
+
+    resetForm()
   }
 
   const hasInvalidProperty = invalidPropertyIndex >= 0 && propertyItemsCount
