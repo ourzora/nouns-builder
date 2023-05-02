@@ -3,6 +3,7 @@ import { FormikProps } from 'formik'
 
 import { MediaPreview } from 'src/components/MediaPreview/MediaPreview'
 
+import { previewTextStyle } from './Droposal.css'
 import { DroposalFormValues } from './DroposalForm.schema'
 
 interface DroposalPreviewProps {
@@ -26,7 +27,7 @@ export const DroposalPreview: React.FC<DroposalPreviewProps> = ({ formik }) => {
         <Box style={{ width: '400px', height: '400px' }}>
           <MediaPreview mediaUrl={mediaUrl} coverUrl={coverUrl} mediaType={mediaType} />
         </Box>
-        <Text mt="x4" variant="heading-sm">
+        <Text mt="x4" variant="heading-sm" className={previewTextStyle}>
           {name || 'Collection name'}
         </Text>
         <Flex mt="x2" align={'center'}>
@@ -43,7 +44,14 @@ export const DroposalPreview: React.FC<DroposalPreviewProps> = ({ formik }) => {
             EDITION
           </Text>
         </Flex>
-        <Text mt="x2" variant={'paragraph-lg'} style={{ fontWeight: 500 }}>
+        <Text
+          mt="x2"
+          variant={'paragraph-lg'}
+          className={previewTextStyle}
+          style={{
+            fontWeight: 500,
+          }}
+        >
           {description || 'description'}
         </Text>
         <Flex mt="x4">
