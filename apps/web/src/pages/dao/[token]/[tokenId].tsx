@@ -16,6 +16,7 @@ import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { Auction } from 'src/modules/auction'
+import { AuctionSkeleton } from 'src/modules/auction/components/AuctionSkeleton'
 import {
   About,
   Activity,
@@ -89,11 +90,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
     return hasThreshold ? [...publicSections, adminSection] : publicSections
   }, [hasThreshold, collection])
 
-  if (!token || !addresses.auction) {
-    return null
-  }
-
-  const description = token.description ?? ''
+  const description = token?.description ?? ''
   const ogDescription =
     description.length > 111 ? `${description.slice(0, 111)}...` : description
 
@@ -108,7 +105,15 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         slug={url}
         description={ogDescription}
       />
-      <Auction auctionAddress={addresses.auction} collection={collection} token={token} />
+      {token && addresses?.auction ? (
+        <Auction
+          auctionAddress={addresses.auction}
+          collection={collection}
+          token={token}
+        />
+      ) : (
+        <AuctionSkeleton />
+      )}
       <SectionHandler
         sections={sections}
         activeTab={activeTab}
