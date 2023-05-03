@@ -22,6 +22,11 @@ export type Scalars = {
   datetime: any
 }
 
+export type AccumulativeSalesQueryInput = {
+  collectionAddress: Scalars['String']
+  tokenId?: InputMaybe<Scalars['String']>
+}
+
 export type ActiveMarket = {
   __typename?: 'ActiveMarket'
   collectionAddress?: Maybe<Scalars['String']>
@@ -88,11 +93,18 @@ export type AggregateAttributesQueryInput = {
 
 export type AggregateStat = {
   __typename?: 'AggregateStat'
+  accumulativeSales: Array<SalesBucket>
   floorPrice?: Maybe<Scalars['Float']>
   nftCount: Scalars['Int']
   ownerCount: Scalars['Int']
   ownersByCount: OwnerCountConnection
+  ownersByCount1155: Array<OwnerCount>
   salesVolume: SalesVolume
+}
+
+export type AggregateStatAccumulativeSalesArgs = {
+  networks?: InputMaybe<Array<NetworkInput>>
+  where: AccumulativeSalesQueryInput
 }
 
 export type AggregateStatFloorPriceArgs = {
@@ -113,7 +125,12 @@ export type AggregateStatOwnerCountArgs = {
 export type AggregateStatOwnersByCountArgs = {
   networks?: InputMaybe<Array<NetworkInput>>
   pagination?: InputMaybe<PaginationInput>
+  sort?: InputMaybe<OwnerCountSortKeySortInput>
   where: OwnersByCountQueryInput
+}
+
+export type AggregateStatOwnersByCount1155Args = {
+  where: OwnersByCount1155QueryInput
 }
 
 export type AggregateStatSalesVolumeArgs = {
@@ -507,6 +524,26 @@ export type Mint = {
   toAddress: Scalars['String']
   tokenId: Scalars['String']
   transactionInfo: TransactionInfo
+}
+
+export type MintComment = {
+  __typename?: 'MintComment'
+  blockNumber: Scalars['Int']
+  collectionAddress: Scalars['String']
+  comment: Scalars['String']
+  fromAddress: Scalars['String']
+  quantity: Scalars['Int']
+  tokenId: Scalars['String']
+}
+
+export type MintComments = {
+  __typename?: 'MintComments'
+  comments: Array<MintComment>
+}
+
+export type MintCommentsQueryInput = {
+  collectionAddress: Scalars['String']
+  tokenId?: InputMaybe<Scalars['String']>
 }
 
 export type MintEvent = {
@@ -1249,6 +1286,7 @@ export type OffchainOrdersQueryInput = {
 export type OwnerCount = {
   __typename?: 'OwnerCount'
   count: Scalars['Int']
+  latestMint: Scalars['datetime']
   owner: Scalars['String']
   tokenIds: Array<Scalars['String']>
 }
@@ -1257,6 +1295,22 @@ export type OwnerCountConnection = {
   __typename?: 'OwnerCountConnection'
   nodes: Array<OwnerCount>
   pageInfo: PageInfo
+}
+
+export enum OwnerCountSortKey {
+  Count = 'COUNT',
+  LatestMint = 'LATEST_MINT',
+  None = 'NONE',
+}
+
+export type OwnerCountSortKeySortInput = {
+  sortDirection: SortDirection
+  sortKey: OwnerCountSortKey
+}
+
+export type OwnersByCount1155QueryInput = {
+  collectionAddress: Scalars['String']
+  tokenId: Scalars['String']
 }
 
 export type OwnersByCountQueryInput = {
@@ -1322,6 +1376,8 @@ export type RootQuery = {
   market?: Maybe<ActiveMarket>
   /** Data for specific ZORA markets, e.g. Buy Now, Auctions, Offers */
   markets: MarketWithTokenConnection
+  /** Returns comments made while minting */
+  mintComments: MintComments
   /** Historical minting data */
   mints: MintWithTokenAndMarketsConnection
   /** Nouns Builder DAOs */
@@ -1370,6 +1426,11 @@ export type RootQueryMarketsArgs = {
   pagination?: InputMaybe<PaginationInput>
   sort?: InputMaybe<MarketSortKeySortInput>
   where?: InputMaybe<MarketsQueryInput>
+}
+
+export type RootQueryMintCommentsArgs = {
+  networks: Array<NetworkInput>
+  where: MintCommentsQueryInput
 }
 
 export type RootQueryMintsArgs = {
@@ -1468,6 +1529,12 @@ export type SaleWithTokenConnection = {
   __typename?: 'SaleWithTokenConnection'
   nodes: Array<SaleWithToken>
   pageInfo: PageInfo
+}
+
+export type SalesBucket = {
+  __typename?: 'SalesBucket'
+  count: Scalars['Int']
+  date: Scalars['datetime']
 }
 
 export type SalesQueryFilter = {
@@ -2381,6 +2448,48 @@ export type ActiveAuctionsQuery = {
   }
 }
 
+export type AuctionSettledQueryVariables = Exact<{
+  chain: Chain
+  auctionAddresses?: InputMaybe<Array<Scalars['String']> | Scalars['String']>
+  endDatetime?: InputMaybe<Scalars['datetime']>
+  limit: Scalars['Int']
+}>
+
+export type AuctionSettledQuery = {
+  __typename?: 'RootQuery'
+  nouns: {
+    __typename?: 'Nouns'
+    nounsEvents: {
+      __typename?: 'NounsEventConnection'
+      nodes: Array<{
+        __typename?: 'NounsEvent'
+        properties:
+          | { __typename?: 'LilNounsAuctionEvent' }
+          | { __typename?: 'NounsAuctionEvent' }
+          | {
+              __typename?: 'NounsBuilderAuctionEvent'
+              collectionAddress: string
+              properties:
+                | { __typename?: 'NounsBuilderAuctionAuctionBidEventProperties' }
+                | { __typename?: 'NounsBuilderAuctionAuctionCreatedEventProperties' }
+                | {
+                    __typename?: 'NounsBuilderAuctionAuctionSettledEventProperties'
+                    tokenId: string
+                  }
+                | { __typename?: 'NounsBuilderAuctionDurationUpdatedEventProperties' }
+                | {
+                    __typename?: 'NounsBuilderAuctionMinBidIncrementPercentageUpdatedEventProperties'
+                  }
+                | { __typename?: 'NounsBuilderAuctionReservePriceUpdatedEventProperties' }
+                | { __typename?: 'NounsBuilderAuctionTimeBufferUpdatedEventProperties' }
+            }
+          | { __typename?: 'NounsBuilderGovernorEvent' }
+          | { __typename?: 'NounsBuilderManagerEvent' }
+      }>
+    }
+  }
+}
+
 export type DaoInfoQueryVariables = Exact<{
   chain: Chain
   collectionAddress?: InputMaybe<Array<Scalars['String']> | Scalars['String']>
@@ -2892,6 +3001,41 @@ export const ActiveAuctionsDocument = gql`
   }
   ${AuctionFragmentDoc}
 `
+export const AuctionSettledDocument = gql`
+  query auctionSettled(
+    $chain: Chain!
+    $auctionAddresses: [String!]
+    $endDatetime: datetime
+    $limit: Int!
+  ) {
+    nouns {
+      nounsEvents(
+        networks: { network: ETHEREUM, chain: $chain }
+        pagination: { limit: $limit }
+        sort: { sortKey: CREATED, sortDirection: DESC }
+        filter: {
+          nounsBuilderAuctionEventType: NOUNS_BUILDER_AUCTION_AUCTION_SETTLED_EVENT
+          nounsEventTypes: NOUNS_BUILDER_AUCTION_EVENT
+          timeFilter: { endDatetime: $endDatetime }
+        }
+        where: { auctionAddresses: $auctionAddresses }
+      ) {
+        nodes {
+          properties {
+            ... on NounsBuilderAuctionEvent {
+              collectionAddress
+              properties {
+                ... on NounsBuilderAuctionAuctionSettledEventProperties {
+                  tokenId
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 export const DaoInfoDocument = gql`
   query daoInfo($chain: Chain!, $collectionAddress: [String!]) {
     aggregateStat {
@@ -3210,6 +3354,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'activeAuctions',
+        'query'
+      )
+    },
+    auctionSettled(
+      variables: AuctionSettledQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<AuctionSettledQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<AuctionSettledQuery>(AuctionSettledDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'auctionSettled',
         'query'
       )
     },

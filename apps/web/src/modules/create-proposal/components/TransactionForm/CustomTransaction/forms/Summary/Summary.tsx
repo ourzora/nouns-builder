@@ -155,7 +155,9 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
       </Flex>
       <Flex justify={'space-between'} align={'center'}>
         <Flex fontWeight={'label'}>Function</Flex>
-        <Flex>{customTransaction?.function.name}</Flex>
+        <Flex style={{ wordBreak: 'break-word' }} ml="x6">
+          {customTransaction?.function.name}
+        </Flex>
       </Flex>
       <Flex justify={'space-between'} align={'center'} mb={'x4'}>
         <Flex fontWeight={'label'}>Arguments</Flex>
