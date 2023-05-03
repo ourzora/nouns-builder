@@ -40,9 +40,8 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
 }) => {
   const { query } = useRouter()
 
-  const { data: proposal } = useSWR(
-    [SWR_KEYS.PROPOSAL, query.proposalId as string],
-    (_, id) => getProposal(proposalId)
+  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, proposalId as string], (_, id) =>
+    getProposal(proposalId)
   )
 
   const sections = React.useMemo(() => {
