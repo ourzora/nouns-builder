@@ -9,6 +9,7 @@ import { AddressType } from 'src/typings'
 export interface DaoResponse {
   collection: string
   collectionName: string
+  collectionImage: string
   addresses: DaoContractAddresses
   ogImageURL: string
 }
@@ -45,6 +46,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(200).json({
       collection,
       collectionName: daoOgMetadata.name,
+      collectionImage: daoOgMetadata.daoImage,
       addresses,
       ogImageURL,
     } as DaoResponse)
