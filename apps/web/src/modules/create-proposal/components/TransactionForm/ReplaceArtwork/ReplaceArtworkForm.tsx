@@ -1,12 +1,15 @@
-import { Box, Button, Flex, Text } from '@zoralabs/zord'
+import { Box, Button, Flex, Text, atoms } from '@zoralabs/zord'
 import { Form, Formik } from 'formik'
 import isEmpty from 'lodash/isEmpty'
-import React from 'react'
+import React, { useState } from 'react'
 
+import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
+import { Icon } from 'src/components/Icon'
 import { Uploading } from 'src/components/Uploading'
 import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkStore'
 
 import { ArtworkUpload } from './ArtworkUpload'
+import { checkboxHelperText, checkboxStyleVariants } from './ReplaceArtworkForm.css'
 import { ArtworkFormValues, validationSchemaArtwork } from './ReplaceArtworkForm.schema'
 
 export interface InvalidProperty {
@@ -30,6 +33,7 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
   handleSubmit,
 }) => {
   const { isUploadingToIPFS, ipfsUpload, setUpArtwork } = useArtworkStore()
+  const [hasConfirmed, setHasConfirmed] = useState(false)
 
   const initialValues = {
     artwork: setUpArtwork?.artwork || [],
@@ -40,7 +44,13 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
 
   return (
     <Box w={'100%'}>
-      <Text fontWeight={'display'}>Requirements for Artwork Update proposal:</Text>
+      <Text className={defaultHelperTextStyle} ml="x2" style={{ marginTop: -30 }}>
+        This proposal will replace all existing artwork based on the new traits you
+        upload.
+      </Text>
+      <Text fontWeight={'display'} mt="x8">
+        Requirements for Replace Artwork proposal:
+      </Text>
       <Box as="ul" color="text3" mt="x6">
         <li>
           The total number of new traits must be equal to or greater than the number of
@@ -100,12 +110,40 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
               >{`${invalidProperty.currentLayerName} currently has ${invalidProperty.currentVariantCount} trait variants. New trait for ${invalidProperty.currentLayerName} "${invalidProperty.nextName}" should also have minimum ${invalidProperty.currentVariantCount} trait variants.`}</Text>
             )}
 
+            <Flex align={'center'} justify={'center'} gap={'x4'} mt="x4">
+              <Flex
+                align={'center'}
+                justify={'center'}
+                className={checkboxStyleVariants[hasConfirmed ? 'confirmed' : 'default']}
+                onClick={() => setHasConfirmed((bool) => !bool)}
+              >
+                {hasConfirmed && <Icon fill="background1" id="check" />}
+              </Flex>
+
+              <Flex className={checkboxHelperText}>
+                I confirm I have tested an artwork replacement proposal on{' '}
+                <a
+                  href={'https://testnet.nouns.build'}
+                  target="_blank"
+                  className={atoms({ color: 'accent' })}
+                  rel="noreferrer"
+                >
+                  testnet
+                </a>
+              </Flex>
+            </Flex>
+
             <Button
               mt={'x9'}
               variant={'outline'}
               borderRadius={'curved'}
               type="submit"
-              disabled={disabled || !isEmpty(formik.errors) || formik.isSubmitting}
+              disabled={
+                disabled ||
+                !hasConfirmed ||
+                !isEmpty(formik.errors) ||
+                formik.isSubmitting
+              }
             >
               Add Transaction to Queue
             </Button>

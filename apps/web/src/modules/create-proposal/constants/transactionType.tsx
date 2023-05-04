@@ -57,8 +57,8 @@ export const TRANSACTION_TYPES = {
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
   [TransactionType.REPLACE_ARTWORK]: {
-    title: 'Upgrade Artwork',
-    subTitle: 'Create a proposal to upgrade your artwork',
+    title: 'Replace Artwork',
+    subTitle: 'Create a proposal to replace your artwork',
     icon: 'brush',
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
