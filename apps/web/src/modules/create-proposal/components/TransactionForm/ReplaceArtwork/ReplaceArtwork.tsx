@@ -68,7 +68,7 @@ export const ReplaceArtwork = () => {
 
       return {
         functionSignature,
-        target: addresses?.token as AddressType,
+        target: addresses?.metadata as AddressType,
         value: '',
         calldata: metadataInterface.encodeFunctionData(functionSignature, [
           transaction.names,
