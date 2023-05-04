@@ -9,6 +9,7 @@ const pulse = keyframes({
 
 export const exploreSkeleton = style({
   animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+  minHeight: '280px',
 })
 
 export const exploreGrid = style([
