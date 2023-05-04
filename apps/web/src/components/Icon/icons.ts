@@ -11,6 +11,7 @@ import ChevronLeft from './assets/chevron-left.svg'
 import ChevronRight from './assets/chevron-right.svg'
 import ChevronUp from './assets/chevron-up.svg'
 import Code from './assets/code.svg'
+import Collection from './assets/collection.svg'
 import Copy from './assets/copy.svg'
 import Cross16 from './assets/cross-16.svg'
 import Cross from './assets/cross.svg'
@@ -27,7 +28,9 @@ import Info16 from './assets/info-16.svg'
 import Move from './assets/move.svg'
 import NewWindow from './assets/new-window.svg'
 import NounsConnect from './assets/nouns-connect.svg'
+import PauseTemplate from './assets/pause-template.svg'
 import Pause from './assets/pause.svg'
+import Play from './assets/play.svg'
 import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
 import Trash from './assets/trash.svg'
@@ -49,6 +52,7 @@ export const icons = {
   chevronRight: ChevronRight,
   chevronUp: ChevronUp,
   code: Code,
+  collection: Collection,
   copy: Copy,
   cross: Cross,
   'cross-16': Cross16,
@@ -66,6 +70,8 @@ export const icons = {
   newWindow: NewWindow,
   nounsConnect: NounsConnect,
   pause: Pause,
+  pauseTemplate: PauseTemplate,
+  play: Play,
   plus: Plus,
   refresh: Refresh,
   trash: Trash,

@@ -23,6 +23,12 @@ export const useVotes = ({
         args: [signerAddress as AddressType],
       },
       {
+        address: collectionAddress,
+        abi: tokenAbi,
+        functionName: 'delegates',
+        args: [signerAddress as AddressType],
+      },
+      {
         address: governorAddress,
         abi: governorAbi,
         functionName: 'proposalThreshold',
@@ -38,10 +44,11 @@ export const useVotes = ({
     }
   }
 
-  const [votes, proposalThreshold] = data
+  const [votes, delegates, proposalThreshold] = data
 
   return {
     isLoading,
+    isDelegating: delegates !== signerAddress,
     isOwner: votes.toNumber() > proposalThreshold.toNumber(),
     hasThreshold: votes.toNumber() > 0,
   }
