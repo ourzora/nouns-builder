@@ -40,6 +40,22 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
 
   return (
     <Box w={'100%'}>
+      <Text fontWeight={'display'}>Requirements for Artwork Update proposal:</Text>
+      <Box as="ul" color="text3" mt="x6">
+        <li>
+          The total number of new traits must be equal to or greater than the number of
+          old traits
+        </li>
+        <li>
+          For each trait, the number of new variants must be equal to or greater than the
+          number of old variants.
+        </li>
+        <li>
+          To determine the minimum number of variants required for each trait, refer to
+          the current trait position within the overall folder e.g. Top Layer, Layer #1,
+          Base layer etc.
+        </li>
+      </Box>
       <Uploading isUploadingToIPFS={isUploadingToIPFS} />
       <Formik<ArtworkFormValues>
         initialValues={initialValues}
@@ -51,7 +67,7 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
         onSubmit={handleSubmit}
       >
         {(formik) => (
-          <Flex as={Form} direction={'column'}>
+          <Flex as={Form} direction={'column'} mt="x8">
             <ArtworkUpload
               {...formik.getFieldProps('artwork')}
               inputLabel={'Artwork'}

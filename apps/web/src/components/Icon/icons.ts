@@ -2,6 +2,7 @@ import Airdrop from './assets/airdrop.svg'
 import ArrowLeft from './assets/arrow-left.svg'
 import ArrowRight from './assets/arrow-right.svg'
 import ArrowTopRight from './assets/arrow-top-right.svg'
+import Brush from './assets/brush.svg'
 import Burger from './assets/burger.svg'
 import CheckInCircle from './assets/check-in-circle.svg'
 import Check from './assets/check.svg'
@@ -39,6 +40,7 @@ export const icons = {
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
   arrowTopRight: ArrowTopRight,
+  brush: Brush,
   burger: Burger,
   check: Check,
   checkInCircle: CheckInCircle,
