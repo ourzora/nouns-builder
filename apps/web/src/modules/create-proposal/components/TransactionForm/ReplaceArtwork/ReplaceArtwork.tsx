@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import useSWR from 'swr'
 
 import { getLayerName } from 'src/components/Artwork/LayerBox'
@@ -29,6 +29,10 @@ export const ReplaceArtwork = () => {
       return getPropertyItemsCount(addresses?.metadata)
     }
   )
+
+  useEffect(() => {
+    resetForm()
+  }, [])
 
   const { propertiesCount, propertyItemsCount } = data || {}
 
