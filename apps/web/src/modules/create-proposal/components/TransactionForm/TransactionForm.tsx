@@ -18,9 +18,9 @@ export type TransactionFormType = typeof TRANSACTION_FORM_OPTIONS[number]
 export const TRANSACTION_FORM_OPTIONS = [
   TransactionType.SEND_ETH,
   TransactionType.AIRDROP,
-  TransactionType.DROPOSAL,
   TransactionType.PAUSE_AUCTIONS,
   TransactionType.REPLACE_ARTWORK,
+  TransactionType.DROPOSAL,
   TransactionType.CUSTOM,
 ] as const
 
