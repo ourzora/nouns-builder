@@ -1,6 +1,5 @@
 import { Box, Grid } from '@zoralabs/zord'
 
-import { daoImage } from '../DaoCard/DaoCard.css'
 import { exploreGrid, exploreSkeleton } from './Explore.css'
 
 export const ExploreSkeleton = () => {
@@ -13,10 +12,9 @@ export const ExploreSkeleton = () => {
             <Box
               backgroundColor="background2"
               width={'100%'}
-              height={'auto'}
               aspectRatio={1 / 1}
               position="relative"
-              className={[daoImage, exploreSkeleton]}
+              className={exploreSkeleton}
             />
           </Box>
         ))}
