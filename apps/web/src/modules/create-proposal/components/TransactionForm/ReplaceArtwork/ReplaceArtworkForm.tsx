@@ -52,19 +52,19 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
         Requirements for Replace Artwork proposal:
       </Text>
       <Box as="ul" color="text3" mt="x6">
-        <li>
+        <Box as="li" mb="x3">
           The total number of new traits must be equal to or greater than the number of
           old traits
-        </li>
-        <li>
+        </Box>
+        <Box as="li" mb="x3">
           For each trait, the number of new variants must be equal to or greater than the
           number of old variants.
-        </li>
-        <li>
+        </Box>
+        <Box as="li">
           To determine the minimum number of variants required for each trait, refer to
           the current trait position within the overall folder e.g. Top Layer, Layer #1,
           Base layer etc.
-        </li>
+        </Box>
       </Box>
       <Uploading isUploadingToIPFS={isUploadingToIPFS} />
       <Formik<ArtworkFormValues>
