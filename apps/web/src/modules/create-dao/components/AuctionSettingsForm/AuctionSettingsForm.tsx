@@ -108,9 +108,7 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
                   formik.setFieldValue('auctionReservePrice', parseFloat(target.value))
                 }}
                 onBlur={formik.handleBlur}
-                helperText={
-                  'The starting price of an auction. Must be greater than 0.0001 ETH.'
-                }
+                helperText={'The starting price of an auction.'}
                 errorMessage={
                   formik.touched['auctionReservePrice'] &&
                   formik.errors['auctionReservePrice']

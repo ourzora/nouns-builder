@@ -127,9 +127,7 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
                       )
                     }}
                     onBlur={formik.handleBlur}
-                    helperText={
-                      'The starting price of an auction. Must be greater than 0.0001 ETH.'
-                    }
+                    helperText={'The starting price of an auction.'}
                     errorMessage={
                       formik.touched['auctionReservePrice'] &&
                       formik.errors['auctionReservePrice']
