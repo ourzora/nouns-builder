@@ -15,13 +15,13 @@ import ExploreToolbar from './ExploreToolbar'
 export const ExploreMyDaos = () => {
   const signerAddress = useLayoutStore((state) => state.signerAddress)
 
-  const { data, error } = useSWR(
+  const { data, error, isValidating } = useSWR(
     signerAddress ? SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string) : null,
     () => userDaosFilter(null, signerAddress as string),
     { revalidateOnFocus: false }
   )
 
-  const isLoading = !data && !error
+  const isLoading = data ? false : isValidating && !data && !error
 
   return (
     <>
