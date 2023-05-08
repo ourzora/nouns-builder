@@ -1,4 +1,4 @@
-import { Grid } from '@zoralabs/zord'
+import { Box, Grid } from '@zoralabs/zord'
 import React from 'react'
 import useSWR from 'swr'
 
@@ -9,23 +9,26 @@ import { useLayoutStore } from 'src/stores'
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'
 import ExploreNoDaos from './ExploreNoDaos'
+import { ExploreSkeleton } from './ExploreSkeleton'
 import ExploreToolbar from './ExploreToolbar'
 
 export const ExploreMyDaos = () => {
   const signerAddress = useLayoutStore((state) => state.signerAddress)
 
-  const { data } = useSWR(
+  const { data, error } = useSWR(
     signerAddress ? SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string) : null,
     () => userDaosFilter(null, signerAddress as string),
     { revalidateOnFocus: false }
   )
 
-  if (!data) return null
+  const isLoading = !data && !error
 
   return (
-    <>
+    <Box minH={'100vh'}>
       <ExploreToolbar title={'My DAOs'} />
-      {data?.daos?.length ? (
+      {isLoading ? (
+        <ExploreSkeleton />
+      ) : data?.daos?.length ? (
         <Grid className={exploreGrid} mb={'x16'}>
           {data.daos.map((dao) => (
             <DaoCard
@@ -43,6 +46,6 @@ export const ExploreMyDaos = () => {
       ) : (
         <ExploreNoDaos />
       )}
-    </>
+    </Box>
   )
 }

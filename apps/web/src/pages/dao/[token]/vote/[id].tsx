@@ -40,7 +40,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
 }) => {
   const { query } = useRouter()
 
-  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, proposalId as string], (_, id) =>
+  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, proposalId], (_, id) =>
     getProposal(proposalId)
   )
 
@@ -128,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   }
 
   if (
-    ethers.utils.getAddress(proposal?.collectionAddress) !==
+    ethers.utils.getAddress(proposal.collectionAddress) !==
     ethers.utils.getAddress(collection)
   ) {
     return {
@@ -165,7 +165,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   return {
     props: {
       fallback: {
-        [unstable_serialize([SWR_KEYS.PROPOSAL, proposal?.proposalId])]: proposal,
+        [unstable_serialize([SWR_KEYS.PROPOSAL, proposal.proposalId])]: proposal,
       },
       daoName: collectionName,
       ogImageURL,
