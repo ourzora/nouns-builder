@@ -1,4 +1,4 @@
-import { Box, Grid } from '@zoralabs/zord'
+import { Grid } from '@zoralabs/zord'
 import React from 'react'
 import useSWR from 'swr'
 
@@ -24,7 +24,7 @@ export const ExploreMyDaos = () => {
   const isLoading = !data && !error
 
   return (
-    <Box minH={'100vh'}>
+    <>
       <ExploreToolbar title={'My DAOs'} />
       {isLoading ? (
         <ExploreSkeleton />
@@ -46,6 +46,6 @@ export const ExploreMyDaos = () => {
       ) : (
         <ExploreNoDaos />
       )}
-    </Box>
+    </>
   )
 }

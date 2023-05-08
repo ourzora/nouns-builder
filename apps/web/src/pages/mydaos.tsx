@@ -8,7 +8,7 @@ import { NextPageWithLayout } from './_app'
 
 const MyDaosPage: NextPageWithLayout = () => {
   return (
-    <Flex direction={'column'} align={'center'} mt={'x5'}>
+    <Flex direction={'column'} align={'center'} mt={'x5'} minH={'100vh'}>
       <Meta title={'My Daos'} type={'website'} slug={'/mydaos'} />
       <ExploreMyDaos />
     </Flex>
