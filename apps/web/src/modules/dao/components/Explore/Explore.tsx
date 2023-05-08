@@ -8,11 +8,14 @@ import { ExploreDaosResponse } from 'src/data/graphql/requests/exploreQueries'
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'
 import ExploreNoDaos from './ExploreNoDaos'
+import { ExploreSkeleton } from './ExploreSkeleton'
 import ExploreToolbar from './ExploreToolbar'
 
-interface ExploreProps extends ExploreDaosResponse {}
+interface ExploreProps extends Partial<ExploreDaosResponse> {
+  isLoading: boolean
+}
 
-export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo }) => {
+export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo, isLoading }) => {
   const router = useRouter()
   const { pathname } = router
 
@@ -96,6 +99,8 @@ export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo }) => {
             isFirst={!router.query.page}
           />
         </Fragment>
+      ) : isLoading ? (
+        <ExploreSkeleton />
       ) : (
         <ExploreNoDaos />
       )}
