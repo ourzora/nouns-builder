@@ -114,7 +114,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   const protocol = env === 'development' ? 'http' : 'https'
   const baseUrl = process.env.VERCEL_URL || 'localhost:3000'
 
-  const [{ collectionName, collectionImage }, proposal] = await Promise.all([
+  const [{ collectionName, collectionImage, addresses }, proposal] = await Promise.all([
     axios
       .get<DaoResponse>(`${protocol}://${baseUrl}/api/dao/${collection}`)
       .then((x) => x.data),
@@ -170,6 +170,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       daoName: collectionName,
       ogImageURL,
       proposalId,
+      addresses,
     },
   }
 }
