@@ -63,6 +63,18 @@ const initialState = {
     auctionReservePrice: undefined,
     proposalThreshold: undefined,
     quorumThreshold: undefined,
+    votingDelay: {
+      seconds: undefined,
+      days: 1,
+      hours: undefined,
+      minutes: undefined,
+    },
+    votingPeriod: {
+      seconds: undefined,
+      days: 4,
+      hours: undefined,
+      minutes: undefined,
+    },
   },
   founderAllocation: [],
   contributionAllocation: [
