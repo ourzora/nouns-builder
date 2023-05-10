@@ -1,13 +1,10 @@
-import { Box, Paragraph, Stack, Text, atoms } from '@zoralabs/zord'
+import { Stack, Text } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import { FormikHelpers } from 'formik'
-import { AnimatePresence, motion } from 'framer-motion'
 import gte from 'lodash/gte'
-import Link from 'next/link'
 import React from 'react'
 import { useContractRead } from 'wagmi'
 
-import { Icon } from 'src/components/Icon'
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { AddressType } from 'src/typings'
@@ -18,43 +15,21 @@ import { getProvider } from 'src/utils/provider'
 import { TransactionType } from '../../../constants'
 import { useAvailableUpgrade } from '../../../hooks'
 import { useProposalStore } from '../../../stores'
-import { Alert } from '../../Alert'
-import { UpgradeCard } from '../../UpgradeCard'
+import { UpgradeInProgress, UpgradeRequired } from '../Upgrade'
 import AirdropForm from './AirdropForm'
 import { AirdropFormValues } from './AirdropForm.schema'
 
 const AIRDROP_CONTRACT_VERSION = '1.2.0'
-
-const animation = {
-  init: {
-    height: 0,
-    overflow: 'hidden',
-    transition: {
-      animate: 'easeInOut',
-    },
-  },
-  open: {
-    height: 'auto',
-    transition: {
-      animate: 'easeInOut',
-    },
-  },
-}
 
 export const Airdrop: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const transactions = useProposalStore((state) => state.transactions)
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
-  const {
-    latest,
-    date,
-    transaction: upgradeTransaction,
-    currentVersions,
-    shouldUpgrade,
-    activeUpgradeProposalId,
-    totalContractUpgrades,
-  } = useAvailableUpgrade(addresses, AIRDROP_CONTRACT_VERSION)
+  const { currentVersions, shouldUpgrade, activeUpgradeProposalId } = useAvailableUpgrade(
+    addresses,
+    AIRDROP_CONTRACT_VERSION
+  )
 
   const { data: auctionOwner } = useContractRead({
     abi: auctionAbi,
@@ -70,10 +45,6 @@ export const Airdrop: React.FC = () => {
     functionName: 'isMinter',
     args: [addresses?.treasury as AddressType],
   })
-
-  const handleUpgrade = (): void => {
-    addTransaction(upgradeTransaction!)
-  }
 
   const handleAirdropTransaction = async (
     values: AirdropFormValues,
@@ -148,43 +119,9 @@ export const Airdrop: React.FC = () => {
 
   return (
     <Stack data-testid="airdrop">
-      {upgradeRequired && (
-        <AnimatePresence>
-          <motion.div initial={'init'} animate={'open'} variants={animation}>
-            <Box mb={'x10'}>
-              <UpgradeCard
-                hasThreshold={true}
-                totalContractUpgrades={totalContractUpgrades}
-                version={latest}
-                date={date}
-                onUpgrade={handleUpgrade}
-                alert={<Alert />}
-              />
-            </Box>
-          </motion.div>
-        </AnimatePresence>
-      )}
+      {upgradeRequired && <UpgradeRequired contractVersion={AIRDROP_CONTRACT_VERSION} />}
       {upgradeInProgress && (
-        <Box mb={'x10'} data-testid="upgrade-in-progress">
-          <Paragraph size="md" color="negative">
-            It looks like you currently have an{' '}
-            <Link
-              href={{
-                pathname: '/dao/[token]/vote/[id]',
-                query: { token: addresses?.token, id: activeUpgradeProposalId },
-              }}
-            >
-              <Box
-                display={'inline-flex'}
-                className={atoms({ textDecoration: 'underline' })}
-              >
-                upgrade proposal{' '}
-                <Icon align="center" fill="negative" id="external-16" size="sm" />
-              </Box>
-            </Link>
-            in progress. The upgrade needs to be executed in order to access airdrops.
-          </Paragraph>
-        </Box>
+        <UpgradeInProgress contractVersion={AIRDROP_CONTRACT_VERSION} />
       )}
       <Stack>
         <AirdropForm

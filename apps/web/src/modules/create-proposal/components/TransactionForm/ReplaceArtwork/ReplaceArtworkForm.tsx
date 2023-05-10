@@ -3,7 +3,6 @@ import { Form, Formik } from 'formik'
 import isEmpty from 'lodash/isEmpty'
 import React, { useState } from 'react'
 
-import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { NetworkController } from 'src/components/NetworkController'
 import { Uploading } from 'src/components/Uploading'
@@ -47,10 +46,6 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
 
   return (
     <Box w={'100%'}>
-      <Text className={defaultHelperTextStyle} ml="x2" style={{ marginTop: -30 }}>
-        This proposal will replace all existing artwork based on the new traits you
-        upload.
-      </Text>
       <Text fontWeight={'display'} mt="x8">
         Requirements for Replace Artwork proposal:
       </Text>

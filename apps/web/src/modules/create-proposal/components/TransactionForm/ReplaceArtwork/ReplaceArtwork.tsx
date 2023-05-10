@@ -1,24 +1,36 @@
+import { Stack, Text } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo } from 'react'
 import useSWR from 'swr'
 
 import { getLayerName } from 'src/components/Artwork/LayerBox'
+import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi } from 'src/data/contract/abis'
 import { getPropertyItemsCount } from 'src/data/contract/requests/getPropertyItemsCount'
 import { transformFileProperties } from 'src/modules/create-dao'
 import { TransactionType } from 'src/modules/create-proposal/constants'
+import { useAvailableUpgrade } from 'src/modules/create-proposal/hooks'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkStore'
 import { useDaoStore } from 'src/modules/dao'
 import { AddressType } from 'src/typings'
 
+import { UpgradeInProgress, UpgradeRequired } from '../Upgrade'
 import { ReplaceArtworkForm } from './ReplaceArtworkForm'
+
+const REPLACE_ARTWORK_CONTRACT_VERSION = '1.2.0'
 
 export const ReplaceArtwork = () => {
   const { orderedLayers, ipfsUpload, isUploadingToIPFS, resetForm } = useArtworkStore()
   const addresses = useDaoStore((x) => x.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
+  const currentTransactions = useProposalStore((state) => state.transactions)
+
+  const { currentVersions, shouldUpgrade, activeUpgradeProposalId } = useAvailableUpgrade(
+    addresses,
+    REPLACE_ARTWORK_CONTRACT_VERSION
+  )
 
   const contractOrderedLayers = [...orderedLayers].reverse() // traits in the contract are reversed
 
@@ -29,6 +41,12 @@ export const ReplaceArtwork = () => {
       return getPropertyItemsCount(addresses?.metadata)
     }
   )
+
+  const upgradeNotQueued = !currentTransactions.some(
+    (transaction) => transaction.type === TransactionType.UPGRADE
+  )
+  const upgradeRequired = shouldUpgrade && upgradeNotQueued
+  const upgradeInProgress = !!activeUpgradeProposalId
 
   useEffect(() => {
     resetForm()
@@ -96,23 +114,37 @@ export const ReplaceArtwork = () => {
     orderedLayers.length - invalidPropertyIndex - 1
 
   return (
-    <ReplaceArtworkForm
-      disabled={!isValid}
-      isPropertyCountValid={isPropertyCountValid}
-      invalidProperty={
-        hasInvalidProperty
-          ? {
-              currentLayerName: getLayerName(
-                invalidPropertyOrderedLayersIndex,
-                orderedLayers
-              ),
-              nextName: contractOrderedLayers[invalidPropertyIndex].trait,
-              currentVariantCount: propertyItemsCount[invalidPropertyIndex],
-            }
-          : undefined
-      }
-      propertiesCount={propertiesCount || 0}
-      handleSubmit={handleReplaceArtworkTransaction}
-    />
+    <Stack>
+      <Text className={defaultHelperTextStyle} ml="x2" style={{ marginTop: -30 }}>
+        This proposal will replace all existing artwork based on the new traits you
+        upload.
+      </Text>
+
+      {upgradeRequired && (
+        <UpgradeRequired contractVersion={REPLACE_ARTWORK_CONTRACT_VERSION} />
+      )}
+      {upgradeInProgress && (
+        <UpgradeInProgress contractVersion={REPLACE_ARTWORK_CONTRACT_VERSION} />
+      )}
+
+      <ReplaceArtworkForm
+        disabled={!isValid || upgradeRequired || upgradeInProgress}
+        isPropertyCountValid={isPropertyCountValid}
+        invalidProperty={
+          hasInvalidProperty
+            ? {
+                currentLayerName: getLayerName(
+                  invalidPropertyOrderedLayersIndex,
+                  orderedLayers
+                ),
+                nextName: contractOrderedLayers[invalidPropertyIndex].trait,
+                currentVariantCount: propertyItemsCount[invalidPropertyIndex],
+              }
+            : undefined
+        }
+        propertiesCount={propertiesCount || 0}
+        handleSubmit={handleReplaceArtworkTransaction}
+      />
+    </Stack>
   )
 }
