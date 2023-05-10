@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 
 import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
+import { NetworkController } from 'src/components/NetworkController'
 import { Uploading } from 'src/components/Uploading'
 import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkStore'
 
@@ -33,7 +34,9 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
   handleSubmit,
 }) => {
   const { isUploadingToIPFS, ipfsUpload, setUpArtwork } = useArtworkStore()
-  const [hasConfirmed, setHasConfirmed] = useState(false)
+  const [hasConfirmed, setHasConfirmed] = useState(
+    process.env.NEXT_PUBLIC_CHAIN_ID === '5' ? true : false
+  )
 
   const initialValues = {
     artwork: setUpArtwork?.artwork || [],
@@ -110,28 +113,32 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
               >{`${invalidProperty.currentLayerName} currently has ${invalidProperty.currentVariantCount} trait variants. New trait for ${invalidProperty.currentLayerName} "${invalidProperty.nextName}" should also have minimum ${invalidProperty.currentVariantCount} trait variants.`}</Text>
             )}
 
-            <Flex align={'center'} justify={'center'} gap={'x4'} mt="x4">
-              <Flex
-                align={'center'}
-                justify={'center'}
-                className={checkboxStyleVariants[hasConfirmed ? 'confirmed' : 'default']}
-                onClick={() => setHasConfirmed((bool) => !bool)}
-              >
-                {hasConfirmed && <Icon fill="background1" id="check" />}
-              </Flex>
-
-              <Flex className={checkboxHelperText}>
-                I confirm I have tested an artwork replacement proposal on{' '}
-                <a
-                  href={'https://testnet.nouns.build'}
-                  target="_blank"
-                  className={atoms({ color: 'accent' })}
-                  rel="noreferrer"
+            <NetworkController.Mainnet>
+              <Flex align={'center'} justify={'center'} gap={'x4'} mt="x4">
+                <Flex
+                  align={'center'}
+                  justify={'center'}
+                  className={
+                    checkboxStyleVariants[hasConfirmed ? 'confirmed' : 'default']
+                  }
+                  onClick={() => setHasConfirmed((bool) => !bool)}
                 >
-                  testnet
-                </a>
+                  {hasConfirmed && <Icon fill="background1" id="check" />}
+                </Flex>
+
+                <Flex className={checkboxHelperText}>
+                  I confirm I have tested an artwork replacement proposal on{' '}
+                  <a
+                    href={'https://testnet.nouns.build'}
+                    target="_blank"
+                    className={atoms({ color: 'accent' })}
+                    rel="noreferrer"
+                  >
+                    testnet
+                  </a>
+                </Flex>
               </Flex>
-            </Flex>
+            </NetworkController.Mainnet>
 
             <Button
               mt={'x9'}
