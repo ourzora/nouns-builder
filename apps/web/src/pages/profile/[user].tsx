@@ -1,0 +1,163 @@
+import { Box, Flex, Grid, Text } from '@zoralabs/zord'
+import axios from 'axios'
+import { isAddress } from 'ethers/lib/utils.js'
+import { GetServerSideProps } from 'next'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import useSWR from 'swr'
+
+import { Avatar } from 'src/components/Avatar'
+import CopyButton from 'src/components/CopyButton/CopyButton'
+import Pagination from 'src/components/Pagination'
+import { TokenPreview } from 'src/components/Profile'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { useEnsData } from 'src/hooks'
+import { usePagination } from 'src/hooks/usePagination'
+import { getProfileLayout } from 'src/layouts/ProfileLayout'
+import { useLayoutStore } from 'src/stores'
+import { getEnsAddress } from 'src/utils/ens'
+import { walletSnippet } from 'src/utils/helpers'
+
+import { NextPageWithLayout } from '../_app'
+import { UserTokensResponse } from '../api/profile/[user]/tokens'
+
+interface ProfileProps {
+  userAddress: string
+}
+
+const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
+  const isMobile = useLayoutStore((x) => x.isMobile)
+  const { query } = useRouter()
+
+  const page = query.page as string
+
+  const { ensName, ensAvatar } = useEnsData(userAddress)
+  const { data } = useSWR(
+    userAddress ? [SWR_KEYS.PROFILE_TOKENS, userAddress, page] : undefined,
+    () =>
+      axios
+        .get<UserTokensResponse>(
+          `/api/profile/${userAddress}/tokens${page ? `?page=${page}` : ''}`
+        )
+        .then((x) => x.data)
+  )
+
+  const { tokens, daos } = data || {}
+
+  const { handlePageBack, handlePageForward } = usePagination(
+    tokens?.pageInfo?.hasNextPage
+  )
+
+  const daosString = daos?.map((x) => x.name).join(', ')
+
+  return (
+    <Flex
+      mt="x16"
+      style={{ height: 'fit-content' }}
+      direction={{ '@initial': 'column', '@768': 'row' }}
+    >
+      <Box style={{ width: isMobile ? '100%' : '30%' }} pr={{ '@768': 'x18' }}>
+        <Flex
+          align={{ '@initial': 'center', '@768': 'flex-start' }}
+          direction={{ '@initial': 'row', '@768': 'column' }}
+        >
+          <Avatar
+            mr={{ '@initial': 'x2', '@768': undefined }}
+            address={userAddress}
+            src={ensAvatar}
+            size={isMobile ? '40' : '90'}
+          />
+          <Text
+            variant={isMobile ? 'heading-sm' : 'heading-md'}
+            position={'relative'}
+            mt={{ '@768': 'x4' }}
+            style={{ zIndex: 600 }}
+          >
+            {ensName || walletSnippet(userAddress)}
+          </Text>
+        </Flex>
+
+        <Flex
+          align={'center'}
+          mt={{ '@initial': 'x2', '@768': undefined }}
+          py="x1"
+          px="x2"
+          borderRadius="curved"
+          borderStyle="solid"
+          borderWidth={'thin'}
+          borderColor={'border'}
+          style={{ width: 'fit-content' }}
+        >
+          <Text mr="x2" color="text3">
+            {walletSnippet(userAddress)}
+          </Text>
+          <CopyButton text={userAddress} />
+        </Flex>
+
+        {daosString && (
+          <Flex mt="x8" align={'flex-start'}>
+            <Text mr="x4" fontWeight={'display'}>
+              DAOs
+            </Text>
+            <Text color="text3">{daosString}</Text>
+          </Flex>
+        )}
+      </Box>
+      {!isMobile && (
+        <Box
+          position={'fixed'}
+          h="100vh"
+          top="x0"
+          style={{ left: '27%', borderRight: '2px solid #F2F2F2' }}
+        />
+      )}
+      {daos && daos.length > 0 && (
+        <Box
+          mt={isMobile ? 'x14' : undefined}
+          style={{
+            width: isMobile ? '100%' : '70%',
+            maxHeight: isMobile ? undefined : '80vh',
+            overflow: 'auto',
+          }}
+        >
+          <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
+            {tokens?.tokens.map((x, i) => (
+              <Link key={i} href={`/dao/${x.collection}/${x.tokenId}`}>
+                <TokenPreview name={x.name} image={x.image} />
+              </Link>
+            ))}
+          </Grid>
+          <Pagination
+            onNext={handlePageForward}
+            onPrev={handlePageBack}
+            isLast={!tokens?.pageInfo?.hasNextPage}
+            isFirst={!page}
+          />
+        </Box>
+      )}
+    </Flex>
+  )
+}
+
+ProfilePage.getLayout = getProfileLayout
+
+export default ProfilePage
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const user = context.query.user as string
+
+  if (isAddress(user))
+    return {
+      props: { userAddress: user },
+    }
+
+  const ensAddress = await getEnsAddress(user)
+  if (isAddress(ensAddress))
+    return {
+      props: { userAddress: ensAddress },
+    }
+
+  return {
+    notFound: true,
+  }
+}

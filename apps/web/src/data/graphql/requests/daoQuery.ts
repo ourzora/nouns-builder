@@ -17,22 +17,9 @@ const DAOS_TO_EXCLUDE = [
 export const myDaosRequest = async (
   memberAddress: [string]
 ): Promise<MyDaosResponse | undefined> => {
-  let addresses: string[] = []
   let daos: MyDaosResponse = []
 
   if (!memberAddress) return
-
-  try {
-    const data = await sdk.activeAuctions({ chain: CHAIN })
-    addresses = data?.nouns?.nounsMarkets?.nodes
-      .filter((dao) => !DAOS_TO_EXCLUDE.includes(dao.collectionAddress))
-      .slice(0, 3)
-      .map((dao) => dao.collectionAddress)
-  } catch (e: any) {
-    console.error(e)
-    Sentry.captureException(e)
-    await Sentry.flush(2000)
-  }
 
   try {
     const data = await sdk.daos({

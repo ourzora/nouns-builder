@@ -169,6 +169,7 @@ export enum Chain {
   Goerli = 'GOERLI',
   Mainnet = 'MAINNET',
   Rinkeby = 'RINKEBY',
+  Sepolia = 'SEPOLIA',
 }
 
 export type Collection = {
@@ -2870,6 +2871,8 @@ export type TokensQuery = {
       token: {
         __typename?: 'Token'
         name?: string | null
+        tokenId: string
+        tokenContract?: { __typename?: 'TokenContract'; collectionAddress: string } | null
         image?: {
           __typename?: 'TokenContentMedia'
           url?: string | null
@@ -2886,6 +2889,12 @@ export type TokensQuery = {
         } | null
       }
     }>
+    pageInfo: {
+      __typename?: 'PageInfo'
+      limit: number
+      endCursor?: string | null
+      hasNextPage: boolean
+    }
   }
 }
 
@@ -3313,6 +3322,10 @@ export const TokensDocument = gql`
       nodes {
         token {
           name
+          tokenId
+          tokenContract {
+            collectionAddress
+          }
           image {
             url
             mediaEncoding {
@@ -3325,8 +3338,12 @@ export const TokensDocument = gql`
           }
         }
       }
+      pageInfo {
+        ...PageInfo
+      }
     }
   }
+  ${PageInfoFragmentDoc}
 `
 
 export type SdkFunctionWrapper = <T>(

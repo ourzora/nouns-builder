@@ -15,6 +15,10 @@ query tokens(
     nodes {
       token {
         name
+        tokenId
+        tokenContract {
+          collectionAddress
+        }
         image {
           url
           mediaEncoding {
@@ -26,6 +30,9 @@ query tokens(
           }
         }
       }
+    }
+    pageInfo {
+      ...PageInfo
     }
   }
 }
