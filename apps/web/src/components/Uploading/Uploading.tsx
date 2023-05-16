@@ -2,13 +2,10 @@ import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
 
 import { Spinner } from 'src/components/Spinner'
-import { useFormStore } from 'src/modules/create-dao'
 
-import { uploadNotificationWrapper } from './Nav.styles.css'
+import { uploadNotificationWrapper } from './Uploading.css'
 
-export const Uploading = () => {
-  const { isUploadingToIPFS } = useFormStore()
-
+export const Uploading = ({ isUploadingToIPFS }: { isUploadingToIPFS: boolean }) => {
   return (
     <>
       {isUploadingToIPFS && (
@@ -22,6 +19,7 @@ export const Uploading = () => {
           align={'flex-end'}
           justify={'flex-end'}
           right={'x8'}
+          style={{ zIndex: 100 }}
         >
           <Flex align={'center'} justify={'center'}>
             <Box fontSize={14}>Uploading Artwork to IPFS</Box>

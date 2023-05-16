@@ -4,18 +4,28 @@ import React from 'react'
 import { defaultFormHeading } from 'src/components/Fields/styles.css'
 import { ImageProps } from 'src/hooks'
 
-import { useFormStore } from '../../stores'
-import { DragAndDropProps, LayerBox } from './LayerBox'
+import { DragAndDropProps, LayerBox, OrderedTraits } from './LayerBox'
+
+export interface ArtworkType {
+  trait: string
+  properties: string[]
+}
 
 interface LayerOrderingProps {
   title?: string
-  images: ImageProps[]
+  images?: ImageProps[]
+  artwork: ArtworkType[]
+  orderedLayers: OrderedTraits
+  setOrderedLayers: (orderedLayers: OrderedTraits) => void
 }
 
-export const LayerOrdering: React.FC<LayerOrderingProps> = ({ title, images }) => {
-  const { setUpArtwork, orderedLayers, setOrderedLayers } = useFormStore()
-  const { artwork } = setUpArtwork
-
+export const LayerOrdering: React.FC<LayerOrderingProps> = ({
+  title,
+  images,
+  artwork,
+  orderedLayers,
+  setOrderedLayers,
+}) => {
   /*  init layers and drag and drop  */
   const [dragAndDrop, setDragAndDrop] = React.useState<DragAndDropProps | null>(null)
   React.useEffect(() => {
@@ -23,6 +33,8 @@ export const LayerOrdering: React.FC<LayerOrderingProps> = ({ title, images }) =
       setOrderedLayers(artwork)
     }
   }, [artwork, orderedLayers, setOrderedLayers])
+
+  if (!images) return null
 
   return (
     <Box>
@@ -38,6 +50,7 @@ export const LayerOrdering: React.FC<LayerOrderingProps> = ({ title, images }) =
               setDragAndDrop={setDragAndDrop}
               dragAndDrop={dragAndDrop}
               orderedLayers={orderedLayers}
+              setOrderedLayers={setOrderedLayers}
               index={index}
             />
           ))}

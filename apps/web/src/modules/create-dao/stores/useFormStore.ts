@@ -6,13 +6,13 @@ import { IPFSUpload } from 'src/hooks'
 import { DaoContractAddresses } from 'src/modules/dao'
 import { yearsAhead } from 'src/utils/helpers'
 
+import { OrderedTraits } from '../../../components/Artwork/LayerBox'
 import {
   ArtworkFormValues,
   AuctionSettingsFormValues,
   GeneralFormValues,
   TokenAllocation,
 } from '../components'
-import { OrderedTraits } from '../components/Artwork/LayerBox'
 
 export interface FormStoreState {
   activeSection: number
