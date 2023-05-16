@@ -21,9 +21,9 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   )
 
   if (daos.length < 1)
-    return {
+    res.status(200).json({
       daos: [],
-    } as UserTokensResponse
+    })
 
   const collections = daos?.map((dao) => dao.collectionAddress)
 

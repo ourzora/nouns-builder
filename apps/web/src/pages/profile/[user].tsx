@@ -15,6 +15,7 @@ import { useEnsData } from 'src/hooks'
 import { usePagination } from 'src/hooks/usePagination'
 import { getProfileLayout } from 'src/layouts/ProfileLayout'
 import { useLayoutStore } from 'src/stores'
+import { artworkSkeleton } from 'src/styles/Artwork.css'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 
@@ -32,7 +33,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
   const page = query.page as string
 
   const { ensName, ensAvatar } = useEnsData(userAddress)
-  const { data } = useSWR(
+  const { data, error, isValidating } = useSWR(
     userAddress ? [SWR_KEYS.PROFILE_TOKENS, userAddress, page] : undefined,
     () =>
       axios
@@ -43,6 +44,9 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
   )
 
   const { tokens, daos } = data || {}
+
+  const isLoading = data ? false : isValidating && !data && !error
+  const hasDaos = !!daos && daos.length > 0
 
   const { handlePageBack, handlePageForward } = usePagination(
     tokens?.pageInfo?.hasNextPage
@@ -94,14 +98,22 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
           <CopyButton text={userAddress} />
         </Flex>
 
-        {daosString && (
-          <Flex mt="x8" align={'flex-start'}>
-            <Text mr="x4" fontWeight={'display'}>
-              DAOs
-            </Text>
-            <Text color="text3">{daosString}</Text>
-          </Flex>
-        )}
+        <Flex mt="x8" align={'flex-start'}>
+          <Text mr="x4" fontWeight={'display'}>
+            DAOs
+          </Text>
+          {isLoading ? (
+            <Box
+              backgroundColor="background2"
+              h="x6"
+              w="100%"
+              className={artworkSkeleton}
+              borderRadius="normal"
+            />
+          ) : (
+            <Text color="text3">{daosString || 'No Daos'}</Text>
+          )}
+        </Flex>
       </Box>
       {!isMobile && (
         <Box
@@ -111,30 +123,51 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
           style={{ left: '27%', borderRight: '2px solid #F2F2F2' }}
         />
       )}
-      {daos && daos.length > 0 && (
-        <Box
-          mt={isMobile ? 'x14' : undefined}
-          style={{
-            width: isMobile ? '100%' : '70%',
-            maxHeight: isMobile ? undefined : '80vh',
-            overflow: 'auto',
-          }}
-        >
+
+      <Box
+        mt={isMobile ? 'x14' : undefined}
+        style={{
+          width: isMobile ? '100%' : '70%',
+          maxHeight: isMobile ? undefined : '79vh',
+          overflow: 'auto',
+        }}
+      >
+        {isLoading && (
           <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
-            {tokens?.tokens.map((x, i) => (
-              <Link key={i} href={`/dao/${x.collection}/${x.tokenId}`}>
-                <TokenPreview name={x.name} image={x.image} />
-              </Link>
-            ))}
+            {Array(6)
+              .fill(0)
+              .map((_, i) => (
+                <Box
+                  key={i}
+                  backgroundColor="background2"
+                  width={'100%'}
+                  height={'100%'}
+                  aspectRatio={1 / 1}
+                  position="relative"
+                  className={artworkSkeleton}
+                />
+              ))}
           </Grid>
-          <Pagination
-            onNext={handlePageForward}
-            onPrev={handlePageBack}
-            isLast={!tokens?.pageInfo?.hasNextPage}
-            isFirst={!page}
-          />
-        </Box>
-      )}
+        )}
+
+        {hasDaos && (
+          <>
+            <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
+              {tokens?.tokens.map((x, i) => (
+                <Link key={i} href={`/dao/${x.collection}/${x.tokenId}`}>
+                  <TokenPreview name={x.name} image={x.image} />
+                </Link>
+              ))}
+            </Grid>
+            <Pagination
+              onNext={handlePageForward}
+              onPrev={handlePageBack}
+              isLast={!tokens?.pageInfo?.hasNextPage}
+              isFirst={!page}
+            />
+          </>
+        )}
+      </Box>
     </Flex>
   )
 }
