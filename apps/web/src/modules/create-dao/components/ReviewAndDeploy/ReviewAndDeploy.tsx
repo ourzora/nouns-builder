@@ -112,8 +112,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
   const govParams = {
     timelockDelay: BigNumber.from(toSeconds({ days: 2 }).toString()),
-    votingDelay: BigNumber.from('86400'),
-    votingPeriod: BigNumber.from('345600'),
+    votingDelay: BigNumber.from(toSeconds(auctionSettings.votingDelay)),
+    votingPeriod: BigNumber.from(toSeconds(auctionSettings.votingPeriod)),
     proposalThresholdBps: auctionSettings?.proposalThreshold
       ? BigNumber.from(
           Number((Number(auctionSettings?.proposalThreshold) * 100).toFixed(2))

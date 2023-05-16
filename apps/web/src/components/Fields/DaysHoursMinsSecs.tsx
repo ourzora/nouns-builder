@@ -23,6 +23,7 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
   formik,
   id,
   errorMessage,
+  placeholder,
   value,
 }) => {
   const { isMobile } = useLayoutStore()
@@ -57,7 +58,7 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
       <Grid columns={isMobile ? '1fr 1fr' : '1fr 1fr 1fr 1fr'} gap={'x5'} mb={'x3'}>
         <NumberInput
           label={'[Days]'}
-          placeholder={'3'}
+          placeholder={placeholder?.[0] || '3'}
           hasError={valueHasError || daysHasError}
           errorMessage={errorMessage?.days}
           onChange={(e) => handleChange(e, 'days')}
@@ -68,7 +69,7 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
 
         <NumberInput
           label={'[Hours]'}
-          placeholder={'0'}
+          placeholder={placeholder?.[1] || '0'}
           hasError={valueHasError || hoursHasError}
           errorMessage={errorMessage?.hours}
           onChange={(e) => handleChange(e, 'hours')}
@@ -79,7 +80,7 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
 
         <NumberInput
           label={'[Minutes]'}
-          placeholder={'0'}
+          placeholder={placeholder?.[2] || '0'}
           errorMessage={errorMessage?.minutes}
           hasError={valueHasError || minutesHasError}
           onChange={(e) => handleChange(e, 'minutes')}
@@ -90,7 +91,7 @@ const DaysHoursMinsSecs: React.FC<DaysHoursMinsProps> = ({
 
         <NumberInput
           label={'[Seconds]'}
-          placeholder={'0'}
+          placeholder={placeholder?.[3] || '0'}
           errorMessage={errorMessage?.seconds}
           hasError={valueHasError || secondsHasError}
           onChange={(e) => handleChange(e, 'seconds')}

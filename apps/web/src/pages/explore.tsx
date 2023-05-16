@@ -1,37 +1,41 @@
-import * as Sentry from '@sentry/nextjs'
 import { Flex } from '@zoralabs/zord'
-import { GetServerSideProps } from 'next'
+import axios from 'axios'
 import { useRouter } from 'next/router'
-import useSWR, { unstable_serialize } from 'swr'
+import useSWR from 'swr'
 
 import { Meta } from 'src/components/Meta'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { exploreDaosRequest } from 'src/data/graphql/requests/exploreQueries'
-import { MarketSortKey } from 'src/data/graphql/sdk.generated'
+import { ExploreDaosResponse } from 'src/data/graphql/requests/exploreQueries'
 import { getDefaultLayout } from 'src/layouts/DefaultLayout'
 import { Explore } from 'src/modules/dao'
-import { encodePageNumToEndCursor } from 'src/utils/encodePageNumToEndCursor'
 
 import { NextPageWithLayout } from './_app'
 
 const ExplorePage: NextPageWithLayout = () => {
   const {
     query: { page, sortKey },
+    isReady,
   } = useRouter()
 
-  const { data } = useSWR([SWR_KEYS.EXPLORE, page, sortKey], async () => {
-    const endCursor = encodePageNumToEndCursor(30, page as string)
-    return await exploreDaosRequest(endCursor as string, [], sortKey as MarketSortKey)
-  })
+  const { data, error } = useSWR(
+    isReady ? [SWR_KEYS.EXPLORE, page, sortKey] : undefined,
+    async () => {
+      const params: any = {}
+      if (page) params['page'] = page
+      if (sortKey) params['sortKey'] = sortKey
 
-  if (!data) return null
+      return await axios
+        .get<ExploreDaosResponse>('/api/explore', { params })
+        .then((x) => x.data)
+    }
+  )
 
-  const { daos, pageInfo } = data
+  const { daos, pageInfo } = data || {}
 
   return (
-    <Flex direction={'column'} align={'center'} mt={'x5'}>
+    <Flex direction={'column'} align={'center'} mt={'x5'} minH={'100vh'}>
       <Meta title={'Explore'} type={'website'} slug={'/explore'} />
-      <Explore daos={daos} pageInfo={pageInfo} />
+      <Explore daos={daos} pageInfo={pageInfo} isLoading={!data && !error} />
     </Flex>
   )
 }
@@ -39,35 +43,3 @@ const ExplorePage: NextPageWithLayout = () => {
 ExplorePage.getLayout = getDefaultLayout
 
 export default ExplorePage
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  try {
-    const endCursor = encodePageNumToEndCursor(30, context.query?.page as string)
-    const res = await exploreDaosRequest(
-      endCursor as string,
-      [],
-      context.query?.sortKey as MarketSortKey
-    )
-
-    if (!res) throw new Error('Explore data not found.')
-
-    return {
-      props: {
-        fallback: {
-          [unstable_serialize([
-            SWR_KEYS.EXPLORE,
-            context.query?.page,
-            context.query?.sortKey,
-          ])]: res,
-        },
-      },
-    }
-  } catch (e) {
-    console.error(e)
-    Sentry.captureException(e)
-    await Sentry.flush(2000)
-
-    // attempt to refetch on client
-    return { props: {} }
-  }
-}

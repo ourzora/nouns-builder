@@ -16,6 +16,10 @@ export const CACHE_TIMES = {
     maxAge: ONE_MINUTE,
     swr: ONE_DAY,
   },
+  EXPLORE: {
+    maxAge: ONE_MINUTE,
+    swr: ONE_HOUR,
+  },
   IN_PROGRESS_PROPOSAL: {
     maxAge: ONE_MINUTE,
     swr: ONE_HOUR,

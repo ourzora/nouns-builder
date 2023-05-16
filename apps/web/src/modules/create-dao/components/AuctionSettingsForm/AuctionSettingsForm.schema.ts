@@ -8,7 +8,12 @@ export interface AuctionSettingsFormValues {
   auctionReservePrice?: number
   proposalThreshold?: number
   quorumThreshold?: number
+  votingPeriod: Duration
+  votingDelay: Duration
 }
+
+const twentyFourWeeks = 60 * 60 * 24 * 7 * 24
+const tenMinutes = 60 * 10
 
 export const auctionReservePriceValidationSchema = Yup.number()
   .transform((value) => (isNaN(value) ? undefined : value))
@@ -32,4 +37,12 @@ export const auctionSettingsValidationSchema = Yup.object().shape({
       'Quorum threshold must be greater than proposal threshold'
     )
     .max(20, '<= 20%'),
+  votingDelay: durationValidationSchema(
+    { value: 1, description: '1 second' },
+    { value: twentyFourWeeks, description: '24 weeks' }
+  ),
+  votingPeriod: durationValidationSchema(
+    { value: tenMinutes, description: '10 minutes' },
+    { value: twentyFourWeeks, description: '24 weeks' }
+  ),
 })
