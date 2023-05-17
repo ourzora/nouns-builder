@@ -75,7 +75,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
             variant={isMobile ? 'heading-sm' : 'heading-md'}
             position={'relative'}
             mt={{ '@768': 'x4' }}
-            style={{ zIndex: 600 }}
+            style={{ zIndex: 100 }}
           >
             {ensName || walletSnippet(userAddress)}
           </Text>
@@ -111,7 +111,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
               borderRadius="normal"
             />
           ) : (
-            <Text color="text3">{daosString || 'No Daos'}</Text>
+            <Text color="text3">{daosString || 'No DAO tokens owned.'}</Text>
           )}
         </Flex>
       </Box>
@@ -166,6 +166,16 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
               isFirst={!page}
             />
           </>
+        )}
+
+        {!isLoading && !hasDaos && (
+          <Flex
+            align={'center'}
+            justify={'space-around'}
+            style={{ height: isMobile ? '40vh' : '65vh' }}
+          >
+            <Text color="text3">No DAO tokens owned.</Text>
+          </Flex>
         )}
       </Box>
     </Flex>
