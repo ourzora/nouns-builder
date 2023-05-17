@@ -9,15 +9,15 @@ import { Uploading } from 'src/components/Uploading'
 import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkStore'
 
 import { ArtworkUpload } from '../../ArtworkUpload'
-import { checkboxHelperText, checkboxStyleVariants } from './ReplaceArtworkForm.css'
-import { ArtworkFormValues, validationSchemaArtwork } from './ReplaceArtworkForm.schema'
+import { checkboxHelperText, checkboxStyleVariants } from './AddArtworkForm.css'
+import { ArtworkFormValues, validationSchemaArtwork } from './AddArtworkForm.schema'
 
 export interface InvalidProperty {
   currentVariantCount: number
   currentLayerName: string
   nextName: string
 }
-export interface ReplaceArtworkFormProps {
+export interface AddArtworkFormProps {
   disabled: boolean
   isPropertyCountValid: boolean
   propertiesCount: number
@@ -25,10 +25,9 @@ export interface ReplaceArtworkFormProps {
   handleSubmit: (values: ArtworkFormValues) => void
 }
 
-export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
+export const AddArtworkForm: React.FC<AddArtworkFormProps> = ({
   disabled,
   isPropertyCountValid,
-  invalidProperty,
   propertiesCount,
   handleSubmit,
 }) => {
@@ -46,23 +45,20 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
 
   return (
     <Box w={'100%'}>
-      <Text fontWeight={'display'} mt="x8">
-        Requirements for Replace Artwork proposal:
-      </Text>
+      <Text fontWeight={'display'}>Requirements for Add Artwork proposal:</Text>
       <Box as="ul" color="text3" mt="x6">
         <Box as="li" mb="x3">
           The total number of new traits must be equal to or greater than the number of
-          old traits
+          old traits.
         </Box>
         <Box as="li" mb="x3">
-          For each trait, the number of new variants must be equal to or greater than the
-          number of old variants.
+          All trait folders should be included in the same order as the original upload
+          even if they contain no new artwork.
         </Box>
-        <Box as="li">
-          To determine the minimum number of variants required for each trait, refer to
-          the current trait position within the overall folder e.g. Top Layer, Layer #1,
-          Base layer etc.
+        <Box as="li" mb="x3">
+          Previously uploaded variants should be removed to avoid dulicates.
         </Box>
+        <Box as="li">New traits must be added to the end of the folder hierarchy.</Box>
       </Box>
       <Uploading isUploadingToIPFS={isUploadingToIPFS} />
       <Formik<ArtworkFormValues>
@@ -99,13 +95,6 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
                 textAlign={'center'}
                 color={'negative'}
               >{`Current total number of traits is ${propertiesCount}. The new folder of traits must have a minimum total of ${propertiesCount}`}</Text>
-            )}
-            {showPropertyErrors && invalidProperty && (
-              <Text
-                w="100%"
-                textAlign={'center'}
-                color={'negative'}
-              >{`${invalidProperty.currentLayerName} currently has ${invalidProperty.currentVariantCount} trait variants. New trait for ${invalidProperty.currentLayerName} "${invalidProperty.nextName}" should also have minimum ${invalidProperty.currentVariantCount} trait variants.`}</Text>
             )}
 
             <NetworkController.Mainnet>

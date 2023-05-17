@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 
 import { TransactionType } from 'src/modules/create-proposal/constants'
 
+import { AddArtwork } from './AddArtwork/AddArtwork'
 import { Airdrop } from './Airdrop'
 import { CustomTransaction } from './CustomTransaction'
 import { Droposal } from './Droposal'
@@ -19,6 +20,7 @@ export const TRANSACTION_FORM_OPTIONS = [
   TransactionType.SEND_ETH,
   TransactionType.AIRDROP,
   TransactionType.PAUSE_AUCTIONS,
+  TransactionType.ADD_ARTWORK,
   TransactionType.REPLACE_ARTWORK,
   TransactionType.DROPOSAL,
   TransactionType.CUSTOM,
@@ -31,6 +33,7 @@ export const TransactionForm = ({ type }: TransactionFormProps) => {
     [TransactionType.DROPOSAL]: <Droposal />,
     [TransactionType.SEND_ETH]: <SendEth />,
     [TransactionType.PAUSE_AUCTIONS]: <PauseAuctions />,
+    [TransactionType.ADD_ARTWORK]: <AddArtwork />,
     [TransactionType.REPLACE_ARTWORK]: <ReplaceArtwork />,
   }
 
