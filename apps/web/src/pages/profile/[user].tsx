@@ -56,128 +56,145 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
 
   return (
     <Flex
-      mt="x16"
-      style={{ height: 'fit-content' }}
-      direction={{ '@initial': 'column', '@768': 'row' }}
+      align={'center'}
+      position={isMobile ? 'relative' : 'fixed'}
+      h={{ '@initial': 'unset', '@768': '100vh' }}
+      top={'x0'}
+      left={'x0'}
+      justify={'space-around'}
+      w="100%"
+      px={{ '@initial': 'x0', '@768': 'x8' }}
     >
-      <Box style={{ width: isMobile ? '100%' : '30%' }} pr={{ '@768': 'x18' }}>
-        <Flex
-          align={{ '@initial': 'center', '@768': 'flex-start' }}
-          direction={{ '@initial': 'row', '@768': 'column' }}
-        >
-          <Avatar
-            mr={{ '@initial': 'x2', '@768': undefined }}
-            address={userAddress}
-            src={ensAvatar}
-            size={isMobile ? '40' : '90'}
-          />
-          <Text
-            variant={isMobile ? 'heading-sm' : 'heading-md'}
-            position={'relative'}
-            mt={{ '@768': 'x4' }}
-            style={{ zIndex: 100 }}
-          >
-            {ensName || walletSnippet(userAddress)}
-          </Text>
-        </Flex>
-
-        <Flex
-          align={'center'}
-          mt={{ '@initial': 'x2', '@768': undefined }}
-          py="x1"
-          px="x2"
-          borderRadius="curved"
-          borderStyle="solid"
-          borderWidth={'thin'}
-          borderColor={'border'}
-          style={{ width: 'fit-content' }}
-        >
-          <Text mr="x2" color="text3">
-            {walletSnippet(userAddress)}
-          </Text>
-          <CopyButton text={userAddress} />
-        </Flex>
-
-        <Flex mt="x8" align={'flex-start'}>
-          <Text mr="x4" fontWeight={'display'}>
-            DAOs
-          </Text>
-          {isLoading ? (
-            <Box
-              backgroundColor="background2"
-              h="x6"
-              w="100%"
-              className={artworkSkeleton}
-              borderRadius="normal"
-            />
-          ) : (
-            <Text color="text3">{daosString || 'No DAO tokens owned.'}</Text>
-          )}
-        </Flex>
-      </Box>
-      {!isMobile && (
-        <Box
-          position={'fixed'}
-          h="100vh"
-          top="x0"
-          style={{ left: '27%', borderRight: '2px solid #F2F2F2' }}
-        />
-      )}
-
-      <Box
-        mt={isMobile ? 'x14' : undefined}
-        style={{
-          width: isMobile ? '100%' : '70%',
-          maxHeight: isMobile ? undefined : '79vh',
-          overflow: 'auto',
-        }}
+      <Flex
+        w="100%"
+        direction={{ '@initial': 'column', '@768': 'row' }}
+        h={{ '@initial': 'unset', '@768': '100%' }}
+        style={{ maxWidth: '1440px' }}
+        position={'relative'}
       >
-        {isLoading && (
-          <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
-            {Array(6)
-              .fill(0)
-              .map((_, i) => (
-                <Box
-                  key={i}
-                  backgroundColor="background2"
-                  width={'100%'}
-                  height={'100%'}
-                  aspectRatio={1 / 1}
-                  position="relative"
-                  className={artworkSkeleton}
-                />
-              ))}
-          </Grid>
-        )}
-
-        {hasDaos && (
-          <>
-            <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
-              {tokens?.tokens.map((x, i) => (
-                <Link key={i} href={`/dao/${x.collection}/${x.tokenId}`}>
-                  <TokenPreview name={x.name} image={x.image} />
-                </Link>
-              ))}
-            </Grid>
-            <Pagination
-              onNext={handlePageForward}
-              onPrev={handlePageBack}
-              isLast={!tokens?.pageInfo?.hasNextPage}
-              isFirst={!page}
+        <Box
+          style={{ width: isMobile ? '100%' : '30%' }}
+          mt={{ '@initial': 'x12', '@768': 'x32' }}
+          pr={{ '@768': 'x18' }}
+        >
+          <Flex
+            align={{ '@initial': 'center', '@768': 'flex-start' }}
+            direction={{ '@initial': 'row', '@768': 'column' }}
+          >
+            <Avatar
+              mr={{ '@initial': 'x2', '@768': undefined }}
+              address={userAddress}
+              src={ensAvatar}
+              size={isMobile ? '40' : '90'}
             />
-          </>
-        )}
+            <Text
+              variant={isMobile ? 'heading-sm' : 'heading-md'}
+              position={'relative'}
+              mt={{ '@768': 'x4' }}
+              style={{ zIndex: 100 }}
+            >
+              {ensName || walletSnippet(userAddress)}
+            </Text>
+          </Flex>
 
-        {!isLoading && !hasDaos && (
           <Flex
             align={'center'}
-            justify={'space-around'}
-            style={{ height: isMobile ? '40vh' : '65vh' }}
+            mt={{ '@initial': 'x2', '@768': undefined }}
+            py="x1"
+            px="x2"
+            borderRadius="curved"
+            borderStyle="solid"
+            borderWidth={'thin'}
+            borderColor={'border'}
+            style={{ width: 'fit-content' }}
           >
-            <Text color="text3">No DAO tokens owned.</Text>
+            <Text mr="x2" color="text3">
+              {walletSnippet(userAddress)}
+            </Text>
+            <CopyButton text={userAddress} />
           </Flex>
+
+          <Flex mt="x8" align={'flex-start'}>
+            <Text mr="x4" fontWeight={'display'}>
+              DAOs
+            </Text>
+            {isLoading ? (
+              <Box
+                backgroundColor="background2"
+                h="x6"
+                w="100%"
+                className={artworkSkeleton}
+                borderRadius="normal"
+              />
+            ) : (
+              <Text color="text3">{daosString || 'No DAO tokens owned.'}</Text>
+            )}
+          </Flex>
+        </Box>
+        {!isMobile && (
+          <Box
+            position={'absolute'}
+            h="100vh"
+            top="x0"
+            style={{ left: '27%', borderRight: '2px solid #F2F2F2' }}
+          />
         )}
-      </Box>
+
+        <Box
+          mt={isMobile ? 'x14' : 'x32'}
+          style={{
+            width: isMobile ? '100%' : '70%',
+            maxHeight: isMobile ? undefined : '80vh',
+            overflow: 'auto',
+          }}
+        >
+          {isLoading && (
+            <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
+              {Array(6)
+                .fill(0)
+                .map((_, i) => (
+                  <Box
+                    key={i}
+                    backgroundColor="background2"
+                    width={'100%'}
+                    height={'100%'}
+                    aspectRatio={1 / 1}
+                    position="relative"
+                    className={artworkSkeleton}
+                  />
+                ))}
+            </Grid>
+          )}
+
+          {hasDaos && (
+            <>
+              <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
+                {tokens?.tokens.map((x, i) => (
+                  <Link key={i} href={`/dao/${x.collection}/${x.tokenId}`}>
+                    <TokenPreview name={x.name} image={x.image} />
+                  </Link>
+                ))}
+              </Grid>
+              <Pagination
+                onNext={handlePageForward}
+                onPrev={handlePageBack}
+                isLast={!tokens?.pageInfo?.hasNextPage}
+                isFirst={!page}
+              />
+            </>
+          )}
+
+          {!isLoading && !hasDaos && (
+            <Flex
+              align={'center'}
+              justify={'space-around'}
+              style={{ height: isMobile ? '40vh' : '65vh' }}
+            >
+              <Text color="text3">No DAO tokens owned.</Text>
+            </Flex>
+          )}
+        </Box>
+      </Flex>
     </Flex>
   )
 }
