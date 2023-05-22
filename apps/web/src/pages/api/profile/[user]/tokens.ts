@@ -14,8 +14,6 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { user, page } = req.query
   const baseUrl = getBaseUrl()
 
-  console.log('user', user)
-
   const { data: daos } = await axios.get<MyDaosResponse>(
     `${baseUrl}/api/profile/${user}/daos`
   )
