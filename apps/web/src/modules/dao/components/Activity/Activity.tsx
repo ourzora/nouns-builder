@@ -1,3 +1,4 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Button, Flex, Text } from '@zoralabs/zord'
 import omit from 'lodash/omit'
 import { useRouter } from 'next/router'
@@ -15,7 +16,11 @@ import { useVotes } from 'src/hooks'
 import { Upgrade, useProposalStore } from 'src/modules/create-proposal'
 import { ProposalCard } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
-import { selectDelegateBtn, submitProposalBtn } from 'src/styles/Proposals.css'
+import {
+  delegateBtn,
+  selectDelegateBtn,
+  submitProposalBtn,
+} from 'src/styles/Proposals.css'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
@@ -33,6 +38,7 @@ export const Activity: React.FC = () => {
   const { address } = useAccount()
   const { query, isReady, push, pathname } = useRouter()
   const { isMobile } = useLayoutStore()
+  const { openConnectModal } = useConnectModal()
   const LIMIT = 20
 
   const { token } = addresses
@@ -42,7 +48,7 @@ export const Activity: React.FC = () => {
     (_, token, page) => getProposals([token], LIMIT, Number(page))
   )
 
-  const { isOwner, isDelegating, hasThreshold } = useVotes({
+  const { isOwner, isDelegating, hasThreshold, proposalVotesRequired } = useVotes({
     governorAddress: addresses?.governor,
     signerAddress: address,
     collectionAddress: query?.token as AddressType,
@@ -137,13 +143,32 @@ export const Activity: React.FC = () => {
           </Text>
 
           <Flex justify={'center'} align={'center'}>
+            {address && !isDelegating && !isOwner && !isMobile && (
+              <Flex mr={'x4'} color={'tertiary'}>
+                You have no votes.
+              </Flex>
+            )}
+            {isDelegating && !isMobile && (
+              <Flex mr={'x4'} color={'tertiary'}>
+                Your votes are delegated.
+              </Flex>
+            )}
+            {isOwner && !hasThreshold && !isMobile && (
+              <Flex mr={'x4'} color={'tertiary'}>
+                {proposalVotesRequired} votes required to propose.
+              </Flex>
+            )}
             {isOwner || isDelegating ? (
               <>
                 {!isMobile ? (
                   <ContractButton
-                    className={selectDelegateBtn}
-                    style={{ backgroundColor: '#FFF', color: '#000' }}
+                    className={delegateBtn}
+                    color="ghost"
+                    borderColor="border"
+                    borderStyle="solid"
+                    borderWidth="normal"
                     handleClick={view}
+                    mr="x2"
                   >
                     Delegate
                   </ContractButton>
@@ -160,21 +185,24 @@ export const Activity: React.FC = () => {
                 )}
               </>
             ) : null}
-
-            {!isDelegating && !hasThreshold && !isMobile && (
-              <Flex mr={'x4'} color={'tertiary'}>
-                You have no votes.
-              </Flex>
+            {!address ? (
+              <Button
+                className={submitProposalBtn}
+                onClick={openConnectModal}
+                color={'tertiary'}
+              >
+                Submit {!isMobile ? 'proposal' : null}
+              </Button>
+            ) : (
+              <Button
+                className={submitProposalBtn}
+                onClick={address ? handleProposalCreation : openConnectModal}
+                disabled={address ? !hasThreshold : false}
+                color={'tertiary'}
+              >
+                Submit {!isMobile ? 'proposal' : null}
+              </Button>
             )}
-
-            <Button
-              className={submitProposalBtn}
-              onClick={handleProposalCreation}
-              disabled={!isOwner}
-              color={'tertiary'}
-            >
-              Submit {!isMobile ? 'proposal' : null}
-            </Button>
           </Flex>
         </Flex>
         {addresses && (

@@ -1,7 +1,7 @@
 import { Flex } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import React, { Fragment } from 'react'
-import { useContractReads } from 'wagmi'
+import { useAccount, useContractReads } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
 import { Proposal } from 'src/data/graphql/requests/proposalQuery'
@@ -15,6 +15,7 @@ import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
 import { CancelButton } from './CancelButton'
+import { ConnectWalletAction } from './ConnectWalletAction'
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
 import { VetoAction } from './VetoAction'
 import { VoteStatus } from './VoteStatus'
@@ -28,6 +29,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   daoName,
   proposal,
 }) => {
+  const { address: userAddress } = useAccount()
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const addresses = useDaoStore((state) => state.addresses)
 
@@ -51,7 +53,13 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
     ],
   })
 
-  if (!data) return null
+  const shouldShowActions =
+    status === NounsProposalStatus.Active ||
+    status === NounsProposalStatus.Pending ||
+    signerAddress
+
+  if (shouldShowActions && !userAddress) return <ConnectWalletAction />
+  if (!shouldShowActions || !data) return null
 
   const [votes, vetoer] = data
 
@@ -70,13 +78,6 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
     ethers.utils.getAddress(proposer) == ethers.utils.getAddress(signerAddress)
 
   const isVetoer = signerAddress === vetoer
-
-  const shouldShowActions =
-    status === NounsProposalStatus.Active ||
-    status === NounsProposalStatus.Pending ||
-    signerAddress
-
-  if (!shouldShowActions) return null
 
   const showCancel = proposalOpen && isProposer
   const showVeto = proposalOpen && isVetoer
