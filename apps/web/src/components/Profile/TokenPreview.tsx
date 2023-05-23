@@ -3,8 +3,8 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 export interface TokenPreviewProps {
-  image?: string
-  name?: string
+  image?: string | null
+  name?: string | null
 }
 
 export const TokenPreview: React.FC<TokenPreviewProps> = ({ image, name }) => {

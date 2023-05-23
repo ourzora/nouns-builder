@@ -168,6 +168,8 @@ export type AudioEncodingTypes = {
 export enum Chain {
   Goerli = 'GOERLI',
   Mainnet = 'MAINNET',
+  OptimismGoerli = 'OPTIMISM_GOERLI',
+  OptimismMainnet = 'OPTIMISM_MAINNET',
   Rinkeby = 'RINKEBY',
   Sepolia = 'SEPOLIA',
 }
@@ -609,6 +611,7 @@ export type MintsQueryInput = {
 
 export enum Network {
   Ethereum = 'ETHEREUM',
+  Optimism = 'OPTIMISM',
 }
 
 export type NetworkInfo = {
@@ -2405,6 +2408,7 @@ export type TokenFragment = {
   name?: string | null
   description?: string | null
   owner?: string | null
+  tokenContract?: { __typename?: 'TokenContract'; collectionAddress: string } | null
   image?: {
     __typename?: 'TokenContentMedia'
     url?: string | null
@@ -2792,6 +2796,7 @@ export type TokenQuery = {
       name?: string | null
       description?: string | null
       owner?: string | null
+      tokenContract?: { __typename?: 'TokenContract'; collectionAddress: string } | null
       image?: {
         __typename?: 'TokenContentMedia'
         url?: string | null
@@ -2870,8 +2875,10 @@ export type TokensQuery = {
       __typename?: 'TokenWithMarketsSummary'
       token: {
         __typename?: 'Token'
-        name?: string | null
         tokenId: string
+        name?: string | null
+        description?: string | null
+        owner?: string | null
         tokenContract?: { __typename?: 'TokenContract'; collectionAddress: string } | null
         image?: {
           __typename?: 'TokenContentMedia'
@@ -2886,6 +2893,10 @@ export type TokensQuery = {
             | { __typename: 'UnsupportedEncodingTypes' }
             | { __typename: 'VideoEncodingTypes' }
             | null
+        } | null
+        mintInfo?: {
+          __typename?: 'MintInfo'
+          mintContext: { __typename?: 'TransactionInfo'; blockTimestamp: any }
         } | null
       }
     }>
@@ -2966,6 +2977,9 @@ export const ImageMediaEncodingFragmentDoc = gql`
 export const TokenFragmentDoc = gql`
   fragment Token on Token {
     tokenId
+    tokenContract {
+      collectionAddress
+    }
     name
     description
     image {
@@ -3321,21 +3335,7 @@ export const TokensDocument = gql`
     ) {
       nodes {
         token {
-          name
-          tokenId
-          tokenContract {
-            collectionAddress
-          }
-          image {
-            url
-            mediaEncoding {
-              __typename
-              ... on ImageEncodingTypes {
-                original
-                thumbnail
-              }
-            }
-          }
+          ...Token
         }
       }
       pageInfo {
@@ -3343,6 +3343,7 @@ export const TokensDocument = gql`
       }
     }
   }
+  ${TokenFragmentDoc}
   ${PageInfoFragmentDoc}
 `
 

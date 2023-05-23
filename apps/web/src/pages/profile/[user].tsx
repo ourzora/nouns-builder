@@ -141,7 +141,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
         )}
 
         <Box
-          mt={isMobile ? 'x14' : 'x32'}
+          mt={{ '@initial': 'x14', '@768': 'x32' }}
           style={{
             width: isMobile ? '100%' : '70%',
             maxHeight: isMobile ? undefined : '80vh',
@@ -170,8 +170,11 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
             <>
               <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
                 {tokens?.tokens.map((x, i) => (
-                  <Link key={i} href={`/dao/${x.collection}/${x.tokenId}`}>
-                    <TokenPreview name={x.name} image={x.image} />
+                  <Link
+                    key={i}
+                    href={`/dao/${x.tokenContract?.collectionAddress}/${x.tokenId}`}
+                  >
+                    <TokenPreview name={x.name} image={x.image?.url} />
                   </Link>
                 ))}
               </Grid>
