@@ -18,7 +18,6 @@ const tenMinutes = 60 * 10
 export const auctionReservePriceValidationSchema = Yup.number()
   .transform((value) => (isNaN(value) ? undefined : value))
   .required('*')
-  .min(0.0001, '> 0.0001 ETH') // temp until protocol supports 0 ETH reserve price
 
 export const auctionSettingsValidationSchema = Yup.object().shape({
   auctionDuration: durationValidationSchema(),
