@@ -1,8 +1,9 @@
 import { Flex } from '@zoralabs/zord'
+import axios from 'axios'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
-import useSWR, { unstable_serialize } from 'swr'
+import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 
 import { Meta } from 'src/components/Meta'
@@ -11,12 +12,11 @@ import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
-import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
-import getDaoOgMetadata from 'src/data/contract/requests/getDaoOgMetadata'
-import getToken from 'src/data/contract/requests/getToken'
+import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { Auction } from 'src/modules/auction'
+import { AuctionSkeleton } from 'src/modules/auction/components/AuctionSkeleton'
 import {
   About,
   Activity,
@@ -26,6 +26,7 @@ import {
   SmartContracts,
 } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
+import { DaoResponse } from 'src/pages/api/dao/[token]'
 import { AddressType } from 'src/typings'
 
 interface TokenPageProps {
@@ -49,7 +50,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   const { address } = useAccount()
 
   const { data: token } = useSWR([SWR_KEYS.TOKEN, collection, tokenId], (_, id) =>
-    getToken(collection, tokenId)
+    axios.get<TokenWithWinner>(`/api/dao/${collection}/${tokenId}`).then((x) => x.data)
   )
 
   const { hasThreshold } = useVotes({
@@ -89,11 +90,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
     return hasThreshold ? [...publicSections, adminSection] : publicSections
   }, [hasThreshold, collection])
 
-  if (!token || !addresses.auction) {
-    return null
-  }
-
-  const description = token.description ?? ''
+  const description = token?.description ?? ''
   const ogDescription =
     description.length > 111 ? `${description.slice(0, 111)}...` : description
 
@@ -108,7 +105,15 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         slug={url}
         description={ogDescription}
       />
-      <Auction auctionAddress={addresses.auction} collection={collection} token={token} />
+      {token && addresses?.auction ? (
+        <Auction
+          auctionAddress={addresses.auction}
+          collection={collection}
+          token={token}
+        />
+      ) : (
+        <AuctionSkeleton />
+      )}
       <SectionHandler
         sections={sections}
         activeTab={activeTab}
@@ -135,50 +140,32 @@ export default TokenPage
 
 export const getServerSideProps: GetServerSideProps = async ({
   params,
-  req,
   res,
   resolvedUrl,
 }) => {
-  const { maxAge, swr } = CACHE_TIMES.TOKEN_INFO
-  res.setHeader(
-    'Cache-Control',
-    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
-  )
-
   const collection = params?.token as AddressType
   const tokenId = params?.tokenId as string
 
   try {
-    const [token, addresses] = await Promise.all([
-      getToken(collection, tokenId),
-      getDAOAddresses(collection),
-    ])
+    const env = process.env.VERCEL_ENV || 'development'
+    const protocol = env === 'development' ? 'http' : 'https'
+    const baseUrl = process.env.VERCEL_URL || 'localhost:3000'
 
-    const daoOgMetadata = await getDaoOgMetadata(
-      collection,
-      addresses?.metadata as string,
-      addresses?.treasury as string
+    const { collectionName, addresses, ogImageURL } = await axios
+      .get<DaoResponse>(`${protocol}://${baseUrl}/api/dao/${collection}`)
+      .then((x) => x.data)
+
+    const { maxAge, swr } = CACHE_TIMES.TOKEN_INFO
+    res.setHeader(
+      'Cache-Control',
+      `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
     )
-
-    if (!(addresses && token)) {
-      return {
-        notFound: true,
-      }
-    }
-
-    const protocol = process.env.VERCEL_ENV === 'development' ? 'http' : 'https'
-    const ogImageURL = `${protocol}://${
-      req.headers.host
-    }/api/og/dao?data=${encodeURIComponent(JSON.stringify(daoOgMetadata))}`
 
     return {
       props: {
-        fallback: {
-          [unstable_serialize([SWR_KEYS.TOKEN, collection, tokenId])]: token,
-        },
         url: resolvedUrl,
         collection,
-        collectionName: daoOgMetadata.name,
+        collectionName,
         tokenId,
         addresses,
         ogImageURL,

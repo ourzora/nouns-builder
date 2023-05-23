@@ -2,6 +2,7 @@ import { Button, Flex, Stack } from '@zoralabs/zord'
 import { Form, Formik } from 'formik'
 import { motion } from 'framer-motion'
 import React, { BaseSyntheticEvent } from 'react'
+import { useAccount } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -34,6 +35,11 @@ const animation = {
   },
 }
 
+const VOTING_DELAY_AND_PERIOD_AUTHORIZED_USERS = [
+  '0x7498e6e471f31e869f038D8DBffbDFdf650c3F95',
+  '0x2767500a75D90D711b2Ac27b3a032a0dAa40e4B2',
+]
+
 export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title }) => {
   const {
     setAuctionSettings,
@@ -42,6 +48,7 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
     setActiveSection,
     activeSection,
   } = useFormStore()
+  const { address: user } = useAccount()
   const [showAdvanced, setShowAdvanced] = React.useState<boolean>(false)
 
   const initialValues: AuctionSettingsFormValues = {
@@ -58,6 +65,18 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
         : auctionSettings?.proposalThreshold || 0.5,
     quorumThreshold:
       auctionSettings?.quorumThreshold === 0 ? 0 : auctionSettings?.quorumThreshold || 10,
+    votingDelay: {
+      seconds: auctionSettings?.votingDelay?.seconds,
+      minutes: auctionSettings?.votingDelay?.minutes,
+      days: auctionSettings?.votingDelay?.days || 1,
+      hours: auctionSettings?.votingDelay?.hours,
+    },
+    votingPeriod: {
+      seconds: auctionSettings?.votingPeriod?.seconds,
+      minutes: auctionSettings?.votingPeriod?.minutes,
+      days: auctionSettings?.votingPeriod?.days || 4,
+      hours: auctionSettings?.votingPeriod?.hours,
+    },
   }
 
   const handleSubmit = (values: AuctionSettingsFormValues) => {
@@ -69,6 +88,9 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
   const handlePrev = () => {
     setActiveSection(activeSection - 1)
   }
+
+  const isVotingDelayAndPeriodAuthorized =
+    user && VOTING_DELAY_AND_PERIOD_AUTHORIZED_USERS.includes(user)
 
   return (
     <Formik<AuctionSettingsFormValues>
@@ -181,6 +203,39 @@ export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title 
                 perma={'%'}
                 step={1}
               />
+              {isVotingDelayAndPeriodAuthorized && (
+                <>
+                  <DaysHoursMinsSecs
+                    {...formik.getFieldProps('votingPeriod')}
+                    inputLabel={'Voting Period'}
+                    formik={formik}
+                    id={'votingPeriod'}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorMessage={
+                      formik.touched['votingPeriod'] && formik.errors['votingPeriod']
+                        ? formik.errors['votingPeriod']
+                        : undefined
+                    }
+                    placeholder={['4', '0', '0', '0']}
+                  />
+
+                  <DaysHoursMinsSecs
+                    {...formik.getFieldProps('votingDelay')}
+                    inputLabel={'Voting Delay'}
+                    formik={formik}
+                    id={'votingDelay'}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    errorMessage={
+                      formik.touched['votingDelay'] && formik.errors['votingDelay']
+                        ? formik.errors['votingDelay']
+                        : undefined
+                    }
+                    placeholder={['1', '0', '0', '0']}
+                  />
+                </>
+              )}
             </motion.div>
 
             <Flex>

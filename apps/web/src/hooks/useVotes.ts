@@ -49,7 +49,8 @@ export const useVotes = ({
   return {
     isLoading,
     isDelegating: delegates !== signerAddress,
-    isOwner: votes.toNumber() > proposalThreshold.toNumber(),
-    hasThreshold: votes.toNumber() > 0,
+    isOwner: votes.toNumber() > 0,
+    hasThreshold: votes.toNumber() > proposalThreshold.toNumber(),
+    proposalVotesRequired: proposalThreshold.toNumber() + 1,
   }
 }

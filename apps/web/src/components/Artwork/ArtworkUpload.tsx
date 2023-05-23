@@ -15,9 +15,8 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { ArtworkUploadError, ImageProps } from 'src/hooks/useArtworkUpload'
-import { LayerOrdering } from 'src/modules/create-dao/components/Artwork/LayerOrdering'
 
-interface ArtworkFormProps {
+interface ArtworkUploadProps {
   inputLabel: string | ReactElement
   helperText?: string
   errorMessage?: any
@@ -28,9 +27,10 @@ interface ArtworkFormProps {
   ipfsUploadError: boolean
   images: ImageProps[] | undefined
   fileType?: string
+  layerOrdering: React.ReactNode
 }
 
-export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
+export const ArtworkUpload: React.FC<ArtworkUploadProps> = ({
   inputLabel,
   helperText,
   errorMessage,
@@ -39,8 +39,8 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
   onUpload,
   uploadArtworkError,
   ipfsUploadError,
-  images,
   fileType,
+  layerOrdering,
 }) => {
   const dropInput = React.useRef<HTMLInputElement>(null)
   React.useEffect(() => {
@@ -116,7 +116,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
                 <li>correct folder structure &#9733;</li>
               </Box>
             </Box>
-            {images && <LayerOrdering images={images} />}
+            {layerOrdering}
           </>
         ))}
     </Box>

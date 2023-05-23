@@ -3,7 +3,7 @@ import { normalizeIPFSUrl } from 'ipfs-service'
 
 import { IPFSUpload } from 'src/hooks'
 
-import { OrderedTraits } from '../components/Artwork/LayerBox'
+import { OrderedTraits } from '../../../components/Artwork/LayerBox'
 
 export interface PropertyItem {
   propertyId: BigNumber
