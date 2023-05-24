@@ -4,13 +4,18 @@ import { FormikProps } from 'formik'
 import { MediaPreview } from 'src/components/MediaPreview/MediaPreview'
 
 import { previewTextStyle } from './Droposal.css'
+import { EditionType } from './DroposalForm'
 import { DroposalFormValues } from './DroposalForm.schema'
 
 interface DroposalPreviewProps {
   formik: FormikProps<DroposalFormValues>
+  editionType: EditionType
 }
 
-export const DroposalPreview: React.FC<DroposalPreviewProps> = ({ formik }) => {
+export const DroposalPreview: React.FC<DroposalPreviewProps> = ({
+  formik,
+  editionType,
+}) => {
   const {
     mediaUrl,
     coverUrl,
@@ -68,7 +73,7 @@ export const DroposalPreview: React.FC<DroposalPreviewProps> = ({ formik }) => {
               TOTAL SUPPLY
             </Text>
             <Text variant="heading-sm" style={{ fontWeight: 'bold' }}>
-              {maxSupply || 'OPEN'}
+              {editionType === 'fixed' ? maxSupply || '---' : 'OPEN'}
             </Text>
           </Box>
         </Flex>

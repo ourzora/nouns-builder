@@ -24,13 +24,15 @@ export interface AirdropFormProps {
   disabled?: boolean
 }
 
+export type EditionType = 'fixed' | 'open'
+
 const editionSizeOptions = [
   { label: 'Fixed', value: 'fixed' },
   { label: 'Open edition', value: 'open' },
 ]
 
 export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
-  const [editionType, setEditionType] = useState('fixed')
+  const [editionType, setEditionType] = useState<EditionType>('fixed')
   const [isIPFSUploading, setIsIPFSUploading] = useState(false)
   const { address: user } = useAccount()
   const { treasury } = useDaoStore((x) => x.addresses)
@@ -79,7 +81,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
             value === 'open'
               ? formik.setFieldValue('maxSupply', 0)
               : formik.setFieldValue('maxSupply', undefined)
-            setEditionType(value)
+            setEditionType(value as EditionType)
           }
 
           const showCover = formik.values['mediaType']
@@ -88,7 +90,7 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
 
           return (
             <>
-              {!isMobile && <DroposalPreview formik={formik} />}
+              {!isMobile && <DroposalPreview formik={formik} editionType={editionType} />}
               <Text
                 mb="x8"
                 ml="x2"

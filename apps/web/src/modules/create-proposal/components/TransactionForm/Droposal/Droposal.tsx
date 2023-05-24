@@ -12,8 +12,8 @@ import { AddressType } from 'src/typings'
 import { DroposalForm } from './DroposalForm'
 import { DroposalFormValues } from './DroposalForm.schema'
 
-const UINT_64_MAX = 18446744073709551615
-const UINT_32_MAX = 4294967295
+const UINT_64_MAX = BigNumber.from('18446744073709551615')
+const UINT_32_MAX = BigNumber.from('4294967295')
 
 export const Droposal: React.FC = () => {
   const addTransaction = useProposalStore((state) => state.addTransaction)
