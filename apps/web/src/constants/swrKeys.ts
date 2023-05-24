@@ -5,6 +5,7 @@ const SWR_KEYS = {
   ETH_USD: 'eth-usd-price',
   TREASURY_SALES: 'treasury-sales',
   NFT_COUNT: 'nft-count',
+  PROFILE_TOKENS: 'profile-tokens',
   PROPOSAL: 'proposal',
   PROPOSALS: 'proposals',
   PROPOSALS_CALLDATAS: 'proposals-calldatas',

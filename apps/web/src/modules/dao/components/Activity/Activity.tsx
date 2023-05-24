@@ -1,6 +1,5 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Button, Flex, Text } from '@zoralabs/zord'
-import omit from 'lodash/omit'
 import { useRouter } from 'next/router'
 import React from 'react'
 import useSWR from 'swr'
@@ -13,6 +12,7 @@ import Pagination from 'src/components/Pagination'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { ProposalsResponse, getProposals } from 'src/data/graphql/requests/proposalsQuery'
 import { useVotes } from 'src/hooks'
+import { usePagination } from 'src/hooks/usePagination'
 import { Upgrade, useProposalStore } from 'src/modules/create-proposal'
 import { ProposalCard } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
@@ -48,6 +48,8 @@ export const Activity: React.FC = () => {
     (_, token, page) => getProposals([token], LIMIT, Number(page))
   )
 
+  const { handlePageBack, handlePageForward } = usePagination(data?.pageInfo?.hasNextPage)
+
   const { isOwner, isDelegating, hasThreshold, proposalVotesRequired } = useVotes({
     governorAddress: addresses?.governor,
     signerAddress: address,
@@ -72,61 +74,6 @@ export const Activity: React.FC = () => {
     })
     push(`/dao/${query.token}/proposal/create`)
   }
-
-  const handlePageBack = React.useCallback(() => {
-    // user is on the first page
-    if (!query.page)
-      return {
-        pathname,
-        query: {
-          ...query,
-        },
-      }
-
-    // user is at least on the second page
-    return Number(query.page) > 2
-      ? {
-          pathname,
-          query: {
-            ...query,
-            page: Number(query.page) - 1,
-          },
-        }
-      : {
-          pathname,
-          query: omit(query, ['page']),
-        }
-  }, [query, pathname])
-
-  const handlePageForward = React.useCallback(() => {
-    // there are more results to be fetched
-    if (!data?.pageInfo?.hasNextPage)
-      return {
-        pathname,
-        query: {
-          page: query.page,
-        },
-      }
-
-    // user is on the first page
-    if (!query.page)
-      return {
-        pathname,
-        query: {
-          ...query,
-          page: 2,
-        },
-      }
-
-    // user is at least on the second page
-    return {
-      pathname,
-      query: {
-        ...query,
-        page: Number(query.page) + 1,
-      },
-    }
-  }, [data?.pageInfo?.hasNextPage, pathname, query])
 
   if (!data && !error) {
     return null

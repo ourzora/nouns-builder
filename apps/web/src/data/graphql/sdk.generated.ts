@@ -168,7 +168,10 @@ export type AudioEncodingTypes = {
 export enum Chain {
   Goerli = 'GOERLI',
   Mainnet = 'MAINNET',
+  OptimismGoerli = 'OPTIMISM_GOERLI',
+  OptimismMainnet = 'OPTIMISM_MAINNET',
   Rinkeby = 'RINKEBY',
+  Sepolia = 'SEPOLIA',
 }
 
 export type Collection = {
@@ -608,6 +611,7 @@ export type MintsQueryInput = {
 
 export enum Network {
   Ethereum = 'ETHEREUM',
+  Optimism = 'OPTIMISM',
 }
 
 export type NetworkInfo = {
@@ -2404,6 +2408,7 @@ export type TokenFragment = {
   name?: string | null
   description?: string | null
   owner?: string | null
+  tokenContract?: { __typename?: 'TokenContract'; collectionAddress: string } | null
   image?: {
     __typename?: 'TokenContentMedia'
     url?: string | null
@@ -2791,6 +2796,7 @@ export type TokenQuery = {
       name?: string | null
       description?: string | null
       owner?: string | null
+      tokenContract?: { __typename?: 'TokenContract'; collectionAddress: string } | null
       image?: {
         __typename?: 'TokenContentMedia'
         url?: string | null
@@ -2869,7 +2875,11 @@ export type TokensQuery = {
       __typename?: 'TokenWithMarketsSummary'
       token: {
         __typename?: 'Token'
+        tokenId: string
         name?: string | null
+        description?: string | null
+        owner?: string | null
+        tokenContract?: { __typename?: 'TokenContract'; collectionAddress: string } | null
         image?: {
           __typename?: 'TokenContentMedia'
           url?: string | null
@@ -2884,8 +2894,18 @@ export type TokensQuery = {
             | { __typename: 'VideoEncodingTypes' }
             | null
         } | null
+        mintInfo?: {
+          __typename?: 'MintInfo'
+          mintContext: { __typename?: 'TransactionInfo'; blockTimestamp: any }
+        } | null
       }
     }>
+    pageInfo: {
+      __typename?: 'PageInfo'
+      limit: number
+      endCursor?: string | null
+      hasNextPage: boolean
+    }
   }
 }
 
@@ -2957,6 +2977,9 @@ export const ImageMediaEncodingFragmentDoc = gql`
 export const TokenFragmentDoc = gql`
   fragment Token on Token {
     tokenId
+    tokenContract {
+      collectionAddress
+    }
     name
     description
     image {
@@ -3312,21 +3335,16 @@ export const TokensDocument = gql`
     ) {
       nodes {
         token {
-          name
-          image {
-            url
-            mediaEncoding {
-              __typename
-              ... on ImageEncodingTypes {
-                original
-                thumbnail
-              }
-            }
-          }
+          ...Token
         }
+      }
+      pageInfo {
+        ...PageInfo
       }
     }
   }
+  ${TokenFragmentDoc}
+  ${PageInfoFragmentDoc}
 `
 
 export type SdkFunctionWrapper = <T>(

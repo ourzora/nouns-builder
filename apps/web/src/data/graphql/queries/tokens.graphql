@@ -14,18 +14,11 @@ query tokens(
   ) {
     nodes {
       token {
-        name
-        image {
-          url
-          mediaEncoding {
-            __typename
-            ... on ImageEncodingTypes {
-              original
-              thumbnail
-            }
-          }
-        }
+        ...Token
       }
+    }
+    pageInfo {
+      ...PageInfo
     }
   }
 }

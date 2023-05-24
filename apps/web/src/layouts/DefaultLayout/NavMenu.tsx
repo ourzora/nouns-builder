@@ -24,6 +24,7 @@ import {
   navButton,
   navMenuBurger,
 } from './Nav.styles.css'
+import { ViewProfileButton } from './ViewProfileButton'
 
 export const NavMenu = () => {
   const [isOpenMenu, setIsOpenMenu] = React.useState(false)
@@ -99,6 +100,7 @@ export const NavMenu = () => {
             }}
           >
             <Flex direction={'column'} p={'x4'} gap={'x4'} style={{ width: 264 }}>
+              <ViewProfileButton />
               <CreateDaoButton />
               {myDaos && myDaos.length > 0 && (
                 <Flex direction={'column'} gap={'x4'}>

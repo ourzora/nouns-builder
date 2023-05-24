@@ -1,5 +1,8 @@
 fragment Token on Token {
   tokenId
+  tokenContract {
+    collectionAddress
+  }
   name
   description
   image {
