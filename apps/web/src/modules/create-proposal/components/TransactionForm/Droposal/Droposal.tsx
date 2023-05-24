@@ -12,6 +12,9 @@ import { AddressType } from 'src/typings'
 import { DroposalForm } from './DroposalForm'
 import { DroposalFormValues } from './DroposalForm.schema'
 
+const UINT_64_MAX = BigNumber.from('18446744073709551615')
+const UINT_32_MAX = BigNumber.from('4294967295')
+
 export const Droposal: React.FC = () => {
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const zoraNFTCreatorContract = useContract({
@@ -43,7 +46,7 @@ export const Droposal: React.FC = () => {
     const royaltyBPS = royaltyPercentage * 100
     const salesConfig = [
       ethers.utils.parseEther((publicSalePrice || 0).toString()),
-      maxSalePurchasePerAddress,
+      maxSalePurchasePerAddress || UINT_32_MAX,
       BigNumber.from(Math.floor(new Date(publicSaleStart).getTime() / 1000)),
       BigNumber.from(Math.floor(new Date(publicSaleEnd).getTime() / 1000)),
       0, // presaleStart
@@ -62,7 +65,7 @@ export const Droposal: React.FC = () => {
           [
             name,
             symbol,
-            editionSize,
+            editionSize || UINT_64_MAX,
             royaltyBPS,
             fundsRecipient,
             defaultAdmin,
