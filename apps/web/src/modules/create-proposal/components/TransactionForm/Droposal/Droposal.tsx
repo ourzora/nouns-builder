@@ -43,7 +43,7 @@ export const Droposal: React.FC = () => {
     const royaltyBPS = royaltyPercentage * 100
     const salesConfig = [
       ethers.utils.parseEther((publicSalePrice || 0).toString()),
-      maxSalePurchasePerAddress,
+      maxSalePurchasePerAddress || 0,
       BigNumber.from(Math.floor(new Date(publicSaleStart).getTime() / 1000)),
       BigNumber.from(Math.floor(new Date(publicSaleEnd).getTime() / 1000)),
       0, // presaleStart
