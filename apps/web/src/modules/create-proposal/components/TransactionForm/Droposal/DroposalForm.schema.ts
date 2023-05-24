@@ -10,7 +10,7 @@ export interface DroposalFormValues {
   mediaType?: string
   coverUrl: string
   pricePerMint: number
-  maxPerAddress: number
+  maxPerAddress?: number
   maxSupply: number
   royaltyPercentage: number
   fundsRecipient: string

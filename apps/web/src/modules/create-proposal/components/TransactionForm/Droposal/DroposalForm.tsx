@@ -50,7 +50,6 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
     publicSaleEnd: '',
     royaltyPercentage: 5,
     pricePerMint: 0,
-    maxPerAddress: 1,
     maxSupply: 10,
   }
 
