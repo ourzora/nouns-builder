@@ -14,8 +14,6 @@ import {
   artworkSettingsPropertyName,
 } from 'src/styles/Artwork.css'
 
-import { useFormStore } from '../../stores'
-
 interface Trait {
   trait: string
   properties: string[]
@@ -23,6 +21,18 @@ interface Trait {
 }
 
 export type OrderedTraits = Array<Trait>
+
+export const getLayerName = (idx: number, layers?: OrderedTraits): string => {
+  if (idx === 0) {
+    return 'Top layer'
+  }
+
+  if (layers && idx === layers.length - 1) {
+    return 'Base layer'
+  }
+
+  return `Layer #${idx}`
+}
 
 export interface DragAndDropProps {
   draggedFrom?: number
@@ -39,6 +49,7 @@ interface LayerBoxProps {
   setDragAndDrop: (props: DragAndDropProps) => void
   dragAndDrop: DragAndDropProps | null
   orderedLayers: OrderedTraits
+  setOrderedLayers: (orderedLayers: OrderedTraits) => void
   index: number
 }
 
@@ -49,10 +60,9 @@ export const LayerBox: React.FC<LayerBoxProps> = ({
   setDragAndDrop,
   dragAndDrop,
   orderedLayers,
+  setOrderedLayers,
   index,
 }) => {
-  const { setOrderedLayers } = useFormStore()
-
   /*  toggle property animation  */
   const [isOpen, setIsOpen] = React.useState(false)
   const propertiesVariants = {
@@ -126,18 +136,6 @@ export const LayerBox: React.FC<LayerBoxProps> = ({
       draggedTo: null,
       isDragging: false,
     })
-  }
-
-  const getLayerName = (idx: number, layers?: OrderedTraits): string => {
-    if (idx === 0) {
-      return 'Top layer'
-    }
-
-    if (layers && idx === layers.length - 1) {
-      return 'Base layer'
-    }
-
-    return `Layer #${idx}`
   }
 
   /*  listen for if section is being dropped in drop area */

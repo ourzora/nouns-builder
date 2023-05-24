@@ -5,19 +5,16 @@ import React, { BaseSyntheticEvent, ChangeEventHandler, ReactElement } from 'rea
 
 import { ArtworkPreview, ArtworkUpload as UploadComponent } from 'src/components/Artwork'
 import { LayerOrdering } from 'src/components/Artwork/LayerOrdering'
-import { artworkPreviewPanel } from 'src/components/Fields/styles.css'
 import { IPFSUpload, useArtworkPreview, useArtworkUpload } from 'src/hooks'
+import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkStore'
 
-import { useFormStore } from '../../stores'
+import { artworkPreviewPanel } from './ArtworkUpload.css'
 
 const previewVariants = {
   closed: {
-    left: 0,
+    right: 0,
     top: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    x: '-105%',
+    x: '105%',
     opacity: 0,
     transition: {
       animate: 'easeInOut',
@@ -59,7 +56,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
     setIsUploadingToIPFS,
     orderedLayers,
     setOrderedLayers,
-  } = useFormStore()
+  } = useArtworkStore()
   const { artwork } = setUpArtwork
 
   const handleUploadSuccess = (ipfs: IPFSUpload[]) => {
@@ -114,7 +111,6 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
       return
 
     setSetUpArtwork({
-      ...formik.values,
       artwork: fileInfo.traits,
       filesLength: fileInfo.filesLength,
     })
