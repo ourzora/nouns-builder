@@ -77,8 +77,8 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
 
           const handleEditionTypeChanged = (value: string) => {
             value === 'open'
-              ? formik.setFieldValue('editionSize', 0)
-              : formik.setFieldValue('editionSize', undefined)
+              ? formik.setFieldValue('maxSupply', 0)
+              : formik.setFieldValue('maxSupply', undefined)
             setEditionType(value)
           }
 
