@@ -10,6 +10,7 @@ import { BidAmount } from '../BidAmount'
 import { ActionsWrapper } from '../BidHistory'
 import { WinningBidder } from '../WinningBidder'
 import { AuctionCountdown } from './AuctionCountdown'
+import { GroupBidLink } from './GroupBidLink'
 import { MemoizedPlaceBid } from './PlaceBid'
 import { RecentBids } from './RecentBids'
 import { Settle } from './Settle'
@@ -69,6 +70,7 @@ export const CurrentAuction = ({
 
       <ActionsWrapper>
         <MemoizedPlaceBid tokenId={tokenId} highestBid={bid} />
+        <GroupBidLink />
       </ActionsWrapper>
 
       <RecentBids bids={bids} />

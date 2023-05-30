@@ -33,6 +33,7 @@ import Pause from './assets/pause.svg'
 import Play from './assets/play.svg'
 import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
+import Sparkles from './assets/sparkles.svg'
 import Trash from './assets/trash.svg'
 import Twitter from './assets/twitter.svg'
 import Warning16 from './assets/warning-16.svg'
@@ -74,6 +75,7 @@ export const icons = {
   play: Play,
   plus: Plus,
   refresh: Refresh,
+  sparkles: Sparkles,
   trash: Trash,
   twitter: Twitter,
   warning: Warning,
