@@ -1,0 +1,112 @@
+type DAO @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  totalSupply: Int!
+  description: String!
+  contractImage: String!
+  projectURI: String!
+  tokenAddress: Bytes!
+  metadataAddress: Bytes!
+  auctionAddress: Bytes!
+  treasuryAddress: Bytes!
+  governorAddress: Bytes!
+  ownerCount: Int!
+  proposalCount: Int!
+  auctionConfig: AuctionConfig!
+  currentAuction: Auction
+  owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
+  tokens: [Token!]! @derivedFrom(field: "dao")
+  proposals: [Proposal!]! @derivedFrom(field: "dao")
+  auctions: [Auction!]! @derivedFrom(field: "dao")
+}
+
+type DAOTokenOwner @entity {
+  id: ID!
+  address: Bytes!
+  dao: DAO!
+  daoTokenCount: Int!
+  daoTokens: [Token!]! @derivedFrom(field: "ownerInfo")
+}
+
+type Token @entity {
+  id: ID!
+  name: String!
+  image: String!
+  tokenContract: Bytes!
+  tokenId: BigInt!
+  owner: Bytes!
+  ownerInfo: DAOTokenOwner!
+  mintedAt: BigInt!
+  dao: DAO!
+}
+
+type Proposal @entity {
+  id: ID!
+  proposalId: Bytes!
+  proposalNumber: Int!
+  dao: DAO!
+  targets: [Bytes!]!
+  values: [BigInt!]!
+  description: String!
+  proposer: Bytes!
+  timeCreated: BigInt!
+  againstVotes: BigInt!
+  forVotes: BigInt!
+  abstainVotes: BigInt!
+  voteStart: BigInt!
+  voteEnd: BigInt!
+  proposalThreshold: BigInt!
+  quorumVotes: BigInt!
+  queued: Boolean!
+  executed: Boolean!
+  canceled: Boolean!
+  vetoed: Boolean!
+  votes: [ProposalVote!]! @derivedFrom(field: "proposal")
+}
+
+enum ProposalVoteSupport {
+  FOR
+  AGAINST
+  ABSTAIN
+}
+
+type ProposalVote @entity {
+  id: ID!
+  voter: Bytes!
+  support: ProposalVoteSupport!
+  weight: BigInt!
+  reason: String
+  proposal: Proposal!
+}
+
+type AuctionConfig @entity {
+  id: ID!
+  duration: BigInt!
+  reservePrice: BigInt!
+  timeBuffer: BigInt!
+  minimumBidIncrement: BigInt!
+}
+
+type Auction @entity {
+  id: ID!
+  tokenId: BigInt!
+  dao: DAO!
+  startTime: BigInt!
+  endTime: BigInt!
+  estimatedDurationTime: BigInt!
+  extended: Boolean!
+  highestBid: AuctionBid
+  firstBidTime: BigInt
+  settled: Boolean!
+  bidCount: Int!
+  bids: [AuctionBid!] @derivedFrom(field: "auction")
+}
+
+type AuctionBid @entity {
+  id: ID!
+  amount: BigInt!
+  bidder: Bytes!
+  auction: Auction!
+  bidTime: BigInt!
+}

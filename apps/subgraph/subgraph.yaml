@@ -1,0 +1,138 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Manager
+    network: goerli
+    source:
+      abi: Manager
+      address: "0x0E9F3382Cf2508E3bc83248B5b4707FbA86D7Ee0"
+      startBlock: 7810600
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DAO
+        - AuctionSettings
+      abis:
+        - name: Manager
+          file: ./abis/Manager.json
+        - name: Token
+          file: ./abis/Token.json
+        - name: MetadataRenderer
+          file: ./abis/MetadataRenderer.json
+        - name: Auction
+          file: ./abis/Auction.json
+      eventHandlers:
+        - event: DAODeployed(address,address,address,address,address)
+          handler: handleDAODeployed
+      file: ./src/manager.ts
+templates:
+  - kind: ethereum
+    name: Token
+    network: goerli
+    source:
+      abi: Token
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Token
+        - DAO
+        - DAOTokenOwner
+      abis:
+        - name: Token
+          file: ./abis/Token.json
+        - name: MetadataRenderer
+          file: ./abis/MetadataRenderer.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/token.ts
+  - kind: ethereum
+    name: Governor
+    network: goerli
+    source:
+      abi: Governor
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+        - ProposalVote
+      abis:
+        - name: Governor
+          file: ./abis/Governor.json
+      eventHandlers:
+        - event: ProposalCreated(bytes32,address[],uint256[],bytes[],string,bytes32,(address,uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32,bool,bool,bool))
+          handler: handleProposalCreated
+        - event: ProposalQueued(bytes32,uint256)
+          handler: handleProposalQueued
+        - event: ProposalExecuted(bytes32)
+          handler: handleProposalExecuted
+        - event: ProposalCanceled(bytes32)
+          handler: handleProposalCanceled
+        - event: ProposalVetoed(bytes32)
+          handler: handleProposalVetoed
+        - event: VoteCast(address,bytes32,uint256,uint256,string)
+          handler: handleVoteCast
+      file: ./src/governor.ts
+  - kind: ethereum
+    name: MetadataRenderer
+    network: goerli
+    source:
+      abi: MetadataRenderer
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Proposal
+      abis:
+        - name: MetadataRenderer
+          file: ./abis/MetadataRenderer.json
+      eventHandlers:
+        - event: ContractImageUpdated(string,string)
+          handler: handleContractImageUpdated
+        - event: DescriptionUpdated(string,string)
+          handler: handleDescriptionUpdated
+        - event: WebsiteURIUpdated(string,string)
+          handler: handleWebsiteURIUpdated
+      file: ./src/metadata.ts
+  - kind: ethereum
+    name: Auction
+    network: goerli
+    source:
+      abi: Auction
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DAO
+        - Auction
+        - AuctionBid
+        - AuctionConfig
+      abis:
+        - name: Auction
+          file: ./abis/Auction.json
+      eventHandlers:
+        - event: AuctionCreated(uint256,uint256,uint256)
+          handler: handleAuctionCreated
+        - event: AuctionSettled(uint256,address,uint256)
+          handler: handleAuctionSettled
+        - event: AuctionBid(uint256,address,uint256,bool,uint256)
+          handler: handleAuctionBid
+        - event: DurationUpdated(uint256)
+          handler: handleDurationUpdated
+        - event: ReservePriceUpdated(uint256)
+          handler: handleReservePriceUpdated
+        - event: TimeBufferUpdated(uint256)
+          handler: handleTimeBufferUpdated
+        - event: MinBidIncrementPercentageUpdated(uint256)
+          handler: handleMinBidIncrementPercentageUpdated
+      file: ./src/auction.ts
