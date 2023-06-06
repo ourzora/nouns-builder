@@ -8,9 +8,8 @@ import { store } from '@graphprotocol/graph-ts'
 let ADDRESS_ZERO = Bytes.fromHexString('0x0000000000000000000000000000000000000000')
 
 export function handleTransfer(event: TransferEvent): void {
-  let token = Token.load(
-    `${event.address.toHexString()}:${event.params.tokenId.toHexString()}`
-  )
+  let tokenId = `${event.address.toHexString()}:${event.params.tokenId.toHexString()}`
+  let token = Token.load(tokenId)
   let dao = DAO.load(event.address.toHexString())!
 
   // Handle loading token data on first transfer
@@ -24,9 +23,7 @@ export function handleTransfer(event: TransferEvent): void {
 
     let attributes = metadataContract.getAttributes(event.params.tokenId)
 
-    token = new Token(
-      event.address.toHexString() + ':' + event.params.tokenId.toHexString()
-    )
+    token = new Token(tokenId)
 
     token.name = `${tokenContract.name()} #${event.params.tokenId.toString()}`
     token.image = `${metadataContract.rendererBase()}${attributes.value1}`
@@ -44,17 +41,22 @@ export function handleTransfer(event: TransferEvent): void {
   token.save()
 
   // Handle loading to owner
-  let toOwnerId = `${event.address.toHexString()}:${event.params.to.toHexString()}`
-  let toOwner = DAOTokenOwner.load(toOwnerId)
-  if (!toOwner) {
-    toOwner = new DAOTokenOwner(toOwnerId)
-    toOwner.daoTokenCount = 1
-    toOwner.dao = event.address.toHexString()
-    toOwner.address = event.params.to
-    dao.ownerCount = dao.ownerCount + 1
-  } else toOwner.daoTokenCount = toOwner.daoTokenCount + 1
+  if (event.params.to.notEqual(ADDRESS_ZERO)) {
+    let toOwnerId = `${event.address.toHexString()}:${event.params.to.toHexString()}`
+    let toOwner = DAOTokenOwner.load(toOwnerId)
+    if (!toOwner) {
+      toOwner = new DAOTokenOwner(toOwnerId)
+      toOwner.daoTokenCount = 1
+      toOwner.dao = event.address.toHexString()
+      toOwner.address = event.params.to
+      dao.ownerCount = dao.ownerCount + 1
+    } else toOwner.daoTokenCount = toOwner.daoTokenCount + 1
 
-  toOwner.save()
+    toOwner.save()
+  } else {
+    // Handle burning
+    dao.totalSupply = dao.totalSupply - 1
+  }
 
   // Handle loading from owner
   if (event.params.from.notEqual(ADDRESS_ZERO)) {
