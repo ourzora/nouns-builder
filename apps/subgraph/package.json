@@ -8,8 +8,7 @@
     "deploy": "graph deploy --product hosted-service neokry/nouns-builder-goerli",
     "create-local": "graph create --node http://localhost:8020/ nouns-builder",
     "remove-local": "graph remove --node http://localhost:8020/ nouns-builder",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 --network goerli nouns-builder",
-    "test": "graph test"
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 --network goerli nouns-builder"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.50.1",
