@@ -48,7 +48,8 @@ type Proposal @entity {
   dao: DAO!
   targets: [Bytes!]!
   values: [BigInt!]!
-  description: String!
+  title: String
+  description: String
   proposer: Bytes!
   timeCreated: BigInt!
   againstVotes: BigInt!
@@ -62,6 +63,7 @@ type Proposal @entity {
   executed: Boolean!
   canceled: Boolean!
   vetoed: Boolean!
+  voteCount: Int!
   votes: [ProposalVote!]! @derivedFrom(field: "proposal")
 }
 

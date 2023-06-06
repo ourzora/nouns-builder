@@ -1,9 +1,9 @@
+import { DAO } from '../generated/schema'
 import {
   ContractImageUpdated as ContractImageUpdatedEvent,
   DescriptionUpdated as DescriptionUpdatedEvent,
   WebsiteURIUpdated as URIUpdatedEvent,
-} from '../generated/MetadataRenderer/MetadataRenderer'
-import { DAO } from '../generated/schema'
+} from '../generated/templates/MetadataRenderer/MetadataRenderer'
 import { dataSource } from '@graphprotocol/graph-ts'
 
 export function handleContractImageUpdated(event: ContractImageUpdatedEvent): void {

@@ -1,7 +1,4 @@
-import { Auction as AuctionContract } from '../generated/Auction/Auction'
 import { DAODeployed as DAODeployedEvent } from '../generated/Manager/Manager'
-import { MetadataRenderer as MetadataContract } from '../generated/MetadataRenderer/MetadataRenderer'
-import { Token as TokenContract } from '../generated/Token/Token'
 import { AuctionConfig, DAO } from '../generated/schema'
 import {
   Auction as AuctionTemplate,
@@ -9,6 +6,9 @@ import {
   MetadataRenderer as MetadataRendererTemplate,
   Token as TokenTemplate,
 } from '../generated/templates'
+import { Auction as AuctionContract } from '../generated/templates/Auction/Auction'
+import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
+import { Token as TokenContract } from '../generated/templates/Token/Token'
 import { DataSourceContext } from '@graphprotocol/graph-ts'
 
 export function handleDAODeployed(event: DAODeployedEvent): void {

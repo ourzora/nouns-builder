@@ -1,3 +1,4 @@
+import { DAO, Proposal, ProposalVote } from '../generated/schema'
 import {
   ProposalCanceled as ProposalCanceledEvent,
   ProposalCreated as ProposalCreatedEvent,
@@ -5,8 +6,7 @@ import {
   ProposalQueued as ProposalQueuedEvent,
   ProposalVetoed as ProposalVetoedEvent,
   VoteCast as VoteCastEvent,
-} from '../generated/Governor/Governor'
-import { DAO, Proposal, ProposalVote } from '../generated/schema'
+} from '../generated/templates/Governor/Governor'
 import { BigInt, dataSource, log } from '@graphprotocol/graph-ts'
 
 export function handleProposalCreated(event: ProposalCreatedEvent): void {
@@ -24,9 +24,14 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
     proposal.targets.push(event.params.targets[i])
   }
 
+  let split = event.params.description.split('&&')
+  let title = split.length > 0 && split[0].length > 0 ? split[0] : null
+  let description = split.length > 1 && split[1].length > 0 ? split[1] : null
+
   proposal.values = event.params.values
   //proposal.calldatas = event.params.calldatas
-  proposal.description = event.params.description
+  proposal.title = title
+  proposal.description = description
   proposal.proposer = event.params.proposal.proposer
   proposal.timeCreated = event.params.proposal.timeCreated
   proposal.againstVotes = event.params.proposal.againstVotes
@@ -41,6 +46,7 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.vetoed = event.params.proposal.vetoed
   proposal.queued = false
   proposal.dao = context.getString('tokenAddress')
+  proposal.voteCount = 0
 
   proposal.save()
 
@@ -103,6 +109,8 @@ export function handleVoteCast(event: VoteCastEvent): void {
   } else {
     log.error('Unknown vote support type: {}', [support.toString()])
   }
+
+  proposal.voteCount = proposal.voteCount + 1
 
   proposal.save()
   proposalVote.save()

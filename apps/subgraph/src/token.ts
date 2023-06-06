@@ -1,7 +1,7 @@
-import { MetadataRenderer as MetadataContract } from '../generated/MetadataRenderer/MetadataRenderer'
-import { Transfer as TransferEvent } from '../generated/Token/Token'
-import { Token as TokenContract } from '../generated/Token/Token'
 import { DAO, DAOTokenOwner, Token } from '../generated/schema'
+import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
+import { Transfer as TransferEvent } from '../generated/templates/Token/Token'
+import { Token as TokenContract } from '../generated/templates/Token/Token'
 import { Address, Bytes, dataSource } from '@graphprotocol/graph-ts'
 import { store } from '@graphprotocol/graph-ts'
 

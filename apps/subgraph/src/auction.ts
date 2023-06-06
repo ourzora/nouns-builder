@@ -1,3 +1,4 @@
+import { Auction, AuctionBid, AuctionConfig, DAO } from '../generated/schema'
 import {
   AuctionBid as AuctionBidEvent,
   AuctionCreated as AuctionCreatedEvent,
@@ -6,8 +7,7 @@ import {
   MinBidIncrementPercentageUpdated as MinBidIncrementPercentageUpdatedEvent,
   ReservePriceUpdated as ReservePriceUpdatedEvent,
   TimeBufferUpdated as TimeBufferUpdatedEvent,
-} from '../generated/Auction/Auction'
-import { Auction, AuctionBid, AuctionConfig, DAO } from '../generated/schema'
+} from '../generated/templates/Auction/Auction'
 import { dataSource } from '@graphprotocol/graph-ts'
 
 export function handleAuctionCreated(event: AuctionCreatedEvent): void {
