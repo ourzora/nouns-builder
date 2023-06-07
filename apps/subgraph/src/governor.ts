@@ -20,11 +20,19 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.proposalId = event.params.proposalId
   proposal.proposalNumber = newProposalCount
 
+  // Loop through and build the targets array (bytes array copying not implemented in assemblyscript)
   let targets: Bytes[] = []
   for (let i = 0; i < event.params.targets.length; i++) {
     targets[i] = event.params.targets[i]
   }
   proposal.targets = targets
+
+  // Loop through and build the calldatas array (bytes array copying not implemented in assemblyscript)
+  let calldatas: Bytes[] = []
+  for (let i = 0; i < event.params.calldatas.length; i++) {
+    calldatas[i] = event.params.calldatas[i]
+  }
+  proposal.calldatas = calldatas
 
   let split = event.params.description.split('&&')
   let title = split.length > 0 && split[0].length > 0 ? split[0] : null

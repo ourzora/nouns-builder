@@ -48,7 +48,7 @@ export function handleTransfer(event: TransferEvent): void {
       toOwner = new DAOTokenOwner(toOwnerId)
       toOwner.daoTokenCount = 1
       toOwner.dao = event.address.toHexString()
-      toOwner.address = event.params.to
+      toOwner.owner = event.params.to
       dao.ownerCount = dao.ownerCount + 1
     } else toOwner.daoTokenCount = toOwner.daoTokenCount + 1
 
