@@ -98,7 +98,6 @@ type Auction @entity {
   dao: DAO!
   startTime: BigInt!
   endTime: BigInt!
-  estimatedDurationTime: BigInt!
   extended: Boolean!
   highestBid: AuctionBid
   firstBidTime: BigInt

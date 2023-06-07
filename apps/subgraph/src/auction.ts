@@ -20,7 +20,6 @@ export function handleAuctionCreated(event: AuctionCreatedEvent): void {
   auction.dao = tokenAddress
   auction.startTime = event.params.startTime
   auction.endTime = event.params.endTime
-  auction.estimatedDurationTime = auction.endTime.minus(auction.startTime)
   auction.extended = false
   auction.settled = false
   auction.bidCount = 0
