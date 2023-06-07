@@ -7,7 +7,8 @@ import {
   ProposalVetoed as ProposalVetoedEvent,
   VoteCast as VoteCastEvent,
 } from '../generated/templates/Governor/Governor'
-import { BigInt, dataSource, log } from '@graphprotocol/graph-ts'
+import { Treasury as TreasuryContract } from '../generated/templates/Governor/Treasury'
+import { Address, BigInt, dataSource, log } from '@graphprotocol/graph-ts'
 
 export function handleProposalCreated(event: ProposalCreatedEvent): void {
   let proposal = new Proposal(event.params.proposalId.toHexString())
@@ -55,7 +56,12 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
 }
 
 export function handleProposalQueued(event: ProposalQueuedEvent): void {
+  let context = dataSource.context()
+  let treasuryAddress = context.getString('treasuryAddress')
+  let treasuryContract = TreasuryContract.bind(Address.fromString(treasuryAddress))
+
   let proposal = new Proposal(event.params.proposalId.toHexString())
+  proposal.expiresAt = event.params.eta.plus(treasuryContract.gracePeriod())
   proposal.queued = true
   proposal.save()
 }

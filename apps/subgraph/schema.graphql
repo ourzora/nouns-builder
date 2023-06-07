@@ -52,6 +52,7 @@ type Proposal @entity {
   description: String
   proposer: Bytes!
   timeCreated: BigInt!
+  expiresAt: BigInt
   againstVotes: BigInt!
   forVotes: BigInt!
   abstainVotes: BigInt!

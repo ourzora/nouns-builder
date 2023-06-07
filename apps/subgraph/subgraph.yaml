@@ -67,6 +67,8 @@ templates:
       abis:
         - name: Governor
           file: ./abis/Governor.json
+        - name: Treasury
+          file: ./abis/Treasury.json
       eventHandlers:
         - event: ProposalCreated(bytes32,address[],uint256[],bytes[],string,bytes32,(address,uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32,bool,bool,bool))
           handler: handleProposalCreated
