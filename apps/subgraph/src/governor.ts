@@ -8,7 +8,7 @@ import {
   VoteCast as VoteCastEvent,
 } from '../generated/templates/Governor/Governor'
 import { Treasury as TreasuryContract } from '../generated/templates/Governor/Treasury'
-import { Address, BigInt, dataSource, log } from '@graphprotocol/graph-ts'
+import { Address, BigInt, Bytes, dataSource, log } from '@graphprotocol/graph-ts'
 
 export function handleProposalCreated(event: ProposalCreatedEvent): void {
   let proposal = new Proposal(event.params.proposalId.toHexString())
@@ -20,10 +20,11 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.proposalId = event.params.proposalId
   proposal.proposalNumber = newProposalCount
 
-  proposal.targets = []
+  let targets: Bytes[] = []
   for (let i = 0; i < event.params.targets.length; i++) {
-    proposal.targets.push(event.params.targets[i])
+    targets[i] = event.params.targets[i]
   }
+  proposal.targets = targets
 
   let split = event.params.description.split('&&')
   let title = split.length > 0 && split[0].length > 0 ? split[0] : null
