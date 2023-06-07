@@ -66,6 +66,8 @@ export function handleTransfer(event: TransferEvent): void {
       store.remove('DAOTokenOwner', fromOwnerId)
       dao.ownerCount = dao.ownerCount - 1
     } else fromOwner.daoTokenCount = fromOwner.daoTokenCount - 1
+
+    fromOwner.save()
   }
 
   dao.save()
