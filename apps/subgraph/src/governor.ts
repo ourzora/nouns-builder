@@ -28,9 +28,9 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.targets = targets
 
   // Loop through and build the calldatas array (bytes array copying not implemented in assemblyscript)
-  let calldatas: Bytes[] = []
+  let calldatas: string = ''
   for (let i = 0; i < event.params.calldatas.length; i++) {
-    calldatas[i] = event.params.calldatas[i]
+    calldatas = calldatas + ':' + event.params.calldatas[i].toHexString()
   }
   proposal.calldatas = calldatas
 

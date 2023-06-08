@@ -48,7 +48,7 @@ type Proposal @entity {
   dao: DAO!
   targets: [Bytes!]!
   values: [BigInt!]!
-  calldatas: [Bytes!]!
+  calldatas: String!
   title: String
   description: String
   proposer: Bytes!
