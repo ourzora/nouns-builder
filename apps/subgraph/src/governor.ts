@@ -27,7 +27,7 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   }
   proposal.targets = targets
 
-  // Loop through and build the calldatas array (bytes array copying not implemented in assemblyscript)
+  // Loop through and build the calldatas string (bytes array was hitting index limits that strings do not have)
   let calldatas: string = ''
   for (let i = 0; i < event.params.calldatas.length; i++) {
     calldatas = calldatas + ':' + event.params.calldatas[i].toHexString()
@@ -39,7 +39,6 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   let description = split.length > 1 && split[1].length > 0 ? split[1] : null
 
   proposal.values = event.params.values
-  //proposal.calldatas = event.params.calldatas
   proposal.title = title
   proposal.description = description
   proposal.proposer = event.params.proposal.proposer
