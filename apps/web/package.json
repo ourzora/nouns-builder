@@ -90,7 +90,7 @@
     "jsdom": "^20.0.1",
     "tsconfig": "workspace:*",
     "typescript": "^4.9.4",
-    "vite": "latest",
+    "vite": "^4.1.4",
     "vite-plugin-svgr": "^2.4.0",
     "vitest": "^0.27.3"
   }
