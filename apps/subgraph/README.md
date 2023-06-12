@@ -27,6 +27,7 @@ NETWORK_NAME=mainnet
 
 ### Development
 
+- create a `.env` file with the required environment variables
 - generate types with `pnpm codegen`
 - build the subgraph with `pnpm build`
 - run the local graph node with `pnpm local-node`

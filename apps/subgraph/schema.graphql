@@ -100,6 +100,7 @@ type Auction @entity {
   endTime: BigInt!
   extended: Boolean!
   highestBid: AuctionBid
+  winningBid: AuctionBid
   firstBidTime: BigInt
   settled: Boolean!
   bidCount: Int!

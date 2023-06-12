@@ -37,6 +37,7 @@ export function handleAuctionSettled(event: AuctionSettledEvent): void {
   let auction = Auction.load(`${tokenAddress}:${event.params.tokenId.toHexString()}`)!
 
   auction.settled = true
+  auction.winningBid = auction.highestBid
   auction.save()
 
   let dao = DAO.load(tokenAddress)!
