@@ -8,7 +8,7 @@ import { store } from '@graphprotocol/graph-ts'
 let ADDRESS_ZERO = Bytes.fromHexString('0x0000000000000000000000000000000000000000')
 
 export function handleTransfer(event: TransferEvent): void {
-  let tokenId = `${event.address.toHexString()}:${event.params.tokenId.toHexString()}`
+  let tokenId = `${event.address.toHexString()}:${event.params.tokenId.toString()}`
   let token = Token.load(tokenId)
   let dao = DAO.load(event.address.toHexString())!
 

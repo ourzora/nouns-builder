@@ -14,7 +14,7 @@ export function handleAuctionCreated(event: AuctionCreatedEvent): void {
   let context = dataSource.context()
 
   let tokenAddress = context.getString('tokenAddress')
-  let auction = new Auction(`${tokenAddress}:${event.params.tokenId.toHexString()}`)
+  let auction = new Auction(`${tokenAddress}:${event.params.tokenId.toString()}`)
 
   auction.tokenId = event.params.tokenId
   auction.dao = tokenAddress
@@ -34,7 +34,7 @@ export function handleAuctionSettled(event: AuctionSettledEvent): void {
   let context = dataSource.context()
 
   let tokenAddress = context.getString('tokenAddress')
-  let auction = Auction.load(`${tokenAddress}:${event.params.tokenId.toHexString()}`)!
+  let auction = Auction.load(`${tokenAddress}:${event.params.tokenId.toString()}`)!
 
   auction.settled = true
   auction.winningBid = auction.highestBid
@@ -56,11 +56,11 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
 
   bid.amount = event.params.amount
   bid.bidder = event.params.bidder
-  bid.auction = `${tokenAddress}:${event.params.tokenId.toHexString()}`
+  bid.auction = `${tokenAddress}:${event.params.tokenId.toString()}`
   bid.bidTime = event.block.timestamp
   bid.save()
 
-  let auction = Auction.load(`${tokenAddress}:${event.params.tokenId.toHexString()}`)!
+  let auction = Auction.load(`${tokenAddress}:${event.params.tokenId.toString()}`)!
   if (auction.bidCount === 0) auction.firstBidTime = event.block.timestamp
   auction.bidCount = auction.bidCount + 1
   auction.highestBid = bid.id
