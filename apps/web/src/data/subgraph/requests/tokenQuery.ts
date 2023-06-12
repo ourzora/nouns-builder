@@ -24,9 +24,7 @@ export const tokenQuery = async (
 ): Promise<Token | undefined> => {
   if (!address) return
 
-  console.log('id', `${address.toLowerCase()}:0x${tokenId}`)
   const data = await sdk.token({ id: `${address.toLowerCase()}:${tokenId}` })
-  console.log('data', data)
 
   const token = data?.token
 
@@ -42,7 +40,7 @@ export const tokenQuery = async (
         name: token.name || undefined,
         description: token.dao.description || undefined,
         image: token.image || undefined,
-        mintDate: token.mintedAt || undefined,
+        mintDate: token.mintedAt ? token.mintedAt * 1000 : undefined,
       },
       isUndefined
     ),
