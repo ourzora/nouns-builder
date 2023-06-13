@@ -7,11 +7,10 @@ import rehypeSanitize from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
 import useSWR from 'swr'
 
-import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { sdk } from 'src/data/graphql/client'
 import { Proposal } from 'src/data/graphql/requests/proposalQuery'
-import { SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
+import { sdk } from 'src/data/subgraph/client'
+import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 
@@ -43,12 +42,12 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
     !!collection && !!proposer ? [SWR_KEYS.TOKEN_IMAGE, collection, proposer] : null,
     async (_, collection, proposer) => {
       const data = await sdk.tokens({
-        chain: CHAIN,
-        pagination: { limit: 1 },
-        where: { ownerAddresses: [proposer], collectionAddresses: [collection] },
-        sort: { sortKey: TokenSortKey.Minted, sortDirection: SortDirection.Asc },
+        where: { owner: proposer, tokenContract: collection },
+        first: 1,
+        orderBy: Token_OrderBy.MintedAt,
+        orderDirection: OrderDirection.Asc,
       })
-      return data?.tokens?.nodes[0]?.token?.image?.url
+      return data?.tokens?.[0]?.image
     },
     { revalidateOnFocus: false }
   )
