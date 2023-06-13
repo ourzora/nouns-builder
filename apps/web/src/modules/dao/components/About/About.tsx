@@ -7,10 +7,9 @@ import useSWR from 'swr'
 import { Address, useBalance, useContractReads } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar/Avatar'
-import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
-import { sdk } from 'src/data/graphql/client'
+import { sdk } from 'src/data/subgraph/client'
 import { useLayoutStore } from 'src/stores'
 import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
 import { unpackOptionalArray } from 'src/utils/helpers'
@@ -55,13 +54,14 @@ export const About: React.FC = () => {
   const { data: balance } = useBalance({ address: treasury as Address })
 
   const { data } = useSWR(token ? [SWR_KEYS.DAO_INFO, token] : null, async (_, token) => {
-    const res = await sdk.daoInfo({
-      collectionAddress: token,
-      chain: CHAIN,
-    })
+    const res = await sdk
+      .daoInfo({
+        tokenAddress: token,
+      })
+      .then((x) => x.dao)
 
     return {
-      ownerCount: res?.aggregateStat?.ownerCount,
+      ownerCount: res?.ownerCount,
     }
   })
 

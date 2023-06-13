@@ -171,10 +171,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
               {(tokens?.tokens.length || 0) > 0 ? (
                 <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
                   {tokens?.tokens.map((x, i) => (
-                    <Link
-                      key={i}
-                      href={`/dao/${x.tokenContract?.collectionAddress}/${x.tokenId}`}
-                    >
+                    <Link key={i} href={`/dao/${x.tokenContract}/${x.tokenId}`}>
                       <TokenPreview name={x.name} image={x.image} />
                     </Link>
                   ))}
