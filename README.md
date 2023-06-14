@@ -12,6 +12,7 @@ For an introduction to Nouns Builder and its concept, you can find further [docu
 `apps`
 
 - `web`: Nouns Builder front-end
+- `subgraph`: Nouns Builder subgraph
 
 `packages`
 

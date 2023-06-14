@@ -1,0 +1,14 @@
+{
+  "mainnet": {
+    "Manager": {
+      "address": "0xd310a3041dfcf14def5ccbc508668974b5da7174",
+      "startBlock": 15799000
+    }
+  },
+  "goerli": {
+    "Manager": {
+      "address": "0x0E9F3382Cf2508E3bc83248B5b4707FbA86D7Ee0",
+      "startBlock": 7810600
+    }
+  }
+}
