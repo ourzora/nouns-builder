@@ -42,7 +42,7 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
     !!collection && !!proposer ? [SWR_KEYS.TOKEN_IMAGE, collection, proposer] : null,
     async (_, collection, proposer) => {
       const data = await sdk.tokens({
-        where: { owner: proposer, tokenContract: collection },
+        where: { owner: proposer.toLowerCase(), tokenContract: collection.toLowerCase() },
         first: 1,
         orderBy: Token_OrderBy.MintedAt,
         orderDirection: OrderDirection.Asc,
