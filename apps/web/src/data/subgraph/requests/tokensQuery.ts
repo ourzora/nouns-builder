@@ -12,7 +12,7 @@ export const tokensQuery = async (
   const limit = 12
   const res = await sdk.tokens({
     where: {
-      owner: owner,
+      owner: owner.toLowerCase(),
     },
     orderBy: Token_OrderBy.MintedAt,
     orderDirection: OrderDirection.Desc,
