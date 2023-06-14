@@ -56,7 +56,7 @@ export const About: React.FC = () => {
   const { data } = useSWR(token ? [SWR_KEYS.DAO_INFO, token] : null, async (_, token) => {
     const res = await sdk
       .daoInfo({
-        tokenAddress: token,
+        tokenAddress: token.toLowerCase(),
       })
       .then((x) => x.dao)
 
