@@ -1,6 +1,5 @@
 import { Box, Flex } from '@zoralabs/zord'
 import axios from 'axios'
-import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
@@ -10,9 +9,9 @@ import useSWR, { unstable_serialize } from 'swr'
 import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { SectionHandler } from 'src/modules/dao'
+import { SectionHandler, useDaoStore } from 'src/modules/dao'
 import {
   ProposalActions,
   ProposalDescription,
@@ -39,6 +38,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   ogImageURL,
 }) => {
   const { query } = useRouter()
+  const { governor } = useDaoStore((x) => x.addresses)
 
   const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, proposalId], (_, id) =>
     getProposal(proposalId)
@@ -64,7 +64,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
     return null
   }
 
-  const displayActions = isProposalOpen(proposal.status)
+  const displayActions = isProposalOpen(proposal.state)
 
   return (
     <Fragment>
@@ -127,23 +127,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     }
   }
 
-  if (
-    ethers.utils.getAddress(proposal.collectionAddress) !==
-    ethers.utils.getAddress(collection)
-  ) {
-    return {
-      notFound: true,
-    }
-  }
-
   const ogMetadata: ProposalOgMetadata = {
     proposal: {
       proposalNumber: proposal.proposalNumber,
       title: proposal.title,
-      status: proposal.status,
       forVotes: proposal.forVotes,
       againstVotes: proposal.againstVotes,
       abstainVotes: proposal.abstainVotes,
+      state: proposal.state,
     },
     daoName: collectionName,
     daoImage: collectionImage,
@@ -153,7 +144,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     req.headers.host
   }/api/og/proposal?data=${encodeURIComponent(JSON.stringify(ogMetadata))}`
 
-  const { maxAge, swr } = isProposalOpen(proposal.status)
+  const { maxAge, swr } = isProposalOpen(proposal.state)
     ? CACHE_TIMES.IN_PROGRESS_PROPOSAL
     : CACHE_TIMES.SETTLED_PROPOSAL
 

@@ -30,9 +30,10 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   // Loop through and build the calldatas string (bytes array was hitting index limits that strings do not have)
   let calldatas: string = ''
   for (let i = 0; i < event.params.calldatas.length; i++) {
-    calldatas = calldatas + ':' + event.params.calldatas[i].toHexString()
+    if (i === 0) calldatas = event.params.calldatas[i].toHexString()
+    else calldatas = calldatas + ':' + event.params.calldatas[i].toHexString()
   }
-  proposal.calldatas = calldatas
+  proposal.calldatas = calldatas.length > 1 ? calldatas : null
 
   let split = event.params.description.split('&&')
   let title = split.length > 0 && split[0].length > 0 ? split[0] : null
@@ -41,6 +42,7 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.values = event.params.values
   proposal.title = title
   proposal.description = description
+  proposal.descriptionHash = event.params.descriptionHash
   proposal.proposer = event.params.proposal.proposer
   proposal.timeCreated = event.params.proposal.timeCreated
   proposal.againstVotes = event.params.proposal.againstVotes
@@ -56,6 +58,8 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.queued = false
   proposal.dao = context.getString('tokenAddress')
   proposal.voteCount = 0
+  proposal.snapshotBlockNumber = event.block.number
+  proposal.transactionHash = event.transaction.hash
 
   proposal.save()
 
@@ -69,6 +73,7 @@ export function handleProposalQueued(event: ProposalQueuedEvent): void {
   let treasuryContract = TreasuryContract.bind(Address.fromString(treasuryAddress))
 
   let proposal = new Proposal(event.params.proposalId.toHexString())
+  proposal.executableFrom = event.params.eta
   proposal.expiresAt = event.params.eta.plus(treasuryContract.gracePeriod())
   proposal.queued = true
   proposal.save()

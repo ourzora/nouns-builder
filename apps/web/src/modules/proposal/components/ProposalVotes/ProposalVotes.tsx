@@ -4,7 +4,7 @@ import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionSettledRequest } from 'src/data/graphql/requests/auctionSettledQuery'
-import { Proposal } from 'src/data/graphql/requests/proposalQuery'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useDaoStore } from 'src/modules/dao'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 

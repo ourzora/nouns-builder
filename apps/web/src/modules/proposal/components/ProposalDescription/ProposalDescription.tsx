@@ -8,8 +8,8 @@ import remarkGfm from 'remark-gfm'
 import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { Proposal } from 'src/data/graphql/requests/proposalQuery'
 import { sdk } from 'src/data/subgraph/client'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { propPageWrapper } from 'src/styles/Proposals.css'
@@ -57,13 +57,15 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
       <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
         <Section title="Description">
           <Paragraph overflow={'auto'}>
-            <ReactMarkdown
-              className={proposalDescription}
-              rehypePlugins={[rehypeRaw, rehypeSanitize]}
-              remarkPlugins={[remarkGfm]}
-            >
-              {description}
-            </ReactMarkdown>
+            {description && (
+              <ReactMarkdown
+                className={proposalDescription}
+                rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                remarkPlugins={[remarkGfm]}
+              >
+                {description}
+              </ReactMarkdown>
+            )}
           </Paragraph>
         </Section>
 
