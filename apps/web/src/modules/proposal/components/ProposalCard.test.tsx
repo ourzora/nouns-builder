@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { render } from 'src/test/utils'
 
 import { ProposalCard } from './ProposalCard'
@@ -26,7 +26,7 @@ describe('proposaal card', () => {
         timeCreated={1668002568}
         title="A proposal title"
         proposalNumber={1}
-        status={NounsProposalStatus.Succeeded}
+        state={ProposalState.Succeeded}
         collection="sdflkdsjf"
         voteEnd={dayjs('2/1/21').unix()}
         voteStart={dayjs('1/1/21').unix()}
@@ -45,7 +45,7 @@ describe('proposaal card', () => {
         timeCreated={dayjs(date).unix()}
         title="A proposal title"
         proposalNumber={1}
-        status={NounsProposalStatus.Active}
+        state={ProposalState.Active}
         collection="sdflkdsjf"
         voteEnd={dayjs(date).add(2, 'day').unix()}
         voteStart={dayjs(date).subtract(1, 'day').unix()}
