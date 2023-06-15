@@ -45,9 +45,9 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.descriptionHash = event.params.descriptionHash
   proposal.proposer = event.params.proposal.proposer
   proposal.timeCreated = event.params.proposal.timeCreated
-  proposal.againstVotes = event.params.proposal.againstVotes
-  proposal.forVotes = event.params.proposal.forVotes
-  proposal.abstainVotes = event.params.proposal.abstainVotes
+  proposal.againstVotes = event.params.proposal.againstVotes.toI32()
+  proposal.forVotes = event.params.proposal.forVotes.toI32()
+  proposal.abstainVotes = event.params.proposal.abstainVotes.toI32()
   proposal.voteStart = event.params.proposal.voteStart
   proposal.voteEnd = event.params.proposal.voteEnd
   proposal.proposalThreshold = event.params.proposal.proposalThreshold
@@ -108,22 +108,23 @@ export function handleVoteCast(event: VoteCastEvent): void {
   )
 
   proposalVote.voter = event.params.voter
-  proposalVote.weight = event.params.weight
+  proposalVote.weight = event.params.weight.toI32()
   proposalVote.reason = event.params.reason.length > 0 ? event.params.reason : null
   proposalVote.proposal = proposalId
 
   let support = event.params.support
+  let weight = event.params.weight.toI32()
   // If the vote is against:
   if (support.equals(BigInt.fromI32(0))) {
-    proposal.againstVotes = proposal.againstVotes.plus(event.params.weight)
+    proposal.againstVotes = proposal.againstVotes + weight
     proposalVote.support = 'AGAINST'
     // Else if the vote is for:
   } else if (support.equals(BigInt.fromI32(1))) {
-    proposal.forVotes = proposal.forVotes.plus(event.params.weight)
+    proposal.forVotes = proposal.forVotes + weight
     proposalVote.support = 'FOR'
     // Else if the vote is to abstain:
   } else if (support.equals(BigInt.fromI32(2))) {
-    proposal.abstainVotes = proposal.abstainVotes.plus(event.params.weight)
+    proposal.abstainVotes = proposal.abstainVotes + weight
     proposalVote.support = 'ABSTAIN'
   } else {
     log.error('Unknown vote support type: {}', [support.toString()])

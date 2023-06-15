@@ -802,9 +802,9 @@ export enum OrderDirection {
 
 export type Proposal = {
   __typename?: 'Proposal'
-  abstainVotes: Scalars['BigInt']
-  againstVotes: Scalars['BigInt']
-  calldatas: Scalars['String']
+  abstainVotes: Scalars['Int']
+  againstVotes: Scalars['Int']
+  calldatas?: Maybe<Scalars['String']>
   canceled: Scalars['Boolean']
   dao: Dao
   description?: Maybe<Scalars['String']>
@@ -812,7 +812,7 @@ export type Proposal = {
   executableFrom?: Maybe<Scalars['BigInt']>
   executed: Scalars['Boolean']
   expiresAt?: Maybe<Scalars['BigInt']>
-  forVotes: Scalars['BigInt']
+  forVotes: Scalars['Int']
   id: Scalars['ID']
   proposalId: Scalars['Bytes']
   proposalNumber: Scalars['Int']
@@ -848,7 +848,7 @@ export type ProposalVote = {
   reason?: Maybe<Scalars['String']>
   support: ProposalVoteSupport
   voter: Scalars['Bytes']
-  weight: Scalars['BigInt']
+  weight: Scalars['Int']
 }
 
 export enum ProposalVoteSupport {
@@ -925,14 +925,14 @@ export type ProposalVote_Filter = {
   voter_not?: InputMaybe<Scalars['Bytes']>
   voter_not_contains?: InputMaybe<Scalars['Bytes']>
   voter_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  weight?: InputMaybe<Scalars['BigInt']>
-  weight_gt?: InputMaybe<Scalars['BigInt']>
-  weight_gte?: InputMaybe<Scalars['BigInt']>
-  weight_in?: InputMaybe<Array<Scalars['BigInt']>>
-  weight_lt?: InputMaybe<Scalars['BigInt']>
-  weight_lte?: InputMaybe<Scalars['BigInt']>
-  weight_not?: InputMaybe<Scalars['BigInt']>
-  weight_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  weight?: InputMaybe<Scalars['Int']>
+  weight_gt?: InputMaybe<Scalars['Int']>
+  weight_gte?: InputMaybe<Scalars['Int']>
+  weight_in?: InputMaybe<Array<Scalars['Int']>>
+  weight_lt?: InputMaybe<Scalars['Int']>
+  weight_lte?: InputMaybe<Scalars['Int']>
+  weight_not?: InputMaybe<Scalars['Int']>
+  weight_not_in?: InputMaybe<Array<Scalars['Int']>>
 }
 
 export enum ProposalVote_OrderBy {
@@ -972,22 +972,22 @@ export enum ProposalVote_OrderBy {
 export type Proposal_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
-  abstainVotes?: InputMaybe<Scalars['BigInt']>
-  abstainVotes_gt?: InputMaybe<Scalars['BigInt']>
-  abstainVotes_gte?: InputMaybe<Scalars['BigInt']>
-  abstainVotes_in?: InputMaybe<Array<Scalars['BigInt']>>
-  abstainVotes_lt?: InputMaybe<Scalars['BigInt']>
-  abstainVotes_lte?: InputMaybe<Scalars['BigInt']>
-  abstainVotes_not?: InputMaybe<Scalars['BigInt']>
-  abstainVotes_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  againstVotes?: InputMaybe<Scalars['BigInt']>
-  againstVotes_gt?: InputMaybe<Scalars['BigInt']>
-  againstVotes_gte?: InputMaybe<Scalars['BigInt']>
-  againstVotes_in?: InputMaybe<Array<Scalars['BigInt']>>
-  againstVotes_lt?: InputMaybe<Scalars['BigInt']>
-  againstVotes_lte?: InputMaybe<Scalars['BigInt']>
-  againstVotes_not?: InputMaybe<Scalars['BigInt']>
-  againstVotes_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  abstainVotes?: InputMaybe<Scalars['Int']>
+  abstainVotes_gt?: InputMaybe<Scalars['Int']>
+  abstainVotes_gte?: InputMaybe<Scalars['Int']>
+  abstainVotes_in?: InputMaybe<Array<Scalars['Int']>>
+  abstainVotes_lt?: InputMaybe<Scalars['Int']>
+  abstainVotes_lte?: InputMaybe<Scalars['Int']>
+  abstainVotes_not?: InputMaybe<Scalars['Int']>
+  abstainVotes_not_in?: InputMaybe<Array<Scalars['Int']>>
+  againstVotes?: InputMaybe<Scalars['Int']>
+  againstVotes_gt?: InputMaybe<Scalars['Int']>
+  againstVotes_gte?: InputMaybe<Scalars['Int']>
+  againstVotes_in?: InputMaybe<Array<Scalars['Int']>>
+  againstVotes_lt?: InputMaybe<Scalars['Int']>
+  againstVotes_lte?: InputMaybe<Scalars['Int']>
+  againstVotes_not?: InputMaybe<Scalars['Int']>
+  againstVotes_not_in?: InputMaybe<Array<Scalars['Int']>>
   and?: InputMaybe<Array<InputMaybe<Proposal_Filter>>>
   calldatas?: InputMaybe<Scalars['String']>
   calldatas_contains?: InputMaybe<Scalars['String']>
@@ -1084,14 +1084,14 @@ export type Proposal_Filter = {
   expiresAt_lte?: InputMaybe<Scalars['BigInt']>
   expiresAt_not?: InputMaybe<Scalars['BigInt']>
   expiresAt_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  forVotes?: InputMaybe<Scalars['BigInt']>
-  forVotes_gt?: InputMaybe<Scalars['BigInt']>
-  forVotes_gte?: InputMaybe<Scalars['BigInt']>
-  forVotes_in?: InputMaybe<Array<Scalars['BigInt']>>
-  forVotes_lt?: InputMaybe<Scalars['BigInt']>
-  forVotes_lte?: InputMaybe<Scalars['BigInt']>
-  forVotes_not?: InputMaybe<Scalars['BigInt']>
-  forVotes_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  forVotes?: InputMaybe<Scalars['Int']>
+  forVotes_gt?: InputMaybe<Scalars['Int']>
+  forVotes_gte?: InputMaybe<Scalars['Int']>
+  forVotes_in?: InputMaybe<Array<Scalars['Int']>>
+  forVotes_lt?: InputMaybe<Scalars['Int']>
+  forVotes_lte?: InputMaybe<Scalars['Int']>
+  forVotes_not?: InputMaybe<Scalars['Int']>
+  forVotes_not_in?: InputMaybe<Array<Scalars['Int']>>
   id?: InputMaybe<Scalars['ID']>
   id_gt?: InputMaybe<Scalars['ID']>
   id_gte?: InputMaybe<Scalars['ID']>
@@ -1810,14 +1810,14 @@ export type DaoFragment = {
 
 export type ProposalFragment = {
   __typename?: 'Proposal'
-  abstainVotes: any
-  againstVotes: any
-  calldatas: string
+  abstainVotes: number
+  againstVotes: number
+  calldatas?: string | null
   description?: string | null
   descriptionHash: any
   executableFrom?: any | null
   expiresAt?: any | null
-  forVotes: any
+  forVotes: number
   proposalId: any
   proposalNumber: number
   proposalThreshold: any
@@ -1838,7 +1838,7 @@ export type ProposalVoteFragment = {
   __typename?: 'ProposalVote'
   voter: any
   support: ProposalVoteSupport
-  weight: any
+  weight: number
   reason?: string | null
 }
 
@@ -1884,14 +1884,14 @@ export type ProposalQuery = {
   __typename?: 'Query'
   proposal?: {
     __typename?: 'Proposal'
-    abstainVotes: any
-    againstVotes: any
-    calldatas: string
+    abstainVotes: number
+    againstVotes: number
+    calldatas?: string | null
     description?: string | null
     descriptionHash: any
     executableFrom?: any | null
     expiresAt?: any | null
-    forVotes: any
+    forVotes: number
     proposalId: any
     proposalNumber: number
     proposalThreshold: any
@@ -1909,7 +1909,7 @@ export type ProposalQuery = {
       __typename?: 'ProposalVote'
       voter: any
       support: ProposalVoteSupport
-      weight: any
+      weight: number
       reason?: string | null
     }>
     dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
@@ -1926,14 +1926,14 @@ export type ProposalsQuery = {
   __typename?: 'Query'
   proposals: Array<{
     __typename?: 'Proposal'
-    abstainVotes: any
-    againstVotes: any
-    calldatas: string
+    abstainVotes: number
+    againstVotes: number
+    calldatas?: string | null
     description?: string | null
     descriptionHash: any
     executableFrom?: any | null
     expiresAt?: any | null
-    forVotes: any
+    forVotes: number
     proposalId: any
     proposalNumber: number
     proposalThreshold: any
@@ -1951,7 +1951,7 @@ export type ProposalsQuery = {
       __typename?: 'ProposalVote'
       voter: any
       support: ProposalVoteSupport
-      weight: any
+      weight: number
       reason?: string | null
     }>
     dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }

@@ -6,6 +6,6 @@ export const isProposalExecutable = (proposal: Proposal) => {
   return (
     proposal.state === ProposalState.Queued &&
     proposal.executableFrom &&
-    parseBlockchainDate(proposal.executableFrom) > new Date()
+    parseBlockchainDate(proposal.executableFrom) < new Date()
   )
 }

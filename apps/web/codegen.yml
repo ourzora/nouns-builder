@@ -1,4 +1,4 @@
-schema: https://api.thegraph.com/subgraphs/id/QmQxLAkYHUeAUzcgeNaT53YV6FBcmmSbs4o9gKattw7f4b
+schema: https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli
 documents: 'src/data/subgraph/**/*.graphql'
 generates:
   src/data/subgraph/sdk.generated.ts:

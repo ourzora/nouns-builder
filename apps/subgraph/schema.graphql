@@ -56,9 +56,9 @@ type Proposal @entity {
   timeCreated: BigInt!
   executableFrom: BigInt
   expiresAt: BigInt
-  againstVotes: BigInt!
-  forVotes: BigInt!
-  abstainVotes: BigInt!
+  againstVotes: Int!
+  forVotes: Int!
+  abstainVotes: Int!
   voteStart: BigInt!
   voteEnd: BigInt!
   proposalThreshold: BigInt!
@@ -83,7 +83,7 @@ type ProposalVote @entity {
   id: ID!
   voter: Bytes!
   support: ProposalVoteSupport!
-  weight: BigInt!
+  weight: Int!
   reason: String
   proposal: Proposal!
 }

@@ -14,8 +14,7 @@ interface ProposalHeaderProps {
 
 export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
   const router = useRouter()
-  const { title, voteStart, voteEnd, proposer, state, expiresAt, proposalNumber } =
-    proposal
+  const { title, voteStart, voteEnd, proposer, expiresAt, proposalNumber } = proposal
 
   const { displayName: proposerDisplayName } = useEnsData(proposer)
 

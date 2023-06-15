@@ -20,7 +20,7 @@ export const getProposals = async (
   try {
     const data = await sdk.proposals({
       where: {
-        dao: token,
+        dao: token.toLowerCase(),
       },
       first: limit,
       skip: page ? (page - 1) * limit : 0,
