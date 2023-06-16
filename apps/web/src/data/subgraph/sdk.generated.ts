@@ -1958,6 +1958,22 @@ export type ProposalsQuery = {
   }>
 }
 
+export type ProposalsWithCalldataQueryVariables = Exact<{
+  token: Scalars['String']
+}>
+
+export type ProposalsWithCalldataQuery = {
+  __typename?: 'Query'
+  proposals: Array<{
+    __typename?: 'Proposal'
+    proposalId: any
+    proposalNumber: number
+    calldatas?: string | null
+    targets: Array<any>
+    values: Array<any>
+  }>
+}
+
 export type TokenQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -2115,6 +2131,22 @@ export const ProposalsDocument = gql`
   ${ProposalFragmentDoc}
   ${ProposalVoteFragmentDoc}
 `
+export const ProposalsWithCalldataDocument = gql`
+  query proposalsWithCalldata($token: String!) {
+    proposals(
+      where: { dao: $token }
+      orderBy: timeCreated
+      orderDirection: desc
+      first: 100
+    ) {
+      proposalId
+      proposalNumber
+      calldatas
+      targets
+      values
+    }
+  }
+`
 export const TokenDocument = gql`
   query token($id: ID!) {
     token(id: $id) {
@@ -2221,6 +2253,21 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposals',
+        'query'
+      )
+    },
+    proposalsWithCalldata(
+      variables: ProposalsWithCalldataQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ProposalsWithCalldataQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ProposalsWithCalldataQuery>(
+            ProposalsWithCalldataDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'proposalsWithCalldata',
         'query'
       )
     },

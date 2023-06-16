@@ -1,0 +1,14 @@
+query proposalsWithCalldata($token: String!) {
+  proposals(
+    where: { dao: $token }
+    orderBy: timeCreated
+    orderDirection: desc
+    first: 100
+  ) {
+    proposalId
+    proposalNumber
+    calldatas
+    targets
+    values
+  }
+}
