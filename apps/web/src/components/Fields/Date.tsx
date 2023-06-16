@@ -19,8 +19,11 @@ interface DateProps {
   id: string
   errorMessage: string | FormikErrors<any> | string[] | undefined | FormikErrors<any>[]
   value: any
+  altFormat?: string
+  dateFormat?: string
   placeholder?: string
   autoSubmit?: boolean
+  enableTime?: boolean
   parentValues?: any
   disabled?: boolean
 }
@@ -33,6 +36,9 @@ const Date: React.FC<DateProps> = ({
   autoSubmit,
   value,
   placeholder,
+  altFormat,
+  enableTime = false,
+  dateFormat = 'Y-m-d',
   disabled = false,
 }) => {
   const ref = React.useRef(null)
@@ -41,7 +47,10 @@ const Date: React.FC<DateProps> = ({
     if (!ref.current) return
 
     flatpickr(ref.current, {
-      dateFormat: 'Y-m-d',
+      enableTime,
+      dateFormat,
+      altInput: !!altFormat,
+      altFormat,
       onChange: (_selectedDates, dateStr, _instance) => {
         formik.setFieldValue(id, dateStr)
 

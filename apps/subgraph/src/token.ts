@@ -8,7 +8,7 @@ import { store } from '@graphprotocol/graph-ts'
 let ADDRESS_ZERO = Bytes.fromHexString('0x0000000000000000000000000000000000000000')
 
 export function handleTransfer(event: TransferEvent): void {
-  let tokenId = `${event.address.toHexString()}:${event.params.tokenId.toHexString()}`
+  let tokenId = `${event.address.toHexString()}:${event.params.tokenId.toString()}`
   let token = Token.load(tokenId)
   let dao = DAO.load(event.address.toHexString())!
 
@@ -65,9 +65,10 @@ export function handleTransfer(event: TransferEvent): void {
     if (fromOwner.daoTokenCount === 1) {
       store.remove('DAOTokenOwner', fromOwnerId)
       dao.ownerCount = dao.ownerCount - 1
-    } else fromOwner.daoTokenCount = fromOwner.daoTokenCount - 1
-
-    fromOwner.save()
+    } else {
+      fromOwner.daoTokenCount = fromOwner.daoTokenCount - 1
+      fromOwner.save()
+    }
   }
 
   dao.save()

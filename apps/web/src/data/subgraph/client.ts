@@ -1,5 +1,7 @@
 import { GraphQLClient } from 'graphql-request'
 
+import { PUBLIC_SUBGRAPH_URL } from 'src/constants/subgraph'
+
 import { getSdk } from './sdk.generated'
 
 const globalForClient = global as unknown as {
@@ -8,7 +10,7 @@ const globalForClient = global as unknown as {
 
 export const client =
   globalForClient.subgraphClient ??
-  new GraphQLClient(process.env.NEXT_PUBLIC_SUBGRAPH!, {
+  new GraphQLClient(PUBLIC_SUBGRAPH_URL, {
     headers: {
       'Content-Type': 'application/json',
     },

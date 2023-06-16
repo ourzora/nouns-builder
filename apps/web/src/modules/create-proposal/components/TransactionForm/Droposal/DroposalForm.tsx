@@ -3,10 +3,11 @@ import { Form, Formik, FormikHelpers } from 'formik'
 import { useCallback, useState } from 'react'
 import { useAccount } from 'wagmi'
 
+import DatePicker from 'src/components/Fields/Date'
 import SmartInput from 'src/components/Fields/SmartInput'
 import TextArea from 'src/components/Fields/TextArea'
 import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
-import { DATE, NUMBER, TEXT } from 'src/components/Fields/types'
+import { NUMBER, TEXT } from 'src/components/Fields/types'
 import SingleMediaUpload from 'src/components/SingleMediaUpload/SingleMediaUpload'
 import { DropdownSelect } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
@@ -255,14 +256,17 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     </Box>
                   )}
 
-                  <SmartInput
+                  <DatePicker
                     {...formik.getFieldProps('publicSaleStart')}
+                    placeholder={'yyyy-mm-dd'}
                     inputLabel={'Start time'}
-                    type={DATE}
                     formik={formik}
                     id={'publicSaleStart'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    autoSubmit={false}
+                    disabled={false}
+                    enableTime={true}
+                    dateFormat="Z"
+                    altFormat="Y-m-d H:i"
                     errorMessage={
                       formik.touched['publicSaleStart'] &&
                       formik.errors['publicSaleStart']
@@ -271,14 +275,17 @@ export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled })
                     }
                   />
 
-                  <SmartInput
+                  <DatePicker
                     {...formik.getFieldProps('publicSaleEnd')}
+                    placeholder={'yyyy-mm-dd'}
                     inputLabel={'End time'}
-                    type={DATE}
                     formik={formik}
                     id={'publicSaleEnd'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    autoSubmit={false}
+                    disabled={false}
+                    enableTime={true}
+                    dateFormat="Z"
+                    altFormat="Y-m-d H:i"
                     errorMessage={
                       formik.touched['publicSaleEnd'] && formik.errors['publicSaleEnd']
                         ? formik.errors['publicSaleEnd']
