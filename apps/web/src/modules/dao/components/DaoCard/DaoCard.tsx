@@ -1,6 +1,6 @@
 import { Box, Flex, Paragraph } from '@zoralabs/zord'
 import dayjs from 'dayjs'
-import { BigNumberish } from 'ethers'
+import { BigNumberish, ethers } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
@@ -48,6 +48,7 @@ export const DaoCard = ({
   if (!isMounted) return null
 
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
+  const bidInEth = bid ? ethers.utils.formatEther(bid) : '0'
 
   return (
     <Link href={`/dao/${collectionAddress}/${tokenId}`} prefetch={false}>
@@ -107,13 +108,13 @@ export const DaoCard = ({
           {isEnded || isOver ? (
             <Detail
               title={'Winning bid'}
-              content={bid ? `${formatCryptoVal(bid)} ETH` : 'n/a'}
+              content={bid ? `${formatCryptoVal(bidInEth)} ETH` : 'n/a'}
             />
           ) : (
             <>
               <Detail
                 title={'Highest bid'}
-                content={bid ? `${formatCryptoVal(bid)} ETH` : '0.00 ETH'}
+                content={bid ? `${formatCryptoVal(bidInEth)} ETH` : '0.00 ETH'}
               />
               <Countdown end={endTime} onEnd={onEnd} />
             </>

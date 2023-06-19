@@ -1,9 +1,9 @@
 query activeAuctions($endTime: BigInt!) {
   auctions(
-    orderBy: highestBidAmount
+    orderBy: highestBid__amount
     orderDirection: desc
     first: 3
-    where: { highestBidAmount_not: null, settled: false, endTime_gt: $endTime }
+    where: { bidCount_gt: 0, settled: false, endTime_gt: $endTime }
   ) {
     ...Auction
   }

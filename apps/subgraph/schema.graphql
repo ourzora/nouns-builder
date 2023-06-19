@@ -39,6 +39,7 @@ type Token @entity {
   ownerInfo: DAOTokenOwner!
   mintedAt: BigInt!
   dao: DAO!
+  auction: Auction @derivedFrom(field: "token")
 }
 
 type Proposal @entity {
@@ -98,17 +99,16 @@ type AuctionConfig @entity {
 
 type Auction @entity {
   id: ID!
-  tokenId: BigInt!
   dao: DAO!
   startTime: BigInt!
   endTime: BigInt!
   extended: Boolean!
   highestBid: AuctionBid
-  highestBidAmount: BigInt
   winningBid: AuctionBid
   firstBidTime: BigInt
   settled: Boolean!
   bidCount: Int!
+  token: Token!
   bids: [AuctionBid!] @derivedFrom(field: "auction")
 }
 

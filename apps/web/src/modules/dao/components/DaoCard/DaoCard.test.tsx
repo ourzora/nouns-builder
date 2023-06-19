@@ -1,5 +1,6 @@
 import { act, render, screen } from '@testing-library/react'
 import dayjs from 'dayjs'
+import { ethers } from 'ethers'
 import React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
@@ -21,7 +22,7 @@ describe('Dao card', () => {
         tokenImage="https://fakeimg.pl/300/"
         collectionName="Collection name"
         collectionAddress="0x12345"
-        bid={2}
+        bid={ethers.utils.parseEther('2')}
         endTime={dayjs('1/1/21').unix()}
       />
     )
@@ -58,7 +59,7 @@ describe('Dao card', () => {
         tokenImage="https://fakeimg.pl/300/"
         collectionName="Collection name"
         collectionAddress="0x12345"
-        bid={2}
+        bid={ethers.utils.parseEther('2')}
         endTime={dayjs().add(30, 'seconds').unix()}
       />
     )

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 
 import Pagination from 'src/components/Pagination'
-import { ExploreDaosResponse } from 'src/data/graphql/requests/exploreQueries'
+import { ExploreDaosResponse } from 'src/data/subgraph/requests/exploreQueries'
 
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'
@@ -15,7 +15,7 @@ interface ExploreProps extends Partial<ExploreDaosResponse> {
   isLoading: boolean
 }
 
-export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo, isLoading }) => {
+export const Explore: React.FC<ExploreProps> = ({ daos, isLoading }) => {
   const router = useRouter()
   const { pathname } = router
 
@@ -45,7 +45,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo, isLoading }) =
 
   const handlePageForward = React.useCallback(() => {
     // there are more results to be fetched
-    if (!pageInfo?.hasNextPage)
+    if (!daos?.length)
       return {
         pathname,
         query: {
@@ -71,7 +71,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo, isLoading }) =
         page: Number(router.query.page) + 1,
       },
     }
-  }, [router, pageInfo?.hasNextPage, pathname])
+  }, [router, daos?.length, pathname])
 
   return (
     <Fragment>
@@ -81,13 +81,13 @@ export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo, isLoading }) =
           <Grid className={exploreGrid}>
             {daos?.map((dao) => (
               <DaoCard
-                tokenId={dao.tokenId ?? undefined}
-                key={dao.collectionAddress}
-                tokenImage={dao.image ?? undefined}
-                tokenName={dao.name ?? undefined}
-                collectionAddress={dao.collectionAddress as string}
-                collectionName={dao.collectionName ?? undefined}
-                bid={dao.highestBidPrice ?? undefined}
+                tokenId={dao.token?.tokenId ?? undefined}
+                key={dao.dao.tokenAddress}
+                tokenImage={dao.token?.image ?? undefined}
+                tokenName={dao.token?.name ?? undefined}
+                collectionAddress={dao.dao.tokenAddress as string}
+                collectionName={dao.dao.name ?? undefined}
+                bid={dao.highestBid?.amount ?? undefined}
                 endTime={dao.endTime ?? undefined}
               />
             ))}
@@ -95,7 +95,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, pageInfo, isLoading }) =
           <Pagination
             onNext={handlePageForward}
             onPrev={handlePageBack}
-            isLast={!pageInfo?.hasNextPage}
+            isLast={!daos?.length}
             isFirst={!router.query.page}
           />
         </Fragment>
