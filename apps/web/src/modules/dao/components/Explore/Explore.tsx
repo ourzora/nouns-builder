@@ -82,7 +82,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, isLoading }) => {
           <Grid className={exploreGrid}>
             {daos?.map((dao) => {
               const bid = dao.highestBid?.amount ?? undefined
-              const bidInEth = bid ? ethers.utils.formatEther(bid) : '0'
+              const bidInEth = bid ? ethers.utils.formatEther(bid) : undefined
 
               return (
                 <DaoCard

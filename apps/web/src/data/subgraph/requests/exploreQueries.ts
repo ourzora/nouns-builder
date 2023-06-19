@@ -13,16 +13,20 @@ export interface ExploreDaosResponse {
   daos: ExploreDaoFragment[]
 }
 
-export const userDaosFilter = async (memberAddress: string) => {
-  const data = await sdk.daoTokenOwners({
+export const userDaosFilter = async (
+  memberAddress: string
+): Promise<ExploreDaosResponse | undefined> => {
+  const userDaos = await sdk.daoTokenOwners({
     where: {
       owner: memberAddress,
     },
     first: 30,
   })
 
-  const daos = data.daotokenOwners.map((x) => x.dao.tokenAddress)
-  return sdk.myDaosPage({ daos })
+  const daoAddresses = userDaos.daotokenOwners.map((x) => x.dao.tokenAddress)
+  const data = await sdk.myDaosPage({ daos: daoAddresses })
+
+  return { daos: data.auctions }
 }
 
 export const exploreDaosRequest = async (
