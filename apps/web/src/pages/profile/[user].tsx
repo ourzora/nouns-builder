@@ -48,9 +48,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
   const isLoading = data ? false : isValidating && !data && !error
   const hasDaos = !!daos && daos.length > 0
 
-  const { handlePageBack, handlePageForward } = usePagination(
-    (tokens?.tokens.length || 0) > 0
-  )
+  const { handlePageBack, handlePageForward } = usePagination(!!tokens?.tokens.length)
 
   const daosString = daos?.map((x) => x.name).join(', ')
 
@@ -168,7 +166,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
 
           {hasDaos && (
             <>
-              {(tokens?.tokens.length || 0) > 0 ? (
+              {!!tokens?.tokens.length ? (
                 <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
                   {tokens?.tokens.map((x, i) => (
                     <Link
@@ -192,7 +190,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
               <Pagination
                 onNext={handlePageForward}
                 onPrev={handlePageBack}
-                isLast={(tokens?.tokens.length || 0) < 1}
+                isLast={!tokens?.tokens.length}
                 isFirst={!page}
               />
             </>
