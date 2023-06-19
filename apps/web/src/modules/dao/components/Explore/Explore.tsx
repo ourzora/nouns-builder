@@ -1,4 +1,5 @@
 import { Grid } from '@zoralabs/zord'
+import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 
@@ -79,18 +80,23 @@ export const Explore: React.FC<ExploreProps> = ({ daos, isLoading }) => {
       {daos?.length ? (
         <Fragment>
           <Grid className={exploreGrid}>
-            {daos?.map((dao) => (
-              <DaoCard
-                tokenId={dao.token?.tokenId ?? undefined}
-                key={dao.dao.tokenAddress}
-                tokenImage={dao.token?.image ?? undefined}
-                tokenName={dao.token?.name ?? undefined}
-                collectionAddress={dao.dao.tokenAddress as string}
-                collectionName={dao.dao.name ?? undefined}
-                bid={dao.highestBid?.amount ?? undefined}
-                endTime={dao.endTime ?? undefined}
-              />
-            ))}
+            {daos?.map((dao) => {
+              const bid = dao.highestBid?.amount ?? undefined
+              const bidInEth = bid ? ethers.utils.formatEther(bid) : '0'
+
+              return (
+                <DaoCard
+                  tokenId={dao.token?.tokenId ?? undefined}
+                  key={dao.dao.tokenAddress}
+                  tokenImage={dao.token?.image ?? undefined}
+                  tokenName={dao.token?.name ?? undefined}
+                  collectionAddress={dao.dao.tokenAddress as string}
+                  collectionName={dao.dao.name ?? undefined}
+                  bid={bidInEth}
+                  endTime={dao.endTime ?? undefined}
+                />
+              )
+            })}
           </Grid>
           <Pagination
             onNext={handlePageForward}
