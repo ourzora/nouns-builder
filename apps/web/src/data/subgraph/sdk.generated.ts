@@ -33,6 +33,7 @@ export type Auction = {
   extended: Scalars['Boolean']
   firstBidTime?: Maybe<Scalars['BigInt']>
   highestBid?: Maybe<AuctionBid>
+  highestBidAmount?: Maybe<Scalars['BigInt']>
   id: Scalars['ID']
   settled: Scalars['Boolean']
   startTime: Scalars['BigInt']
@@ -126,6 +127,7 @@ export enum AuctionBid_OrderBy {
   AuctionEndTime = 'auction__endTime',
   AuctionExtended = 'auction__extended',
   AuctionFirstBidTime = 'auction__firstBidTime',
+  AuctionHighestBidAmount = 'auction__highestBidAmount',
   AuctionId = 'auction__id',
   AuctionSettled = 'auction__settled',
   AuctionStartTime = 'auction__startTime',
@@ -254,6 +256,14 @@ export type Auction_Filter = {
   firstBidTime_not?: InputMaybe<Scalars['BigInt']>
   firstBidTime_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   highestBid?: InputMaybe<Scalars['String']>
+  highestBidAmount?: InputMaybe<Scalars['BigInt']>
+  highestBidAmount_gt?: InputMaybe<Scalars['BigInt']>
+  highestBidAmount_gte?: InputMaybe<Scalars['BigInt']>
+  highestBidAmount_in?: InputMaybe<Array<Scalars['BigInt']>>
+  highestBidAmount_lt?: InputMaybe<Scalars['BigInt']>
+  highestBidAmount_lte?: InputMaybe<Scalars['BigInt']>
+  highestBidAmount_not?: InputMaybe<Scalars['BigInt']>
+  highestBidAmount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   highestBid_?: InputMaybe<AuctionBid_Filter>
   highestBid_contains?: InputMaybe<Scalars['String']>
   highestBid_contains_nocase?: InputMaybe<Scalars['String']>
@@ -348,6 +358,7 @@ export enum Auction_OrderBy {
   Extended = 'extended',
   FirstBidTime = 'firstBidTime',
   HighestBid = 'highestBid',
+  HighestBidAmount = 'highestBidAmount',
   HighestBidAmount = 'highestBid__amount',
   HighestBidBidTime = 'highestBid__bidTime',
   HighestBidBidder = 'highestBid__bidder',
@@ -773,6 +784,7 @@ export enum Dao_OrderBy {
   CurrentAuctionEndTime = 'currentAuction__endTime',
   CurrentAuctionExtended = 'currentAuction__extended',
   CurrentAuctionFirstBidTime = 'currentAuction__firstBidTime',
+  CurrentAuctionHighestBidAmount = 'currentAuction__highestBidAmount',
   CurrentAuctionId = 'currentAuction__id',
   CurrentAuctionSettled = 'currentAuction__settled',
   CurrentAuctionStartTime = 'currentAuction__startTime',
@@ -1801,6 +1813,11 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+export type AuctionFragment = {
+  __typename?: 'Auction'
+  dao: { __typename?: 'DAO'; name: string; auctionAddress: any; tokenAddress: any }
+}
+
 export type DaoFragment = {
   __typename?: 'DAO'
   name: string
@@ -1851,6 +1868,18 @@ export type TokenFragment = {
   owner: any
   mintedAt: any
   dao: { __typename?: 'DAO'; description: string }
+}
+
+export type ActiveAuctionsQueryVariables = Exact<{
+  endTime: Scalars['BigInt']
+}>
+
+export type ActiveAuctionsQuery = {
+  __typename?: 'Query'
+  auctions: Array<{
+    __typename?: 'Auction'
+    dao: { __typename?: 'DAO'; name: string; auctionAddress: any; tokenAddress: any }
+  }>
 }
 
 export type DaoInfoQueryVariables = Exact<{
@@ -1958,22 +1987,6 @@ export type ProposalsQuery = {
   }>
 }
 
-export type ProposalsWithCalldataQueryVariables = Exact<{
-  token: Scalars['String']
-}>
-
-export type ProposalsWithCalldataQuery = {
-  __typename?: 'Query'
-  proposals: Array<{
-    __typename?: 'Proposal'
-    proposalId: any
-    proposalNumber: number
-    calldatas?: string | null
-    targets: Array<any>
-    values: Array<any>
-  }>
-}
-
 export type TokenQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -2026,6 +2039,15 @@ export type TokensQuery = {
   }>
 }
 
+export const AuctionFragmentDoc = gql`
+  fragment Auction on Auction {
+    dao {
+      name
+      auctionAddress
+      tokenAddress
+    }
+  }
+`
 export const DaoFragmentDoc = gql`
   fragment DAO on DAO {
     name
@@ -2083,6 +2105,19 @@ export const TokenFragmentDoc = gql`
     mintedAt
   }
 `
+export const ActiveAuctionsDocument = gql`
+  query activeAuctions($endTime: BigInt!) {
+    auctions(
+      orderBy: highestBidAmount
+      orderDirection: desc
+      first: 3
+      where: { highestBidAmount_not: null, settled: false, endTime_gt: $endTime }
+    ) {
+      ...Auction
+    }
+  }
+  ${AuctionFragmentDoc}
+`
 export const DaoInfoDocument = gql`
   query daoInfo($tokenAddress: ID!) {
     dao(id: $tokenAddress) {
@@ -2130,22 +2165,6 @@ export const ProposalsDocument = gql`
   }
   ${ProposalFragmentDoc}
   ${ProposalVoteFragmentDoc}
-`
-export const ProposalsWithCalldataDocument = gql`
-  query proposalsWithCalldata($token: String!) {
-    proposals(
-      where: { dao: $token }
-      orderBy: timeCreated
-      orderDirection: desc
-      first: 100
-    ) {
-      proposalId
-      proposalNumber
-      calldatas
-      targets
-      values
-    }
-  }
 `
 export const TokenDocument = gql`
   query token($id: ID!) {
@@ -2200,6 +2219,20 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
   return {
+    activeAuctions(
+      variables: ActiveAuctionsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ActiveAuctionsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ActiveAuctionsQuery>(ActiveAuctionsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'activeAuctions',
+        'query'
+      )
+    },
     daoInfo(
       variables: DaoInfoQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
@@ -2253,21 +2286,6 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposals',
-        'query'
-      )
-    },
-    proposalsWithCalldata(
-      variables: ProposalsWithCalldataQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
-    ): Promise<ProposalsWithCalldataQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ProposalsWithCalldataQuery>(
-            ProposalsWithCalldataDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
-          ),
-        'proposalsWithCalldata',
         'query'
       )
     },

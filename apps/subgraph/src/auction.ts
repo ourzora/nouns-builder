@@ -64,6 +64,7 @@ export function handleAuctionBid(event: AuctionBidEvent): void {
   if (auction.bidCount === 0) auction.firstBidTime = event.block.timestamp
   auction.bidCount = auction.bidCount + 1
   auction.highestBid = bid.id
+  auction.highestBidAmount = bid.amount
   auction.extended = event.params.extended
   auction.endTime = event.params.endTime
   auction.save()
