@@ -36,7 +36,7 @@ export type Auction = {
   id: Scalars['ID']
   settled: Scalars['Boolean']
   startTime: Scalars['BigInt']
-  token?: Maybe<Token>
+  token: Token
   winningBid?: Maybe<AuctionBid>
 }
 
@@ -1846,7 +1846,7 @@ export type ExploreDaoFragment = {
   endTime: any
   dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
   highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-  token?: { __typename?: 'Token'; name: string; image: string; tokenId: any } | null
+  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
 }
 
 export type ProposalFragment = {
@@ -1943,7 +1943,7 @@ export type ExploreDaosPageQuery = {
     endTime: any
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
     highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-    token?: { __typename?: 'Token'; name: string; image: string; tokenId: any } | null
+    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
   }>
 }
 
@@ -1960,7 +1960,7 @@ export type MyDaosPageQuery = {
     endTime: any
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
     highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-    token?: { __typename?: 'Token'; name: string; image: string; tokenId: any } | null
+    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
   }>
 }
 
