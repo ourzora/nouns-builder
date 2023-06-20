@@ -23,18 +23,32 @@ export const Footer = () => {
               }}
               direction={{ '@initial': 'column', '@768': 'row' }}
             >
-              <Text
-                variant="paragraph-sm"
-                color="tertiary"
-                as="a"
-                href="https://docs.zora.co/docs/smart-contracts/nouns-builder/intro"
-                rel="noopener noreferrer"
-                target="_blank"
-                mr={{ '@initial': 'x0', '@768': 'x4' }}
-                className={footerLink}
-              >
-                Documentation
-              </Text>
+              <Flex align="center" direction={{ '@initial': 'column', '@768': 'row' }}>
+                <Text
+                  variant="paragraph-sm"
+                  color="tertiary"
+                  as="a"
+                  href="https://docs.zora.co/docs/smart-contracts/nouns-builder/intro"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  mr={{ '@initial': 'x0', '@768': 'x4', '@1024': 'x6' }}
+                  className={footerLink}
+                >
+                  Documentation
+                </Text>
+
+                <Link href="/propguidelines" passHref legacyBehavior>
+                  <Text
+                    variant="paragraph-sm"
+                    color="tertiary"
+                    as="a"
+                    mt={{ '@initial': 'x4', '@768': 'x0' }}
+                    className={footerLink}
+                  >
+                    Proposal Guidelines
+                  </Text>
+                </Link>
+              </Flex>
 
               <Flex align="center" direction={{ '@initial': 'column', '@768': 'row' }}>
                 <Text
