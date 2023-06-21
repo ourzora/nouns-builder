@@ -1753,6 +1753,13 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+export type DaoFragment = {
+  __typename?: 'DAO'
+  name: string
+  tokenAddress: any
+  auctionAddress: any
+}
+
 export type TokenFragment = {
   __typename?: 'Token'
   tokenId: any
@@ -1762,6 +1769,29 @@ export type TokenFragment = {
   owner: any
   mintedAt: any
   dao: { __typename?: 'DAO'; description: string }
+}
+
+export type DaoInfoQueryVariables = Exact<{
+  tokenAddress: Scalars['ID']
+}>
+
+export type DaoInfoQuery = {
+  __typename?: 'Query'
+  dao?: { __typename?: 'DAO'; totalSupply: number; ownerCount: number } | null
+}
+
+export type DaoTokenOwnersQueryVariables = Exact<{
+  where?: InputMaybe<DaoTokenOwner_Filter>
+  first?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+}>
+
+export type DaoTokenOwnersQuery = {
+  __typename?: 'Query'
+  daotokenOwners: Array<{
+    __typename?: 'DAOTokenOwner'
+    dao: { __typename?: 'DAO'; name: string; tokenAddress: any; auctionAddress: any }
+  }>
 }
 
 export type TokenQueryVariables = Exact<{
@@ -1816,6 +1846,13 @@ export type TokensQuery = {
   }>
 }
 
+export const DaoFragmentDoc = gql`
+  fragment DAO on DAO {
+    name
+    tokenAddress
+    auctionAddress
+  }
+`
 export const TokenFragmentDoc = gql`
   fragment Token on Token {
     tokenId
@@ -1828,6 +1865,24 @@ export const TokenFragmentDoc = gql`
     owner
     mintedAt
   }
+`
+export const DaoInfoDocument = gql`
+  query daoInfo($tokenAddress: ID!) {
+    dao(id: $tokenAddress) {
+      totalSupply
+      ownerCount
+    }
+  }
+`
+export const DaoTokenOwnersDocument = gql`
+  query daoTokenOwners($where: DAOTokenOwner_filter, $first: Int, $skip: Int) {
+    daotokenOwners(where: $where, first: $first, skip: $skip) {
+      dao {
+        ...DAO
+      }
+    }
+  }
+  ${DaoFragmentDoc}
 `
 export const TokenDocument = gql`
   query token($id: ID!) {
@@ -1882,6 +1937,34 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
   return {
+    daoInfo(
+      variables: DaoInfoQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoInfoQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoInfoQuery>(DaoInfoDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'daoInfo',
+        'query'
+      )
+    },
+    daoTokenOwners(
+      variables?: DaoTokenOwnersQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoTokenOwnersQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoTokenOwnersQuery>(DaoTokenOwnersDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'daoTokenOwners',
+        'query'
+      )
+    },
     token(
       variables: TokenQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
