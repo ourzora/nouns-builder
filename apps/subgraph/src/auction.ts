@@ -42,6 +42,10 @@ export function handleAuctionSettled(event: AuctionSettledEvent): void {
 
   let dao = DAO.load(tokenAddress)!
   dao.currentAuction = null
+  if (auction.highestBid) {
+    let bid = AuctionBid.load(auction.highestBid!)!
+    dao.totalAuctionSales = dao.totalAuctionSales.plus(bid.amount)
+  }
   dao.save()
 }
 

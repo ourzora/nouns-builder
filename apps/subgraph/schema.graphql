@@ -13,6 +13,7 @@ type DAO @entity {
   governorAddress: Bytes!
   ownerCount: Int!
   proposalCount: Int!
+  totalAuctionSales: BigInt!
   auctionConfig: AuctionConfig!
   currentAuction: Auction
   owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
