@@ -61,15 +61,13 @@ export const UpgradeCard = ({
             borderRadius={'small'}
             className={image}
           >
-            {!!imgurl && (
-              <Image
-                src={imgurl}
-                alt={imgName || ''}
-                width={64}
-                height={64}
-                className={atoms({ borderRadius: 'small' })}
-              />
-            )}
+            <Image
+              src={imgurl}
+              alt={imgName || ''}
+              width={64}
+              height={64}
+              className={atoms({ borderRadius: 'small' })}
+            />
           </Box>
           <Box
             width={{ '@initial': '100%', '@768': 'auto' }}
