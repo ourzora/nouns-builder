@@ -58,7 +58,11 @@ export const Footer = () => {
               Documentation
             </Box>
           </a>
-
+          <Link href={'/guidelines'} className={homeFooterLinks} legacyBehavior>
+            <Box color={'onAccent'} fontSize={16} className={homeFooterLinks}>
+              Proposal Guidelines
+            </Box>
+          </Link>
           <Link href={'/about'} className={homeFooterLinks} legacyBehavior>
             <Box color={'onAccent'} fontSize={16} className={homeFooterLinks}>
               About Builder
