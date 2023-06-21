@@ -3,11 +3,11 @@ import Head from 'next/head'
 import React from 'react'
 
 import { getDefaultLayout } from 'src/layouts/DefaultLayout'
-import { propGuidelinesContainer } from 'src/styles/PropGuidelines.css'
+import { guidelinesContainer } from 'src/styles/guidelines.css'
 
 import { NextPageWithLayout } from './_app'
 
-const PropGuidelinesPage: NextPageWithLayout = () => {
+const GuidelinesPage: NextPageWithLayout = () => {
   return (
     <>
       <Head>
@@ -15,7 +15,7 @@ const PropGuidelinesPage: NextPageWithLayout = () => {
       </Head>
 
       <main>
-        <Box as="article" py="x8" className={propGuidelinesContainer}>
+        <Box as="article" py="x8" className={guidelinesContainer}>
           <header>
             <Box>
               <Heading size="sm" mb="x2">
@@ -210,6 +210,6 @@ const PropGuidelinesPage: NextPageWithLayout = () => {
   )
 }
 
-PropGuidelinesPage.getLayout = getDefaultLayout
+GuidelinesPage.getLayout = getDefaultLayout
 
-export default PropGuidelinesPage
+export default GuidelinesPage

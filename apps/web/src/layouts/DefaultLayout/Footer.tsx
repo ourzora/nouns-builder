@@ -37,7 +37,7 @@ export const Footer = () => {
                   Documentation
                 </Text>
 
-                <Link href="/propguidelines" passHref legacyBehavior>
+                <Link href="/guidelines" passHref legacyBehavior>
                   <Text
                     variant="paragraph-sm"
                     color="tertiary"
