@@ -1,4 +1,4 @@
-import { Flex, Stack } from '@zoralabs/zord'
+import { Box, Flex, Stack, Text, atoms } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -15,10 +15,14 @@ import {
 } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
+import { useLayoutStore } from 'src/stores'
 import { notFoundWrap } from 'src/styles/404.css'
 import { AddressType } from 'src/typings'
 
+import { Icon } from '../../../../components/Icon'
+
 const ReviewProposalPage: NextPageWithLayout = () => {
+  const { isMobile } = useLayoutStore()
   const router = useRouter()
   const { query } = router
 
@@ -45,6 +49,21 @@ const ReviewProposalPage: NextPageWithLayout = () => {
   return (
     <Stack mb={'x20'} w={'100%'} px={'x3'} style={{ maxWidth: 1060 }} mx="auto">
       <CreateProposalHeading title={'Review and Submit Proposal'} align={'center'} />
+      <Box mx="auto">
+        <a href="/guidelines" target="_blank" rel="noreferrer noopener">
+          <Flex align={'center'} mb={'x8'} color="text1">
+            <Text
+              as="a"
+              fontSize={isMobile ? 14 : 18}
+              fontWeight={'paragraph'}
+              className={atoms({ textDecoration: 'underline' })}
+            >
+              Tips on how to write great proposals
+            </Text>
+            <Icon fill="text1" size="sm" ml="x1" id="external-16" />
+          </Flex>
+        </a>
+      </Box>
       <Stack w={'100%'} px={'x3'} style={{ maxWidth: 680 }} mx="auto">
         <ReviewProposalForm
           disabled={disabled}
