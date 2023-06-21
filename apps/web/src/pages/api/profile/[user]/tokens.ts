@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils.js'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { MyDaosResponse } from 'src/data/graphql/requests/daoQuery'
+import { MyDaosResponse } from 'src/data/subgraph/requests/daoQuery'
 import { TokensQueryResponse, tokensQuery } from 'src/data/subgraph/requests/tokensQuery'
 import { NotFoundError } from 'src/services/errors'
 import { getBaseUrl } from 'src/utils/baseUrl'
