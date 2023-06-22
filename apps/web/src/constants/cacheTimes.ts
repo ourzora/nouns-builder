@@ -32,4 +32,8 @@ export const CACHE_TIMES = {
     maxAge: ONE_DAY,
     swr: ONE_WEEK,
   },
+  DAO_FEED: {
+    maxAge: ONE_DAY,
+    swr: ONE_WEEK,
+  },
 }

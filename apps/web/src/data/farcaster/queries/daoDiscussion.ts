@@ -1,7 +1,6 @@
 import { isCastAddMessage } from '@farcaster/hub-nodejs'
 import { err, ok } from 'neverthrow'
 
-import { PURPLE_COLLECTION } from 'src/constants/farcasterHub'
 
 import { farcasterClient } from '../client'
 
@@ -9,17 +8,11 @@ const createChannelString = (collectionAddress: string, chainId: string) => {
   return `chain://eip155:${chainId}/erc721:${collectionAddress}`
 }
 
-export const getDAOfeed = async (
-  collectionAddress: string,
-  chainId: string,
-  testActiveChannel = false
-) => {
+export const getDAOfeed = async (collectionAddress: string, chainId: string) => {
   const client = farcasterClient()
 
   const res = await client.getCastsByParent({
-    parentUrl: testActiveChannel
-      ? createChannelString(PURPLE_COLLECTION, '1')
-      : createChannelString(collectionAddress, chainId),
+    parentUrl: createChannelString(collectionAddress, chainId),
   })
 
   if (res.isErr()) {
