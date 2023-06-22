@@ -13,7 +13,6 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
-import { getDAOdiscussion } from 'src/data/farcaster/queries/daoDiscussion'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { Auction } from 'src/modules/auction'
@@ -26,6 +25,7 @@ import {
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
+import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { DaoResponse } from 'src/pages/api/dao/[token]'
 import { AddressType } from 'src/typings'
@@ -71,12 +71,10 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       title: 'About',
       component: [<About key={'about'} />],
     }
-
     const proposalsSection = {
       title: 'Activity',
       component: [<Activity key={'proposals'} />],
     }
-
     const adminSection = {
       title: 'Admin',
       component: [<AdminForm key={'admin'} collectionAddress={collection} />],
@@ -85,16 +83,16 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       title: 'Smart Contracts',
       component: [<SmartContracts key={'smart_contracts'} />],
     }
-    const channel = {
-      title: 'DAO Feed',
-      component: [],
+    const daoFeed = {
+      title: 'Feed',
+      component: [<FeedTab key="feed" collectionAddress={collection} />],
     }
 
     const publicSections = [
       aboutSection,
       proposalsSection,
       smartContractsSection,
-      channel,
+      daoFeed,
     ]
 
     return hasThreshold ? [...publicSections, adminSection] : publicSections
@@ -172,8 +170,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     )
 
     //FARCASTER STUFF HERE, REFACTOR LATER
-    const discussion = await getDAOdiscussion('')
-    console.log('discussion', discussion)
+
     return {
       props: {
         url: resolvedUrl,
