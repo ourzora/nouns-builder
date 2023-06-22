@@ -1,7 +1,6 @@
 import { isCastAddMessage } from '@farcaster/hub-nodejs'
 import { err, ok } from 'neverthrow'
 
-
 import { farcasterClient } from '../client'
 
 const createChannelString = (collectionAddress: string, chainId: string) => {
