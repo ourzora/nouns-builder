@@ -29,7 +29,6 @@ const HomePage: NextPageWithLayout<{
   return (
     <>
       <Meta title={'Nouns your ideas'} type={'website'} slug={'/'} />
-
       <Stack align={'center'}>
         <Marquee />
         <GetStarted />

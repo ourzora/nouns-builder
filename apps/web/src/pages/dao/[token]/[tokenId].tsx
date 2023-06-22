@@ -13,6 +13,7 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
+import { getDAOdiscussion } from 'src/data/farcaster/queries/daoDiscussion'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { Auction } from 'src/modules/auction'
@@ -84,8 +85,17 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       title: 'Smart Contracts',
       component: [<SmartContracts key={'smart_contracts'} />],
     }
+    const channel = {
+      title: 'DAO Feed',
+      component: [],
+    }
 
-    const publicSections = [aboutSection, proposalsSection, smartContractsSection]
+    const publicSections = [
+      aboutSection,
+      proposalsSection,
+      smartContractsSection,
+      channel,
+    ]
 
     return hasThreshold ? [...publicSections, adminSection] : publicSections
   }, [hasThreshold, collection])
@@ -161,6 +171,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
     )
 
+    //FARCASTER STUFF HERE, REFACTOR LATER
+    const discussion = await getDAOdiscussion('')
+    console.log('discussion', discussion)
     return {
       props: {
         url: resolvedUrl,
