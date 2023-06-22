@@ -141,6 +141,9 @@ importers:
       multiformats:
         specifier: 9.9.0
         version: 9.9.0
+      neverthrow:
+        specifier: ^6.0.0
+        version: 6.0.0
       next:
         specifier: ^13.0.3
         version: 13.1.6(@babel/core@7.20.12)(react-dom@18.2.0)(react@18.2.0)
