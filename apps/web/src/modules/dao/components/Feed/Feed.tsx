@@ -1,7 +1,13 @@
-import { CastAddMessage } from '@farcaster/hub-nodejs'
+import {
+  CastAddData,
+  Message,
+  SignatureScheme,
+} from '@farcaster/hub-nodejs'
 import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
-import React, { ReactNode } from 'react'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import React, { ReactNode, useMemo } from 'react'
 import useSWR from 'swr'
 
 import { PURPLE_COLLECTION } from 'src/constants/farcasterHub'
@@ -12,6 +18,12 @@ import { feed, feedLayoutWrapper } from './Feed.css'
 
 type FeedTabProps = {
   collectionAddress: string
+}
+
+type AddMsgWithUnix = Message & {
+  data: CastAddData
+  unixTime: number
+  signatureScheme: SignatureScheme.ED25519
 }
 
 const testImg =
@@ -25,7 +37,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
     collectionAddress ? [SWR_KEYS.DAO_FEED, PURPLE_COLLECTION] : undefined,
     () =>
       axios
-        .get<{ value: CastAddMessage[] }>(`/api/feed/${PURPLE_COLLECTION}~${chainId}`)
+        .get<{ value: AddMsgWithUnix[] }>(`/api/feed/${PURPLE_COLLECTION}~${chainId}`)
         .then((x) => x.data.value)
   )
 
@@ -40,7 +52,11 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
     <FeedTab isMobile={isMobile}>
       <>
         {data?.map((msg) => (
-          <CastCard text={msg?.data?.castAddBody?.text} fid={msg.data.fid} />
+          <CastCard
+            text={msg?.data?.castAddBody?.text}
+            fid={msg.data.fid}
+            timestamp={msg.unixTime}
+          />
         ))}
       </>
     </FeedTab>
@@ -88,12 +104,25 @@ const FeedLayout = ({ children }: { children?: ReactNode }) => {
   )
 }
 
-const CastCard = ({ text, fid }: { text: string; fid: number }) => {
+const CastCard = ({
+  text,
+  fid,
+  timestamp,
+}: {
+  text: string
+  fid: number
+  timestamp: number
+}) => {
   const { data, error, isValidating } = useSWR(fid ? [fid] : undefined, () =>
     axios
       .get<{ displayName?: string; pfp?: string }>(`/api/feed/userData?fid=${fid}`)
       .then((x) => x.data)
   )
+  const time = useMemo(() => {
+    dayjs.extend(relativeTime)
+    const date = dayjs.unix(timestamp / 1000).fromNow()
+    return date
+  }, [timestamp])
 
   if (error) {
     return <Box>error</Box>
@@ -101,6 +130,8 @@ const CastCard = ({ text, fid }: { text: string; fid: number }) => {
   if (isValidating) {
     return <Box>loading</Box>
   }
+
+  //   console.log('timestamp', timestamp)
 
   return (
     <Box mb={'x10'}>
@@ -135,7 +166,7 @@ const CastCard = ({ text, fid }: { text: string; fid: number }) => {
         <Text color="text3" mr={'x3'}>
           |
         </Text>
-        <Text color="text3">Yesterday</Text>
+        <Text color="text3">{time}</Text>
       </Flex>
       <Text wordBreak="break-word">{text}</Text>
     </Box>

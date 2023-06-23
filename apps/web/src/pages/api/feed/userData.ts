@@ -5,7 +5,7 @@ import { getFarcasterProfile } from 'src/data/farcaster/queries/farcasterProfile
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { fid } = req.query
-  console.log('fid', fid)
+
   const profileRes = await getFarcasterProfile(Number(fid))
   const { maxAge, swr } = CACHE_TIMES.CASTR_PROFILE
   res.setHeader(

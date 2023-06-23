@@ -12,12 +12,6 @@ export const getFarcasterProfile = async (fid: number) => {
   if (nameRes.isErr()) return err(nameRes.error)
   if (pfpRes.isErr()) return err(pfpRes.error)
 
-  // console.log('PROFILE', res.value)
-  // const casts = res.value.messages.filter(isUserDataAddMessage)
-  console.log('nameRes', nameRes.value.data?.userDataBody?.value)
-  console.log('pfpRes', pfpRes.value.data?.userDataBody)
-  // return res
-
   return {
     displayName: nameRes.value.data?.userDataBody?.value as string | undefined,
     pfp: pfpRes.value.data?.userDataBody?.value as string | undefined,
