@@ -90,9 +90,9 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
 
     const publicSections = [
       aboutSection,
+      daoFeed,
       proposalsSection,
       smartContractsSection,
-      daoFeed,
     ]
 
     return hasThreshold ? [...publicSections, adminSection] : publicSections
