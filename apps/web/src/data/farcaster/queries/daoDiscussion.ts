@@ -12,12 +12,13 @@ export const getDAOfeed = async (
 ): Promise<Ok<CastAddMessage[], never> | Err<HubError, HubError>> => {
   const client = farcasterClient()
 
-  const [collectionAddress, chainId] = feedId.split('_')
+  const [collectionAddress, chainId] = feedId.split('~')
 
   const res = await client.getCastsByParent({
     parentUrl: createChannelString(collectionAddress, chainId),
   })
 
+  client.close()
   if (res.isErr()) {
     return err(res.error)
   }

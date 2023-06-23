@@ -15,8 +15,8 @@ type FeedTabProps = {
   collectionAddress: string
 }
 
-// add proper type
-type DAOFeedResponse = any
+const testImg =
+  'https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA'
 
 const Feed = ({ collectionAddress }: FeedTabProps) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
@@ -26,15 +26,17 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
     collectionAddress ? [SWR_KEYS.DAO_FEED, PURPLE_COLLECTION] : undefined,
     () =>
       axios
-        .get<{ value: CastAddMessage[] }>(`/api/feed/${PURPLE_COLLECTION}_${chainId}`)
+        .get<{ value: CastAddMessage[] }>(`/api/feed/${PURPLE_COLLECTION}~${chainId}`)
         .then((x) => x.data.value)
   )
+
   if (error) {
     return <FeedTab isMobile={isMobile}>error</FeedTab>
   }
   if (isValidating) {
     return <FeedTab isMobile={isMobile}>loading</FeedTab>
   }
+
   return (
     <FeedTab isMobile={isMobile}>
       <>
@@ -88,18 +90,21 @@ const FeedLayout = ({ children }: { children?: ReactNode }) => {
 }
 
 const CastCard = ({ text }: { text: string }) => {
+  //   const
+
   return (
     <Box mb={'x10'}>
       <Flex align={'center'} fontWeight={'display'} mb={'x3'}>
         <Box mr="x3" borderRadius="round">
           <Image
-            src={'/nouns-avatar-circle.png'}
+            src={testImg}
             layout="fixed"
             objectFit="contain"
             style={{ borderRadius: '100%' }}
             alt=""
             height={32}
             width={32}
+            loading={'lazy'}
           />
         </Box>
         <Text>UserName</Text>
