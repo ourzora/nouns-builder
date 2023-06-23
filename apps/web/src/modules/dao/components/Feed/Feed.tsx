@@ -1,7 +1,6 @@
 import { CastAddMessage } from '@farcaster/hub-nodejs'
 import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
-import Image from 'next/legacy/image'
 import React, { ReactNode } from 'react'
 import useSWR from 'swr'
 
@@ -41,7 +40,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
     <FeedTab isMobile={isMobile}>
       <>
         {data?.map((msg) => (
-          <CastCard text={msg?.data?.castAddBody?.text} />
+          <CastCard text={msg?.data?.castAddBody?.text} fid={msg.data.fid} />
         ))}
       </>
     </FeedTab>
@@ -89,25 +88,54 @@ const FeedLayout = ({ children }: { children?: ReactNode }) => {
   )
 }
 
-const CastCard = ({ text }: { text: string }) => {
-  //   const
+const CastCard = ({ text, fid }: { text: string; fid: number }) => {
+  const { data, error, isValidating } = useSWR(fid ? [fid] : undefined, () =>
+    axios
+      .get<{ displayName?: string; pfp?: string }>(`/api/feed/userData?fid=${fid}`)
+      .then((x) => x.data)
+  )
+
+  if (error) {
+    return <Box>error</Box>
+  }
+  if (isValidating) {
+    return <Box>loading</Box>
+  }
 
   return (
     <Box mb={'x10'}>
-      <Flex align={'center'} fontWeight={'display'} mb={'x3'}>
+      <Flex align={'center'} mb={'x4'}>
         <Box mr="x3" borderRadius="round">
-          <Image
-            src={testImg}
-            layout="fixed"
-            objectFit="contain"
-            style={{ borderRadius: '100%' }}
-            alt=""
-            height={32}
-            width={32}
-            loading={'lazy'}
-          />
+          <div
+            style={{
+              width: '32px',
+              height: '32px',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src={data?.pfp || testImg}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                height: '100%',
+                width: '100%',
+                transform: 'translate(-50%, -50%)',
+                objectFit: 'cover',
+                borderRadius: '50%',
+              }}
+            />
+          </div>
         </Box>
-        <Text>UserName</Text>
+        <Text mr={'x3'} fontWeight={'display'}>
+          {data?.displayName}
+        </Text>
+        <Text color="text3" mr={'x3'}>
+          |
+        </Text>
+        <Text color="text3">Yesterday</Text>
       </Flex>
       <Text wordBreak="break-word">{text}</Text>
     </Box>

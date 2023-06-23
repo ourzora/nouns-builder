@@ -17,4 +17,9 @@ export const getFarcasterProfile = async (fid: number) => {
   console.log('nameRes', nameRes.value.data?.userDataBody?.value)
   console.log('pfpRes', pfpRes.value.data?.userDataBody)
   // return res
+
+  return {
+    displayName: nameRes.value.data?.userDataBody?.value as string | undefined,
+    pfp: pfpRes.value.data?.userDataBody?.value as string | undefined,
+  }
 }

@@ -33,6 +33,10 @@ export const CACHE_TIMES = {
     swr: ONE_WEEK,
   },
   DAO_FEED: {
+    maxAge: ONE_MINUTE,
+    swr: ONE_HOUR,
+  },
+  CASTR_PROFILE: {
     maxAge: ONE_DAY,
     swr: ONE_WEEK,
   },
