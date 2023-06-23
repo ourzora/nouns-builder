@@ -36,10 +36,10 @@ export const tokenQuery = async (
     id: token.tokenId,
     ...omitBy(
       {
-        owner: token.owner || undefined,
-        name: token.name || undefined,
-        description: token.dao.description || undefined,
-        image: token.image || undefined,
+        owner: token.owner,
+        name: token.name,
+        description: token.dao.description,
+        image: token.image,
         mintDate: token.mintedAt ? token.mintedAt * 1000 : undefined,
       },
       isUndefined

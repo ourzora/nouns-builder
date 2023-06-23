@@ -1,5 +1,6 @@
 import { Box, Flex } from '@zoralabs/zord'
 import axios from 'axios'
+import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
@@ -122,6 +123,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   ])
 
   if (!proposal) {
+    return {
+      notFound: true,
+    }
+  }
+
+  if (
+    ethers.utils.getAddress(proposal.dao.tokenAddress) !==
+    ethers.utils.getAddress(collection)
+  ) {
     return {
       notFound: true,
     }
