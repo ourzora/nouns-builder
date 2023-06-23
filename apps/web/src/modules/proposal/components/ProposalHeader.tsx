@@ -2,7 +2,7 @@ import { Box, Flex, Label, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { Proposal } from 'src/data/graphql/requests/proposalQuery'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useEnsData } from 'src/hooks/useEnsData'
 
 import { ProposalNavigation } from './ProposalNavigation'
@@ -14,8 +14,7 @@ interface ProposalHeaderProps {
 
 export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
   const router = useRouter()
-  const { title, voteStart, voteEnd, proposer, status, expiresAt, proposalNumber } =
-    proposal
+  const { title, voteStart, voteEnd, proposer, expiresAt, proposalNumber } = proposal
 
   const { displayName: proposerDisplayName } = useEnsData(proposer)
 
@@ -26,7 +25,7 @@ export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
           router.push({
             pathname: `/dao/[token]`,
             query: {
-              token: proposal.collectionAddress,
+              token: proposal.dao.tokenAddress,
               tab: 'activity',
             },
           })
@@ -38,7 +37,7 @@ export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
             Proposal {proposalNumber}
           </Label>
           <ProposalStatus
-            state={status}
+            state={proposal.state}
             voteEnd={voteEnd}
             voteStart={voteStart}
             expiresAt={expiresAt}

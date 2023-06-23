@@ -1,6 +1,6 @@
 import { theme } from '@zoralabs/zord'
 
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { fromSeconds } from 'src/utils/helpers'
 
 export function parseTime(timediff: number, prefix: string) {
@@ -31,60 +31,56 @@ export function parseTime(timediff: number, prefix: string) {
   }
 }
 
-export function parseState(state: NounsProposalStatus) {
+export function parseState(state: ProposalState) {
   switch (state) {
-    case NounsProposalStatus.Created:
-    case NounsProposalStatus.Pending:
+    case ProposalState.Pending:
       return 'Pending'
-    case NounsProposalStatus.Active:
+    case ProposalState.Active:
       return 'Active'
-    case NounsProposalStatus.Canceled:
+    case ProposalState.Canceled:
       return 'Cancelled'
-    case NounsProposalStatus.Defeated:
+    case ProposalState.Defeated:
       return 'Defeated'
-    case NounsProposalStatus.Succeeded:
+    case ProposalState.Succeeded:
       return 'Succeeded'
-    case NounsProposalStatus.Queued:
-    case NounsProposalStatus.Executable:
+    case ProposalState.Queued:
       return 'Queued'
-    case NounsProposalStatus.Expired:
+    case ProposalState.Expired:
       return 'Expired'
-    case NounsProposalStatus.Executed:
+    case ProposalState.Executed:
       return 'Executed'
-    case NounsProposalStatus.Vetoed:
+    case ProposalState.Vetoed:
       return 'Vetoed'
     default:
       return 'Loading'
   }
 }
 
-export function parseBgColor(state: NounsProposalStatus) {
+export function parseBgColor(state: ProposalState) {
   switch (state) {
-    case NounsProposalStatus.Created:
-    case NounsProposalStatus.Pending:
-    case NounsProposalStatus.Active:
-    case NounsProposalStatus.Succeeded:
+    case ProposalState.Pending:
+    case ProposalState.Active:
+    case ProposalState.Succeeded:
       return {
         borderColor: 'rgba(28, 182, 135, 0.1)',
         color: theme.colors.positive,
       }
-    case NounsProposalStatus.Defeated:
+    case ProposalState.Defeated:
       return {
         borderColor: 'rgba(240, 50, 50, 0.1)',
         color: theme.colors.negative,
       }
-    case NounsProposalStatus.Executed:
+    case ProposalState.Executed:
       return {
         borderColor: 'rgba(37, 124, 237, 0.1)',
         color: '#257CED',
       }
-    case NounsProposalStatus.Queued:
-    case NounsProposalStatus.Executable:
+    case ProposalState.Queued:
       return {
         borderColor: '#F2E2F7',
         color: '#D16BE1',
       }
-    case NounsProposalStatus.Expired:
+    case ProposalState.Expired:
     default:
       return { borderColor: theme.colors.background2, color: theme.colors.text4 }
   }

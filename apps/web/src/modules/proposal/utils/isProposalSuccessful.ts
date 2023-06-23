@@ -1,18 +1,12 @@
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
 
 export type ProposalSucceededStatus = Extract<
-  NounsProposalStatus,
-  | NounsProposalStatus.Succeeded
-  | NounsProposalStatus.Queued
-  | NounsProposalStatus.Executable
+  ProposalState,
+  ProposalState.Succeeded | ProposalState.Queued
 >
 
 export function isProposalSuccessful(
-  value: NounsProposalStatus
+  value: ProposalState
 ): value is ProposalSucceededStatus {
-  return [
-    NounsProposalStatus.Succeeded,
-    NounsProposalStatus.Queued,
-    NounsProposalStatus.Executable,
-  ].includes(value)
+  return [ProposalState.Succeeded, ProposalState.Queued].includes(value)
 }

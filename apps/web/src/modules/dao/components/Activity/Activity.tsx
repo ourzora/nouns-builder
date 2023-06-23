@@ -10,7 +10,10 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import Pagination from 'src/components/Pagination'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { ProposalsResponse, getProposals } from 'src/data/graphql/requests/proposalsQuery'
+import {
+  ProposalsResponse,
+  getProposals,
+} from 'src/data/subgraph/requests/proposalsQuery'
 import { useVotes } from 'src/hooks'
 import { usePagination } from 'src/hooks/usePagination'
 import { Upgrade, useProposalStore } from 'src/modules/create-proposal'
@@ -45,7 +48,7 @@ export const Activity: React.FC = () => {
 
   const { data, error } = useSWR<ProposalsResponse>(
     isReady ? [SWR_KEYS.PROPOSALS, query.token, query.page] : null,
-    (_, token, page) => getProposals([token], LIMIT, Number(page))
+    (_, token, page) => getProposals(token, LIMIT, Number(page))
   )
 
   const { handlePageBack, handlePageForward } = usePagination(data?.pageInfo?.hasNextPage)
@@ -167,8 +170,8 @@ export const Activity: React.FC = () => {
                 collection={token}
                 proposalId={proposal.proposalId}
                 proposalNumber={proposal.proposalNumber}
-                title={proposal.title}
-                status={proposal.status}
+                title={proposal.title || ''}
+                state={proposal.state}
                 timeCreated={proposal.timeCreated}
                 voteEnd={proposal.voteEnd}
                 voteStart={proposal.voteStart}

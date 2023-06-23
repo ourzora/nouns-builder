@@ -48,15 +48,17 @@ type Proposal @entity {
   dao: DAO!
   targets: [Bytes!]!
   values: [BigInt!]!
-  calldatas: String!
+  calldatas: String
   title: String
   description: String
+  descriptionHash: Bytes!
   proposer: Bytes!
   timeCreated: BigInt!
+  executableFrom: BigInt
   expiresAt: BigInt
-  againstVotes: BigInt!
-  forVotes: BigInt!
-  abstainVotes: BigInt!
+  againstVotes: Int!
+  forVotes: Int!
+  abstainVotes: Int!
   voteStart: BigInt!
   voteEnd: BigInt!
   proposalThreshold: BigInt!
@@ -66,6 +68,8 @@ type Proposal @entity {
   canceled: Boolean!
   vetoed: Boolean!
   voteCount: Int!
+  snapshotBlockNumber: BigInt!
+  transactionHash: Bytes!
   votes: [ProposalVote!]! @derivedFrom(field: "proposal")
 }
 
@@ -79,7 +83,7 @@ type ProposalVote @entity {
   id: ID!
   voter: Bytes!
   support: ProposalVoteSupport!
-  weight: BigInt!
+  weight: Int!
   reason: String
   proposal: Proposal!
 }
