@@ -5,7 +5,7 @@ import useSWR from 'swr'
 
 import { Meta } from 'src/components/Meta'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { ExploreDaosResponse } from 'src/data/graphql/requests/exploreQueries'
+import { ExploreDaosResponse } from 'src/data/subgraph/requests/exploreQueries'
 import { getDefaultLayout } from 'src/layouts/DefaultLayout'
 import { Explore } from 'src/modules/dao'
 
@@ -13,16 +13,16 @@ import { NextPageWithLayout } from './_app'
 
 const ExplorePage: NextPageWithLayout = () => {
   const {
-    query: { page, sortKey },
+    query: { page, orderBy },
     isReady,
   } = useRouter()
 
   const { data, error } = useSWR(
-    isReady ? [SWR_KEYS.EXPLORE, page, sortKey] : undefined,
+    isReady ? [SWR_KEYS.EXPLORE, page, orderBy] : undefined,
     async () => {
       const params: any = {}
       if (page) params['page'] = page
-      if (sortKey) params['sortKey'] = sortKey
+      if (orderBy) params['orderBy'] = orderBy
 
       return await axios
         .get<ExploreDaosResponse>('/api/explore', { params })
@@ -30,12 +30,12 @@ const ExplorePage: NextPageWithLayout = () => {
     }
   )
 
-  const { daos, pageInfo } = data || {}
+  const { daos } = data || {}
 
   return (
     <Flex direction={'column'} align={'center'} mt={'x5'} minH={'100vh'}>
       <Meta title={'Explore'} type={'website'} slug={'/explore'} />
-      <Explore daos={daos} pageInfo={pageInfo} isLoading={!data && !error} />
+      <Explore daos={daos} isLoading={!data && !error} />
     </Flex>
   )
 }

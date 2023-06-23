@@ -13,6 +13,7 @@ type DAO @entity {
   governorAddress: Bytes!
   ownerCount: Int!
   proposalCount: Int!
+  totalAuctionSales: BigInt!
   auctionConfig: AuctionConfig!
   currentAuction: Auction
   owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
@@ -39,6 +40,7 @@ type Token @entity {
   ownerInfo: DAOTokenOwner!
   mintedAt: BigInt!
   dao: DAO!
+  auction: Auction @derivedFrom(field: "token")
 }
 
 type Proposal @entity {
@@ -98,7 +100,6 @@ type AuctionConfig @entity {
 
 type Auction @entity {
   id: ID!
-  tokenId: BigInt!
   dao: DAO!
   startTime: BigInt!
   endTime: BigInt!
@@ -108,6 +109,7 @@ type Auction @entity {
   firstBidTime: BigInt
   settled: Boolean!
   bidCount: Int!
+  token: Token!
   bids: [AuctionBid!] @derivedFrom(field: "auction")
 }
 

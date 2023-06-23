@@ -36,7 +36,7 @@ export type Auction = {
   id: Scalars['ID']
   settled: Scalars['Boolean']
   startTime: Scalars['BigInt']
-  tokenId: Scalars['BigInt']
+  token: Token
   winningBid?: Maybe<AuctionBid>
 }
 
@@ -129,7 +129,6 @@ export enum AuctionBid_OrderBy {
   AuctionId = 'auction__id',
   AuctionSettled = 'auction__settled',
   AuctionStartTime = 'auction__startTime',
-  AuctionTokenId = 'auction__tokenId',
   BidTime = 'bidTime',
   Bidder = 'bidder',
   Id = 'id',
@@ -295,14 +294,27 @@ export type Auction_Filter = {
   startTime_lte?: InputMaybe<Scalars['BigInt']>
   startTime_not?: InputMaybe<Scalars['BigInt']>
   startTime_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  tokenId?: InputMaybe<Scalars['BigInt']>
-  tokenId_gt?: InputMaybe<Scalars['BigInt']>
-  tokenId_gte?: InputMaybe<Scalars['BigInt']>
-  tokenId_in?: InputMaybe<Array<Scalars['BigInt']>>
-  tokenId_lt?: InputMaybe<Scalars['BigInt']>
-  tokenId_lte?: InputMaybe<Scalars['BigInt']>
-  tokenId_not?: InputMaybe<Scalars['BigInt']>
-  tokenId_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  token?: InputMaybe<Scalars['String']>
+  token_?: InputMaybe<Token_Filter>
+  token_contains?: InputMaybe<Scalars['String']>
+  token_contains_nocase?: InputMaybe<Scalars['String']>
+  token_ends_with?: InputMaybe<Scalars['String']>
+  token_ends_with_nocase?: InputMaybe<Scalars['String']>
+  token_gt?: InputMaybe<Scalars['String']>
+  token_gte?: InputMaybe<Scalars['String']>
+  token_in?: InputMaybe<Array<Scalars['String']>>
+  token_lt?: InputMaybe<Scalars['String']>
+  token_lte?: InputMaybe<Scalars['String']>
+  token_not?: InputMaybe<Scalars['String']>
+  token_not_contains?: InputMaybe<Scalars['String']>
+  token_not_contains_nocase?: InputMaybe<Scalars['String']>
+  token_not_ends_with?: InputMaybe<Scalars['String']>
+  token_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  token_not_in?: InputMaybe<Array<Scalars['String']>>
+  token_not_starts_with?: InputMaybe<Scalars['String']>
+  token_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  token_starts_with?: InputMaybe<Scalars['String']>
+  token_starts_with_nocase?: InputMaybe<Scalars['String']>
   winningBid?: InputMaybe<Scalars['String']>
   winningBid_?: InputMaybe<AuctionBid_Filter>
   winningBid_contains?: InputMaybe<Scalars['String']>
@@ -342,6 +354,7 @@ export enum Auction_OrderBy {
   DaoProposalCount = 'dao__proposalCount',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
+  DaoTotalAuctionSales = 'dao__totalAuctionSales',
   DaoTotalSupply = 'dao__totalSupply',
   DaoTreasuryAddress = 'dao__treasuryAddress',
   EndTime = 'endTime',
@@ -355,7 +368,14 @@ export enum Auction_OrderBy {
   Id = 'id',
   Settled = 'settled',
   StartTime = 'startTime',
-  TokenId = 'tokenId',
+  Token = 'token',
+  TokenId = 'token__id',
+  TokenImage = 'token__image',
+  TokenMintedAt = 'token__mintedAt',
+  TokenName = 'token__name',
+  TokenOwner = 'token__owner',
+  TokenTokenContract = 'token__tokenContract',
+  TokenTokenId = 'token__tokenId',
   WinningBid = 'winningBid',
   WinningBidAmount = 'winningBid__amount',
   WinningBidBidTime = 'winningBid__bidTime',
@@ -393,6 +413,7 @@ export type Dao = {
   symbol: Scalars['String']
   tokenAddress: Scalars['Bytes']
   tokens: Array<Token>
+  totalAuctionSales: Scalars['BigInt']
   totalSupply: Scalars['Int']
   treasuryAddress: Scalars['Bytes']
 }
@@ -517,6 +538,7 @@ export enum DaoTokenOwner_OrderBy {
   DaoProposalCount = 'dao__proposalCount',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
+  DaoTotalAuctionSales = 'dao__totalAuctionSales',
   DaoTotalSupply = 'dao__totalSupply',
   DaoTreasuryAddress = 'dao__treasuryAddress',
   Id = 'id',
@@ -738,6 +760,14 @@ export type Dao_Filter = {
   tokenAddress_not_contains?: InputMaybe<Scalars['Bytes']>
   tokenAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>
   tokens_?: InputMaybe<Token_Filter>
+  totalAuctionSales?: InputMaybe<Scalars['BigInt']>
+  totalAuctionSales_gt?: InputMaybe<Scalars['BigInt']>
+  totalAuctionSales_gte?: InputMaybe<Scalars['BigInt']>
+  totalAuctionSales_in?: InputMaybe<Array<Scalars['BigInt']>>
+  totalAuctionSales_lt?: InputMaybe<Scalars['BigInt']>
+  totalAuctionSales_lte?: InputMaybe<Scalars['BigInt']>
+  totalAuctionSales_not?: InputMaybe<Scalars['BigInt']>
+  totalAuctionSales_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   totalSupply?: InputMaybe<Scalars['Int']>
   totalSupply_gt?: InputMaybe<Scalars['Int']>
   totalSupply_gte?: InputMaybe<Scalars['Int']>
@@ -776,7 +806,6 @@ export enum Dao_OrderBy {
   CurrentAuctionId = 'currentAuction__id',
   CurrentAuctionSettled = 'currentAuction__settled',
   CurrentAuctionStartTime = 'currentAuction__startTime',
-  CurrentAuctionTokenId = 'currentAuction__tokenId',
   Description = 'description',
   GovernorAddress = 'governorAddress',
   Id = 'id',
@@ -790,6 +819,7 @@ export enum Dao_OrderBy {
   Symbol = 'symbol',
   TokenAddress = 'tokenAddress',
   Tokens = 'tokens',
+  TotalAuctionSales = 'totalAuctionSales',
   TotalSupply = 'totalSupply',
   TreasuryAddress = 'treasuryAddress',
 }
@@ -1256,6 +1286,7 @@ export enum Proposal_OrderBy {
   DaoProposalCount = 'dao__proposalCount',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
+  DaoTotalAuctionSales = 'dao__totalAuctionSales',
   DaoTotalSupply = 'dao__totalSupply',
   DaoTreasuryAddress = 'dao__treasuryAddress',
   Description = 'description',
@@ -1594,6 +1625,7 @@ export type SubscriptionTokensArgs = {
 
 export type Token = {
   __typename?: 'Token'
+  auction?: Maybe<Auction>
   dao: Dao
   id: Scalars['ID']
   image: Scalars['String']
@@ -1609,6 +1641,7 @@ export type Token_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<Token_Filter>>>
+  auction_?: InputMaybe<Auction_Filter>
   dao?: InputMaybe<Scalars['String']>
   dao_?: InputMaybe<Dao_Filter>
   dao_contains?: InputMaybe<Scalars['String']>
@@ -1739,6 +1772,14 @@ export type Token_Filter = {
 }
 
 export enum Token_OrderBy {
+  Auction = 'auction',
+  AuctionBidCount = 'auction__bidCount',
+  AuctionEndTime = 'auction__endTime',
+  AuctionExtended = 'auction__extended',
+  AuctionFirstBidTime = 'auction__firstBidTime',
+  AuctionId = 'auction__id',
+  AuctionSettled = 'auction__settled',
+  AuctionStartTime = 'auction__startTime',
   Dao = 'dao',
   DaoAuctionAddress = 'dao__auctionAddress',
   DaoContractImage = 'dao__contractImage',
@@ -1752,6 +1793,7 @@ export enum Token_OrderBy {
   DaoProposalCount = 'dao__proposalCount',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
+  DaoTotalAuctionSales = 'dao__totalAuctionSales',
   DaoTotalSupply = 'dao__totalSupply',
   DaoTreasuryAddress = 'dao__treasuryAddress',
   Id = 'id',
@@ -1801,11 +1843,24 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny',
 }
 
+export type AuctionFragment = {
+  __typename?: 'Auction'
+  dao: { __typename?: 'DAO'; name: string; auctionAddress: any; tokenAddress: any }
+}
+
 export type DaoFragment = {
   __typename?: 'DAO'
   name: string
   tokenAddress: any
   auctionAddress: any
+}
+
+export type ExploreDaoFragment = {
+  __typename?: 'Auction'
+  endTime: any
+  dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
+  highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
 }
 
 export type ProposalFragment = {
@@ -1853,6 +1908,18 @@ export type TokenFragment = {
   dao: { __typename?: 'DAO'; description: string }
 }
 
+export type ActiveAuctionsQueryVariables = Exact<{
+  endTime: Scalars['BigInt']
+}>
+
+export type ActiveAuctionsQuery = {
+  __typename?: 'Query'
+  auctions: Array<{
+    __typename?: 'Auction'
+    dao: { __typename?: 'DAO'; name: string; auctionAddress: any; tokenAddress: any }
+  }>
+}
+
 export type DaoInfoQueryVariables = Exact<{
   tokenAddress: Scalars['ID']
 }>
@@ -1873,6 +1940,41 @@ export type DaoTokenOwnersQuery = {
   daotokenOwners: Array<{
     __typename?: 'DAOTokenOwner'
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any; auctionAddress: any }
+  }>
+}
+
+export type ExploreDaosPageQueryVariables = Exact<{
+  orderBy?: InputMaybe<Auction_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  where?: InputMaybe<Auction_Filter>
+  skip?: InputMaybe<Scalars['Int']>
+}>
+
+export type ExploreDaosPageQuery = {
+  __typename?: 'Query'
+  auctions: Array<{
+    __typename?: 'Auction'
+    endTime: any
+    dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
+    highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+  }>
+}
+
+export type MyDaosPageQueryVariables = Exact<{
+  daos?: InputMaybe<Array<Scalars['String']> | Scalars['String']>
+  orderBy?: InputMaybe<Auction_OrderBy>
+  skip?: InputMaybe<Scalars['Int']>
+}>
+
+export type MyDaosPageQuery = {
+  __typename?: 'Query'
+  auctions: Array<{
+    __typename?: 'Auction'
+    endTime: any
+    dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
+    highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
   }>
 }
 
@@ -1958,22 +2060,6 @@ export type ProposalsQuery = {
   }>
 }
 
-export type ProposalsWithCalldataQueryVariables = Exact<{
-  token: Scalars['String']
-}>
-
-export type ProposalsWithCalldataQuery = {
-  __typename?: 'Query'
-  proposals: Array<{
-    __typename?: 'Proposal'
-    proposalId: any
-    proposalNumber: number
-    calldatas?: string | null
-    targets: Array<any>
-    values: Array<any>
-  }>
-}
-
 export type TokenQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -2026,11 +2112,47 @@ export type TokensQuery = {
   }>
 }
 
+export type TotalAuctionSalesQueryVariables = Exact<{
+  tokenAddress: Scalars['ID']
+}>
+
+export type TotalAuctionSalesQuery = {
+  __typename?: 'Query'
+  dao?: { __typename?: 'DAO'; totalAuctionSales: any } | null
+}
+
+export const AuctionFragmentDoc = gql`
+  fragment Auction on Auction {
+    dao {
+      name
+      auctionAddress
+      tokenAddress
+    }
+  }
+`
 export const DaoFragmentDoc = gql`
   fragment DAO on DAO {
     name
     tokenAddress
     auctionAddress
+  }
+`
+export const ExploreDaoFragmentDoc = gql`
+  fragment ExploreDao on Auction {
+    dao {
+      name
+      tokenAddress
+    }
+    endTime
+    highestBid {
+      amount
+      bidder
+    }
+    token {
+      name
+      image
+      tokenId
+    }
   }
 `
 export const ProposalFragmentDoc = gql`
@@ -2083,6 +2205,19 @@ export const TokenFragmentDoc = gql`
     mintedAt
   }
 `
+export const ActiveAuctionsDocument = gql`
+  query activeAuctions($endTime: BigInt!) {
+    auctions(
+      orderBy: highestBid__amount
+      orderDirection: desc
+      first: 3
+      where: { bidCount_gt: 0, settled: false, endTime_gt: $endTime }
+    ) {
+      ...Auction
+    }
+  }
+  ${AuctionFragmentDoc}
+`
 export const DaoInfoDocument = gql`
   query daoInfo($tokenAddress: ID!) {
     dao(id: $tokenAddress) {
@@ -2100,6 +2235,39 @@ export const DaoTokenOwnersDocument = gql`
     }
   }
   ${DaoFragmentDoc}
+`
+export const ExploreDaosPageDocument = gql`
+  query exploreDaosPage(
+    $orderBy: Auction_orderBy
+    $orderDirection: OrderDirection
+    $where: Auction_filter
+    $skip: Int
+  ) {
+    auctions(
+      where: $where
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+      first: 30
+      skip: $skip
+    ) {
+      ...ExploreDao
+    }
+  }
+  ${ExploreDaoFragmentDoc}
+`
+export const MyDaosPageDocument = gql`
+  query myDaosPage($daos: [String!], $orderBy: Auction_orderBy, $skip: Int) {
+    auctions(
+      where: { settled: false, dao_in: $daos }
+      orderBy: $orderBy
+      orderDirection: desc
+      first: 30
+      skip: $skip
+    ) {
+      ...ExploreDao
+    }
+  }
+  ${ExploreDaoFragmentDoc}
 `
 export const ProposalDocument = gql`
   query proposal($proposalId: ID!) {
@@ -2130,22 +2298,6 @@ export const ProposalsDocument = gql`
   }
   ${ProposalFragmentDoc}
   ${ProposalVoteFragmentDoc}
-`
-export const ProposalsWithCalldataDocument = gql`
-  query proposalsWithCalldata($token: String!) {
-    proposals(
-      where: { dao: $token }
-      orderBy: timeCreated
-      orderDirection: desc
-      first: 100
-    ) {
-      proposalId
-      proposalNumber
-      calldatas
-      targets
-      values
-    }
-  }
 `
 export const TokenDocument = gql`
   query token($id: ID!) {
@@ -2185,6 +2337,13 @@ export const TokensDocument = gql`
   }
   ${TokenFragmentDoc}
 `
+export const TotalAuctionSalesDocument = gql`
+  query totalAuctionSales($tokenAddress: ID!) {
+    dao(id: $tokenAddress) {
+      totalAuctionSales
+    }
+  }
+`
 
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
@@ -2200,6 +2359,20 @@ export function getSdk(
   withWrapper: SdkFunctionWrapper = defaultWrapper
 ) {
   return {
+    activeAuctions(
+      variables: ActiveAuctionsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ActiveAuctionsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ActiveAuctionsQuery>(ActiveAuctionsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'activeAuctions',
+        'query'
+      )
+    },
     daoInfo(
       variables: DaoInfoQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
@@ -2228,6 +2401,34 @@ export function getSdk(
         'query'
       )
     },
+    exploreDaosPage(
+      variables?: ExploreDaosPageQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ExploreDaosPageQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ExploreDaosPageQuery>(ExploreDaosPageDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'exploreDaosPage',
+        'query'
+      )
+    },
+    myDaosPage(
+      variables?: MyDaosPageQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<MyDaosPageQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<MyDaosPageQuery>(MyDaosPageDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'myDaosPage',
+        'query'
+      )
+    },
     proposal(
       variables: ProposalQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
@@ -2253,21 +2454,6 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposals',
-        'query'
-      )
-    },
-    proposalsWithCalldata(
-      variables: ProposalsWithCalldataQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
-    ): Promise<ProposalsWithCalldataQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ProposalsWithCalldataQuery>(
-            ProposalsWithCalldataDocument,
-            variables,
-            { ...requestHeaders, ...wrappedRequestHeaders }
-          ),
-        'proposalsWithCalldata',
         'query'
       )
     },
@@ -2310,6 +2496,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'tokens',
+        'query'
+      )
+    },
+    totalAuctionSales(
+      variables: TotalAuctionSalesQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<TotalAuctionSalesQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<TotalAuctionSalesQuery>(TotalAuctionSalesDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'totalAuctionSales',
         'query'
       )
     },

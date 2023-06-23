@@ -9,7 +9,7 @@ import {
 import { Auction as AuctionContract } from '../generated/templates/Auction/Auction'
 import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
 import { Token as TokenContract } from '../generated/templates/Token/Token'
-import { DataSourceContext } from '@graphprotocol/graph-ts'
+import { BigInt, DataSourceContext } from '@graphprotocol/graph-ts'
 
 export function handleDAODeployed(event: DAODeployedEvent): void {
   let tokenContract = TokenContract.bind(event.params.token)
@@ -40,6 +40,7 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   dao.projectURI = metadataContract.projectURI()
   dao.proposalCount = 0
   dao.ownerCount = 0
+  dao.totalAuctionSales = BigInt.fromI32(0)
   dao.auctionConfig = auctionConfig.id
 
   dao.save()
