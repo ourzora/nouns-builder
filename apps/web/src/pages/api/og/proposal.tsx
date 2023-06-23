@@ -2,8 +2,8 @@ import { ImageResponse } from '@vercel/og'
 import { getFetchableUrl } from 'ipfs-service/src/gateway'
 import { NextRequest } from 'next/server'
 
-import { Proposal } from 'src/data/graphql/requests/proposalQuery'
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 
 export const config = {
@@ -11,60 +11,56 @@ export const config = {
   unstable_allowDynamic: ['../../packages/zoralabs-zord/dist/index.js'],
 }
 
-export function parseState(state: NounsProposalStatus) {
+export function parseState(state: ProposalState) {
   switch (state) {
-    case NounsProposalStatus.Created:
-    case NounsProposalStatus.Pending:
+    case ProposalState.Pending:
       return 'Pending'
-    case NounsProposalStatus.Active:
+    case ProposalState.Active:
       return 'Active'
-    case NounsProposalStatus.Canceled:
+    case ProposalState.Canceled:
       return 'Cancelled'
-    case NounsProposalStatus.Defeated:
+    case ProposalState.Defeated:
       return 'Defeated'
-    case NounsProposalStatus.Succeeded:
+    case ProposalState.Succeeded:
       return 'Succeeded'
-    case NounsProposalStatus.Queued:
-    case NounsProposalStatus.Executable:
+    case ProposalState.Queued:
       return 'Queued'
-    case NounsProposalStatus.Expired:
+    case ProposalState.Expired:
       return 'Expired'
-    case NounsProposalStatus.Executed:
+    case ProposalState.Executed:
       return 'Executed'
-    case NounsProposalStatus.Vetoed:
+    case ProposalState.Vetoed:
       return 'Vetoed'
     default:
       return 'Loading'
   }
 }
 
-export function parseBgColor(state: NounsProposalStatus) {
+export function parseBgColor(state: ProposalState) {
   switch (state) {
-    case NounsProposalStatus.Created:
-    case NounsProposalStatus.Pending:
-    case NounsProposalStatus.Active:
-    case NounsProposalStatus.Succeeded:
+    case ProposalState.Pending:
+    case ProposalState.Active:
+    case ProposalState.Succeeded:
       return {
         borderColor: 'rgba(28, 182, 135, 0.1)',
         color: '#1CB687',
       }
-    case NounsProposalStatus.Defeated:
+    case ProposalState.Defeated:
       return {
         borderColor: 'rgba(240, 50, 50, 0.1)',
         color: '#F03232',
       }
-    case NounsProposalStatus.Executed:
+    case ProposalState.Executed:
       return {
         borderColor: 'rgba(37, 124, 237, 0.1)',
         color: '#257CED',
       }
-    case NounsProposalStatus.Queued:
-    case NounsProposalStatus.Executable:
+    case ProposalState.Queued:
       return {
         borderColor: '#F2E2F7',
         color: '#D16BE1',
       }
-    case NounsProposalStatus.Expired:
+    case ProposalState.Expired:
     default:
       return { borderColor: '#F2F2F2', color: '#B3B3B3' }
   }
@@ -87,7 +83,7 @@ export type ProposalOgMetadata = {
   daoImage: string
   proposal: Pick<
     Proposal,
-    'proposalNumber' | 'title' | 'status' | 'forVotes' | 'againstVotes' | 'abstainVotes'
+    'proposalNumber' | 'title' | 'forVotes' | 'againstVotes' | 'abstainVotes' | 'state'
   >
 }
 
@@ -105,7 +101,7 @@ export default async function handler(req: NextRequest) {
     ptRootBold,
   ])
 
-  const proposalStatusColor = parseBgColor(data.proposal.status)
+  const proposalStatusColor = parseBgColor(data.proposal.state)
 
   return new ImageResponse(
     (
@@ -195,7 +191,7 @@ export default async function handler(req: NextRequest) {
                   color: proposalStatusColor.color,
                 }}
               >
-                {parseState(data.proposal.status)}
+                {parseState(data.proposal.state)}
               </p>
             </div>
             <p style={{ fontSize: '28px', fontWeight: 700 }}>{data.proposal.title}</p>

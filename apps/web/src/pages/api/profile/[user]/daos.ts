@@ -1,7 +1,7 @@
 import { getAddress } from 'ethers/lib/utils.js'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
+import { myDaosRequest } from 'src/data/subgraph/requests/daoQuery'
 import { NotFoundError } from 'src/services/errors'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -14,7 +14,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: 'bad address input' })
   }
   try {
-    const daos = await myDaosRequest([address])
+    const daos = await myDaosRequest(address)
+
     res.status(200).json(daos)
   } catch (e) {
     if (e instanceof NotFoundError) {

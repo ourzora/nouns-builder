@@ -1,5 +1,7 @@
+import { Auction_OrderBy } from 'src/data/subgraph/sdk.generated'
+
 export const SORT_KEY = {
-  CREATED: 'Created',
-  CHAIN_TOKEN_PRICE: 'Price',
-  TIMED_SALE_ENDING: 'Ending',
+  [Auction_OrderBy.StartTime]: 'Created',
+  [Auction_OrderBy.HighestBidAmount]: 'Price',
+  [Auction_OrderBy.EndTime]: 'Ending',
 }

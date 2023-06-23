@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 
 import { Icon } from 'src/components/Icon'
 import { IconType } from 'src/components/Icon/icons'
-import { Support } from 'src/data/graphql/sdk.generated'
+import { ProposalVoteSupport as Support } from 'src/data/subgraph/sdk.generated'
 
 interface VoteProps {
   support: Support

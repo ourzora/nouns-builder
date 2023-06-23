@@ -8,14 +8,11 @@ import useSWR from 'swr'
 import { useContract, useContractReads } from 'wagmi'
 
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
-import { CHAIN } from 'src/constants/network'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
-import { sdk } from 'src/data/graphql/client'
-import {
-  NounsProposalStatus,
-  ProposalsWithCalldataQuery,
-} from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
+import { getProposals } from 'src/data/subgraph/requests/proposalsQuery'
 import {
   BuilderTransaction,
   CONTRACT_VERSION_DETAILS,
@@ -25,8 +22,6 @@ import {
 } from 'src/modules/create-proposal'
 import { DaoContractAddresses } from 'src/modules/dao'
 import { AddressType } from 'src/typings'
-
-type Proposal = ProposalsWithCalldataQuery['nouns']['nounsProposals']['nodes'][number]
 
 interface AvailableUpgrade {
   shouldUpgrade: boolean
@@ -58,7 +53,7 @@ export const useAvailableUpgrade = (
 
   const { data: proposals } = useSWR(
     !!addresses?.token ? [SWR_KEYS.PROPOSALS_CALLDATAS, addresses?.token] : null,
-    () => sdk.proposalsWithCalldata({ token: addresses?.token, chain: CHAIN })
+    () => getProposals(addresses?.token as string, 100)
   )
 
   const { data, isLoading, isError } = useContractReads({
@@ -84,7 +79,7 @@ export const useAvailableUpgrade = (
       { ...contract, functionName: 'treasuryImpl' },
       { ...contract, functionName: 'auctionImpl' },
       { ...contract, functionName: 'metadataImpl' },
-    ],
+    ] as const,
   })
 
   const hasUndefinedAddresses = Object.keys(pickBy(addresses, isUndefined)).length > 0
@@ -210,11 +205,10 @@ export const useAvailableUpgrade = (
   ): Proposal | undefined => {
     const activeProposals = proposals?.filter(
       (proposal) =>
-        proposal.status === NounsProposalStatus.Active ||
-        proposal.status === NounsProposalStatus.Pending ||
-        proposal.status === NounsProposalStatus.Queued ||
-        proposal.status === NounsProposalStatus.Succeeded ||
-        proposal.status === NounsProposalStatus.Executable
+        proposal.state === ProposalState.Active ||
+        proposal.state === ProposalState.Pending ||
+        proposal.state === ProposalState.Queued ||
+        proposal.state === ProposalState.Succeeded
     )
 
     const upgradesCalldata = upgrades.map((upgrade) => upgrade.calldata)
@@ -234,7 +228,7 @@ export const useAvailableUpgrade = (
   )
 
   const activeUpgradeProposal = findActiveUpgradeProposal(
-    proposals?.nouns?.nounsProposals?.nodes,
+    proposals?.proposals,
     upgradeTransactions
   )
 

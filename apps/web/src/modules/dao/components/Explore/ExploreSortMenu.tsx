@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 import { SORT_KEY } from 'src/constants/sortKey'
+import { Auction_OrderBy } from 'src/data/subgraph/sdk.generated'
 
 interface ExploreSortMenuProps {
   choice: string
@@ -11,14 +12,14 @@ interface ExploreSortMenuProps {
 const ExploreSortMenu: React.FC<ExploreSortMenuProps> = ({ choice }) => {
   const router = useRouter()
 
-  const selectionToSortKey = React.useCallback((option: string) => {
+  const selectionToOrderBy = React.useCallback((option: string) => {
     switch (option) {
       case 'Created':
-        return 'CREATED'
+        return Auction_OrderBy.StartTime
       case 'Price':
-        return 'CHAIN_TOKEN_PRICE'
+        return Auction_OrderBy.HighestBidAmount
       case 'Ending':
-        return 'TIMED_SALE_ENDING'
+        return Auction_OrderBy.EndTime
       default:
         throw new Error('Invalid sort key')
     }
@@ -30,11 +31,11 @@ const ExploreSortMenu: React.FC<ExploreSortMenuProps> = ({ choice }) => {
         pathname: router.pathname,
         query: {
           ...router.query,
-          sortKey: selectionToSortKey(e.target.value),
+          orderBy: selectionToOrderBy(e.target.value),
         },
       })
     },
-    [router, selectionToSortKey]
+    [router, selectionToOrderBy]
   )
 
   return (

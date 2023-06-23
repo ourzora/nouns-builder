@@ -2,12 +2,12 @@ import { Box, Flex, Label, Paragraph } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import React from 'react'
 
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
 
 import { parseBgColor, parseState, parseTime } from './ProposalStatus.helper'
 
 type StatusProps = {
-  state: NounsProposalStatus
+  state: ProposalState
   voteEnd: number
   voteStart: number
   expiresAt?: number
@@ -37,9 +37,7 @@ export const ProposalStatus: React.FC<StatusProps> = ({
       align="center"
       direction={flipped ? { '@768': 'row-reverse' } : {}}
     >
-      {(!!state ||
-        state === NounsProposalStatus.Created ||
-        state === NounsProposalStatus.Pending) && (
+      {(!!state || state === ProposalState.Pending) && (
         <Box
           py={'x1'}
           px={'x3'}
@@ -53,23 +51,21 @@ export const ProposalStatus: React.FC<StatusProps> = ({
           <Label size="sm">{parseState(state)}</Label>
         </Box>
       )}
-      {state === NounsProposalStatus.Pending && showTime && (
+      {state === ProposalState.Pending && showTime && (
         <Paragraph color="text3" data-testid="time-prefix">
           {parseTime(diffStart, 'Starts')}
         </Paragraph>
       )}
-      {state === NounsProposalStatus.Active && showTime && (
+      {state === ProposalState.Active && showTime && (
         <Paragraph color="text3" data-testid="time-prefix">
           {parseTime(diffEnd, 'Ends')}
         </Paragraph>
       )}
-      {(state === NounsProposalStatus.Queued ||
-        state === NounsProposalStatus.Executable) &&
-        showTime && (
-          <Paragraph color="text3" data-testid="time-prefix">
-            {parseTime(diffExpiration, 'Expires')}
-          </Paragraph>
-        )}
+      {state === ProposalState.Queued && showTime && (
+        <Paragraph color="text3" data-testid="time-prefix">
+          {parseTime(diffExpiration, 'Expires')}
+        </Paragraph>
+      )}
     </Flex>
   )
 }

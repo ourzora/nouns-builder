@@ -2,7 +2,6 @@ import * as Sentry from '@sentry/nextjs'
 
 import { CHAIN } from 'src/constants/network'
 import { sdk } from 'src/data/graphql/client'
-import { DaoProps } from 'src/pages'
 
 const brokenImgs = [
   '0xd38f7041d04ecb99404476d79420948158f1e7ad',
@@ -11,11 +10,11 @@ const brokenImgs = [
 ] //TODO: to be removed
 
 export const highestBidsRequest = async (): Promise<{
-  data: DaoProps[]
+  data: any[]
   statusCode: number
 }> => {
   let addresses: string[] = []
-  let daos: DaoProps[] = []
+  let daos: any[] = []
   let statusCode = null
 
   try {

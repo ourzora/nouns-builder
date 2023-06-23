@@ -16,13 +16,13 @@ export function handleAuctionCreated(event: AuctionCreatedEvent): void {
   let tokenAddress = context.getString('tokenAddress')
   let auction = new Auction(`${tokenAddress}:${event.params.tokenId.toString()}`)
 
-  auction.tokenId = event.params.tokenId
   auction.dao = tokenAddress
   auction.startTime = event.params.startTime
   auction.endTime = event.params.endTime
   auction.extended = false
   auction.settled = false
   auction.bidCount = 0
+  auction.token = `${tokenAddress}:${event.params.tokenId.toString()}`
   auction.save()
 
   let dao = DAO.load(tokenAddress)!
@@ -42,6 +42,10 @@ export function handleAuctionSettled(event: AuctionSettledEvent): void {
 
   let dao = DAO.load(tokenAddress)!
   dao.currentAuction = null
+  if (auction.highestBid) {
+    let bid = AuctionBid.load(auction.highestBid!)!
+    dao.totalAuctionSales = dao.totalAuctionSales.plus(bid.amount)
+  }
   dao.save()
 }
 

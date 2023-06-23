@@ -4,11 +4,9 @@ import React, { Fragment } from 'react'
 import { useAccount, useContractReads } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
-import { Proposal } from 'src/data/graphql/requests/proposalQuery'
-import {
-  NounsProposalStatus,
-  ProposalVoteFragment as ProposalVote,
-} from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
+import { ProposalVoteFragment as ProposalVote } from 'src/data/subgraph/sdk.generated'
 import { useDaoStore } from 'src/modules/dao'
 import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
@@ -33,7 +31,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const addresses = useDaoStore((state) => state.addresses)
 
-  const { proposer, title, voteStart, proposalId, proposalNumber, timeCreated, status } =
+  const { proposer, title, voteStart, proposalId, proposalNumber, timeCreated, state } =
     proposal
 
   const { data } = useContractReads({
@@ -50,13 +48,11 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
         address: addresses?.governor,
         functionName: 'vetoer',
       },
-    ],
+    ] as const,
   })
 
   const shouldShowActions =
-    status === NounsProposalStatus.Active ||
-    status === NounsProposalStatus.Pending ||
-    signerAddress
+    state === ProposalState.Active || state === ProposalState.Pending || signerAddress
 
   if (shouldShowActions && !userAddress) return <ConnectWalletAction />
   if (!shouldShowActions || !data) return null
@@ -72,7 +68,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
       )
     : undefined
 
-  const proposalOpen = isProposalOpen(status)
+  const proposalOpen = isProposalOpen(state)
   const isProposer =
     !!signerAddress &&
     ethers.utils.getAddress(proposer) == ethers.utils.getAddress(signerAddress)
@@ -82,7 +78,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const showCancel = proposalOpen && isProposer
   const showVeto = proposalOpen && isVetoer
 
-  const displaySucceededActions = isProposalSuccessful(proposal.status)
+  const displaySucceededActions = isProposalSuccessful(proposal.state)
 
   return (
     <Fragment>
@@ -105,9 +101,9 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
           votesAvailable={votesAvailable}
           proposalId={proposalId}
           voteStart={voteStart}
-          state={status}
+          state={state}
           daoName={daoName}
-          title={title}
+          title={title || ''}
         />
 
         {showCancel && <CancelButton proposalId={proposalId} />}

@@ -11,7 +11,7 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { governorAbi } from 'src/data/contract/abis'
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useDaoStore } from 'src/modules/dao'
 import {
   proposalFormTitle,

@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import { useBalance } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { salesVolumeRequest } from 'src/data/graphql/requests/salesVolumeQuery'
+import { sdk } from 'src/data/subgraph/client'
 import { statisticContent } from 'src/styles/About.css'
 import { treasuryWrapper } from 'src/styles/Proposals.css'
 import { formatCryptoVal, numberFormatter } from 'src/utils/numbers'
@@ -27,7 +27,11 @@ export const Treasury = () => {
   })
 
   const { data: earnings } = useSWR([SWR_KEYS.TREASURY_SALES, addresses.token], () =>
-    salesVolumeRequest(addresses.token as string)
+    sdk
+      .totalAuctionSales({ tokenAddress: addresses.token?.toLowerCase() as string })
+      .then((x) =>
+        x.dao?.totalAuctionSales ? ethers.utils.formatEther(x.dao.totalAuctionSales) : 0
+      )
   )
 
   const formattedEarnings = earnings && formatCryptoVal(earnings)

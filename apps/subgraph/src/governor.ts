@@ -30,9 +30,10 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   // Loop through and build the calldatas string (bytes array was hitting index limits that strings do not have)
   let calldatas: string = ''
   for (let i = 0; i < event.params.calldatas.length; i++) {
-    calldatas = calldatas + ':' + event.params.calldatas[i].toHexString()
+    if (i === 0) calldatas = event.params.calldatas[i].toHexString()
+    else calldatas = calldatas + ':' + event.params.calldatas[i].toHexString()
   }
-  proposal.calldatas = calldatas
+  proposal.calldatas = calldatas.length > 1 ? calldatas : null
 
   let split = event.params.description.split('&&')
   let title = split.length > 0 && split[0].length > 0 ? split[0] : null
@@ -41,11 +42,12 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.values = event.params.values
   proposal.title = title
   proposal.description = description
+  proposal.descriptionHash = event.params.descriptionHash
   proposal.proposer = event.params.proposal.proposer
   proposal.timeCreated = event.params.proposal.timeCreated
-  proposal.againstVotes = event.params.proposal.againstVotes
-  proposal.forVotes = event.params.proposal.forVotes
-  proposal.abstainVotes = event.params.proposal.abstainVotes
+  proposal.againstVotes = event.params.proposal.againstVotes.toI32()
+  proposal.forVotes = event.params.proposal.forVotes.toI32()
+  proposal.abstainVotes = event.params.proposal.abstainVotes.toI32()
   proposal.voteStart = event.params.proposal.voteStart
   proposal.voteEnd = event.params.proposal.voteEnd
   proposal.proposalThreshold = event.params.proposal.proposalThreshold
@@ -56,6 +58,8 @@ export function handleProposalCreated(event: ProposalCreatedEvent): void {
   proposal.queued = false
   proposal.dao = context.getString('tokenAddress')
   proposal.voteCount = 0
+  proposal.snapshotBlockNumber = event.block.number
+  proposal.transactionHash = event.transaction.hash
 
   proposal.save()
 
@@ -69,6 +73,7 @@ export function handleProposalQueued(event: ProposalQueuedEvent): void {
   let treasuryContract = TreasuryContract.bind(Address.fromString(treasuryAddress))
 
   let proposal = new Proposal(event.params.proposalId.toHexString())
+  proposal.executableFrom = event.params.eta
   proposal.expiresAt = event.params.eta.plus(treasuryContract.gracePeriod())
   proposal.queued = true
   proposal.save()
@@ -103,22 +108,23 @@ export function handleVoteCast(event: VoteCastEvent): void {
   )
 
   proposalVote.voter = event.params.voter
-  proposalVote.weight = event.params.weight
+  proposalVote.weight = event.params.weight.toI32()
   proposalVote.reason = event.params.reason.length > 0 ? event.params.reason : null
   proposalVote.proposal = proposalId
 
   let support = event.params.support
+  let weight = event.params.weight.toI32()
   // If the vote is against:
   if (support.equals(BigInt.fromI32(0))) {
-    proposal.againstVotes = proposal.againstVotes.plus(event.params.weight)
+    proposal.againstVotes = proposal.againstVotes + weight
     proposalVote.support = 'AGAINST'
     // Else if the vote is for:
   } else if (support.equals(BigInt.fromI32(1))) {
-    proposal.forVotes = proposal.forVotes.plus(event.params.weight)
+    proposal.forVotes = proposal.forVotes + weight
     proposalVote.support = 'FOR'
     // Else if the vote is to abstain:
   } else if (support.equals(BigInt.fromI32(2))) {
-    proposal.abstainVotes = proposal.abstainVotes.plus(event.params.weight)
+    proposal.abstainVotes = proposal.abstainVotes + weight
     proposalVote.support = 'ABSTAIN'
   } else {
     log.error('Unknown vote support type: {}', [support.toString()])
