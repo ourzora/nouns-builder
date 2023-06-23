@@ -17,7 +17,7 @@ export const CreateProposalHeading: React.FC<CreateProposalHeadingProps> = ({
   align = 'left',
 }) => {
   return (
-    <Stack mx={'auto'} pb={'x8'} w={'100%'}>
+    <Stack mx={'auto'} pb={'x3'} w={'100%'}>
       <ProposalNavigation transactionType={transactionType} />
       <Text
         fontSize={35}

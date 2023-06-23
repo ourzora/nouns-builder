@@ -51,7 +51,7 @@ const ReviewProposalPage: NextPageWithLayout = () => {
       <CreateProposalHeading title={'Review and Submit Proposal'} align={'center'} />
       <Box mx="auto">
         <a href="/guidelines" target="_blank" rel="noreferrer noopener">
-          <Flex align={'center'} mb={'x8'} color="text1">
+          <Flex align={'center'} mb={'x10'} color="text1">
             <Text
               as="a"
               fontSize={isMobile ? 14 : 18}
