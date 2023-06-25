@@ -17,6 +17,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (feedRes.isErr()) {
     return res.status(500).json(feedRes.error)
   }
+
+  // fromFarcasteTime does not work on the client. Running the function here.
   const withUnixTime = feedRes.value.map((cast) => ({
     ...cast,
     unixTime: fromFarcasterTime(cast.data.timestamp)._unsafeUnwrap(),

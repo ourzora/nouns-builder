@@ -8,10 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const profileRes = await getFarcasterProfile(Number(fid))
   const { maxAge, swr } = CACHE_TIMES.CASTR_PROFILE
-  res.setHeader(
-    'Cache-Control',
-    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
-  )
+  res.setHeader('Cache-Control', `public, s-maxage=${1}, stale-while-revalidate=${1}`)
 
   return res.status(200).json(profileRes)
 }

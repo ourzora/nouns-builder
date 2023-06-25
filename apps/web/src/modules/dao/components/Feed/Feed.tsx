@@ -1,8 +1,4 @@
-import {
-  CastAddData,
-  Message,
-  SignatureScheme,
-} from '@farcaster/hub-nodejs'
+import { CastAddData, Message, SignatureScheme } from '@farcaster/hub-nodejs'
 import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import dayjs from 'dayjs'
@@ -14,7 +10,7 @@ import { PURPLE_COLLECTION } from 'src/constants/farcasterHub'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { useLayoutStore } from 'src/stores'
 
-import { feed, feedLayoutWrapper } from './Feed.css'
+import { cardSkeleton, feed, feedLayoutWrapper } from './Feed.css'
 
 type FeedTabProps = {
   collectionAddress: string
@@ -38,14 +34,22 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
     () =>
       axios
         .get<{ value: AddMsgWithUnix[] }>(`/api/feed/${PURPLE_COLLECTION}~${chainId}`)
-        .then((x) => x.data.value)
+        .then((x) => x.data.value.reverse())
   )
 
   if (error) {
     return <FeedTab isMobile={isMobile}>error</FeedTab>
   }
   if (isValidating) {
-    return <FeedTab isMobile={isMobile}>loading</FeedTab>
+    return (
+      <FeedTab isMobile={isMobile}>
+        <Box>
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </Box>
+      </FeedTab>
+    )
   }
 
   return (
@@ -118,6 +122,7 @@ const CastCard = ({
       .get<{ displayName?: string; pfp?: string }>(`/api/feed/userData?fid=${fid}`)
       .then((x) => x.data)
   )
+
   const time = useMemo(() => {
     dayjs.extend(relativeTime)
     const date = dayjs.unix(timestamp / 1000).fromNow()
@@ -128,10 +133,8 @@ const CastCard = ({
     return <Box>error</Box>
   }
   if (isValidating) {
-    return <Box>loading</Box>
+    return <CardSkeleton />
   }
-
-  //   console.log('timestamp', timestamp)
 
   return (
     <Box mb={'x10'}>
@@ -172,3 +175,13 @@ const CastCard = ({
     </Box>
   )
 }
+
+const CardSkeleton = () => (
+  <Box
+    className={cardSkeleton}
+    borderRadius="normal"
+    backgroundColor="background2"
+    style={{ height: '8rem' }}
+    mb="x3"
+  />
+)
