@@ -43,33 +43,30 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
   if (isValidating) {
     return (
       <FeedTab isMobile={isMobile}>
-        <Box>
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-        </Box>
+        <CardSkeleton />
+        <CardSkeleton />
+        <CardSkeleton />
       </FeedTab>
     )
   }
-
+  console.log(data)
   return (
     <FeedTab isMobile={isMobile}>
-      <>
-        {data?.map((msg) => (
-          <CastCard
-            text={msg?.data?.castAddBody?.text}
-            fid={msg.data.fid}
-            timestamp={msg.unixTime}
-          />
-        ))}
-      </>
+      {data?.map((msg, index) => (
+        <CastCard
+          key={`${msg.unixTime}.${index}`}
+          text={msg?.data?.castAddBody?.text}
+          fid={msg.data.fid}
+          timestamp={msg.unixTime}
+        />
+      ))}
     </FeedTab>
   )
 }
 
 export default Feed
 
-const FeedTab = ({ isMobile, children }: { isMobile: boolean; children?: ReactNode }) => (
+const FeedTab = ({ children }: { isMobile: boolean; children?: ReactNode }) => (
   <Box className={feed}>
     <Flex direction={'column'}>
       <Box mb={{ '@initial': 'x4', '@768': 'x8' }}>
@@ -181,7 +178,7 @@ const CardSkeleton = () => (
     className={cardSkeleton}
     borderRadius="normal"
     backgroundColor="background2"
-    style={{ height: '8rem' }}
+    style={{ height: '8rem', minHeight: '8rem' }}
     mb="x3"
   />
 )
