@@ -10,7 +10,7 @@ import { PURPLE_COLLECTION } from 'src/constants/farcasterHub'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { useLayoutStore } from 'src/stores'
 
-import { cardSkeleton, feed, feedLayoutWrapper } from './Feed.css'
+import { cardLink, cardSkeleton, cardWrapper, feed, feedLayoutWrapper } from './Feed.css'
 
 type FeedTabProps = {
   collectionAddress: string
@@ -19,11 +19,9 @@ type FeedTabProps = {
 type AddMsgWithUnix = Message & {
   data: CastAddData
   unixTime: number
+  hexHash: string
   signatureScheme: SignatureScheme.ED25519
 }
-
-const testImg =
-  'https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_png,w_256/https://lh3.googleusercontent.com/MyUBL0xHzMeBu7DXQAqv0bM9y6s4i4qjnhcXz5fxZKS3gwWgtamxxmxzCJX7m2cuYeGalyseCA2Y6OBKDMR06TWg2uwknnhdkDA1AA'
 
 const Feed = ({ collectionAddress }: FeedTabProps) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
@@ -40,6 +38,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
   if (error) {
     return <FeedTab isMobile={isMobile}>error</FeedTab>
   }
+
   if (isValidating) {
     return (
       <FeedTab isMobile={isMobile}>
@@ -49,7 +48,26 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
       </FeedTab>
     )
   }
-  console.log(data)
+
+  if (!data?.length) {
+    return (
+      <FeedTab isMobile={isMobile}>
+        <Flex
+          justify="center"
+          align="center"
+          width="100%"
+          height="100%"
+          direction="column"
+        >
+          <Text fontSize={20} fontWeight={'heading'} mb={'x3'}>
+            No casts found
+          </Text>
+          <Text>A channel feed has not been created for this DAO.</Text>
+        </Flex>
+      </FeedTab>
+    )
+  }
+
   return (
     <FeedTab isMobile={isMobile}>
       {data?.map((msg, index) => (
@@ -58,6 +76,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
           text={msg?.data?.castAddBody?.text}
           fid={msg.data.fid}
           timestamp={msg.unixTime}
+          hexHash={msg.hexHash}
         />
       ))}
     </FeedTab>
@@ -91,8 +110,7 @@ const FeedLayout = ({ children }: { children?: ReactNode }) => {
     <Flex
       className={feedLayoutWrapper}
       direction={'column'}
-      px={{ '@initial': 'x0', '@768': 'x18' }}
-      py={{ '@initial': 'x0', '@768': 'x8' }}
+      py={{ '@initial': 'x0', '@768': 'x4' }}
       borderColor={'border'}
       borderStyle={'solid'}
       borderRadius={'curved'}
@@ -109,14 +127,18 @@ const CastCard = ({
   text,
   fid,
   timestamp,
+  hexHash,
 }: {
   text: string
   fid: number
   timestamp: number
+  hexHash: string
 }) => {
   const { data, error, isValidating } = useSWR(fid ? [fid] : undefined, () =>
     axios
-      .get<{ displayName?: string; pfp?: string }>(`/api/feed/userData?fid=${fid}`)
+      .get<{ displayName?: string; pfp?: string; fName?: string }>(
+        `/api/feed/userData?fid=${fid}`
+      )
       .then((x) => x.data)
   )
 
@@ -134,41 +156,60 @@ const CastCard = ({
   }
 
   return (
-    <Box mb={'x10'}>
-      <Flex align={'center'} mb={'x4'}>
-        <Box mr="x3" borderRadius="round">
-          <div
-            style={{
-              width: '32px',
-              height: '32px',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            <img
-              src={data?.pfp || testImg}
+    <Box
+      className={cardWrapper}
+      px={{ '@initial': 'x0', '@768': 'x32' }}
+      py={{ '@initial': 'x4', '@768': 'x4' }}
+      borderRadius={'normal'}
+      mb={'x3'}
+    >
+      <a
+        href={`https://warpcast.com/~/conversations/${hexHash}`}
+        target="_blank"
+        className={cardLink}
+      >
+        <Flex align={'center'} mb={'x4'}>
+          <Box mr="x3" borderRadius="round">
+            <div
               style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                height: '100%',
-                width: '100%',
-                transform: 'translate(-50%, -50%)',
-                objectFit: 'cover',
-                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                position: 'relative',
+                overflow: 'hidden',
               }}
-            />
-          </div>
-        </Box>
-        <Text mr={'x3'} fontWeight={'display'}>
-          {data?.displayName}
-        </Text>
-        <Text color="text3" mr={'x3'}>
-          |
-        </Text>
-        <Text color="text3">{time}</Text>
-      </Flex>
-      <Text wordBreak="break-word">{text}</Text>
+            >
+              <img
+                src={data?.pfp || '/nouns-avatar-circle.png'}
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  height: '100%',
+                  width: '100%',
+                  transform: 'translate(-50%, -50%)',
+                  objectFit: 'cover',
+                  borderRadius: '50%',
+                }}
+              />
+            </div>
+          </Box>
+          <Flex direction={{ '@initial': 'column', '@768': 'row' }}>
+            <Text mr={'x1'} fontWeight={'display'}>
+              {data?.displayName || '@' + data?.fName || 'Name Not Found'}
+            </Text>
+            <Flex>
+              <Text color="text3" mr={'x1'}>
+                @{data?.fName || 'fName Not Found'}
+              </Text>
+              <Text color="text3" mr={'x1'}>
+                -
+              </Text>
+              <Text color="text3">{time}</Text>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Text wordBreak="break-word">{text}</Text>
+      </a>
     </Box>
   )
 }
