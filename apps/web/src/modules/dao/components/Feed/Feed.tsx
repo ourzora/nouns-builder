@@ -1,17 +1,16 @@
 import { CastAddData, Message, SignatureScheme } from '@farcaster/hub-nodejs'
-import { Box, Flex, Text } from '@zoralabs/zord'
+import { Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import Link from 'next/link'
-import React, { ReactNode, useMemo } from 'react'
+import React from 'react'
 import useSWR from 'swr'
 
 import { PURPLE_COLLECTION } from 'src/constants/farcasterHub'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { useLayoutStore } from 'src/stores'
 
-import { cardLink, cardSkeleton, cardWrapper, feed, feedLayoutWrapper } from './Feed.css'
+import { CardSkeleton } from './CardSkeleton'
+import { CastCard } from './CastCard'
+import { FeedTab } from './FeedTab'
 
 type FeedTabProps = {
   collectionAddress: string
@@ -100,145 +99,3 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
 }
 
 export default Feed
-
-const FeedTab = ({ children }: { isMobile: boolean; children?: ReactNode }) => (
-  <Box className={feed}>
-    <Flex direction={'column'}>
-      <Box mb={{ '@initial': 'x4', '@768': 'x8' }}>
-        <Text
-          mb={{ '@initial': 'x4', '@768': 'x6' }}
-          fontSize={28}
-          fontWeight={'display'}
-        >
-          DAO Feed
-        </Text>
-        <Text mb="x3">
-          This feed is a read-only, alpha feature for DAOs that have a{' '}
-          <Link href="https://github.com/farcasterxyz/protocol/discussions/71">
-            Farcaster channel
-          </Link>
-        </Text>
-        <Text mb="x3">
-          Please leave any feedback or feature requests on this{' '}
-          <Link href="https://github.com/ourzora/nouns-builder/issues/270">
-            Github issue
-          </Link>
-        </Text>
-        <Flex
-          className={feedLayoutWrapper}
-          direction={'column'}
-          py={{ '@initial': 'x0', '@768': 'x4' }}
-          borderColor={'border'}
-          borderStyle={'solid'}
-          borderRadius={'curved'}
-          borderWidth={'normal'}
-          mt={'x4'}
-          mb={'x8'}
-        >
-          {children}
-        </Flex>
-      </Box>
-    </Flex>
-  </Box>
-)
-
-const CastCard = ({
-  text,
-  fid,
-  timestamp,
-  hexHash,
-}: {
-  text: string
-  fid: number
-  timestamp: number
-  hexHash: string
-}) => {
-  const { data, error, isValidating } = useSWR(fid ? [fid] : undefined, () =>
-    axios
-      .get<{ displayName?: string; pfp?: string; fName?: string }>(
-        `/api/feed/userData?fid=${fid}`
-      )
-      .then((x) => x.data)
-  )
-
-  const time = useMemo(() => {
-    dayjs.extend(relativeTime)
-    const date = dayjs.unix(timestamp / 1000).fromNow()
-    return date
-  }, [timestamp])
-
-  if (error) {
-    return <Box>error</Box>
-  }
-  if (isValidating) {
-    return <CardSkeleton />
-  }
-
-  return (
-    <Box
-      className={cardWrapper}
-      px={{ '@initial': 'x2', '@768': 'x32' }}
-      py={{ '@initial': 'x4', '@768': 'x4' }}
-      borderRadius={'normal'}
-      mb={'x3'}
-    >
-      <a
-        href={`https://warpcast.com/~/conversations/${hexHash}`}
-        target="_blank"
-        className={cardLink}
-      >
-        <Flex align={'center'} mb={'x4'}>
-          <Box mr="x3" borderRadius="round">
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <img
-                src={data?.pfp || '/nouns-avatar-circle.png'}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  height: '100%',
-                  width: '100%',
-                  transform: 'translate(-50%, -50%)',
-                  objectFit: 'cover',
-                  borderRadius: '50%',
-                }}
-              />
-            </div>
-          </Box>
-          <Flex direction={{ '@initial': 'column', '@768': 'row' }}>
-            <Text mr={'x1'} fontWeight={'display'}>
-              {data?.displayName || '@' + data?.fName || 'Name Not Found'}
-            </Text>
-            <Flex>
-              <Text color="text3" mr={'x1'}>
-                @{data?.fName || 'fName Not Found'}
-              </Text>
-              <Text color="text3" mr={'x1'}>
-                -
-              </Text>
-              <Text color="text3">{time}</Text>
-            </Flex>
-          </Flex>
-        </Flex>
-        <Text wordBreak="break-word">{text}</Text>
-      </a>
-    </Box>
-  )
-}
-
-const CardSkeleton = () => (
-  <Box
-    className={cardSkeleton}
-    borderRadius="normal"
-    backgroundColor="background2"
-    style={{ height: '8rem', minHeight: '8rem' }}
-    mb="x3"
-  />
-)
