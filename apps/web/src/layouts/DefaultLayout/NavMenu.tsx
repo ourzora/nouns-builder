@@ -50,7 +50,7 @@ export const NavMenu = () => {
     : undefined
 
   const { data: myDaos } = useSWR(
-    address ? SWR_KEYS.DYNAMIC.MY_DAOS(address as string) : null,
+    address ? [chain.slug, SWR_KEYS.DYNAMIC.MY_DAOS(address as string)] : null,
     () =>
       axios
         .get<MyDaosResponse>(`/api/profile/${chain.slug}/${address}/daos`)

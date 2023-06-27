@@ -9,6 +9,7 @@ import React, { Fragment, useState } from 'react'
 
 import { useCountdown } from 'src/hooks/useCountdown'
 import { useIsMounted } from 'src/hooks/useIsMounted'
+import { useChainStore } from 'src/stores/useChainStore'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { auction, daoImage, name, title } from './DaoCard.css'
@@ -42,6 +43,7 @@ export const DaoCard = ({
   const [imgErr, setImgErr] = React.useState<boolean>(false)
   const [isEnded, setIsEnded] = useState(false)
   const { query } = useRouter()
+  const chain = useChainStore((x) => x.chain)
 
   const onEnd = () => {
     setIsEnded(true)
@@ -52,7 +54,7 @@ export const DaoCard = ({
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
 
   return (
-    <Link href={`/dao/${query.network}/${collectionAddress}/${tokenId}`} prefetch={false}>
+    <Link href={`/dao/${chain.slug}/${collectionAddress}/${tokenId}`} prefetch={false}>
       <Box borderRadius="curved" height={'100%'} overflow="hidden">
         <Box
           backgroundColor="background2"
