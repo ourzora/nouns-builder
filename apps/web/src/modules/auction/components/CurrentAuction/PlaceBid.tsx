@@ -33,7 +33,7 @@ interface PlaceBidProps {
 export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
   const { address } = useAccount()
-  const { chain: userChain } = useNetwork()
+  const { chain: wagmiChain } = useNetwork()
   const { data: balance } = useBalance({ address: address })
   const { mutate } = useSWRConfig()
   const { addresses } = useDaoStore()
@@ -120,7 +120,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
             className={auctionActionButtonVariants['bid']}
             handleClick={handleCreateBid}
             disabled={
-              address && !userChain?.unsupported ? !isMinBid || !bidAmount : false
+              address && wagmiChain?.id == chain.id ? !isMinBid || !bidAmount : false
             }
             mt={{ '@initial': 'x2', '@768': 'x0' }}
           >

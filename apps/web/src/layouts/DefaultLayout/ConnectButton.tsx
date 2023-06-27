@@ -1,16 +1,19 @@
-import { ConnectButton as RKConnectButton, useChainModal } from '@rainbow-me/rainbowkit'
+import { ConnectButton as RKConnectButton } from '@rainbow-me/rainbowkit'
 import { Flex, Text } from '@zoralabs/zord'
 import React from 'react'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { connectButtonWrapper } from './Nav.styles.css'
 
 export const ConnectButton = () => {
   const { address } = useAccount()
-  const { chain } = useNetwork()
-  const { openChainModal } = useChainModal()
+  const { chain: wagmiChain } = useNetwork()
+  const { switchNetwork } = useSwitchNetwork()
+  const chain = useChainStore((x) => x.chain)
 
-  if (chain?.unsupported) {
+  if (wagmiChain?.id !== chain?.id) {
     return (
       <Flex
         as={'button'}
@@ -18,7 +21,7 @@ export const ConnectButton = () => {
         alignSelf={'center'}
         align={'center'}
         justify={'center'}
-        onClick={openChainModal}
+        onClick={() => switchNetwork?.(chain.id)}
         py={'x2'}
         style={{
           backgroundColor: '#F5E2E2',
@@ -33,7 +36,7 @@ export const ConnectButton = () => {
     )
   }
 
-  if (address || chain) {
+  if (address || wagmiChain) {
     return null
   }
 

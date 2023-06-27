@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Stack, Text } from '@zoralabs/zord'
 import { Form, Formik } from 'formik'
-import { useChainId } from 'wagmi'
 
 import Date from 'src/components/Fields/Date'
 import SmartInput from 'src/components/Fields/SmartInput'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 import { yearsAhead } from 'src/utils/helpers'
 
 import { TokenAllocation } from '../AllocationForm'
@@ -28,7 +28,8 @@ export const ContributionAllocationForm: React.FC<ContributionAllocationFormProp
   initialValues,
   handleSubmit,
 }) => {
-  const chainId = useChainId() as ContributionChain
+  const chain = useChainStore((x) => x.chain)
+  const chainId = chain.id as ContributionChain
   const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS[chainId])
   const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS[chainId])
 

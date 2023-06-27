@@ -1,10 +1,10 @@
 import { Button, Flex, Heading, Stack, Text } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { useChainId } from 'wagmi'
 
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 import { getEnsAddress } from 'src/utils/ens'
 
 import { useFormStore } from '../../stores'
@@ -24,7 +24,8 @@ export const ContributionAllocation = () => {
   const setContributionAllocation = useFormStore(
     (state) => state.setContributionAllocation
   )
-  const chainId = useChainId() as ContributionChain
+  const chain = useChainStore((x) => x.chain)
+  const chainId = chain.id as ContributionChain
 
   const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS[chainId])
   const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS[chainId])

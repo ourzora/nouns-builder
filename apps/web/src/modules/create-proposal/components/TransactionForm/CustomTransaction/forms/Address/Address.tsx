@@ -47,7 +47,7 @@ export const Address = () => {
         customABI,
       })
     },
-    [customTransaction, composeCustomTransaction]
+    [customTransaction, composeCustomTransaction, chain.id]
   )
 
   return (

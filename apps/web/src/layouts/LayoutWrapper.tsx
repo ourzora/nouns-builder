@@ -43,7 +43,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
     if (!query?.network) return
     const routeChain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === query.network)
     if (routeChain) setChain(routeChain)
-  }, [query.network])
+  }, [query.network, setChain])
 
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768)
