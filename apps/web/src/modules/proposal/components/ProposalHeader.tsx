@@ -23,8 +23,9 @@ export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
       <ProposalNavigation
         handleBack={() => {
           router.push({
-            pathname: `/dao/[token]`,
+            pathname: `/dao/[network]/[token]`,
             query: {
+              network: router.query.network,
               token: proposal.dao.tokenAddress,
               tab: 'activity',
             },

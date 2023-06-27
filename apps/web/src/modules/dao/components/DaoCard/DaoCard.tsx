@@ -4,6 +4,7 @@ import { BigNumberish } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
 
 import { useCountdown } from 'src/hooks/useCountdown'
@@ -40,6 +41,7 @@ export const DaoCard = ({
   const isMounted = useIsMounted()
   const [imgErr, setImgErr] = React.useState<boolean>(false)
   const [isEnded, setIsEnded] = useState(false)
+  const { query } = useRouter()
 
   const onEnd = () => {
     setIsEnded(true)
@@ -50,7 +52,7 @@ export const DaoCard = ({
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
 
   return (
-    <Link href={`/dao/${collectionAddress}/${tokenId}`} prefetch={false}>
+    <Link href={`/dao/${query.network}/${collectionAddress}/${tokenId}`} prefetch={false}>
       <Box borderRadius="curved" height={'100%'} overflow="hidden">
         <Box
           backgroundColor="background2"

@@ -6,6 +6,7 @@ import { useContract, useContractRead, useSigner } from 'wagmi'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { DaoContractAddresses, useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 import {
   deployPendingButtonStyle,
   infoSectionLabelStyle,
@@ -39,6 +40,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const router = useRouter()
   const { general, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
     useFormStore()
+  const chain = useChainStore((x) => x.chain)
   const { data: signer } = useSigner()
   const { addresses, setAddresses } = useDaoStore()
   const metadataContract = useContract({
@@ -113,7 +115,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     setIsPendingTransaction(false)
     setFulfilledSections(title)
 
-    router.push(`/dao/${token}`).then(() => {
+    router.push(`/dao/${chain.slug}/${token}`).then(() => {
       resetForm()
     })
   }

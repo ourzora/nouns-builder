@@ -93,7 +93,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
         <SectionHandler
           sections={sections}
           activeTab={query?.tab ? (query.tab as string) : 'Details'}
-          basePath={`/dao/${query?.token}/vote/${query?.id}`}
+          basePath={`/dao/${chain.slug}/${query?.token}/vote/${query?.id}`}
         />
       </Box>
     </Fragment>
@@ -123,7 +123,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
 
   const [{ collectionName, collectionImage, addresses }, proposal] = await Promise.all([
     axios
-      .get<DaoResponse>(`${protocol}://${baseUrl}/api/dao/${collection}`)
+      .get<DaoResponse>(`${protocol}://${baseUrl}/api/dao/${network}/${collection}`)
       .then((x) => x.data),
     getProposal(chain, proposalId),
   ])

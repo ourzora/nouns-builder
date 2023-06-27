@@ -1,6 +1,7 @@
 import { Box, Flex, Label, Paragraph } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
@@ -33,11 +34,15 @@ export const ProposalCard: React.FC<ProposalCardProps> = ({
   collection,
 }) => {
   const isMounted = useIsMounted()
+  const { query } = useRouter()
 
   if (!isMounted) return null
 
   return (
-    <Link href={collection ? `/dao/${collection}/vote/${proposalId}` : ''} passHref>
+    <Link
+      href={collection ? `/dao/${query.network}/${collection}/vote/${proposalId}` : ''}
+      passHref
+    >
       <Flex
         direction={{ '@initial': 'column', '@768': 'row' }}
         my={'x2'}

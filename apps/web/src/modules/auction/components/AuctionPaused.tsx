@@ -69,8 +69,8 @@ export const AuctionPaused = () => {
         shallow={!pausedProposal?.proposalId}
         href={
           pausedProposal?.proposalId
-            ? `/dao/${query.token}/vote/${pausedProposal?.proposalId}`
-            : `/dao/${query.token}?tab=activity`
+            ? `/dao/${query.network}/${query.token}/vote/${pausedProposal?.proposalId}`
+            : `/dao/${query.network}/${query.token}?tab=activity`
         }
       >
         <Box

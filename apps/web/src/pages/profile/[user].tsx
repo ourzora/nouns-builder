@@ -38,7 +38,9 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
     () =>
       axios
         .get<UserTokensResponse>(
-          `/api/profile/${userAddress}/tokens${page ? `?page=${page}` : ''}`
+          `/api/profile/${query.network}/${userAddress}/tokens${
+            page ? `?page=${page}` : ''
+          }`
         )
         .then((x) => x.data)
   )
@@ -169,7 +171,10 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
               {!!tokens?.tokens.length ? (
                 <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
                   {tokens?.tokens.map((x, i) => (
-                    <Link key={i} href={`/dao/${x.tokenContract}/${x.tokenId}`}>
+                    <Link
+                      key={i}
+                      href={`/dao/${query.network}/${x.tokenContract}/${x.tokenId}`}
+                    >
                       <TokenPreview name={x.name} image={x.image} />
                     </Link>
                   ))}

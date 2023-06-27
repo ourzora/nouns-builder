@@ -156,8 +156,9 @@ export const ReviewProposalForm = ({
 
         router
           .push({
-            pathname: `/dao/[token]/[tokenId]`,
+            pathname: `/dao/[network]/[token]/[tokenId]`,
             query: {
+              network: router.query?.network,
               token: router.query?.token,
               tokenId: auction?.tokenId?.toNumber(),
               message: SUCCESS_MESSAGES.PROPOSAL_SUBMISSION_SUCCESS,

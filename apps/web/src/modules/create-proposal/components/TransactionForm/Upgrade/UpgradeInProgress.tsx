@@ -28,8 +28,12 @@ export const UpgradeInProgress: React.FC<UpgradeInProgressProps> = ({
         It looks like you currently have an{' '}
         <Link
           href={{
-            pathname: '/dao/[token]/vote/[id]',
-            query: { token: addresses?.token, id: activeUpgradeProposalId },
+            pathname: '/dao/[network]/[token]/vote/[id]',
+            query: {
+              network: chain.slug,
+              token: addresses?.token,
+              id: activeUpgradeProposalId,
+            },
           }}
         >
           <Box display={'inline-flex'} className={atoms({ textDecoration: 'underline' })}>

@@ -68,7 +68,7 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
 
         <OptionalLink
           enabled={hasNextToken}
-          href={`/dao/${collection}/${currentAuction}`}
+          href={`/dao/${query.network}/${collection}/${currentAuction}`}
           passHref
           legacyBehavior
         >

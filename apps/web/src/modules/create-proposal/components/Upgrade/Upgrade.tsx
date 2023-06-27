@@ -53,8 +53,8 @@ export const Upgrade = ({
     })
 
     router.push({
-      pathname: '/dao/[token]/proposal/review',
-      query: { token: collection },
+      pathname: '/dao/[network]/[token]/proposal/review',
+      query: { network: chain.slug, token: collection },
     })
   }
 
