@@ -4,7 +4,6 @@ import axios from 'axios'
 import React from 'react'
 import useSWR from 'swr'
 
-import { PURPLE_COLLECTION } from 'src/constants/farcasterHub'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { useLayoutStore } from 'src/stores'
 
@@ -28,10 +27,10 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
   const chainId = '1'
 
   const { data, error, isValidating } = useSWR(
-    collectionAddress ? [SWR_KEYS.DAO_FEED, PURPLE_COLLECTION] : undefined,
+    collectionAddress ? [SWR_KEYS.DAO_FEED, collectionAddress] : undefined,
     () =>
       axios
-        .get<{ value: AddMsgWithUnix[] }>(`/api/feed/${PURPLE_COLLECTION}~${chainId}`)
+        .get<{ value: AddMsgWithUnix[] }>(`/api/feed/${collectionAddress}~${chainId}`)
         .then((x) => x.data.value.reverse())
   )
 
