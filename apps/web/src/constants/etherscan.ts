@@ -1,7 +1,7 @@
-export const ETHERSCAN_BASE_URL =
-  {
-    1: 'https://etherscan.io',
-    5: 'https://goerli.etherscan.io',
-  }[process.env.NEXT_PUBLIC_CHAIN_ID || 1] || ''
+import { CHAIN_ID } from 'src/typings'
 
-export const ETHER_ACTOR_BASE_URL = 'https://ether.actor'
+export const ETHERSCAN_BASE_URL = {
+  [CHAIN_ID.ETHEREUM]: 'https://etherscan.io',
+  [CHAIN_ID.GOERLI]: 'https://goerli.etherscan.io',
+  [CHAIN_ID.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io/',
+}

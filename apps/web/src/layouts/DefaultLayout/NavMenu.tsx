@@ -1,4 +1,4 @@
-import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
+import { Box, Flex, PopUp, Select, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -14,6 +14,7 @@ import { NetworkController } from 'src/components/NetworkController'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { MyDaosResponse } from 'src/data/subgraph/requests/daoQuery'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { ConnectButton } from './ConnectButton'
@@ -42,6 +43,7 @@ export const NavMenu = () => {
     address: address as `0x${string}`,
   })
   const { disconnect } = useDisconnect()
+  const { chain, setChain, chains } = useChainStore()
 
   const userBalance = balance?.formatted
     ? `${Number(formatCryptoVal(balance?.formatted)).toFixed(2)} ETH`
@@ -58,6 +60,11 @@ export const NavMenu = () => {
   const initMaxDaos = 3
   const viewableDaos = myDaos && myDaos.slice(0, viewAll ? myDaos.length : initMaxDaos)
   const hasMoreDaos = myDaos && myDaos.length > initMaxDaos ? true : false
+
+  const onChainChange = (chainId: number) => {
+    const selected = chains.find((x) => x.id === chainId)
+    if (selected) setChain(selected)
+  }
 
   /*
     close dropdown on route change
@@ -76,6 +83,15 @@ export const NavMenu = () => {
 
   return (
     <Flex align={'center'} direction={'row'} gap={'x4'}>
+      <Select value={chain.id} onChange={(e) => onChainChange(parseInt(e.target.value))}>
+        {Object.values(chains).map((chain) => {
+          return (
+            <option key={chain.id} value={chain.id}>
+              {chain.name}
+            </option>
+          )
+        })}
+      </Select>
       {address && (
         <Flex
           className={navButton}

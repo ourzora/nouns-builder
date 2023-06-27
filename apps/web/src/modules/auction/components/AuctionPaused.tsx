@@ -14,9 +14,11 @@ import {
   getProposals,
 } from 'src/data/subgraph/requests/proposalsQuery'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 
 export const AuctionPaused = () => {
   const { query, isReady } = useRouter()
+  const chain = useChainStore((x) => x.chain)
   const LIMIT = 20
 
   const { auction } = useDaoStore((x) => x.addresses)
@@ -28,8 +30,8 @@ export const AuctionPaused = () => {
   })
 
   const { data } = useSWR<ProposalsResponse>(
-    paused && isReady ? [SWR_KEYS.PROPOSALS, query.token, query.page] : null,
-    (_, token, page) => getProposals(token, LIMIT, Number(page))
+    paused && isReady ? [SWR_KEYS.PROPOSALS, chain, query.token, query.page] : null,
+    (_, chain, token, page) => getProposals(chain, token, LIMIT, Number(page))
   )
 
   const pausedProposal = useMemo(() => {

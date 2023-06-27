@@ -4,12 +4,12 @@ import {
   ProposalState,
   getProposalState,
 } from 'src/data/contract/requests/getProposalState'
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
 import {
   ProposalFragment,
   ProposalVoteFragment as ProposalVote,
 } from 'src/data/subgraph/sdk.generated'
-import { BytesType } from 'src/typings'
+import { BytesType, Chain } from 'src/typings'
 
 export interface Proposal
   extends Omit<ProposalFragment, 'executableFrom' | 'expiresAt' | 'calldatas'> {
@@ -20,9 +20,12 @@ export interface Proposal
   votes?: ProposalVote[]
 }
 
-export const getProposal = async (proposalId: string): Promise<Proposal | undefined> => {
+export const getProposal = async (
+  chain: Chain,
+  proposalId: string
+): Promise<Proposal | undefined> => {
   try {
-    const data = await sdk.proposal({
+    const data = await SDK.connect(chain.id).proposal({
       proposalId,
     })
 

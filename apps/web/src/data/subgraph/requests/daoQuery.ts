@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/nextjs'
 
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
+import { Chain } from 'src/typings'
 
 export type MyDaosResponse = Array<{
   name: string
@@ -14,6 +15,7 @@ const DAOS_TO_EXCLUDE = [
 ]
 
 export const myDaosRequest = async (
+  chain: Chain,
   memberAddress: string
 ): Promise<MyDaosResponse | undefined> => {
   let daos: MyDaosResponse = []
@@ -21,7 +23,7 @@ export const myDaosRequest = async (
   if (!memberAddress) return
 
   try {
-    const data = await sdk.daoTokenOwners({
+    const data = await SDK.connect(chain.id).daoTokenOwners({
       where: {
         owner: memberAddress,
       },

@@ -8,6 +8,7 @@ import {
   useCustomTransactionStore,
 } from 'src/modules/create-proposal'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { CustomTransactionForm } from '../CustomTransactionForm'
 import { contractAddressFields, validateContractAddress } from './fields'
@@ -15,6 +16,7 @@ import { contractAddressFields, validateContractAddress } from './fields'
 export const Address = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
   const { provider } = useLayoutStore()
+  const chain = useChainStore((x) => x.chain)
   const initialValues = {
     transactionContractAddress: customTransaction?.address || '',
     transactionCustomABI: customTransaction?.customABI || '',
@@ -29,7 +31,9 @@ export const Address = () => {
     async ({ transactionContractAddress }: { transactionContractAddress: string }) => {
       let customABI
       try {
-        const response = await axios(`/api/abi?address=${transactionContractAddress}`)
+        const response = await axios(
+          `/api/abi?chainid=${chain.id}&address=${transactionContractAddress}`
+        )
         customABI = response.data?.abi
       } catch (e) {
         console.error(e)

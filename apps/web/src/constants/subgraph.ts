@@ -1,4 +1,10 @@
+import { CHAIN_ID } from 'src/typings'
+
 export const PUBLIC_SUBGRAPH_URL = {
-  1: 'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-mainnet',
-  5: 'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli',
-}[process.env.NEXT_PUBLIC_CHAIN_ID || 1] as string
+  [CHAIN_ID.ETHEREUM]:
+    'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-mainnet',
+  [CHAIN_ID.GOERLI]:
+    'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli',
+  [CHAIN_ID.OPTIMISM_GOERLI]:
+    'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-optimism-goerli',
+}

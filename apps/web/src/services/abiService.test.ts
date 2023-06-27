@@ -2,6 +2,7 @@ import axios from 'axios'
 import Redis from 'ioredis'
 import { describe, expect, it, vi } from 'vitest'
 
+import { CHAIN_ID } from 'src/typings'
 import { getProvider } from 'src/utils/provider'
 
 import { getContractABIByAddress } from './abiService'
@@ -34,17 +35,19 @@ describe('abiService', () => {
 
   describe('runs fetch', () => {
     it('fails with invalid address', async () => {
-      expect(() => getContractABIByAddress('asdf')).rejects.toThrow(InvalidRequestError)
+      expect(() => getContractABIByAddress(CHAIN_ID.ETHEREUM, 'asdf')).rejects.toThrow(
+        InvalidRequestError
+      )
     })
 
     it('fails with an undefined address', async () => {
-      expect(() => getContractABIByAddress(undefined)).rejects.toThrow(
+      expect(() => getContractABIByAddress(CHAIN_ID.ETHEREUM, undefined)).rejects.toThrow(
         InvalidRequestError
       )
     })
 
     it('attempts to fetch the slot from the provider', async () => {
-      const spy = vi.spyOn(getProvider(), 'getStorageAt')
+      const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
         async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -52,7 +55,10 @@ describe('abiService', () => {
 
       // We know the contract call will fail but we want to validate the slot call
       try {
-        await getContractABIByAddress('0x9444390c01Dd5b7249E53FAc31290F7dFF53450D')
+        await getContractABIByAddress(
+          CHAIN_ID.ETHEREUM,
+          '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D'
+        )
       } catch (err) {}
 
       expect(spy).toHaveBeenCalledOnce()
@@ -63,7 +69,7 @@ describe('abiService', () => {
     })
 
     it('skips redis check and checks original contract with etherscan', async () => {
-      const spy = vi.spyOn(getProvider(), 'getStorageAt')
+      const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
         async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -75,6 +81,7 @@ describe('abiService', () => {
       })
 
       const response = await getContractABIByAddress(
+        CHAIN_ID.ETHEREUM,
         '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D'
       )
 
@@ -87,7 +94,7 @@ describe('abiService', () => {
     })
 
     it('fails given an non 200 response status from etherscan', async () => {
-      const spy = vi.spyOn(getProvider(), 'getStorageAt')
+      const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
         async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -98,12 +105,15 @@ describe('abiService', () => {
       })
 
       expect(() =>
-        getContractABIByAddress('0x9444390c01Dd5b7249E53FAc31290F7dFF53450D')
+        getContractABIByAddress(
+          CHAIN_ID.ETHEREUM,
+          '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D'
+        )
       ).rejects.toThrow(BackendFailedError)
     })
 
     it('fails given a non-verified abi', async () => {
-      const spy = vi.spyOn(getProvider(), 'getStorageAt')
+      const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
         async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -115,7 +125,10 @@ describe('abiService', () => {
       })
 
       expect(() =>
-        getContractABIByAddress('0x9444390c01Dd5b7249E53FAc31290F7dFF53450D')
+        getContractABIByAddress(
+          CHAIN_ID.ETHEREUM,
+          '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D'
+        )
       ).rejects.toThrow(NotFoundError)
     })
 
@@ -126,13 +139,14 @@ describe('abiService', () => {
 
       vi.mocked(connection.get).mockResolvedValue(JSON.stringify({ result: '[]' }))
 
-      const spy = vi.spyOn(getProvider(), 'getStorageAt')
+      const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
         async () => '0x0000000000000000000000000000000000000000000000000000000000000123'
       )
 
       const response = await getContractABIByAddress(
+        CHAIN_ID.ETHEREUM,
         '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D'
       )
 

@@ -17,6 +17,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
+import { Chain } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -24,14 +25,15 @@ import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 
 interface PlaceBidProps {
+  chain: Chain
   tokenId: string
   highestBid?: BigNumber
 }
 
-export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
+export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
   const { address } = useAccount()
-  const { chain } = useNetwork()
+  const { chain: userChain } = useNetwork()
   const { data: balance } = useBalance({ address: address })
   const { mutate } = useSWRConfig()
   const { addresses } = useDaoStore()
@@ -42,12 +44,13 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
   const auctionContractParams = {
     abi: auctionAbi,
     address: addresses.auction,
+    chainId: chain.id,
   }
   const { data } = useContractReads({
     contracts: [
       { ...auctionContractParams, functionName: 'reservePrice' },
       { ...auctionContractParams, functionName: 'minBidIncrement' },
-    ],
+    ] as const,
   })
   const [auctionReservePrice, minBidIncrement] = unpackOptionalArray(data, 2)
 
@@ -75,7 +78,7 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
       await wait()
 
       await mutate([SWR_KEYS.AUCTION_BIDS, addresses.auction, tokenId], () =>
-        getBids(addresses.auction as string, tokenId)
+        getBids(chain, addresses.auction as string, tokenId)
       )
     } catch (error) {
       console.error(error)
@@ -116,7 +119,9 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
           <ContractButton
             className={auctionActionButtonVariants['bid']}
             handleClick={handleCreateBid}
-            disabled={address && !chain?.unsupported ? !isMinBid || !bidAmount : false}
+            disabled={
+              address && !userChain?.unsupported ? !isMinBid || !bidAmount : false
+            }
             mt={{ '@initial': 'x2', '@768': 'x0' }}
           >
             Place bid

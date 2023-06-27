@@ -9,6 +9,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { governorAbi } from 'src/data/contract/abis'
 import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { uploadingSpinnerWhite } from './GovernorContractButton.css'
 
@@ -41,6 +42,7 @@ export function GovernorContractButton<
 }: GovernorContractButtonProps) {
   const { addresses } = useDaoStore()
   const { mutate } = useSWRConfig()
+  const chain = useChainStore((x) => x.chain)
 
   const [isPending, setIsPending] = useState<boolean>(false)
 
@@ -60,7 +62,7 @@ export function GovernorContractButton<
       const txn = await writeAsync?.()
       await txn?.wait()
 
-      await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(proposalId))
+      await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(chain, proposalId))
       setIsPending(false)
       onSuccess()
     } catch (err) {

@@ -14,6 +14,7 @@ import { useAvailableUpgrade } from 'src/modules/create-proposal/hooks'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkStore'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
 
 import { UpgradeInProgress, UpgradeRequired } from '../Upgrade'
@@ -26,10 +27,10 @@ export const ReplaceArtwork = () => {
   const addresses = useDaoStore((x) => x.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const currentTransactions = useProposalStore((state) => state.transactions)
+  const chain = useChainStore((x) => x.chain)
 
   const { currentVersions, shouldUpgrade, activeUpgradeProposalId } = useAvailableUpgrade(
-    addresses,
-    REPLACE_ARTWORK_CONTRACT_VERSION
+    { chain, addresses, contractVersion: REPLACE_ARTWORK_CONTRACT_VERSION }
   )
 
   const contractOrderedLayers = [...orderedLayers].reverse() // traits in the contract are reversed

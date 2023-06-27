@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import { useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
+import { Chain } from 'src/typings'
 
 import { useDaoStore } from '../stores'
 import {
@@ -16,10 +17,11 @@ import {
 } from './PreAuction.css'
 
 interface PreAuctionProps {
+  chain: Chain
   collectionAddress: string
 }
 
-export const PreAuction: React.FC<PreAuctionProps> = ({ collectionAddress }) => {
+export const PreAuction: React.FC<PreAuctionProps> = ({ chain, collectionAddress }) => {
   const router = useRouter()
   const { data: signer } = useSigner()
   const { addresses } = useDaoStore()
@@ -31,6 +33,7 @@ export const PreAuction: React.FC<PreAuctionProps> = ({ collectionAddress }) => 
     address: addresses.auction,
     functionName: 'unpause',
     signer: signer,
+    chainId: chain.id,
   })
 
   const { writeAsync } = useContractWrite(config)
@@ -52,10 +55,11 @@ export const PreAuction: React.FC<PreAuctionProps> = ({ collectionAddress }) => 
       address: addresses.auction!,
       abi: auctionAbi,
       functionName: 'auction',
+      chainId: chain.id,
     })
 
     const tokenId = auction?.tokenId?.toString()
-    router.push(`/dao/${collectionAddress}/${tokenId}`)
+    router.push(`/dao/${router.query.network}/${collectionAddress}/${tokenId}`)
   }
 
   return (
@@ -74,7 +78,11 @@ export const PreAuction: React.FC<PreAuctionProps> = ({ collectionAddress }) => 
           <Link
             href={{
               pathname: router.pathname,
-              query: { token: collectionAddress, tab: 'admin' },
+              query: {
+                network: router.query.network,
+                token: collectionAddress,
+                tab: 'admin',
+              },
             }}
             shallow={true}
             className={atoms({

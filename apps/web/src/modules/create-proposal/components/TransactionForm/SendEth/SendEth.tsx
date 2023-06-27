@@ -8,6 +8,7 @@ import { Icon } from 'src/components/Icon'
 import Input from 'src/components/Input/Input'
 import { TransactionType, useProposalStore } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
+import { CHAIN_ID } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
@@ -29,7 +30,10 @@ export const SendEth = () => {
   ) => {
     if (!values.amount || !values.recipientAddress) return
 
-    const target = await getEnsAddress(values.recipientAddress, getProvider())
+    const target = await getEnsAddress(
+      values.recipientAddress,
+      getProvider(CHAIN_ID.ETHEREUM)
+    )
     const value = values.amount.toString()
 
     addTransaction({

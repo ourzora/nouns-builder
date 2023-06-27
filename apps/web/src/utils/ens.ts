@@ -2,8 +2,11 @@ import { Provider } from '@ethersproject/abstract-provider'
 import { ethers } from 'ethers'
 
 import { ALCHEMY_RPC_URL } from 'src/constants/rpc'
+import { CHAIN_ID } from 'src/typings'
 
-const defaultProvider: Provider = new ethers.providers.JsonRpcProvider(ALCHEMY_RPC_URL)
+const defaultProvider: Provider = new ethers.providers.JsonRpcProvider(
+  ALCHEMY_RPC_URL[CHAIN_ID.ETHEREUM]
+)
 
 export async function isValidAddress(
   address: string,

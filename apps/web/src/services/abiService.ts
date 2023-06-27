@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { utils } from 'ethers'
 
+import { CHAIN_ID } from 'src/typings'
+
 import { getProvider } from '../utils/provider'
 import { BackendFailedError, InvalidRequestError, NotFoundError } from './errors'
 import { getRedisConnection } from './redisConnection'
@@ -17,14 +19,16 @@ export type ContractABIResult = {
   source: 'fetched' | 'cache'
 }
 
-const CHAIN_API_LOOKUP: Record<string, string> = {
-  '1': 'api',
-  '5': 'api-goerli',
+const CHAIN_API_LOOKUP: Record<CHAIN_ID, string> = {
+  [CHAIN_ID.ETHEREUM]: 'api',
+  [CHAIN_ID.GOERLI]: 'api-goerli',
+  [CHAIN_ID.OPTIMISM_GOERLI]: 'api-goerli-optimistic',
 }
 
 const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 export const getContractABIByAddress = async (
+  chainId: CHAIN_ID,
   addressInput?: string
 ): Promise<ContractABIResult> => {
   if (!addressInput) {
@@ -45,7 +49,7 @@ export const getContractABIByAddress = async (
   let fetchedAddress = address
 
   // Only handles EIP1967 proxy slots – does not handle minimal proxies (EIP11)
-  const proxyAddress = await getProvider().getStorageAt(
+  const proxyAddress = await getProvider(chainId).getStorageAt(
     address,
     EIP1967_PROXY_STORAGE_SLOT
   )
@@ -56,11 +60,11 @@ export const getContractABIByAddress = async (
     ) as typeof fetchedAddress
   }
 
-  const chainIdStr = process.env.NEXT_PUBLIC_CHAIN_ID
+  const chainIdStr = chainId.toString()
 
   const redisConnection = getRedisConnection()
 
-  let cache = await redisConnection?.get(getRedisKey(chainIdStr!, fetchedAddress))
+  let cache = await redisConnection?.get(getRedisKey(chainIdStr, fetchedAddress))
 
   if (cache) {
     return {
@@ -71,11 +75,7 @@ export const getContractABIByAddress = async (
     }
   } else {
     const etherscan = await axios.get(
-      `https://${
-        CHAIN_API_LOOKUP[chainIdStr || '1']
-      }.etherscan.io/api?module=contract&action=getabi&address=${fetchedAddress}&apikey=${
-        process.env.ETHERSCAN_API_KEY
-      }`
+      `https://${CHAIN_API_LOOKUP[chainId]}.etherscan.io/api?module=contract&action=getabi&address=${fetchedAddress}&apikey=${process.env.ETHERSCAN_API_KEY}`
     )
 
     if (etherscan.status !== 200) {
@@ -84,7 +84,7 @@ export const getContractABIByAddress = async (
     const abi = etherscan.data
 
     if (abi.status === '1') {
-      redisConnection?.set(getRedisKey(chainIdStr!, fetchedAddress), JSON.stringify(abi))
+      redisConnection?.set(getRedisKey(chainIdStr, fetchedAddress), JSON.stringify(abi))
       return {
         abi: abi.result,
         fetchedAddress,

@@ -34,7 +34,7 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
 }) => {
   const { isUploadingToIPFS, ipfsUpload, setUpArtwork } = useArtworkStore()
   const [hasConfirmed, setHasConfirmed] = useState(
-    process.env.NEXT_PUBLIC_CHAIN_ID === '5' ? true : false
+    process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? true : false
   )
 
   const initialValues = {

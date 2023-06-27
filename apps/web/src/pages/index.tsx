@@ -10,6 +10,7 @@ import RecentlyCreated from 'src/components/Home/RecentlyCreated'
 import Twitter from 'src/components/Home/Twitter'
 import VisitAlternate from 'src/components/Home/VisitAlternate'
 import { Meta } from 'src/components/Meta'
+import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { highestBidsRequest } from 'src/data/subgraph/requests/homepageQuery'
 import { AuctionFragment } from 'src/data/subgraph/sdk.generated'
 import { getHomeLayout } from 'src/layouts/HomeLayout'
@@ -49,14 +50,14 @@ HomePage.getLayout = getHomeLayout
 export default HomePage
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  if (process.env.NEXT_PUBLIC_CHAIN_ID === '1') {
-    const res = await highestBidsRequest()
+  if (process.env.NEXT_PUBLIC_NETWORK_TYPE === 'mainnet') {
+    const res = await highestBidsRequest(PUBLIC_DEFAULT_CHAINS[0])
     return {
       props: { featuredDaos: res.data, statusCode: res.statusCode },
     }
   }
 
-  if (process.env.NEXT_PUBLIC_CHAIN_ID === '5') {
+  if (process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet') {
     return {
       props: {
         featuredDaos: [

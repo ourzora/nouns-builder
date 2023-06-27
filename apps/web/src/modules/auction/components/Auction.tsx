@@ -7,7 +7,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
-import { AddressType } from 'src/typings'
+import { AddressType, Chain } from 'src/typings'
 
 import { useAuctionEvents } from '../hooks'
 import { auctionGrid, auctionWrapVariants, auctionWrapper } from './Auction.css'
@@ -21,12 +21,14 @@ import { CurrentAuction } from './CurrentAuction'
 import { WinningBidder } from './WinningBidder'
 
 interface AuctionControllerProps {
+  chain: Chain
   auctionAddress: string
   collection: string
   token: TokenWithWinner
 }
 
 export const Auction: React.FC<AuctionControllerProps> = ({
+  chain,
   auctionAddress,
   collection,
   token,
@@ -40,6 +42,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
         abi: auctionAbi,
         address: auctionAddress as AddressType,
         functionName: 'auction',
+        chainId: chain.id,
       }),
     { revalidateOnFocus: true }
   )
@@ -48,13 +51,15 @@ export const Auction: React.FC<AuctionControllerProps> = ({
     !auction?.settled && !!auction?.tokenId && auction.tokenId.eq(token.id)
 
   useAuctionEvents({
+    chain,
     collection,
     isTokenActiveAuction,
     tokenId: token.id,
   })
 
-  const { data: bids } = useSWR([SWR_KEYS.AUCTION_BIDS, auctionAddress, token.id], () =>
-    getBids(auctionAddress, token.id)
+  const { data: bids } = useSWR(
+    [SWR_KEYS.AUCTION_BIDS, chain, auctionAddress, token.id],
+    () => getBids(chain, auctionAddress, token.id)
   )
 
   return (
@@ -82,6 +87,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
 
           {isTokenActiveAuction && !!auction && (
             <CurrentAuction
+              chain={chain}
               tokenId={token.id}
               auctionAddress={auctionAddress}
               bid={auction.highestBid}

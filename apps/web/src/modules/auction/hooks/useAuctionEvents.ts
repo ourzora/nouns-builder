@@ -8,13 +8,15 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
-import { AddressType } from 'src/typings'
+import { AddressType, Chain } from 'src/typings'
 
 export const useAuctionEvents = ({
+  chain,
   collection,
   tokenId,
   isTokenActiveAuction,
 }: {
+  chain: Chain
   collection: string
   tokenId: string
   isTokenActiveAuction: boolean
@@ -39,10 +41,10 @@ export const useAuctionEvents = ({
       )
 
       await mutate([SWR_KEYS.AUCTION_BIDS, auction, tokenId], () =>
-        getBids(auction as string, tokenId)
+        getBids(chain, auction as string, tokenId)
       )
 
-      await router.push(`/dao/${collection}/${tokenId}`)
+      await router.push(`/dao/${router.query.network}/${collection}/${tokenId}`)
     },
   })
 
@@ -60,7 +62,7 @@ export const useAuctionEvents = ({
       )
 
       await mutate([SWR_KEYS.AUCTION_BIDS, auction, tokenId], () =>
-        getBids(auction as string, tokenId)
+        getBids(chain, auction as string, tokenId)
       )
     },
   })

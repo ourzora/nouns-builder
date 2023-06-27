@@ -10,5 +10,11 @@
       "address": "0x0E9F3382Cf2508E3bc83248B5b4707FbA86D7Ee0",
       "startBlock": 7810600
     }
+  },
+  "optimism-goerli": {
+    "Manager": {
+      "address": "0x5f9c1e7E31875beAa6ba6B0AB573a4AbEcC95d67",
+      "startBlock": 11032400
+    }
   }
 }

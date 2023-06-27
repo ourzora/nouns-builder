@@ -1,4 +1,0 @@
-fragment Auction on NounsBuilderAuction {
-  auction
-  collectionAddress
-}

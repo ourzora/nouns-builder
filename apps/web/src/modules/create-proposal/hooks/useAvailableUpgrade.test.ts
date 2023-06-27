@@ -2,7 +2,9 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { expect, vi } from 'vitest'
 import { useContractReads } from 'wagmi'
 
+import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { DaoContractAddresses } from 'src/modules/dao'
+import { CHAIN_ID } from 'src/typings'
 
 import { useAvailableUpgrade } from './useAvailableUpgrade'
 
@@ -33,6 +35,8 @@ const addresses = {
   auction: '0x8F1B054500ED7a2B06619CD2E5D70415Bc9d6b8a',
   token: '0x6e13ED8472fBBd384C260538323906fc1eCb0d7B',
 } as DaoContractAddresses
+
+const chain = PUBLIC_ALL_CHAINS.find((x) => x.id == CHAIN_ID.ETHEREUM)!
 
 describe('Use available upgrade hook', () => {
   afterEach(() => {
@@ -117,7 +121,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses))
+    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,
@@ -149,7 +153,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses))
+    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
 
     await waitFor(() => expect(result.current).toBeTruthy())
 
@@ -198,7 +202,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses))
+    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
 
     expect(result.current).toStrictEqual({
       latest: '1.1.0',
@@ -251,7 +255,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses))
+    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,
@@ -287,7 +291,7 @@ describe('Use available upgrade hook', () => {
       ],
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses))
+    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
 
     expect(result.current.latest).toBe('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(3)
@@ -362,7 +366,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses))
+    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
 
     expect(result.current.latest).toEqual('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(3)
@@ -413,7 +417,7 @@ describe('Use available upgrade hook', () => {
       ],
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses))
+    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
 
     expect(result.current.latest).toEqual('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(5)
@@ -490,7 +494,9 @@ describe('Use available upgrade hook', () => {
       ],
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses, '1.1.0'))
+    const { result } = renderHook(() =>
+      useAvailableUpgrade({ chain, addresses, contractVersion: '1.1.0' })
+    )
 
     expect(result.current).toStrictEqual({
       latest: '1.2.0',
@@ -531,7 +537,9 @@ describe('Use available upgrade hook', () => {
       ],
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade(addresses, '1.1.0'))
+    const { result } = renderHook(() =>
+      useAvailableUpgrade({ chain, addresses, contractVersion: '1.1.0' })
+    )
 
     expect(result.current.latest).toBe('1.2.0')
     expect(result.current.totalContractUpgrades).toBe(5)

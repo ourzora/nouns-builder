@@ -7,6 +7,7 @@ import { PUBLIC_ZORA_NFT_CREATOR } from 'src/constants/addresses'
 import { zoraNFTCreatorAbi } from 'src/data/contract/abis/ZoraNFTCreator'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
 
 import { DroposalForm } from './DroposalForm'
@@ -17,15 +18,17 @@ const UINT_32_MAX = BigNumber.from('4294967295')
 
 export const Droposal: React.FC = () => {
   const addTransaction = useProposalStore((state) => state.addTransaction)
+  const chain = useChainStore((x) => x.chain)
   const zoraNFTCreatorContract = useContract({
     abi: zoraNFTCreatorAbi,
-    address: PUBLIC_ZORA_NFT_CREATOR,
+    address: chain && PUBLIC_ZORA_NFT_CREATOR[chain.id],
   })
 
   const handleDroposalTransaction = (
     values: DroposalFormValues,
     actions: FormikHelpers<DroposalFormValues>
   ) => {
+    if (!chain) return
     const {
       name,
       symbol,
@@ -57,7 +60,7 @@ export const Droposal: React.FC = () => {
     const imageUri = mediaType?.startsWith('image') ? mediaUrl : coverUrl
 
     const createEdition = {
-      target: PUBLIC_ZORA_NFT_CREATOR as AddressType,
+      target: PUBLIC_ZORA_NFT_CREATOR[chain.id] as AddressType,
       functionSignature: 'createEdition()',
       calldata:
         zoraNFTCreatorContract?.interface.encodeFunctionData(

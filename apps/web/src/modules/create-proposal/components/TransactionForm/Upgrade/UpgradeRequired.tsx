@@ -5,6 +5,7 @@ import { VersionType } from 'src/modules/create-proposal/constants'
 import { useAvailableUpgrade } from 'src/modules/create-proposal/hooks'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { Alert } from '../../Alert'
 import { UpgradeCard } from '../../UpgradeCard'
@@ -31,12 +32,17 @@ const animation = {
 
 export const UpgradeRequired: React.FC<UpgradeRequiredProps> = ({ contractVersion }) => {
   const addresses = useDaoStore((state) => state.addresses)
+  const chain = useChainStore((x) => x.chain)
   const {
     latest,
     date,
     transaction: upgradeTransaction,
     totalContractUpgrades,
-  } = useAvailableUpgrade(addresses, contractVersion)
+  } = useAvailableUpgrade({
+    chain,
+    addresses,
+    contractVersion,
+  })
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
   const handleUpgrade = (): void => {

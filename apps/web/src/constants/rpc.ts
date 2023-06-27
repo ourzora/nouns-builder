@@ -1,4 +1,7 @@
+import { CHAIN_ID } from 'src/typings'
+
 export const ALCHEMY_RPC_URL = {
-  1: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-  5: `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
-}[process.env.NEXT_PUBLIC_CHAIN_ID || 1]
+  [CHAIN_ID.ETHEREUM]: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+  [CHAIN_ID.GOERLI]: `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+  [CHAIN_ID.OPTIMISM_GOERLI]: `https://opt-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_ID}`,
+}

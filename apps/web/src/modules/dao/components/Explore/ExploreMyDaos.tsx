@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { userDaosFilter } from 'src/data/subgraph/requests/exploreQueries'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'
@@ -15,10 +16,11 @@ import ExploreToolbar from './ExploreToolbar'
 
 export const ExploreMyDaos = () => {
   const signerAddress = useLayoutStore((state) => state.signerAddress)
+  const chain = useChainStore((x) => x.chain)
 
   const { data, error, isValidating } = useSWR(
     signerAddress ? SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string) : null,
-    () => userDaosFilter(signerAddress as string),
+    () => userDaosFilter(chain, signerAddress as string),
     { revalidateOnFocus: false }
   )
 

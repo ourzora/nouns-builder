@@ -20,7 +20,7 @@ import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 
 import { NextPageWithLayout } from '../_app'
-import { UserTokensResponse } from '../api/profile/[user]/tokens'
+import { UserTokensResponse } from '../api/profile/[network]/[user]/tokens'
 
 interface ProfileProps {
   userAddress: string

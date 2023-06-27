@@ -9,8 +9,9 @@ import { Address, useBalance, useContractReads } from 'wagmi'
 import { Avatar } from 'src/components/Avatar/Avatar'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
@@ -25,15 +26,18 @@ export const About: React.FC = () => {
   const {
     addresses: { token, treasury, metadata },
   } = useDaoStore()
+  const chain = useChainStore((x) => x.chain)
   const { isMobile } = useLayoutStore()
 
   const tokenContractParams = {
     abi: tokenAbi,
     address: token as Address,
+    chainId: chain.id,
   }
   const metadataContractParams = {
     abi: metadataAbi,
     address: metadata as Address,
+    chainId: chain.id,
   }
 
   const { data: contractData } = useContractReads({
@@ -44,7 +48,7 @@ export const About: React.FC = () => {
       { ...metadataContractParams, functionName: 'contractImage' },
       { ...metadataContractParams, functionName: 'description' },
       { ...metadataContractParams, functionName: 'contractURI' },
-    ],
+    ] as const,
   })
 
   const [name, totalSupply, founders, daoImage, description, contractURI] =
@@ -53,17 +57,20 @@ export const About: React.FC = () => {
 
   const { data: balance } = useBalance({ address: treasury as Address })
 
-  const { data } = useSWR(token ? [SWR_KEYS.DAO_INFO, token] : null, async (_, token) => {
-    const res = await sdk
-      .daoInfo({
-        tokenAddress: token.toLowerCase(),
-      })
-      .then((x) => x.dao)
+  const { data } = useSWR(
+    chain && token ? [SWR_KEYS.DAO_INFO, chain, token] : null,
+    async (_, chain, token) => {
+      const res = await SDK.connect(chain.id)
+        .daoInfo({
+          tokenAddress: token.toLowerCase(),
+        })
+        .then((x) => x.dao)
 
-    return {
-      ownerCount: res?.ownerCount,
+      return {
+        ownerCount: res?.ownerCount,
+      }
     }
-  })
+  )
 
   const treasuryBalance = React.useMemo(() => {
     return balance?.formatted ? formatCryptoVal(balance?.formatted) : null

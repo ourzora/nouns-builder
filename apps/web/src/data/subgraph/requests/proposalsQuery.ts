@@ -1,7 +1,8 @@
 import * as Sentry from '@sentry/nextjs'
 
 import { getProposalState } from 'src/data/contract/requests/getProposalState'
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
+import { Chain } from 'src/typings'
 
 import { Proposal } from './proposalQuery'
 
@@ -13,12 +14,13 @@ export interface ProposalsResponse {
 }
 
 export const getProposals = async (
+  chain: Chain,
   token: string,
   limit: number = 100,
   page?: number
 ): Promise<ProposalsResponse> => {
   try {
-    const data = await sdk.proposals({
+    const data = await SDK.connect(chain.id).proposals({
       where: {
         dao: token.toLowerCase(),
       },

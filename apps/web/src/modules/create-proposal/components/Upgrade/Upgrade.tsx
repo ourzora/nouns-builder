@@ -4,6 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import React from 'react'
 
+import { useChainStore } from 'src/stores/useChainStore'
+
 import { DaoContractAddresses } from '../../../dao'
 import { useAvailableUpgrade } from '../../hooks'
 import { useProposalStore } from '../../stores'
@@ -26,6 +28,7 @@ export const Upgrade = ({
 }) => {
   const router = useRouter()
   const createProposal = useProposalStore((state) => state.createProposal)
+  const chain = useChainStore((x) => x.chain)
 
   const {
     latest,
@@ -34,7 +37,10 @@ export const Upgrade = ({
     transaction: upgradeTransaction,
     totalContractUpgrades,
     shouldUpgrade,
-  } = useAvailableUpgrade(addresses)
+  } = useAvailableUpgrade({
+    chain,
+    addresses,
+  })
 
   if (!shouldUpgrade) return null
 

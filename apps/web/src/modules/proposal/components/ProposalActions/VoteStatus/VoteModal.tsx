@@ -13,6 +13,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { governorAbi } from 'src/data/contract/abis'
 import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 import {
   proposalFormTitle,
   voteModalFieldset,
@@ -44,6 +45,7 @@ const VoteModal: React.FC<{
   const { addresses } = useDaoStore()
   const { data: signer } = useSigner()
   const { mutate } = useSWRConfig()
+  const chain = useChainStore((x) => x.chain)
 
   const contract = useContract({
     address: addresses?.governor as Address,
@@ -74,7 +76,7 @@ const VoteModal: React.FC<{
     const tx = await vote
     await tx?.wait()
 
-    await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(proposalId))
+    await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(chain, proposalId))
 
     setIsCastVoteSuccess(true)
   }

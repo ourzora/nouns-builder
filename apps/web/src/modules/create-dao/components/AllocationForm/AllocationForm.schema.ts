@@ -1,6 +1,7 @@
 import { debounce } from 'lodash'
 import * as Yup from 'yup'
 
+import { CHAIN_ID } from 'src/typings'
 import { isValidAddress } from 'src/utils/ens'
 import { getProvider } from 'src/utils/provider'
 
@@ -9,7 +10,7 @@ const validateAddress = async (
   res: (value: boolean | PromiseLike<boolean>) => void
 ) => {
   try {
-    res(!!value && (await isValidAddress(value, getProvider())))
+    res(!!value && (await isValidAddress(value, getProvider(CHAIN_ID.ETHEREUM))))
   } catch (err) {
     res(false)
   }

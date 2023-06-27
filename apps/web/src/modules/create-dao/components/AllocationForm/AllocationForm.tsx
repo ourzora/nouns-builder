@@ -2,6 +2,7 @@ import { Button, Flex } from '@zoralabs/zord'
 import { FieldArray, Form, Formik, FormikProps } from 'formik'
 import sum from 'lodash/sum'
 import React, { useRef, useState } from 'react'
+import { useChainId } from 'wagmi'
 import { shallow } from 'zustand/shallow'
 
 import {
@@ -10,6 +11,7 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
+import { CHAIN_ID } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 
 import { useFormStore } from '../../stores'
@@ -35,6 +37,7 @@ export interface FounderAllocationFormValues {
 export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
   const formRef = useRef<FormikProps<FounderAllocationFormValues>>(null)
   const [allocationError, setAllocationError] = useState(false)
+  const chainId = useChainId()
   const {
     founderAllocation,
     contributionAllocation,
@@ -95,6 +98,8 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
 
   const handleSubmit = async ({ founderAllocation }: FounderAllocationFormValues) => {
     setAllocationError(false)
+
+    console.log('contrib', contributionAllocation)
 
     const totalAllocation = sum(
       [...founderAllocation, ...contributionAllocation].map(
@@ -159,7 +164,9 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
         )}
       </Formik>
 
-      <ContributionAllocation />
+      {(chainId === CHAIN_ID.ETHEREUM || chainId === CHAIN_ID.GOERLI) && (
+        <ContributionAllocation />
+      )}
 
       {allocationError && (
         <Flex mt={'x4'} color="negative">

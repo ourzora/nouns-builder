@@ -1,8 +1,9 @@
 import { fetchBalance } from '@wagmi/core'
 import { Address, readContracts } from 'wagmi'
 
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
 import { getProposals } from 'src/data/subgraph/requests/proposalsQuery'
+import { Chain } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -17,31 +18,36 @@ export type DaoOgMetadata = {
   daoImage: string | undefined
 }
 
-const getOwnerCount = async (token: string) => {
-  return sdk.daoInfo({ tokenAddress: token }).then((x) => x.dao?.ownerCount || 0)
+const getOwnerCount = async (chain: Chain, token: string) => {
+  return SDK.connect(chain.id)
+    .daoInfo({ tokenAddress: token })
+    .then((x) => x.dao?.ownerCount || 0)
 }
 
-const getProposalCount = async (token: string) => {
-  return getProposals(token, 1).then((x) =>
+const getProposalCount = async (chain: Chain, token: string) => {
+  return getProposals(chain, token, 1).then((x) =>
     x.proposals && x.proposals.length > 0 ? x.proposals[0].proposalNumber : 0
   )
 }
 
-const getTreasuryBalance = async (treasury: string) => {
+const getTreasuryBalance = async (chain: Chain, treasury: string) => {
   const balance = await fetchBalance({
     address: treasury as Address,
+    chainId: chain.id,
   })
   return formatCryptoVal(balance?.formatted)
 }
 
-const getContractMetadata = async (token: string, metadata: string) => {
+const getContractMetadata = async (chain: Chain, token: string, metadata: string) => {
   const tokenContractParams = {
     abi: tokenAbi,
     address: token as Address,
+    chainId: chain.id,
   }
   const metadataContractParams = {
     abi: metadataAbi,
     address: metadata as Address,
+    chainId: chain.id,
   }
 
   const contractData = await readContracts({
@@ -62,16 +68,17 @@ const getContractMetadata = async (token: string, metadata: string) => {
 }
 
 const getDaoOgMetadata = async (
+  chain: Chain,
   token: string,
   metadata: string,
   treasury: string
 ): Promise<DaoOgMetadata> => {
   const [contractMetadata, treasuryBalance, ownerCount, proposalCount] =
     await Promise.all([
-      getContractMetadata(token, metadata),
-      getTreasuryBalance(treasury),
-      getOwnerCount(token),
-      getProposalCount(token),
+      getContractMetadata(chain, token, metadata),
+      getTreasuryBalance(chain, treasury),
+      getOwnerCount(chain, token),
+      getProposalCount(chain, token),
     ])
 
   return {

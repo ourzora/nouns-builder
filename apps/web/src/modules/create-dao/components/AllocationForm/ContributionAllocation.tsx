@@ -1,5 +1,6 @@
 import { Button, Flex, Heading, Stack, Text } from '@zoralabs/zord'
 import React, { useState } from 'react'
+import { useChainId } from 'wagmi'
 
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
@@ -15,21 +16,24 @@ import {
 } from './ContributionAllocationForm'
 import { DaoCopyAddress } from './DaoCopyAddress'
 
+export type ContributionChain = 1 | 5
+
 export const ContributionAllocation = () => {
   const [open, setOpen] = useState(false)
   const contributionAllocation = useFormStore((state) => state.contributionAllocation)
   const setContributionAllocation = useFormStore(
     (state) => state.setContributionAllocation
   )
+  const chainId = useChainId() as ContributionChain
 
-  const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS)
-  const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS)
+  const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS[chainId])
+  const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS[chainId])
 
   const builderAllocationValue = contributionAllocation.find(
-    (allocation) => allocation.founderAddress === PUBLIC_BUILDER_ADDRESS
+    (allocation) => allocation.founderAddress === PUBLIC_BUILDER_ADDRESS[chainId]
   )
   const nounsAllocationValue = contributionAllocation.find(
-    (allocation) => allocation.founderAddress === PUBLIC_NOUNS_ADDRESS
+    (allocation) => allocation.founderAddress === PUBLIC_NOUNS_ADDRESS[chainId]
   )
 
   const handleSubmit = async ({
@@ -94,7 +98,7 @@ export const ContributionAllocation = () => {
                       name="Builder"
                       image="/builder-avatar-circle.png"
                       ens={builderDisplayName}
-                      address={PUBLIC_BUILDER_ADDRESS}
+                      address={PUBLIC_BUILDER_ADDRESS[chainId]}
                     />
                   }
                 />
@@ -109,7 +113,7 @@ export const ContributionAllocation = () => {
                       name="Nouns"
                       image="/nouns-avatar-circle.png"
                       ens={nounsDisplayName}
-                      address={PUBLIC_NOUNS_ADDRESS}
+                      address={PUBLIC_NOUNS_ADDRESS[chainId]}
                     />
                   }
                 />

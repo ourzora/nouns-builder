@@ -24,7 +24,7 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
   name,
   currentAuction,
 }: AuctionTokenPickerProps) => {
-  const { isReady } = useRouter()
+  const { isReady, query } = useRouter()
   const { isMobile } = useLayoutStore()
   const disabledStyle = { opacity: 0.2 }
 
@@ -36,7 +36,7 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
       <Flex align="center" direction={'row'} gap={'x2'}>
         <OptionalLink
           enabled={hasPreviousToken}
-          href={`/dao/${collection}/${tokenId - 1}`}
+          href={`/dao/${query.network}/${collection}/${tokenId - 1}`}
           passHref
           legacyBehavior
         >
@@ -52,7 +52,7 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
 
         <OptionalLink
           enabled={hasNextToken}
-          href={`/dao/${collection}/${tokenId + 1}`}
+          href={`/dao/${query.network}/${collection}/${tokenId + 1}`}
           passHref
           legacyBehavior
         >

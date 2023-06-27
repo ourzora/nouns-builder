@@ -1,3 +1,5 @@
+import { Chain as WagmiChain } from 'wagmi'
+
 export interface Duration {
   seconds?: number
   days?: number
@@ -5,9 +7,15 @@ export interface Duration {
   minutes?: number
 }
 
-export const enum NETWORK {
-  GOERLI = 'GOERLI',
-  MAINNET = 'MAINNET',
+export const enum CHAIN_ID {
+  ETHEREUM = 1,
+  GOERLI = 5,
+  OPTIMISM_GOERLI = 420,
+}
+
+export interface Chain extends WagmiChain {
+  id: CHAIN_ID
+  slug: string
 }
 
 export type AddressType = `0x${string}`
