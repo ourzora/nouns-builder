@@ -3,6 +3,7 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import Link from 'next/link'
 import React, { ReactNode, useMemo } from 'react'
 import useSWR from 'swr'
 
@@ -36,7 +37,22 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
   )
 
   if (error) {
-    return <FeedTab isMobile={isMobile}>error</FeedTab>
+    return (
+      <FeedTab isMobile={isMobile}>
+        <Flex
+          justify="center"
+          align="center"
+          width="100%"
+          height="100%"
+          direction="column"
+        >
+          <Text fontSize={20} fontWeight={'heading'} mb={'x3'} color="negative">
+            Error
+          </Text>
+          <Text color="negative">{error?.message || 'Unknown Error'}</Text>
+        </Flex>
+      </FeedTab>
+    )
   }
 
   if (isValidating) {
@@ -96,32 +112,35 @@ const FeedTab = ({ children }: { isMobile: boolean; children?: ReactNode }) => (
         >
           DAO Feed
         </Text>
-        <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed</Text>
-        <Text>
-          <FeedLayout>{children}</FeedLayout>
+        <Text mb="x3">
+          This feed is a read-only, alpha feature for DAOs that have a{' '}
+          <Link href="https://github.com/farcasterxyz/protocol/discussions/71">
+            Farcaster channel
+          </Link>
         </Text>
+        <Text mb="x3">
+          Please leave any feedback or feature requests on this{' '}
+          <Link href="https://github.com/ourzora/nouns-builder/issues/270">
+            Github issue
+          </Link>
+        </Text>
+        <Flex
+          className={feedLayoutWrapper}
+          direction={'column'}
+          py={{ '@initial': 'x0', '@768': 'x4' }}
+          borderColor={'border'}
+          borderStyle={'solid'}
+          borderRadius={'curved'}
+          borderWidth={'normal'}
+          mt={'x4'}
+          mb={'x8'}
+        >
+          {children}
+        </Flex>
       </Box>
     </Flex>
   </Box>
 )
-
-const FeedLayout = ({ children }: { children?: ReactNode }) => {
-  return (
-    <Flex
-      className={feedLayoutWrapper}
-      direction={'column'}
-      py={{ '@initial': 'x0', '@768': 'x4' }}
-      borderColor={'border'}
-      borderStyle={'solid'}
-      borderRadius={'curved'}
-      borderWidth={'normal'}
-      mt={'x4'}
-      mb={'x8'}
-    >
-      {children}
-    </Flex>
-  )
-}
 
 const CastCard = ({
   text,
@@ -158,7 +177,7 @@ const CastCard = ({
   return (
     <Box
       className={cardWrapper}
-      px={{ '@initial': 'x0', '@768': 'x32' }}
+      px={{ '@initial': 'x2', '@768': 'x32' }}
       py={{ '@initial': 'x4', '@768': 'x4' }}
       borderRadius={'normal'}
       mb={'x3'}
