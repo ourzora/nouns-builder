@@ -3,7 +3,7 @@
 This is Nouns Builder front-end mono-repo. You can find Nouns Builder deployed on:
 
 - [Mainnet](//nouns.build)
-- [Goerli testnet](//testnet.nouns.build)
+- [Testnet](//testnet.nouns.build)
 
 For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://docs.zora.co/docs/smart-contracts/nouns-builder/intro). You can also find [Nouns Protocol here](https://github.com/ourzora/nouns-protocol).
 
