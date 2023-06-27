@@ -52,6 +52,7 @@ export const useAvailableUpgrade = ({
   const contract = {
     abi: managerAbi,
     address: chain ? (PUBLIC_MANAGER_ADDRESS[chain.id] as AddressType) : undefined,
+    chainId: chain.id,
   }
 
   const auctionContract = useContract({ abi: auctionAbi, address: addresses?.auction })
@@ -62,7 +63,7 @@ export const useAvailableUpgrade = ({
     !!chain && !!addresses?.token
       ? [SWR_KEYS.PROPOSALS_CALLDATAS, addresses?.token]
       : null,
-    () => getProposals(chain!, addresses?.token as string, 100)
+    () => getProposals(chain, addresses?.token as string, 100)
   )
 
   const { data, isLoading, isError } = useContractReads({
@@ -71,6 +72,7 @@ export const useAvailableUpgrade = ({
       {
         abi: auctionAbi,
         address: addresses.auction as AddressType,
+        chainId: chain.id,
         functionName: 'paused',
       },
       {

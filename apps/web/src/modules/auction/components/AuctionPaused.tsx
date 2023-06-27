@@ -27,6 +27,7 @@ export const AuctionPaused = () => {
     abi: auctionAbi,
     address: auction,
     functionName: 'paused',
+    chainId: chain.id,
   })
 
   const { data } = useSWR<ProposalsResponse>(

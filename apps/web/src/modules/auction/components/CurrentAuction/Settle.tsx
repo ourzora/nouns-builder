@@ -10,6 +10,7 @@ import {
 import { ContractButton } from 'src/components/ContractButton'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { auctionActionButtonVariants } from '../Auction.css'
 
@@ -20,11 +21,13 @@ interface SettleProps {
 
 export const Settle = ({ isEnding }: SettleProps) => {
   const { data: signer } = useSigner()
+  const chain = useChainStore((x) => x.chain)
   const addresses = useDaoStore((state) => state.addresses)
 
   const { data: paused } = useContractRead({
     enabled: !!addresses?.auction,
     address: addresses?.auction,
+    chainId: chain.id,
     abi: auctionAbi,
     functionName: 'paused',
   })

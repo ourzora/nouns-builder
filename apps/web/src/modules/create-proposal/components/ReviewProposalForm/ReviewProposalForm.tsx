@@ -13,6 +13,7 @@ import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { ErrorResult } from 'src/services/errorResult'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
+import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
@@ -37,6 +38,7 @@ export const ReviewProposalForm = ({
   const router = useRouter()
   const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
+  const chain = useChainStore((x) => x.chain)
   //@ts-ignore
   const signerAddress = signer?._address
   const { clearProposal } = useProposalStore()
@@ -52,6 +54,7 @@ export const ReviewProposalForm = ({
     abi: tokenAbi,
     enabled: !!signerAddress,
     functionName: 'getVotes',
+    chainId: chain.id,
     args: [signerAddress as AddressType],
   })
 
@@ -69,6 +72,7 @@ export const ReviewProposalForm = ({
 
   const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
     address: addresses?.governor as AddressType,
+    chainId: chain.id,
     abi: governorAbi,
     functionName: 'proposalThreshold',
   })

@@ -36,6 +36,7 @@ export const Airdrop: React.FC = () => {
     abi: auctionAbi,
     address: addresses?.auction,
     functionName: 'owner',
+    chainId: chain.id,
   })
 
   const { data: isMinter } = useContractRead({
@@ -43,6 +44,7 @@ export const Airdrop: React.FC = () => {
     enabled: gte(currentVersions?.token, AIRDROP_CONTRACT_VERSION),
     abi: tokenAbi,
     address: addresses?.token,
+    chainId: chain.id,
     functionName: 'isMinter',
     args: [addresses?.treasury as AddressType],
   })

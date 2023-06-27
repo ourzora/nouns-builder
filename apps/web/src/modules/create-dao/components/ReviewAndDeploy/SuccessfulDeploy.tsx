@@ -55,6 +55,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     enabled: !!token,
     abi: tokenAbi,
     address: token,
+    chainId: chain.id,
     functionName: 'owner',
   })
 
