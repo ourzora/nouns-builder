@@ -1,5 +1,7 @@
 # Nouns Builder monorepo
 
+Nadia was here
+
 This is Nouns Builder front-end mono-repo. You can find Nouns Builder deployed on:
 
 - [Mainnet](//nouns.build)
