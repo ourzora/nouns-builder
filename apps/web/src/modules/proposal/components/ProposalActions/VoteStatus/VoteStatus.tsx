@@ -4,11 +4,11 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useContractEvent } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import {
-  NounsProposalStatus,
   ProposalVoteFragment as ProposalVote,
-  Support,
-} from 'src/data/graphql/sdk.generated'
+  ProposalVoteSupport as Support,
+} from 'src/data/subgraph/sdk.generated'
 import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
@@ -28,7 +28,7 @@ interface VoteStatusProps {
   votesAvailable: number
   proposalId: string
   voteStart: number
-  state: NounsProposalStatus
+  state: ProposalState
   title: string
   daoName?: string
   signerVote?: ProposalVote
@@ -65,8 +65,7 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
     }
   }, [signerAddress, signerVote, proposalId])
 
-  const shouldListen =
-    !signerVote && !!signerAddress && state === NounsProposalStatus.Active
+  const shouldListen = !signerVote && !!signerAddress && state === ProposalState.Active
 
   useContractEvent({
     address: shouldListen ? governor : undefined,
@@ -101,12 +100,12 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
       align={'center'}
     >
       {/* Voting for proposal has not yet started (proposal is Pending) */}
-      {state === NounsProposalStatus.Created || state === NounsProposalStatus.Pending ? (
+      {state === ProposalState.Pending ? (
         <Pending voteStart={voteStart} proposalId={proposalId} />
       ) : null}
 
       {/* Proposal is open but user cannot vote */}
-      {state === NounsProposalStatus.Active && !votesAvailable && !vote ? (
+      {state === ProposalState.Active && !votesAvailable && !vote ? (
         <Flex
           direction={{ '@initial': 'column', '@768': 'row' }}
           align={'center'}
@@ -126,7 +125,7 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
       ) : null}
 
       {/* Proposal is open and user can vote */}
-      {state === NounsProposalStatus.Active && votesAvailable && !vote ? (
+      {state === ProposalState.Active && votesAvailable && !vote ? (
         <Fragment>
           <Flex
             direction={'row'}
@@ -157,10 +156,7 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
       {vote ? <Vote support={vote.support} weight={vote.weight} /> : null}
 
       {/* Proposal ended and the user did not vote */}
-      {state !== NounsProposalStatus.Active &&
-      state !== NounsProposalStatus.Created &&
-      state !== NounsProposalStatus.Pending &&
-      !vote ? (
+      {state !== ProposalState.Active && state !== ProposalState.Pending && !vote ? (
         <Flex direction={'row'} align={'center'}>
           <Text color={'text3'} ml={'x3'}>
             You did not participate in voting on this proposal

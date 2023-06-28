@@ -1,7 +1,7 @@
-schema: https://api.zora.co/graphql
-documents: 'src/data/graphql/**/*.graphql'
+schema: https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli
+documents: 'src/data/subgraph/**/*.graphql'
 generates:
-  src/data/graphql/sdk.generated.ts:
+  src/data/subgraph/sdk.generated.ts:
     plugins:
       - typescript
       - typescript-operations

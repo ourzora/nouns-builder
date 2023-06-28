@@ -11,14 +11,14 @@ vi.mock('src/modules/dao', () => ({
   useDaoStore: vi.fn(),
 }))
 
-vi.mock('src/data/graphql/sdk.generated', async () => {
-  const mod = await vi.importActual<typeof import('src/data/graphql/sdk.generated')>(
-    'src/data/graphql/sdk.generated'
+vi.mock('src/data/subgraph/sdk.generated', async () => {
+  const mod = await vi.importActual<typeof import('src/data/subgraph/sdk.generated')>(
+    'src/data/subgraph/sdk.generated'
   )
   return {
     ...mod,
     getSdk: vi.fn(() => ({
-      proposalsWithCalldata: () => ({ nouns: { nounsProposals: { nodes: [] } } }),
+      getProposal: () => ({ proposals: [] }),
     })),
   }
 })

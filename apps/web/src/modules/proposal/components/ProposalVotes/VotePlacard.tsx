@@ -3,7 +3,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo, useState } from 'react'
 
 import { Avatar } from 'src/components/Avatar'
-import { ProposalVoteFragment, Support } from 'src/data/graphql/sdk.generated'
+import {
+  ProposalVoteFragment,
+  ProposalVoteSupport,
+} from 'src/data/subgraph/sdk.generated'
 import { useEnsData } from 'src/hooks'
 import { useLayoutStore } from 'src/stores'
 import { walletSnippet } from 'src/utils/helpers'
@@ -45,11 +48,11 @@ export const VotePlacard: React.FC<VotePlacardProps> = ({ vote, totalVotes }) =>
     })
 
     switch (vote.support) {
-      case Support.For:
+      case ProposalVoteSupport.For:
         return [base, atoms({ color: 'positive', borderColor: 'positiveDisabled' })]
-      case Support.Against:
+      case ProposalVoteSupport.Against:
         return [base, atoms({ color: 'negative', borderColor: 'negativeDisabled' })]
-      case Support.Abstain:
+      case ProposalVoteSupport.Abstain:
         return [base, atoms({ color: 'text3', borderColor: 'border' })]
     }
   }, [vote.support])

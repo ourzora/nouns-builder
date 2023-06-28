@@ -48,9 +48,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
   const isLoading = data ? false : isValidating && !data && !error
   const hasDaos = !!daos && daos.length > 0
 
-  const { handlePageBack, handlePageForward } = usePagination(
-    tokens?.pageInfo?.hasNextPage
-  )
+  const { handlePageBack, handlePageForward } = usePagination(!!tokens?.tokens.length)
 
   const daosString = daos?.map((x) => x.name).join(', ')
 
@@ -168,20 +166,28 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
 
           {hasDaos && (
             <>
-              <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
-                {tokens?.tokens.map((x, i) => (
-                  <Link
-                    key={i}
-                    href={`/dao/${x.tokenContract?.collectionAddress}/${x.tokenId}`}
-                  >
-                    <TokenPreview name={x.name} image={x.image?.url} />
-                  </Link>
-                ))}
-              </Grid>
+              {!!tokens?.tokens.length ? (
+                <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
+                  {tokens?.tokens.map((x, i) => (
+                    <Link key={i} href={`/dao/${x.tokenContract}/${x.tokenId}`}>
+                      <TokenPreview name={x.name} image={x.image} />
+                    </Link>
+                  ))}
+                </Grid>
+              ) : (
+                <Flex
+                  align={'center'}
+                  justify={'space-around'}
+                  style={{ height: isMobile ? '40vh' : '65vh' }}
+                >
+                  <Text color="text3">No more DAO tokens found.</Text>
+                </Flex>
+              )}
+
               <Pagination
                 onNext={handlePageForward}
                 onPrev={handlePageBack}
-                isLast={!tokens?.pageInfo?.hasNextPage}
+                isLast={!tokens?.tokens.length}
                 isFirst={!page}
               />
             </>

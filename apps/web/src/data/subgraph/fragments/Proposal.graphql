@@ -1,0 +1,27 @@
+fragment Proposal on Proposal {
+  abstainVotes
+  againstVotes
+  calldatas
+  description
+  descriptionHash
+  executableFrom
+  expiresAt
+  forVotes
+  proposalId
+  proposalNumber
+  proposalThreshold
+  proposer
+  quorumVotes
+  targets
+  timeCreated
+  title
+  values
+  voteEnd
+  voteStart
+  snapshotBlockNumber
+  transactionHash
+  dao {
+    governorAddress
+    tokenAddress
+  }
+}

@@ -1,9 +1,10 @@
 import { Grid } from '@zoralabs/zord'
+import { ethers } from 'ethers'
 import React from 'react'
 import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { userDaosFilter } from 'src/data/graphql/requests/exploreQueries'
+import { userDaosFilter } from 'src/data/subgraph/requests/exploreQueries'
 import { useLayoutStore } from 'src/stores'
 
 import { DaoCard } from '../DaoCard'
@@ -17,7 +18,7 @@ export const ExploreMyDaos = () => {
 
   const { data, error, isValidating } = useSWR(
     signerAddress ? SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string) : null,
-    () => userDaosFilter(null, signerAddress as string),
+    () => userDaosFilter(signerAddress as string),
     { revalidateOnFocus: false }
   )
 
@@ -30,18 +31,23 @@ export const ExploreMyDaos = () => {
         <ExploreSkeleton />
       ) : data?.daos?.length ? (
         <Grid className={exploreGrid} mb={'x16'}>
-          {data.daos.map((dao) => (
-            <DaoCard
-              tokenId={dao.tokenId ?? undefined}
-              key={dao.collectionAddress}
-              tokenImage={dao.image ?? undefined}
-              tokenName={dao.name ?? undefined}
-              collectionAddress={dao.collectionAddress as string}
-              collectionName={dao.collectionName ?? undefined}
-              bid={dao.highestBidPrice ?? undefined}
-              endTime={dao.endTime ?? undefined}
-            />
-          ))}
+          {data.daos.map((dao) => {
+            const bid = dao.highestBid?.amount ?? undefined
+            const bidInEth = bid ? ethers.utils.formatEther(bid) : undefined
+
+            return (
+              <DaoCard
+                tokenId={dao.token?.tokenId ?? undefined}
+                key={dao.dao.tokenAddress}
+                tokenImage={dao.token?.image ?? undefined}
+                tokenName={dao.token?.name ?? undefined}
+                collectionAddress={dao.dao.tokenAddress as string}
+                collectionName={dao.dao.name ?? undefined}
+                bid={bidInEth}
+                endTime={dao.endTime ?? undefined}
+              />
+            )
+          })}
         </Grid>
       ) : (
         <ExploreNoDaos />

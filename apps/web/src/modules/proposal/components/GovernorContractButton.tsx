@@ -7,7 +7,7 @@ import { useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { governorAbi } from 'src/data/contract/abis'
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useDaoStore } from 'src/modules/dao'
 
 import { uploadingSpinnerWhite } from './GovernorContractButton.css'

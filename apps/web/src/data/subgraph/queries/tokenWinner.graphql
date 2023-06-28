@@ -1,0 +1,8 @@
+query tokenWinner($id: ID!) {
+  auction(id: $id) {
+    winningBid {
+      amount
+      bidder
+    }
+  }
+}

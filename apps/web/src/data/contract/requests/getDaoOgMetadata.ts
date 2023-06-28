@@ -1,9 +1,8 @@
 import { fetchBalance } from '@wagmi/core'
 import { Address, readContracts } from 'wagmi'
 
-import { CHAIN } from 'src/constants/network'
-import { sdk } from 'src/data/graphql/client'
-import { getProposals } from 'src/data/graphql/requests/proposalsQuery'
+import { sdk } from 'src/data/subgraph/client'
+import { getProposals } from 'src/data/subgraph/requests/proposalsQuery'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -19,13 +18,11 @@ export type DaoOgMetadata = {
 }
 
 const getOwnerCount = async (token: string) => {
-  return sdk
-    .daoInfo({ collectionAddress: token, chain: CHAIN })
-    .then((x) => x.aggregateStat?.ownerCount || 0)
+  return sdk.daoInfo({ tokenAddress: token }).then((x) => x.dao?.ownerCount || 0)
 }
 
 const getProposalCount = async (token: string) => {
-  return getProposals([token], 1).then((x) =>
+  return getProposals(token, 1).then((x) =>
     x.proposals && x.proposals.length > 0 ? x.proposals[0].proposalNumber : 0
   )
 }

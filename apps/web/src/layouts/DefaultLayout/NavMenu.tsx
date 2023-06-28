@@ -1,4 +1,5 @@
 import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
+import axios from 'axios'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -11,7 +12,7 @@ import CopyButton from 'src/components/CopyButton/CopyButton'
 import { Icon } from 'src/components/Icon'
 import { NetworkController } from 'src/components/NetworkController'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { myDaosRequest } from 'src/data/graphql/requests/daoQuery'
+import { MyDaosResponse } from 'src/data/subgraph/requests/daoQuery'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -48,7 +49,7 @@ export const NavMenu = () => {
 
   const { data: myDaos } = useSWR(
     address ? SWR_KEYS.DYNAMIC.MY_DAOS(address as string) : null,
-    () => myDaosRequest([address as string]),
+    () => axios.get<MyDaosResponse>(`/api/profile/${address}/daos`).then((x) => x.data),
     {
       revalidateOnFocus: false,
     }

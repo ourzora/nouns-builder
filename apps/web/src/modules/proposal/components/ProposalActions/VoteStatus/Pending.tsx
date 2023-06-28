@@ -4,7 +4,7 @@ import { useSWRConfig } from 'swr'
 
 import { Countdown } from 'src/components/Countdown'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getProposal } from 'src/data/graphql/requests/proposalQuery'
+import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useTimeout } from 'src/hooks/useTimeout'
 
 interface PendingProps {

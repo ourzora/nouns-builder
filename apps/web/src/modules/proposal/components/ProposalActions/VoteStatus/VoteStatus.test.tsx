@@ -1,33 +1,20 @@
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { NounsProposalStatus, Support } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
+import { ProposalVoteSupport as Support } from 'src/data/subgraph/sdk.generated'
 import { render } from 'src/test/utils'
 
 import { VoteStatus } from './VoteStatus'
 
 describe('VoteStatus', () => {
-  it('should render proposal countdown to active if state is in created', () => {
-    render(
-      <VoteStatus
-        votesAvailable={0}
-        proposalId={'0x12'}
-        voteStart={1630000000}
-        state={NounsProposalStatus.Created}
-        daoName={'xcz'}
-        title={'Upgrade xcz'}
-      />
-    )
-    expect(screen.getByText('Time until voting starts')).toBeInTheDocument()
-  })
-
   it('should render proposal countdown to active if state is in pending', () => {
     render(
       <VoteStatus
         votesAvailable={0}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={NounsProposalStatus.Pending}
+        state={ProposalState.Pending}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />
@@ -41,7 +28,7 @@ describe('VoteStatus', () => {
         votesAvailable={0}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={NounsProposalStatus.Active}
+        state={ProposalState.Active}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />
@@ -58,7 +45,7 @@ describe('VoteStatus', () => {
         votesAvailable={2}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={NounsProposalStatus.Active}
+        state={ProposalState.Active}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />
@@ -82,7 +69,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
-          state={NounsProposalStatus.Succeeded}
+          state={ProposalState.Succeeded}
           daoName={'xcz'}
           title={'Upgrade xcz'}
         />
@@ -105,7 +92,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
-          state={NounsProposalStatus.Queued}
+          state={ProposalState.Queued}
           daoName={'xcz'}
           title={'Upgrade xcz'}
         />
@@ -128,7 +115,7 @@ describe('VoteStatus', () => {
           votesAvailable={1}
           proposalId={'0x12'}
           voteStart={1630000000}
-          state={NounsProposalStatus.Active}
+          state={ProposalState.Active}
           daoName={'xcz'}
           title={'Upgrade xcz'}
         />
@@ -145,7 +132,7 @@ describe('VoteStatus', () => {
         votesAvailable={1}
         proposalId={'0x12'}
         voteStart={1630000000}
-        state={NounsProposalStatus.Executed}
+        state={ProposalState.Executed}
         daoName={'xcz'}
         title={'Upgrade xcz'}
       />
