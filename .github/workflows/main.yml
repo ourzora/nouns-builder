@@ -2,8 +2,10 @@
 name: CI
 
 on:
-  - push
-  - workflow_dispatch
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+  push:
+    branches: [main]
 
 jobs:
   ci:
@@ -25,7 +27,7 @@ jobs:
       - name: 📦 Setup Node 18
         uses: actions/setup-node@v3
         with:
-          cache: "pnpm"
+          cache: 'pnpm'
           node-version: 18
 
       - name: 💾 Cache node_modules
@@ -44,7 +46,7 @@ jobs:
         run: pnpm i
 
       - name: 💾 Cache Anvil
-        uses: "actions/cache@v3"
+        uses: 'actions/cache@v3'
         with:
           path: ~/.foundry/cache/rpc/**/${{ env.ANVIL_BLOCK_NUMBER }}
           key: foundry-anvil-${{ env.ANVIL_BLOCK_NUMBER }}

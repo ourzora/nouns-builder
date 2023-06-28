@@ -65,6 +65,7 @@ export const CastCard = ({
               }}
             >
               <img
+                alt="profile picture"
                 src={data?.pfp || '/nouns-avatar-circle.png'}
                 style={{
                   position: 'absolute',
