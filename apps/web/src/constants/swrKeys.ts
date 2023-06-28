@@ -12,6 +12,7 @@ const SWR_KEYS = {
   PROPOSALS_TRANSACTIONS: 'proposal-transaction-data',
   ENS: 'ens',
   EXPLORE: 'explore',
+  FEATURED: 'featured',
   TOKEN: 'token',
   AUCTION: 'auction',
   DAO_INFO: 'dao-info',
