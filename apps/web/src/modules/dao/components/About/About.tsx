@@ -58,9 +58,9 @@ export const About: React.FC = () => {
   const { data: balance } = useBalance({ address: treasury as Address })
 
   const { data } = useSWR(
-    chain && token ? [SWR_KEYS.DAO_INFO, chain, token] : null,
-    async (_, chain, token) => {
-      const res = await SDK.connect(chain.id)
+    chain && token ? [SWR_KEYS.DAO_INFO, chain.id, token] : null,
+    async (_, chainId, token) => {
+      const res = await SDK.connect(chainId)
         .daoInfo({
           tokenAddress: token.toLowerCase(),
         })

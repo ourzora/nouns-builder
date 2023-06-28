@@ -39,6 +39,7 @@ export const getProposal = async (
       ...proposal,
       calldatas: calldatas ? calldatas.split(':') : [],
       state: await getProposalState(
+        chain,
         proposal.dao.governorAddress,
         proposalId as BytesType
       ),
@@ -54,6 +55,7 @@ export const getProposal = async (
     }
     return baseProposal
   } catch (e) {
+    console.log('err', e)
     Sentry.captureException(e)
     await Sentry.flush(2000)
     return

@@ -20,7 +20,7 @@ export const ExploreMyDaos = () => {
 
   const { data, error, isValidating } = useSWR(
     signerAddress
-      ? [chain.id, SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string)]
+      ? [chain, SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string)]
       : null,
     () => userDaosFilter(chain, signerAddress as string),
     { revalidateOnFocus: false }

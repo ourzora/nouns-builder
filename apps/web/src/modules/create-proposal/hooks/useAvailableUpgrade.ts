@@ -61,7 +61,7 @@ export const useAvailableUpgrade = ({
 
   const { data: proposals } = useSWR(
     !!chain && !!addresses?.token
-      ? [SWR_KEYS.PROPOSALS_CALLDATAS, addresses?.token]
+      ? [SWR_KEYS.PROPOSALS_CALLDATAS, chain, addresses?.token]
       : null,
     () => getProposals(chain, addresses?.token as string, 100)
   )

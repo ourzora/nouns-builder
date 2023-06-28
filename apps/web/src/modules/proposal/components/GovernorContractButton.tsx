@@ -62,7 +62,7 @@ export function GovernorContractButton<
       const txn = await writeAsync?.()
       await txn?.wait()
 
-      await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(chain, proposalId))
+      await mutate([SWR_KEYS.PROPOSAL, chain, proposalId], getProposal(chain, proposalId))
       setIsPending(false)
       onSuccess()
     } catch (err) {

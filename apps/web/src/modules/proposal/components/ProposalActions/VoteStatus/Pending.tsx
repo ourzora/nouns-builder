@@ -21,7 +21,7 @@ const Pending: React.FC<PendingProps> = ({ voteStart, proposalId }) => {
 
   const isEndedtimeout = isEnded ? 4000 : null
   useTimeout(() => {
-    mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(chain, proposalId))
+    mutate([SWR_KEYS.PROPOSAL, chain, proposalId], getProposal(chain, proposalId))
   }, isEndedtimeout)
 
   const onEnd = () => {

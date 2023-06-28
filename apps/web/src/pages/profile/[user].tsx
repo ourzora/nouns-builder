@@ -34,7 +34,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
 
   const { ensName, ensAvatar } = useEnsData(userAddress)
   const { data, error, isValidating } = useSWR(
-    userAddress ? [SWR_KEYS.PROFILE_TOKENS, userAddress, page] : undefined,
+    userAddress ? [SWR_KEYS.PROFILE_TOKENS, query.network, userAddress, page] : undefined,
     () =>
       axios
         .get<UserTokensResponse>(

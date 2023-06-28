@@ -76,7 +76,7 @@ const VoteModal: React.FC<{
     const tx = await vote
     await tx?.wait()
 
-    await mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(chain, proposalId))
+    await mutate([SWR_KEYS.PROPOSAL, chain, proposalId], getProposal(chain, proposalId))
 
     setIsCastVoteSuccess(true)
   }

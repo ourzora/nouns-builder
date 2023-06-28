@@ -41,9 +41,11 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   const chain = useChainStore((x) => x.chain)
 
   const { data: tokenImage, error } = useSWR(
-    !!collection && !!proposer ? [SWR_KEYS.TOKEN_IMAGE, collection, proposer] : null,
-    async (_, collection, proposer) => {
-      const data = await SDK.connect(chain.id).tokens({
+    !!collection && !!proposer
+      ? [SWR_KEYS.TOKEN_IMAGE, chain.id, collection, proposer]
+      : null,
+    async (_, chainId, collection, proposer) => {
+      const data = await SDK.connect(chainId).tokens({
         where: { owner: proposer.toLowerCase(), tokenContract: collection.toLowerCase() },
         first: 1,
         orderBy: Token_OrderBy.MintedAt,

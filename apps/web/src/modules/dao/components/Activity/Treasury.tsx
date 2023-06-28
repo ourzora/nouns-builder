@@ -30,9 +30,9 @@ export const Treasury = () => {
   })
 
   const { data: earnings } = useSWR(
-    chain && [SWR_KEYS.TREASURY_SALES, chain, addresses.token],
-    (_, chain) =>
-      SDK.connect(chain.id)
+    chain && [SWR_KEYS.TREASURY_SALES, chain.id, addresses.token],
+    (_, chainId) =>
+      SDK.connect(chainId)
         .totalAuctionSales({ tokenAddress: addresses.token?.toLowerCase() as string })
         .then((x) =>
           x.dao?.totalAuctionSales ? ethers.utils.formatEther(x.dao.totalAuctionSales) : 0

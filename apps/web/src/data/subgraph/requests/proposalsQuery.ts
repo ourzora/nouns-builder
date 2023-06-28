@@ -37,6 +37,7 @@ export const getProposals = async (
             ...proposal,
             calldatas: calldatas ? calldatas.split(':') : [],
             state: await getProposalState(
+              chain,
               proposal.dao.governorAddress,
               proposal.proposalId
             ),

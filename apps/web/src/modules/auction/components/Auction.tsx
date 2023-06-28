@@ -36,13 +36,13 @@ export const Auction: React.FC<AuctionControllerProps> = ({
   const { mintDate, name, image, price: tokenPrice, owner: tokenOwner } = token
 
   const { data: auction } = useSWR(
-    [SWR_KEYS.AUCTION, auctionAddress],
-    (_, auctionAddress) =>
+    [SWR_KEYS.AUCTION, chain.id, auctionAddress],
+    (_, chainId, auctionAddress) =>
       readContract({
         abi: auctionAbi,
         address: auctionAddress as AddressType,
         functionName: 'auction',
-        chainId: chain.id,
+        chainId,
       }),
     { revalidateOnFocus: true }
   )

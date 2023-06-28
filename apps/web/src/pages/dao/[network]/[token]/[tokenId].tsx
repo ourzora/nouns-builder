@@ -52,10 +52,12 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   const { query, replace, pathname } = useRouter()
   const { address } = useAccount()
 
-  const { data: token } = useSWR([SWR_KEYS.TOKEN, chain, collection, tokenId], (_, id) =>
-    axios
-      .get<TokenWithWinner>(`/api/dao/${query.network}/${collection}/${tokenId}`)
-      .then((x) => x.data)
+  const { data: token } = useSWR(
+    [SWR_KEYS.TOKEN, query.network, collection, tokenId],
+    (_, id) =>
+      axios
+        .get<TokenWithWinner>(`/api/dao/${query.network}/${collection}/${tokenId}`)
+        .then((x) => x.data)
   )
 
   const { hasThreshold } = useVotes({
@@ -66,9 +68,13 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   })
 
   const handleCloseSuccessModal = () => {
-    replace({ pathname, query: { token: collection, tokenId } }, undefined, {
-      shallow: true,
-    })
+    replace(
+      { pathname, query: { token: collection, network: chain.slug, tokenId } },
+      undefined,
+      {
+        shallow: true,
+      }
+    )
   }
 
   const sections = React.useMemo(() => {

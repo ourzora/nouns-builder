@@ -129,7 +129,6 @@ export const ReviewProposalForm = ({
       } finally {
         setSimulating(false)
       }
-
       const simulationFailed = simulationResults?.success === false
       if (simulationFailed) {
         const failed =

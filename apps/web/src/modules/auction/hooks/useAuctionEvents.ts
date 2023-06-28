@@ -29,18 +29,20 @@ export const useAuctionEvents = ({
     address: isTokenActiveAuction ? auction : undefined,
     abi: auctionAbi,
     eventName: 'AuctionCreated',
+    chainId: chain.id,
     listener: async (id) => {
       const tokenId = BigNumber.from(id._hex).toNumber()
 
-      await mutate([SWR_KEYS.AUCTION, auction], () =>
+      await mutate([SWR_KEYS.AUCTION, chain.id, auction], () =>
         readContract({
           abi: auctionAbi,
           address: auction as AddressType,
+          chainId: chain.id,
           functionName: 'auction',
         })
       )
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, auction, tokenId], () =>
+      await mutate([SWR_KEYS.AUCTION_BIDS, chain, auction, tokenId], () =>
         getBids(chain, auction as string, tokenId)
       )
 
@@ -53,15 +55,16 @@ export const useAuctionEvents = ({
     abi: auctionAbi,
     eventName: 'AuctionBid',
     listener: async () => {
-      await mutate([SWR_KEYS.AUCTION, auction], () =>
+      await mutate([SWR_KEYS.AUCTION, chain.id, auction], () =>
         readContract({
           abi: auctionAbi,
           address: auction as AddressType,
+          chainId: chain.id,
           functionName: 'auction',
         })
       )
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, auction, tokenId], () =>
+      await mutate([SWR_KEYS.AUCTION_BIDS, chain, auction, tokenId], () =>
         getBids(chain, auction as string, tokenId)
       )
     },
