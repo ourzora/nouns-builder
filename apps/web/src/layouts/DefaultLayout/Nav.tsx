@@ -12,12 +12,10 @@ export const Nav = () => {
       <Flex align={'center'} className={NavWrapper} justify={'space-between'}>
         <Flex align={'center'}>
           <Link href={'/'} passHref>
-            <Flex direction={'row'} align="center">
-              <NogglesLogo
-                fill={'black'}
-                className={atoms({ width: 'x23', cursor: 'pointer' })}
-              />
-            </Flex>
+            <NogglesLogo
+              fill={'black'}
+              className={atoms({ width: 'x23', cursor: 'pointer' })}
+            />
           </Link>
           <Flex display={{ '@initial': 'none', '@768': 'flex' }} ml="x10" gap={'x4'}>
             <Link href={'/about'}>

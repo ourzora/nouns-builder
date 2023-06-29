@@ -14,7 +14,7 @@ export const NavContainer = style([
 export const NavWrapper = style([
   atoms({
     py: { '@initial': 'x3', '@768': 'x5' },
-    px: 'x4',
+    px: 'x8',
     backgroundColor: 'background1',
   }),
   {

@@ -313,7 +313,7 @@ export const NavMenu = () => {
         </Flex>
       )}
       {!address && !isMobile && (
-        <Box w="x32">
+        <Box style={{ width: 110 }}>
           <ConnectButton />
         </Box>
       )}

@@ -52,7 +52,7 @@ export const ConnectButton = () => {
     >
       <RKConnectButton
         showBalance={false}
-        label={'Connect Wallet'}
+        label={'Connect'}
         chainStatus={'none'}
         accountStatus={'address'}
       />
