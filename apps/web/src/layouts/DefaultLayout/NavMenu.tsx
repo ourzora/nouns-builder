@@ -80,6 +80,34 @@ export const NavMenu = () => {
 
   const isSelectedChain = (chainId: CHAIN_ID) => selectedChain.id === chainId
 
+  const memoizedChainMenu = React.useMemo(() => {
+    return (
+      <Flex
+        borderColor="border"
+        borderStyle="solid"
+        borderRadius="curved"
+        cursor={'pointer'}
+        align={'center'}
+        justify={'space-between'}
+        height={'x10'}
+        px="x2"
+      >
+        <Flex align={'center'}>
+          <Box h="x6" w="x6">
+            <Image
+              style={{ height: 24, width: 24 }}
+              src={selectedChain.icon}
+              alt={selectedChain.name}
+            />
+          </Box>
+          <Box h="x6" w="x6" ml="x1">
+            <Icon id="chevronDown" fill="tertiary" pointerEvents="none" />
+          </Box>
+        </Flex>
+      </Flex>
+    )
+  }, [selectedChain])
+
   /*
     close dropdown on route change
    */
@@ -118,31 +146,7 @@ export const NavMenu = () => {
               }
             }
           }}
-          trigger={
-            <Flex
-              borderColor="border"
-              borderStyle="solid"
-              borderRadius="curved"
-              cursor={'pointer'}
-              align={'center'}
-              justify={'space-between'}
-              height={'x10'}
-              px="x2"
-            >
-              <Flex align={'center'}>
-                <Box h="x6" w="x6">
-                  <Image
-                    style={{ height: 24, width: 24 }}
-                    src={selectedChain.icon}
-                    alt={selectedChain.name}
-                  />
-                </Box>
-                <Box h="x6" w="x6" ml="x1">
-                  <Icon id="chevronDown" fill="tertiary" pointerEvents="none" />
-                </Box>
-              </Flex>
-            </Flex>
-          }
+          trigger={memoizedChainMenu}
         >
           <Stack my="x4" mx="x2">
             {PUBLIC_DEFAULT_CHAINS.map((chain, i, chains) => (
