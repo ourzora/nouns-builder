@@ -20,7 +20,7 @@ export const getDAOfeed = async (feedId: string) => {
   const res = await client.getCastsByParent({
     parentUrl: createChannelString(collectionAddress, chainId),
     reverse: true,
-    pageSize: 10,
+    pageSize: 5,
     pageToken: nextBufferArray,
   })
 
