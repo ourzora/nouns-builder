@@ -5,6 +5,7 @@ import React, { Fragment } from 'react'
 
 import Pagination from 'src/components/Pagination'
 import { ExploreDaosResponse } from 'src/data/subgraph/requests/exploreQueries'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'
@@ -19,6 +20,7 @@ interface ExploreProps extends Partial<ExploreDaosResponse> {
 export const Explore: React.FC<ExploreProps> = ({ daos, isLoading }) => {
   const router = useRouter()
   const { pathname } = router
+  const chain = useChainStore((x) => x.chain)
 
   const handlePageBack = React.useCallback(() => {
     // user is on the first page
@@ -76,7 +78,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, isLoading }) => {
 
   return (
     <Fragment>
-      <ExploreToolbar title={'DAOs'} showSort />
+      <ExploreToolbar title={`DAOs on ${chain.name}`} showSort />
       {daos?.length ? (
         <Fragment>
           <Grid className={exploreGrid}>

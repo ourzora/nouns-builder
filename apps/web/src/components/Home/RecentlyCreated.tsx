@@ -2,11 +2,13 @@ import { Button, Flex, Stack, Text, mixins } from '@zoralabs/zord'
 import Link from 'next/link'
 import React, { ReactNode } from 'react'
 
+import { useChainStore } from 'src/stores/useChainStore'
 import { homeSectionHeader, homeSectionWrapper } from 'src/styles/home.css'
 
 const RecentlyCreated: React.FC<{
   children: ReactNode
 }> = ({ children }) => {
+  const chain = useChainStore((x) => x.chain)
   return (
     <Stack
       w={'100%'}
@@ -16,7 +18,7 @@ const RecentlyCreated: React.FC<{
       className={homeSectionWrapper}
     >
       <Text fontWeight={'label'} className={homeSectionHeader}>
-        Recent DAOs
+        Recent DAOs on <span style={{ textDecoration: 'underline' }}>{chain.name}</span>
       </Text>
       {children}
       <Flex align={'center'} justify={'center'} mt={'x6'}>

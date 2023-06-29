@@ -12,7 +12,14 @@ import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { SDK } from 'src/data/subgraph/client'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
-import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
+import {
+  about,
+  daoDescription,
+  daoInfo,
+  daoName,
+  statistic,
+  statisticContent,
+} from 'src/styles/About.css'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -117,6 +124,7 @@ export const About: React.FC = () => {
         mt={{ '@initial': 'x4', '@768': 'x6' }}
         gap={{ '@initial': 'x2', '@768': 'x4' }}
         overflowX="scroll"
+        wrap={'wrap'}
         className={daoInfo}
       >
         <Statistic
@@ -126,6 +134,17 @@ export const About: React.FC = () => {
         />
         <Statistic title="Owners" content={data?.ownerCount} />
         <Statistic title="Total supply" content={totalSupply?.toNumber()} />
+        <Box className={statistic} width={'100%'}>
+          <Text color="tertiary">Chain</Text>
+          <Flex align={'center'} mt={{ '@initial': 'x1', '@768': 'x3' }}>
+            <Box mr="x2">
+              <Image src={chain.icon} alt={chain.name} height={28} width={28} />
+            </Box>
+            <Text fontWeight={'display'} className={statisticContent}>
+              {chain.name}
+            </Text>
+          </Flex>
+        </Box>
       </Flex>
 
       {typeof description !== 'undefined' && description !== null ? (
