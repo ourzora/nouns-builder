@@ -11,8 +11,8 @@ export const feed = style([
 ])
 
 export const feedLayoutWrapper = style({
-  height: '500px',
-  overflowY: 'auto',
+  // height: '500px',
+  // overflowY: 'auto',
 })
 
 export const castCardStyle = style({})

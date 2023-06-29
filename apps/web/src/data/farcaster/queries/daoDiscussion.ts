@@ -1,4 +1,4 @@
-import { isCastAddMessage } from '@farcaster/hub-nodejs'
+import { hexStringToBytes, isCastAddMessage } from '@farcaster/hub-nodejs'
 import { err, ok } from 'neverthrow'
 
 import { farcasterClient } from '../client'
@@ -10,11 +10,20 @@ const createChannelString = (collectionAddress: string, chainId: string) => {
 export const getDAOfeed = async (feedId: string) => {
   const client = farcasterClient()
 
-  const [collectionAddress, chainId] = feedId.split('~')
+  const [collectionAddress, chainId, nextToken] = feedId.split('~')
+  console.log('nextToken', nextToken)
+  const nextBufferArray =
+    nextToken?.slice(0, 2) === '0x'
+      ? hexStringToBytes(nextToken)._unsafeUnwrap()
+      : undefined
 
   const res = await client.getCastsByParent({
     parentUrl: createChannelString(collectionAddress, chainId),
+    reverse: true,
+    pageSize: 10,
+    pageToken: nextBufferArray,
   })
+  console.log('res', res)
 
   client.close()
   if (res.isErr()) {
@@ -23,5 +32,8 @@ export const getDAOfeed = async (feedId: string) => {
   // Coerce Messages into Casts, should not actually filter out any messages
   const casts = res.value.messages.filter(isCastAddMessage)
 
-  return ok(casts.filter((msg) => !msg.data.castAddBody.parentCastId))
+  return ok({
+    data: casts.filter((msg) => !msg.data.castAddBody.parentCastId),
+    nextPageToken: res.value.nextPageToken,
+  })
 }

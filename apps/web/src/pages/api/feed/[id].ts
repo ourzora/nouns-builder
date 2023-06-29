@@ -18,13 +18,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   // fromFarcasteTime does not work on the client. Running the function here.
-  const withUnixTime = feedRes.value.map((cast) => ({
+  const withUnixTime = feedRes.value.data.map((cast) => ({
     ...cast,
     unixTime: fromFarcasterTime(cast.data.timestamp)._unsafeUnwrap(),
     hexHash: bytesToHexString(cast.hash)._unsafeUnwrap(),
   }))
 
-  res.status(200).json({ ...feedRes, value: withUnixTime })
+  const nextPageToken = feedRes.value.nextPageToken
+    ? bytesToHexString(feedRes.value.nextPageToken)._unsafeUnwrap()
+    : undefined
+
+  res.status(200).json({
+    nextPageToken,
+    value: withUnixTime,
+  })
 }
 
 export default handler

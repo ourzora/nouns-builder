@@ -1,10 +1,9 @@
 import { CastAddData, Message, SignatureScheme } from '@farcaster/hub-nodejs'
-import { Flex, Text } from '@zoralabs/zord'
+import { Button, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
-import React from 'react'
-import useSWR from 'swr'
+import React, { useMemo } from 'react'
+import useSWRInfinite from 'swr/infinite'
 
-import SWR_KEYS from 'src/constants/swrKeys'
 import { useLayoutStore } from 'src/stores'
 
 import { CardSkeleton } from './CardSkeleton'
@@ -21,18 +20,33 @@ type AddMsgWithUnix = Message & {
   hexHash: string
   signatureScheme: SignatureScheme.ED25519
 }
+type PageData = { value: AddMsgWithUnix[]; nextPageToken?: string }
 
 const Feed = ({ collectionAddress }: FeedTabProps) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
-  const chainId = '1'
+  const chainId = process.env.NEXT_PUBLIC_CHAIN_ID || '1'
 
-  const { data, error, isValidating } = useSWR(
-    collectionAddress ? [SWR_KEYS.DAO_FEED, collectionAddress] : undefined,
-    () =>
-      axios
-        .get<{ value: AddMsgWithUnix[] }>(`/api/feed/${collectionAddress}~${chainId}`)
-        .then((x) => x.data.value.reverse())
+  const { data, error, isValidating, setSize } = useSWRInfinite(
+    (pageIndex: number, prevPageData: PageData) => {
+      if (prevPageData && !prevPageData.nextPageToken) return null
+      return `/api/feed/${collectionAddress}~${chainId}~${
+        prevPageData?.nextPageToken || ''
+      }`
+    },
+    (url) =>
+      axios.get<PageData>(url).then((x) => {
+        return x.data
+      })
   )
+
+  const { casts } = useMemo(() => {
+    if (!data) return {}
+    return { casts: data.flatMap((pageData) => pageData.value) }
+  }, [data])
+
+  const loadMore = () => {
+    setSize((size) => size + 1)
+  }
 
   if (error) {
     return (
@@ -53,7 +67,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
     )
   }
 
-  if (isValidating) {
+  if (isValidating && !casts?.length) {
     return (
       <FeedTab isMobile={isMobile}>
         <CardSkeleton />
@@ -63,7 +77,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
     )
   }
 
-  if (!data?.length) {
+  if (!casts?.length) {
     return (
       <FeedTab isMobile={isMobile}>
         <Flex
@@ -84,15 +98,16 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
 
   return (
     <FeedTab isMobile={isMobile}>
-      {data?.map((msg, index) => (
+      {casts?.map((msg) => (
         <CastCard
-          key={`${msg.unixTime}.${index}`}
+          key={msg.hexHash}
           text={msg?.data?.castAddBody?.text}
           fid={msg.data.fid}
           timestamp={msg.unixTime}
           hexHash={msg.hexHash}
         />
       ))}
+      <Button onClick={loadMore}> Load More</Button>
     </FeedTab>
   )
 }

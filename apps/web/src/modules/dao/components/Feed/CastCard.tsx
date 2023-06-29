@@ -37,7 +37,7 @@ export const CastCard = ({
     // Design decision: how would we like to display a profile load fail?
     return null
   }
-  if (isValidating) {
+  if (isValidating && !data) {
     return <CardSkeleton />
   }
 
