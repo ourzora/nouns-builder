@@ -2,7 +2,6 @@ import { Box, Flex, Label, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
-
 import NogglesLogo from '../assets/builder-framed.svg'
 import { NavContainer, NavWrapper, navMenuItem } from './Nav.styles.css'
 import { NavMenu } from './NavMenu'

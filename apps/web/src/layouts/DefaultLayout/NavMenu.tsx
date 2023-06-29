@@ -36,6 +36,7 @@ import { ViewProfileButton } from './ViewProfileButton'
 export const NavMenu = () => {
   const [isOpenMenu, setIsOpenMenu] = React.useState(false)
   const [isOpenChainMenu, setIsOpenChainMenu] = React.useState(false)
+  const [isChainInitilized, setIsChainInitilized] = React.useState(false)
   const isMobile = useLayoutStore((x) => x.isMobile)
   const [viewAll, setViewAll] = React.useState(false)
   const [activeDropdown, setActiveDropdown] = React.useState<
@@ -80,34 +81,6 @@ export const NavMenu = () => {
 
   const isSelectedChain = (chainId: CHAIN_ID) => selectedChain.id === chainId
 
-  const memoizedChainMenu = React.useMemo(() => {
-    return (
-      <Flex
-        borderColor="border"
-        borderStyle="solid"
-        borderRadius="curved"
-        cursor={'pointer'}
-        align={'center'}
-        justify={'space-between'}
-        height={'x10'}
-        px="x2"
-      >
-        <Flex align={'center'}>
-          <Box h="x6" w="x6">
-            <Image
-              style={{ height: 24, width: 24 }}
-              src={selectedChain.icon}
-              alt={selectedChain.name}
-            />
-          </Box>
-          <Box h="x6" w="x6" ml="x1">
-            <Icon id="chevronDown" fill="tertiary" pointerEvents="none" />
-          </Box>
-        </Flex>
-      </Flex>
-    )
-  }, [selectedChain])
-
   /*
     close dropdown on route change
    */
@@ -118,83 +91,122 @@ export const NavMenu = () => {
 
     router.events.on('routeChangeStart', handleRouteChange)
 
+    const hasHydrated = useChainStore.persist.hasHydrated()
+    let hydrationUnsubscribe: () => void | undefined
+
+    if (hasHydrated) setIsChainInitilized(true)
+    else {
+      hydrationUnsubscribe = useChainStore.persist.onFinishHydration(() =>
+        setIsChainInitilized(true)
+      )
+    }
+
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
+      hydrationUnsubscribe?.()
     }
   }, [router])
 
   return (
     <Flex align={'center'} direction={'row'} gap={'x4'}>
-      <Flex
-        onClick={() => {
-          !hasNetwork && setIsOpenChainMenu((bool) => !bool)
-          setActiveDropdown('chainMenu')
-        }}
-        data-active={!!activeDropdown && activeDropdown !== 'chainMenu'}
-      >
-        <PopUp
-          padding="x0"
-          placement="bottom-end"
-          close={!isOpenChainMenu}
-          onOpenChange={(open) => {
-            setIsOpenChainMenu(open)
-            if (!open) {
-              setViewAll(false)
-              // if closing menu and not opening another
-              if (activeDropdown === 'chainMenu') {
-                setActiveDropdown(undefined)
-              }
-            }
+      {isChainInitilized && (
+        <Flex
+          onClick={() => {
+            !hasNetwork && setIsOpenChainMenu((bool) => !bool)
+            setActiveDropdown('chainMenu')
           }}
-          trigger={memoizedChainMenu}
+          data-active={!!activeDropdown && activeDropdown !== 'chainMenu'}
         >
-          <Stack my="x4" mx="x2">
-            {PUBLIC_DEFAULT_CHAINS.map((chain, i, chains) => (
-              <Flex
-                className={chainPopUpButton}
-                borderRadius="normal"
-                onClick={() => !hasNetwork && onChainChange(chain.id)}
-                cursor={
-                  hasNetwork
-                    ? isSelectedChain(chain.id)
-                      ? undefined
-                      : 'not-allowed'
-                    : 'pointer'
+          <PopUp
+            padding="x0"
+            placement="bottom-end"
+            close={!isOpenChainMenu}
+            onOpenChange={(open) => {
+              setIsOpenChainMenu(open)
+              if (!open) {
+                setViewAll(false)
+                // if closing menu and not opening another
+                if (activeDropdown === 'chainMenu') {
+                  setActiveDropdown(undefined)
                 }
-                height={'x10'}
-                px="x4"
-                mb={i !== chains.length - 1 ? 'x2' : undefined}
+              }
+            }}
+            trigger={
+              <Flex
+                borderColor="border"
+                borderStyle="solid"
+                borderRadius="curved"
+                cursor={'pointer'}
                 align={'center'}
                 justify={'space-between'}
+                height={'x10'}
+                px="x2"
               >
                 <Flex align={'center'}>
-                  <Box h="x6" w="x6" mr="x2">
+                  <Box h="x6" w="x6">
                     <Image
                       style={{ height: 24, width: 24 }}
-                      src={chain.icon}
-                      alt={chain.name}
+                      src={selectedChain.icon}
+                      alt={selectedChain.name}
                     />
                   </Box>
-                  <Text
-                    fontWeight={'heading'}
-                    color={hasNetwork && !isSelectedChain(chain.id) ? 'text3' : undefined}
-                  >
-                    {chain.name}
-                  </Text>
+                  <Box h="x6" w="x6" ml="x1">
+                    <Icon id="chevronDown" fill="tertiary" pointerEvents="none" />
+                  </Box>
                 </Flex>
-                <Icon
-                  id="check"
-                  fill="tertiary"
-                  ml="x10"
-                  style={{
-                    visibility: selectedChain.id === chain.id ? 'visible' : 'hidden',
-                  }}
-                />
               </Flex>
-            ))}
-          </Stack>
-        </PopUp>
-      </Flex>
+            }
+          >
+            <Stack my="x4" mx="x2">
+              {PUBLIC_DEFAULT_CHAINS.map((chain, i, chains) => (
+                <Flex
+                  className={chainPopUpButton}
+                  borderRadius="normal"
+                  onClick={() => !hasNetwork && onChainChange(chain.id)}
+                  cursor={
+                    hasNetwork
+                      ? isSelectedChain(chain.id)
+                        ? undefined
+                        : 'not-allowed'
+                      : 'pointer'
+                  }
+                  height={'x10'}
+                  px="x4"
+                  mb={i !== chains.length - 1 ? 'x2' : undefined}
+                  align={'center'}
+                  justify={'space-between'}
+                >
+                  <Flex align={'center'}>
+                    <Box h="x6" w="x6" mr="x2">
+                      <Image
+                        style={{ height: 24, width: 24 }}
+                        src={chain.icon}
+                        alt={chain.name}
+                      />
+                    </Box>
+                    <Text
+                      fontWeight={'heading'}
+                      color={
+                        hasNetwork && !isSelectedChain(chain.id) ? 'text3' : undefined
+                      }
+                    >
+                      {chain.name}
+                    </Text>
+                  </Flex>
+                  <Icon
+                    id="check"
+                    fill="tertiary"
+                    ml="x10"
+                    style={{
+                      visibility: selectedChain.id === chain.id ? 'visible' : 'hidden',
+                    }}
+                  />
+                </Flex>
+              ))}
+            </Stack>
+          </PopUp>
+        </Flex>
+      )}
       {address && (
         <Flex
           className={navButton}
