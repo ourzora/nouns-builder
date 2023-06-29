@@ -16,6 +16,7 @@ export const enum CHAIN_ID {
 export interface Chain extends WagmiChain {
   id: CHAIN_ID
   slug: string
+  icon: string
 }
 
 export type AddressType = `0x${string}`

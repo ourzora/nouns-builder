@@ -144,3 +144,12 @@ export const footerLogoTextRight = style({
   flexShrink: 1,
   flexBasis: 0,
 })
+
+export const chainPopUpButton = style({
+  backgroundColor: 'white',
+  selectors: {
+    '&:hover': {
+      backgroundColor: vars.color.background2,
+    },
+  },
+})

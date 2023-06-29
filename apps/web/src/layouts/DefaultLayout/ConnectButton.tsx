@@ -13,7 +13,7 @@ export const ConnectButton = () => {
   const { switchNetwork } = useSwitchNetwork()
   const chain = useChainStore((x) => x.chain)
 
-  if (wagmiChain?.id !== chain?.id) {
+  if (address && wagmiChain?.id !== chain?.id) {
     return (
       <Flex
         as={'button'}

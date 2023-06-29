@@ -2,11 +2,18 @@ import { goerli, mainnet, optimismGoerli } from 'wagmi/chains'
 
 import { CHAIN_ID, Chain } from 'src/typings'
 
-const MAINNET_CHAINS: Chain[] = [{ ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'eth' }]
+const MAINNET_CHAINS: Chain[] = [
+  { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'eth', icon: '/chains/ethereum.svg' },
+]
 
 const TESTNET_CHAINS: Chain[] = [
-  { ...goerli, id: CHAIN_ID.GOERLI, slug: 'goerli' },
-  { ...optimismGoerli, id: CHAIN_ID.OPTIMISM_GOERLI, slug: 'op-goerli' },
+  { ...goerli, id: CHAIN_ID.GOERLI, slug: 'goerli', icon: '/chains/ethereum.svg' },
+  {
+    ...optimismGoerli,
+    id: CHAIN_ID.OPTIMISM_GOERLI,
+    slug: 'op-goerli',
+    icon: '/chains/optimism.svg',
+  },
 ]
 
 export const PUBLIC_ALL_CHAINS = {
