@@ -40,6 +40,7 @@ export const cardLink = style({
 })
 
 export const cardWrapper = style({
+  width: '100%',
   maxWidth: '45rem',
   transition: 'all 0.15s ease-in-out',
   selectors: {
@@ -51,4 +52,5 @@ export const cardWrapper = style({
 })
 export const loadMoreButton = style({
   maxWidth: '45rem',
+  width: '100%',
 })
