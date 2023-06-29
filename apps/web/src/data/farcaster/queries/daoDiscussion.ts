@@ -11,7 +11,7 @@ export const getDAOfeed = async (feedId: string) => {
   const client = farcasterClient()
 
   const [collectionAddress, chainId, nextToken] = feedId.split('~')
-  console.log('nextToken', nextToken)
+
   const nextBufferArray =
     nextToken?.slice(0, 2) === '0x'
       ? hexStringToBytes(nextToken)._unsafeUnwrap()
@@ -23,7 +23,6 @@ export const getDAOfeed = async (feedId: string) => {
     pageSize: 10,
     pageToken: nextBufferArray,
   })
-  console.log('res', res)
 
   client.close()
   if (res.isErr()) {

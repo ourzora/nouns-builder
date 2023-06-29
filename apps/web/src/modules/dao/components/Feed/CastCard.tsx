@@ -44,10 +44,14 @@ export const CastCard = ({
   return (
     <Box
       className={cardWrapper}
-      px={{ '@initial': 'x2', '@768': 'x32' }}
-      py={{ '@initial': 'x4', '@768': 'x4' }}
-      borderRadius={'normal'}
-      mb={'x3'}
+      py={{ '@initial': 'x4', '@768': 'x6' }}
+      px={{ '@initial': 'x2', '@768': 'x6' }}
+      borderRadius={'phat'}
+      borderStyle={'solid'}
+      borderWidth={'normal'}
+      borderColor={'border'}
+      maxW={'x32'}
+      mb={'x6'}
     >
       <a
         href={`https://warpcast.com/~/conversations/${hexHash}`}

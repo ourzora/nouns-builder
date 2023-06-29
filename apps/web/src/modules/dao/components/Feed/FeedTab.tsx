@@ -2,7 +2,7 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
 import React, { ReactNode } from 'react'
 
-import { feed, feedLayoutWrapper } from './Feed.css'
+import { feed } from './Feed.css'
 
 export const FeedTab = ({ children }: { isMobile: boolean; children?: ReactNode }) => (
   <Box className={feed}>
@@ -28,13 +28,8 @@ export const FeedTab = ({ children }: { isMobile: boolean; children?: ReactNode 
           </Link>
         </Text>
         <Flex
-          className={feedLayoutWrapper}
           direction={'column'}
           py={{ '@initial': 'x0', '@768': 'x4' }}
-          borderColor={'border'}
-          borderStyle={'solid'}
-          borderRadius={'curved'}
-          borderWidth={'normal'}
           mt={'x4'}
           mb={'x8'}
         >

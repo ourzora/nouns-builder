@@ -10,11 +10,6 @@ export const feed = style([
   },
 ])
 
-export const feedLayoutWrapper = style({
-  // height: '500px',
-  // overflowY: 'auto',
-})
-
 export const castCardStyle = style({})
 
 const pulse = keyframes({
@@ -25,7 +20,9 @@ const pulse = keyframes({
 
 export const cardSkeleton = style({
   animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-  //   marginBottom: '2rem',
+  maxWidth: '45rem',
+  height: '8.5rem',
+  marginBottom: '1.6rem',
 })
 
 // requires !important to override default link styles from Zord
@@ -43,6 +40,7 @@ export const cardLink = style({
 })
 
 export const cardWrapper = style({
+  maxWidth: '45rem',
   transition: 'all 0.15s ease-in-out',
   selectors: {
     '&:hover': {
@@ -50,4 +48,7 @@ export const cardWrapper = style({
       cursor: 'pointer',
     },
   },
+})
+export const loadMoreButton = style({
+  maxWidth: '45rem',
 })

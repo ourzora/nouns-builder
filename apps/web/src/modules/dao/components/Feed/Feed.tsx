@@ -8,6 +8,7 @@ import { useLayoutStore } from 'src/stores'
 
 import { CardSkeleton } from './CardSkeleton'
 import { CastCard } from './CastCard'
+import { loadMoreButton } from './Feed.css'
 import { FeedTab } from './FeedTab'
 
 type FeedTabProps = {
@@ -27,7 +28,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
   const chainId = process.env.NEXT_PUBLIC_CHAIN_ID || '1'
 
   const { data, error, isValidating, setSize } = useSWRInfinite(
-    (pageIndex: number, prevPageData: PageData) => {
+    (_pageIndex: number, prevPageData: PageData) => {
       if (prevPageData && !prevPageData.nextPageToken) return null
       return `/api/feed/${collectionAddress}~${chainId}~${
         prevPageData?.nextPageToken || ''
@@ -107,7 +108,9 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
           hexHash={msg.hexHash}
         />
       ))}
-      <Button onClick={loadMore}> Load More</Button>
+      <Button onClick={loadMore} loading={isValidating} className={loadMoreButton}>
+        Load More
+      </Button>
     </FeedTab>
   )
 }
