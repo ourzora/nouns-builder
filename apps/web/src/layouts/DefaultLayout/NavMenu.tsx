@@ -44,14 +44,15 @@ export const NavMenu = () => {
   >(undefined)
 
   const router = useRouter()
+  const { chain: selectedChain, setChain } = useChainStore()
 
   const { address } = useAccount()
   const { displayName, ensAvatar } = useEnsData(address as string)
   const { data: balance } = useBalance({
     address: address as `0x${string}`,
+    chainId: selectedChain.id,
   })
   const { disconnect } = useDisconnect()
-  const { chain: selectedChain, setChain } = useChainStore()
   const hasNetwork = !!router.query?.network
 
   const userBalance = balance?.formatted

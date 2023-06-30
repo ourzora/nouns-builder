@@ -34,7 +34,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
   const { address } = useAccount()
   const { chain: wagmiChain } = useNetwork()
-  const { data: balance } = useBalance({ address: address })
+  const { data: balance } = useBalance({ address: address, chainId: chain.id })
   const { mutate } = useSWRConfig()
   const { addresses } = useDaoStore()
 

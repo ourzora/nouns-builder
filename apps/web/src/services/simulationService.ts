@@ -3,10 +3,13 @@ import axios from 'axios'
 import { BigNumber, constants, ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 
+import { CHAIN_ID } from 'src/typings'
+
 import { InvalidRequestError } from './errors'
 
 export interface SimulationRequestBody {
   treasuryAddress: string
+  chainId: CHAIN_ID
   targets: string[]
   calldatas: string[]
   values: string[]
@@ -26,8 +29,7 @@ export interface SimulationResult {
   totalGasUsed: BigNumber
 }
 
-const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY, NEXT_PUBLIC_CHAIN_ID } =
-  process.env
+const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
 
 const TENDERLY_FORK_API = `https://api.tenderly.co/api/v1/account/${TENDERLY_USER}/project/${TENDERLY_PROJECT}/fork`
 const TENDERLY_FORK_V2_BASE_URL =
@@ -39,6 +41,7 @@ export class InsufficientFundsError extends Error {}
 
 export async function simulate({
   treasuryAddress,
+  chainId,
   targets,
   calldatas,
   values,
@@ -58,7 +61,7 @@ export async function simulate({
   }
 
   const opts = { headers: { 'X-Access-Key': TENDERLY_ACCESS_KEY as string } }
-  const body = { network_id: NEXT_PUBLIC_CHAIN_ID }
+  const body = { network_id: chainId }
 
   const forkResponse = await axios.post(TENDERLY_FORK_API, body, opts)
   const forkId = forkResponse.data.simulation_fork.id
@@ -80,8 +83,8 @@ export async function simulate({
     const txParams = {
       from: treasuryAddress.toLowerCase(),
       to: targets[i].toLowerCase(),
-      gas: '0x76999c0',
-      gasPrice: '0x1',
+      gas: '0x163CCD40',
+      gasPrice: '0x3',
       // We have to wrap this in a hexValue() call because .toHexString() adds a 0x0 padding to the front of the value.
       value: ethers.utils.hexValue(BigNumber.from(values[i]).toHexString()),
       data: calldatas[i],
@@ -93,6 +96,10 @@ export async function simulate({
     const forkViewRes = (await axios.get(`${TENDERLY_FORK_V2_BASE_URL}/${forkId}`, opts))
       .data
     const simulationId = forkViewRes.fork.head_simulation_id
+    console.log(
+      'url',
+      `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`
+    )
     simulations.push({
       index: i,
       simulationId,

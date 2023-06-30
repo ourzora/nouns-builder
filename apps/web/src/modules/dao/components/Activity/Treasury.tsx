@@ -15,11 +15,12 @@ import { useDaoStore } from '../../stores'
 
 export const Treasury = () => {
   const { addresses } = useDaoStore()
+  const chain = useChainStore((x) => x.chain)
+
   const { data: balance } = useBalance({
     address: addresses?.treasury as `0x${string}`,
+    chainId: chain.id,
   })
-
-  const chain = useChainStore((x) => x.chain)
 
   const { data: ethUsd } = useSWR(SWR_KEYS.ETH_USD, async () => {
     const response = await fetch(

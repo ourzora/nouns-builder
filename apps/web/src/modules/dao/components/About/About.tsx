@@ -62,7 +62,10 @@ export const About: React.FC = () => {
     unpackOptionalArray(contractData, 6)
   const parsedContractURI = parseContractURI(contractURI)
 
-  const { data: balance } = useBalance({ address: treasury as Address })
+  const { data: balance } = useBalance({
+    address: treasury as Address,
+    chainId: chain.id,
+  })
 
   const { data } = useSWR(
     chain && token ? [SWR_KEYS.DAO_INFO, chain.id, token] : null,

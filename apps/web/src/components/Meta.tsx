@@ -10,7 +10,7 @@ interface MetaProps {
 }
 
 export const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description }) => {
-  const isTestnet = process.env.NEXT_PUBLIC_CHAIN_ID === '5' ? true : false
+  const isTestnet = process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? true : false
 
   return (
     <Head>

@@ -113,6 +113,7 @@ export const ReviewProposalForm = ({
         simulationResults = await axios
           .post<SimulationResult>('/api/simulate', {
             treasuryAddress: addresses?.treasury,
+            chainId: chain.id,
             calldatas: calldata,
             values: transactionValues,
             targets,

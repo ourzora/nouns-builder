@@ -6,7 +6,7 @@ import { Icon } from '../Icon'
 
 const VisitAlternate = () => {
   const { isMobile } = useLayoutStore()
-  const isTestnet = process.env.NEXT_PUBLIC_CHAIN_ID === '5' ? true : false
+  const isTestnet = process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? true : false
 
   return (
     <a

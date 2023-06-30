@@ -8,15 +8,15 @@ interface FeatureContainerProps {
   children: ReactNode
 }
 
-const showFeature = (chainId: string) => chainId === process.env.NEXT_PUBLIC_CHAIN_ID
+const showFeature = (network: string) => network === process.env.NEXT_PUBLIC_NETWORK_TYPE
 
 const FeatureMainnet = ({ children }: FeatureContainerProps) => {
-  if (showFeature('1')) return <>{children}</>
+  if (showFeature('mainnet')) return <>{children}</>
   return null
 }
 
 const FeatureTestnet = ({ children }: FeatureContainerProps) => {
-  if (showFeature('5')) return <>{children}</>
+  if (showFeature('testnet')) return <>{children}</>
   return null
 }
 
