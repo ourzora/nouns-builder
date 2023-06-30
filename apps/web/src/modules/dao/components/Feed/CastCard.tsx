@@ -6,7 +6,7 @@ import React, { useMemo } from 'react'
 import useSWR from 'swr'
 
 import { CardSkeleton } from './CardSkeleton'
-import { cardLink, cardWrapper } from './Feed.css'
+import { cardWrapper } from './Feed.css'
 
 export const CastCard = ({
   text,
@@ -56,7 +56,7 @@ export const CastCard = ({
       <a
         href={`https://warpcast.com/~/conversations/${hexHash}`}
         target="_blank"
-        className={cardLink}
+        // className={cardLink}
       >
         <Flex align={'center'} mb={'x4'}>
           <Box mr="x3" borderRadius="round">

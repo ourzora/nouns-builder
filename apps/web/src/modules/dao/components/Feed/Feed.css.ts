@@ -25,20 +25,6 @@ export const cardSkeleton = style({
   marginBottom: '1.6rem',
 })
 
-// requires !important to override default link styles from Zord
-export const cardLink = style({
-  textDecoration: 'none !important',
-  color: 'inherit',
-  backgroundImage: 'none !important',
-  // won't let me override this without ts-ignore
-  // @ts-ignore
-  whiteSpace: 'normal !important',
-  marginRight: '0 !important',
-  ':after': {
-    content: '"" !important',
-  },
-})
-
 export const cardWrapper = style({
   width: '100%',
   maxWidth: '45rem',
