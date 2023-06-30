@@ -1,5 +1,4 @@
 import { hexStringToBytes, isCastAddMessage } from '@farcaster/hub-nodejs'
-import { err, ok } from 'neverthrow'
 
 import { farcasterClient } from '../client'
 
@@ -25,14 +24,16 @@ export const getDAOfeed = async (feedId: string) => {
   })
 
   client.close()
+
   if (res.isErr()) {
-    return err(res.error)
+    throw new Error(res.error.message)
   }
+
   // Coerce Messages into Casts, should not actually filter out any messages
   const casts = res.value.messages.filter(isCastAddMessage)
 
-  return ok({
+  return {
     data: casts.filter((msg) => !msg.data.castAddBody.parentCastId),
     nextPageToken: res.value.nextPageToken,
-  })
+  }
 }

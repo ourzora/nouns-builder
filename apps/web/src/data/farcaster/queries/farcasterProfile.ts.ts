@@ -1,5 +1,4 @@
 import { UserDataType } from '@farcaster/hub-nodejs'
-import { err } from 'neverthrow'
 
 import { farcasterClient } from '../client'
 
@@ -11,9 +10,10 @@ export const getFarcasterProfile = async (fid: number) => {
   const fName = await client.getUserData({ fid, userDataType: UserDataType.FNAME })
 
   client.close()
-  if (nameRes.isErr()) return err(nameRes.error)
-  if (pfpRes.isErr()) return err(pfpRes.error)
-  if (fName.isErr()) return err(fName.error)
+
+  if (nameRes.isErr()) throw new Error(nameRes.error.message)
+  if (pfpRes.isErr()) throw new Error(pfpRes.error.message)
+  if (fName.isErr()) throw new Error(fName.error.message)
 
   return {
     displayName: nameRes.value.data?.userDataBody?.value as string | undefined,

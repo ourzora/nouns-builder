@@ -6,13 +6,19 @@ import { getFarcasterProfile } from 'src/data/farcaster/queries/farcasterProfile
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { fid } = req.query
 
-  const profileRes = await getFarcasterProfile(Number(fid))
-  const { maxAge, swr } = CACHE_TIMES.CASTR_PROFILE
-  res.setHeader(
-    'Cache-Control',
-    `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
-  )
+  try {
+    const profileRes = await getFarcasterProfile(Number(fid))
 
-  return res.status(200).json(profileRes)
+    const { maxAge, swr } = CACHE_TIMES.CASTR_PROFILE
+    res.setHeader(
+      'Cache-Control',
+      `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+    )
+
+    return res.status(200).json(profileRes)
+  } catch (error) {
+    res.status(500).json({ error: error })
+  }
 }
+
 export default handler
