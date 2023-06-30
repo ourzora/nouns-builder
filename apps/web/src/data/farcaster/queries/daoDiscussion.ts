@@ -10,7 +10,7 @@ const createChannelString = (collectionAddress: string, chainId: string) => {
 export const getDAOfeed = async (feedId: string) => {
   const client = farcasterClient()
 
-  const [collectionAddress, chainId, nextToken] = feedId.split('~')
+  const [collectionAddress, chainId, nextToken] = feedId.split(':')
 
   const nextBufferArray =
     nextToken?.slice(0, 2) === '0x'

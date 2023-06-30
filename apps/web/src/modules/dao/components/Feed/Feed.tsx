@@ -30,7 +30,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
   const { data, error, isValidating, setSize } = useSWRInfinite(
     (_pageIndex: number, prevPageData: PageData) => {
       if (prevPageData && !prevPageData.nextPageToken) return null
-      return `/api/feed/${collectionAddress}~${chainId}~${
+      return `/api/feed/${collectionAddress}:${chainId}:${
         prevPageData?.nextPageToken || ''
       }`
     },

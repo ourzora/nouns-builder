@@ -13,6 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     'Cache-Control',
     `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
   )
+
   if (feedRes.isErr()) {
     return res.status(500).json(feedRes.error)
   }
