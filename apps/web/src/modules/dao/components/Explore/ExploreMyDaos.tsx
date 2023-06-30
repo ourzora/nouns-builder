@@ -30,7 +30,7 @@ export const ExploreMyDaos = () => {
 
   return (
     <>
-      <ExploreToolbar title={'My DAOs'} />
+      <ExploreToolbar title={`My DAOs on ${chain.name}`} />
       {isLoading ? (
         <ExploreSkeleton />
       ) : data?.daos?.length ? (
