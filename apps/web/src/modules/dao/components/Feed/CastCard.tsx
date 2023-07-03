@@ -2,11 +2,12 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import Link from 'next/link'
 import React, { useMemo } from 'react'
 import useSWR from 'swr'
 
 import { CardSkeleton } from './CardSkeleton'
-import { cardWrapper, castText, pfpStyles, pfpWrapper } from './Feed.css'
+import { cardLink, cardWrapper, castText, pfpStyles, pfpWrapper } from './Feed.css'
 
 const getProfile = async (fid: number) => {
   const res = await axios.get<{ displayName?: string; pfp?: string; fName?: string }>(
@@ -16,14 +17,13 @@ const getProfile = async (fid: number) => {
 }
 
 const handleMentions = async (mentions: number[], mentionsPositions: number[]) => {
-  if (!mentions || !mentionsPositions) return Promise.resolve([])
+  if (!mentions || !mentionsPositions) return []
 
   const res = await Promise.all(
-    mentions.map(async (mention, index) => {
+    mentions.map(async (mention) => {
       const profile = await getProfile(mention)
       return {
-        profile,
-        position: mentionsPositions[index],
+        fName: profile.fName,
         fid: mention,
       }
     })
@@ -67,7 +67,38 @@ export const CastCard = ({
 
   const textWithMentions = useMemo(() => {
     if (!mentionsData || !text) return
-    if (!mentionsData.length) return <Text>{text}</Text>
+    if (!mentions.length) return text
+
+    const encoder = new TextEncoder()
+    const bytes = encoder.encode(text)
+
+    const decoder = new TextDecoder()
+    let elements = []
+    let indexBytes = 0
+
+    for (let i = 0; i < mentions.length; i++) {
+      elements.push(
+        <p key={`${mentionsPositions[1]}-${i}-pre`}>
+          {decoder.decode(bytes.slice(indexBytes, mentionsPositions[i]))}
+        </p>
+      )
+      const fName = mentionsData.find((mentionData) => mentionData.fid)?.fName
+      elements.push(
+        <Link
+          href={`https://warpcast.com/${fName}`}
+          key={`${mentionsPositions[1]}-${fName}`}
+        >
+          {fName}
+        </Link>
+      )
+      indexBytes = mentionsPositions[i]
+    }
+
+    elements.push(
+      <p key="end">{decoder.decode(bytes.slice(indexBytes, bytes.length))},</p>
+    )
+
+    return elements
   }, [text, mentionsData, mentions, mentionsPositions])
 
   if (error) {
@@ -75,6 +106,9 @@ export const CastCard = ({
     return null
   }
   if (isValidating && !data) {
+    return <CardSkeleton />
+  }
+  if (!textWithMentions) {
     return <CardSkeleton />
   }
 
@@ -89,34 +123,37 @@ export const CastCard = ({
       borderColor={'border'}
       mb={'x6'}
     >
-      <a href={`https://warpcast.com/~/conversations/${hexHash}`} target="_blank">
-        <Flex align={'center'} mb={'x4'}>
-          <Box mr="x2" borderRadius="round">
-            <div className={pfpWrapper}>
-              <img
-                alt="profile picture"
-                src={data?.pfp || '/nouns-avatar-circle.png'}
-                className={pfpStyles}
-              />
-            </div>
-          </Box>
-          <Flex direction={{ '@initial': 'column', '@768': 'row' }}>
-            <Text mr={'x1'} fontWeight={'display'}>
-              {data?.displayName || '@' + data?.fName || 'Name Not Found'}
+      <Flex align={'center'} mb={'x4'}>
+        <a
+          className={cardLink}
+          href={`https://warpcast.com/~/conversations/${hexHash}`}
+          target="_blank"
+        />
+        <Box mr="x2" borderRadius="round">
+          <div className={pfpWrapper}>
+            <img
+              alt="profile picture"
+              src={data?.pfp || '/nouns-avatar-circle.png'}
+              className={pfpStyles}
+            />
+          </div>
+        </Box>
+        <Flex direction={{ '@initial': 'column', '@768': 'row' }}>
+          <Text mr={'x1'} fontWeight={'display'}>
+            {data?.displayName || '@' + data?.fName || 'Name Not Found'}
+          </Text>
+          <Flex>
+            <Text color="text3" mr={'x1'}>
+              @{data?.fName || 'fName Not Found'}
             </Text>
-            <Flex>
-              <Text color="text3" mr={'x1'}>
-                @{data?.fName || 'fName Not Found'}
-              </Text>
-              <Text color="text3" mr={'x1'}>
-                -
-              </Text>
-              <Text color="text3">{time}</Text>
-            </Flex>
+            <Text color="text3" mr={'x1'}>
+              -
+            </Text>
+            <Text color="text3">{time}</Text>
           </Flex>
         </Flex>
-        <Text className={castText}>{text}</Text>
-      </a>
+      </Flex>
+      <Text className={castText}>{textWithMentions}</Text>
     </Box>
   )
 }
