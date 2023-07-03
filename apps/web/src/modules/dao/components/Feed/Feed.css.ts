@@ -56,3 +56,7 @@ export const pfpWrapper = style({
   position: 'relative',
   overflow: 'hidden',
 })
+export const castText = style({
+  wordBreak: 'break-word',
+  whiteSpace: 'break-spaces',
+})

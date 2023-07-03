@@ -39,7 +39,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
         return x.data
       })
   )
-  console.log('data', data)
+
   const { casts } = useMemo(() => {
     if (!data) return {}
     return { casts: data.flatMap((pageData) => pageData.value) }
@@ -106,6 +106,8 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
           fid={msg.data.fid}
           timestamp={msg.unixTime}
           hexHash={msg.hexHash}
+          mentions={msg?.data?.castAddBody?.mentions}
+          mentionsPositions={msg?.data?.castAddBody?.mentionsPositions}
         />
       ))}
       <Button onClick={loadMore} loading={isValidating} className={loadMoreButton}>
