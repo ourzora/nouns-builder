@@ -14,13 +14,15 @@ import { useDaoStore } from 'src/modules/dao'
 import { ErrorResult } from 'src/services/errorResult'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
 import { useChainStore } from 'src/stores/useChainStore'
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { MarkdownEditor } from './MarkdownEditor'
 import { Transactions } from './Transactions'
 import { ERROR_CODE, FormValues, validationSchema } from './fields'
+
+const CHAINS_TO_SIMULATE = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI]
 
 interface ReviewProposalProps {
   disabled: boolean
@@ -106,36 +108,39 @@ export const ReviewProposalForm = ({
         calldata,
       } = prepareProposalTransactions(values.transactions)
 
-      let simulationResults
-      try {
-        setSimulating(true)
+      if (!!CHAINS_TO_SIMULATE.find((x) => x === chain.id)) {
+        let simulationResults
+        try {
+          setSimulating(true)
 
-        simulationResults = await axios
-          .post<SimulationResult>('/api/simulate', {
-            treasuryAddress: addresses?.treasury,
-            chainId: chain.id,
-            calldatas: calldata,
-            values: transactionValues,
-            targets,
-          })
-          .then((res) => res.data)
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          const data = err.response?.data as ErrorResult
-          setSimulationError(data.error)
-        } else {
-          setSimulationError('Unable to simulate these transactions')
+          simulationResults = await axios
+            .post<SimulationResult>('/api/simulate', {
+              treasuryAddress: addresses?.treasury,
+              chainId: chain.id,
+              calldatas: calldata,
+              values: transactionValues,
+              targets,
+            })
+            .then((res) => res.data)
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+            const data = err.response?.data as ErrorResult
+            setSimulationError(data.error)
+          } else {
+            setSimulationError('Unable to simulate these transactions')
+          }
+          return
+        } finally {
+          setSimulating(false)
         }
-        return
-      } finally {
-        setSimulating(false)
-      }
-      const simulationFailed = simulationResults?.success === false
-      if (simulationFailed) {
-        const failed =
-          simulationResults?.simulations.filter(({ success }) => success === false) || []
-        setSimulations(failed)
-        return
+        const simulationFailed = simulationResults?.success === false
+        if (simulationFailed) {
+          const failed =
+            simulationResults?.simulations.filter(({ success }) => success === false) ||
+            []
+          setSimulations(failed)
+          return
+        }
       }
 
       try {
