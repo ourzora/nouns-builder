@@ -4,7 +4,6 @@ import { BigNumberish } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
 
 import { useCountdown } from 'src/hooks/useCountdown'
@@ -42,7 +41,6 @@ export const DaoCard = ({
   const isMounted = useIsMounted()
   const [imgErr, setImgErr] = React.useState<boolean>(false)
   const [isEnded, setIsEnded] = useState(false)
-  const { query } = useRouter()
   const chain = useChainStore((x) => x.chain)
 
   const onEnd = () => {

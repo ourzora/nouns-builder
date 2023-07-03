@@ -2,9 +2,8 @@ import { renderHook, waitFor } from '@testing-library/react'
 import { expect, vi } from 'vitest'
 import { useContractReads } from 'wagmi'
 
-import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { DaoContractAddresses } from 'src/modules/dao'
-import { CHAIN_ID } from 'src/typings'
+import { FOUNDRY_CHAIN } from 'src/test/fixtures/chain'
 
 import { useAvailableUpgrade } from './useAvailableUpgrade'
 
@@ -28,6 +27,8 @@ vi.mock('src/data/subgraph/sdk.generated', async () => {
   }
 })
 
+const chain = FOUNDRY_CHAIN
+
 const addresses = {
   governor: '0xbf9BEA8028699F922c3B2879D9CBec0179Bf7587',
   treasury: '0xC093b895c132Eb1BcEA557b231dbf6cE4c7dB8Eb',
@@ -35,8 +36,6 @@ const addresses = {
   auction: '0x8F1B054500ED7a2B06619CD2E5D70415Bc9d6b8a',
   token: '0x6e13ED8472fBBd384C260538323906fc1eCb0d7B',
 } as DaoContractAddresses
-
-const chain = PUBLIC_ALL_CHAINS.find((x) => x.id == CHAIN_ID.ETHEREUM)!
 
 describe('Use available upgrade hook', () => {
   afterEach(() => {
@@ -78,16 +77,19 @@ describe('Use available upgrade hook', () => {
 
     const { result } = renderHook(() =>
       useAvailableUpgrade({
-        //@ts-ignore
-        governor: undefined,
-        //@ts-ignore
-        treasury: undefined,
-        //@ts-ignore
-        metadata: undefined,
-        //@ts-ignore
-        auction: undefined,
-        //@ts-ignore
-        token: undefined,
+        chain: FOUNDRY_CHAIN,
+        addresses: {
+          //@ts-ignore
+          governor: undefined,
+          //@ts-ignore
+          treasury: undefined,
+          //@ts-ignore
+          metadata: undefined,
+          //@ts-ignore
+          auction: undefined,
+          //@ts-ignore
+          token: undefined,
+        },
       })
     )
 

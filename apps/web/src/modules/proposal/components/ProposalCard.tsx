@@ -34,13 +34,15 @@ export const ProposalCard: React.FC<ProposalCardProps> = ({
   collection,
 }) => {
   const isMounted = useIsMounted()
-  const { query } = useRouter()
+  const router = useRouter()
 
   if (!isMounted) return null
 
   return (
     <Link
-      href={collection ? `/dao/${query.network}/${collection}/vote/${proposalId}` : ''}
+      href={
+        collection ? `/dao/${router?.query.network}/${collection}/vote/${proposalId}` : ''
+      }
       passHref
     >
       <Flex

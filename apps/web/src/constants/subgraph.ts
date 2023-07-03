@@ -9,4 +9,6 @@ export const PUBLIC_SUBGRAPH_URL = {
     'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-optimism-goerli',
   [CHAIN_ID.BASE_GOERLI]:
     'https://api.studio.thegraph.com/query/49279/nouns-builder-base-goerli/version/latest',
+  [CHAIN_ID.FOUNDRY]:
+    'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-mainnet',
 }

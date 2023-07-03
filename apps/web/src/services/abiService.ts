@@ -24,6 +24,7 @@ const CHAIN_API_LOOKUP: Record<CHAIN_ID, string> = {
   [CHAIN_ID.GOERLI]: 'api-goerli.etherscan.io',
   [CHAIN_ID.OPTIMISM_GOERLI]: 'api-goerli-optimistic.etherscan.io',
   [CHAIN_ID.BASE_GOERLI]: 'api-goerli.basescan.org',
+  [CHAIN_ID.FOUNDRY]: '',
 }
 
 const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000'

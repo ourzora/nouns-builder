@@ -12,6 +12,7 @@ export const enum CHAIN_ID {
   GOERLI = 5,
   OPTIMISM_GOERLI = 420,
   BASE_GOERLI = 84531,
+  FOUNDRY = 31337,
 }
 
 export interface Chain extends WagmiChain {
