@@ -39,7 +39,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
         return x.data
       })
   )
-
+  console.log('data', data)
   const { casts } = useMemo(() => {
     if (!data) return {}
     return { casts: data.flatMap((pageData) => pageData.value) }

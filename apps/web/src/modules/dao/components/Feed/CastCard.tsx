@@ -6,7 +6,7 @@ import React, { useMemo } from 'react'
 import useSWR from 'swr'
 
 import { CardSkeleton } from './CardSkeleton'
-import { cardWrapper } from './Feed.css'
+import { cardWrapper, pfpStyles, pfpWrapper } from './Feed.css'
 
 export const CastCard = ({
   text,
@@ -55,27 +55,11 @@ export const CastCard = ({
       <a href={`https://warpcast.com/~/conversations/${hexHash}`} target="_blank">
         <Flex align={'center'} mb={'x4'}>
           <Box mr="x3" borderRadius="round">
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
+            <div className={pfpWrapper}>
               <img
                 alt="profile picture"
                 src={data?.pfp || '/nouns-avatar-circle.png'}
-                style={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  height: '100%',
-                  width: '100%',
-                  transform: 'translate(-50%, -50%)',
-                  objectFit: 'cover',
-                  borderRadius: '50%',
-                }}
+                className={pfpStyles}
               />
             </div>
           </Box>
@@ -94,7 +78,9 @@ export const CastCard = ({
             </Flex>
           </Flex>
         </Flex>
-        <Text wordBreak="break-word">{text}</Text>
+        <Text wordBreak="break-word" style={{ whiteSpace: 'break-spaces' }}>
+          {text}
+        </Text>
       </a>
     </Box>
   )

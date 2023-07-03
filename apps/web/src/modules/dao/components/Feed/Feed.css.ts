@@ -39,3 +39,20 @@ export const loadMoreButton = style({
   maxWidth: '45rem',
   width: '100%',
 })
+
+export const pfpStyles = style({
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  height: '100%',
+  width: '100%',
+  transform: 'translate(-50%, -50%)',
+  objectFit: 'cover',
+  borderRadius: '50%',
+})
+export const pfpWrapper = style({
+  width: '32px',
+  height: '32px',
+  position: 'relative',
+  overflow: 'hidden',
+})
