@@ -28,6 +28,7 @@ export const cardSkeleton = style({
 export const cardWrapper = style({
   width: '100%',
   transition: 'all 0.15s ease-in-out',
+  position: 'relative',
   selectors: {
     '&:hover': {
       backgroundColor: '#fafafa',
@@ -59,4 +60,17 @@ export const pfpWrapper = style({
 export const castText = style({
   wordBreak: 'break-word',
   whiteSpace: 'break-spaces',
+})
+export const cardLink = style({
+  textDecoration: 'none',
+  color: 'inherit',
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
+})
+
+export const inlineLink = style({
+  display: 'inline',
 })

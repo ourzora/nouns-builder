@@ -2,12 +2,18 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import Link from 'next/link'
 import React, { useMemo } from 'react'
 import useSWR from 'swr'
 
 import { CardSkeleton } from './CardSkeleton'
-import { cardLink, cardWrapper, castText, pfpStyles, pfpWrapper } from './Feed.css'
+import {
+  cardLink,
+  cardWrapper,
+  castText,
+  inlineLink,
+  pfpStyles,
+  pfpWrapper,
+} from './Feed.css'
 
 const getProfile = async (fid: number) => {
   const res = await axios.get<{ displayName?: string; pfp?: string; fName?: string }>(
@@ -78,27 +84,38 @@ export const CastCard = ({
 
     for (let i = 0; i < mentions.length; i++) {
       elements.push(
-        <p key={`${mentionsPositions[1]}-${i}-pre`}>
+        <span key={`${mentionsPositions[1]}-${i}-pre`}>
           {decoder.decode(bytes.slice(indexBytes, mentionsPositions[i]))}
-        </p>
+        </span>
       )
       const fName = mentionsData.find((mentionData) => mentionData.fid)?.fName
       elements.push(
-        <Link
+        <a
+          className={inlineLink}
           href={`https://warpcast.com/${fName}`}
           key={`${mentionsPositions[1]}-${fName}`}
         >
           {fName}
-        </Link>
+        </a>
       )
       indexBytes = mentionsPositions[i]
     }
 
     elements.push(
-      <p key="end">{decoder.decode(bytes.slice(indexBytes, bytes.length))},</p>
+      <span key="end">{decoder.decode(bytes.slice(indexBytes, bytes.length))},</span>
     )
 
-    return elements
+    const newElements = elements.map((element) => {
+      if (element.type === 'a') {
+        return React.cloneElement(element, {
+          children: `@${element.props.children}`,
+        })
+      } else {
+        return element
+      }
+    })
+
+    return newElements
   }, [text, mentionsData, mentions, mentionsPositions])
 
   if (error) {
