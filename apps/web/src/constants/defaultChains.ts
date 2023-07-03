@@ -1,4 +1,4 @@
-import { goerli, mainnet, optimismGoerli } from 'wagmi/chains'
+import { baseGoerli, goerli, mainnet, optimismGoerli } from 'wagmi/chains'
 
 import { CHAIN_ID, Chain } from 'src/typings'
 
@@ -13,6 +13,12 @@ const TESTNET_CHAINS: Chain[] = [
     id: CHAIN_ID.OPTIMISM_GOERLI,
     slug: 'op-goerli',
     icon: '/chains/optimism.svg',
+  },
+  {
+    ...baseGoerli,
+    id: CHAIN_ID.BASE_GOERLI,
+    slug: 'base-goerli',
+    icon: '/chains/base.svg',
   },
 ]
 

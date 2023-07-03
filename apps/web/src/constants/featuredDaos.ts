@@ -37,4 +37,21 @@ export const PUBLIC_FEATURED_DAOS = {
       name: 'Test',
     },
   ],
+  [CHAIN_ID.BASE_GOERLI]: [
+    {
+      auctionAddress: '0x03855976Fcb91bF23110E2C425dCfb1BA0635b79',
+      tokenAddress: '0x3b7626182aab7a70d4b2b254c4f19f5f48a7e6d8',
+      name: 'Test base DAO',
+    },
+    {
+      auctionAddress: '0x03855976Fcb91bF23110E2C425dCfb1BA0635b79',
+      tokenAddress: '0x3b7626182aab7a70d4b2b254c4f19f5f48a7e6d8',
+      name: 'Test base DAO',
+    },
+    {
+      auctionAddress: '0x03855976Fcb91bF23110E2C425dCfb1BA0635b79',
+      tokenAddress: '0x3b7626182aab7a70d4b2b254c4f19f5f48a7e6d8',
+      name: 'Test base DAO',
+    },
+  ],
 }

@@ -20,9 +20,10 @@ export type ContractABIResult = {
 }
 
 const CHAIN_API_LOOKUP: Record<CHAIN_ID, string> = {
-  [CHAIN_ID.ETHEREUM]: 'api',
-  [CHAIN_ID.GOERLI]: 'api-goerli',
-  [CHAIN_ID.OPTIMISM_GOERLI]: 'api-goerli-optimistic',
+  [CHAIN_ID.ETHEREUM]: 'api.etherscan.io',
+  [CHAIN_ID.GOERLI]: 'api-goerli.etherscan.io',
+  [CHAIN_ID.OPTIMISM_GOERLI]: 'api-goerli-optimistic.etherscan.io',
+  [CHAIN_ID.BASE_GOERLI]: 'api-goerli.basescan.org',
 }
 
 const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -75,7 +76,7 @@ export const getContractABIByAddress = async (
     }
   } else {
     const etherscan = await axios.get(
-      `https://${CHAIN_API_LOOKUP[chainId]}.etherscan.io/api?module=contract&action=getabi&address=${fetchedAddress}&apikey=${process.env.ETHERSCAN_API_KEY}`
+      `https://${CHAIN_API_LOOKUP[chainId]}/api?module=contract&action=getabi&address=${fetchedAddress}&apikey=${process.env.ETHERSCAN_API_KEY}`
     )
 
     if (etherscan.status !== 200) {

@@ -164,15 +164,9 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     setIsPendingTransaction(true)
     let transaction
     try {
-      console.log('address', {
-        address: PUBLIC_MANAGER_ADDRESS[chain.id],
-        abi: managerAbi,
-        functionName: 'deploy',
-        signer: signer,
-        args: [founderParams, tokenParams, auctionParams, govParams],
-      })
       const config = await prepareWriteContract({
         address: PUBLIC_MANAGER_ADDRESS[chain.id],
+        chainId: chain.id,
         abi: managerAbi,
         functionName: 'deploy',
         signer: signer,

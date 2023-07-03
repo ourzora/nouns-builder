@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Manager
-    network: optimism-goerli
+    network: base-testnet
     source:
       abi: Manager
-      address: "0x5f9c1e7E31875beAa6ba6B0AB573a4AbEcC95d67"
-      startBlock: 11032400
+      address: "0x550c326d688fD51ae65AC6A2d48749E631023A03"
+      startBlock: 6585050
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -32,7 +32,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: Token
-    network: optimism-goerli
+    network: base-testnet
     source:
       abi: Token
     mapping:
@@ -54,7 +54,7 @@ templates:
       file: ./src/token.ts
   - kind: ethereum
     name: Governor
-    network: optimism-goerli
+    network: base-testnet
     source:
       abi: Governor
     mapping:
@@ -85,7 +85,7 @@ templates:
       file: ./src/governor.ts
   - kind: ethereum
     name: MetadataRenderer
-    network: optimism-goerli
+    network: base-testnet
     source:
       abi: MetadataRenderer
     mapping:
@@ -107,7 +107,7 @@ templates:
       file: ./src/metadata.ts
   - kind: ethereum
     name: Auction
-    network: optimism-goerli
+    network: base-testnet
     source:
       abi: Auction
     mapping:

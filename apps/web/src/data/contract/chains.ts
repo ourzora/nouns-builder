@@ -1,17 +1,32 @@
 import { configureChains } from 'wagmi'
-import { goerli, mainnet, optimismGoerli } from 'wagmi/chains'
+import { baseGoerli, goerli, mainnet, optimismGoerli } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+
+import { RPC_URL } from 'src/constants/rpc'
+import { CHAIN_ID } from 'src/typings'
 
 const MAINNET_CHAINS = [mainnet]
 
-const TESTNET_CHAINS = [goerli, optimismGoerli]
+const TESTNET_CHAINS = [goerli, optimismGoerli, baseGoerli]
 
 const AVAILIBLE_CHAINS =
   process.env.NEXT_PUBLIC_NETWORK_TYPE === 'mainnet' ? MAINNET_CHAINS : TESTNET_CHAINS
 
 const { chains, provider } = configureChains(
   [...AVAILIBLE_CHAINS],
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string })]
+  [
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string,
+      stallTimeout: 1000,
+    }),
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: RPC_URL[chain.id as CHAIN_ID],
+      }),
+      stallTimeout: 1000,
+    }),
+  ]
 )
 
 export { chains, provider }
