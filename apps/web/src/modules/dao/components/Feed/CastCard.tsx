@@ -50,14 +50,9 @@ export const CastCard = ({
       borderStyle={'solid'}
       borderWidth={'normal'}
       borderColor={'border'}
-      maxW={'x32'}
       mb={'x6'}
     >
-      <a
-        href={`https://warpcast.com/~/conversations/${hexHash}`}
-        target="_blank"
-        // className={cardLink}
-      >
+      <a href={`https://warpcast.com/~/conversations/${hexHash}`} target="_blank">
         <Flex align={'center'} mb={'x4'}>
           <Box mr="x3" borderRadius="round">
             <div
