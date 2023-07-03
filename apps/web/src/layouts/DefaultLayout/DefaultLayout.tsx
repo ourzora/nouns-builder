@@ -9,7 +9,9 @@ export function DefaultLayout({ children }: { children: ReactNode }) {
   return (
     <Box>
       <Nav />
-      <Box px={'x4'}>{children}</Box>
+      <Box px={'x4'} pt="x16">
+        {children}
+      </Box>
       <Footer />
     </Box>
   )
