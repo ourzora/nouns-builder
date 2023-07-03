@@ -73,4 +73,8 @@ export const cardLink = style({
 
 export const inlineLink = style({
   display: 'inline',
+  marginRight: '0 !important',
+  ':after': {
+    content: 'none !important',
+  },
 })

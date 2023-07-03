@@ -94,6 +94,7 @@ export const CastCard = ({
           className={inlineLink}
           href={`https://warpcast.com/${fName}`}
           key={`${mentionsPositions[1]}-${fName}`}
+          target="_blank"
         >
           {fName}
         </a>
@@ -102,7 +103,7 @@ export const CastCard = ({
     }
 
     elements.push(
-      <span key="end">{decoder.decode(bytes.slice(indexBytes, bytes.length))},</span>
+      <span key="end">{decoder.decode(bytes.slice(indexBytes, bytes.length))}</span>
     )
 
     const newElements = elements.map((element) => {
@@ -157,7 +158,13 @@ export const CastCard = ({
         </Box>
         <Flex direction={{ '@initial': 'column', '@768': 'row' }}>
           <Text mr={'x1'} fontWeight={'display'}>
-            {data?.displayName || '@' + data?.fName || 'Name Not Found'}
+            <a
+              href={`https://warpcast.com/${data?.fName || ''}`}
+              className={inlineLink}
+              target="_blank"
+            >
+              {data?.displayName || '@' + data?.fName || 'Name Not Found'}
+            </a>
           </Text>
           <Flex>
             <Text color="text3" mr={'x1'}>
