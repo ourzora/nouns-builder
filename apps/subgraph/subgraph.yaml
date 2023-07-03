@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Manager
-    network: base-testnet
+    network: goerli
     source:
       abi: Manager
-      address: "0x550c326d688fD51ae65AC6A2d48749E631023A03"
-      startBlock: 6585050
+      address: '0x0E9F3382Cf2508E3bc83248B5b4707FbA86D7Ee0'
+      startBlock: 7810600
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -32,7 +32,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: Token
-    network: base-testnet
+    network: goerli
     source:
       abi: Token
     mapping:
@@ -54,7 +54,7 @@ templates:
       file: ./src/token.ts
   - kind: ethereum
     name: Governor
-    network: base-testnet
+    network: goerli
     source:
       abi: Governor
     mapping:
@@ -85,7 +85,7 @@ templates:
       file: ./src/governor.ts
   - kind: ethereum
     name: MetadataRenderer
-    network: base-testnet
+    network: goerli
     source:
       abi: MetadataRenderer
     mapping:
@@ -107,7 +107,7 @@ templates:
       file: ./src/metadata.ts
   - kind: ethereum
     name: Auction
-    network: base-testnet
+    network: goerli
     source:
       abi: Auction
     mapping:
