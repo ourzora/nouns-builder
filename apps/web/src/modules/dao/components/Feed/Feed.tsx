@@ -15,11 +15,19 @@ type FeedTabProps = {
   collectionAddress: string
 }
 
+export type CasterProfile = {
+  displayName?: string
+  pfp?: string
+  fName?: string
+}
+
 type AddMsgWithUnix = Message & {
   data: CastAddData
   unixTime: number
   hexHash: string
   signatureScheme: SignatureScheme.ED25519
+  profile: CasterProfile
+  mentionsfNames: string[]
 }
 type PageData = { value: AddMsgWithUnix[]; nextPageToken?: string }
 
@@ -108,6 +116,8 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
           hexHash={msg.hexHash}
           mentions={msg?.data?.castAddBody?.mentions}
           mentionsPositions={msg?.data?.castAddBody?.mentionsPositions}
+          profile={msg.profile}
+          mentionsfNames={msg.mentionsfNames}
         />
       ))}
       <Button onClick={loadMore} loading={isValidating} className={loadMoreButton}>

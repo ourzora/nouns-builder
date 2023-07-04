@@ -2,22 +2,49 @@ import { UserDataType } from '@farcaster/hub-nodejs'
 
 import { farcasterClient } from '../client'
 
+const logFetchError = (dataType: string, fid: number, errorMsg: string) => {
+  console.error(
+    `${dataType} Not Found 
+       Error: ${errorMsg}
+       fid: ${fid}
+      `
+  )
+}
+
+export const getfName = async (fid: number) => {
+  const client = farcasterClient()
+
+  const fName = await client.getUserData({ fid, userDataType: UserDataType.FNAME })
+  client.close()
+  if (fName.isErr()) logFetchError('Farcaster Name', fid, fName.error.message)
+  return {
+    fName: fName.isOk() ? fName.value.data?.userDataBody?.value : undefined,
+  }
+}
+
 export const getFarcasterProfile = async (fid: number) => {
   const client = farcasterClient()
 
-  const pfpRes = await client.getUserData({ fid, userDataType: UserDataType.PFP })
-  const nameRes = await client.getUserData({ fid, userDataType: UserDataType.DISPLAY })
-  const fName = await client.getUserData({ fid, userDataType: UserDataType.FNAME })
+  const [pfpRes, nameRes, fName] = await Promise.all([
+    client.getUserData({ fid, userDataType: UserDataType.PFP }),
+    client.getUserData({ fid, userDataType: UserDataType.DISPLAY }),
+    client.getUserData({ fid, userDataType: UserDataType.FNAME }),
+  ])
 
   client.close()
 
-  if (nameRes.isErr()) throw new Error(nameRes.error.message)
-  if (pfpRes.isErr()) throw new Error(pfpRes.error.message)
-  if (fName.isErr()) throw new Error(fName.error.message)
+  // Decided to not throw errors here as that would block either the
+  // entire feed or the entire profile from loading. Instead, I'll
+  // try to log the error with as many details as possible
 
+  if (nameRes.isErr()) logFetchError('Display Name', fid, nameRes.error.message)
+  if (pfpRes.isErr()) logFetchError('Profile Picture', fid, pfpRes.error.message)
+  if (fName.isErr()) logFetchError('Farcaster Name', fid, fName.error.message)
+
+  // Neverthrow typing didn't allow for optional chaining checks. Need to use isOk() instead.
   return {
-    displayName: nameRes.value.data?.userDataBody?.value as string | undefined,
-    pfp: pfpRes.value.data?.userDataBody?.value as string | undefined,
-    fName: fName.value.data?.userDataBody?.value as string | undefined,
+    displayName: nameRes.isOk() ? nameRes.value.data?.userDataBody?.value : undefined,
+    pfp: pfpRes.isOk() ? pfpRes.value.data?.userDataBody?.value : undefined,
+    fName: fName.isOk() ? fName.value.data?.userDataBody?.value : undefined,
   }
 }

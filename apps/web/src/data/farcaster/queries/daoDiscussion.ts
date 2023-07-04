@@ -1,9 +1,23 @@
 import { hexStringToBytes, isCastAddMessage } from '@farcaster/hub-nodejs'
 
 import { farcasterClient } from '../client'
+import { getFarcasterProfile, getfName } from './farcasterProfile.ts'
 
 const createChannelString = (collectionAddress: string, chainId: string) => {
   return `chain://eip155:${chainId}/erc721:${collectionAddress}`
+}
+
+const handleMentions = async (fIDs: number[], mentionsPositions: number[]) => {
+  if (!fIDs || !mentionsPositions) return []
+
+  const res = await Promise.all(
+    fIDs.map(async (fid) => {
+      const res = await getfName(fid)
+      return res?.fName || null
+    })
+  )
+
+  return res
 }
 
 export const getDAOfeed = async (feedId: string) => {
@@ -32,8 +46,29 @@ export const getDAOfeed = async (feedId: string) => {
   // Coerce Messages into Casts, should not actually filter out any messages
   const casts = res.value.messages.filter(isCastAddMessage)
 
-  return {
-    data: casts.filter((msg) => !msg.data.castAddBody.parentCastId),
-    nextPageToken: res.value.nextPageToken,
+  try {
+    const castsWithProfiles = await Promise.all(
+      casts.map(async (cast) => {
+        const [profile, mentionsfNames] = await Promise.all([
+          getFarcasterProfile(cast.data.fid),
+          handleMentions(
+            cast.data.castAddBody.mentions,
+            cast.data.castAddBody.mentionsPositions
+          ),
+        ])
+        return {
+          ...cast,
+          profile,
+          mentionsfNames,
+        }
+      })
+    )
+    return {
+      data: castsWithProfiles.filter((msg) => !msg.data.castAddBody.parentCastId),
+      nextPageToken: res.value.nextPageToken,
+    }
+  } catch (error) {
+    console.error('error', error)
+    throw new Error(error as any)
   }
 }

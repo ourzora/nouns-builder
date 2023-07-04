@@ -1,49 +1,19 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
-import axios from 'axios'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import React, { useMemo } from 'react'
-import useSWR from 'swr'
 
-import { CardSkeleton } from './CardSkeleton'
-import {
-  cardLink,
-  cardWrapper,
-  castText,
-  inlineLink,
-  pfpStyles,
-  pfpWrapper,
-} from './Feed.css'
-
-const getProfile = async (fid: number) => {
-  const res = await axios.get<{ displayName?: string; pfp?: string; fName?: string }>(
-    `/api/feed/userData?fid=${fid}`
-  )
-  return res.data
-}
-
-const handleMentions = async (mentions: number[], mentionsPositions: number[]) => {
-  if (!mentions || !mentionsPositions) return []
-
-  const res = await Promise.all(
-    mentions.map(async (mention) => {
-      const profile = await getProfile(mention)
-      return {
-        fName: profile.fName,
-        fid: mention,
-      }
-    })
-  )
-  return res
-}
+import { CasterProfile } from './Feed'
+import { cardLink, cardWrapper, castText, pfpStyles, pfpWrapper } from './Feed.css'
 
 export const CastCard = ({
   text,
-  fid,
   timestamp,
   hexHash,
   mentions,
   mentionsPositions,
+  profile,
+  mentionsfNames,
 }: {
   text: string
   fid: number
@@ -51,20 +21,9 @@ export const CastCard = ({
   hexHash: string
   mentions: number[]
   mentionsPositions: number[]
+  profile: CasterProfile
+  mentionsfNames: string[]
 }) => {
-  const { data, error, isValidating } = useSWR(fid ? [fid] : undefined, () =>
-    getProfile(fid)
-  )
-
-  const {
-    data: mentionsData,
-    error: mentionsError,
-    isValidating: mentionsIsValidating,
-  } = useSWR(
-    mentions && mentionsPositions ? [mentions, mentionsPositions] : undefined,
-    () => handleMentions(mentions, mentionsPositions)
-  )
-
   const time = useMemo(() => {
     dayjs.extend(relativeTime)
     const date = dayjs.unix(timestamp / 1000).fromNow()
@@ -72,7 +31,7 @@ export const CastCard = ({
   }, [timestamp])
 
   const textWithMentions = useMemo(() => {
-    if (!mentionsData || !text) return
+    if (!mentionsfNames || !text) return
     if (!mentions.length) return text
 
     const encoder = new TextEncoder()
@@ -88,10 +47,9 @@ export const CastCard = ({
           {decoder.decode(bytes.slice(indexBytes, mentionsPositions[i]))}
         </span>
       )
-      const fName = mentionsData.find((mentionData) => mentionData.fid)?.fName
+      const fName = mentionsfNames[i]
       elements.push(
         <a
-          className={inlineLink}
           href={`https://warpcast.com/${fName}`}
           key={`${mentionsPositions[1]}-${fName}`}
           target="_blank"
@@ -117,18 +75,7 @@ export const CastCard = ({
     })
 
     return newElements
-  }, [text, mentionsData, mentions, mentionsPositions])
-
-  if (error) {
-    // Design decision: how would we like to display a profile load fail?
-    return null
-  }
-  if (isValidating && !data) {
-    return <CardSkeleton />
-  }
-  if (!textWithMentions) {
-    return <CardSkeleton />
-  }
+  }, [text, mentionsfNames, mentions, mentionsPositions])
 
   return (
     <Box
@@ -151,24 +98,20 @@ export const CastCard = ({
           <div className={pfpWrapper}>
             <img
               alt="profile picture"
-              src={data?.pfp || '/nouns-avatar-circle.png'}
+              src={profile?.pfp || '/nouns-avatar-circle.png'}
               className={pfpStyles}
             />
           </div>
         </Box>
         <Flex direction={{ '@initial': 'column', '@768': 'row' }}>
           <Text mr={'x1'} fontWeight={'display'}>
-            <a
-              href={`https://warpcast.com/${data?.fName || ''}`}
-              className={inlineLink}
-              target="_blank"
-            >
-              {data?.displayName || '@' + data?.fName || 'Name Not Found'}
+            <a href={`https://warpcast.com/${profile?.fName || ''}`} target="_blank">
+              {profile?.displayName || '@' + profile?.fName || 'Name Not Found'}
             </a>
           </Text>
           <Flex>
             <Text color="text3" mr={'x1'}>
-              @{data?.fName || 'fName Not Found'}
+              @{profile?.fName || 'fName Not Found'}
             </Text>
             <Text color="text3" mr={'x1'}>
               -
