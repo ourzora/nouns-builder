@@ -8,6 +8,7 @@ import { useLayoutStore } from 'src/stores'
 
 import { CardSkeleton } from './CardSkeleton'
 import { CastCard } from './CastCard'
+import { DisplayPanel } from './DisplayPanel'
 import { loadMoreButton } from './Feed.css'
 import { FeedTab } from './FeedTab'
 
@@ -67,10 +68,7 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
           height="100%"
           direction="column"
         >
-          <Text fontSize={20} fontWeight={'heading'} mb={'x3'} color="negative">
-            Error
-          </Text>
-          <Text color="negative">{error?.message || 'Unknown Error'}</Text>
+          <DisplayPanel title="Error" description={error?.message || 'Unknown Error'} />
         </Flex>
       </FeedTab>
     )

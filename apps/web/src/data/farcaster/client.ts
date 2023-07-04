@@ -5,7 +5,8 @@ export const PURPLE_COLLECTION = '0xa45662638e9f3bbb7a6fecb4b17853b7ba0f3a60'
 
 export const farcasterClient = () => {
   const client = getSSLHubRpcClient(
-    process.env.FARCASTER_HUB || 'testnet1.farcaster.xyz:2283'
+    'er'
+    // process.env.FARCASTER_HUB || 'testnet1.farcaster.xyz:2283'
   )
 
   return client
