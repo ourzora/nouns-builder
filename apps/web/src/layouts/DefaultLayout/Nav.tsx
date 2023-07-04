@@ -1,10 +1,11 @@
-import { Box, Flex, Label, atoms } from '@zoralabs/zord'
+import { Box, Flex, Label, Stack, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
 import { useScrollDirection } from 'src/hooks/useScrollDirection'
 
 import NogglesLogo from '../assets/builder-framed.svg'
+import TestnetLogo from '../assets/testnet.svg'
 import { NavContainer, NavWrapper, navMenuItem } from './Nav.styles.css'
 import { NavMenu } from './NavMenu'
 
@@ -24,10 +25,19 @@ export const Nav = () => {
       <Flex align={'center'} className={NavWrapper} justify={'space-between'}>
         <Flex align={'center'}>
           <Link href={'/'} passHref>
-            <NogglesLogo
-              fill={'black'}
-              className={atoms({ width: 'x23', cursor: 'pointer' })}
-            />
+            <Stack>
+              <NogglesLogo
+                fill={'black'}
+                className={atoms({ width: 'x23', cursor: 'pointer' })}
+              />
+              <TestnetLogo
+                className={atoms({
+                  width: 'x23',
+                  cursor: 'pointer',
+                  mt: 'x1',
+                })}
+              />
+            </Stack>
           </Link>
           <Flex display={{ '@initial': 'none', '@768': 'flex' }} ml="x10" gap={'x4'}>
             <Link href={'/about'}>

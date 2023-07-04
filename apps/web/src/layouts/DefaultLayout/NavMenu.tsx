@@ -136,6 +136,7 @@ export const NavMenu = () => {
               <Flex
                 borderColor="border"
                 borderStyle="solid"
+                backgroundColor="background1"
                 borderRadius="curved"
                 cursor={'pointer'}
                 align={'center'}

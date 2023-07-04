@@ -8,7 +8,7 @@ export function ProfileLayout({ children }: { children: ReactNode }) {
   return (
     <Box>
       <Nav />
-      <Box px={'x4'} pt="x16">
+      <Box px={'x4'} pt={{ '@initial': 'x20', '@480': 'x16' }}>
         {children}
       </Box>
     </Box>
