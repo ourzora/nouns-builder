@@ -38,43 +38,21 @@ export const CastCard = ({
     const bytes = encoder.encode(text)
 
     const decoder = new TextDecoder()
-    let elements = []
+    let newText = ''
     let indexBytes = 0
 
     for (let i = 0; i < mentions.length; i++) {
-      elements.push(
-        <span key={`${mentionsPositions[1]}-${i}-pre`}>
-          {decoder.decode(bytes.slice(indexBytes, mentionsPositions[i]))}
-        </span>
-      )
+      newText += decoder.decode(bytes.slice(indexBytes, mentionsPositions[i]))
+
       const fName = mentionsfNames[i]
-      elements.push(
-        <a
-          href={`https://warpcast.com/${fName}`}
-          key={`${mentionsPositions[1]}-${fName}`}
-          target="_blank"
-        >
-          {fName}
-        </a>
-      )
+
+      newText += '@' + fName
+
       indexBytes = mentionsPositions[i]
     }
+    newText += decoder.decode(bytes.slice(indexBytes, bytes.length))
 
-    elements.push(
-      <span key="end">{decoder.decode(bytes.slice(indexBytes, bytes.length))}</span>
-    )
-
-    const newElements = elements.map((element) => {
-      if (element.type === 'a') {
-        return React.cloneElement(element, {
-          children: `@${element.props.children}`,
-        })
-      } else {
-        return element
-      }
-    })
-
-    return newElements
+    return newText
   }, [text, mentionsfNames, mentions, mentionsPositions])
 
   return (
@@ -105,9 +83,7 @@ export const CastCard = ({
         </Box>
         <Flex direction={{ '@initial': 'column', '@768': 'row' }}>
           <Text mr={'x1'} fontWeight={'display'}>
-            <a href={`https://warpcast.com/${profile?.fName || ''}`} target="_blank">
-              {profile?.displayName || '@' + profile?.fName || 'Name Not Found'}
-            </a>
+            {profile?.displayName || '@' + profile?.fName || 'Name Not Found'}
           </Text>
           <Flex>
             <Text color="text3" mr={'x1'}>
