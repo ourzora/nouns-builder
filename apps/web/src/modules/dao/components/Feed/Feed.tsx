@@ -83,6 +83,25 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
       </FeedTab>
     )
   }
+  // this shouldn't occur. Keeping this here for next update.
+  if (!casts?.length) {
+    return (
+      <FeedTab isMobile={isMobile}>
+        <Flex
+          justify="center"
+          align="center"
+          width="100%"
+          height="100%"
+          direction="column"
+        >
+          <DisplayPanel
+            title="No casts found"
+            description="A channel feed has not been created for this DAO."
+          />
+        </Flex>
+      </FeedTab>
+    )
+  }
 
   return (
     <FeedTab isMobile={isMobile}>
