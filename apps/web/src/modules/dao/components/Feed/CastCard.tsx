@@ -111,7 +111,7 @@ export const CastCard = ({
           </Text>
           <Flex>
             <Text color="text3" mr={'x1'}>
-              @{profile?.fName || 'fName Not Found'}
+              @{profile?.fName || 'NotFound'}
             </Text>
             <Text color="text3" mr={'x1'}>
               -

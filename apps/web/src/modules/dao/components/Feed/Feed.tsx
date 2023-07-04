@@ -1,5 +1,5 @@
 import { CastAddData, Message, SignatureScheme } from '@farcaster/hub-nodejs'
-import { Button, Flex, Text } from '@zoralabs/zord'
+import { Button, Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import React, { useMemo } from 'react'
 import useSWRInfinite from 'swr/infinite'
@@ -80,25 +80,6 @@ const Feed = ({ collectionAddress }: FeedTabProps) => {
         <CardSkeleton />
         <CardSkeleton />
         <CardSkeleton />
-      </FeedTab>
-    )
-  }
-
-  if (!casts?.length) {
-    return (
-      <FeedTab isMobile={isMobile}>
-        <Flex
-          justify="center"
-          align="center"
-          width="100%"
-          height="100%"
-          direction="column"
-        >
-          <Text fontSize={20} fontWeight={'heading'} mb={'x3'}>
-            No casts found
-          </Text>
-          <Text>A channel feed has not been created for this DAO.</Text>
-        </Flex>
       </FeedTab>
     )
   }
