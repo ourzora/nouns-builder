@@ -10,6 +10,7 @@ import { Meta } from 'src/components/Meta'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
+import { CAST_ENABLED } from 'src/constants/farcasterEnabled'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
@@ -89,14 +90,12 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       component: [<FeedTab key="feed" collectionAddress={collection} />],
     }
 
-    const publicSections = [
-      aboutSection,
-      daoFeed,
-      proposalsSection,
-      smartContractsSection,
-    ]
+    const publicSections = [aboutSection, proposalsSection, smartContractsSection]
 
-    return hasThreshold ? [...publicSections, adminSection] : publicSections
+    const baseSections = hasThreshold ? [...publicSections, adminSection] : publicSections
+    return CAST_ENABLED.includes(collection)
+      ? [...baseSections.slice(0, 1), daoFeed, ...baseSections.slice(1)]
+      : publicSections
   }, [hasThreshold, collection])
 
   const description = token?.description ?? ''
