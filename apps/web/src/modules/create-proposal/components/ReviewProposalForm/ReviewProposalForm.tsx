@@ -22,7 +22,7 @@ import { MarkdownEditor } from './MarkdownEditor'
 import { Transactions } from './Transactions'
 import { ERROR_CODE, FormValues, validationSchema } from './fields'
 
-const CHAINS_TO_SIMULATE = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI]
+const CHAINS_TO_SIMULATE = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI, CHAIN_ID.OPTIMISM_GOERLI]
 
 interface ReviewProposalProps {
   disabled: boolean
