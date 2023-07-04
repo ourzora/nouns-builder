@@ -20,8 +20,7 @@ const pulse = keyframes({
 
 export const cardSkeleton = style({
   animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-  maxWidth: '45rem',
-  height: '8.5rem',
+  height: '10rem',
   marginBottom: '1.6rem',
 })
 
@@ -37,7 +36,6 @@ export const cardWrapper = style({
   },
 })
 export const loadMoreButton = style({
-  maxWidth: '45rem',
   width: '100%',
 })
 
