@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import React from 'react'
 
+import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
+
 interface MetaProps {
   title: string
   slug: string
@@ -10,8 +12,6 @@ interface MetaProps {
 }
 
 export const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description }) => {
-  const isTestnet = process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? true : false
-
   return (
     <Head>
       <title>{`Nouns Builder | ${title}`}</title>
@@ -29,7 +29,7 @@ export const Meta: React.FC<MetaProps> = ({ title, type, slug, image, descriptio
           'Unlock the possibilities of collective creation. Start with a vision. Start a DAO. All onchain.'
         }
       />
-      {isTestnet && <meta name="robots" content="noindex" />}
+      {PUBLIC_IS_TESTNET && <meta name="robots" content="noindex" />}
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@nounsbuilder" />

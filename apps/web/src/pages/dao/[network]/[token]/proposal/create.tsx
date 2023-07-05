@@ -131,7 +131,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res, params }) =>
       notFound: true,
     }
 
-  const addresses = await getDAOAddresses(chain, collection)
+  const addresses = await getDAOAddresses(chain.id, collection)
 
   if (!addresses)
     return {

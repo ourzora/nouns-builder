@@ -77,8 +77,8 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
       const { wait } = await writeContract(config)
       await wait()
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, chain, addresses.auction, tokenId], () =>
-        getBids(chain, addresses.auction as string, tokenId)
+      await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.auction, tokenId], () =>
+        getBids(chain.id, addresses.auction as string, tokenId)
       )
     } catch (error) {
       console.error(error)

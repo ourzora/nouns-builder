@@ -10,12 +10,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { page, orderBy, network } = req.query
   const pageInt = parseInt(page as string, 10)
 
-  const chainRes = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
+  const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
 
-  if (!chainRes) return res.status(404).end()
+  if (!chain) return res.status(404).end()
 
   const exploreRes = await exploreDaosRequest(
-    chainRes,
+    chain.id,
     (pageInt + 1) * limit,
     orderBy as Auction_OrderBy
   )

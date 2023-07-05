@@ -34,7 +34,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       axios
         .get<MyDaosResponse>(`${baseUrl}/api/profile/${network}/${address}/daos`)
         .then((x) => x.data),
-      tokensQuery(chain, address, page ? parseInt(page as string) : undefined),
+      tokensQuery(chain.id, address, page ? parseInt(page as string) : undefined),
     ])
 
     if (daos.length < 1)

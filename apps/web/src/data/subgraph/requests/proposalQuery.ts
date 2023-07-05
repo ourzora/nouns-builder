@@ -9,7 +9,7 @@ import {
   ProposalFragment,
   ProposalVoteFragment as ProposalVote,
 } from 'src/data/subgraph/sdk.generated'
-import { BytesType, Chain } from 'src/typings'
+import { BytesType, CHAIN_ID } from 'src/typings'
 
 export interface Proposal
   extends Omit<ProposalFragment, 'executableFrom' | 'expiresAt' | 'calldatas'> {
@@ -21,11 +21,11 @@ export interface Proposal
 }
 
 export const getProposal = async (
-  chain: Chain,
+  chainId: CHAIN_ID,
   proposalId: string
 ): Promise<Proposal | undefined> => {
   try {
-    const data = await SDK.connect(chain.id).proposal({
+    const data = await SDK.connect(chainId).proposal({
       proposalId,
     })
 
@@ -39,7 +39,7 @@ export const getProposal = async (
       ...proposal,
       calldatas: calldatas ? calldatas.split(':') : [],
       state: await getProposalState(
-        chain,
+        chainId,
         proposal.dao.governorAddress,
         proposalId as BytesType
       ),

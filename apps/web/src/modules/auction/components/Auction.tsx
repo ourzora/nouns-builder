@@ -58,8 +58,8 @@ export const Auction: React.FC<AuctionControllerProps> = ({
   })
 
   const { data: bids } = useSWR(
-    [SWR_KEYS.AUCTION_BIDS, chain, auctionAddress, token.id],
-    () => getBids(chain, auctionAddress, token.id)
+    [SWR_KEYS.AUCTION_BIDS, chain.id, auctionAddress, token.id],
+    () => getBids(chain.id, auctionAddress, token.id)
   )
 
   return (

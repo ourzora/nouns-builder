@@ -13,21 +13,21 @@ export const ContractButton = ({
   handleClick,
   ...rest
 }: ContractButtonProps) => {
-  const { address } = useAccount()
-  const { chain: wagmiChain } = useNetwork()
-  const chain = useChainStore((x) => x.chain)
+  const { address: userAddress } = useAccount()
+  const { chain: userChain } = useNetwork()
+  const appChain = useChainStore((x) => x.chain)
 
   const { openConnectModal } = useConnectModal()
   const { switchNetwork } = useSwitchNetwork()
 
-  const handleSwitchNetwork = () => switchNetwork?.(chain.id)
+  const handleSwitchNetwork = () => switchNetwork?.(appChain.id)
 
   return (
     <Button
       onClick={
-        address == null
+        userAddress === null
           ? openConnectModal
-          : wagmiChain?.id != chain.id
+          : userChain?.id != appChain.id
           ? handleSwitchNetwork
           : handleClick
       }

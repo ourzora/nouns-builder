@@ -36,10 +36,12 @@ export const ReplaceArtwork = () => {
   const contractOrderedLayers = [...orderedLayers].reverse() // traits in the contract are reversed
 
   const { data } = useSWR(
-    addresses.metadata ? [SWR_KEYS.ARTWORK_PROPERTY_ITEMS_COUNT, chain] : undefined,
+    addresses.metadata
+      ? [SWR_KEYS.ARTWORK_PROPERTY_ITEMS_COUNT, chain.id, addresses.metadata]
+      : undefined,
     () => {
       if (!addresses.metadata) return
-      return getPropertyItemsCount(chain, addresses?.metadata)
+      return getPropertyItemsCount(chain.id, addresses?.metadata)
     }
   )
 

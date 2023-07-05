@@ -26,7 +26,7 @@ const GetStarted = () => {
   return (
     <Button
       onClick={
-        address == null
+        address === null
           ? openConnectModal
           : wagmiChain?.id != chain.id
           ? handleSwitchNetwork

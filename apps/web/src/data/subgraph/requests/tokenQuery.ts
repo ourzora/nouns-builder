@@ -3,7 +3,7 @@ import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
 
 import { SDK } from 'src/data/subgraph/client'
-import { Chain } from 'src/typings'
+import { CHAIN_ID } from 'src/typings'
 
 export interface Token {
   id: string
@@ -20,13 +20,13 @@ export interface TokenWinner {
 }
 
 export const tokenQuery = async (
-  chain: Chain,
+  chainId: CHAIN_ID,
   address: string,
   tokenId: string
 ): Promise<Token | undefined> => {
   if (!address) return
 
-  const data = await SDK.connect(chain.id).token({
+  const data = await SDK.connect(chainId).token({
     id: `${address.toLowerCase()}:${tokenId}`,
   })
 
@@ -52,11 +52,11 @@ export const tokenQuery = async (
 }
 
 export const tokenWinnerQuery = async (
-  chain: Chain,
+  chainId: CHAIN_ID,
   address: string,
   tokenId: string
 ): Promise<TokenWinner> => {
-  const data = await SDK.connect(chain.id).tokenWinner({
+  const data = await SDK.connect(chainId).tokenWinner({
     id: `${address.toLowerCase()}:${tokenId}`,
   })
 

@@ -77,7 +77,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
   }
 
   const onEnd = () => {
-    mutate([SWR_KEYS.PROPOSAL, chain, proposalId], getProposal(chain, proposalId))
+    mutate([SWR_KEYS.PROPOSAL, chain.id, proposalId], getProposal(chain.id, proposalId))
   }
 
   const {

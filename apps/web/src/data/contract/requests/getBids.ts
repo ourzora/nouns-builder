@@ -2,7 +2,7 @@ import { getContract } from '@wagmi/core'
 import { ethers } from 'ethers'
 
 import { auctionAbi } from 'src/data/contract/abis'
-import { Chain } from 'src/typings'
+import { CHAIN_ID } from 'src/typings'
 
 import { getProvider } from '../../../utils/provider'
 
@@ -14,10 +14,10 @@ export interface Bid {
 }
 
 const readAuctionBidEvents = async (
-  chain: Chain,
+  chainId: CHAIN_ID,
   auctionAddress: string
 ): Promise<Bid[]> => {
-  const provider = getProvider(chain.id)
+  const provider = getProvider(chainId)
   const contract = getContract({
     abi: auctionAbi,
     address: auctionAddress,
@@ -39,12 +39,12 @@ const readAuctionBidEvents = async (
 }
 
 async function getBids(
-  chain: Chain,
+  chainId: CHAIN_ID,
   auction: string,
   tokenId: string | number
 ): Promise<Bid[]> {
   try {
-    const events = await readAuctionBidEvents(chain, auction)
+    const events = await readAuctionBidEvents(chainId, auction)
 
     return events
       ?.filter((event) => event.id === Number(tokenId))

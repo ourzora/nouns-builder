@@ -10,12 +10,12 @@ import {
   tokenQuery,
   tokenWinnerQuery,
 } from 'src/data/subgraph/requests/tokenQuery'
-import { AddressType, Chain } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 export interface TokenWithWinner extends Token, TokenWinner {}
 
 const readTokenContractData = async (
-  chain: Chain,
+  chainId: CHAIN_ID,
   tokenAddress: AddressType,
   id: string
 ): Promise<
@@ -31,7 +31,7 @@ const readTokenContractData = async (
     address: tokenAddress,
     functionName: 'tokenURI',
     args: [BigNumber.from(id)],
-    chainId: chain.id,
+    chainId,
   })
 
   const decodeToUintArr = base64.decode(result?.substring(29, result.length) as string) //remove the url info from base64 encoding
@@ -55,7 +55,7 @@ const logError = async (e: unknown) => {
 }
 
 const getToken = async (
-  chain: Chain,
+  chainId: CHAIN_ID,
   tokenAddress: AddressType,
   id: string
 ): Promise<TokenWithWinner | undefined> => {
@@ -63,8 +63,8 @@ const getToken = async (
 
   try {
     const [token, tokenWinner] = await Promise.all([
-      await tokenQuery(chain, tokenAddress, id),
-      await tokenWinnerQuery(chain, tokenAddress, id),
+      await tokenQuery(chainId, tokenAddress, id),
+      await tokenWinnerQuery(chainId, tokenAddress, id),
     ])
 
     tokenData = {
@@ -80,7 +80,7 @@ const getToken = async (
     // fallback contract data, i.e. for when the data returned from the zora API has not
     // caught up to the latest token data
     if (!tokenData?.name || !tokenData?.image || !tokenData.description) {
-      const tokenContractRes = await readTokenContractData(chain, tokenAddress, id)
+      const tokenContractRes = await readTokenContractData(chainId, tokenAddress, id)
       if (tokenContractRes) {
         return {
           ...tokenData,

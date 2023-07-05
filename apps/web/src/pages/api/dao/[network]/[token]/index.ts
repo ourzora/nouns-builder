@@ -26,10 +26,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(404).end()
     }
 
-    const addresses = await getDAOAddresses(chain, collection)
+    const addresses = await getDAOAddresses(chain.id, collection)
 
     const daoOgMetadata = await getDaoOgMetadata(
-      chain,
+      chain.id,
       collection,
       addresses?.metadata as string,
       addresses?.treasury as string

@@ -24,9 +24,9 @@ export type DaoProps = AuctionFragment['dao']
 
 const HomePage: NextPageWithLayout = () => {
   const chain = useChainStore((x) => x.chain)
-  const { data: featuredDaos } = useSWR([SWR_KEYS.FEATURED, chain], async () => {
+  const { data: featuredDaos } = useSWR([SWR_KEYS.FEATURED, chain.id], async () => {
     return process.env.NEXT_PUBLIC_NETWORK_TYPE === 'mainnet'
-      ? await highestBidsRequest(chain)
+      ? await highestBidsRequest(chain.id)
       : { data: PUBLIC_FEATURED_DAOS[chain.id as TestnetChain], statusCode: 200 }
   })
 

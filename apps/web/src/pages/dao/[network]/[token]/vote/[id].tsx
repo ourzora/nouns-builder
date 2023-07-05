@@ -44,8 +44,8 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   const { governor } = useDaoStore((x) => x.addresses)
   const chain = useChainStore((x) => x.chain)
 
-  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain, proposalId], (_, id) =>
-    getProposal(chain, proposalId)
+  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], (_, id) =>
+    getProposal(chain.id, proposalId)
   )
 
   const sections = React.useMemo(() => {
@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     axios
       .get<DaoResponse>(`${protocol}://${baseUrl}/api/dao/${network}/${collection}`)
       .then((x) => x.data),
-    getProposal(chain, proposalId),
+    getProposal(chain.id, proposalId),
   ])
 
   if (!proposal) {

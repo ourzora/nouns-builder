@@ -42,8 +42,8 @@ export const useAuctionEvents = ({
         })
       )
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, chain, auction, tokenId], () =>
-        getBids(chain, auction as string, tokenId)
+      await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, auction, tokenId], () =>
+        getBids(chain.id, auction as string, tokenId)
       )
 
       await router.push(`/dao/${router.query.network}/${collection}/${tokenId}`)
@@ -64,8 +64,8 @@ export const useAuctionEvents = ({
         })
       )
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, chain, auction, tokenId], () =>
-        getBids(chain, auction as string, tokenId)
+      await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, auction, tokenId], () =>
+        getBids(chain.id, auction as string, tokenId)
       )
     },
   })

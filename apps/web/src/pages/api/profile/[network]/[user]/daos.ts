@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: 'bad address input' })
   }
   try {
-    const daos = await myDaosRequest(chain, address)
+    const daos = await myDaosRequest(chain.id, address)
 
     res.status(200).json(daos)
   } catch (e) {

@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).end()
   }
 
-  const tokenRes = await getToken(chain, token as AddressType, tokenId as string)
+  const tokenRes = await getToken(chain.id, token as AddressType, tokenId as string)
 
   const { maxAge, swr } = CACHE_TIMES.TOKEN_INFO
   res.setHeader(

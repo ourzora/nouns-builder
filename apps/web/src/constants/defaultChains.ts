@@ -22,10 +22,11 @@ const TESTNET_CHAINS: Chain[] = [
   },
 ]
 
+export const PUBLIC_IS_TESTNET = process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet'
+
 export const PUBLIC_ALL_CHAINS = {
   ...MAINNET_CHAINS,
   ...TESTNET_CHAINS,
 }
 
-export const PUBLIC_DEFAULT_CHAINS =
-  process.env.NEXT_PUBLIC_NETWORK_TYPE === 'mainnet' ? MAINNET_CHAINS : TESTNET_CHAINS
+export const PUBLIC_DEFAULT_CHAINS = PUBLIC_IS_TESTNET ? TESTNET_CHAINS : MAINNET_CHAINS
