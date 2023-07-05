@@ -30,6 +30,7 @@ interface DaoPageProps {
 
 const DaoPage: NextPageWithLayout<DaoPageProps> = ({ collectionAddress }) => {
   const { query } = useRouter()
+
   const { address: signerAddress } = useAccount()
   const { addresses } = useDaoStore()
 
