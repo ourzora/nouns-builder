@@ -10,7 +10,7 @@ const VisitAlternate = () => {
 
   return (
     <a
-      href={PUBLIC_IS_TESTNET ? 'https://testnet.nouns.build/' : 'https://nouns.build/'}
+      href={PUBLIC_IS_TESTNET ? 'https://nouns.build/' : 'https://testnet.nouns.build/'}
       target="_blank"
       rel="noreferrer noopener"
     >
@@ -20,7 +20,7 @@ const VisitAlternate = () => {
           fontWeight={'paragraph'}
           className={atoms({ textDecoration: 'underline' })}
         >
-          {PUBLIC_IS_TESTNET ? 'Visit Testnet' : 'Visit Mainnet'}
+          {PUBLIC_IS_TESTNET ? 'Visit Mainnet' : 'Visit Testnet'}
         </Text>
         <Icon fill="text1" size="sm" ml="x1" id="external-16" />
       </Flex>

@@ -2,6 +2,7 @@ import { Box, Flex, Label, Stack, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
+import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
 import { useScrollDirection } from 'src/hooks/useScrollDirection'
 
 import NogglesLogo from '../assets/builder-framed.svg'
@@ -30,13 +31,15 @@ export const Nav = () => {
                 fill={'black'}
                 className={atoms({ width: 'x23', cursor: 'pointer' })}
               />
-              <TestnetLogo
-                className={atoms({
-                  width: 'x23',
-                  cursor: 'pointer',
-                  mt: 'x1',
-                })}
-              />
+              {PUBLIC_IS_TESTNET && (
+                <TestnetLogo
+                  className={atoms({
+                    width: 'x23',
+                    cursor: 'pointer',
+                    mt: 'x1',
+                  })}
+                />
+              )}
             </Stack>
           </Link>
           <Flex display={{ '@initial': 'none', '@768': 'flex' }} ml="x10" gap={'x4'}>
