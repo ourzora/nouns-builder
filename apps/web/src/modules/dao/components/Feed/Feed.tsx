@@ -5,6 +5,7 @@ import React, { useMemo } from 'react'
 import useSWRInfinite from 'swr/infinite'
 
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { CardSkeleton } from './CardSkeleton'
 import { CastCard } from './CastCard'
@@ -34,12 +35,12 @@ type PageData = { value: AddMsgWithUnix[]; nextPageToken?: string }
 
 const Feed = ({ collectionAddress }: FeedTabProps) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
-  const chainId = process.env.NEXT_PUBLIC_CHAIN_ID || '1'
+  const chain = useChainStore((x) => x.chain)
 
   const { data, error, isValidating, setSize } = useSWRInfinite(
     (_pageIndex: number, prevPageData: PageData) => {
       if (prevPageData && !prevPageData.nextPageToken) return null
-      return `/api/feed/${collectionAddress}:${chainId}:${
+      return `/api/feed/${collectionAddress}:${chain.id}:${
         prevPageData?.nextPageToken || ''
       }`
     },
