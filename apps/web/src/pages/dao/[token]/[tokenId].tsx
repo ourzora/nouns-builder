@@ -14,7 +14,6 @@ import { CAST_ENABLED } from 'src/constants/farcasterEnabled'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
-import { getFarcasterProfile } from 'src/data/farcaster/queries/farcasterProfile.ts'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { Auction } from 'src/modules/auction'
@@ -168,8 +167,6 @@ export const getServerSideProps: GetServerSideProps = async ({
       'Cache-Control',
       `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
     )
-
-    getFarcasterProfile(3)
 
     return {
       props: {
