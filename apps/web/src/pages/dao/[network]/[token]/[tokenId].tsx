@@ -11,6 +11,7 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
+import { CAST_ENABLED } from 'src/constants/farcasterEnabled'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
@@ -26,6 +27,7 @@ import {
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
+import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { DaoResponse } from 'src/pages/api/dao/[network]/[token]'
 import { AddressType, Chain } from 'src/typings'
@@ -82,12 +84,10 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       title: 'About',
       component: [<About key={'about'} />],
     }
-
     const proposalsSection = {
       title: 'Activity',
       component: [<Activity key={'proposals'} />],
     }
-
     const adminSection = {
       title: 'Admin',
       component: [<AdminForm key={'admin'} collectionAddress={collection} />],
@@ -96,10 +96,17 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       title: 'Smart Contracts',
       component: [<SmartContracts key={'smart_contracts'} />],
     }
+    const daoFeed = {
+      title: 'Feed',
+      component: [<FeedTab key="feed" collectionAddress={collection} />],
+    }
 
     const publicSections = [aboutSection, proposalsSection, smartContractsSection]
 
-    return hasThreshold ? [...publicSections, adminSection] : publicSections
+    const baseSections = hasThreshold ? [...publicSections, adminSection] : publicSections
+    return CAST_ENABLED.includes(collection)
+      ? [...baseSections.slice(0, 1), daoFeed, ...baseSections.slice(1)]
+      : publicSections
   }, [hasThreshold, collection])
 
   const description = token?.description ?? ''
