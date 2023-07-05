@@ -2,41 +2,41 @@ import isNil from 'lodash/isNil'
 import { useContractReads } from 'wagmi'
 
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
-import { AddressType, Chain } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 export const useVotes = ({
-  chain,
+  chainId,
   collectionAddress,
   governorAddress,
   signerAddress,
 }: {
-  chain: Chain
+  chainId: CHAIN_ID
   collectionAddress?: AddressType
   governorAddress?: AddressType
   signerAddress?: AddressType
 }) => {
   const { data, isLoading } = useContractReads({
-    enabled: !!chain && !!collectionAddress && !!governorAddress && !!signerAddress,
+    enabled: !!collectionAddress && !!governorAddress && !!signerAddress,
     contracts: [
       {
         address: collectionAddress,
         abi: tokenAbi,
         functionName: 'getVotes',
         args: [signerAddress as AddressType],
-        chainId: chain.id,
+        chainId,
       },
       {
         address: collectionAddress,
         abi: tokenAbi,
         functionName: 'delegates',
         args: [signerAddress as AddressType],
-        chainId: chain.id,
+        chainId,
       },
       {
         address: governorAddress,
         abi: governorAbi,
         functionName: 'proposalThreshold',
-        chainId: chain.id,
+        chainId,
       },
     ] as const,
   })

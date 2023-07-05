@@ -38,7 +38,7 @@ export const Upgrade = ({
     totalContractUpgrades,
     shouldUpgrade,
   } = useAvailableUpgrade({
-    chain,
+    chainId: chain.id,
     addresses,
   })
 

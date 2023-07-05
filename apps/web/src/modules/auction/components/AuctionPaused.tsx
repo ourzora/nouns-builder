@@ -31,8 +31,8 @@ export const AuctionPaused = () => {
   })
 
   const { data } = useSWR<ProposalsResponse>(
-    paused && isReady ? [SWR_KEYS.PROPOSALS, chain, query.token, query.page] : null,
-    (_, chain, token, page) => getProposals(chain, token, LIMIT, Number(page))
+    paused && isReady ? [SWR_KEYS.PROPOSALS, chain.id, query.token, query.page] : null,
+    (_, chainId, token, page) => getProposals(chainId, token, LIMIT, Number(page))
   )
 
   const pausedProposal = useMemo(() => {

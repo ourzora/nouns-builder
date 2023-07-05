@@ -27,7 +27,7 @@ vi.mock('src/data/subgraph/sdk.generated', async () => {
   }
 })
 
-const chain = FOUNDRY_CHAIN
+const chainId = FOUNDRY_CHAIN.id
 
 const addresses = {
   governor: '0xbf9BEA8028699F922c3B2879D9CBec0179Bf7587',
@@ -77,7 +77,7 @@ describe('Use available upgrade hook', () => {
 
     const { result } = renderHook(() =>
       useAvailableUpgrade({
-        chain: FOUNDRY_CHAIN,
+        chainId,
         addresses: {
           //@ts-ignore
           governor: undefined,
@@ -123,7 +123,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
+    const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,
@@ -155,7 +155,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
+    const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
     await waitFor(() => expect(result.current).toBeTruthy())
 
@@ -204,7 +204,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
+    const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
     expect(result.current).toStrictEqual({
       latest: '1.1.0',
@@ -257,7 +257,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
+    const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
     expect(result.current).toStrictEqual({
       shouldUpgrade: false,
@@ -293,7 +293,7 @@ describe('Use available upgrade hook', () => {
       ],
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
+    const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
     expect(result.current.latest).toBe('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(3)
@@ -368,7 +368,7 @@ describe('Use available upgrade hook', () => {
       internal: undefined as any,
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
+    const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
     expect(result.current.latest).toEqual('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(3)
@@ -419,7 +419,7 @@ describe('Use available upgrade hook', () => {
       ],
     })
 
-    const { result } = renderHook(() => useAvailableUpgrade({ chain, addresses }))
+    const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
     expect(result.current.latest).toEqual('1.1.0')
     expect(result.current.totalContractUpgrades).toBe(5)
@@ -497,7 +497,7 @@ describe('Use available upgrade hook', () => {
     })
 
     const { result } = renderHook(() =>
-      useAvailableUpgrade({ chain, addresses, contractVersion: '1.1.0' })
+      useAvailableUpgrade({ chainId, addresses, contractVersion: '1.1.0' })
     )
 
     expect(result.current).toStrictEqual({
@@ -540,7 +540,7 @@ describe('Use available upgrade hook', () => {
     })
 
     const { result } = renderHook(() =>
-      useAvailableUpgrade({ chain, addresses, contractVersion: '1.1.0' })
+      useAvailableUpgrade({ chainId, addresses, contractVersion: '1.1.0' })
     )
 
     expect(result.current.latest).toBe('1.2.0')

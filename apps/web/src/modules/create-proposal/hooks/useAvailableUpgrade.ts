@@ -21,7 +21,7 @@ import {
   VersionType,
 } from 'src/modules/create-proposal'
 import { DaoContractAddresses } from 'src/modules/dao'
-import { AddressType, Chain } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 interface AvailableUpgrade {
   shouldUpgrade: boolean
@@ -35,7 +35,7 @@ interface AvailableUpgrade {
 }
 
 interface AvailableUpgradeProps {
-  chain: Chain
+  chainId: CHAIN_ID
   addresses: DaoContractAddresses
   contractVersion?: VersionType
 }
@@ -45,14 +45,14 @@ type ContractType = typeof contracts[number]
 type DaoVersions = Record<ContractType, string>
 
 export const useAvailableUpgrade = ({
-  chain,
+  chainId,
   addresses,
   contractVersion,
 }: AvailableUpgradeProps): AvailableUpgrade => {
   const contract = {
     abi: managerAbi,
-    address: chain ? (PUBLIC_MANAGER_ADDRESS[chain.id] as AddressType) : undefined,
-    chainId: chain.id,
+    address: PUBLIC_MANAGER_ADDRESS[chainId],
+    chainId,
   }
 
   const auctionContract = useContract({ abi: auctionAbi, address: addresses?.auction })
@@ -60,10 +60,8 @@ export const useAvailableUpgrade = ({
   const managerContract = useContract(contract)
 
   const { data: proposals } = useSWR(
-    !!addresses?.token
-      ? [SWR_KEYS.PROPOSALS_CALLDATAS, chain.id, addresses?.token]
-      : null,
-    () => getProposals(chain.id, addresses?.token as string, 100)
+    !!addresses?.token ? [SWR_KEYS.PROPOSALS_CALLDATAS, chainId, addresses?.token] : null,
+    () => getProposals(chainId, addresses?.token as string, 100)
   )
 
   const { data, isLoading, isError } = useContractReads({
@@ -72,7 +70,7 @@ export const useAvailableUpgrade = ({
       {
         abi: auctionAbi,
         address: addresses.auction as AddressType,
-        chainId: chain.id,
+        chainId,
         functionName: 'paused',
       },
       {

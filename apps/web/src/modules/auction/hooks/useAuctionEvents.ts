@@ -8,15 +8,15 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
-import { AddressType, Chain } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 export const useAuctionEvents = ({
-  chain,
+  chainId,
   collection,
   tokenId,
   isTokenActiveAuction,
 }: {
-  chain: Chain
+  chainId: CHAIN_ID
   collection: string
   tokenId: string
   isTokenActiveAuction: boolean
@@ -29,21 +29,21 @@ export const useAuctionEvents = ({
     address: isTokenActiveAuction ? auction : undefined,
     abi: auctionAbi,
     eventName: 'AuctionCreated',
-    chainId: chain.id,
+    chainId,
     listener: async (id) => {
       const tokenId = BigNumber.from(id._hex).toNumber()
 
-      await mutate([SWR_KEYS.AUCTION, chain.id, auction], () =>
+      await mutate([SWR_KEYS.AUCTION, chainId, auction], () =>
         readContract({
           abi: auctionAbi,
           address: auction as AddressType,
-          chainId: chain.id,
+          chainId,
           functionName: 'auction',
         })
       )
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, auction, tokenId], () =>
-        getBids(chain.id, auction as string, tokenId)
+      await mutate([SWR_KEYS.AUCTION_BIDS, chainId, auction, tokenId], () =>
+        getBids(chainId, auction as string, tokenId)
       )
 
       await router.push(`/dao/${router.query.network}/${collection}/${tokenId}`)
@@ -55,17 +55,17 @@ export const useAuctionEvents = ({
     abi: auctionAbi,
     eventName: 'AuctionBid',
     listener: async () => {
-      await mutate([SWR_KEYS.AUCTION, chain.id, auction], () =>
+      await mutate([SWR_KEYS.AUCTION, chainId, auction], () =>
         readContract({
           abi: auctionAbi,
           address: auction as AddressType,
-          chainId: chain.id,
+          chainId: chainId,
           functionName: 'auction',
         })
       )
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, auction, tokenId], () =>
-        getBids(chain.id, auction as string, tokenId)
+      await mutate([SWR_KEYS.AUCTION_BIDS, chainId, auction, tokenId], () =>
+        getBids(chainId, auction as string, tokenId)
       )
     },
   })

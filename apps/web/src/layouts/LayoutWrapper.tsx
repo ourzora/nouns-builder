@@ -29,7 +29,7 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
       //@ts-ignore
       setSignerAddress(signer?._address)
     }
-  }, [status, chain, signer, setProvider, addresses, setSigner, setSignerAddress])
+  }, [status, chain.id, signer, setProvider, addresses, setSigner, setSignerAddress])
 
   // add mobile flag to layout store
   React.useEffect(() => {

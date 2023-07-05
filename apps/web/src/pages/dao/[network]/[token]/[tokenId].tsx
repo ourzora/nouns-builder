@@ -61,7 +61,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   )
 
   const { hasThreshold } = useVotes({
-    chain,
+    chainId: chain.id,
     signerAddress: address,
     collectionAddress: collection,
     governorAddress: addresses?.governor,

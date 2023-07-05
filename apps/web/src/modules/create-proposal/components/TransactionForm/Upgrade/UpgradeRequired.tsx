@@ -39,7 +39,7 @@ export const UpgradeRequired: React.FC<UpgradeRequiredProps> = ({ contractVersio
     transaction: upgradeTransaction,
     totalContractUpgrades,
   } = useAvailableUpgrade({
-    chain,
+    chainId: chain.id,
     addresses,
     contractVersion,
   })

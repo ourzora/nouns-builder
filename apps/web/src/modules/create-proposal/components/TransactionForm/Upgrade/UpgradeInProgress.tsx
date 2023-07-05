@@ -17,7 +17,7 @@ export const UpgradeInProgress: React.FC<UpgradeInProgressProps> = ({
   const addresses = useDaoStore((state) => state.addresses)
   const chain = useChainStore((x) => x.chain)
   const { activeUpgradeProposalId } = useAvailableUpgrade({
-    chain,
+    chainId: chain.id,
     addresses,
     contractVersion,
   })

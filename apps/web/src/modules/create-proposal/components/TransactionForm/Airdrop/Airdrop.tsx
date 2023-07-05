@@ -29,7 +29,7 @@ export const Airdrop: React.FC = () => {
   const chain = useChainStore((x) => x.chain)
 
   const { currentVersions, shouldUpgrade, activeUpgradeProposalId } = useAvailableUpgrade(
-    { chain, addresses, contractVersion: AIRDROP_CONTRACT_VERSION }
+    { chainId: chain.id, addresses, contractVersion: AIRDROP_CONTRACT_VERSION }
   )
 
   const { data: auctionOwner } = useContractRead({

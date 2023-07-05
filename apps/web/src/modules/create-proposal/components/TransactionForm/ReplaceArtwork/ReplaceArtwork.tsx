@@ -30,7 +30,7 @@ export const ReplaceArtwork = () => {
   const chain = useChainStore((x) => x.chain)
 
   const { currentVersions, shouldUpgrade, activeUpgradeProposalId } = useAvailableUpgrade(
-    { chain, addresses, contractVersion: REPLACE_ARTWORK_CONTRACT_VERSION }
+    { chainId: chain.id, addresses, contractVersion: REPLACE_ARTWORK_CONTRACT_VERSION }
   )
 
   const contractOrderedLayers = [...orderedLayers].reverse() // traits in the contract are reversed

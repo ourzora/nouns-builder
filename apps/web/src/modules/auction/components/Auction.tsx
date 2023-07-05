@@ -51,7 +51,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
     !auction?.settled && !!auction?.tokenId && auction.tokenId.eq(token.id)
 
   useAuctionEvents({
-    chain,
+    chainId: chain.id,
     collection,
     isTokenActiveAuction,
     tokenId: token.id,

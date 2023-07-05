@@ -49,14 +49,14 @@ export const Activity: React.FC = () => {
   const { token } = addresses
 
   const { data, error } = useSWR<ProposalsResponse>(
-    isReady && chain ? [SWR_KEYS.PROPOSALS, chain, query.token, query.page] : null,
-    (_, chain, token, page) => getProposals(chain, token, LIMIT, Number(page))
+    isReady ? [SWR_KEYS.PROPOSALS, chain.id, query.token, query.page] : null,
+    (_, chainId, token, page) => getProposals(chainId, token, LIMIT, Number(page))
   )
 
   const { handlePageBack, handlePageForward } = usePagination(data?.pageInfo?.hasNextPage)
 
   const { isOwner, isDelegating, hasThreshold, proposalVotesRequired } = useVotes({
-    chain,
+    chainId: chain.id,
     governorAddress: addresses?.governor,
     signerAddress: address,
     collectionAddress: query?.token as AddressType,

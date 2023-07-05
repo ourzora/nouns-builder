@@ -46,7 +46,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
   const { address } = useAccount()
 
   const { isLoading, hasThreshold } = useVotes({
-    chain,
+    chainId: chain.id,
     governorAddress: addresses?.governor,
     signerAddress: address,
     collectionAddress: query?.token as AddressType,
