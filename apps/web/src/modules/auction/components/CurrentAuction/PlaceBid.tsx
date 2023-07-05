@@ -90,6 +90,9 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
   const isMinBid = Number(bidAmount) >= minBidAmount
   const formattedMinBid = formatCryptoVal(minBidAmount)
 
+  const isValidBid = bidAmount && isMinBid
+  const isValidChain = wagmiChain?.id === chain.id
+
   return (
     <Flex
       width="100%"
@@ -119,9 +122,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
           <ContractButton
             className={auctionActionButtonVariants['bid']}
             handleClick={handleCreateBid}
-            disabled={
-              address && wagmiChain?.id == chain.id ? !isMinBid || !bidAmount : false
-            }
+            disabled={address && isValidChain ? !isValidBid : false}
             mt={{ '@initial': 'x2', '@768': 'x0' }}
           >
             Place bid

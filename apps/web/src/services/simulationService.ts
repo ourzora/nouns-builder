@@ -96,10 +96,6 @@ export async function simulate({
     const forkViewRes = (await axios.get(`${TENDERLY_FORK_V2_BASE_URL}/${forkId}`, opts))
       .data
     const simulationId = forkViewRes.fork.head_simulation_id
-    console.log(
-      'url',
-      `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`
-    )
     simulations.push({
       index: i,
       simulationId,

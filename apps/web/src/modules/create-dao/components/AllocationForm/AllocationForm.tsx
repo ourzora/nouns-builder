@@ -99,8 +99,6 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
   const handleSubmit = async ({ founderAllocation }: FounderAllocationFormValues) => {
     setAllocationError(false)
 
-    console.log('contrib', contributionAllocation)
-
     const totalAllocation = sum(
       [...founderAllocation, ...contributionAllocation].map(
         ({ allocationPercentage: allocation }) => Number(allocation)

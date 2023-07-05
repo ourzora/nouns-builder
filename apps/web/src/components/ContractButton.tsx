@@ -25,9 +25,9 @@ export const ContractButton = ({
   return (
     <Button
       onClick={
-        userAddress === null
+        !userAddress
           ? openConnectModal
-          : userChain?.id != appChain.id
+          : userChain?.id !== appChain.id
           ? handleSwitchNetwork
           : handleClick
       }
