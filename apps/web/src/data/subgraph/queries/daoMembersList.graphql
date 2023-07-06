@@ -1,4 +1,4 @@
-query daoTokenOwners(
+query daoMembersList(
   $where: DAOTokenOwner_filter
   $first: Int
   $skip: Int
