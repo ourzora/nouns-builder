@@ -147,6 +147,7 @@ export const NavMenu = () => {
                 <Flex align={'center'}>
                   <Box h="x6" w="x6">
                     <Image
+                      loading="eager"
                       style={{ height: 24, width: 24 }}
                       src={selectedChain.icon}
                       alt={selectedChain.name}
