@@ -3,7 +3,7 @@ import { baseGoerli, goerli, mainnet, optimismGoerli } from 'wagmi/chains'
 import { CHAIN_ID, Chain } from 'src/typings'
 
 const MAINNET_CHAINS: Chain[] = [
-  { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'eth', icon: '/chains/ethereum.svg' },
+  { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'ethereum', icon: '/chains/ethereum.svg' },
 ]
 
 const TESTNET_CHAINS: Chain[] = [
