@@ -17,6 +17,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import getBids from 'src/data/contract/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
+import { Chain } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -24,15 +25,16 @@ import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 
 interface PlaceBidProps {
+  chain: Chain
   tokenId: string
   highestBid?: BigNumber
 }
 
-export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
+export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
   const { data: signer } = useSigner()
   const { address } = useAccount()
-  const { chain } = useNetwork()
-  const { data: balance } = useBalance({ address: address })
+  const { chain: wagmiChain } = useNetwork()
+  const { data: balance } = useBalance({ address: address, chainId: chain.id })
   const { mutate } = useSWRConfig()
   const { addresses } = useDaoStore()
 
@@ -42,12 +44,13 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
   const auctionContractParams = {
     abi: auctionAbi,
     address: addresses.auction,
+    chainId: chain.id,
   }
   const { data } = useContractReads({
     contracts: [
       { ...auctionContractParams, functionName: 'reservePrice' },
       { ...auctionContractParams, functionName: 'minBidIncrement' },
-    ],
+    ] as const,
   })
   const [auctionReservePrice, minBidIncrement] = unpackOptionalArray(data, 2)
 
@@ -74,8 +77,8 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
       const { wait } = await writeContract(config)
       await wait()
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, addresses.auction, tokenId], () =>
-        getBids(addresses.auction as string, tokenId)
+      await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.auction, tokenId], () =>
+        getBids(chain.id, addresses.auction as string, tokenId)
       )
     } catch (error) {
       console.error(error)
@@ -86,6 +89,9 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
 
   const isMinBid = Number(bidAmount) >= minBidAmount
   const formattedMinBid = formatCryptoVal(minBidAmount)
+
+  const isValidBid = bidAmount && isMinBid
+  const isValidChain = wagmiChain?.id === chain.id
 
   return (
     <Flex
@@ -116,7 +122,7 @@ export const PlaceBid = ({ highestBid, tokenId }: PlaceBidProps) => {
           <ContractButton
             className={auctionActionButtonVariants['bid']}
             handleClick={handleCreateBid}
-            disabled={address && !chain?.unsupported ? !isMinBid || !bidAmount : false}
+            disabled={address && isValidChain ? !isValidBid : false}
             mt={{ '@initial': 'x2', '@768': 'x0' }}
           >
             Place bid

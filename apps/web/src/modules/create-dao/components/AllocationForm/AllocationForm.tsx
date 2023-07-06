@@ -10,6 +10,8 @@ import {
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
+import { CHAIN_ID } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 
 import { useFormStore } from '../../stores'
@@ -35,6 +37,7 @@ export interface FounderAllocationFormValues {
 export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
   const formRef = useRef<FormikProps<FounderAllocationFormValues>>(null)
   const [allocationError, setAllocationError] = useState(false)
+  const chain = useChainStore((x) => x.chain)
   const {
     founderAllocation,
     contributionAllocation,
@@ -159,7 +162,9 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
         )}
       </Formik>
 
-      <ContributionAllocation />
+      {(chain.id === CHAIN_ID.ETHEREUM || chain.id === CHAIN_ID.GOERLI) && (
+        <ContributionAllocation />
+      )}
 
       {allocationError && (
         <Flex mt={'x4'} color="negative">

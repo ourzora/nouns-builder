@@ -7,7 +7,8 @@ import { useContractRead } from 'wagmi'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
-import { AddressType } from 'src/typings'
+import { useChainStore } from 'src/stores/useChainStore'
+import { AddressType, CHAIN_ID } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
@@ -25,16 +26,17 @@ export const Airdrop: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const transactions = useProposalStore((state) => state.transactions)
   const addTransaction = useProposalStore((state) => state.addTransaction)
+  const chain = useChainStore((x) => x.chain)
 
   const { currentVersions, shouldUpgrade, activeUpgradeProposalId } = useAvailableUpgrade(
-    addresses,
-    AIRDROP_CONTRACT_VERSION
+    { chainId: chain.id, addresses, contractVersion: AIRDROP_CONTRACT_VERSION }
   )
 
   const { data: auctionOwner } = useContractRead({
     abi: auctionAbi,
     address: addresses?.auction,
     functionName: 'owner',
+    chainId: chain.id,
   })
 
   const { data: isMinter } = useContractRead({
@@ -42,6 +44,7 @@ export const Airdrop: React.FC = () => {
     enabled: gte(currentVersions?.token, AIRDROP_CONTRACT_VERSION),
     abi: tokenAbi,
     address: addresses?.token,
+    chainId: chain.id,
     functionName: 'isMinter',
     args: [addresses?.treasury as AddressType],
   })
@@ -65,7 +68,10 @@ export const Airdrop: React.FC = () => {
       ]),
     }
 
-    const resolvedRecipientAddress = await getEnsAddress(recipient || '', getProvider())
+    const resolvedRecipientAddress = await getEnsAddress(
+      recipient || '',
+      getProvider(CHAIN_ID.ETHEREUM)
+    )
     const airdropTransaction = {
       functionSignature: 'mintBatchTo',
       target: addresses?.token as AddressType,

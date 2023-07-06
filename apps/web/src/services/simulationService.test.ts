@@ -3,6 +3,8 @@ import axios from 'axios'
 import { ethers } from 'ethers'
 import { vi } from 'vitest'
 
+import { CHAIN_ID } from 'src/typings'
+
 import { InvalidRequestError } from './errors'
 import { InsufficientFundsError, Simulation, simulate } from './simulationService'
 
@@ -36,6 +38,7 @@ describe('simulationService', () => {
     const treasuryAddress = '0xbcdfd67cce7bf4f49c0631ddd14eadff4d5ca15d'
     const request = {
       treasuryAddress,
+      chainId: CHAIN_ID.ETHEREUM,
       targets: [
         '0x7d8ba3e0745079b292f68e421d292c05da2d0721',
         '0xa7c8f84ec8cbed6e8fb793904cd1ec9ddfc9c35d',
@@ -48,6 +51,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
+          chainId: CHAIN_ID.ETHEREUM,
           targets: ['t1', 't2', 't3'],
           calldatas: ['c1', 'c2'],
           values: ['v1, v2'],
@@ -57,6 +61,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
+          chainId: CHAIN_ID.ETHEREUM,
           targets: ['t1'],
           calldatas: ['c1'],
           values: ['v1, v2'],
@@ -66,6 +71,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
+          chainId: CHAIN_ID.ETHEREUM,
           targets: ['t1'],
           calldatas: ['c1', 'c2'],
           values: ['v1, v2'],

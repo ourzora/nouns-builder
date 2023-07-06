@@ -9,9 +9,17 @@ import { Address, useBalance, useContractReads } from 'wagmi'
 import { Avatar } from 'src/components/Avatar/Avatar'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
 import { useLayoutStore } from 'src/stores'
-import { about, daoDescription, daoInfo, daoName } from 'src/styles/About.css'
+import { useChainStore } from 'src/stores/useChainStore'
+import {
+  about,
+  daoDescription,
+  daoInfo,
+  daoName,
+  statistic,
+  statisticContent,
+} from 'src/styles/About.css'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -25,15 +33,18 @@ export const About: React.FC = () => {
   const {
     addresses: { token, treasury, metadata },
   } = useDaoStore()
+  const chain = useChainStore((x) => x.chain)
   const { isMobile } = useLayoutStore()
 
   const tokenContractParams = {
     abi: tokenAbi,
     address: token as Address,
+    chainId: chain.id,
   }
   const metadataContractParams = {
     abi: metadataAbi,
     address: metadata as Address,
+    chainId: chain.id,
   }
 
   const { data: contractData } = useContractReads({
@@ -44,26 +55,32 @@ export const About: React.FC = () => {
       { ...metadataContractParams, functionName: 'contractImage' },
       { ...metadataContractParams, functionName: 'description' },
       { ...metadataContractParams, functionName: 'contractURI' },
-    ],
+    ] as const,
   })
 
   const [name, totalSupply, founders, daoImage, description, contractURI] =
     unpackOptionalArray(contractData, 6)
   const parsedContractURI = parseContractURI(contractURI)
 
-  const { data: balance } = useBalance({ address: treasury as Address })
-
-  const { data } = useSWR(token ? [SWR_KEYS.DAO_INFO, token] : null, async (_, token) => {
-    const res = await sdk
-      .daoInfo({
-        tokenAddress: token.toLowerCase(),
-      })
-      .then((x) => x.dao)
-
-    return {
-      ownerCount: res?.ownerCount,
-    }
+  const { data: balance } = useBalance({
+    address: treasury as Address,
+    chainId: chain.id,
   })
+
+  const { data } = useSWR(
+    chain && token ? [SWR_KEYS.DAO_INFO, chain.id, token] : null,
+    async (_, chainId, token) => {
+      const res = await SDK.connect(chainId)
+        .daoInfo({
+          tokenAddress: token.toLowerCase(),
+        })
+        .then((x) => x.dao)
+
+      return {
+        ownerCount: res?.ownerCount,
+      }
+    }
+  )
 
   const treasuryBalance = React.useMemo(() => {
     return balance?.formatted ? formatCryptoVal(balance?.formatted) : null
@@ -110,6 +127,7 @@ export const About: React.FC = () => {
         mt={{ '@initial': 'x4', '@768': 'x6' }}
         gap={{ '@initial': 'x2', '@768': 'x4' }}
         overflowX="scroll"
+        wrap={'wrap'}
         className={daoInfo}
       >
         <Statistic
@@ -119,6 +137,17 @@ export const About: React.FC = () => {
         />
         <Statistic title="Owners" content={data?.ownerCount} />
         <Statistic title="Total supply" content={totalSupply?.toNumber()} />
+        <Box className={statistic} width={'100%'}>
+          <Text color="tertiary">Chain</Text>
+          <Flex align={'center'} mt={{ '@initial': 'x1', '@768': 'x3' }}>
+            <Box mr="x2">
+              <Image src={chain.icon} alt={chain.name} height={28} width={28} />
+            </Box>
+            <Text fontWeight={'display'} className={statisticContent}>
+              {chain.name}
+            </Text>
+          </Flex>
+        </Box>
       </Flex>
 
       {typeof description !== 'undefined' && description !== null ? (

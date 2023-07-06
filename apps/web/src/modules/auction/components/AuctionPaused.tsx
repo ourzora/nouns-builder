@@ -14,9 +14,11 @@ import {
   getProposals,
 } from 'src/data/subgraph/requests/proposalsQuery'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 
 export const AuctionPaused = () => {
   const { query, isReady } = useRouter()
+  const chain = useChainStore((x) => x.chain)
   const LIMIT = 20
 
   const { auction } = useDaoStore((x) => x.addresses)
@@ -25,11 +27,12 @@ export const AuctionPaused = () => {
     abi: auctionAbi,
     address: auction,
     functionName: 'paused',
+    chainId: chain.id,
   })
 
   const { data } = useSWR<ProposalsResponse>(
-    paused && isReady ? [SWR_KEYS.PROPOSALS, query.token, query.page] : null,
-    (_, token, page) => getProposals(token, LIMIT, Number(page))
+    paused && isReady ? [SWR_KEYS.PROPOSALS, chain.id, query.token, query.page] : null,
+    (_, chainId, token, page) => getProposals(chainId, token, LIMIT, Number(page))
   )
 
   const pausedProposal = useMemo(() => {
@@ -67,8 +70,8 @@ export const AuctionPaused = () => {
         shallow={!pausedProposal?.proposalId}
         href={
           pausedProposal?.proposalId
-            ? `/dao/${query.token}/vote/${pausedProposal?.proposalId}`
-            : `/dao/${query.token}?tab=activity`
+            ? `/dao/${query.network}/${query.token}/vote/${pausedProposal?.proposalId}`
+            : `/dao/${query.network}/${query.token}?tab=activity`
         }
       >
         <Box

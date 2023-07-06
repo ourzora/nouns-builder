@@ -1,10 +1,8 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { IPFSUpload } from 'src/hooks'
 import { DaoContractAddresses } from 'src/modules/dao'
-import { yearsAhead } from 'src/utils/helpers'
 
 import { OrderedTraits } from '../../../components/Artwork/LayerBox'
 import {
@@ -77,18 +75,7 @@ const initialState = {
     },
   },
   founderAllocation: [],
-  contributionAllocation: [
-    {
-      founderAddress: PUBLIC_BUILDER_ADDRESS,
-      allocationPercentage: 1,
-      endDate: yearsAhead(5),
-    },
-    {
-      founderAddress: PUBLIC_NOUNS_ADDRESS,
-      allocationPercentage: 1,
-      endDate: yearsAhead(5),
-    },
-  ],
+  contributionAllocation: [],
   vetoPower: undefined,
   vetoerAddress: '',
   setUpArtwork: {
@@ -147,7 +134,7 @@ export const useFormStore = create(
       resetForm: () => set({ ...initialState }),
     }),
     {
-      name: `nouns-builder-create-${process.env.NEXT_PUBLIC_CHAIN_ID}`,
+      name: `nouns-builder-create-${process.env.NEXT_PUBLIC_NETWORK_TYPE}`,
       storage: createJSONStorage(() => localStorage),
       version: 0,
     }

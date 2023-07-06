@@ -10,6 +10,7 @@ import SmartInput from 'src/components/Fields/SmartInput'
 import StickySave from 'src/components/Fields/StickySave'
 import { NUMBER } from 'src/components/Fields/types'
 import { auctionAbi } from 'src/data/contract/abis'
+import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import {
   compareAndReturn,
@@ -28,10 +29,12 @@ interface PreAuctionFormSettingsProps {
 export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const { addresses } = useDaoStore()
   const { data: signer } = useSigner()
+  const chain = useChainStore((x) => x.chain)
 
   const auctionContractParams = {
     abi: auctionAbi,
     address: addresses.auction,
+    chainId: chain.id,
   }
 
   const auctionContract = useContract({
@@ -43,7 +46,7 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
     contracts: [
       { ...auctionContractParams, functionName: 'duration' },
       { ...auctionContractParams, functionName: 'reservePrice' },
-    ],
+    ] as const,
   })
 
   const [auctionDuration, auctionReservePrice] = unpackOptionalArray(data, 2)

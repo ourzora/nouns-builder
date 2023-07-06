@@ -5,10 +5,12 @@ import Date from 'src/components/Fields/Date'
 import SmartInput from 'src/components/Fields/SmartInput'
 import { PUBLIC_BUILDER_ADDRESS, PUBLIC_NOUNS_ADDRESS } from 'src/constants/addresses'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 import { yearsAhead } from 'src/utils/helpers'
 
 import { TokenAllocation } from '../AllocationForm'
 import { validationSchemaContributions } from './AllocationForm.schema'
+import { ContributionChain } from './ContributionAllocation'
 import { DaoCopyAddress } from './DaoCopyAddress'
 import { Toggle } from './Toggle'
 
@@ -26,8 +28,10 @@ export const ContributionAllocationForm: React.FC<ContributionAllocationFormProp
   initialValues,
   handleSubmit,
 }) => {
-  const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS)
-  const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS)
+  const chain = useChainStore((x) => x.chain)
+  const chainId = chain.id as ContributionChain
+  const { displayName: builderDisplayName } = useEnsData(PUBLIC_BUILDER_ADDRESS[chainId])
+  const { displayName: nounsDisplayName } = useEnsData(PUBLIC_NOUNS_ADDRESS[chainId])
 
   return (
     <Formik<ContributionAllocationFormValues>
@@ -62,7 +66,7 @@ export const ContributionAllocationForm: React.FC<ContributionAllocationFormProp
                         builderAllocation
                           ? undefined
                           : {
-                              founderAddress: PUBLIC_BUILDER_ADDRESS,
+                              founderAddress: PUBLIC_BUILDER_ADDRESS[chainId],
                               allocation: 1,
                               endDate: yearsAhead(5),
                             }
@@ -77,7 +81,7 @@ export const ContributionAllocationForm: React.FC<ContributionAllocationFormProp
                       name="Builder"
                       image="/builder-avatar-circle.png"
                       ens={builderDisplayName}
-                      address={PUBLIC_BUILDER_ADDRESS}
+                      address={PUBLIC_BUILDER_ADDRESS[chainId]}
                     />
 
                     <SmartInput
@@ -130,7 +134,7 @@ export const ContributionAllocationForm: React.FC<ContributionAllocationFormProp
                         nounsAllocation
                           ? undefined
                           : {
-                              founderAddress: PUBLIC_NOUNS_ADDRESS,
+                              founderAddress: PUBLIC_NOUNS_ADDRESS[chainId],
                               allocation: 1,
                               endDate: yearsAhead(5),
                             }
@@ -145,7 +149,7 @@ export const ContributionAllocationForm: React.FC<ContributionAllocationFormProp
                       name="Nouns"
                       image="/nouns-avatar-circle.png"
                       ens={nounsDisplayName}
-                      address={PUBLIC_NOUNS_ADDRESS}
+                      address={PUBLIC_NOUNS_ADDRESS[chainId]}
                     />
 
                     <SmartInput

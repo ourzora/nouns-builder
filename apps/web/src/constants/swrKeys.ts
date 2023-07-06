@@ -12,9 +12,11 @@ const SWR_KEYS = {
   PROPOSALS_TRANSACTIONS: 'proposal-transaction-data',
   ENS: 'ens',
   EXPLORE: 'explore',
+  FEATURED: 'featured',
   TOKEN: 'token',
   AUCTION: 'auction',
   DAO_INFO: 'dao-info',
+  DAO_FEED: 'dao-feed',
   TOKEN_IMAGE: 'token-image',
   DYNAMIC: {
     MY_DAOS(str: string) {

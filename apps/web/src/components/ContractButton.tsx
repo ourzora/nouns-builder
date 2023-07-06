@@ -1,6 +1,8 @@
-import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Button, ButtonProps } from '@zoralabs/zord'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+
+import { useChainStore } from 'src/stores/useChainStore'
 
 interface ContractButtonProps extends ButtonProps {
   handleClick: () => void
@@ -11,19 +13,22 @@ export const ContractButton = ({
   handleClick,
   ...rest
 }: ContractButtonProps) => {
-  const { address } = useAccount()
-  const { chain } = useNetwork()
+  const { address: userAddress } = useAccount()
+  const { chain: userChain } = useNetwork()
+  const appChain = useChainStore((x) => x.chain)
 
   const { openConnectModal } = useConnectModal()
-  const { openChainModal } = useChainModal()
+  const { switchNetwork } = useSwitchNetwork()
+
+  const handleSwitchNetwork = () => switchNetwork?.(appChain.id)
 
   return (
     <Button
       onClick={
-        address == null
+        !userAddress
           ? openConnectModal
-          : chain?.unsupported
-          ? openChainModal
+          : userChain?.id !== appChain.id
+          ? handleSwitchNetwork
           : handleClick
       }
       {...rest}

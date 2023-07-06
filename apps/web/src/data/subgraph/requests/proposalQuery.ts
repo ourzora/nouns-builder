@@ -4,12 +4,12 @@ import {
   ProposalState,
   getProposalState,
 } from 'src/data/contract/requests/getProposalState'
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
 import {
   ProposalFragment,
   ProposalVoteFragment as ProposalVote,
 } from 'src/data/subgraph/sdk.generated'
-import { BytesType } from 'src/typings'
+import { BytesType, CHAIN_ID } from 'src/typings'
 
 export interface Proposal
   extends Omit<ProposalFragment, 'executableFrom' | 'expiresAt' | 'calldatas'> {
@@ -20,9 +20,12 @@ export interface Proposal
   votes?: ProposalVote[]
 }
 
-export const getProposal = async (proposalId: string): Promise<Proposal | undefined> => {
+export const getProposal = async (
+  chainId: CHAIN_ID,
+  proposalId: string
+): Promise<Proposal | undefined> => {
   try {
-    const data = await sdk.proposal({
+    const data = await SDK.connect(chainId).proposal({
       proposalId,
     })
 
@@ -36,6 +39,7 @@ export const getProposal = async (proposalId: string): Promise<Proposal | undefi
       ...proposal,
       calldatas: calldatas ? calldatas.split(':') : [],
       state: await getProposalState(
+        chainId,
         proposal.dao.governorAddress,
         proposalId as BytesType
       ),
@@ -51,6 +55,7 @@ export const getProposal = async (proposalId: string): Promise<Proposal | undefi
     }
     return baseProposal
   } catch (e) {
+    console.log('err', e)
     Sentry.captureException(e)
     await Sentry.flush(2000)
     return

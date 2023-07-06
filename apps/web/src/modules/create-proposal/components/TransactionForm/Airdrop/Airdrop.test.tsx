@@ -2,6 +2,8 @@ import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
 
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
+import { FOUNDRY_CHAIN } from 'src/test/fixtures/chain'
 import { BUILDER_DAO } from 'src/test/fixtures/dao'
 import { render } from 'src/test/utils'
 
@@ -9,6 +11,10 @@ import { Airdrop } from './Airdrop'
 
 vi.mock('src/modules/dao', () => ({
   useDaoStore: vi.fn(),
+}))
+
+vi.mock('src/stores/useChainStore', () => ({
+  useChainStore: vi.fn(),
 }))
 
 vi.mock('src/data/subgraph/sdk.generated', async () => {
@@ -29,6 +35,7 @@ describe('Airdrop', () => {
   })
 
   it('should render initially disabled airdrop form given a required upgrade', async () => {
+    vi.mocked(useChainStore).mockReturnValue(FOUNDRY_CHAIN)
     vi.mocked(useDaoStore).mockReturnValue(BUILDER_DAO)
 
     render(<Airdrop />)

@@ -10,6 +10,7 @@ import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { Proposal, getProposal } from 'src/data/subgraph/requests/proposalQuery'
+import { useChainStore } from 'src/stores/useChainStore'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 import { BytesType } from 'src/typings'
 
@@ -60,6 +61,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
   proposal,
 }) => {
   const { mutate } = useSWRConfig()
+  const chain = useChainStore((x) => x.chain)
 
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false)
   const [modalContent, setModalContent] = useState({ title: '', subtitle: '' })
@@ -75,7 +77,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
   }
 
   const onEnd = () => {
-    mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(proposalId))
+    mutate([SWR_KEYS.PROPOSAL, chain.id, proposalId], getProposal(chain.id, proposalId))
   }
 
   const {

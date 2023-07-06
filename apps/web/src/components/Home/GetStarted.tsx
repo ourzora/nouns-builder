@@ -1,17 +1,21 @@
-import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Button } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 
+import { useChainStore } from 'src/stores/useChainStore'
 import { marqueeButton } from 'src/styles/home.css'
 
 const GetStarted = () => {
   const { address } = useAccount()
-  const { chain } = useNetwork()
+  const { chain: wagmiChain } = useNetwork()
+  const chain = useChainStore((x) => x.chain)
 
   const { openConnectModal } = useConnectModal()
-  const { openChainModal } = useChainModal()
+  const { switchNetwork } = useSwitchNetwork()
+
+  const handleSwitchNetwork = () => switchNetwork?.(chain.id)
 
   const { push } = useRouter()
 
@@ -22,10 +26,10 @@ const GetStarted = () => {
   return (
     <Button
       onClick={
-        address == null
+        address === null
           ? openConnectModal
-          : chain?.unsupported
-          ? openChainModal
+          : wagmiChain?.id != chain.id
+          ? handleSwitchNetwork
           : handleClick
       }
       h="x16"

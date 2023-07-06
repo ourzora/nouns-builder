@@ -1,4 +1,0 @@
-fragment ImageMediaEncoding on ImageEncodingTypes {
-  original
-  thumbnail
-}

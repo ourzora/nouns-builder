@@ -1,6 +1,7 @@
 import * as Sentry from '@sentry/nextjs'
 
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
+import { CHAIN_ID } from 'src/typings'
 
 import {
   Auction_Filter,
@@ -14,9 +15,10 @@ export interface ExploreDaosResponse {
 }
 
 export const userDaosFilter = async (
+  chainId: CHAIN_ID,
   memberAddress: string
 ): Promise<ExploreDaosResponse | undefined> => {
-  const userDaos = await sdk.daoTokenOwners({
+  const userDaos = await SDK.connect(chainId).daoTokenOwners({
     where: {
       owner: memberAddress,
     },
@@ -24,12 +26,13 @@ export const userDaosFilter = async (
   })
 
   const daoAddresses = userDaos.daotokenOwners.map((x) => x.dao.tokenAddress)
-  const data = await sdk.myDaosPage({ daos: daoAddresses })
+  const data = await SDK.connect(chainId).myDaosPage({ daos: daoAddresses })
 
   return { daos: data.auctions }
 }
 
 export const exploreDaosRequest = async (
+  chainId: CHAIN_ID,
   skip: number,
   orderBy: Auction_OrderBy = Auction_OrderBy.StartTime
 ): Promise<ExploreDaosResponse | undefined> => {
@@ -45,7 +48,7 @@ export const exploreDaosRequest = async (
     if (orderBy === Auction_OrderBy.EndTime)
       where.endTime_gt = Math.floor(Date.now() / 1000)
 
-    const data = await sdk.exploreDaosPage({
+    const data = await SDK.connect(chainId).exploreDaosPage({
       orderBy,
       orderDirection,
       where,

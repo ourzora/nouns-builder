@@ -15,12 +15,13 @@ import { useEnsData } from 'src/hooks'
 import { usePagination } from 'src/hooks/usePagination'
 import { getProfileLayout } from 'src/layouts/ProfileLayout'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 import { artworkSkeleton } from 'src/styles/Artwork.css'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 
 import { NextPageWithLayout } from '../_app'
-import { UserTokensResponse } from '../api/profile/[user]/tokens'
+import { UserTokensResponse } from '../api/profile/[network]/[user]/tokens'
 
 interface ProfileProps {
   userAddress: string
@@ -28,17 +29,18 @@ interface ProfileProps {
 
 const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
+  const chain = useChainStore((x) => x.chain)
   const { query } = useRouter()
 
   const page = query.page as string
 
   const { ensName, ensAvatar } = useEnsData(userAddress)
   const { data, error, isValidating } = useSWR(
-    userAddress ? [SWR_KEYS.PROFILE_TOKENS, userAddress, page] : undefined,
+    userAddress ? [SWR_KEYS.PROFILE_TOKENS, chain.slug, userAddress, page] : undefined,
     () =>
       axios
         .get<UserTokensResponse>(
-          `/api/profile/${userAddress}/tokens${page ? `?page=${page}` : ''}`
+          `/api/profile/${chain.slug}/${userAddress}/tokens${page ? `?page=${page}` : ''}`
         )
         .then((x) => x.data)
   )
@@ -169,7 +171,10 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
               {!!tokens?.tokens.length ? (
                 <Grid columns={isMobile ? 1 : 3} gap={'x12'}>
                   {tokens?.tokens.map((x, i) => (
-                    <Link key={i} href={`/dao/${x.tokenContract}/${x.tokenId}`}>
+                    <Link
+                      key={i}
+                      href={`/dao/${query.network}/${x.tokenContract}/${x.tokenId}`}
+                    >
                       <TokenPreview name={x.name} image={x.image} />
                     </Link>
                   ))}

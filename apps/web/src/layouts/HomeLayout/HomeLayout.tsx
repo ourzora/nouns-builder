@@ -9,7 +9,9 @@ export function HomeLayout({ children }: { children: ReactNode }) {
   return (
     <Box>
       <Nav />
-      <Box px={'x4'}>{children}</Box>
+      <Box px={'x4'} pt={{ '@initial': 'x20', '@480': 'x0' }}>
+        {children}
+      </Box>
       <Footer />
     </Box>
   )

@@ -5,6 +5,7 @@ import CopyButton from 'src/components/CopyButton/CopyButton'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 import { about } from 'src/styles/About.css'
 import { walletSnippet } from 'src/utils/helpers'
 
@@ -12,6 +13,7 @@ import { useDaoStore } from '../stores'
 
 const ContractLink = ({ title, address }: { title: string; address?: string }) => {
   const { isMobile } = useLayoutStore()
+  const { chain } = useChainStore()
 
   return (
     <Grid columns={isMobile ? 1 : '1fr 3fr'} align={'center'}>
@@ -38,7 +40,7 @@ const ContractLink = ({ title, address }: { title: string; address?: string }) =
           gap={{ '@initial': 'x2', '@768': 'x4' }}
         >
           <a
-            href={`${ETHERSCAN_BASE_URL}/address/${address}`}
+            href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${address}`}
             target="_blank"
             rel="noreferrer"
           >

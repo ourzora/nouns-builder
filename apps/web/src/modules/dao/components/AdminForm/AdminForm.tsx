@@ -24,6 +24,7 @@ import {
 } from 'src/modules/create-proposal'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
@@ -54,6 +55,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
   const createProposal = useProposalStore((state) => state.createProposal)
   const addresses = useDaoStore((state) => state.addresses)
   const provider = useLayoutStore((state) => state.provider)
+  const chain = useChainStore((x) => x.chain)
 
   const auctionContractParams = {
     abi: auctionAbi,
@@ -82,19 +84,27 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
 
   const { data } = useContractReads({
     contracts: [
-      { ...auctionContractParams, functionName: 'duration' },
-      { ...auctionContractParams, functionName: 'reservePrice' },
-      { ...governorContractParams, functionName: 'vetoer' },
-      { ...governorContractParams, functionName: 'votingPeriod' },
-      { ...governorContractParams, functionName: 'votingDelay' },
-      { ...governorContractParams, functionName: 'quorumThresholdBps' },
-      { ...governorContractParams, functionName: 'proposalThresholdBps' },
-      { ...metadataContractParams, functionName: 'contractImage' },
-      { ...metadataContractParams, functionName: 'projectURI' },
-      { ...metadataContractParams, functionName: 'rendererBase' },
-      { ...metadataContractParams, functionName: 'description' },
-      { ...tokenContractParams, functionName: 'getFounders' },
-    ],
+      { ...auctionContractParams, chainId: chain.id, functionName: 'duration' },
+      { ...auctionContractParams, chainId: chain.id, functionName: 'reservePrice' },
+      { ...governorContractParams, chainId: chain.id, functionName: 'vetoer' },
+      { ...governorContractParams, chainId: chain.id, functionName: 'votingPeriod' },
+      { ...governorContractParams, chainId: chain.id, functionName: 'votingDelay' },
+      {
+        ...governorContractParams,
+        chainId: chain.id,
+        functionName: 'quorumThresholdBps',
+      },
+      {
+        ...governorContractParams,
+        chainId: chain.id,
+        functionName: 'proposalThresholdBps',
+      },
+      { ...metadataContractParams, chainId: chain.id, functionName: 'contractImage' },
+      { ...metadataContractParams, chainId: chain.id, functionName: 'projectURI' },
+      { ...metadataContractParams, chainId: chain.id, functionName: 'rendererBase' },
+      { ...metadataContractParams, chainId: chain.id, functionName: 'description' },
+      { ...tokenContractParams, chainId: chain.id, functionName: 'getFounders' },
+    ] as const,
   })
 
   const [
@@ -269,7 +279,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       transactions: transactionsWithPauseUnpause,
     })
 
-    push(`/dao/${collectionAddress}/proposal/review`)
+    push(`/dao/${chain.slug}/${collectionAddress}/proposal/review`)
   }
 
   return (

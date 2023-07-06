@@ -2,13 +2,15 @@ import isNil from 'lodash/isNil'
 import { useContractReads } from 'wagmi'
 
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 export const useVotes = ({
+  chainId,
   collectionAddress,
   governorAddress,
   signerAddress,
 }: {
+  chainId: CHAIN_ID
   collectionAddress?: AddressType
   governorAddress?: AddressType
   signerAddress?: AddressType
@@ -21,19 +23,22 @@ export const useVotes = ({
         abi: tokenAbi,
         functionName: 'getVotes',
         args: [signerAddress as AddressType],
+        chainId,
       },
       {
         address: collectionAddress,
         abi: tokenAbi,
         functionName: 'delegates',
         args: [signerAddress as AddressType],
+        chainId,
       },
       {
         address: governorAddress,
         abi: governorAbi,
         functionName: 'proposalThreshold',
+        chainId,
       },
-    ],
+    ] as const,
   })
 
   if (!data || isLoading || data.some(isNil)) {

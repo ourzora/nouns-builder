@@ -25,7 +25,7 @@ const ExploreToolbar: React.FC<ExploreToolbarProps> = ({ title, showSort = false
       style={{ maxWidth: 912 }}
     >
       <Flex direction={'row'} w={'100%'} justify={'space-between'}>
-        <Box fontSize={28} mb={'x8'}>
+        <Box fontSize={28} fontWeight={'heading'} mb={'x8'}>
           {title}
         </Box>
         {showSort && (

@@ -6,6 +6,8 @@ import useSWR from 'swr'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { useChainStore } from 'src/stores/useChainStore'
+import { CHAIN_ID } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 
 interface DecodedTransactionProps {
@@ -18,6 +20,8 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
   calldatas,
   values,
 }) => {
+  const chain = useChainStore((x) => x.chain)
+
   /*
   
     format in shape defined in ethers actor
@@ -34,7 +38,12 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
     }
   }
 
-  const decodeTransaction = async (target: string, calldata: string, value: string) => {
+  const decodeTransaction = async (
+    chainId: CHAIN_ID,
+    target: string,
+    calldata: string,
+    value: string
+  ) => {
     /* if calldata is '0x' */
     const isTransfer = calldata === '0x'
 
@@ -46,6 +55,7 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
       const decoded = await axios.post('/api/decode', {
         calldata: calldata,
         contract: target,
+        chain: chainId,
       })
 
       if (decoded?.data?.statusCode) return calldata
@@ -66,7 +76,12 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
     async (_, targets, calldatas, values) => {
       return await Promise.all(
         targets.map(async (target, i) => {
-          const transaction = await decodeTransaction(target, calldatas[i], values[i])
+          const transaction = await decodeTransaction(
+            chain.id,
+            target,
+            calldatas[i],
+            values[i]
+          )
 
           return {
             target,

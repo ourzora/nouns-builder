@@ -11,6 +11,7 @@ import { OptionalLink } from 'src/components/OptionalLink'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { Queue, TransactionType, useProposalStore } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 
 interface ProposalNavigationProps {
   transactionType?: TransactionType
@@ -22,6 +23,7 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
   handleBack,
 }) => {
   const router = useRouter()
+  const chain = useChainStore((x) => x.chain)
   const addresses = useDaoStore((state) => state.addresses)
   const transactions = useProposalStore((state) => state.transactions)
   const [queueModalOpen, setQueueModalOpen] = useState(false)
@@ -32,9 +34,14 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
   const { data } = useContractReads({
     enabled: !!token && !!metadata,
     contracts: [
-      { abi: metadataAbi, address: metadata, functionName: 'contractImage' },
-      { abi: tokenAbi, address: token, functionName: 'name' },
-    ],
+      {
+        abi: metadataAbi,
+        address: metadata,
+        chainId: chain.id,
+        functionName: 'contractImage',
+      },
+      { abi: tokenAbi, address: token, chainId: chain.id, functionName: 'name' },
+    ] as const,
   })
 
   const handleNavigation = () => {
@@ -83,7 +90,7 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
               </Button>
               <OptionalLink
                 enabled={!!transactions.length}
-                href={`/dao/${token}/proposal/review`}
+                href={`/dao/${chain.slug}/${token}/proposal/review`}
               >
                 <Button disabled={!transactions.length}>Continue</Button>
               </OptionalLink>

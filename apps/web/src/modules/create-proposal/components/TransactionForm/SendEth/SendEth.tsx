@@ -8,6 +8,8 @@ import { Icon } from 'src/components/Icon'
 import Input from 'src/components/Input/Input'
 import { TransactionType, useProposalStore } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
+import { CHAIN_ID } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { walletSnippet } from 'src/utils/helpers'
 import { getProvider } from 'src/utils/provider'
@@ -16,7 +18,11 @@ import sendEthSchema, { SendEthValues } from './SendEth.schema'
 
 export const SendEth = () => {
   const { treasury } = useDaoStore((state) => state.addresses)
-  const { data: treasuryBalance } = useBalance({ address: treasury })
+  const chain = useChainStore((x) => x.chain)
+  const { data: treasuryBalance } = useBalance({
+    address: treasury,
+    chainId: chain.id,
+  })
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const initialValues: SendEthValues = {
     recipientAddress: '',
@@ -29,7 +35,10 @@ export const SendEth = () => {
   ) => {
     if (!values.amount || !values.recipientAddress) return
 
-    const target = await getEnsAddress(values.recipientAddress, getProvider())
+    const target = await getEnsAddress(
+      values.recipientAddress,
+      getProvider(CHAIN_ID.ETHEREUM)
+    )
     const value = values.amount.toString()
 
     addTransaction({
