@@ -2,8 +2,8 @@ import axios from 'axios'
 import { getAddress } from 'ethers/lib/utils.js'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { MyDaosResponse } from 'src/data/graphql/requests/daoQuery'
-import { TokensQueryResponse, tokensQuery } from 'src/data/graphql/requests/tokensQuery'
+import { MyDaosResponse } from 'src/data/subgraph/requests/daoQuery'
+import { TokensQueryResponse, tokensQuery } from 'src/data/subgraph/requests/tokensQuery'
 import { NotFoundError } from 'src/services/errors'
 import { getBaseUrl } from 'src/utils/baseUrl'
 
@@ -25,22 +25,18 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const { data: daos } = await axios.get<MyDaosResponse>(
-      `${baseUrl}/api/profile/${address}/daos`
-    )
+    const [daos, tokens] = await Promise.all([
+      axios
+        .get<MyDaosResponse>(`${baseUrl}/api/profile/${address}/daos`)
+        .then((x) => x.data),
+      tokensQuery(address, page ? parseInt(page as string) : undefined),
+    ])
 
     if (daos.length < 1)
       return res.status(200).json({
         daos: [],
       })
 
-    const collections = daos.map((dao) => dao.collectionAddress)
-
-    const tokens = await tokensQuery(
-      [address],
-      collections,
-      page ? parseInt(page as string) : undefined
-    )
     res.status(200).json({ tokens, daos } as UserTokensResponse)
   } catch (e) {
     if (e instanceof NotFoundError) {

@@ -9,7 +9,7 @@ import {
   TokenWinner,
   tokenQuery,
   tokenWinnerQuery,
-} from 'src/data/graphql/requests/tokenQuery'
+} from 'src/data/subgraph/requests/tokenQuery'
 import { AddressType } from 'src/typings'
 
 export interface TokenWithWinner extends Token, TokenWinner {}

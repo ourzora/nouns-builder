@@ -2,12 +2,6 @@ import { Box, Button, Flex, Label, Paragraph, Text, atoms } from '@zoralabs/zord
 import dayjs from 'dayjs'
 import Image from 'next/image'
 import React, { ReactElement } from 'react'
-import useSWR from 'swr'
-
-import { PUBLIC_BUILDER_TOKEN } from 'src/constants/addresses'
-import SWR_KEYS from 'src/constants/swrKeys'
-import { sdk } from 'src/data/graphql/client'
-import { Chain, SortDirection, TokenSortKey } from 'src/data/graphql/sdk.generated'
 
 import { btn, card, content, image } from './UpgradeCard.css'
 
@@ -30,25 +24,10 @@ export const UpgradeCard = ({
   onUpgrade,
   alert,
 }: UpgradeCardProps) => {
-  const { data, error } = useSWR(
-    [SWR_KEYS.TOKEN_IMAGE, PUBLIC_BUILDER_TOKEN, date],
-    (_, token, date) =>
-      sdk.tokens({
-        chain: Chain.Mainnet,
-        sort: { sortKey: TokenSortKey.Minted, sortDirection: SortDirection.Desc },
-        where: { collectionAddresses: [token] },
-        filter: { timeFilter: { endDate: date } },
-        pagination: { limit: 1 },
-      })
-  )
-
   const imgurl =
-    data?.tokens?.nodes[0]?.token?.image?.mediaEncoding?.__typename ===
-    'ImageEncodingTypes'
-      ? data?.tokens?.nodes[0]?.token?.image?.mediaEncoding?.thumbnail
-      : null
+    'https://api.zora.co/renderer/stack-images?contractAddress=0x963ac521c595d3d1be72c1eb057f24d4d42cb70b&tokenId=90&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2fbackgrounds%2f9-5.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f0%2f0_14_2_b.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f1%2f1_a_3.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f2%2f2_07_1_b.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f3%2f3_21_10_b.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f4c%2f4c-13.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f5%2f5_05_6_w.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f6%2f6_01-5%20b.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f7%2f7_13_1_b.svg&images=ipfs%3a%2f%2fbafybeieah7wjevdirq3clfpno4mkgn6z7vhdnqqniba62pwyfbwzf7mzqi%2f8%2f8_14_2_w.svg'
 
-  const imgName = data?.tokens?.nodes[0]?.token?.name
+  const imgName = 'Nouns Builder Upgrade'
 
   return (
     <Flex
@@ -82,15 +61,13 @@ export const UpgradeCard = ({
             borderRadius={'small'}
             className={image}
           >
-            {!!imgurl && !error && (
-              <Image
-                src={imgurl}
-                alt={imgName || ''}
-                width={64}
-                height={64}
-                className={atoms({ borderRadius: 'small' })}
-              />
-            )}
+            <Image
+              src={imgurl}
+              alt={imgName || ''}
+              width={64}
+              height={64}
+              className={atoms({ borderRadius: 'small' })}
+            />
           </Box>
           <Box
             width={{ '@initial': '100%', '@768': 'auto' }}

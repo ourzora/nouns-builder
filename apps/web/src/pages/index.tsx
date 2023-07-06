@@ -10,17 +10,14 @@ import RecentlyCreated from 'src/components/Home/RecentlyCreated'
 import Twitter from 'src/components/Home/Twitter'
 import VisitAlternate from 'src/components/Home/VisitAlternate'
 import { Meta } from 'src/components/Meta'
-import { highestBidsRequest } from 'src/data/graphql/requests/homepageQuery'
-import { AuctionFragment } from 'src/data/graphql/sdk.generated'
+import { highestBidsRequest } from 'src/data/subgraph/requests/homepageQuery'
+import { AuctionFragment } from 'src/data/subgraph/sdk.generated'
 import { getHomeLayout } from 'src/layouts/HomeLayout'
 import { DaoFeed } from 'src/modules/dao'
 
 import { NextPageWithLayout } from './_app'
 
-export type DaoProps = Pick<AuctionFragment, 'collectionAddress'> & {
-  auctionAddress: string
-  name?: string
-}
+export type DaoProps = AuctionFragment['dao']
 
 const HomePage: NextPageWithLayout<{
   featuredDaos: DaoProps[]
@@ -65,17 +62,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         featuredDaos: [
           {
             auctionAddress: '0x8F1B054500ED7a2B06619CD2E5D70415Bc9d6b8a',
-            collectionAddress: '0x6e13ED8472fBBd384C260538323906fc1eCb0d7B',
+            tokenAddress: '0x6e13ED8472fBBd384C260538323906fc1eCb0d7B',
             name: 'MuseumDAO',
           },
           {
             auctionAddress: '0x736EaF8C02dc093E392131068B7F17f34C4f7791',
-            collectionAddress: '0x7F29a9dfBFf0e6DB6c8a449Fee282F9B5f5fc99f',
+            tokenAddress: '0x7F29a9dfBFf0e6DB6c8a449Fee282F9B5f5fc99f',
             name: 'RecordLabelDAO',
           },
           {
             auctionAddress: '0xC4E181443EE3696cF19EB21578A6310BB75aA117',
-            collectionAddress: '0x579B2fF0F4bd719ad7628208606688a8Ac871644',
+            tokenAddress: '0x579B2fF0F4bd719ad7628208606688a8Ac871644',
             name: 'StartupDAO',
           },
         ],

@@ -3,8 +3,9 @@ import { useMemo } from 'react'
 import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { auctionSettledRequest } from 'src/data/graphql/requests/auctionSettledQuery'
-import { Proposal } from 'src/data/graphql/requests/proposalQuery'
+import { sdk } from 'src/data/subgraph/client'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
+import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 import { useDaoStore } from 'src/modules/dao'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 
@@ -24,20 +25,28 @@ export const ProposalVotes: React.FC<ProposalVotesProps> = ({ proposal }) => {
 
   const hasVotes = proposal.votes?.length || 0 > 0
 
-  const { data: auctionSettled } = useSWR(
-    addresses.auction
-      ? [SWR_KEYS.AUCTION_SETTLED, addresses.auction, proposal.timeCreated]
+  const { data: tokenAtTimestamp } = useSWR(
+    addresses.token
+      ? [SWR_KEYS.AUCTION_SETTLED, addresses.token, proposal.timeCreated]
       : undefined,
     () =>
-      auctionSettledRequest([addresses.auction as string], proposal.timeCreated, 1).then(
-        (x) => x[0]
-      )
+      sdk
+        .tokens({
+          where: {
+            tokenContract: addresses.token?.toLowerCase(),
+            mintedAt_lt: proposal.timeCreated,
+          },
+          orderBy: Token_OrderBy.MintedAt,
+          orderDirection: OrderDirection.Desc,
+          first: 1,
+        })
+        .then((x) => x.tokens[0])
   )
 
   const maxVotes = useMemo(() => {
-    if (!auctionSettled) return 0
-    return parseInt(auctionSettled?.tokenId) + 1 // + 1 for tokenId 0
-  }, [auctionSettled])
+    if (!tokenAtTimestamp) return 0
+    return parseInt(tokenAtTimestamp?.tokenId) + 1 // + 1 for tokenId 0
+  }, [tokenAtTimestamp])
 
   return (
     <Flex className={propPageWrapper}>

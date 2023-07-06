@@ -8,12 +8,13 @@ import { Countdown } from 'src/components/Countdown'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { Proposal, getProposal } from 'src/data/graphql/requests/proposalQuery'
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
+import { Proposal, getProposal } from 'src/data/subgraph/requests/proposalQuery'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 import { BytesType } from 'src/typings'
 
-import { ProposalSucceededStatus, isProposalSuccessful } from '../../utils'
+import { isProposalSuccessful } from '../../utils'
+import { isProposalExecutable } from '../../utils/isProposalExecutable'
 import { GovernorContractButton } from '../GovernorContractButton'
 
 interface SuccessfulProposalActionsProps {
@@ -79,7 +80,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
 
   const {
     proposalId,
-    status,
+    state,
     calldatas,
     targets,
     values,
@@ -89,19 +90,19 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
     executableFrom,
   } = proposal
 
-  const getBorderColor = (state: ProposalSucceededStatus) => {
-    if (state === NounsProposalStatus.Succeeded) {
+  const getBorderColor = (proposal: Proposal) => {
+    if (proposal.state === ProposalState.Succeeded) {
       return '#F2E2F7'
     }
-    if (state === NounsProposalStatus.Queued) {
-      return vars.color.border
-    }
-    if (state === NounsProposalStatus.Executable) {
+    if (isProposalExecutable(proposal)) {
       return '#D3E5FB'
+    }
+    if (proposal.state === ProposalState.Queued) {
+      return vars.color.border
     }
   }
 
-  if (!isProposalSuccessful(status)) {
+  if (!isProposalSuccessful(state)) {
     return null
   }
 
@@ -116,11 +117,11 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
       borderWidth={'normal'}
       borderRadius={'curved'}
       style={{
-        borderColor: getBorderColor(status),
+        borderColor: getBorderColor(proposal),
       }}
     >
       {/* proposal is in queue-able state */}
-      {status === NounsProposalStatus.Succeeded && (
+      {state === ProposalState.Succeeded && (
         <Fragment>
           <Flex w={{ '@initial': '100%', '@768': 'auto' }} justify={'center'}>
             <Queue
@@ -146,7 +147,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
       )}
 
       {/* has been queued, countdown to executable */}
-      {status === NounsProposalStatus.Queued && (
+      {state === ProposalState.Queued && !isProposalExecutable(proposal) && (
         <Fragment>
           <Flex
             w={{ '@initial': '100%', '@768': 'auto' }}
@@ -180,7 +181,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
       )}
 
       {/* proposal is in executable state */}
-      {status === NounsProposalStatus.Executable && (
+      {isProposalExecutable(proposal) && (
         <Fragment>
           <Flex w={{ '@initial': '100%', '@768': 'auto' }} justify={'center'}>
             <Execute

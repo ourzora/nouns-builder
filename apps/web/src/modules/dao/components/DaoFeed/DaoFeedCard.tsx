@@ -11,7 +11,7 @@ interface DaoCardProps {
 
 export const DaoFeedCard: React.FC<DaoCardProps> = ({ dao }) => {
   const { highestBid, tokenId, tokenUri, endTime } = useDaoFeedCard({
-    collectionAddress: dao.collectionAddress,
+    collectionAddress: dao.tokenAddress,
     auctionAddress: dao.auctionAddress,
   })
 
@@ -25,7 +25,7 @@ export const DaoFeedCard: React.FC<DaoCardProps> = ({ dao }) => {
       tokenImage={tokenUri?.image}
       tokenId={tokenId?.toString()}
       collectionName={dao?.name}
-      collectionAddress={dao.collectionAddress}
+      collectionAddress={dao.tokenAddress}
       bid={highestBid}
       endTime={endTime as number}
     />

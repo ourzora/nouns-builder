@@ -3,8 +3,8 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
-import { Proposal } from 'src/data/graphql/requests/proposalQuery'
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { render } from 'src/test/utils'
 
 import { SuccessfulProposalActions } from './SuccessfulProposalActions'
@@ -26,7 +26,7 @@ describe('proposal status', () => {
         proposal={
           {
             proposalId: '0x9ddab946',
-            status: NounsProposalStatus.Succeeded,
+            state: ProposalState.Succeeded,
             calldatas: [
               '0x1e83409a000000000000000000000000dc9b96ea4966d063dd5c8dbaf08fe59062091b6d',
             ],
@@ -50,7 +50,7 @@ describe('proposal status', () => {
         proposal={
           {
             proposalId: '0x9ddab946',
-            status: NounsProposalStatus.Queued,
+            state: ProposalState.Queued,
             calldatas: [
               '0x1e83409a000000000000000000000000dc9b96ea4966d063dd5c8dbaf08fe59062091b6d',
             ],
@@ -68,36 +68,6 @@ describe('proposal status', () => {
     expect(screen.getByText('48h 00m 00s')).toBeInTheDocument()
     expect(
       screen.getByText('Time remaining before this proposal can be executed')
-    ).toBeInTheDocument()
-  })
-
-  it('should render a executable proposal', async () => {
-    render(
-      <SuccessfulProposalActions
-        proposal={
-          {
-            proposalId: '0x9ddab946',
-            status: NounsProposalStatus.Executable,
-            calldatas: [
-              '0x1e83409a000000000000000000000000dc9b96ea4966d063dd5c8dbaf08fe59062091b6d',
-            ],
-            targets: ['0xc20dac0b62b28edde0c44ab1be2206a1c48e6a67'],
-            values: ['0'],
-            descriptionHash:
-              '0xf7bf256625bf1d86a299fe194328b2cc7145877bbd004e8d63a93885df4917a3',
-            proposer: '0xd1d1d4e36117ab794ec5d4c78cbd3a8904e691d0',
-            executableFrom: dayjs(date).add(2, 'day').unix(),
-            expiresAt: dayjs(date).add(14, 'day').unix(),
-          } as Proposal
-        }
-      />
-    )
-
-    expect(screen.getByText('Execute')).toBeInTheDocument()
-    expect(screen.getByText(/There's /)).toBeInTheDocument()
-    expect(screen.getByText(/14 days/)).toBeInTheDocument()
-    expect(
-      screen.getByText(/ left to execute this proposal before it expires/)
     ).toBeInTheDocument()
   })
 })

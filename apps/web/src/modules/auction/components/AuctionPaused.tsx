@@ -8,8 +8,11 @@ import { useContract, useContractRead } from 'wagmi'
 import { Icon } from 'src/components/Icon'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
-import { ProposalsResponse, getProposals } from 'src/data/graphql/requests/proposalsQuery'
-import { NounsProposalStatus } from 'src/data/graphql/sdk.generated'
+import { ProposalState } from 'src/data/contract/requests/getProposalState'
+import {
+  ProposalsResponse,
+  getProposals,
+} from 'src/data/subgraph/requests/proposalsQuery'
 import { useDaoStore } from 'src/modules/dao'
 
 export const AuctionPaused = () => {
@@ -26,7 +29,7 @@ export const AuctionPaused = () => {
 
   const { data } = useSWR<ProposalsResponse>(
     paused && isReady ? [SWR_KEYS.PROPOSALS, query.token, query.page] : null,
-    (_, token, page) => getProposals([token], LIMIT, Number(page))
+    (_, token, page) => getProposals(token, LIMIT, Number(page))
   )
 
   const pausedProposal = useMemo(() => {
@@ -36,7 +39,7 @@ export const AuctionPaused = () => {
     const unpauseCalldata = auctionContract.interface.encodeFunctionData('unpause')
 
     return data?.proposals.find((proposal) => {
-      if (proposal.status !== NounsProposalStatus.Executed) return false
+      if (proposal.state !== ProposalState.Executed) return false
 
       const pauseIndex = proposal.calldatas.findIndex(
         (calldata) => calldata === pauseCalldata

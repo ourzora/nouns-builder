@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import React, { useCallback } from 'react'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { Proposal } from 'src/data/graphql/requests/proposalQuery'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { propDataGrid } from 'src/styles/Proposals.css'
 
 import { Tile } from './Tile'
@@ -14,8 +14,15 @@ export type ProposalDetailsGridProps = {
 }
 
 export const ProposalDetailsGrid: React.FC<ProposalDetailsGridProps> = ({ proposal }) => {
-  const { forVotes, againstVotes, abstainVotes, quorumVotes, transactionInfo, voteEnd } =
-    proposal
+  const {
+    forVotes,
+    againstVotes,
+    abstainVotes,
+    quorumVotes,
+    transactionHash,
+    snapshotBlockNumber,
+    voteEnd,
+  } = proposal
 
   const calculateProgress = useCallback(
     (votes: number) => {
@@ -87,13 +94,13 @@ export const ProposalDetailsGrid: React.FC<ProposalDetailsGridProps> = ({ propos
           subtext={`${dayjs.unix(voteEnd).format('h:mm:ss A')} GMT+2`}
         />
         <a
-          href={`${ETHERSCAN_BASE_URL}/tx/${transactionInfo.transactionHash}`}
+          href={`${ETHERSCAN_BASE_URL}/tx/${transactionHash}`}
           target="_blank"
           rel="noreferrer"
         >
           <Tile
             title={'Snapshot'}
-            subtitle={`#${transactionInfo.blockNumber}`}
+            subtitle={`#${snapshotBlockNumber}`}
             subtext={'Taken at block'}
           />
         </a>
