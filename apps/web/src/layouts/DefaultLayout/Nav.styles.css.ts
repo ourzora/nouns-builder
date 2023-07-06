@@ -5,20 +5,20 @@ import { NAV_BUTTON_ZINDEX } from 'src/constants/zIndex'
 import * as z from 'src/utils/layers'
 
 export const NavContainer = style([
-  atoms({ m: 'auto', pos: 'fixed', w: '100vw' }),
+  atoms({ m: 'auto', backgroundColor: 'background1', pos: 'fixed', w: '100vw' }),
   {
-    maxWidth: '1440px',
     zIndex: z.NAV_LAYER,
   },
 ])
 
 export const NavWrapper = style([
   atoms({
-    backgroundColor: 'background1',
     py: { '@initial': 'x3', '@768': 'x5' },
     px: 'x8',
+    w: '100%',
   }),
   {
+    maxWidth: '1440px',
     height: '80px',
     zIndex: z.NAV_LAYER,
   },

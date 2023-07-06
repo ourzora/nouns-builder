@@ -1,4 +1,4 @@
-import { Box, Flex, Label, Stack, atoms } from '@zoralabs/zord'
+import { Flex, Label, Stack, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
@@ -14,7 +14,9 @@ export const Nav = () => {
   const scrollDirection = useScrollDirection()
 
   return (
-    <Box
+    <Flex
+      align="center"
+      justify="space-around"
       style={{
         top: scrollDirection === 'down' ? -80 : 0,
         transitionProperty: 'all',
@@ -61,6 +63,6 @@ export const Nav = () => {
 
         <NavMenu />
       </Flex>
-    </Box>
+    </Flex>
   )
 }
