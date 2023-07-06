@@ -23,10 +23,18 @@ const nextConfig = {
     ],
   },
   async redirects() {
+    const network =
+      process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? 'goerli' : 'ethereum'
+
     return [
       {
         source: '/why',
         destination: '/about',
+        permanent: true,
+      },
+      {
+        source: '/dao/:address(0x[0-9a-fA-F]{40})/:slug*',
+        destination: `/dao/${network}/:address/:slug*`,
         permanent: true,
       },
     ]

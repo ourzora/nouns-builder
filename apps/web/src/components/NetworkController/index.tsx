@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react'
 
+import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
+
 interface NetworkControllerProps {
   children: ReactNode
 }
@@ -8,15 +10,13 @@ interface FeatureContainerProps {
   children: ReactNode
 }
 
-const showFeature = (chainId: string) => chainId === process.env.NEXT_PUBLIC_CHAIN_ID
-
 const FeatureMainnet = ({ children }: FeatureContainerProps) => {
-  if (showFeature('1')) return <>{children}</>
+  if (!PUBLIC_IS_TESTNET) return <>{children}</>
   return null
 }
 
 const FeatureTestnet = ({ children }: FeatureContainerProps) => {
-  if (showFeature('5')) return <>{children}</>
+  if (PUBLIC_IS_TESTNET) return <>{children}</>
   return null
 }
 

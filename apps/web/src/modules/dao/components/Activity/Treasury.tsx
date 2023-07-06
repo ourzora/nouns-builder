@@ -5,7 +5,8 @@ import useSWR from 'swr'
 import { useBalance } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
+import { useChainStore } from 'src/stores/useChainStore'
 import { statisticContent } from 'src/styles/About.css'
 import { treasuryWrapper } from 'src/styles/Proposals.css'
 import { formatCryptoVal, numberFormatter } from 'src/utils/numbers'
@@ -14,8 +15,11 @@ import { useDaoStore } from '../../stores'
 
 export const Treasury = () => {
   const { addresses } = useDaoStore()
+  const chain = useChainStore((x) => x.chain)
+
   const { data: balance } = useBalance({
     address: addresses?.treasury as `0x${string}`,
+    chainId: chain.id,
   })
 
   const { data: ethUsd } = useSWR(SWR_KEYS.ETH_USD, async () => {
@@ -26,12 +30,14 @@ export const Treasury = () => {
     return json.data.rates.USD
   })
 
-  const { data: earnings } = useSWR([SWR_KEYS.TREASURY_SALES, addresses.token], () =>
-    sdk
-      .totalAuctionSales({ tokenAddress: addresses.token?.toLowerCase() as string })
-      .then((x) =>
-        x.dao?.totalAuctionSales ? ethers.utils.formatEther(x.dao.totalAuctionSales) : 0
-      )
+  const { data: earnings } = useSWR(
+    chain && [SWR_KEYS.TREASURY_SALES, chain.id, addresses.token],
+    (_, chainId) =>
+      SDK.connect(chainId)
+        .totalAuctionSales({ tokenAddress: addresses.token?.toLowerCase() as string })
+        .then((x) =>
+          x.dao?.totalAuctionSales ? ethers.utils.formatEther(x.dao.totalAuctionSales) : 0
+        )
   )
 
   const formattedEarnings = earnings && formatCryptoVal(earnings)

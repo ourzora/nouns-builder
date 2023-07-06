@@ -6,6 +6,7 @@ import React, { useState } from 'react'
 import { Icon } from 'src/components/Icon'
 import { NetworkController } from 'src/components/NetworkController'
 import { Uploading } from 'src/components/Uploading'
+import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
 import { useArtworkStore } from 'src/modules/create-proposal/stores/useArtworkStore'
 
 import { ArtworkUpload } from './ArtworkUpload'
@@ -33,9 +34,7 @@ export const ReplaceArtworkForm: React.FC<ReplaceArtworkFormProps> = ({
   handleSubmit,
 }) => {
   const { isUploadingToIPFS, ipfsUpload, setUpArtwork } = useArtworkStore()
-  const [hasConfirmed, setHasConfirmed] = useState(
-    process.env.NEXT_PUBLIC_CHAIN_ID === '5' ? true : false
-  )
+  const [hasConfirmed, setHasConfirmed] = useState(PUBLIC_IS_TESTNET ? true : false)
 
   const initialValues = {
     artwork: setUpArtwork?.artwork || [],

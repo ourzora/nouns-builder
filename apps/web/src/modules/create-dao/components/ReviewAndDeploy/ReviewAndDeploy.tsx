@@ -15,6 +15,7 @@ import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { managerAbi } from 'src/data/contract/abis'
 import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
+import { useChainStore } from 'src/stores/useChainStore'
 import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
@@ -56,6 +57,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [hasConfirmed, setHasConfirmed] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
+  const chain = useChainStore((x) => x.chain)
+
   const {
     founderAllocation,
     contributionAllocation,
@@ -162,7 +165,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     let transaction
     try {
       const config = await prepareWriteContract({
-        address: PUBLIC_MANAGER_ADDRESS,
+        address: PUBLIC_MANAGER_ADDRESS[chain.id],
+        chainId: chain.id,
         abi: managerAbi,
         functionName: 'deploy',
         signer: signer,
@@ -171,6 +175,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       const { wait } = await writeContract(config)
       transaction = await wait()
     } catch (e) {
+      console.log('e', e)
       setIsPendingTransaction(false)
       return
     }

@@ -4,6 +4,7 @@ import React, { Fragment, useState } from 'react'
 
 import { Bid } from 'src/data/contract/requests/getBids'
 import { useTimeout } from 'src/hooks/useTimeout'
+import { Chain } from 'src/typings'
 
 import { AuctionDetails } from '../AuctionDetails'
 import { BidAmount } from '../BidAmount'
@@ -15,12 +16,14 @@ import { RecentBids } from './RecentBids'
 import { Settle } from './Settle'
 
 export const CurrentAuction = ({
+  chain,
   tokenId,
   bid,
   owner,
   endTime,
   bids,
 }: {
+  chain: Chain
   tokenId: string
   auctionAddress: string
   bid?: BigNumber
@@ -68,7 +71,7 @@ export const CurrentAuction = ({
       </AuctionDetails>
 
       <ActionsWrapper>
-        <MemoizedPlaceBid tokenId={tokenId} highestBid={bid} />
+        <MemoizedPlaceBid chain={chain} tokenId={tokenId} highestBid={bid} />
       </ActionsWrapper>
 
       <RecentBids bids={bids} />

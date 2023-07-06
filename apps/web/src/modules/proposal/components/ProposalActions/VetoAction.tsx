@@ -8,6 +8,7 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { GovernorContractButton } from '../GovernorContractButton'
 
@@ -85,11 +86,13 @@ export const VetoAction: React.FC<OwnerActionsProps> = ({
   const {
     addresses: { token },
   } = useDaoStore()
+  const { chain } = useChainStore()
   const { isMobile } = useLayoutStore()
 
   const tokenContractParams = {
     abi: tokenAbi,
     address: token as Address,
+    chainId: chain.id,
   }
 
   const { data: daoName } = useContractRead({

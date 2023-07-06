@@ -1,27 +1,32 @@
-import assert from 'assert'
 import { configureChains } from 'wagmi'
-import { goerli, mainnet } from 'wagmi/chains'
+import { baseGoerli, goerli, mainnet, optimismGoerli } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
-const CHAIN_IDS = ['1', '5']
+import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
+import { RPC_URL } from 'src/constants/rpc'
+import { CHAIN_ID } from 'src/typings'
 
-function isValidChainEnv(chainEnv: string): chainEnv is typeof CHAIN_IDS[number] {
-  return CHAIN_IDS.includes(chainEnv)
-}
+const MAINNET_CHAINS = [mainnet]
 
-assert(process.env.NEXT_PUBLIC_CHAIN_ID, 'NEXT_PUBLIC_CHAIN_ID env var required')
-assert(
-  isValidChainEnv(process.env.NEXT_PUBLIC_CHAIN_ID),
-  `NEXT_PUBLIC_CHAIN_ID must be one of ${CHAIN_IDS.join(', ')}`
-)
+const TESTNET_CHAINS = [goerli, optimismGoerli, baseGoerli]
 
-export const AVAILABLE_CHAIN = [mainnet, goerli].find(
-  (chain) => chain.id.toString() === process.env.NEXT_PUBLIC_CHAIN_ID
-)!
+const AVAILIBLE_CHAINS = PUBLIC_IS_TESTNET ? TESTNET_CHAINS : MAINNET_CHAINS
 
 const { chains, provider } = configureChains(
-  [AVAILABLE_CHAIN],
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string })]
+  [...AVAILIBLE_CHAINS],
+  [
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string,
+      stallTimeout: 1000,
+    }),
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: RPC_URL[chain.id as CHAIN_ID],
+      }),
+      stallTimeout: 1000,
+    }),
+  ]
 )
 
 export { chains, provider }

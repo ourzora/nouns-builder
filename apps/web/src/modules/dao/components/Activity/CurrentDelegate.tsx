@@ -8,6 +8,7 @@ import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { tokenAbi } from 'src/data/contract/abis'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
 import { walletSnippet } from 'src/utils/helpers'
 
@@ -20,10 +21,12 @@ interface CurrentDelegateProps {
 export const CurrentDelegate = ({ toggleIsEditing }: CurrentDelegateProps) => {
   const { addresses } = useDaoStore()
   const { address: signerAddress } = useAccount()
+  const chain = useChainStore((x) => x.chain)
 
   const { data: delegateAddress } = useContractRead({
     abi: tokenAbi,
     address: addresses.token,
+    chainId: chain.id,
     functionName: 'delegates',
     args: [signerAddress || constants.AddressZero],
     enabled: !!signerAddress,

@@ -6,6 +6,7 @@ import { Countdown } from 'src/components/Countdown'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useTimeout } from 'src/hooks/useTimeout'
+import { useChainStore } from 'src/stores/useChainStore'
 
 interface PendingProps {
   voteStart: number
@@ -16,10 +17,11 @@ const Pending: React.FC<PendingProps> = ({ voteStart, proposalId }) => {
   const { mutate } = useSWRConfig()
 
   const [isEnded, setIsEnded] = useState<boolean>(false)
+  const chain = useChainStore((x) => x.chain)
 
   const isEndedtimeout = isEnded ? 4000 : null
   useTimeout(() => {
-    mutate([SWR_KEYS.PROPOSAL, proposalId], getProposal(proposalId))
+    mutate([SWR_KEYS.PROPOSAL, chain.id, proposalId], getProposal(chain.id, proposalId))
   }, isEndedtimeout)
 
   const onEnd = () => {

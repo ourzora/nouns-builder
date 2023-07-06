@@ -8,6 +8,8 @@ import { render } from 'src/test/utils'
 
 import { ProposalCard } from './ProposalCard'
 
+vi.mock('next/router', () => ({ useRouter: vi.fn() }))
+
 describe('proposaal card', () => {
   const date = new Date(2022, 1, 1)
 

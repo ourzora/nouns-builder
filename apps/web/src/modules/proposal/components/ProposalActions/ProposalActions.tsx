@@ -10,6 +10,7 @@ import { ProposalVoteFragment as ProposalVote } from 'src/data/subgraph/sdk.gene
 import { useDaoStore } from 'src/modules/dao'
 import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
 
 import { CancelButton } from './CancelButton'
@@ -30,6 +31,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const { address: userAddress } = useAccount()
   const signerAddress = useLayoutStore((state) => state.signerAddress)
   const addresses = useDaoStore((state) => state.addresses)
+  const chain = useChainStore((x) => x.chain)
 
   const { proposer, title, voteStart, proposalId, proposalNumber, timeCreated, state } =
     proposal
@@ -40,12 +42,14 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
       {
         abi: governorAbi,
         address: addresses?.governor,
+        chainId: chain.id,
         functionName: 'getVotes',
         args: [signerAddress as AddressType, BigNumber.from(timeCreated)],
       },
       {
         abi: governorAbi,
         address: addresses?.governor,
+        chainId: chain.id,
         functionName: 'vetoer',
       },
     ] as const,

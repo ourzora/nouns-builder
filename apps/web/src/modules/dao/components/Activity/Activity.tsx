@@ -19,6 +19,7 @@ import { usePagination } from 'src/hooks/usePagination'
 import { Upgrade, useProposalStore } from 'src/modules/create-proposal'
 import { ProposalCard } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 import {
   delegateBtn,
   selectDelegateBtn,
@@ -39,21 +40,23 @@ export const Activity: React.FC = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const { createProposal } = useProposalStore()
   const { address } = useAccount()
-  const { query, isReady, push, pathname } = useRouter()
+  const { query, isReady, push } = useRouter()
   const { isMobile } = useLayoutStore()
   const { openConnectModal } = useConnectModal()
+  const chain = useChainStore((x) => x.chain)
   const LIMIT = 20
 
   const { token } = addresses
 
   const { data, error } = useSWR<ProposalsResponse>(
-    isReady ? [SWR_KEYS.PROPOSALS, query.token, query.page] : null,
-    (_, token, page) => getProposals(token, LIMIT, Number(page))
+    isReady ? [SWR_KEYS.PROPOSALS, chain.id, query.token, query.page] : null,
+    (_, chainId, token, page) => getProposals(chainId, token, LIMIT, Number(page))
   )
 
   const { handlePageBack, handlePageForward } = usePagination(data?.pageInfo?.hasNextPage)
 
   const { isOwner, isDelegating, hasThreshold, proposalVotesRequired } = useVotes({
+    chainId: chain.id,
     governorAddress: addresses?.governor,
     signerAddress: address,
     collectionAddress: query?.token as AddressType,
@@ -75,7 +78,7 @@ export const Activity: React.FC = () => {
       disabled: false,
       transactions: [],
     })
-    push(`/dao/${query.token}/proposal/create`)
+    push(`/dao/${query.network}/${query.token}/proposal/create`)
   }
 
   if (!data && !error) {

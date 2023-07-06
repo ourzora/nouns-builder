@@ -1,12 +1,15 @@
 import { readContract, readContracts } from '@wagmi/core'
 import { BigNumber } from 'ethers'
 
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { metadataAbi } from '../abis'
 
-export const getPropertyItemsCount = async (metadataAddress: AddressType) => {
-  const baseParams = { address: metadataAddress, abi: metadataAbi }
+export const getPropertyItemsCount = async (
+  chainId: CHAIN_ID,
+  metadataAddress: AddressType
+) => {
+  const baseParams = { address: metadataAddress, abi: metadataAbi, chainId: chainId }
   const propertiesCount = await readContract({
     ...baseParams,
     functionName: 'propertiesCount',

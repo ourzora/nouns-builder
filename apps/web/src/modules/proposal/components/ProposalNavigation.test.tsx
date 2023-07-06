@@ -2,6 +2,8 @@ import { screen, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
 
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
+import { FOUNDRY_CHAIN } from 'src/test/fixtures/chain'
 import { BUILDER_DAO } from 'src/test/fixtures/dao'
 import { render } from 'src/test/utils'
 
@@ -13,12 +15,18 @@ vi.mock('src/modules/dao', () => ({
   useDaoStore: vi.fn(),
 }))
 
+vi.mock('src/stores/useChainStore', () => ({
+  useChainStore: vi.fn(),
+}))
+
 describe('Proposal Navigation', () => {
   it('should render the nav', async () => {
     vi.mocked(useDaoStore).mockReturnValue({
       token: BUILDER_DAO.token,
       metadata: BUILDER_DAO.metadata,
     })
+
+    vi.mocked(useChainStore).mockReturnValue(FOUNDRY_CHAIN)
 
     render(<ProposalNavigation />)
 

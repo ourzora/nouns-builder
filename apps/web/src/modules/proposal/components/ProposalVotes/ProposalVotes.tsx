@@ -3,10 +3,11 @@ import { useMemo } from 'react'
 import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 
 import { VotePlacard } from './VotePlacard'
@@ -22,15 +23,16 @@ export const ProposalVotes: React.FC<ProposalVotesProps> = ({ proposal }) => {
     return proposal.votes.reduce((acc, vote) => acc + vote.weight, 0)
   }, [proposal.votes])
   const addresses = useDaoStore((x) => x.addresses)
+  const chain = useChainStore((x) => x.chain)
 
   const hasVotes = proposal.votes?.length || 0 > 0
 
   const { data: tokenAtTimestamp } = useSWR(
     addresses.token
-      ? [SWR_KEYS.AUCTION_SETTLED, addresses.token, proposal.timeCreated]
+      ? [SWR_KEYS.AUCTION_SETTLED, chain.id, addresses.token, proposal.timeCreated]
       : undefined,
     () =>
-      sdk
+      SDK.connect(chain.id)
         .tokens({
           where: {
             tokenContract: addresses.token?.toLowerCase(),

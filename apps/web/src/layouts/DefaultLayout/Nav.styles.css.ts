@@ -5,17 +5,18 @@ import { NAV_BUTTON_ZINDEX } from 'src/constants/zIndex'
 import * as z from 'src/utils/layers'
 
 export const NavContainer = style([
-  atoms({ m: 'auto' }),
+  atoms({ m: 'auto', pos: 'fixed', w: '100vw' }),
   {
     maxWidth: '1440px',
+    zIndex: z.NAV_LAYER,
   },
 ])
 
 export const NavWrapper = style([
   atoms({
-    py: { '@initial': 'x3', '@768': 'x5' },
-    px: 'x4',
     backgroundColor: 'background1',
+    py: { '@initial': 'x3', '@768': 'x5' },
+    px: 'x8',
   }),
   {
     height: '80px',
@@ -143,4 +144,13 @@ export const footerLogoTextRight = style({
   flexGrow: 1,
   flexShrink: 1,
   flexBasis: 0,
+})
+
+export const chainPopUpButton = style({
+  backgroundColor: 'white',
+  selectors: {
+    '&:hover': {
+      backgroundColor: vars.color.background2,
+    },
+  },
 })

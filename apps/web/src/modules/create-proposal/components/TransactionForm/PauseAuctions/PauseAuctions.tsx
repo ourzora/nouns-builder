@@ -5,15 +5,18 @@ import { auctionAbi } from 'src/data/contract/abis'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
 
 export const PauseAuctions = () => {
   const { auction } = useDaoStore((state) => state.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
+  const chain = useChainStore((x) => x.chain)
   const auctionContract = useContract({ abi: auctionAbi, address: auction })
   const { data: paused } = useContractRead({
     abi: auctionAbi,
     address: auction,
+    chainId: chain.id,
     functionName: 'paused',
   })
 

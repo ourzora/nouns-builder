@@ -22,8 +22,9 @@ const AdminNav = () => {
   const handleNavigation = async () => {
     const auction = await auctionContract?.auction()
     await router.push({
-      pathname: `/dao/[token]/[tokenId]`,
+      pathname: `/dao/[network]/[token]/[tokenId]`,
       query: {
+        network: router.query?.network,
         token: router.query?.token,
         tokenId: auction?.tokenId?.toNumber(),
         tab: 'admin',

@@ -13,13 +13,16 @@ import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { ErrorResult } from 'src/services/errorResult'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
-import { AddressType } from 'src/typings'
+import { useChainStore } from 'src/stores/useChainStore'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { MarkdownEditor } from './MarkdownEditor'
 import { Transactions } from './Transactions'
 import { ERROR_CODE, FormValues, validationSchema } from './fields'
+
+const CHAINS_TO_SIMULATE = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI, CHAIN_ID.OPTIMISM_GOERLI]
 
 interface ReviewProposalProps {
   disabled: boolean
@@ -37,6 +40,7 @@ export const ReviewProposalForm = ({
   const router = useRouter()
   const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
+  const chain = useChainStore((x) => x.chain)
   //@ts-ignore
   const signerAddress = signer?._address
   const { clearProposal } = useProposalStore()
@@ -52,6 +56,7 @@ export const ReviewProposalForm = ({
     abi: tokenAbi,
     enabled: !!signerAddress,
     functionName: 'getVotes',
+    chainId: chain.id,
     args: [signerAddress as AddressType],
   })
 
@@ -69,6 +74,7 @@ export const ReviewProposalForm = ({
 
   const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
     address: addresses?.governor as AddressType,
+    chainId: chain.id,
     abi: governorAbi,
     functionName: 'proposalThreshold',
   })
@@ -102,36 +108,39 @@ export const ReviewProposalForm = ({
         calldata,
       } = prepareProposalTransactions(values.transactions)
 
-      let simulationResults
-      try {
-        setSimulating(true)
+      if (!!CHAINS_TO_SIMULATE.find((x) => x === chain.id)) {
+        let simulationResults
+        try {
+          setSimulating(true)
 
-        simulationResults = await axios
-          .post<SimulationResult>('/api/simulate', {
-            treasuryAddress: addresses?.treasury,
-            calldatas: calldata,
-            values: transactionValues,
-            targets,
-          })
-          .then((res) => res.data)
-      } catch (err) {
-        if (axios.isAxiosError(err)) {
-          const data = err.response?.data as ErrorResult
-          setSimulationError(data.error)
-        } else {
-          setSimulationError('Unable to simulate these transactions')
+          simulationResults = await axios
+            .post<SimulationResult>('/api/simulate', {
+              treasuryAddress: addresses?.treasury,
+              chainId: chain.id,
+              calldatas: calldata,
+              values: transactionValues,
+              targets,
+            })
+            .then((res) => res.data)
+        } catch (err) {
+          if (axios.isAxiosError(err)) {
+            const data = err.response?.data as ErrorResult
+            setSimulationError(data.error)
+          } else {
+            setSimulationError('Unable to simulate these transactions')
+          }
+          return
+        } finally {
+          setSimulating(false)
         }
-        return
-      } finally {
-        setSimulating(false)
-      }
-
-      const simulationFailed = simulationResults?.success === false
-      if (simulationFailed) {
-        const failed =
-          simulationResults?.simulations.filter(({ success }) => success === false) || []
-        setSimulations(failed)
-        return
+        const simulationFailed = simulationResults?.success === false
+        if (simulationFailed) {
+          const failed =
+            simulationResults?.simulations.filter(({ success }) => success === false) ||
+            []
+          setSimulations(failed)
+          return
+        }
       }
 
       try {
@@ -156,8 +165,9 @@ export const ReviewProposalForm = ({
 
         router
           .push({
-            pathname: `/dao/[token]/[tokenId]`,
+            pathname: `/dao/[network]/[token]/[tokenId]`,
             query: {
+              network: router.query?.network,
               token: router.query?.token,
               tokenId: auction?.tokenId?.toNumber(),
               message: SUCCESS_MESSAGES.PROPOSAL_SUBMISSION_SUCCESS,

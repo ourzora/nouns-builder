@@ -1,5 +1,6 @@
-import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
+import { Box, Flex, PopUp, Stack, Text } from '@zoralabs/zord'
 import axios from 'axios'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -11,15 +12,20 @@ import { DaoAvatar } from 'src/components/Avatar/DaoAvatar'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { Icon } from 'src/components/Icon'
 import { NetworkController } from 'src/components/NetworkController'
+import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { MyDaosResponse } from 'src/data/subgraph/requests/daoQuery'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
+import { CHAIN_ID } from 'src/typings'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { ConnectButton } from './ConnectButton'
 import { CreateDaoButton } from './CreateDaoButton'
 import {
   activeNavAvatar,
+  chainPopUpButton,
   disconnectButton,
   myDaosWrapper,
   navButton,
@@ -29,27 +35,36 @@ import { ViewProfileButton } from './ViewProfileButton'
 
 export const NavMenu = () => {
   const [isOpenMenu, setIsOpenMenu] = React.useState(false)
+  const [isOpenChainMenu, setIsOpenChainMenu] = React.useState(false)
+  const [isChainInitilized, setIsChainInitilized] = React.useState(false)
+  const isMobile = useLayoutStore((x) => x.isMobile)
   const [viewAll, setViewAll] = React.useState(false)
   const [activeDropdown, setActiveDropdown] = React.useState<
-    'userMenu' | 'appMenu' | undefined
+    'userMenu' | 'appMenu' | 'chainMenu' | undefined
   >(undefined)
 
   const router = useRouter()
+  const { chain: selectedChain, setChain } = useChainStore()
 
   const { address } = useAccount()
   const { displayName, ensAvatar } = useEnsData(address as string)
   const { data: balance } = useBalance({
     address: address as `0x${string}`,
+    chainId: selectedChain.id,
   })
   const { disconnect } = useDisconnect()
+  const hasNetwork = !!router.query?.network
 
   const userBalance = balance?.formatted
     ? `${Number(formatCryptoVal(balance?.formatted)).toFixed(2)} ETH`
     : undefined
 
   const { data: myDaos } = useSWR(
-    address ? SWR_KEYS.DYNAMIC.MY_DAOS(address as string) : null,
-    () => axios.get<MyDaosResponse>(`/api/profile/${address}/daos`).then((x) => x.data),
+    address ? [selectedChain.slug, SWR_KEYS.DYNAMIC.MY_DAOS(address as string)] : null,
+    () =>
+      axios
+        .get<MyDaosResponse>(`/api/profile/${selectedChain.slug}/${address}/daos`)
+        .then((x) => x.data),
     {
       revalidateOnFocus: false,
     }
@@ -58,6 +73,14 @@ export const NavMenu = () => {
   const initMaxDaos = 3
   const viewableDaos = myDaos && myDaos.slice(0, viewAll ? myDaos.length : initMaxDaos)
   const hasMoreDaos = myDaos && myDaos.length > initMaxDaos ? true : false
+
+  const onChainChange = (chainId: number) => {
+    setActiveDropdown(undefined)
+    const selected = PUBLIC_DEFAULT_CHAINS.find((x) => x.id === chainId)
+    if (selected) setChain(selected)
+  }
+
+  const isSelectedChain = (chainId: CHAIN_ID) => selectedChain.id === chainId
 
   /*
     close dropdown on route change
@@ -69,13 +92,123 @@ export const NavMenu = () => {
 
     router.events.on('routeChangeStart', handleRouteChange)
 
+    const hasHydrated = useChainStore.persist.hasHydrated()
+    let hydrationUnsubscribe: () => void | undefined
+
+    if (hasHydrated) setIsChainInitilized(true)
+    else {
+      hydrationUnsubscribe = useChainStore.persist.onFinishHydration(() =>
+        setIsChainInitilized(true)
+      )
+    }
+
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
+      hydrationUnsubscribe?.()
     }
   }, [router])
 
   return (
     <Flex align={'center'} direction={'row'} gap={'x4'}>
+      {isChainInitilized && (
+        <Flex
+          onClick={() => {
+            !hasNetwork && setIsOpenChainMenu((bool) => !bool)
+            setActiveDropdown('chainMenu')
+          }}
+          data-active={!!activeDropdown && activeDropdown !== 'chainMenu'}
+        >
+          <PopUp
+            padding="x0"
+            placement="bottom-end"
+            close={!isOpenChainMenu}
+            onOpenChange={(open) => {
+              setIsOpenChainMenu(open)
+              if (!open) {
+                setViewAll(false)
+                // if closing menu and not opening another
+                if (activeDropdown === 'chainMenu') {
+                  setActiveDropdown(undefined)
+                }
+              }
+            }}
+            trigger={
+              <Flex
+                borderColor="border"
+                borderStyle="solid"
+                backgroundColor="background1"
+                borderRadius="curved"
+                cursor={'pointer'}
+                align={'center'}
+                justify={'space-between'}
+                height={'x10'}
+                px="x2"
+              >
+                <Flex align={'center'}>
+                  <Box h="x6" w="x6">
+                    <Image
+                      style={{ height: 24, width: 24 }}
+                      src={selectedChain.icon}
+                      alt={selectedChain.name}
+                    />
+                  </Box>
+                  <Box h="x6" w="x6" ml="x1">
+                    <Icon id="chevronDown" fill="tertiary" pointerEvents="none" />
+                  </Box>
+                </Flex>
+              </Flex>
+            }
+          >
+            <Stack my="x4" mx="x2">
+              {PUBLIC_DEFAULT_CHAINS.map((chain, i, chains) => (
+                <Flex
+                  className={chainPopUpButton}
+                  borderRadius="normal"
+                  onClick={() => !hasNetwork && onChainChange(chain.id)}
+                  cursor={
+                    hasNetwork
+                      ? isSelectedChain(chain.id)
+                        ? undefined
+                        : 'not-allowed'
+                      : 'pointer'
+                  }
+                  height={'x10'}
+                  px="x4"
+                  mb={i !== chains.length - 1 ? 'x2' : undefined}
+                  align={'center'}
+                  justify={'space-between'}
+                >
+                  <Flex align={'center'}>
+                    <Box h="x6" w="x6" mr="x2">
+                      <Image
+                        style={{ height: 24, width: 24 }}
+                        src={chain.icon}
+                        alt={chain.name}
+                      />
+                    </Box>
+                    <Text
+                      fontWeight={'heading'}
+                      color={
+                        hasNetwork && !isSelectedChain(chain.id) ? 'text3' : undefined
+                      }
+                    >
+                      {chain.name}
+                    </Text>
+                  </Flex>
+                  <Icon
+                    id="check"
+                    fill="tertiary"
+                    ml="x10"
+                    style={{
+                      visibility: selectedChain.id === chain.id ? 'visible' : 'hidden',
+                    }}
+                  />
+                </Flex>
+              ))}
+            </Stack>
+          </PopUp>
+        </Flex>
+      )}
       {address && (
         <Flex
           className={navButton}
@@ -124,7 +257,7 @@ export const NavMenu = () => {
                     {viewableDaos?.map((dao, index) => (
                       <Link
                         key={dao.collectionAddress}
-                        href={`/dao/${dao.collectionAddress}`}
+                        href={`/dao/${selectedChain.slug}/${dao.collectionAddress}`}
                         passHref
                         legacyBehavior
                       >
@@ -181,8 +314,14 @@ export const NavMenu = () => {
           </PopUp>
         </Flex>
       )}
+      {!address && !isMobile && (
+        <Box style={{ width: 110 }}>
+          <ConnectButton />
+        </Box>
+      )}
       <Flex
         className={navButton}
+        display={{ '@initial': 'flex', '@768': 'none' }}
         onClick={() => {
           setIsOpenMenu((bool) => !bool)
           setActiveDropdown('appMenu')
@@ -219,11 +358,7 @@ export const NavMenu = () => {
         >
           <Flex direction={'column'} p={'x4'} gap={'x2'} style={{ width: 264 }}>
             <ConnectButton />
-            <Flex
-              display={{ '@initial': 'flex', '@768': 'none' }}
-              direction={'column'}
-              gap={'x2'}
-            >
+            <Flex direction={'column'} gap={'x2'}>
               <Link href={'/about'}>
                 <Flex display="flex" align="center" justify={'center'} py={'x2'}>
                   <Text cursor={'pointer'} fontWeight={'display'}>

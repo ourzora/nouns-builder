@@ -8,10 +8,11 @@ import remarkGfm from 'remark-gfm'
 import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { sdk } from 'src/data/subgraph/client'
+import { SDK } from 'src/data/subgraph/client'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 
 import { DecodedTransactions } from './DecodedTransactions'
@@ -37,11 +38,14 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
 }) => {
   const { description, proposer, calldatas, values, targets } = proposal
   const { displayName } = useEnsData(proposer)
+  const chain = useChainStore((x) => x.chain)
 
   const { data: tokenImage, error } = useSWR(
-    !!collection && !!proposer ? [SWR_KEYS.TOKEN_IMAGE, collection, proposer] : null,
-    async (_, collection, proposer) => {
-      const data = await sdk.tokens({
+    !!collection && !!proposer
+      ? [SWR_KEYS.TOKEN_IMAGE, chain.id, collection, proposer]
+      : null,
+    async (_, chainId, collection, proposer) => {
+      const data = await SDK.connect(chainId).tokens({
         where: { owner: proposer.toLowerCase(), tokenContract: collection.toLowerCase() },
         first: 1,
         orderBy: Token_OrderBy.MintedAt,

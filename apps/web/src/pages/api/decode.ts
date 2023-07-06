@@ -5,15 +5,19 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { getContractABIByAddress } from 'src/services/abiService'
 import { InvalidRequestError, NotFoundError } from 'src/services/errors'
+import { CHAIN_ID } from 'src/typings'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { contract, calldata } = req.body
+  const { contract, calldata, chain } = req.body
 
   if (!contract) return res.status(404).json({ error: 'no address request' })
   if (!calldata) return res.status(404).json({ error: 'no calldata request' })
+  if (!chain) return res.status(404).json({ error: 'no chain request' })
+
+  const chainInt = parseInt(chain)
 
   try {
-    const { abi } = await getContractABIByAddress(contract)
+    const { abi } = await getContractABIByAddress(chainInt as CHAIN_ID, contract)
     const contractInterface = new ethers.utils.Interface(abi)
     const decodeResult = contractInterface.parseTransaction({ data: calldata })
 
