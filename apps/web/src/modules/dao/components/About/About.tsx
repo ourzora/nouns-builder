@@ -165,10 +165,10 @@ export const About: React.FC = () => {
       >
         <ExternalLinks links={{ website: parsedContractURI?.external_url }} />
       </Box>
+      <MembersList totalSupply={totalSupply?.toNumber()} />
       <Text variant="heading-xs" mt="x16" style={{ fontWeight: 800 }}>
         Founders
       </Text>
-      <MembersList totalSupply={totalSupply?.toNumber()} />
 
       {typeof founders !== 'undefined' && founders.length > 0 ? (
         <Grid columns={isMobile ? 1 : 2} mt="x6" gap="x4">
