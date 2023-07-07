@@ -159,7 +159,6 @@ export const About: React.FC = () => {
         </Box>
       ) : null}
 
-      <MembersList />
       <Box
         mt={{ '@initial': 'x4', '@768': 'x6' }}
         display={{ '@initial': 'block', '@768': 'none' }}
@@ -169,6 +168,7 @@ export const About: React.FC = () => {
       <Text variant="heading-xs" mt="x16" style={{ fontWeight: 800 }}>
         Founders
       </Text>
+      <MembersList totalSupply={totalSupply?.toNumber()} />
 
       {typeof founders !== 'undefined' && founders.length > 0 ? (
         <Grid columns={isMobile ? 1 : 2} mt="x6" gap="x4">

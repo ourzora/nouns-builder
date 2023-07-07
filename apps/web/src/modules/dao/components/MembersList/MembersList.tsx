@@ -1,9 +1,10 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import useSWR from 'swr'
 
+import { Avatar } from 'src/components/Avatar'
 import { useEnsData } from 'src/hooks'
 import { useChainStore } from 'src/stores/useChainStore'
 
@@ -19,20 +20,19 @@ type MembersQuery = {
   membersList: DaoMember[]
 }
 
-const TESTING = '0x6e13ED8472fBBd384C260538323906fc1eCb0d7B'.toLowerCase()
-const TEST_NETWORK = '5'
-export const MembersList = () => {
+export const MembersList = ({ totalSupply }: { totalSupply?: number }) => {
   const chain = useChainStore((x) => x.chain)
   const {
     addresses: { token },
   } = useDaoStore()
+
   const {
     data: members,
     error,
     isValidating,
   } = useSWR(token && chain.id ? [token, chain.id] : undefined, () =>
     axios
-      .get<MembersQuery>(`/api/membersList/${TESTING}?chainId=${TEST_NETWORK}`)
+      .get<MembersQuery>(`/api/membersList/${token}?chainId=${chain.id}`)
       .then((x) => x.data.membersList)
   )
   // console.log('members', members)
@@ -42,7 +42,7 @@ export const MembersList = () => {
   return (
     <MembersPanel>
       {members?.map((member) => (
-        <MemberCard member={member} />
+        <MemberCard member={member} totalSupply={totalSupply} />
       ))}
     </MembersPanel>
   )
@@ -50,20 +50,26 @@ export const MembersList = () => {
 
 const MembersPanel = ({ children }: { children: ReactNode }) => {
   return (
-    <Box
-      mt={{ '@initial': 'x4', '@768': 'x16' }}
-      borderRadius={'phat'}
-      borderStyle={'solid'}
-      borderWidth={'normal'}
-      borderColor={'border'}
-      p={{ '@initial': 'x4', '@768': 'x10' }}
-    >
-      <Text mb={{ '@initial': 'x4', '@768': 'x6' }} fontSize={28} fontWeight={'display'}>
+    <>
+      <Text
+        mb={{ '@initial': 'x4', '@768': 'x6' }}
+        mt={{ '@initial': 'x4', '@768': 'x10' }}
+        fontSize={28}
+        fontWeight={'display'}
+      >
         Members
       </Text>
-      <TableHeader />
-      {children}
-    </Box>
+      <Box
+        borderRadius={'phat'}
+        borderStyle={'solid'}
+        borderWidth={'normal'}
+        borderColor={'border'}
+        p={{ '@initial': 'x4', '@768': 'x6' }}
+      >
+        <TableHeader />
+        {children}
+      </Box>
+    </>
   )
 }
 
@@ -86,21 +92,36 @@ const TableHeader = () => {
   )
 }
 
-const MemberCard = ({ member }: { member: DaoMember }) => {
+const MemberCard = ({
+  member,
+  totalSupply,
+}: {
+  member: DaoMember
+  totalSupply?: number
+}) => {
   const { displayName, ensAvatar } = useEnsData(member.id)
 
+  const timeJoined = useMemo(
+    () => dayjs(dayjs.unix(member.timeJoined)).format('MMM DD, YYYY'),
+    [member]
+  )
+
+  const votePercent = useMemo(() => {
+    if (!totalSupply || !member.daoTokenCount) return '--'
+    return ((Number(member.daoTokenCount) / totalSupply) * 100).toFixed(2)
+  }, [totalSupply, member])
+
   return (
-    <Flex className={row}>
-      <Box w="100%" className={firstRowItem}>
-        {displayName}
-      </Box>
-      <Text className={rowItem} mb={'x8'}>
-        {member.daoTokenCount}
-      </Text>
-      <Text className={rowItem}>{member.daoTokenCount}</Text>
-      <Text className={rowItem}>
-        Since {dayjs(dayjs.unix(member.timeJoined)).format('MMM DD, YYYY')}
-      </Text>
+    <Flex className={row} align={'center'} mb={'x10'}>
+      <Flex w="100%" className={firstRowItem} align={'center'}>
+        <Avatar address={member.id} src={ensAvatar} size="32" />
+        <Text mx="x2" variant="paragraph-md">
+          {displayName}
+        </Text>
+      </Flex>
+      <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
+      <Text className={rowItem}>{votePercent}%</Text>
+      <Text className={lastRowItem}>Since {timeJoined}</Text>
     </Flex>
   )
 }

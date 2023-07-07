@@ -5,10 +5,16 @@ import { CHAIN_ID } from 'src/typings'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { collectionId, chainId } = req.query
+
+  if (!collectionId || !chainId) {
+    res.status(400).json({ error: 'Missing query parameters' })
+    return
+  }
+
   try {
     const membersList = await membersListRequest(
       Number(chainId) as CHAIN_ID,
-      collectionId as string
+      (collectionId as string).toLowerCase()
     )
     res.status(200).json({ membersList })
   } catch (error) {

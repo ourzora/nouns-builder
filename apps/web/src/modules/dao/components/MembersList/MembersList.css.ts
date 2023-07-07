@@ -8,8 +8,8 @@ export const rowItem = style({
   width: '20%',
 })
 export const firstRowItem = style({
-  width: '35%',
+  width: '37%',
 })
 export const lastRowItem = style({
-  width: '25%',
+  width: '23%',
 })
