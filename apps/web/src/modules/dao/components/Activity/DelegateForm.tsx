@@ -1,3 +1,4 @@
+import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { useState } from 'react'
@@ -8,6 +9,7 @@ import SmartInput from 'src/components/Fields/SmartInput'
 import { Icon } from 'src/components/Icon'
 import { tokenAbi } from 'src/data/contract/abis'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
 import { getEnsAddress } from 'src/utils/ens'
 
@@ -27,6 +29,7 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
   const [isLoading, setIsLoading] = useState(false)
   const { addresses } = useDaoStore()
   const { provider } = useLayoutStore()
+  const chain = useChainStore((x) => x.chain)
   const { data: signer } = useSigner()
 
   const tokenContract = useContract({
@@ -36,13 +39,19 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
   })
 
   const submitCallback = async (values: AddressFormProps) => {
-    if (!values.address || !tokenContract) return
+    if (!values.address || !addresses.token) return
 
     setIsLoading(true)
     try {
-      const txn = await tokenContract.delegate(
-        (await getEnsAddress(values.address, provider)) as Address
-      )
+      const delegate = (await getEnsAddress(values.address, provider)) as Address
+      const config = await prepareWriteContract({
+        abi: tokenAbi,
+        address: addresses.token,
+        chainId: chain.id,
+        functionName: 'delegate',
+        args: [delegate],
+      })
+      const txn = await writeContract(config)
       await txn?.wait()
 
       handleUpdate(values.address)
