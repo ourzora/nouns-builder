@@ -5,6 +5,7 @@ import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 export interface Bid {
@@ -16,6 +17,7 @@ export interface Bid {
 
 export const BidCard = ({ bid }: { bid: Bid }) => {
   const { displayName, ensAvatar } = useEnsData(bid?.bidder)
+  const chain = useChainStore((x) => x.chain)
 
   return (
     <Flex direction={'column'} my="x4" align="center" style={{ height: 35 }}>
@@ -29,7 +31,7 @@ export const BidCard = ({ bid }: { bid: Bid }) => {
         <Flex direction="row" align="center">
           <Flex
             as="a"
-            href={`${ETHERSCAN_BASE_URL}/tx/${bid.transactionHash}`}
+            href={`${ETHERSCAN_BASE_URL[chain.id]}/tx/${bid.transactionHash}`}
             target="_blank"
             rel="noopener noreferrer"
           >

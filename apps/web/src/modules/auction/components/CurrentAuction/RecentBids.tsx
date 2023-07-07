@@ -5,6 +5,7 @@ import React from 'react'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { Bid } from 'src/data/contract/requests/getBids'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { AllBids } from '../AllBids'
 import { allRecentBidsButton, recentBid } from '../Auction.css'
@@ -19,6 +20,8 @@ interface RecentBidsProps {
 }
 
 export const RecentBids: React.FC<RecentBidsProps> = ({ bids }) => {
+  const chain = useChainStore((x) => x.chain)
+
   return bids.length ? (
     <Box mt="x3">
       <Stack>
@@ -35,7 +38,7 @@ export const RecentBids: React.FC<RecentBidsProps> = ({ bids }) => {
             <Flex
               align="center"
               as="a"
-              href={`${ETHERSCAN_BASE_URL}/tx/${transactionHash}`}
+              href={`${ETHERSCAN_BASE_URL[chain.id]}/tx/${transactionHash}`}
               target="_blank"
               rel="noopener noreferrer"
             >
