@@ -111,7 +111,9 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
                       className={atoms({ textDecoration: 'underline' })}
                     >
                       <a
-                        href={`${ETHERSCAN_BASE_URL}/address/${decoded?.target}`}
+                        href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${
+                          decoded?.target
+                        }`}
                         target="_blank"
                         rel="noreferrer"
                       >

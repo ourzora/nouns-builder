@@ -5,11 +5,13 @@ import { Icon } from 'src/components/Icon'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { AuctionDetail } from './AuctionDetail'
 
 export const WinningBidder = ({ owner }: { owner?: string }) => {
   const { displayName, ensAvatar } = useEnsData(owner)
+  const chain = useChainStore((x) => x.chain)
 
   return (
     <AuctionDetail title="Held by">
@@ -20,7 +22,7 @@ export const WinningBidder = ({ owner }: { owner?: string }) => {
           <Avatar address={owner} src={ensAvatar} size={'24'} />
           <Box
             as="a"
-            href={`${ETHERSCAN_BASE_URL}/address/${owner}`}
+            href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${owner}`}
             rel={'noopener noreferrer'}
             target="_blank"
             ml={'x2'}
