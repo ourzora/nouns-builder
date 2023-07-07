@@ -8,7 +8,7 @@ import { DaoTokenOwner_OrderBy, OrderDirection } from '../sdk.generated'
 interface DaoMember {
   id: string
   daoTokenCount: number
-  timeJoined: string
+  timeJoined: number
 }
 
 export const membersListRequest = async (
@@ -24,13 +24,13 @@ export const membersListRequest = async (
       orderBy: DaoTokenOwner_OrderBy.DaoTokenCount,
       orderDirection: OrderDirection.Desc,
     })
-
+    console.log('data', data)
     if (!data.daotokenOwners) return undefined
     return data.daotokenOwners.map((member) => ({
-      id: member.id,
+      id: member.id.split(':')[1],
       daoTokenCount: member.daoTokenCount,
       timeJoined: member.daoTokens
-        .map((daoToken) => daoToken.mintedAt)
+        .map((daoToken) => Number(daoToken.mintedAt))
         .sort((a, b) => a - b)[0],
     }))
   } catch (error) {

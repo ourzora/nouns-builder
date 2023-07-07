@@ -25,6 +25,7 @@ import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useDaoStore } from '../../stores'
 import { parseContractURI } from '../../utils'
+import { MembersList } from '../MembersList'
 import { ExternalLinks } from './ExternalLinks'
 import { Founder } from './Founder'
 import { Statistic } from './Statistic'
@@ -158,13 +159,13 @@ export const About: React.FC = () => {
         </Box>
       ) : null}
 
+      <MembersList />
       <Box
         mt={{ '@initial': 'x4', '@768': 'x6' }}
         display={{ '@initial': 'block', '@768': 'none' }}
       >
         <ExternalLinks links={{ website: parsedContractURI?.external_url }} />
       </Box>
-
       <Text variant="heading-xs" mt="x16" style={{ fontWeight: 800 }}>
         Founders
       </Text>
