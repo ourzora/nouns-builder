@@ -1,4 +1,4 @@
-import { Button, Flex } from '@zoralabs/zord'
+import { Flex } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { useEffect } from 'react'
 
@@ -13,6 +13,8 @@ import {
   deployCheckboxHelperText,
   deployCheckboxStyleVariants,
 } from 'src/styles/deploy.css'
+
+import { ContractButton } from '../ContractButton'
 
 interface StickySaveProps {
   confirmText: string
@@ -110,16 +112,16 @@ const StickySave: React.FC<StickySaveProps> = ({
             direction={'column'}
             align={'center'}
           >
-            <Button
+            <ContractButton
               className={adminStickySaveButton}
               type={'submit'}
               my={'x3'}
               loading={isSubmitting}
               disabled={disabled || isSubmitting}
-              onClick={handleSave}
+              handleClick={handleSave}
             >
               {hasConfirmed ? 'Confirm' : saveButtonText}
-            </Button>
+            </ContractButton>
           </Flex>
         </Flex>
       </motion.div>

@@ -1,8 +1,10 @@
-import { Box, Button, Flex, Paragraph, Text } from '@zoralabs/zord'
+import { prepareWriteContract, writeContract } from '@wagmi/core'
+import { Box, Flex, Paragraph, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useContract, useContractRead, useSigner } from 'wagmi'
 
+import { ContractButton } from 'src/components/ContractButton'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { DaoContractAddresses, useDaoStore } from 'src/modules/dao'
@@ -86,7 +88,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const handleDeployMetadata = async () => {
     setDeploymentError(undefined)
 
-    if (!transactions || !metadataContract) {
+    if (!transactions || !addresses.metadata) {
       setDeploymentError(DEPLOYMENT_ERROR.GENERIC)
       return
     }
@@ -100,11 +102,14 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     setIsPendingTransaction(true)
     for await (const transaction of transactions) {
       try {
-        const { wait } = await metadataContract.addProperties(
-          transaction.names,
-          transaction.items,
-          transaction.data
-        )
+        const config = await prepareWriteContract({
+          abi: metadataAbi,
+          address: addresses.metadata,
+          functionName: 'addProperties',
+          chainId: chain.id,
+          args: [transaction.names, transaction.items, transaction.data],
+        })
+        const { wait } = await writeContract(config)
         await wait()
       } catch (err) {
         console.warn(err)
@@ -218,17 +223,17 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
         </Text>
       )}
 
-      <Button
+      <ContractButton
         size={'lg'}
         borderRadius={'curved'}
         className={isPendingTransaction ? deployPendingButtonStyle : undefined}
         disabled={!transactions || isPendingTransaction || !metadataContract}
-        onClick={handleDeployMetadata}
+        handleClick={handleDeployMetadata}
         w={'100%'}
         mt={'x8'}
       >
         Deploy Token Metadata (2 of 2)
-      </Button>
+      </ContractButton>
       {transactions && transactions?.length > 1 && (
         <Flex color={'secondary'} w={'100%'} justify={'center'} py={'x4'}>
           <Paragraph>
