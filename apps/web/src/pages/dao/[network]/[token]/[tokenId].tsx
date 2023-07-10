@@ -106,7 +106,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
     const baseSections = hasThreshold ? [...publicSections, adminSection] : publicSections
     return CAST_ENABLED.includes(collection)
       ? [...baseSections.slice(0, 1), daoFeed, ...baseSections.slice(1)]
-      : publicSections
+      : baseSections
   }, [hasThreshold, collection])
 
   const description = token?.description ?? ''
