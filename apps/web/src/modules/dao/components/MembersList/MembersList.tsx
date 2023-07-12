@@ -1,6 +1,7 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
 import React, { ReactNode, useMemo } from 'react'
 import useSWR from 'swr'
 
@@ -21,6 +22,7 @@ type MembersQuery = {
 }
 
 export const MembersList = ({ totalSupply }: { totalSupply?: number }) => {
+  const { query, isReady, push } = useRouter()
   const chain = useChainStore((x) => x.chain)
   const {
     addresses: { token },
@@ -30,7 +32,7 @@ export const MembersList = ({ totalSupply }: { totalSupply?: number }) => {
     data: members,
     error,
     isValidating,
-  } = useSWR(token && chain.id ? [token, chain.id] : undefined, () =>
+  } = useSWR(isReady ? [token, chain.id] : undefined, () =>
     axios
       .get<MembersQuery>(`/api/membersList/${token}?chainId=${chain.id}`)
       .then((x) => x.data.membersList)
@@ -42,7 +44,7 @@ export const MembersList = ({ totalSupply }: { totalSupply?: number }) => {
   return (
     <MembersPanel>
       {members?.map((member) => (
-        <MemberCard member={member} totalSupply={totalSupply} />
+        <MemberCard key={member.id} member={member} totalSupply={totalSupply} />
       ))}
     </MembersPanel>
   )
