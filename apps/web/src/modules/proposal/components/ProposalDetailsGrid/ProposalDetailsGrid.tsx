@@ -4,6 +4,7 @@ import React, { useCallback } from 'react'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
+import { useChainStore } from 'src/stores/useChainStore'
 import { propDataGrid } from 'src/styles/Proposals.css'
 
 import { Tile } from './Tile'
@@ -23,6 +24,7 @@ export const ProposalDetailsGrid: React.FC<ProposalDetailsGridProps> = ({ propos
     snapshotBlockNumber,
     voteEnd,
   } = proposal
+  const chain = useChainStore((x) => x.chain)
 
   const calculateProgress = useCallback(
     (votes: number) => {
@@ -94,7 +96,7 @@ export const ProposalDetailsGrid: React.FC<ProposalDetailsGridProps> = ({ propos
           subtext={`${dayjs.unix(voteEnd).format('h:mm:ss A')} GMT+2`}
         />
         <a
-          href={`${ETHERSCAN_BASE_URL}/tx/${transactionHash}`}
+          href={`${ETHERSCAN_BASE_URL[chain.id]}/tx/${transactionHash}`}
           target="_blank"
           rel="noreferrer"
         >

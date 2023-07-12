@@ -1,9 +1,10 @@
+import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { Flex, Stack } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
-import { useContract, useContractReads, useSigner } from 'wagmi'
+import { useContractReads, useSigner } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -37,11 +38,6 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
     chainId: chain.id,
   }
 
-  const auctionContract = useContract({
-    ...auctionContractParams,
-    signerOrProvider: signer,
-  })
-
   const { data } = useContractReads({
     contracts: [
       { ...auctionContractParams, functionName: 'duration' },
@@ -62,22 +58,31 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
     values: PreAuctionFormValues,
     formik: FormikValues
   ) => {
+    if (!auctionContractParams.address) return
     formik.setSubmitting(true)
 
     try {
       const newDuration = values.auctionDuration
       if (!isEqual(newDuration, initialValues['auctionDuration'])) {
-        const durationTxn = await auctionContract?.setDuration(
-          BigNumber.from(toSeconds(newDuration))
-        )
+        const config = await prepareWriteContract({
+          ...auctionContractParams,
+          address: auctionContractParams.address,
+          functionName: 'setDuration',
+          args: [BigNumber.from(toSeconds(newDuration))],
+        })
+        const durationTxn = await writeContract(config)
         await durationTxn?.wait()
       }
 
       const newReservePrice = values.auctionReservePrice
       if (!isEqual(newReservePrice, initialValues['auctionReservePrice'])) {
-        const reservePriceTxn = await auctionContract?.setReservePrice(
-          ethers.utils.parseEther(newReservePrice.toString())
-        )
+        const config = await prepareWriteContract({
+          ...auctionContractParams,
+          address: auctionContractParams.address,
+          functionName: 'setReservePrice',
+          args: [ethers.utils.parseEther(newReservePrice.toString())],
+        })
+        const reservePriceTxn = await writeContract(config)
         await reservePriceTxn?.wait()
       }
     } finally {
