@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { ProposalNavigation } from './ProposalNavigation'
 import { ProposalStatus } from './ProposalStatus'
@@ -17,6 +18,7 @@ export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
   const { title, voteStart, voteEnd, proposer, expiresAt, proposalNumber } = proposal
 
   const { displayName: proposerDisplayName } = useEnsData(proposer)
+  const chain = useChainStore((x) => x.chain)
 
   return (
     <Flex direction={'column'} gap={{ '@initial': 'x4', '@768': 'x7' }} mb={'x2'}>
@@ -59,7 +61,7 @@ export const ProposalHeader: React.FC<ProposalHeaderProps> = ({ proposal }) => {
             <Text color={'text3'}>By</Text>
             <Box fontWeight={'display'}>
               <a
-                href={`${ETHERSCAN_BASE_URL}/address/${proposer}`}
+                href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${proposer}`}
                 rel="noreferrer"
                 target="_blank"
               >

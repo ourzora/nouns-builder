@@ -5,6 +5,7 @@ import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { useEnsData } from 'src/hooks'
+import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
 
 interface FounderProps {
@@ -15,6 +16,7 @@ interface FounderProps {
 
 export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct, vestExpiry }) => {
   const [showTooltip, setShowTooltip] = useState(false)
+  const chain = useChainStore((x) => x.chain)
   const { displayName, ensAvatar } = useEnsData(wallet as string)
   const vestDate = new Date(vestExpiry * 1000).toLocaleDateString(undefined, {
     year: 'numeric',
@@ -41,7 +43,7 @@ export const Founder: React.FC<FounderProps> = ({ wallet, ownershipPct, vestExpi
             as="a"
             target="_blank"
             rel="noreferrer noopener"
-            href={`${ETHERSCAN_BASE_URL}/address/${wallet}`}
+            href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${wallet}`}
             fontWeight={'display'}
           >
             {displayName}
