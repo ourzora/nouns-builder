@@ -79,7 +79,7 @@ export const CurrentDelegate = ({ toggleIsEditing }: CurrentDelegateProps) => {
           <Box
             as="a"
             ml={'x3'}
-            href={`${ETHERSCAN_BASE_URL}/address/${delegateAddress}`}
+            href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${delegateAddress}`}
             target="_blank"
           >
             <Icon size="sm" id="external-16" fill="text4" />
