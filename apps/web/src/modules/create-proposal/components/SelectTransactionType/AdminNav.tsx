@@ -1,26 +1,27 @@
 import { Flex, Stack, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useContract } from 'wagmi'
+import { useContractRead } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
-import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 
 const AdminNav = () => {
   const router = useRouter()
   const addresses = useDaoStore((state) => state.addresses)
-  const signer = useLayoutStore((state) => state.signer)
+  const chain = useChainStore((state) => state.chain)
 
-  const auctionContract = useContract({
+  const { data: auction } = useContractRead({
     abi: auctionAbi,
     address: addresses?.auction,
-    signerOrProvider: signer,
+    chainId: chain.id,
+    functionName: 'auction',
+    enabled: !!addresses?.auction,
   })
 
   const handleNavigation = async () => {
-    const auction = await auctionContract?.auction()
     await router.push({
       pathname: `/dao/[network]/[token]/[tokenId]`,
       query: {

@@ -1,10 +1,11 @@
-import { Atoms, Box, Button, Flex, Stack, Text, theme } from '@zoralabs/zord'
-import { BigNumber, ContractTransaction } from 'ethers'
+import { SendTransactionResult, prepareWriteContract, writeContract } from '@wagmi/core'
+import { Atoms, Box, Flex, Stack, Text, theme } from '@zoralabs/zord'
+import { BigNumber } from 'ethers'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { Fragment } from 'react'
 import { useSWRConfig } from 'swr'
-import { Address, useContract, useSigner } from 'wagmi'
 
+import { ContractButton } from 'src/components/ContractButton'
 import { Icon } from 'src/components/Icon'
 import { IconType } from 'src/components/Icon/icons'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
@@ -43,15 +44,9 @@ const VoteModal: React.FC<{
   setShowVoteModal: (show: boolean) => void
 }> = ({ title, proposalId, votesAvailable, showVoteModal, setShowVoteModal }) => {
   const { addresses } = useDaoStore()
-  const { data: signer } = useSigner()
   const { mutate } = useSWRConfig()
   const chain = useChainStore((x) => x.chain)
 
-  const contract = useContract({
-    address: addresses?.governor as Address,
-    abi: governorAbi,
-    signerOrProvider: signer,
-  })
   const [isCastVoteSuccess, setIsCastVoteSuccess] = React.useState<boolean>(false)
 
   const initialValues: FormValues = {
@@ -60,17 +55,29 @@ const VoteModal: React.FC<{
   }
 
   const handleSubmit = async (values: FormValues) => {
-    if (!contract) return
+    if (!addresses.governor) return
 
-    let vote: Promise<ContractTransaction | undefined>
+    const governorContractParams = {
+      address: addresses.governor,
+      abi: governorAbi,
+      chainId: chain.id,
+    }
+
+    let vote: Promise<SendTransactionResult>
     if (values.reason.length > 0) {
-      vote = contract.castVoteWithReason(
-        proposalId as BytesType,
-        BigNumber.from(values.choice),
-        values.reason
-      )
+      const config = await prepareWriteContract({
+        ...governorContractParams,
+        functionName: 'castVoteWithReason',
+        args: [proposalId as BytesType, BigNumber.from(values.choice), values.reason],
+      })
+      vote = writeContract(config)
     } else {
-      vote = contract.castVote(proposalId as BytesType, BigNumber.from(values.choice))
+      const config = await prepareWriteContract({
+        ...governorContractParams,
+        functionName: 'castVote',
+        args: [proposalId as BytesType, BigNumber.from(values.choice)],
+      })
+      vote = writeContract(config)
     }
 
     const tx = await vote
@@ -128,7 +135,7 @@ const VoteModal: React.FC<{
             </Box>
 
             <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-              {({ values, isSubmitting, setFieldValue }) => (
+              {({ values, submitForm, isSubmitting, setFieldValue }) => (
                 <FormikForm method="post">
                   <fieldset disabled={isSubmitting} className={voteModalFieldset}>
                     <Stack role="group" mt="x6" gap="x3">
@@ -219,8 +226,9 @@ const VoteModal: React.FC<{
                       </Text>
                     </Box>
 
-                    <Button
+                    <ContractButton
                       loading={isSubmitting}
+                      handleClick={submitForm}
                       type="submit"
                       w="100%"
                       size="lg"
@@ -228,7 +236,7 @@ const VoteModal: React.FC<{
                       borderRadius="curved"
                     >
                       Submit vote
-                    </Button>
+                    </ContractButton>
                   </fieldset>
                 </FormikForm>
               )}

@@ -1,15 +1,17 @@
-import { Box, Button, Flex } from '@zoralabs/zord'
+import { prepareWriteContract, writeContract } from '@wagmi/core'
+import { Box, Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { Field, FieldProps, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useContract, useContractRead, useSigner } from 'wagmi'
+import { useContractRead, useSigner } from 'wagmi'
 
+import { ContractButton } from 'src/components/ContractButton'
 import TextInput from 'src/components/Fields/TextInput'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
-import { auctionAbi, governorAbi, tokenAbi } from 'src/data/contract/abis'
+import { governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { ErrorResult } from 'src/services/errorResult'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
@@ -58,18 +60,6 @@ export const ReviewProposalForm = ({
     functionName: 'getVotes',
     chainId: chain.id,
     args: [signerAddress as AddressType],
-  })
-
-  const governorContract = useContract({
-    abi: governorAbi,
-    address: addresses?.governor,
-    signerOrProvider: signer,
-  })
-
-  const auctionContract = useContract({
-    abi: auctionAbi,
-    address: addresses?.auction,
-    signerOrProvider: signer,
   })
 
   const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
@@ -151,25 +141,25 @@ export const ReviewProposalForm = ({
           description: values.title + '&&' + values.summary,
         }
 
-        const tx = await governorContract?.propose(
-          params.targets,
-          params.values,
-          params.calldatas,
-          params.description
-        )
+        const config = await prepareWriteContract({
+          abi: governorAbi,
+          functionName: 'propose',
+          address: addresses?.governor!,
+          chainId: chain.id,
+          args: [params.targets, params.values, params.calldatas, params.description],
+        })
+
+        const { wait } = await writeContract(config)
 
         setProposing(true)
-        await tx?.wait()
-
-        const auction = await auctionContract?.auction()
+        await wait()
 
         router
           .push({
-            pathname: `/dao/[network]/[token]/[tokenId]`,
+            pathname: `/dao/[network]/[token]`,
             query: {
               network: router.query?.network,
               token: router.query?.token,
-              tokenId: auction?.tokenId?.toNumber(),
               message: SUCCESS_MESSAGES.PROPOSAL_SUBMISSION_SUCCESS,
             },
           })
@@ -187,16 +177,7 @@ export const ReviewProposalForm = ({
         setError(err.message)
       }
     },
-    [
-      signer,
-      router,
-      governorContract,
-      addresses,
-      proposalThreshold,
-      votes,
-      auctionContract,
-      clearProposal,
-    ]
+    [signer, router, addresses, proposalThreshold, votes, clearProposal]
   )
 
   if (isLoading || thresholdIsLoading) return null
@@ -248,14 +229,14 @@ export const ReviewProposalForm = ({
                 )}
               </Field>
 
-              <Button
+              <ContractButton
                 mt={'x3'}
                 width={'100%'}
                 borderRadius={'curved'}
                 loading={simulating}
                 disabled={simulating || proposing}
                 h={'x15'}
-                type={'submit'}
+                handleClick={() => formik.submitForm()}
               >
                 <Box>{'Submit Proposal'}</Box>
                 {votes && (
@@ -272,7 +253,7 @@ export const ReviewProposalForm = ({
                     {votes.toNumber()} Votes
                   </Box>
                 )}
-              </Button>
+              </ContractButton>
             </form>
           )}
         </Formik>

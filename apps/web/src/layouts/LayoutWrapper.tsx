@@ -45,6 +45,15 @@ export function LayoutWrapper({ children }: { children: ReactNode }) {
     if (routeChain) setChain(routeChain)
   }, [query.network, setChain])
 
+  // Fix for dev: network must be reset when env network type changes
+  const isDev =
+    !process.env.NEXT_PUBLIC_VERCEL_ENV ||
+    process.env.NEXT_PUBLIC_VERCEL_ENV === 'development'
+
+  React.useEffect(() => {
+    if (isDev && !query?.network) return setChain(PUBLIC_DEFAULT_CHAINS[0])
+  }, [isDev, process.env.NEXT_PUBLIC_NETWORK_TYPE])
+
   const handleResize = () => {
     setIsMobile(window.innerWidth <= 768)
   }

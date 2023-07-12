@@ -3,12 +3,13 @@ import {
   prepareWriteContract,
   writeContract,
 } from '@wagmi/core'
-import { Box, Button, Flex, atoms } from '@zoralabs/zord'
+import { Box, Flex, atoms } from '@zoralabs/zord'
 import { BigNumber, ethers } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import React, { useState } from 'react'
 import { useSigner } from 'wagmi'
 
+import { ContractButton } from 'src/components/ContractButton'
 import { defaultBackButton } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
@@ -328,8 +329,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
               >
                 <Icon id="arrowLeft" />
               </Flex>
-              <Button
-                onClick={handleDeploy}
+              <ContractButton
+                handleClick={handleDeploy}
                 w={'100%'}
                 disabled={!signer || !hasConfirmed || isPendingTransaction}
                 className={
@@ -337,7 +338,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 }
               >
                 {!isPendingTransaction ? `Deploy Contracts (1 of 2)` : `Deploying`}
-              </Button>
+              </ContractButton>
             </Flex>
           </Flex>
         </Box>
