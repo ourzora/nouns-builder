@@ -163,6 +163,7 @@ export const NavMenu = () => {
             <Stack my="x4" mx="x2">
               {PUBLIC_DEFAULT_CHAINS.map((chain, i, chains) => (
                 <Flex
+                  key={chain.id}
                   className={chainPopUpButton}
                   borderRadius="normal"
                   onClick={() => !hasNetwork && onChainChange(chain.id)}

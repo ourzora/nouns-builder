@@ -24,7 +24,7 @@ export const membersListRequest = async (
       orderBy: DaoTokenOwner_OrderBy.DaoTokenCount,
       orderDirection: OrderDirection.Desc,
     })
-    console.log('data', data)
+
     if (!data.daotokenOwners) return undefined
     return data.daotokenOwners.map((member) => ({
       id: member.id.split(':')[1],
