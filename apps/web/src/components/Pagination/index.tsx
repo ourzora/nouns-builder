@@ -17,6 +17,7 @@ const Pagination: React.FC<PaginationProps> = ({ onNext, onPrev, isFirst, isLast
       <Link
         href={onPrev()}
         passHref
+        scroll={false}
         className={atoms({ pointerEvents: isFirst ? 'none' : 'auto' })}
       >
         <Flex
@@ -46,6 +47,7 @@ const Pagination: React.FC<PaginationProps> = ({ onNext, onPrev, isFirst, isLast
       <Link
         href={onNext()}
         passHref
+        scroll={false}
         className={atoms({ pointerEvents: isLast ? 'none' : 'auto' })}
       >
         <Flex
