@@ -6,7 +6,9 @@ import React, { ReactNode, useMemo } from 'react'
 import useSWR from 'swr'
 
 import { Avatar } from 'src/components/Avatar'
+import Pagination from 'src/components/Pagination'
 import { useEnsData } from 'src/hooks'
+import { usePagination } from 'src/hooks/usePagination'
 import { useChainStore } from 'src/stores/useChainStore'
 
 import { useDaoStore } from '../../stores'
@@ -21,23 +23,40 @@ type MembersQuery = {
   membersList: DaoMember[]
 }
 
-export const MembersList = ({ totalSupply }: { totalSupply?: number }) => {
-  const { query, isReady, push } = useRouter()
+export const MembersList = ({
+  totalSupply,
+  ownerCount,
+}: {
+  totalSupply?: number
+  ownerCount?: number
+}) => {
+  const { query, isReady } = useRouter()
   const chain = useChainStore((x) => x.chain)
   const {
     addresses: { token },
   } = useDaoStore()
+  const LIMIT = 10
 
   const {
     data: members,
     error,
     isValidating,
-  } = useSWR(isReady ? [token, chain.id] : undefined, () =>
+  } = useSWR(isReady ? [token, chain.id, query.page] : undefined, () =>
     axios
-      .get<MembersQuery>(`/api/membersList/${token}?chainId=${chain.id}`)
+      .get<MembersQuery>(
+        `/api/membersList/${token}?chainId=${chain.id}&page=${query.page}&limit=${LIMIT}`
+      )
       .then((x) => x.data.membersList)
   )
-  // console.log('members', members)
+
+  const { handlePageBack, handlePageForward } = usePagination(true)
+
+  const hasNextPage = useMemo(() => {
+    const totalPages = Math.ceil((ownerCount || 0) / LIMIT)
+    const currentPage = Number(query.page) || 1
+    return currentPage < totalPages
+  }, [ownerCount, query.page])
+
   if (isValidating) return <MembersPanel>Loading...</MembersPanel>
   if (error) return <MembersPanel>Error</MembersPanel>
 
@@ -46,6 +65,12 @@ export const MembersList = ({ totalSupply }: { totalSupply?: number }) => {
       {members?.map((member) => (
         <MemberCard key={member.id} member={member} totalSupply={totalSupply} />
       ))}
+      <Pagination
+        onNext={handlePageForward}
+        onPrev={handlePageBack}
+        isLast={!hasNextPage}
+        isFirst={!query.page}
+      />
     </MembersPanel>
   )
 }

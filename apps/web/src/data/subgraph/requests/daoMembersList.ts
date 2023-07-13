@@ -13,14 +13,17 @@ interface DaoMember {
 
 export const membersListRequest = async (
   chainId: CHAIN_ID,
-  collectionAddress: string
+  collectionAddress: string,
+  page?: number,
+  limit = 10
 ): Promise<DaoMember[] | undefined> => {
   try {
     const data = await SDK.connect(chainId).daoMembersList({
       where: {
         dao: collectionAddress,
       },
-      first: 10,
+      first: limit,
+      skip: page ? (page - 1) * limit : 0,
       orderBy: DaoTokenOwner_OrderBy.DaoTokenCount,
       orderDirection: OrderDirection.Desc,
     })

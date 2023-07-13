@@ -165,7 +165,7 @@ export const About: React.FC = () => {
       >
         <ExternalLinks links={{ website: parsedContractURI?.external_url }} />
       </Box>
-      <MembersList totalSupply={totalSupply?.toNumber()} />
+      <MembersList totalSupply={totalSupply?.toNumber()} ownerCount={data?.ownerCount} />
       <Text variant="heading-xs" mt="x16" style={{ fontWeight: 800 }}>
         Founders
       </Text>
