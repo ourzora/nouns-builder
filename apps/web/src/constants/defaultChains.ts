@@ -4,7 +4,7 @@ import { CHAIN_ID, Chain } from 'src/typings'
 
 export const zoraGoerli = {
   id: 999,
-  name: 'Zora Goerli Testnet',
+  name: 'Zora Goerli',
   network: 'zora-testnet',
   nativeCurrency: {
     decimals: 18,
