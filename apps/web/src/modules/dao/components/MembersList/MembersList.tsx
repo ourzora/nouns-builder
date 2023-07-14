@@ -14,7 +14,7 @@ import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
 import { useDaoStore } from '../../stores'
-import { firstRowItem, lastRowItem, row, rowItem } from './MembersList.css'
+import { cardSkeleton, firstRowItem, lastRowItem, row, rowItem } from './MembersList.css'
 
 type DaoMember = {
   id: string
@@ -60,7 +60,16 @@ export const MembersList = ({
     return currentPage < totalPages
   }, [ownerCount, query.page])
 
-  if (isValidating) return <MembersPanel isMobile={isMobile}>Loading...</MembersPanel>
+  if (isValidating) {
+    const isInitialPageLoad = !query.page && !members
+    return (
+      <MembersPanel isMobile={isMobile}>
+        {Array.from({ length: isInitialPageLoad ? 5 : 10 }).map((_, i) => (
+          <MemberCardSkeleton isMobile={isMobile} />
+        ))}
+      </MembersPanel>
+    )
+  }
   if (error) return <MembersPanel isMobile={isMobile}>Error</MembersPanel>
 
   return (
@@ -191,5 +200,16 @@ const MemberCard = ({
         </Link>
       )}
     </>
+  )
+}
+
+const MemberCardSkeleton = ({ isMobile }: { isMobile: boolean }) => {
+  return (
+    <Flex
+      className={cardSkeleton}
+      borderRadius="normal"
+      backgroundColor="background2"
+      mb={isMobile ? 'x14' : 'x10'}
+    />
   )
 }
