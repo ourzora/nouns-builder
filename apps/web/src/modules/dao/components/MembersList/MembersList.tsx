@@ -70,7 +70,18 @@ export const MembersList = ({
       </MembersPanel>
     )
   }
-  if (error) return <MembersPanel isMobile={isMobile}>Error</MembersPanel>
+  if (error)
+    return (
+      <MembersPanel isMobile={isMobile} tableRuler={false}>
+        <Flex minH={'x24'} justify={'center'} align={'center'} direction={'column'}>
+          <Text fontSize={20} color={'text3'} fontWeight={'display'} mb={'x3'}>
+            Error
+          </Text>
+          <Text color={'text3'}>{error?.message || 'Unknown Error'}</Text>
+          <Text></Text>
+        </Flex>
+      </MembersPanel>
+    )
 
   return (
     <>
@@ -97,9 +108,11 @@ export const MembersList = ({
 const MembersPanel = ({
   children,
   isMobile,
+  tableRuler = true,
 }: {
   children: ReactNode
   isMobile: boolean
+  tableRuler?: boolean
 }) => {
   return (
     <>
@@ -119,7 +132,7 @@ const MembersPanel = ({
         pt={isMobile ? 'x8' : undefined}
         p={{ '@initial': 'x3', '@768': 'x6' }}
       >
-        {isMobile || <TableHeader />}
+        {!isMobile && tableRuler && <TableHeader />}
         {children}
       </Box>
     </>
