@@ -1,6 +1,7 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import dayjs from 'dayjs'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useMemo } from 'react'
 import useSWR from 'swr'
@@ -159,31 +160,35 @@ const MemberCard = ({
   return (
     <>
       {isMobile ? (
-        <Flex mb={'x14'} direction={'column'}>
-          <Flex w="100%" align={'center'} mb={'x4'}>
-            <Avatar address={member.id} src={ensAvatar} size="32" />
-            <Text mx="x2" variant="paragraph-md">
-              {displayName}
-            </Text>
+        <Link href={`/profile/${member.id}`} passHref>
+          <Flex mb={'x14'} direction={'column'}>
+            <Flex w="100%" align={'center'} mb={'x4'}>
+              <Avatar address={member.id} src={ensAvatar} size="32" />
+              <Text mx="x2" variant="paragraph-md">
+                {displayName}
+              </Text>
+            </Flex>
+            <Flex>
+              <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
+              <Text className={rowItem}>{votePercent}%</Text>
+              <Text className={lastRowItem}>{timeJoined}</Text>
+            </Flex>
           </Flex>
-          <Flex>
+        </Link>
+      ) : (
+        <Link href={`/profile/${member.id}`} passHref>
+          <Flex className={row} align={'center'} mb={'x10'}>
+            <Flex w="100%" align={'center'} className={firstRowItem}>
+              <Avatar address={member.id} src={ensAvatar} size="32" />
+              <Text mx="x2" variant="paragraph-md">
+                {displayName}
+              </Text>
+            </Flex>
             <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
             <Text className={rowItem}>{votePercent}%</Text>
-            <Text className={lastRowItem}>{timeJoined}</Text>
+            <Text className={lastRowItem}>Since {timeJoined}</Text>
           </Flex>
-        </Flex>
-      ) : (
-        <Flex className={row} align={'center'} mb={'x10'}>
-          <Flex w="100%" align={'center'} className={firstRowItem}>
-            <Avatar address={member.id} src={ensAvatar} size="32" />
-            <Text mx="x2" variant="paragraph-md">
-              {displayName}
-            </Text>
-          </Flex>
-          <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
-          <Text className={rowItem}>{votePercent}%</Text>
-          <Text className={lastRowItem}>Since {timeJoined}</Text>
-        </Flex>
+        </Link>
       )}
     </>
   )
