@@ -8,7 +8,7 @@ import { Auction_OrderBy } from 'src/data/subgraph/sdk.generated'
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const limit = 30
   const { page, orderBy, network } = req.query
-  const pageInt = parseInt(page as string, 10)
+  const pageInt = parseInt(page as string, 10) || 1
 
   const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
 
@@ -16,7 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const exploreRes = await exploreDaosRequest(
     chain.id,
-    (pageInt + 1) * limit,
+    (pageInt - 1) * limit,
     orderBy as Auction_OrderBy
   )
 
