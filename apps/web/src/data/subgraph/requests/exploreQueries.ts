@@ -12,23 +12,25 @@ import {
 
 export interface ExploreDaosResponse {
   daos: ExploreDaoFragment[]
+  hasNextPage: boolean
 }
 
 export const userDaosFilter = async (
   chainId: CHAIN_ID,
   memberAddress: string
 ): Promise<ExploreDaosResponse | undefined> => {
+  const first = 30
   const userDaos = await SDK.connect(chainId).daoTokenOwners({
     where: {
       owner: memberAddress,
     },
-    first: 30,
+    first,
   })
 
   const daoAddresses = userDaos.daotokenOwners.map((x) => x.dao.tokenAddress)
   const data = await SDK.connect(chainId).myDaosPage({ daos: daoAddresses })
 
-  return { daos: data.auctions }
+  return { daos: data.auctions, hasNextPage: data.auctions.length === first }
 }
 
 export const exploreDaosRequest = async (
@@ -48,15 +50,18 @@ export const exploreDaosRequest = async (
     if (orderBy === Auction_OrderBy.EndTime)
       where.endTime_gt = Math.floor(Date.now() / 1000)
 
+    const first = 30
+
     const data = await SDK.connect(chainId).exploreDaosPage({
       orderBy,
       orderDirection,
       where,
       skip,
+      first,
     })
 
     if (!data.auctions) return undefined
-    return { daos: data.auctions }
+    return { daos: data.auctions, hasNextPage: data.auctions.length === first }
   } catch (error) {
     console.error(error)
     Sentry.captureException(error)

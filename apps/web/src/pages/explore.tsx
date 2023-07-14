@@ -33,12 +33,16 @@ const ExplorePage: NextPageWithLayout = () => {
     }
   )
 
-  const { daos } = data || {}
+  const { daos, hasNextPage } = data || {}
 
   return (
     <Flex direction={'column'} align={'center'} mt={'x5'} minH={'100vh'}>
       <Meta title={'Explore'} type={'website'} slug={'/explore'} />
-      <Explore daos={daos} isLoading={!data && !error} />
+      <Explore
+        daos={daos}
+        hasNextPage={hasNextPage || false}
+        isLoading={!data && !error}
+      />
     </Flex>
   )
 }

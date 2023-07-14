@@ -15,9 +15,10 @@ import ExploreToolbar from './ExploreToolbar'
 
 interface ExploreProps extends Partial<ExploreDaosResponse> {
   isLoading: boolean
+  hasNextPage: boolean
 }
 
-export const Explore: React.FC<ExploreProps> = ({ daos, isLoading }) => {
+export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }) => {
   const router = useRouter()
   const { pathname } = router
   const chain = useChainStore((x) => x.chain)
@@ -48,7 +49,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, isLoading }) => {
 
   const handlePageForward = React.useCallback(() => {
     // there are more results to be fetched
-    if (!daos?.length)
+    if (!hasNextPage)
       return {
         pathname,
         query: {
@@ -103,7 +104,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, isLoading }) => {
           <Pagination
             onNext={handlePageForward}
             onPrev={handlePageBack}
-            isLast={!daos?.length}
+            isLast={!hasNextPage}
             isFirst={!router.query.page}
           />
         </Fragment>

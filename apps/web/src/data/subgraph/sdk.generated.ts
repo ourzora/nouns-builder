@@ -1948,6 +1948,7 @@ export type ExploreDaosPageQueryVariables = Exact<{
   orderDirection?: InputMaybe<OrderDirection>
   where?: InputMaybe<Auction_Filter>
   skip?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']>
 }>
 
 export type ExploreDaosPageQuery = {
@@ -2242,12 +2243,13 @@ export const ExploreDaosPageDocument = gql`
     $orderDirection: OrderDirection
     $where: Auction_filter
     $skip: Int
+    $first: Int
   ) {
     auctions(
       where: $where
       orderBy: $orderBy
       orderDirection: $orderDirection
-      first: 30
+      first: $first
       skip: $skip
     ) {
       ...ExploreDao
