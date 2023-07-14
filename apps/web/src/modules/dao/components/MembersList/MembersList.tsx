@@ -61,17 +61,19 @@ export const MembersList = ({
   if (error) return <MembersPanel>Error</MembersPanel>
 
   return (
-    <MembersPanel>
-      {members?.map((member) => (
-        <MemberCard key={member.id} member={member} totalSupply={totalSupply} />
-      ))}
+    <>
+      <MembersPanel>
+        {members?.map((member) => (
+          <MemberCard key={member.id} member={member} totalSupply={totalSupply} />
+        ))}
+      </MembersPanel>
       <Pagination
         onNext={handlePageForward}
         onPrev={handlePageBack}
         isLast={!hasNextPage}
         isFirst={!query.page}
       />
-    </MembersPanel>
+    </>
   )
 }
 
@@ -79,7 +81,7 @@ const MembersPanel = ({ children }: { children: ReactNode }) => {
   return (
     <>
       <Text
-        mb={{ '@initial': 'x4', '@768': 'x6' }}
+        mb={{ '@initial': 'x4', '@768': 'x4' }}
         mt={{ '@initial': 'x4', '@768': 'x10' }}
         fontSize={28}
         fontWeight={'display'}
