@@ -9,6 +9,7 @@ import { Avatar } from 'src/components/Avatar'
 import Pagination from 'src/components/Pagination'
 import { useEnsData } from 'src/hooks'
 import { usePagination } from 'src/hooks/usePagination'
+import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
 import { useDaoStore } from '../../stores'
@@ -35,6 +36,7 @@ export const MembersList = ({
   const {
     addresses: { token },
   } = useDaoStore()
+  const { isMobile } = useLayoutStore()
   const LIMIT = 10
 
   const {
@@ -57,14 +59,19 @@ export const MembersList = ({
     return currentPage < totalPages
   }, [ownerCount, query.page])
 
-  if (isValidating) return <MembersPanel>Loading...</MembersPanel>
-  if (error) return <MembersPanel>Error</MembersPanel>
+  if (isValidating) return <MembersPanel isMobile={isMobile}>Loading...</MembersPanel>
+  if (error) return <MembersPanel isMobile={isMobile}>Error</MembersPanel>
 
   return (
     <>
-      <MembersPanel>
+      <MembersPanel isMobile={isMobile}>
         {members?.map((member) => (
-          <MemberCard key={member.id} member={member} totalSupply={totalSupply} />
+          <MemberCard
+            key={member.id}
+            member={member}
+            totalSupply={totalSupply}
+            isMobile={isMobile}
+          />
         ))}
       </MembersPanel>
       <Pagination
@@ -77,7 +84,13 @@ export const MembersList = ({
   )
 }
 
-const MembersPanel = ({ children }: { children: ReactNode }) => {
+const MembersPanel = ({
+  children,
+  isMobile,
+}: {
+  children: ReactNode
+  isMobile: boolean
+}) => {
   return (
     <>
       <Text
@@ -93,9 +106,10 @@ const MembersPanel = ({ children }: { children: ReactNode }) => {
         borderStyle={'solid'}
         borderWidth={'normal'}
         borderColor={'border'}
-        p={{ '@initial': 'x4', '@768': 'x6' }}
+        pt={isMobile ? 'x8' : undefined}
+        p={{ '@initial': 'x3', '@768': 'x6' }}
       >
-        <TableHeader />
+        {isMobile || <TableHeader />}
         {children}
       </Box>
     </>
@@ -124,9 +138,11 @@ const TableHeader = () => {
 const MemberCard = ({
   member,
   totalSupply,
+  isMobile,
 }: {
   member: DaoMember
   totalSupply?: number
+  isMobile: boolean
 }) => {
   const { displayName, ensAvatar } = useEnsData(member.id)
 
@@ -141,16 +157,34 @@ const MemberCard = ({
   }, [totalSupply, member])
 
   return (
-    <Flex className={row} align={'center'} mb={'x10'}>
-      <Flex w="100%" className={firstRowItem} align={'center'}>
-        <Avatar address={member.id} src={ensAvatar} size="32" />
-        <Text mx="x2" variant="paragraph-md">
-          {displayName}
-        </Text>
-      </Flex>
-      <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
-      <Text className={rowItem}>{votePercent}%</Text>
-      <Text className={lastRowItem}>Since {timeJoined}</Text>
-    </Flex>
+    <>
+      {isMobile ? (
+        <Flex mb={'x14'} direction={'column'}>
+          <Flex w="100%" align={'center'} mb={'x4'}>
+            <Avatar address={member.id} src={ensAvatar} size="32" />
+            <Text mx="x2" variant="paragraph-md">
+              {displayName}
+            </Text>
+          </Flex>
+          <Flex>
+            <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
+            <Text className={rowItem}>{votePercent}%</Text>
+            <Text className={lastRowItem}>{timeJoined}</Text>
+          </Flex>
+        </Flex>
+      ) : (
+        <Flex className={row} align={'center'} mb={'x10'}>
+          <Flex w="100%" align={'center'} className={firstRowItem}>
+            <Avatar address={member.id} src={ensAvatar} size="32" />
+            <Text mx="x2" variant="paragraph-md">
+              {displayName}
+            </Text>
+          </Flex>
+          <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
+          <Text className={rowItem}>{votePercent}%</Text>
+          <Text className={lastRowItem}>Since {timeJoined}</Text>
+        </Flex>
+      )}
+    </>
   )
 }
