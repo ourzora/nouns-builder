@@ -1,4 +1,4 @@
-import { Grid } from '@zoralabs/zord'
+import { Grid, Text } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
@@ -23,9 +23,11 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
   const { pathname } = router
   const chain = useChainStore((x) => x.chain)
 
+  const page = router.query.page
+
   const handlePageBack = React.useCallback(() => {
     // user is on the first page
-    if (!router.query.page)
+    if (!page)
       return {
         pathname,
         query: {
@@ -34,12 +36,12 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
       }
 
     // user is at least on the second page
-    return Number(router.query.page) > 2
+    return Number(page) > 2
       ? {
           pathname,
           query: {
             ...router.query,
-            page: Number(router.query.page) - 1,
+            page: Number(page) - 1,
           },
         }
       : {
@@ -48,17 +50,17 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
   }, [router, pathname])
 
   const handlePageForward = React.useCallback(() => {
-    // there are more results to be fetched
+    // there are no more results to be fetched
     if (!hasNextPage)
       return {
         pathname,
         query: {
-          page: router.query.page,
+          page,
         },
       }
 
     // user is on the first page
-    if (!router.query.page)
+    if (!page)
       return {
         pathname,
         query: {
@@ -72,7 +74,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
       pathname,
       query: {
         ...router.query,
-        page: Number(router.query.page) + 1,
+        page: Number(page) + 1,
       },
     }
   }, [router, daos?.length, pathname])
@@ -110,8 +112,25 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
         </Fragment>
       ) : isLoading ? (
         <ExploreSkeleton />
-      ) : (
+      ) : !page ? (
         <ExploreNoDaos />
+      ) : (
+        <Fragment>
+          <Text
+            style={{ maxWidth: 912, minHeight: 250, padding: '150px 0px' }}
+            variant={'paragraph-md'}
+            color={'tertiary'}
+          >
+            There are no DAOs here
+          </Text>
+
+          <Pagination
+            onNext={handlePageForward}
+            onPrev={handlePageBack}
+            isLast={!hasNextPage}
+            isFirst={!router.query.page}
+          />
+        </Fragment>
       )}
     </Fragment>
   )
