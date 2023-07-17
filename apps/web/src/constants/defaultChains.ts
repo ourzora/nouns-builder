@@ -2,6 +2,37 @@ import { baseGoerli, goerli, mainnet, optimismGoerli } from 'wagmi/chains'
 
 import { CHAIN_ID, Chain } from 'src/typings'
 
+export const zoraGoerli = {
+  id: 999,
+  name: 'Zora Goerli',
+  network: 'zora-testnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Zora Goerli',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://testnet.rpc.zora.energy'],
+      webSocket: ['wss://testnet.rpc.zora.energy'],
+    },
+    public: {
+      http: ['https://testnet.rpc.zora.energy'],
+      webSocket: ['wss://testnet.rpc.zora.energy'],
+    },
+  },
+  blockExplorers: {
+    default: { name: 'Explorer', url: 'https://testnet.explorer.zora.energy' },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+      blockCreated: 189123,
+    },
+  },
+  testnet: true,
+} as const
+
 const MAINNET_CHAINS: Chain[] = [
   { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'ethereum', icon: '/chains/ethereum.svg' },
 ]
@@ -19,6 +50,12 @@ const TESTNET_CHAINS: Chain[] = [
     id: CHAIN_ID.BASE_GOERLI,
     slug: 'base-goerli',
     icon: '/chains/base.svg',
+  },
+  {
+    ...zoraGoerli,
+    id: CHAIN_ID.ZORA_GOERLI,
+    slug: 'zora-goerli',
+    icon: '/chains/zora.png',
   },
 ]
 

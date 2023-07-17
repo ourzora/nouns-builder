@@ -54,4 +54,21 @@ export const PUBLIC_FEATURED_DAOS = {
       name: 'Test base DAO',
     },
   ],
+  [CHAIN_ID.ZORA_GOERLI]: [
+    {
+      auctionAddress: '0x8741AE7F44DFDEFaFC33b10D9FED9bd97ac8E972',
+      tokenAddress: '0x65737024daf0ed2e2d86d67cdc3bc92fb903bd93',
+      name: 'Test Zora',
+    },
+    {
+      auctionAddress: '0x8741AE7F44DFDEFaFC33b10D9FED9bd97ac8E972',
+      tokenAddress: '0x65737024daf0ed2e2d86d67cdc3bc92fb903bd93',
+      name: 'Test Zora',
+    },
+    {
+      auctionAddress: '0x8741AE7F44DFDEFaFC33b10D9FED9bd97ac8E972',
+      tokenAddress: '0x65737024daf0ed2e2d86d67cdc3bc92fb903bd93',
+      name: 'Test Zora',
+    },
+  ],
 }
