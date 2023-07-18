@@ -56,7 +56,8 @@ const DEPLOYMENT_ERROR = {
 export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const { data: signer } = useSigner()
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
-  const [hasConfirmed, setHasConfirmed] = useState<boolean>(false)
+  const [hasConfirmedTerms, setHasConfirmedTerms] = useState<boolean>(false)
+  const [hasConfirmedChain, setHasConfirmedChain] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const chain = useChainStore((x) => x.chain)
 
@@ -288,11 +289,13 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   align={'center'}
                   justify={'center'}
                   className={
-                    deployCheckboxStyleVariants[hasConfirmed ? 'confirmed' : 'default']
+                    deployCheckboxStyleVariants[
+                      hasConfirmedTerms ? 'confirmed' : 'default'
+                    ]
                   }
-                  onClick={() => setHasConfirmed((bool) => !bool)}
+                  onClick={() => setHasConfirmedTerms((bool) => !bool)}
                 >
-                  {hasConfirmed && <Icon fill="background1" id="check" />}
+                  {hasConfirmedTerms && <Icon fill="background1" id="check" />}
                 </Flex>
 
                 <Flex className={deployCheckboxHelperText}>
@@ -306,6 +309,27 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                     Nouns Builder Terms of Service
                   </a>
                   ]
+                </Flex>
+              </Flex>
+            </Flex>
+
+            <Flex mt="x4">
+              <Flex align={'center'} justify={'center'} gap={'x4'}>
+                <Flex
+                  align={'center'}
+                  justify={'center'}
+                  className={
+                    deployCheckboxStyleVariants[
+                      hasConfirmedChain ? 'confirmed' : 'default'
+                    ]
+                  }
+                  onClick={() => setHasConfirmedChain((bool) => !bool)}
+                >
+                  {hasConfirmedChain && <Icon fill="background1" id="check" />}
+                </Flex>
+
+                <Flex className={deployCheckboxHelperText}>
+                  I am deploying my DAO on <strong>{chain.name}</strong>
                 </Flex>
               </Flex>
             </Flex>
@@ -332,7 +356,12 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
               <ContractButton
                 handleClick={handleDeploy}
                 w={'100%'}
-                disabled={!signer || !hasConfirmed || isPendingTransaction}
+                disabled={
+                  !signer ||
+                  !hasConfirmedTerms ||
+                  !hasConfirmedChain ||
+                  isPendingTransaction
+                }
                 className={
                   deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']
                 }
