@@ -108,6 +108,10 @@ export const NavMenu = () => {
     }
   }, [router])
 
+  React.useEffect(() => {
+    if (activeDropdown !== 'chainMenu') setIsOpenChainMenu(false)
+  }, [activeDropdown, setIsOpenChainMenu])
+
   return (
     <Flex align={'center'} direction={'row'} gap={'x4'}>
       {isChainInitilized && (
