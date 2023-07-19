@@ -30,6 +30,14 @@ export const MemberCard = ({
     return ((Number(member.daoTokenCount) / totalSupply) * 100).toFixed(2)
   }, [totalSupply, member])
 
+  const gridInfo = (
+    <>
+      <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
+      <Text className={rowItem}>{votePercent}%</Text>
+      <Text className={lastRowItem}>{timeJoined}</Text>
+    </>
+  )
+
   return (
     <Link href={`/profile/${member.address}`} passHref>
       <Flex mb={'x14'} direction={{ '@initial': 'column', '@768': 'row' }}>
@@ -39,19 +47,7 @@ export const MemberCard = ({
             {displayName}
           </Text>
         </Flex>
-        {isMobile ? (
-          <Flex>
-            <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
-            <Text className={rowItem}>{votePercent}%</Text>
-            <Text className={lastRowItem}>{timeJoined}</Text>
-          </Flex>
-        ) : (
-          <>
-            <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
-            <Text className={rowItem}>{votePercent}%</Text>
-            <Text className={lastRowItem}>{timeJoined}</Text>
-          </>
-        )}
+        {isMobile ? <Flex>{gridInfo}</Flex> : gridInfo}
       </Flex>
     </Link>
   )
