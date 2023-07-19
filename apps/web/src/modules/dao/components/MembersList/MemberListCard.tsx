@@ -7,7 +7,7 @@ import { Avatar } from 'src/components/Avatar'
 import { DaoMember } from 'src/data/subgraph/requests/daoMembersList'
 import { useEnsData } from 'src/hooks'
 
-import { firstRowItem, lastRowItem, row, rowItem } from './MembersList.css'
+import { firstRowItem, lastRowItem, rowItem } from './MembersList.css'
 
 export const MemberCard = ({
   member,
@@ -31,38 +31,28 @@ export const MemberCard = ({
   }, [totalSupply, member])
 
   return (
-    <>
-      {isMobile ? (
-        <Link href={`/profile/${member.address}`} passHref>
-          <Flex mb={'x14'} direction={'column'}>
-            <Flex w="100%" align={'center'} mb={'x4'}>
-              <Avatar address={member.address} src={ensAvatar} size="32" />
-              <Text mx="x2" variant="paragraph-md">
-                {displayName}
-              </Text>
-            </Flex>
-            <Flex>
-              <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
-              <Text className={rowItem}>{votePercent}%</Text>
-              <Text className={lastRowItem}>{timeJoined}</Text>
-            </Flex>
-          </Flex>
-        </Link>
-      ) : (
-        <Link href={`/profile/${member.address}`} passHref>
-          <Flex className={row} align={'center'} mb={'x10'}>
-            <Flex w="100%" align={'center'} className={firstRowItem}>
-              <Avatar address={member.address} src={ensAvatar} size="32" />
-              <Text mx="x2" variant="paragraph-md">
-                {displayName}
-              </Text>
-            </Flex>
+    <Link href={`/profile/${member.address}`} passHref>
+      <Flex mb={'x14'} direction={{ '@initial': 'column', '@768': 'row' }}>
+        <Flex className={firstRowItem} align={'center'} mb={'x4'}>
+          <Avatar address={member.address} src={ensAvatar} size="32" />
+          <Text mx="x2" variant="paragraph-md">
+            {displayName}
+          </Text>
+        </Flex>
+        {isMobile ? (
+          <Flex>
             <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
             <Text className={rowItem}>{votePercent}%</Text>
-            <Text className={lastRowItem}>Since {timeJoined}</Text>
+            <Text className={lastRowItem}>{timeJoined}</Text>
           </Flex>
-        </Link>
-      )}
-    </>
+        ) : (
+          <>
+            <Text className={rowItem}>{member.daoTokenCount} Tokens</Text>
+            <Text className={rowItem}>{votePercent}%</Text>
+            <Text className={lastRowItem}>{timeJoined}</Text>
+          </>
+        )}
+      </Flex>
+    </Link>
   )
 }
