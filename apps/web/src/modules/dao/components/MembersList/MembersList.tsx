@@ -5,6 +5,7 @@ import React, { useMemo } from 'react'
 import useSWR from 'swr'
 
 import Pagination from 'src/components/Pagination'
+import { DaoMember } from 'src/data/subgraph/requests/daoMembersList'
 import { usePagination } from 'src/hooks/usePagination'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
@@ -13,11 +14,6 @@ import { useDaoStore } from '../../stores'
 import { MemberCard } from './MemberListCard'
 import { MemberCardSkeleton, MembersPanel } from './MembersListLayout'
 
-export type DaoMember = {
-  id: string
-  daoTokenCount: string
-  timeJoined: number
-}
 type MembersQuery = {
   membersList: DaoMember[]
 }
@@ -62,7 +58,7 @@ export const MembersList = ({
     return (
       <MembersPanel isMobile={isMobile}>
         {Array.from({ length: isInitialPageLoad ? 5 : 10 }).map((_, i) => (
-          <MemberCardSkeleton isMobile={isMobile} />
+          <MemberCardSkeleton isMobile={isMobile} key={`memberCardSkeleton-${i}`} />
         ))}
       </MembersPanel>
     )
@@ -75,7 +71,6 @@ export const MembersList = ({
             Error
           </Text>
           <Text color={'text3'}>{error?.message || 'Unknown Error'}</Text>
-          <Text></Text>
         </Flex>
       </MembersPanel>
     )
@@ -85,7 +80,7 @@ export const MembersList = ({
       <MembersPanel isMobile={isMobile}>
         {members?.map((member) => (
           <MemberCard
-            key={member.id}
+            key={member.address}
             member={member}
             totalSupply={totalSupply}
             isMobile={isMobile}

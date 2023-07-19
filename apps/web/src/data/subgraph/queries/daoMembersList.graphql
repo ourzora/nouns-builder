@@ -13,6 +13,7 @@ query daoMembersList(
     orderDirection: $orderDirection
   ) {
     id
+    owner
     daoTokenCount
     daoTokens {
       mintedAt

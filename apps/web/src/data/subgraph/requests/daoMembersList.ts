@@ -5,8 +5,8 @@ import { CHAIN_ID } from 'src/typings'
 
 import { DaoTokenOwner_OrderBy, OrderDirection } from '../sdk.generated'
 
-interface DaoMember {
-  id: string
+export type DaoMember = {
+  address: string
   daoTokenCount: number
   timeJoined: number
 }
@@ -30,7 +30,7 @@ export const membersListRequest = async (
 
     if (!data.daotokenOwners) return undefined
     return data.daotokenOwners.map((member) => ({
-      id: member.id.split(':')[1],
+      address: member.owner,
       daoTokenCount: member.daoTokenCount,
       timeJoined: member.daoTokens
         .map((daoToken) => Number(daoToken.mintedAt))

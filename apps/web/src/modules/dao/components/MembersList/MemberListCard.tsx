@@ -4,9 +4,9 @@ import Link from 'next/link'
 import React, { useMemo } from 'react'
 
 import { Avatar } from 'src/components/Avatar'
+import { DaoMember } from 'src/data/subgraph/requests/daoMembersList'
 import { useEnsData } from 'src/hooks'
 
-import { DaoMember } from './MembersList'
 import { firstRowItem, lastRowItem, row, rowItem } from './MembersList.css'
 
 export const MemberCard = ({
@@ -18,7 +18,7 @@ export const MemberCard = ({
   totalSupply?: number
   isMobile: boolean
 }) => {
-  const { displayName, ensAvatar } = useEnsData(member.id)
+  const { displayName, ensAvatar } = useEnsData(member.address)
 
   const timeJoined = useMemo(
     () => dayjs(dayjs.unix(member.timeJoined)).format('MMM DD, YYYY'),
@@ -33,10 +33,10 @@ export const MemberCard = ({
   return (
     <>
       {isMobile ? (
-        <Link href={`/profile/${member.id}`} passHref>
+        <Link href={`/profile/${member.address}`} passHref>
           <Flex mb={'x14'} direction={'column'}>
             <Flex w="100%" align={'center'} mb={'x4'}>
-              <Avatar address={member.id} src={ensAvatar} size="32" />
+              <Avatar address={member.address} src={ensAvatar} size="32" />
               <Text mx="x2" variant="paragraph-md">
                 {displayName}
               </Text>
@@ -49,10 +49,10 @@ export const MemberCard = ({
           </Flex>
         </Link>
       ) : (
-        <Link href={`/profile/${member.id}`} passHref>
+        <Link href={`/profile/${member.address}`} passHref>
           <Flex className={row} align={'center'} mb={'x10'}>
             <Flex w="100%" align={'center'} className={firstRowItem}>
-              <Avatar address={member.id} src={ensAvatar} size="32" />
+              <Avatar address={member.address} src={ensAvatar} size="32" />
               <Text mx="x2" variant="paragraph-md">
                 {displayName}
               </Text>

@@ -1942,6 +1942,7 @@ export type DaoMembersListQuery = {
   daotokenOwners: Array<{
     __typename?: 'DAOTokenOwner'
     id: string
+    owner: any
     daoTokenCount: number
     daoTokens: Array<{ __typename?: 'Token'; mintedAt: any }>
   }>
@@ -2261,6 +2262,7 @@ export const DaoMembersListDocument = gql`
       orderDirection: $orderDirection
     ) {
       id
+      owner
       daoTokenCount
       daoTokens {
         mintedAt
