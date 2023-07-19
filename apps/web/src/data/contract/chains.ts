@@ -9,7 +9,8 @@ import { CHAIN_ID } from 'src/typings'
 
 const MAINNET_CHAINS = [mainnet]
 
-const TESTNET_CHAINS = [goerli, optimismGoerli, baseGoerli, zoraGoerli]
+// Mainnet is required here due to hooks like useEnsData that only pull data from mainnet
+const TESTNET_CHAINS = [mainnet, goerli, optimismGoerli, baseGoerli, zoraGoerli]
 
 const AVAILIBLE_CHAINS = PUBLIC_IS_TESTNET ? TESTNET_CHAINS : MAINNET_CHAINS
 
