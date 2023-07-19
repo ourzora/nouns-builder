@@ -15,10 +15,10 @@ export const MembersPanel = ({
   return (
     <>
       <Text
-        mb={{ '@initial': 'x4', '@768': 'x4' }}
+        mb={{ '@initial': 'x4', '@768': 'x6' }}
         mt={{ '@initial': 'x4', '@768': 'x10' }}
-        fontSize={28}
-        fontWeight={'display'}
+        variant="heading-xs"
+        style={{ fontWeight: 800 }}
       >
         Members
       </Text>
