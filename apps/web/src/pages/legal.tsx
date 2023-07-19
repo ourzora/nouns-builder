@@ -22,7 +22,7 @@ const LegalPage: NextPageWithLayout = () => {
                 Nouns Builder Terms of Service
               </Heading>
 
-              <Text>Last Updated: March 6, 2023</Text>
+              <Text>Last Updated: July 18, 2023</Text>
             </Box>
           </header>
 
@@ -51,7 +51,7 @@ const LegalPage: NextPageWithLayout = () => {
                 </Text>
                 ), collectively a hosted user interface (the “Interface” or “App”) offered
                 by Zora Labs, Inc. (“Zora”, “we”, “us”, or “our”) that provides access to
-                the decentralized and open-source NounsBuilder Protocol (“Protocol”). The
+                the decentralized and open-source Builder Protocol (“Protocol”). The
                 Protocol allows users to create and deploy Decentralized Autonomous
                 Organizations (“DAOs”) adopting technical, structural, and governance
                 characteristics modeled after the NounsDAO. The Interface provides one
@@ -140,12 +140,12 @@ const LegalPage: NextPageWithLayout = () => {
             <Paragraph mt="x2">
               The Interface is distinct from the Protocol and simply provides a means for
               accessing the Protocol. The Protocol is comprised of a set of smart
-              contracts on the Ethereum blockchain which allow users to create and deploy
-              Nouns-model DAOs. The Protocol is maintained by Builder DAO and the Builder
-              developer community. Zora does not control or operate the Protocol. Rather,
-              the Interface simplifies interaction with the Protocol to provide a
-              user-friendly method to create and manage DAOs through the Protocol.
-              Specifically:
+              contracts deployed on various public blockchains, including but not limited
+              to Ethereum, which allow users to create and deploy Nouns-model DAOs. The
+              Protocol is maintained by Builder DAO and the Builder developer community.
+              Zora does not control or operate the Protocol. Rather, the Interface
+              simplifies interaction with the Protocol to provide a user-friendly method
+              to create and manage DAOs through the Protocol. Specifically:
             </Paragraph>
             <Box>
               <ul>
@@ -184,13 +184,31 @@ const LegalPage: NextPageWithLayout = () => {
             <Label>Intellectual Property Rights</Label>
 
             <Paragraph mt="x2">
-              The Interface and its contents are our proprietary property and content, and
-              all source code, functionality, software, website designs, audio, video,
-              text, photographs, and graphics on the Interface are owned or controlled by
-              us or licensed to us. Provided that you are eligible to use the Interface,
-              and subject to your compliance with these Terms, you are granted a limited,
-              non-exclusive, non-transferable, non-sublicensable license to access and use
-              the Interface.
+              The Nouns Builder site at{' '}
+              <Text
+                as="a"
+                href="https://nouns.build/"
+                rel="noopner noreferrer"
+                target="_blank"
+                display="inline"
+              >
+                https://nouns.build/
+              </Text>{' '}
+              is hosted by Zora and its contents are our proprietary property and content.
+              However, the underlying source code repository for the Interface is open
+              source and available at{' '}
+              <Text
+                as="a"
+                href="https://github.com/ourzora/nouns-builder"
+                rel="noopner noreferrer"
+                target="_blank"
+                display="inline"
+              >
+                https://github.com/ourzora/nouns-builder
+              </Text>
+              . Provided that you are eligible to use the Interface, and subject to your
+              compliance with these Terms, you are granted a limited, non-exclusive,
+              non-transferable, non-sublicensable license to access and use the Interface.
             </Paragraph>
 
             <Paragraph mt="x2">
