@@ -27,7 +27,7 @@ export const MembersPanel = ({
         borderStyle={'solid'}
         borderWidth={'normal'}
         borderColor={'border'}
-        pt={isMobile ? 'x8' : undefined}
+        pt={{ '@initial': 'x8', '@768': 'x0' }}
         p={{ '@initial': 'x3', '@768': 'x6' }}
       >
         {!isMobile && tableRuler && <TableHeader />}
@@ -62,7 +62,7 @@ export const MemberCardSkeleton = ({ isMobile }: { isMobile: boolean }) => {
       className={cardSkeleton}
       borderRadius="normal"
       backgroundColor="background2"
-      mb={isMobile ? 'x14' : 'x10'}
+      mb={{ '@initial': 'x14', '@768': 'x10' }}
     />
   )
 }
