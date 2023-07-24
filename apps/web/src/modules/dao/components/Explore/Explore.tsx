@@ -108,6 +108,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
             onPrev={handlePageBack}
             isLast={!hasNextPage}
             isFirst={!router.query.page}
+            scroll={true}
           />
         </Fragment>
       ) : isLoading ? (

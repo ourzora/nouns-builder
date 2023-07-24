@@ -7,16 +7,24 @@ import { Icon } from 'src/components/Icon'
 type PaginationProps = {
   isFirst: boolean
   isLast: boolean
+  scroll?: boolean
   onNext: () => {}
   onPrev: () => {}
 }
 
-const Pagination: React.FC<PaginationProps> = ({ onNext, onPrev, isFirst, isLast }) => {
+const Pagination: React.FC<PaginationProps> = ({
+  onNext,
+  onPrev,
+  isFirst,
+  isLast,
+  scroll = false,
+}) => {
   return (
     <Flex direction={'row'} w={'100%'} justify={'center'} my={'x16'}>
       <Link
         href={onPrev()}
         passHref
+        scroll={scroll}
         className={atoms({ pointerEvents: isFirst ? 'none' : 'auto' })}
       >
         <Flex
@@ -46,6 +54,7 @@ const Pagination: React.FC<PaginationProps> = ({ onNext, onPrev, isFirst, isLast
       <Link
         href={onNext()}
         passHref
+        scroll={scroll}
         className={atoms({ pointerEvents: isLast ? 'none' : 'auto' })}
       >
         <Flex

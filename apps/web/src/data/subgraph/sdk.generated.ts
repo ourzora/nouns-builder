@@ -1929,6 +1929,25 @@ export type DaoInfoQuery = {
   dao?: { __typename?: 'DAO'; totalSupply: number; ownerCount: number } | null
 }
 
+export type DaoMembersListQueryVariables = Exact<{
+  where?: InputMaybe<DaoTokenOwner_Filter>
+  first?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<DaoTokenOwner_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+}>
+
+export type DaoMembersListQuery = {
+  __typename?: 'Query'
+  daotokenOwners: Array<{
+    __typename?: 'DAOTokenOwner'
+    id: string
+    owner: any
+    daoTokenCount: number
+    daoTokens: Array<{ __typename?: 'Token'; mintedAt: any }>
+  }>
+}
+
 export type DaoTokenOwnersQueryVariables = Exact<{
   where?: InputMaybe<DaoTokenOwner_Filter>
   first?: InputMaybe<Scalars['Int']>
@@ -2227,6 +2246,30 @@ export const DaoInfoDocument = gql`
     }
   }
 `
+export const DaoMembersListDocument = gql`
+  query daoMembersList(
+    $where: DAOTokenOwner_filter
+    $first: Int
+    $skip: Int
+    $orderBy: DAOTokenOwner_orderBy
+    $orderDirection: OrderDirection
+  ) {
+    daotokenOwners(
+      where: $where
+      first: $first
+      skip: $skip
+      orderBy: $orderBy
+      orderDirection: $orderDirection
+    ) {
+      id
+      owner
+      daoTokenCount
+      daoTokens {
+        mintedAt
+      }
+    }
+  }
+`
 export const DaoTokenOwnersDocument = gql`
   query daoTokenOwners($where: DAOTokenOwner_filter, $first: Int, $skip: Int) {
     daotokenOwners(where: $where, first: $first, skip: $skip) {
@@ -2386,6 +2429,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoInfo',
+        'query'
+      )
+    },
+    daoMembersList(
+      variables?: DaoMembersListQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoMembersListQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoMembersListQuery>(DaoMembersListDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'daoMembersList',
         'query'
       )
     },

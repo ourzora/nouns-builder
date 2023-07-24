@@ -1,0 +1,22 @@
+query daoMembersList(
+  $where: DAOTokenOwner_filter
+  $first: Int
+  $skip: Int
+  $orderBy: DAOTokenOwner_orderBy
+  $orderDirection: OrderDirection
+) {
+  daotokenOwners(
+    where: $where
+    first: $first
+    skip: $skip
+    orderBy: $orderBy
+    orderDirection: $orderDirection
+  ) {
+    id
+    owner
+    daoTokenCount
+    daoTokens {
+      mintedAt
+    }
+  }
+}

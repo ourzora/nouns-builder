@@ -17,6 +17,7 @@ const SWR_KEYS = {
   AUCTION: 'auction',
   DAO_INFO: 'dao-info',
   DAO_FEED: 'dao-feed',
+  MEMBERS: 'members',
   TOKEN_IMAGE: 'token-image',
   DYNAMIC: {
     MY_DAOS(str: string) {
