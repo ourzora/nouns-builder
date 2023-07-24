@@ -40,14 +40,22 @@ export const MemberCard = ({
 
   return (
     <Link href={`/profile/${member.address}`} passHref>
-      <Flex mb={'x14'} direction={{ '@initial': 'column', '@768': 'row' }}>
-        <Flex className={firstRowItem} align={'center'} mb={'x4'}>
+      <Flex
+        mb={'x14'}
+        direction={{ '@initial': 'column', '@768': 'row' }}
+        align={{ '@initial': 'start', '@768': 'center' }}
+      >
+        <Flex
+          className={firstRowItem}
+          align={'center'}
+          mb={{ '@initial': 'x4', '@768': 'x0' }}
+        >
           <Avatar address={member.address} src={ensAvatar} size="32" />
           <Text mx="x2" variant="paragraph-md">
             {displayName}
           </Text>
         </Flex>
-        {isMobile ? <Flex>{gridInfo}</Flex> : gridInfo}
+        {isMobile ? <Flex w="100%">{gridInfo}</Flex> : gridInfo}
       </Flex>
     </Link>
   )
