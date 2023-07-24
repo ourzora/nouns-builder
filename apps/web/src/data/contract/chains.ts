@@ -1,5 +1,5 @@
 import { configureChains } from 'wagmi'
-import { baseGoerli, goerli, mainnet, optimismGoerli } from 'wagmi/chains'
+import { baseGoerli, goerli, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
@@ -7,7 +7,7 @@ import { PUBLIC_IS_TESTNET, zoraGoerli } from 'src/constants/defaultChains'
 import { RPC_URL } from 'src/constants/rpc'
 import { CHAIN_ID } from 'src/typings'
 
-const MAINNET_CHAINS = [mainnet]
+const MAINNET_CHAINS = [mainnet, optimism]
 
 // Mainnet is required here due to hooks like useEnsData that only pull data from mainnet
 const TESTNET_CHAINS = [mainnet, goerli, optimismGoerli, baseGoerli, zoraGoerli]

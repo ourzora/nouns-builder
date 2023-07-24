@@ -1,4 +1,4 @@
-import { baseGoerli, goerli, mainnet, optimismGoerli } from 'wagmi/chains'
+import { baseGoerli, goerli, mainnet, optimism, optimismGoerli } from 'wagmi/chains'
 
 import { CHAIN_ID, Chain } from 'src/typings'
 
@@ -34,7 +34,18 @@ export const zoraGoerli = {
 } as const
 
 const MAINNET_CHAINS: Chain[] = [
-  { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'ethereum', icon: '/chains/ethereum.svg' },
+  {
+    ...mainnet,
+    id: CHAIN_ID.ETHEREUM,
+    slug: 'ethereum',
+    icon: '/chains/ethereum.svg',
+  },
+  {
+    ...optimism,
+    id: CHAIN_ID.OPTIMISM,
+    slug: 'optimism',
+    icon: '/chains/optimism.svg',
+  },
 ]
 
 const TESTNET_CHAINS: Chain[] = [
