@@ -5,6 +5,7 @@ import { OrderDirection, TokenFragment, Token_OrderBy } from '../sdk.generated'
 
 export interface TokensQueryResponse {
   tokens: TokenFragment[]
+  hasNextPage: boolean
 }
 
 export const tokensQuery = async (
@@ -25,5 +26,6 @@ export const tokensQuery = async (
 
   return {
     tokens: res.tokens,
+    hasNextPage: res.tokens.length === limit,
   }
 }

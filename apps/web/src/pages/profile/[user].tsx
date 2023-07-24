@@ -50,7 +50,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
   const isLoading = data ? false : isValidating && !data && !error
   const hasDaos = !!daos && daos.length > 0
 
-  const { handlePageBack, handlePageForward } = usePagination(!!tokens?.tokens.length)
+  const { handlePageBack, handlePageForward } = usePagination(tokens?.hasNextPage)
 
   const daosString = daos?.map((x) => x.name).join(', ')
 
@@ -173,7 +173,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
                   {tokens?.tokens.map((x, i) => (
                     <Link
                       key={i}
-                      href={`/dao/${query.network}/${x.tokenContract}/${x.tokenId}`}
+                      href={`/dao/${chain.slug}/${x.tokenContract}/${x.tokenId}`}
                     >
                       <TokenPreview name={x.name} image={x.image} />
                     </Link>
@@ -192,7 +192,7 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
               <Pagination
                 onNext={handlePageForward}
                 onPrev={handlePageBack}
-                isLast={!tokens?.tokens.length}
+                isLast={!tokens?.hasNextPage}
                 isFirst={!page}
               />
             </>
