@@ -1,12 +1,19 @@
-import { Button, Flex, Text } from '@zoralabs/zord'
+import { Flex } from '@zoralabs/zord'
 import { Grid } from '@zoralabs/zord'
-import { useRouter } from 'next/router'
-import React, { Fragment, ReactNode } from 'react'
+import React, { ReactNode } from 'react'
+import useSWR from 'swr'
 
+import RecentlyCreated from 'src/components/Home/RecentlyCreated'
+import { PUBLIC_FEATURED_DAOS, TestnetChain } from 'src/constants/featuredDaos'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { highestBidsRequest } from 'src/data/subgraph/requests/homepageQuery'
 import { DaoProps } from 'src/pages'
+import { useChainStore } from 'src/stores/useChainStore'
 
-import { daoFeedGrid, emptyTile } from './DaoFeed.css'
+import { DaoErrorFeed } from './DaoErrorFeed'
+import { daoFeedGrid } from './DaoFeed.css'
 import { DaoFeedCard } from './DaoFeedCard'
+import { DaoFeedSkeleton } from './DaoFeedSkeleton'
 
 export const GridContainer = ({ children }: { children: ReactNode }) => (
   <Flex direction={'row'} justify={'center'} mt={'x3'}>
@@ -14,56 +21,50 @@ export const GridContainer = ({ children }: { children: ReactNode }) => (
   </Flex>
 )
 
-export const EmptyTile = ({ displayContent }: { displayContent: boolean }) => {
-  const router = useRouter()
-
-  const onClick = () => router.reload()
-
-  return (
-    <Flex
-      backgroundColor="border"
-      direction="column"
-      justify="center"
-      align="center"
-      className={emptyTile}
-    >
-      {displayContent && (
-        <Fragment>
-          <Text fontWeight="display" mb="x1">
-            Error loading DAOs
-          </Text>
-          <Text mb="x2">Please reload the page</Text>
-          <Button onClick={onClick} variant="secondary" size="sm">
-            Reload
-          </Button>
-        </Fragment>
-      )}
-    </Flex>
-  )
-}
-
-export const DaoFeed = ({
-  featuredDaos,
+const DaoFeedContent = ({
+  loading,
   error,
+  featuredDaos,
 }: {
-  featuredDaos: Array<DaoProps>
-  error: number
+  loading: boolean
+  error: boolean
+  featuredDaos?: Array<DaoProps>
 }) => {
-  if (error >= 500) {
-    return (
-      <GridContainer>
-        {[...Array(3)].map((_, idx) => (
-          <EmptyTile key={idx} displayContent={idx === 1} />
-        ))}
-      </GridContainer>
-    )
-  }
-
+  if (loading) return <DaoFeedSkeleton />
+  if (error) return <DaoErrorFeed />
   return (
     <GridContainer>
       {featuredDaos?.map((dao, index) => (
         <DaoFeedCard key={index} dao={dao} />
       ))}
     </GridContainer>
+  )
+}
+
+export const DaoFeed = () => {
+  const chain = useChainStore((x) => x.chain)
+  const { data: featuredDaos, error } = useSWR(
+    [SWR_KEYS.FEATURED, chain.id],
+    async () => {
+      return process.env.NEXT_PUBLIC_NETWORK_TYPE === 'mainnet'
+        ? await highestBidsRequest(chain.id)
+        : { data: PUBLIC_FEATURED_DAOS[chain.id as TestnetChain], statusCode: 200 }
+    }
+  )
+
+  const isLoading = !featuredDaos && !error
+  const hasThreeDaos = featuredDaos ? featuredDaos.data.length > 2 : false
+  const hasError = featuredDaos ? featuredDaos?.statusCode >= 500 : false
+
+  if (!isLoading && !hasError && !hasThreeDaos) return null
+
+  return (
+    <RecentlyCreated>
+      <DaoFeedContent
+        loading={isLoading}
+        error={hasError}
+        featuredDaos={featuredDaos?.data}
+      />
+    </RecentlyCreated>
   )
 }

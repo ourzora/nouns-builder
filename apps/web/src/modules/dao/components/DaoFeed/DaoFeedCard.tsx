@@ -4,6 +4,7 @@ import { DaoCard } from 'src/modules/dao'
 import { DaoProps } from 'src/pages'
 
 import { useDaoFeedCard } from '../../hooks'
+import { DaoFeedCardSkeleton } from './DaoFeedSkeleton'
 
 interface DaoCardProps {
   dao: DaoProps
@@ -16,7 +17,7 @@ export const DaoFeedCard: React.FC<DaoCardProps> = ({ dao }) => {
   })
 
   if (!tokenUri?.image || !tokenUri?.name) {
-    return null
+    return <DaoFeedCardSkeleton />
   }
 
   return (
