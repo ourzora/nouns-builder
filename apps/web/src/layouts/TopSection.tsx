@@ -3,6 +3,7 @@ import React, { ReactNode } from 'react'
 
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { Auction } from 'src/modules/auction'
+import { auctionWrapVariants } from 'src/modules/auction/components/Auction.css'
 import { AuctionSkeleton } from 'src/modules/auction/components/AuctionSkeleton'
 import { Chain } from 'src/typings'
 
@@ -63,10 +64,10 @@ export const TopSection = ({
 
 const Chart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
   return (
-    <div>
+    <Flex className={auctionWrapVariants['post']}>
       {viewSwitcher}
-      <h1>Chart</h1>
-    </div>
+      <Flex></Flex>
+    </Flex>
   )
 }
 

@@ -1,0 +1,11 @@
+query auctionSales($startTime: BigInt!, $daoId: String!) {
+  dao(id: $daoId) {
+    auctions(where: { startTime_gt: $startTime }) {
+      id
+      endTime
+      winningBid {
+        amount
+      }
+    }
+  }
+}
