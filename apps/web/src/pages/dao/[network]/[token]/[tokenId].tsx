@@ -17,8 +17,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { Auction } from 'src/modules/auction'
-import { AuctionSkeleton } from 'src/modules/auction/components/AuctionSkeleton'
+import { TopSection } from 'src/layouts/TopSection'
 import {
   About,
   Activity,
@@ -93,7 +92,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       component: [<AdminForm key={'admin'} collectionAddress={collection} />],
     }
     const smartContractsSection = {
-      title: 'Smart Contracts',
+      title: 'Contracts',
       component: [<SmartContracts key={'smart_contracts'} />],
     }
     const daoFeed = {
@@ -124,16 +123,13 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         slug={url}
         description={ogDescription}
       />
-      {token && addresses?.auction ? (
-        <Auction
-          chain={chain}
-          auctionAddress={addresses.auction}
-          collection={collection}
-          token={token}
-        />
-      ) : (
-        <AuctionSkeleton />
-      )}
+
+      <TopSection
+        chain={chain}
+        collection={collection}
+        auctionAddress={addresses?.auction}
+        token={token}
+      />
       <SectionHandler
         sections={sections}
         activeTab={activeTab}
