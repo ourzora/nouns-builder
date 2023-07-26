@@ -21,6 +21,7 @@ export type ContractABIResult = {
 
 const CHAIN_API_LOOKUP: Record<CHAIN_ID, string> = {
   [CHAIN_ID.ETHEREUM]: 'api.etherscan.io',
+  [CHAIN_ID.OPTIMISM]: 'api-optimistic.etherscan.io',
   [CHAIN_ID.GOERLI]: 'api-goerli.etherscan.io',
   [CHAIN_ID.OPTIMISM_GOERLI]: 'api-goerli-optimistic.etherscan.io',
   [CHAIN_ID.BASE_GOERLI]: 'api-goerli.basescan.org',
