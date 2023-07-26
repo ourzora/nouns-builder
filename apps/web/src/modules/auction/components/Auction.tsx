@@ -1,6 +1,6 @@
 import { readContract } from '@wagmi/core'
 import { Flex, Grid } from '@zoralabs/zord'
-import React, { Fragment } from 'react'
+import React, { Fragment, ReactNode } from 'react'
 import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -25,6 +25,7 @@ interface AuctionControllerProps {
   auctionAddress: string
   collection: string
   token: TokenWithWinner
+  viewSwitcher?: ReactNode
 }
 
 export const Auction: React.FC<AuctionControllerProps> = ({
@@ -32,6 +33,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
   auctionAddress,
   collection,
   token,
+  viewSwitcher,
 }) => {
   const { mintDate, name, image, price: tokenPrice, owner: tokenOwner } = token
 
@@ -64,13 +66,13 @@ export const Auction: React.FC<AuctionControllerProps> = ({
 
   return (
     <Flex className={auctionWrapVariants['post']}>
+      {viewSwitcher}
       <Grid className={auctionGrid}>
         <AuctionImage
           key={`auction-${collection}-image-${token.id}`}
           image={image}
           isLoading={!auction}
         />
-
         <Flex
           direction={'column'}
           height={{ '@initial': 'auto', '@768': '100%' }}
