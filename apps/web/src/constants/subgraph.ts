@@ -9,6 +9,8 @@ export const PUBLIC_SUBGRAPH_URL = {
     'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-optimism-goerli',
   [CHAIN_ID.BASE_GOERLI]:
     'https://api.studio.thegraph.com/query/49279/nouns-builder-base-goerli/version/latest',
+  [CHAIN_ID.ZORA]:
+    'https://api.goldsky.com/api/public/project_clhk16b61ay9t49vm6ntn4mkz/subgraphs/nouns-builder-zora/stable/gn',
   [CHAIN_ID.ZORA_GOERLI]:
     'https://api.goldsky.com/api/public/project_clhk16b61ay9t49vm6ntn4mkz/subgraphs/nouns-builder-zora-goerli/stable/gn',
   [CHAIN_ID.FOUNDRY]:

@@ -12,6 +12,7 @@ export const enum CHAIN_ID {
   GOERLI = 5,
   OPTIMISM_GOERLI = 420,
   BASE_GOERLI = 84531,
+  ZORA = 7777777,
   ZORA_GOERLI = 999,
   FOUNDRY = 31337,
 }
