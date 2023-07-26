@@ -113,7 +113,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   const ogDescription =
     description.length > 111 ? `${description.slice(0, 111)}...` : description
 
-  const activeTab = query?.tab ? (query.tab as string) : 'About'
+  const activeTab = query?.tab ? (query.tab as string) : 'Activity'
 
   return (
     <Flex direction="column" pb="x30">
@@ -124,16 +124,6 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         slug={url}
         description={ogDescription}
       />
-      {token && addresses?.auction ? (
-        <Auction
-          chain={chain}
-          auctionAddress={addresses.auction}
-          collection={collection}
-          token={token}
-        />
-      ) : (
-        <AuctionSkeleton />
-      )}
       <SectionHandler
         sections={sections}
         activeTab={activeTab}
