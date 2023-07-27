@@ -12,9 +12,9 @@ export const PUBLIC_SUBGRAPH_URL = {
   [CHAIN_ID.BASE_GOERLI]:
     'https://api.studio.thegraph.com/query/49279/nouns-builder-base-goerli/version/latest',
   [CHAIN_ID.ZORA]:
-    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-mainnet/1.0.0/gn',
+    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-mainnet/stable/gn',
   [CHAIN_ID.ZORA_GOERLI]:
-    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-testnet/1.0.1/gn',
+    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-testnet/stable/gn',
   [CHAIN_ID.FOUNDRY]:
     'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-mainnet',
 }
