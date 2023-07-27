@@ -1,0 +1,25 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+
+import { auctionHistoryRequest } from 'src/data/subgraph/requests/auctionHistory'
+import { CHAIN_ID } from 'src/typings'
+
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { tokenId, chainId, startTime } = req.query
+  console.log('tokenId', tokenId)
+  console.log('chainId', chainId)
+  console.log('startTime', startTime)
+  try {
+    if (!tokenId || !chainId || !startTime) {
+      throw new Error('Invalid query')
+    }
+    const auctionHistory = await auctionHistoryRequest(
+      Number(chainId) as CHAIN_ID,
+      (tokenId as string).toLowerCase(),
+      Number(startTime)
+    )
+    res.status(200).json({ auctionHistory })
+  } catch (error) {
+    res.status(500).json({ error })
+  }
+}
+export default handler
