@@ -25,8 +25,8 @@
   },
   "zora-testnet": {
     "Manager": {
-      "address": "0xd36c922dd2e0c8af68c8a6a609268b20c2526302",
-      "startBlock": 834400
+      "address": "0xc521f85613985b7e417fccd5b348f64263d79397",
+      "startBlock": 597700
     }
   },
   "base-testnet": {
