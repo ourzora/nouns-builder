@@ -5,9 +5,7 @@ import { CHAIN_ID } from 'src/typings'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { tokenId, chainId, startTime } = req.query
-  console.log('tokenId', tokenId)
-  console.log('chainId', chainId)
-  console.log('startTime', startTime)
+
   try {
     if (!tokenId || !chainId || !startTime) {
       throw new Error('Invalid query')
