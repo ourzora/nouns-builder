@@ -92,7 +92,7 @@ export const Airdrop: React.FC = () => {
     if (!isMinter && doesNotContainUpdateMinter) {
       addTransaction({
         type: TransactionType.UPDATE_MINTER,
-        summary: `Updateminters to set the DAO treasury as sender`,
+        summary: `Authorize DAO Treasury to mint new tokens`,
         transactions: [updateMinterTransaction],
       })
     }
