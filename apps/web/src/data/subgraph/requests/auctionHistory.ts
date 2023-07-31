@@ -26,7 +26,7 @@ export const auctionHistoryRequest = async (
     })
 
     return data.dao?.auctions
-      .filter((auction) => auction.winningBid)
+      .filter((auction) => auction.settled)
       .map((auction) => ({
         id: auction.id,
         endTime: Number(auction.endTime),

@@ -1,4 +1,4 @@
-import { Flex } from '@zoralabs/zord'
+import { Box, Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useState } from 'react'
@@ -8,6 +8,8 @@ import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 import { auctionWrapVariants } from 'src/modules/auction/components/Auction.css'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
+
+import { AuctionGraph } from './AuctionGraph'
 
 enum StartTimes {
   '30 days' = '30',
@@ -37,16 +39,16 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
     isReady ? [token, chain.id, startTime] : undefined,
     () =>
       axios
-        .get<{ auctionHistory: AuctionHistory }>(
+        .get<{ auctionHistory: AuctionHistory[] }>(
           `/api/auctionHistory/${token}?chainId=${chain.id}&startTime=${startTime}`
         )
         .then((x) => x.data.auctionHistory)
   )
-  console.log('data', data)
+
   return (
     <Flex className={auctionWrapVariants['post']}>
       {viewSwitcher}
-      <Flex></Flex>
+      <Box>{data && <AuctionGraph chartData={data} />}</Box>
     </Flex>
   )
 }

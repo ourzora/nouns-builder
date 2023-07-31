@@ -1936,6 +1936,7 @@ export type AuctionHistoryQuery = {
       __typename?: 'Auction'
       id: string
       endTime: any
+      settled: boolean
       winningBid?: { __typename?: 'AuctionBid'; amount: any } | null
     }>
   } | null
@@ -2279,6 +2280,7 @@ export const AuctionHistoryDocument = gql`
         winningBid {
           amount
         }
+        settled
       }
     }
   }
