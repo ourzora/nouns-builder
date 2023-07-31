@@ -30,6 +30,7 @@ export const AuctionGraph = ({
   const FONT_SIZE = width / 60
 
   const maximumXFromData = Math.max(...chartData.map((e) => e.endTime))
+  console.log(maximumXFromData)
   const maximumYFromData = Math.max(...chartData.map((e) => Number(e.winningBidAmt)))
 
   const handleMouseMove = (e: any) => {
@@ -46,9 +47,10 @@ export const AuctionGraph = ({
   }
 
   const points = chartData
-    .map((element) => {
-      const x = (element.endTime / maximumXFromData) * chartWidth + paddingX
-      console.log('x', x)
+    .map((element, index) => {
+      const PARTS = chartData.length
+      const x = index * (chartWidth / PARTS) + paddingX
+      // const x = (element.endTime / maximumXFromData) * chartWidth + paddingX
       const y =
         chartHeight -
         (Number(element.winningBidAmt) / maximumYFromData) * chartHeight +
