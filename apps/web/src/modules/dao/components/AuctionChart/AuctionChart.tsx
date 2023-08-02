@@ -1,4 +1,4 @@
-import { Box, Flex } from '@zoralabs/zord'
+import { Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { ReactNode, useState } from 'react'
@@ -33,7 +33,7 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
     addresses: { token },
   } = useDaoStore()
 
-  const [startTime, setStartTime] = useState(startTimeFromNow(StartTimes['30 days']))
+  const [startTime, setStartTime] = useState(startTimeFromNow(StartTimes['All']))
 
   const { data, error, isValidating } = useSWR(
     isReady ? [token, chain.id, startTime] : undefined,
@@ -48,15 +48,16 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
   return (
     <Flex className={auctionWrapVariants['post']}>
       {viewSwitcher}
-      <Flex w="100%" direction={'column'} justify="center" align={'center'}>
-        <Box
-          style={{
-            maxWidth: '962px',
-            minWidth: '350px',
-          }}
-        >
-          {data && <AuctionGraph chartData={data} />}
-        </Box>
+
+      <Flex
+        direction="column"
+        // align="center"
+        style={{
+          // maxWidth: '962px',
+          width: '100%',
+        }}
+      >
+        {data && <AuctionGraph chartData={data} />}
       </Flex>
     </Flex>
   )
