@@ -107,9 +107,7 @@ export const GeneralForm: React.FC<GeneralFormProps> = ({ title }) => {
                   formik.setFieldValue('daoWebsite', target.value)
                 }}
                 onBlur={formik.handleBlur}
-                helperText={
-                  'This will show up on-chain as the name of the project and as the name of each NFT , (ex:  "NOUNS #60")'
-                }
+                helperText={'Add an optional website link for your DAO'}
                 errorMessage={
                   formik.touched['daoWebsite'] && formik.errors['daoWebsite']
                     ? formik.errors['daoWebsite']

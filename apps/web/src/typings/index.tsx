@@ -10,8 +10,10 @@ export interface Duration {
 export const enum CHAIN_ID {
   ETHEREUM = 1,
   GOERLI = 5,
+  OPTIMISM = 10,
   OPTIMISM_GOERLI = 420,
   BASE_GOERLI = 84531,
+  ZORA = 7777777,
   ZORA_GOERLI = 999,
   FOUNDRY = 31337,
 }
