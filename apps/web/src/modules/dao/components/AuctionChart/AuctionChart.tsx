@@ -51,10 +51,13 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
 
       <Flex
         direction="column"
-        // align="center"
+        alignSelf="center"
+        justify={'center'}
+        // backgroundColor="negative"
+        w={'100%'}
         style={{
-          // maxWidth: '962px',
-          width: '100%',
+          height: '464px',
+          maxWidth: '912px',
         }}
       >
         {data && <AuctionGraph chartData={data} />}

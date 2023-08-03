@@ -90,7 +90,12 @@ export const AuctionGraph = ({
   }
 
   return (
-    <Box pos="relative">
+    <Box
+      pos="relative"
+      style={{
+        maxWidth: '962px',
+      }}
+    >
       <svg
         viewBox={`0 0 ${width} ${height}`}
         onTouchMove={handleMouseMove}
