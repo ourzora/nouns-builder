@@ -1,9 +1,9 @@
 import { Box, Text } from '@zoralabs/zord'
 import { color } from '@zoralabs/zord'
+import { ethers } from 'ethers'
 import { useState } from 'react'
 
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
-import { formatCryptoVal } from 'src/utils/numbers'
 
 const STROKE = 1
 
@@ -30,7 +30,6 @@ export const AuctionGraph = ({
   const FONT_SIZE = width / 60
 
   const maximumXFromData = Math.max(...chartData.map((e) => e.endTime))
-  console.log(maximumXFromData)
   const maximumYFromData = Math.max(...chartData.map((e) => Number(e.winningBidAmt)))
 
   const handleMouseMove = (e: any) => {
@@ -77,12 +76,12 @@ export const AuctionGraph = ({
               x={x}
               y={y}
               variant="eyebrow"
-              style={{
-                fontFamily: 'Helvetica',
-                display: visibleIndex === index ? 'block' : 'none',
-              }}
+              display={visibleIndex === index ? 'block' : 'none'}
             >
-              {formatCryptoVal(chartData[index]?.winningBidAmt)}
+              {Number(ethers.utils.formatEther(chartData[index]?.winningBidAmt)).toFixed(
+                2
+              )}{' '}
+              ETH
             </Text>
           )
         })}
