@@ -7,6 +7,7 @@ import useSWR from 'swr'
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 import { auctionWrapVariants } from 'src/modules/auction/components/Auction.css'
 import { useDaoStore } from 'src/modules/dao'
+import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
 import { AuctionGraph } from './AuctionGraph'
@@ -27,12 +28,12 @@ const startTimeFromNow = (startTime: StartTimes) => {
 }
 
 export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
-  const { query, isReady } = useRouter()
+  const { isReady } = useRouter()
   const chain = useChainStore((x) => x.chain)
   const {
     addresses: { token },
   } = useDaoStore()
-
+  const { isMobile } = useLayoutStore()
   const [startTime, setStartTime] = useState(startTimeFromNow(StartTimes['All']))
 
   const { data, error, isValidating } = useSWR(
@@ -48,7 +49,6 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
   return (
     <Flex className={auctionWrapVariants['post']}>
       {viewSwitcher}
-
       <Flex
         direction="column"
         alignSelf="center"
@@ -56,7 +56,7 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
         // backgroundColor="negative"
         w={'100%'}
         style={{
-          height: '464px',
+          height: isMobile ? 'fit-content' : '464px',
           maxWidth: '912px',
         }}
       >

@@ -1,16 +1,18 @@
-import { Box, Text } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import { color } from '@zoralabs/zord'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { ethers } from 'ethers'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 
-const STROKE = 1
+const STROKE = 1.25
 
 interface AuctionGraphProps {
   height?: number
   width?: number
-  chartData?: AuctionHistory[]
+  chartData: AuctionHistory[]
 }
 
 export const AuctionGraph = ({
@@ -20,8 +22,6 @@ export const AuctionGraph = ({
 }: AuctionGraphProps) => {
   const [visibleIndex, setVisibleIndex] = useState(10)
 
-  if (!chartData || !chartData.length) return null
-
   const paddingX = 10
   const paddingY = 30
   const chartWidth = width - paddingX * 2
@@ -29,8 +29,15 @@ export const AuctionGraph = ({
 
   const FONT_SIZE = width / 60
 
-  const maximumXFromData = Math.max(...chartData.map((e) => e.endTime))
   const maximumYFromData = Math.max(...chartData.map((e) => Number(e.winningBidAmt)))
+
+  const startTime = useMemo(() => {
+    if (!chartData || !chartData.length) return '--'
+
+    dayjs.extend(relativeTime)
+    const date = dayjs.unix(chartData[0].endTime).fromNow()
+    return date
+  }, [chartData])
 
   const handleMouseMove = (e: any) => {
     const event = e.targetTouches ? e.targetTouches[0] : e
@@ -92,10 +99,17 @@ export const AuctionGraph = ({
   return (
     <Box
       pos="relative"
+      borderRadius={'phat'}
+      borderStyle={'solid'}
+      borderWidth={'normal'}
+      borderColor={'border'}
       style={{
         maxWidth: '962px',
       }}
+      py={{ '@initial': 'x2', '@768': 'x6' }}
+      px={{ '@initial': 'x2', '@768': 'x6' }}
     >
+      <Text variant="paragraph-sm">Auction History</Text>
       <svg
         viewBox={`0 0 ${width} ${height}`}
         onTouchMove={handleMouseMove}
@@ -132,13 +146,11 @@ export const AuctionGraph = ({
           points={points}
         />
       </svg>
+      <Flex w={'100%'} justify={'space-between'}>
+        <Text variant="paragraph-sm">{startTime}</Text>
 
-      {/* <Text variant="paragraph-sm" pos="absolute" left="x1" bottom="x0">
-        {formatDistance(chartData[0].time, Date.now(), { addSuffix: true })}
-      </Text> */}
-      <Text variant="paragraph-sm" pos="absolute" right="x1" bottom="x0">
-        Now
-      </Text>
+        <Text variant="paragraph-sm">Now</Text>
+      </Flex>
     </Box>
   )
 }
