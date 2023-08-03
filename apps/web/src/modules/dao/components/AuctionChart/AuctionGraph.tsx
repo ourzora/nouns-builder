@@ -95,6 +95,7 @@ export const AuctionGraph = ({
         viewBox={`0 0 ${width} ${height}`}
         onTouchMove={handleMouseMove}
         onMouseMove={handleMouseMove}
+        style={{ overflow: 'visible' }}
       >
         <XValues />
         <Box
