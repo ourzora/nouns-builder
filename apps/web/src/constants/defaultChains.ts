@@ -63,9 +63,45 @@ export const zoraGoerli = {
   testnet: true,
 } as const
 
+export const base = {
+  id: 8453,
+  network: 'base',
+  name: 'Base',
+  nativeCurrency: { name: 'Base', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://developer-access-mainnet.base.org'],
+    },
+    public: {
+      http: ['https://developer-access-mainnet.base.org'],
+    },
+  },
+  blockExplorers: {
+    blockscout: {
+      name: 'Basescout',
+      url: 'https://base.blockscout.com',
+    },
+    default: {
+      name: 'Basescan',
+      url: 'https://basescan.org',
+    },
+    etherscan: {
+      name: 'Basescan',
+      url: 'https://basescan.org',
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 5022,
+    },
+  },
+} as const
+
 const MAINNET_CHAINS: Chain[] = [
   { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'ethereum', icon: '/chains/ethereum.svg' },
   { ...zora, id: CHAIN_ID.ZORA, slug: 'zora', icon: '/chains/zora-mainnet.svg' },
+  { ...base, id: CHAIN_ID.BASE, slug: 'base', icon: '/chains/base.svg' },
   {
     ...optimism,
     id: CHAIN_ID.OPTIMISM,
