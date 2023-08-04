@@ -100,7 +100,7 @@ export const base = {
 
 const MAINNET_CHAINS: Chain[] = [
   { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'ethereum', icon: '/chains/ethereum.svg' },
-  { ...zora, id: CHAIN_ID.ZORA, slug: 'zora', icon: '/chains/zora-mainnet.svg' },
+  { ...zora, id: CHAIN_ID.ZORA, slug: 'zora', icon: '/chains/zora-mainnet.png' },
   { ...base, id: CHAIN_ID.BASE, slug: 'base', icon: '/chains/base.svg' },
   {
     ...optimism,
