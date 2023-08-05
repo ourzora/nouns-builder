@@ -1,10 +1,12 @@
 import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
 
-import { Bid, BidCard } from './BidCard'
+import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
+
+import { BidCard } from './BidCard'
 
 interface AuctionAllBidsProps {
-  bids: Bid[]
+  bids: AuctionBidFragment[]
 }
 
 export const AllBids: React.FC<AuctionAllBidsProps> = ({ bids }) => {
@@ -17,7 +19,7 @@ export const AllBids: React.FC<AuctionAllBidsProps> = ({ bids }) => {
           </Box>
 
           <Flex pb="x4" direction="column" overflowY="auto" style={{ height: 200 }}>
-            {bids.map((bid: Bid) => (
+            {bids.map((bid: AuctionBidFragment) => (
               <BidCard key={`${bid.bidder}_${bid.amount}_expanded`} bid={bid} />
             ))}
           </Flex>

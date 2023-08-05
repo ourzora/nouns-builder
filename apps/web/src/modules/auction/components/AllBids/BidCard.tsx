@@ -4,18 +4,12 @@ import React from 'react'
 import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
+import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { useChainStore } from 'src/stores/useChainStore'
 import { formatCryptoVal } from 'src/utils/numbers'
 
-export interface Bid {
-  id: string | number
-  bidder: string
-  amount: string
-  transactionHash: string
-}
-
-export const BidCard = ({ bid }: { bid: Bid }) => {
+export const BidCard = ({ bid }: { bid: AuctionBidFragment }) => {
   const { displayName, ensAvatar } = useEnsData(bid?.bidder)
   const chain = useChainStore((x) => x.chain)
 
@@ -31,7 +25,7 @@ export const BidCard = ({ bid }: { bid: Bid }) => {
         <Flex direction="row" align="center">
           <Flex
             as="a"
-            href={`${ETHERSCAN_BASE_URL[chain.id]}/tx/${bid.transactionHash}`}
+            href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${bid.bidder}`}
             target="_blank"
             rel="noopener noreferrer"
           >
