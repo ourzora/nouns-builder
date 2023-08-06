@@ -4,7 +4,7 @@ import React from 'react'
 
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { Bid } from 'src/data/contract/requests/getBids'
+import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
 import { useChainStore } from 'src/stores/useChainStore'
 
 import { AllBids } from '../AllBids'
@@ -16,7 +16,7 @@ const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal')
 })
 
 interface RecentBidsProps {
-  bids: Bid[]
+  bids: AuctionBidFragment[]
 }
 
 export const RecentBids: React.FC<RecentBidsProps> = ({ bids }) => {
@@ -25,7 +25,7 @@ export const RecentBids: React.FC<RecentBidsProps> = ({ bids }) => {
   return bids.length ? (
     <Box mt="x3">
       <Stack>
-        {bids.slice(0, 3).map(({ amount, bidder, id, transactionHash }) => (
+        {bids.slice(0, 3).map(({ amount, bidder, id }) => (
           <Flex
             align="center"
             py="x2"
@@ -38,7 +38,7 @@ export const RecentBids: React.FC<RecentBidsProps> = ({ bids }) => {
             <Flex
               align="center"
               as="a"
-              href={`${ETHERSCAN_BASE_URL[chain.id]}/tx/${transactionHash}`}
+              href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${bidder}`}
               target="_blank"
               rel="noopener noreferrer"
             >

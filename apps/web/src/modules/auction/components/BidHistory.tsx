@@ -2,7 +2,7 @@ import { Button, Flex } from '@zoralabs/zord'
 import dynamic from 'next/dynamic'
 import { ReactNode } from 'react'
 
-import { Bid } from 'src/data/contract/requests/getBids'
+import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
 
 import { AllBids } from './AllBids'
 
@@ -10,7 +10,7 @@ const AnimatedModal = dynamic(() => import('src/components/Modal/AnimatedModal')
   ssr: false,
 })
 
-export const BidHistory = ({ bids }: { bids: Bid[] }) => {
+export const BidHistory = ({ bids }: { bids: AuctionBidFragment[] }) => {
   return (
     <AnimatedModal
       trigger={

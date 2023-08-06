@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { BigNumber, ethers } from 'ethers'
 import React, { Fragment, useState } from 'react'
 
-import { Bid } from 'src/data/contract/requests/getBids'
+import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
 import { useTimeout } from 'src/hooks/useTimeout'
 import { Chain } from 'src/typings'
 
@@ -29,7 +29,7 @@ export const CurrentAuction = ({
   bid?: BigNumber
   owner?: string
   endTime?: number
-  bids: Bid[]
+  bids: AuctionBidFragment[]
 }) => {
   const [isEnded, setIsEnded] = useState(false)
   const [isEnding, setIsEnding] = useState(false)
