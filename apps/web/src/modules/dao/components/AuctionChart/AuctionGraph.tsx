@@ -1,27 +1,32 @@
-import { Box, Flex, Text } from '@zoralabs/zord'
+import { Box, Text } from '@zoralabs/zord'
 import { color } from '@zoralabs/zord'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { ethers } from 'ethers'
-import { useMemo, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 
-const STROKE = 1.25
+import { StartTimes } from './AuctionChart'
+
+const STROKE = 1.5
+const STROKE_MOBILE = 2
 
 interface AuctionGraphProps {
   height?: number
   width?: number
+  startTime: StartTimes
+  setStartTime: (startTime: StartTimes) => void
   chartData: AuctionHistory[]
 }
 
 export const AuctionGraph = ({
-  height = 200,
+  height = 220,
   width = 500,
   chartData,
+  startTime,
+  setStartTime,
 }: AuctionGraphProps) => {
-  const [visibleIndex, setVisibleIndex] = useState(10)
-
+  const [visibleIndex, setVisibleIndex] = useState(0)
+  console.log('chartData', chartData)
   const paddingX = 10
   const paddingY = 30
   const chartWidth = width - paddingX * 2
@@ -30,14 +35,22 @@ export const AuctionGraph = ({
   const FONT_SIZE = width / 60
 
   const maximumYFromData = Math.max(...chartData.map((e) => Number(e.winningBidAmt)))
+  const lineRef = useRef<SVGPolylineElement | null>(null)
 
-  const startTime = useMemo(() => {
-    if (!chartData || !chartData.length) return '--'
-
-    dayjs.extend(relativeTime)
-    const date = dayjs.unix(chartData[0].endTime).fromNow()
-    return date
-  }, [chartData])
+  useEffect(() => {
+    if (lineRef.current) {
+      const length = lineRef.current.getTotalLength()
+      lineRef.current.style.strokeDasharray = `${length} ${length}`
+      lineRef.current.style.strokeDashoffset = length.toString()
+      lineRef.current.style.opacity = '0'
+      setTimeout(() => {
+        lineRef.current!.style.transition =
+          'stroke-dashoffset 1.5s ease-in-out, opacity 1.5s ease-in-out'
+        lineRef.current!.style.strokeDashoffset = '0'
+        lineRef.current!.style.opacity = '1'
+      }, 100)
+    }
+  }, [])
 
   const handleMouseMove = (e: any) => {
     const event = e.targetTouches ? e.targetTouches[0] : e
@@ -56,11 +69,11 @@ export const AuctionGraph = ({
     .map((element, index) => {
       const PARTS = chartData.length
       const x = index * (chartWidth / PARTS) + paddingX
-      // const x = (element.endTime / maximumXFromData) * chartWidth + paddingX
       const y =
         chartHeight -
         (Number(element.winningBidAmt) / maximumYFromData) * chartHeight +
         paddingY
+
       return `${x},${y}`
     })
     .join(' ')
@@ -80,13 +93,14 @@ export const AuctionGraph = ({
             <Text
               key={index}
               as="text"
-              x={x}
-              y={y}
               variant="eyebrow"
+              x={x}
+              y={y - 10}
+              backgroundColor={'accent'}
               display={visibleIndex === index ? 'block' : 'none'}
             >
               {Number(ethers.utils.formatEther(chartData[index]?.winningBidAmt)).toFixed(
-                2
+                4
               )}{' '}
               ETH
             </Text>
@@ -97,60 +111,48 @@ export const AuctionGraph = ({
   }
 
   return (
-    <Box
-      pos="relative"
-      borderRadius={'phat'}
-      borderStyle={'solid'}
-      borderWidth={'normal'}
-      borderColor={'border'}
-      style={{
-        maxWidth: '962px',
-      }}
-      py={{ '@initial': 'x2', '@768': 'x6' }}
-      px={{ '@initial': 'x2', '@768': 'x6' }}
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      onTouchMove={handleMouseMove}
+      onMouseMove={handleMouseMove}
+      style={{ overflow: 'visible' }}
     >
-      <Text variant="paragraph-sm">Auction History</Text>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        onTouchMove={handleMouseMove}
-        onMouseMove={handleMouseMove}
-        style={{ overflow: 'visible' }}
-      >
-        <XValues />
-        <Box
-          as="circle"
-          cx={visibleIndex * (chartWidth / chartData.length) + paddingX}
-          cy={
-            chartHeight -
-            (Number(chartData[visibleIndex].winningBidAmt) / maximumYFromData) *
-              chartHeight +
-            paddingY
-          }
-          r="2"
-          fill={color.accent}
-        />
-        <line
-          stroke={color.accent}
-          strokeWidth={STROKE}
-          x1={visibleIndex * (chartWidth / chartData.length) + paddingX}
-          x2={visibleIndex * (chartWidth / chartData.length) + paddingX}
-          y1="0"
-          y2={chartHeight + paddingY}
-          opacity="0.2"
-        />
+      <XValues />
+      <Box
+        as="circle"
+        cx={visibleIndex * (chartWidth / chartData.length) + paddingX}
+        cy={
+          chartHeight -
+          (Number(chartData[visibleIndex].winningBidAmt) / maximumYFromData) *
+            chartHeight +
+          paddingY
+        }
+        r="3"
+        fill={color.accent}
+      />
+      <line
+        stroke={color.accent}
+        strokeWidth={STROKE}
+        x1={visibleIndex * (chartWidth / chartData.length) + paddingX}
+        x2={visibleIndex * (chartWidth / chartData.length) + paddingX}
+        y1="0"
+        y2={chartHeight + paddingY}
+        opacity="0.2"
+      />
 
-        <polyline
-          fill="none"
-          stroke={color.accent}
-          strokeWidth={STROKE}
-          points={points}
-        />
-      </svg>
-      <Flex w={'100%'} justify={'space-between'}>
-        <Text variant="paragraph-sm">{startTime}</Text>
-
-        <Text variant="paragraph-sm">Now</Text>
-      </Flex>
-    </Box>
+      <polyline
+        key={startTime}
+        ref={lineRef}
+        fill="none"
+        stroke={chartData ? color.accent : 'transparent'}
+        strokeWidth={STROKE}
+        points={points}
+        style={{
+          opacity: '0',
+          strokeDasharray: '1000 1000', // Some large number to initially hide the line
+          strokeDashoffset: '1000', // Same large number to initially hide the line
+        }}
+      />
+    </svg>
   )
 }

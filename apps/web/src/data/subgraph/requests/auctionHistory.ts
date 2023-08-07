@@ -30,7 +30,7 @@ export const auctionHistoryRequest = async (
       .map((auction) => ({
         id: auction.id,
         endTime: Number(auction.endTime),
-        winningBidAmt: auction?.winningBid?.amount as string,
+        winningBidAmt: auction?.winningBid?.amount || ('1' as string),
       }))
   } catch (error) {
     console.error(error)

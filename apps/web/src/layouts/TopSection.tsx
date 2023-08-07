@@ -59,7 +59,7 @@ export const TopSection = ({
     )
   }
 
-  return <>'error'</>
+  return null
 }
 
 const ViewSwitcher = ({
