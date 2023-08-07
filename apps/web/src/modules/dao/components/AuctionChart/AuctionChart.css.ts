@@ -18,7 +18,7 @@ export const chartSkeleton = style({
   maxWidth: '912px',
   '@media': {
     'screen and (max-width: 768px)': {
-      height: '300px',
+      height: '145px',
     },
   },
 })

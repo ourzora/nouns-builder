@@ -4,6 +4,7 @@ import { ethers } from 'ethers'
 import { useEffect, useRef, useState } from 'react'
 
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
+import { useLayoutStore } from 'src/stores'
 
 import { StartTimes } from './AuctionChart'
 
@@ -31,7 +32,7 @@ export const AuctionGraph = ({
   const chartHeight = height - paddingY * 2
 
   const FONT_SIZE = width / 60
-
+  const { isMobile } = useLayoutStore()
   const maximumYFromData = Math.max(...chartData.map((e) => Number(e.winningBidAmt)))
   const lineRef = useRef<SVGPolylineElement | null>(null)
 
@@ -89,7 +90,7 @@ export const AuctionGraph = ({
             FONT_SIZE
           return (
             <Text
-              fontSize={12}
+              fontSize={isMobile ? 20 : 12}
               key={index}
               as="text"
               variant="eyebrow"
