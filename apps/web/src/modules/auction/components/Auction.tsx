@@ -1,12 +1,14 @@
 import { readContract } from '@wagmi/core'
 import { Flex, Grid } from '@zoralabs/zord'
+import { formatEther } from 'ethers/lib/utils.js'
 import React, { Fragment, ReactNode } from 'react'
 import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
-import getBids from 'src/data/contract/requests/getBids'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
+import { SDK } from 'src/data/subgraph/client'
+import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
 import { AddressType, Chain } from 'src/typings'
 
 import { useAuctionEvents } from '../hooks'
@@ -61,7 +63,15 @@ export const Auction: React.FC<AuctionControllerProps> = ({
 
   const { data: bids } = useSWR(
     [SWR_KEYS.AUCTION_BIDS, chain.id, auctionAddress, token.id],
-    () => getBids(chain.id, auctionAddress, token.id)
+    () =>
+      SDK.connect(chain.id)
+        .auctionBids({ id: `${collection.toLowerCase()}:${token.id}` })
+        .then((x) =>
+          x.auction?.bids?.map((bid: AuctionBidFragment) => ({
+            ...bid,
+            amount: formatEther(bid.amount),
+          }))
+        )
   )
 
   return (

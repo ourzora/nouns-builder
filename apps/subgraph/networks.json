@@ -29,6 +29,12 @@
       "startBlock": 597700
     }
   },
+  "base": {
+    "Manager": {
+      "address": "0x3ac0e64fe2931f8e082c6bb29283540de9b5371c",
+      "startBlock": 1991500
+    }
+  },
   "base-testnet": {
     "Manager": {
       "address": "0x550c326d688fD51ae65AC6A2d48749E631023A03",

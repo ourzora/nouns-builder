@@ -1848,6 +1848,13 @@ export type AuctionFragment = {
   dao: { __typename?: 'DAO'; name: string; auctionAddress: any; tokenAddress: any }
 }
 
+export type AuctionBidFragment = {
+  __typename?: 'AuctionBid'
+  id: string
+  amount: any
+  bidder: any
+}
+
 export type DaoFragment = {
   __typename?: 'DAO'
   name: string
@@ -1918,6 +1925,23 @@ export type ActiveAuctionsQuery = {
     __typename?: 'Auction'
     dao: { __typename?: 'DAO'; name: string; auctionAddress: any; tokenAddress: any }
   }>
+}
+
+export type AuctionBidsQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type AuctionBidsQuery = {
+  __typename?: 'Query'
+  auction?: {
+    __typename?: 'Auction'
+    bids?: Array<{
+      __typename?: 'AuctionBid'
+      id: string
+      amount: any
+      bidder: any
+    }> | null
+  } | null
 }
 
 export type AuctionHistoryQueryVariables = Exact<{
@@ -2172,6 +2196,13 @@ export const AuctionFragmentDoc = gql`
     }
   }
 `
+export const AuctionBidFragmentDoc = gql`
+  fragment AuctionBid on AuctionBid {
+    id
+    amount
+    bidder
+  }
+`
 export const DaoFragmentDoc = gql`
   fragment DAO on DAO {
     name
@@ -2259,6 +2290,16 @@ export const ActiveAuctionsDocument = gql`
     }
   }
   ${AuctionFragmentDoc}
+`
+export const AuctionBidsDocument = gql`
+  query auctionBids($id: ID!) {
+    auction(id: $id) {
+      bids(orderBy: bidTime, orderDirection: desc) {
+        ...AuctionBid
+      }
+    }
+  }
+  ${AuctionBidFragmentDoc}
 `
 export const AuctionHistoryDocument = gql`
   query auctionHistory(
@@ -2462,6 +2503,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'activeAuctions',
+        'query'
+      )
+    },
+    auctionBids(
+      variables: AuctionBidsQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<AuctionBidsQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<AuctionBidsQuery>(AuctionBidsDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'auctionBids',
         'query'
       )
     },
