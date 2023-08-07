@@ -28,24 +28,7 @@ export const TopSection = ({
   const [topSectionView, setTopSectionView] = React.useState<TopSectionView>(
     TopSectionView.Auction
   )
-  if (topSectionView === TopSectionView.Auction) {
-    return token && auctionAddress ? (
-      <Auction
-        chain={chain}
-        auctionAddress={auctionAddress}
-        collection={collection}
-        token={token}
-        viewSwitcher={
-          <ViewSwitcher
-            topSectionView={topSectionView}
-            setTopSectionView={setTopSectionView}
-          />
-        }
-      />
-    ) : (
-      <AuctionSkeleton />
-    )
-  }
+
   if (topSectionView === TopSectionView.Chart) {
     return (
       <AuctionChart
@@ -59,7 +42,22 @@ export const TopSection = ({
     )
   }
 
-  return null
+  return token && auctionAddress ? (
+    <Auction
+      chain={chain}
+      auctionAddress={auctionAddress}
+      collection={collection}
+      token={token}
+      viewSwitcher={
+        <ViewSwitcher
+          topSectionView={topSectionView}
+          setTopSectionView={setTopSectionView}
+        />
+      }
+    />
+  ) : (
+    <AuctionSkeleton />
+  )
 }
 
 const ViewSwitcher = ({
