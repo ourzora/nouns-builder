@@ -1,14 +1,10 @@
-import { keyframes, style } from '@vanilla-extract/css'
+import { style } from '@vanilla-extract/css'
 import { atoms } from '@zoralabs/zord'
 
-const pulse = keyframes({
-  '0%': { opacity: '1' },
-  '100%': { opacity: '1' },
-  '50%': { opacity: '.5' },
-})
+import { skeletonAnimation } from 'src/styles/animations.css'
 
 export const exploreSkeleton = style({
-  animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+  animation: skeletonAnimation,
   height: '390px',
 })
 

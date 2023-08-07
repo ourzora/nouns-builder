@@ -1,14 +1,10 @@
-import { keyframes, style, styleVariants } from '@vanilla-extract/css'
+import { style, styleVariants } from '@vanilla-extract/css'
 import { atoms, media, theme, vars } from '@zoralabs/zord'
 
-const pulse = keyframes({
-  '0%': { opacity: '1' },
-  '100%': { opacity: '1' },
-  '50%': { opacity: '.5' },
-})
+import { skeletonAnimation } from 'src/styles/animations.css'
 
 export const auctionSkeleton = style({
-  animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+  animation: skeletonAnimation,
 })
 
 export const auctionWrap = atoms({
