@@ -16,9 +16,9 @@ import { activeFilter, inactiveFilter } from './AuctionChart.css'
 import { AuctionGraph } from './AuctionGraph'
 
 export enum StartTimes {
-  '30 days' = '30',
-  '60 days' = '60',
-  '90 days' = '90',
+  '30d' = '30',
+  '60d' = '60',
+  '90d' = '90',
   'All' = '0',
 }
 
@@ -63,16 +63,33 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
   }
 
   if (error) {
-    return null
-  }
-
-  if (!data || !data.length) {
     return (
       <AuctionGraphLayout
         viewSwitcher={viewSwitcher}
         startTime={startTime}
         setStartTime={setStartTime}
-        chart={'No Results'}
+        chart={
+          <DisplayPanel
+            title="Error"
+            description={error?.message || 'Error fetching graph data from subgraph'}
+          />
+        }
+      />
+    )
+  }
+
+  if (!data || !data.length || data.length < 2) {
+    return (
+      <AuctionGraphLayout
+        viewSwitcher={viewSwitcher}
+        startTime={startTime}
+        setStartTime={setStartTime}
+        chart={
+          <DisplayPanel
+            title="Insufficient Data"
+            description="Not enough data within the given time-frame to populate a graph"
+          />
+        }
       />
     )
   }
@@ -141,7 +158,7 @@ const AuctionGraphLayout = ({
           py={{ '@initial': 'x2', '@768': 'x6' }}
           px={{ '@initial': 'x2', '@768': 'x6' }}
         >
-          <Flex w={'100%'} justify={'space-between'} align="center">
+          <Flex w={'100%'} justify={'space-between'} align="center" mb={'x4'}>
             {isMobile || <Text variant="paragraph-sm">Auction History</Text>}
             <Flex>
               {Object.entries(StartTimes).map(([label, value]) => {
@@ -152,7 +169,8 @@ const AuctionGraphLayout = ({
                     key={label}
                     variant="ghost"
                     size="xs"
-                    px={'x3'}
+                    px={'x0'}
+                    mr={'x2'}
                     className={isActive ? activeFilter : inactiveFilter}
                     onClick={() => setStartTime(value)}
                   >
@@ -169,6 +187,28 @@ const AuctionGraphLayout = ({
           </Flex>
         </Box>
       </Flex>
+    </Flex>
+  )
+}
+
+const DisplayPanel = ({ title, description }: { title: string; description: string }) => {
+  return (
+    <Flex
+      direction="column"
+      alignSelf="center"
+      justify={'center'}
+      align="center"
+      p={'x4'}
+      w={'100%'}
+      style={{
+        height: '300px',
+        maxWidth: '912px',
+      }}
+    >
+      <Text variant="label-md" mb={'x3'} color={'text2'}>
+        {title}
+      </Text>
+      <Text color={'text2'}>{description}</Text>
     </Flex>
   )
 }

@@ -5,6 +5,10 @@ import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { Auction } from 'src/modules/auction'
 import { AuctionSkeleton } from 'src/modules/auction/components/AuctionSkeleton'
 import { AuctionChart } from 'src/modules/dao/components/AuctionChart/AuctionChart'
+import {
+  activeFilter,
+  inactiveFilter,
+} from 'src/modules/dao/components/AuctionChart/AuctionChart.css'
 import { Chain } from 'src/typings'
 
 type TopSectionProps = {
@@ -72,11 +76,15 @@ const ViewSwitcher = ({
       <Flex style={{ width: '100%', maxWidth: '912px' }}>
         {Object.values(TopSectionView).map((view) => (
           <Button
-            size="xs"
+            size="md"
+            px={'x0'}
+            mr={'x3'}
+            w={'x16'}
             style={{ textTransform: 'capitalize' }}
             onClick={() => setTopSectionView(view)}
-            variant={view === topSectionView ? 'primary' : 'outline'}
+            variant={'ghost'}
             key={view}
+            className={view === topSectionView ? activeFilter : inactiveFilter}
           >
             {view}
           </Button>
