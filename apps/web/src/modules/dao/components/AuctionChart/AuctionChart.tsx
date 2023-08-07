@@ -12,7 +12,7 @@ import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
-import { activeFilter, inactiveFilter } from './AuctionChart.css'
+import { activeFilter, chartSkeleton, inactiveFilter } from './AuctionChart.css'
 import { AuctionGraph } from './AuctionGraph'
 
 export enum StartTimes {
@@ -57,7 +57,7 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
         viewSwitcher={viewSwitcher}
         startTime={startTime}
         setStartTime={setStartTime}
-        chart={null}
+        chart={<SkeletonPanel />}
       />
     )
   }
@@ -210,5 +210,16 @@ const DisplayPanel = ({ title, description }: { title: string; description: stri
       </Text>
       <Text color={'text2'}>{description}</Text>
     </Flex>
+  )
+}
+
+const SkeletonPanel = () => {
+  return (
+    <Box
+      w={'100%'}
+      borderRadius="phat"
+      className={chartSkeleton}
+      backgroundColor="background2"
+    />
   )
 }

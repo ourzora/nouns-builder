@@ -7,8 +7,7 @@ import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 
 import { StartTimes } from './AuctionChart'
 
-const STROKE = 1.5
-const STROKE_MOBILE = 2
+const STROKE = 1
 
 interface AuctionGraphProps {
   height?: number
@@ -26,7 +25,6 @@ export const AuctionGraph = ({
   setStartTime,
 }: AuctionGraphProps) => {
   const [visibleIndex, setVisibleIndex] = useState(0)
-  console.log('chartData', chartData)
   const paddingX = 10
   const paddingY = 30
   const chartWidth = width - paddingX * 2
@@ -91,6 +89,7 @@ export const AuctionGraph = ({
             FONT_SIZE
           return (
             <Text
+              fontSize={12}
               key={index}
               as="text"
               variant="eyebrow"
@@ -117,6 +116,11 @@ export const AuctionGraph = ({
       onMouseMove={handleMouseMove}
       style={{ overflow: 'visible' }}
     >
+      <defs>
+        <filter id="smooth">
+          <feGaussianBlur in="SourceGraphic" stdDeviation=".3" />
+        </filter>
+      </defs>
       <XValues />
       <Box
         as="circle"
@@ -152,6 +156,9 @@ export const AuctionGraph = ({
           strokeDasharray: '1000 1000', // Some large number to initially hide the line
           strokeDashoffset: '1000', // Same large number to initially hide the line
         }}
+        strokeLinejoin="round"
+        strokeLinecap="round"
+        filter="url(#smooth)"
       />
     </svg>
   )
