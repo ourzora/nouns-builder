@@ -71,7 +71,7 @@ export const AuctionGraph = ({
           return `${x},${y}`
         })
         .join(' '),
-    [chartData, chartWidth, paddingX, paddingY, chartHeight, maximumYFromData]
+    [chartData, chartWidth, chartHeight, maximumYFromData]
   )
 
   const handleMouseMove = (
