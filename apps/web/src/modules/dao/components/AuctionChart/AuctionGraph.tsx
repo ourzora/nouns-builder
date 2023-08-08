@@ -1,17 +1,26 @@
 import { Box, Text } from '@zoralabs/zord'
 import { color } from '@zoralabs/zord'
 import { ethers } from 'ethers'
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 import { useLayoutStore } from 'src/stores'
 
 import { StartTimes } from './AuctionChart'
 import { graphOnLoadStyles, svgBox } from './AuctionChart.css'
+import {
+  calculateVisibleIndex,
+  calculateY,
+  getMouseEventSource,
+  getTouchEventSource,
+  isTouchEvent,
+} from './auctionChartUtils'
 
 const STROKE = 1
+const paddingX = 10
+const paddingY = 30
 
-interface AuctionGraphProps {
+type AuctionGraphProps = {
   height?: number
   width?: number
   startTime: StartTimes
@@ -26,12 +35,9 @@ export const AuctionGraph = ({
   startTime,
 }: AuctionGraphProps) => {
   const [visibleIndex, setVisibleIndex] = useState(0)
-  const paddingX = 10
-  const paddingY = 30
   const chartWidth = width - paddingX * 2
   const chartHeight = height - paddingY * 2
 
-  const FONT_SIZE = width / 60
   const { isMobile } = useLayoutStore()
   const maximumYFromData = Math.max(...chartData.map((e) => Number(e.winningBidAmt)))
   const lineRef = useRef<SVGPolylineElement | null>(null)
@@ -51,65 +57,32 @@ export const AuctionGraph = ({
     }
   }, [])
 
-  const handleMouseMove = (e: any) => {
-    const event = e.targetTouches ? e.targetTouches[0] : e
-    const y = Math.max(
-      0,
-      event.pageX - e.currentTarget.getBoundingClientRect().left - paddingX
-    )
-    const index = Math.round(
-      ((y - paddingY / 2) / (e.currentTarget.getBoundingClientRect().width - paddingY)) *
-        chartData.length
-    )
-    setVisibleIndex(Math.max(0, Math.min(index, chartData.length - 1)))
-  }
-
-  const points = chartData
-    .map((element, index) => {
-      const PARTS = chartData.length
-      const x = index * (chartWidth / PARTS) + paddingX
-      const y =
-        chartHeight -
-        (Number(element.winningBidAmt) / maximumYFromData) * chartHeight +
-        paddingY
-
-      return `${x},${y}`
-    })
-    .join(' ')
-
-  const XValues = () => {
-    const PARTS = chartData.length
-    return (
-      <>
-        {new Array(PARTS).fill(0).map((_, index) => {
-          const x = index * (chartWidth / PARTS) + paddingX - FONT_SIZE / 2
+  const points = useMemo(
+    () =>
+      chartData
+        .map((element, index) => {
+          const parts = chartData.length
+          const x = index * (chartWidth / parts) + paddingX
           const y =
             chartHeight -
-            (Number(chartData[index].winningBidAmt) / maximumYFromData) * chartHeight +
-            paddingY -
-            FONT_SIZE
-          return (
-            <Text
-              fontSize={isMobile ? 20 : 12}
-              key={index}
-              as="text"
-              variant="eyebrow"
-              x={x}
-              y={y - 10}
-              backgroundColor={'accent'}
-              display={visibleIndex === index ? 'block' : 'none'}
-            >
-              {Number(ethers.utils.formatEther(chartData[index]?.winningBidAmt)).toFixed(
-                4
-              )}{' '}
-              ETH
-            </Text>
-          )
-        })}
-      </>
-    )
-  }
+            (Number(element.winningBidAmt) / maximumYFromData) * chartHeight +
+            paddingY
 
+          return `${x},${y}`
+        })
+        .join(' '),
+    [chartData, chartWidth, paddingX, paddingY, chartHeight, maximumYFromData]
+  )
+
+  const handleMouseMove = (
+    e: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>
+  ) => {
+    const event = isTouchEvent(e) ? getTouchEventSource(e) : getMouseEventSource(e)
+    const y = calculateY(event, e, paddingX)
+    const visibleIndex = calculateVisibleIndex(y, e, paddingY, chartData.length)
+
+    setVisibleIndex(visibleIndex)
+  }
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
@@ -122,7 +95,17 @@ export const AuctionGraph = ({
           <feGaussianBlur in="SourceGraphic" stdDeviation=".3" />
         </filter>
       </defs>
-      <XValues />
+      <XValues
+        chartData={chartData}
+        chartWidth={chartWidth}
+        paddingX={paddingX}
+        paddingY={paddingY}
+        width={width}
+        visibleIndex={visibleIndex}
+        maximumYFromData={maximumYFromData}
+        chartHeight={chartHeight}
+        isMobile={isMobile}
+      />
       <Box
         as="circle"
         cx={visibleIndex * (chartWidth / chartData.length) + paddingX}
@@ -160,3 +143,61 @@ export const AuctionGraph = ({
     </svg>
   )
 }
+
+type XValuesProps = {
+  chartData: AuctionHistory[]
+  chartWidth: number
+  paddingX: number
+  paddingY: number
+  width: number
+  visibleIndex: number
+  maximumYFromData: number
+  chartHeight: number
+  isMobile: boolean
+}
+
+const XValues = React.memo(
+  ({
+    chartData,
+    chartWidth,
+    paddingX,
+    paddingY,
+    width,
+    visibleIndex,
+    maximumYFromData,
+    chartHeight,
+    isMobile,
+  }: XValuesProps) => {
+    const FONT_SIZE = width / 60
+    const parts = chartData.length
+    return (
+      <>
+        {new Array(parts).fill(0).map((_, index) => {
+          const x = index * (chartWidth / parts) + paddingX - FONT_SIZE / 2
+          const y =
+            chartHeight -
+            (Number(chartData[index].winningBidAmt) / maximumYFromData) * chartHeight +
+            paddingY -
+            FONT_SIZE
+          return (
+            <Text
+              fontSize={isMobile ? 20 : 12}
+              key={index}
+              as="text"
+              variant="eyebrow"
+              x={x}
+              y={y - 10}
+              backgroundColor={'accent'}
+              display={visibleIndex === index ? 'block' : 'none'}
+            >
+              {Number(ethers.utils.formatEther(chartData[index]?.winningBidAmt)).toFixed(
+                4
+              )}{' '}
+              ETH
+            </Text>
+          )
+        })}
+      </>
+    )
+  }
+)
