@@ -1,19 +1,14 @@
-import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import { useRouter } from 'next/router'
-import React, { ReactNode, useMemo, useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import useSWR from 'swr'
 
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
-import { auctionWrapVariants } from 'src/modules/auction/components/Auction.css'
 import { useDaoStore } from 'src/modules/dao'
-import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
-import { activeFilter, chartSkeleton, inactiveFilter } from './AuctionChart.css'
 import { AuctionGraph } from './AuctionGraph'
+import { AuctionGraphLayout, DisplayPanel, SkeletonPanel } from './Layouts'
 
 export enum StartTimes {
   '30d' = '30',
@@ -107,119 +102,6 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
           setStartTime={setStartTime}
         />
       }
-    />
-  )
-}
-const AuctionGraphLayout = ({
-  chart,
-  viewSwitcher,
-  startTime,
-  setStartTime,
-  chartData,
-}: {
-  chart?: ReactNode
-  viewSwitcher?: ReactNode
-  startTime: StartTimes
-  setStartTime: (startTime: StartTimes) => void
-  chartData?: AuctionHistory[]
-}) => {
-  const { isMobile } = useLayoutStore()
-  const startTimeText = useMemo(() => {
-    if (!chartData || !chartData.length) return '--'
-
-    dayjs.extend(relativeTime)
-    const date = dayjs.unix(chartData[0].endTime).fromNow()
-    return date
-  }, [chartData])
-
-  return (
-    <Flex className={auctionWrapVariants['post']}>
-      {viewSwitcher}
-      <Flex
-        direction="column"
-        alignSelf="center"
-        justify={'center'}
-        borderRadius={'phat'}
-        borderStyle={'solid'}
-        borderWidth={'normal'}
-        borderColor={'border'}
-        w={'100%'}
-        style={{
-          height: isMobile ? 'fit-content' : '464px',
-          maxWidth: '912px',
-        }}
-      >
-        <Box
-          pos="relative"
-          style={{
-            maxWidth: '962px',
-            height: '100%',
-          }}
-          py={{ '@initial': 'x2', '@768': 'x6' }}
-          px={{ '@initial': 'x2', '@768': 'x6' }}
-        >
-          <Flex w={'100%'} justify={'space-between'} align="center" mb={'x4'}>
-            {isMobile || <Text variant="paragraph-sm">Auction History</Text>}
-            <Flex>
-              {Object.entries(StartTimes).map(([label, value]) => {
-                const isActive = startTime === value
-
-                return (
-                  <Button
-                    key={label}
-                    variant="ghost"
-                    size="xs"
-                    px={'x0'}
-                    mr={'x2'}
-                    className={isActive ? activeFilter : inactiveFilter}
-                    onClick={() => setStartTime(value)}
-                  >
-                    {label}
-                  </Button>
-                )
-              })}
-            </Flex>
-          </Flex>
-          <Box style={{ height: '90%' }}>{chart}</Box>
-          <Flex w={'100%'} justify={'space-between'}>
-            <Text variant="paragraph-sm">{startTimeText}</Text>
-            <Text variant="paragraph-sm">Now</Text>
-          </Flex>
-        </Box>
-      </Flex>
-    </Flex>
-  )
-}
-
-const DisplayPanel = ({ title, description }: { title: string; description: string }) => {
-  return (
-    <Flex
-      direction="column"
-      alignSelf="center"
-      justify={'center'}
-      align="center"
-      p={'x4'}
-      w={'100%'}
-      style={{
-        height: '300px',
-        maxWidth: '912px',
-      }}
-    >
-      <Text variant="label-md" mb={'x3'} color={'text2'}>
-        {title}
-      </Text>
-      <Text color={'text2'}>{description}</Text>
-    </Flex>
-  )
-}
-
-const SkeletonPanel = () => {
-  return (
-    <Box
-      w={'100%'}
-      borderRadius="phat"
-      className={chartSkeleton}
-      backgroundColor="background2"
     />
   )
 }

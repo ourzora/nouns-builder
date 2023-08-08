@@ -7,6 +7,7 @@ import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 import { useLayoutStore } from 'src/stores'
 
 import { StartTimes } from './AuctionChart'
+import { graphOnLoadStyles, svgBox } from './AuctionChart.css'
 
 const STROKE = 1
 
@@ -23,7 +24,6 @@ export const AuctionGraph = ({
   width = 500,
   chartData,
   startTime,
-  setStartTime,
 }: AuctionGraphProps) => {
   const [visibleIndex, setVisibleIndex] = useState(0)
   const paddingX = 10
@@ -115,7 +115,7 @@ export const AuctionGraph = ({
       viewBox={`0 0 ${width} ${height}`}
       onTouchMove={handleMouseMove}
       onMouseMove={handleMouseMove}
-      style={{ overflow: 'visible' }}
+      className={svgBox}
     >
       <defs>
         <filter id="smooth">
@@ -152,11 +152,7 @@ export const AuctionGraph = ({
         stroke={chartData ? color.accent : 'transparent'}
         strokeWidth={STROKE}
         points={points}
-        style={{
-          opacity: '0',
-          strokeDasharray: '1000 1000', // Some large number to initially hide the line
-          strokeDashoffset: '1000', // Same large number to initially hide the line
-        }}
+        className={graphOnLoadStyles}
         strokeLinejoin="round"
         strokeLinecap="round"
         filter="url(#smooth)"

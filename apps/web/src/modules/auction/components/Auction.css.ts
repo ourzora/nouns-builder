@@ -277,3 +277,4 @@ export const tokenImage = style({
     borderRadius: 12,
   },
 })
+export const switcherBox = style({ width: '100%', maxWidth: '912px' })
