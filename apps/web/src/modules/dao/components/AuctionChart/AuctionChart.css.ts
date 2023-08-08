@@ -54,3 +54,11 @@ export const graphOnLoadStyles = style({
 export const svgBox = style({
   overflow: 'visible',
 })
+export const cursorText = style({
+  fontSize: '20px',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      fontSize: '12px',
+    },
+  },
+})

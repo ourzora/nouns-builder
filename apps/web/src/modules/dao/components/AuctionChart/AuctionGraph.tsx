@@ -168,7 +168,7 @@ const XValues = React.memo(
     chartHeight,
     isMobile,
   }: XValuesProps) => {
-    const FONT_SIZE = width / 60
+    const FONT_SIZE = width / (isMobile ? 36 : 60)
     const parts = chartData.length
     return (
       <>
