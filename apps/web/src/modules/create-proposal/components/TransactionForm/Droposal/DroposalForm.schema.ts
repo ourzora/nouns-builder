@@ -1,6 +1,6 @@
 import * as yup from 'yup'
 
-import { deboucedValidateAddress } from 'src/modules/create-dao/components/AllocationForm/AllocationForm.schema'
+import { addressValidationSchema } from 'src/utils/yup'
 
 export interface DroposalFormValues {
   name: string
@@ -30,14 +30,8 @@ const droposalFormSchema = yup.object({
   maxPerAddress: yup.number().integer('Must be whole number'),
   maxSupply: yup.number().required('*').integer('Must be whole number'),
   royaltyPercentage: yup.number().required('*'),
-  defaultAdmin: yup
-    .string()
-    .required('*')
-    .test('isValidAddress', 'invalid address', deboucedValidateAddress),
-  fundsRecipient: yup
-    .string()
-    .required('*')
-    .test('isValidAddress', 'invalid address', deboucedValidateAddress),
+  defaultAdmin: addressValidationSchema,
+  fundsRecipient: addressValidationSchema,
   publicSaleStart: yup.string().required('*'),
   publicSaleEnd: yup
     .string()

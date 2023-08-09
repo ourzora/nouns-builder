@@ -1,30 +1,9 @@
-import { debounce } from 'lodash'
 import * as Yup from 'yup'
 
-import { CHAIN_ID } from 'src/typings'
-import { isValidAddress } from 'src/utils/ens'
-import { getProvider } from 'src/utils/provider'
-
-const validateAddress = async (
-  value: string | undefined,
-  res: (value: boolean | PromiseLike<boolean>) => void
-) => {
-  try {
-    res(!!value && (await isValidAddress(value, getProvider(CHAIN_ID.ETHEREUM))))
-  } catch (err) {
-    res(false)
-  }
-}
-
-export const deboucedValidateAddress = async (value: string | undefined) => {
-  const debouncedFn = debounce(validateAddress, 500)
-  return await new Promise<boolean>((res) => debouncedFn(value, res))
-}
+import { addressValidationSchema } from 'src/utils/yup'
 
 export const allocationSchema = Yup.object().shape({
-  founderAddress: Yup.string()
-    .test('isValidAddress', 'invalid address', deboucedValidateAddress)
-    .required('*'),
+  founderAddress: addressValidationSchema,
   allocationPercentage: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')

@@ -7,7 +7,6 @@ import {
   initCustomTransaction,
   useCustomTransactionStore,
 } from 'src/modules/create-proposal'
-import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
 import { CustomTransactionForm } from '../CustomTransactionForm'
@@ -15,7 +14,6 @@ import { contractAddressFields, validateContractAddress } from './fields'
 
 export const Address = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
-  const { provider } = useLayoutStore()
   const chain = useChainStore((x) => x.chain)
   const initialValues = {
     transactionContractAddress: customTransaction?.address || '',
@@ -55,7 +53,7 @@ export const Address = () => {
       <CustomTransactionForm
         initialValues={initialValues}
         fields={contractAddressFields}
-        validationSchema={validateContractAddress(provider)}
+        validationSchema={validateContractAddress}
         submitCallback={(values) => submitCallback(values)}
       />
     </Flex>
