@@ -74,9 +74,11 @@ const TabSwitchAnimation = ({
         key={topSectionView}
         variants={{
           closed: {
+            y: 10,
             opacity: 0,
           },
           open: {
+            y: 0,
             opacity: 1,
           },
         }}
