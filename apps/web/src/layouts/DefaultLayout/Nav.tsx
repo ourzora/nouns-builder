@@ -58,6 +58,9 @@ export const Nav = () => {
             >
               <Label className={navMenuItem}>Docs</Label>
             </a>
+            <Link href={'/bridge'}>
+              <Label className={navMenuItem}>Bridge</Label>
+            </Link>
           </Flex>
         </Flex>
 

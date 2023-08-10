@@ -391,6 +391,13 @@ export const NavMenu = () => {
                   </Text>
                 </Flex>
               </a>
+              <Link href={'/bridge'}>
+                <Flex display="flex" align="center" justify={'center'} py={'x2'}>
+                  <Text cursor={'pointer'} fontWeight={'display'}>
+                    Bridge
+                  </Text>
+                </Flex>
+              </Link>
               <Box
                 color="border"
                 borderStyle="solid"
