@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import React, { ReactNode, useState } from 'react'
+import React, { useState } from 'react'
 import useSWR from 'swr'
 
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
@@ -25,7 +25,7 @@ const startTimeFromNow = (startTime: StartTimes) => {
   return nowInSeconds - parseInt(startTime) * 24 * 60 * 60
 }
 
-export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
+export const AuctionChart = () => {
   const { isReady } = useRouter()
   const chain = useChainStore((x) => x.chain)
   const {
@@ -43,13 +43,14 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
         .get<{ auctionHistory: AuctionHistory[] }>(
           `/api/auctionHistory/${token}?chainId=${chain.id}&startTime=${startSeconds}`
         )
-        .then((x) => x.data.auctionHistory)
+        .then((x) => x.data.auctionHistory),
+    { revalidateOnFocus: false }
   )
 
   if (isValidating) {
     return (
       <AuctionGraphLayout
-        viewSwitcher={viewSwitcher}
+        // viewSwitcher={viewSwitcher}
         startTime={startTime}
         setStartTime={setStartTime}
         chart={<SkeletonPanel />}
@@ -60,7 +61,7 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
   if (error) {
     return (
       <AuctionGraphLayout
-        viewSwitcher={viewSwitcher}
+        // viewSwitcher={viewSwitcher}
         startTime={startTime}
         setStartTime={setStartTime}
         chart={
@@ -76,7 +77,7 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
   if (!data || !data.length || data.length < 2) {
     return (
       <AuctionGraphLayout
-        viewSwitcher={viewSwitcher}
+        // viewSwitcher={viewSwitcher}
         startTime={startTime}
         setStartTime={setStartTime}
         chart={
@@ -91,7 +92,6 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
 
   return (
     <AuctionGraphLayout
-      viewSwitcher={viewSwitcher}
       startTime={startTime}
       setStartTime={setStartTime}
       chartData={data}

@@ -78,9 +78,6 @@ export const AuctionGraph = ({
   const handleMouseMove = (
     e: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>
   ) => {
-    if (cursorOpacity === 0) {
-      setCursorOpacity(1)
-    }
     const event = isTouchEvent(e) ? getTouchEventSource(e) : getMouseEventSource(e)
     const y = calculateY(event, e, paddingX)
     const visibleIndex = calculateVisibleIndex(y, e, paddingY, chartData.length)
@@ -91,6 +88,9 @@ export const AuctionGraph = ({
   const handleMouseLeaveOrTouchEnd = () => {
     setCursorOpacity(0)
   }
+  const handleMouseLeaveOrTouchEnter = () => {
+    setCursorOpacity(1)
+  }
 
   return (
     <svg
@@ -98,7 +98,9 @@ export const AuctionGraph = ({
       onTouchMove={handleMouseMove}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeaveOrTouchEnd}
+      onMouseEnter={handleMouseLeaveOrTouchEnter}
       onTouchEnd={handleMouseLeaveOrTouchEnd}
+      onTouchStart={handleMouseLeaveOrTouchEnter}
       className={svgBox}
     >
       <defs>
@@ -129,7 +131,7 @@ export const AuctionGraph = ({
         }
         r="3"
         fill={color.accent}
-        style={{ transition: 'opacity 0.3s', opacity: cursorOpacity }}
+        style={{ transition: 'opacity 0.5s', opacity: cursorOpacity }}
       />
       <line
         stroke={color.accent}
@@ -139,7 +141,7 @@ export const AuctionGraph = ({
         y1="0"
         y2={chartHeight + paddingY}
         opacity="0.2"
-        style={{ transition: 'opacity 0.3s', opacity: cursorOpacity }}
+        style={{ transition: 'opacity 0.5s', opacity: cursorOpacity }}
       />
 
       <polyline
@@ -197,7 +199,7 @@ const XValues = React.memo(
             FONT_SIZE
           return (
             <Text
-              style={{ transition: 'opacity .5s', opacity: cursorOpacity }}
+              style={{ transition: 'opacity 0.5s', opacity: cursorOpacity }}
               fontSize={isMobile ? 20 : 12}
               key={index}
               as="text"

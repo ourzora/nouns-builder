@@ -1,4 +1,5 @@
-import React from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import React, { ReactElement } from 'react'
 
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { Auction } from 'src/modules/auction'
@@ -31,31 +32,60 @@ export const TopSection = ({
 
   if (topSectionView === TopSectionView.Chart) {
     return (
-      <AuctionChart
-        viewSwitcher={
-          <ViewSwitcher
-            topSectionView={topSectionView}
-            setTopSectionView={setTopSectionView}
-          />
-        }
-      />
+      <ViewSwitcher topSectionView={topSectionView} setTopSectionView={setTopSectionView}>
+        <TabSwitchAnimation topSectionView={topSectionView}>
+          <AuctionChart />
+        </TabSwitchAnimation>
+      </ViewSwitcher>
     )
   }
 
   return token && auctionAddress ? (
-    <Auction
-      chain={chain}
-      auctionAddress={auctionAddress}
-      collection={collection}
-      token={token}
-      viewSwitcher={
-        <ViewSwitcher
-          topSectionView={topSectionView}
-          setTopSectionView={setTopSectionView}
+    <ViewSwitcher topSectionView={topSectionView} setTopSectionView={setTopSectionView}>
+      <TabSwitchAnimation topSectionView={topSectionView}>
+        <Auction
+          chain={chain}
+          auctionAddress={auctionAddress}
+          collection={collection}
+          token={token}
         />
-      }
-    />
+      </TabSwitchAnimation>
+    </ViewSwitcher>
   ) : (
     <AuctionSkeleton />
+  )
+}
+
+const TabSwitchAnimation = ({
+  children,
+  topSectionView,
+}: {
+  children: ReactElement
+  topSectionView: string
+}) => {
+  return (
+    <AnimatePresence exitBeforeEnter={true}>
+      <motion.div
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+        key={topSectionView}
+        variants={{
+          closed: {
+            opacity: 0,
+          },
+          open: {
+            opacity: 1,
+          },
+        }}
+        initial="closed"
+        animate="open"
+        exit="closed"
+      >
+        {children}
+      </motion.div>
+    </AnimatePresence>
   )
 }

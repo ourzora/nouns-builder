@@ -16,7 +16,7 @@ export const unselectedTab = style({
 })
 export const chartSkeleton = style({
   animation: skeletonAnimation,
-  height: '350px',
+  height: '330px',
   maxWidth: '912px',
   '@media': {
     'screen and (max-width: 768px)': {
@@ -37,9 +37,11 @@ export const outerBox = style({
 export const viewBox = style({
   height: '100%',
   maxWidth: '912px',
+  width: '100%',
 })
 export const innerBox = style({
   height: '83%',
+  width: '100%',
 })
 export const displayPanelBox = style({
   height: '300px',

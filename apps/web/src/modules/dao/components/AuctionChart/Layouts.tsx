@@ -4,7 +4,6 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import React, { ReactNode, useMemo } from 'react'
 
 import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
-import { auctionWrapVariants } from 'src/modules/auction/components/Auction.css'
 import { useLayoutStore } from 'src/stores'
 
 import { StartTimes } from './AuctionChart'
@@ -41,54 +40,51 @@ export const AuctionGraphLayout = ({
   }, [chartData])
 
   return (
-    <Flex className={auctionWrapVariants['post']}>
-      {viewSwitcher}
-      <Flex
-        direction="column"
-        alignSelf="center"
-        justify={'center'}
-        borderRadius={'phat'}
-        borderStyle={'solid'}
-        borderWidth={'normal'}
-        borderColor={'border'}
-        w={'100%'}
-        className={outerBox}
+    <Flex
+      direction="column"
+      alignSelf="center"
+      justify={'center'}
+      borderRadius={'phat'}
+      borderStyle={'solid'}
+      borderWidth={'normal'}
+      borderColor={'border'}
+      w={'100%'}
+      className={outerBox}
+    >
+      <Box
+        pos="relative"
+        className={viewBox}
+        py={{ '@initial': 'x2', '@768': 'x6' }}
+        px={{ '@initial': 'x2', '@768': 'x6' }}
       >
-        <Box
-          pos="relative"
-          className={viewBox}
-          py={{ '@initial': 'x2', '@768': 'x6' }}
-          px={{ '@initial': 'x2', '@768': 'x6' }}
-        >
-          <Flex w={'100%'} justify={'space-between'} align="center" mb={'x4'}>
-            {isMobile || <Text variant="paragraph-sm">Auction History</Text>}
-            <Flex>
-              {Object.entries(StartTimes).map(([label, value]) => {
-                const isActive = startTime === value
+        <Flex w={'100%'} justify={'space-between'} align="center" mb={'x4'}>
+          {isMobile || <Text variant="paragraph-sm">Auction History</Text>}
+          <Flex>
+            {Object.entries(StartTimes).map(([label, value]) => {
+              const isActive = startTime === value
 
-                return (
-                  <Button
-                    key={label}
-                    variant="ghost"
-                    size="xs"
-                    px={'x0'}
-                    mr={'x2'}
-                    className={isActive ? selectedTab : unselectedTab}
-                    onClick={() => setStartTime(value)}
-                  >
-                    {label}
-                  </Button>
-                )
-              })}
-            </Flex>
+              return (
+                <Button
+                  key={label}
+                  variant="ghost"
+                  size="xs"
+                  px={'x0'}
+                  mr={'x2'}
+                  className={isActive ? selectedTab : unselectedTab}
+                  onClick={() => setStartTime(value)}
+                >
+                  {label}
+                </Button>
+              )
+            })}
           </Flex>
-          <Box className={innerBox}>{chart}</Box>
-          <Flex w={'100%'} justify={'space-between'}>
-            <Text variant="paragraph-sm">{startTimeText}</Text>
-            <Text variant="paragraph-sm">Now</Text>
-          </Flex>
-        </Box>
-      </Flex>
+        </Flex>
+        <Box className={innerBox}>{chart}</Box>
+        <Flex w={'100%'} justify={'space-between'}>
+          <Text variant="paragraph-sm">{startTimeText}</Text>
+          <Text variant="paragraph-sm">Now</Text>
+        </Flex>
+      </Box>
     </Flex>
   )
 }
