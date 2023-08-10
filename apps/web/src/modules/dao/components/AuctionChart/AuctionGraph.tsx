@@ -92,7 +92,7 @@ export const AuctionGraph = ({
     >
       <defs>
         <filter id="smooth">
-          <feGaussianBlur in="SourceGraphic" stdDeviation=".3" />
+          <feGaussianBlur in="SourceGraphic" stdDeviation=".25" />
         </filter>
       </defs>
       <XValues

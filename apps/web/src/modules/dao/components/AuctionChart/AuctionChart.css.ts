@@ -20,7 +20,7 @@ export const chartSkeleton = style({
   maxWidth: '912px',
   '@media': {
     'screen and (max-width: 768px)': {
-      height: '145px',
+      height: '125px',
     },
   },
 })
@@ -39,7 +39,7 @@ export const viewBox = style({
   maxWidth: '912px',
 })
 export const innerBox = style({
-  height: '90%',
+  height: '83%',
 })
 export const displayPanelBox = style({
   height: '300px',
@@ -61,4 +61,12 @@ export const cursorText = style({
       fontSize: '12px',
     },
   },
+})
+export const newTag = style({
+  color: 'white',
+  position: 'absolute',
+  top: '0',
+  right: '-20px',
+  zIndex: 100,
+  padding: '2px 5px',
 })

@@ -1,8 +1,9 @@
-import { Button, Flex } from '@zoralabs/zord'
+import { Button, Flex, Text } from '@zoralabs/zord'
 import React from 'react'
 
 import { TopSectionView } from 'src/layouts/TopSection'
 import {
+  newTag,
   selectedTab,
   unselectedTab,
 } from 'src/modules/dao/components/AuctionChart/AuctionChart.css'
@@ -21,6 +22,7 @@ export const ViewSwitcher = ({
       {Object.values(TopSectionView).map((view) => (
         <Button
           size="md"
+          pos={'relative'}
           px={'x0'}
           mr={'x3'}
           w={'x16'}
@@ -30,6 +32,16 @@ export const ViewSwitcher = ({
           className={view === topSectionView ? selectedTab : unselectedTab}
         >
           {view}
+          {view === 'chart' && (
+            <Text
+              backgroundColor="positive"
+              className={newTag}
+              borderRadius={'phat'}
+              fontSize={12}
+            >
+              New
+            </Text>
+          )}
         </Button>
       ))}
     </Flex>

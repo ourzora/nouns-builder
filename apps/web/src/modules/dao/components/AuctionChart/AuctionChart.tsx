@@ -32,7 +32,7 @@ export const AuctionChart = ({ viewSwitcher }: { viewSwitcher: ReactNode }) => {
     addresses: { token },
   } = useDaoStore()
 
-  const [startTime, setStartTime] = useState(StartTimes['All'])
+  const [startTime, setStartTime] = useState(StartTimes['30d'])
 
   const startSeconds = startTimeFromNow(startTime)
 
