@@ -35,6 +35,7 @@ export const AuctionGraph = ({
   startTime,
 }: AuctionGraphProps) => {
   const [visibleIndex, setVisibleIndex] = useState(0)
+  const [cursorOpacity, setCursorOpacity] = useState(0)
   const chartWidth = width - paddingX * 2
   const chartHeight = height - paddingY * 2
 
@@ -77,17 +78,27 @@ export const AuctionGraph = ({
   const handleMouseMove = (
     e: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>
   ) => {
+    if (cursorOpacity === 0) {
+      setCursorOpacity(1)
+    }
     const event = isTouchEvent(e) ? getTouchEventSource(e) : getMouseEventSource(e)
     const y = calculateY(event, e, paddingX)
     const visibleIndex = calculateVisibleIndex(y, e, paddingY, chartData.length)
 
     setVisibleIndex(visibleIndex)
   }
+
+  const handleMouseLeaveOrTouchEnd = () => {
+    setCursorOpacity(0)
+  }
+
   return (
     <svg
       viewBox={`0 0 ${width} ${height}`}
       onTouchMove={handleMouseMove}
       onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeaveOrTouchEnd}
+      onTouchEnd={handleMouseLeaveOrTouchEnd}
       className={svgBox}
     >
       <defs>
@@ -105,6 +116,7 @@ export const AuctionGraph = ({
         maximumYFromData={maximumYFromData}
         chartHeight={chartHeight}
         isMobile={isMobile}
+        cursorOpacity={cursorOpacity}
       />
       <Box
         as="circle"
@@ -117,6 +129,7 @@ export const AuctionGraph = ({
         }
         r="3"
         fill={color.accent}
+        style={{ transition: 'opacity 0.3s', opacity: cursorOpacity }}
       />
       <line
         stroke={color.accent}
@@ -126,6 +139,7 @@ export const AuctionGraph = ({
         y1="0"
         y2={chartHeight + paddingY}
         opacity="0.2"
+        style={{ transition: 'opacity 0.3s', opacity: cursorOpacity }}
       />
 
       <polyline
@@ -154,6 +168,7 @@ type XValuesProps = {
   maximumYFromData: number
   chartHeight: number
   isMobile: boolean
+  cursorOpacity: number
 }
 
 const XValues = React.memo(
@@ -167,6 +182,7 @@ const XValues = React.memo(
     maximumYFromData,
     chartHeight,
     isMobile,
+    cursorOpacity,
   }: XValuesProps) => {
     const FONT_SIZE = width / (isMobile ? 36 : 60)
     const parts = chartData.length
@@ -181,6 +197,7 @@ const XValues = React.memo(
             FONT_SIZE
           return (
             <Text
+              style={{ transition: 'opacity .5s', opacity: cursorOpacity }}
               fontSize={isMobile ? 20 : 12}
               key={index}
               as="text"
