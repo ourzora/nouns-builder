@@ -100,7 +100,7 @@ export const base = {
 
 const MAINNET_CHAINS: Chain[] = [
   { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'ethereum', icon: '/chains/ethereum.svg' },
-  { ...zora, id: CHAIN_ID.ZORA, slug: 'zora', icon: '/chains/zora-mainnet.png' },
+  { ...zora, id: CHAIN_ID.ZORA, slug: 'zora', icon: '/chains/zora.png' },
   { ...base, id: CHAIN_ID.BASE, slug: 'base', icon: '/chains/base.svg' },
   {
     ...optimism,
@@ -128,15 +128,12 @@ const TESTNET_CHAINS: Chain[] = [
     ...zoraGoerli,
     id: CHAIN_ID.ZORA_GOERLI,
     slug: 'zora-goerli',
-    icon: '/chains/zora-testnet.png',
+    icon: '/chains/zora.png',
   },
 ]
 
 export const PUBLIC_IS_TESTNET = process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet'
 
-export const PUBLIC_ALL_CHAINS = {
-  ...MAINNET_CHAINS,
-  ...TESTNET_CHAINS,
-}
+export const PUBLIC_ALL_CHAINS = [...MAINNET_CHAINS, ...TESTNET_CHAINS]
 
 export const PUBLIC_DEFAULT_CHAINS = PUBLIC_IS_TESTNET ? TESTNET_CHAINS : MAINNET_CHAINS
