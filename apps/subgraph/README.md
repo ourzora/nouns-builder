@@ -37,5 +37,15 @@ NETWORK_NAME=mainnet
 
 ### Deployment
 
-- the subgraph is currently deployed for [mainnet](https://thegraph.com/hosted-service/subgraph/neokry/nouns-builder-mainnet) and [goerli](https://thegraph.com/hosted-service/subgraph/neokry/nouns-builder-goerli)
-- to deploy your own version edit the `deploy` script in `package.json` with your deployment information
+The subgraph is currently deployed for the following networks:
+
+- [Ethereum Mainnet](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-mainnet)
+- [Ethereum Goerli](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli)
+- [Optimism Mainnet](https://api.thegraph.com/subgraphs/name/neokry/noun-builder-optimism-mainnet)
+- [Optimism Goerli](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-optimism-goerli)
+- [Zora Mainnet](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-mainnet/stable/gn)
+- [Zora Goerli](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-testnet/stable/gn)
+- [Base Mainnet](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-base-mainnet/stable/g)
+- [Base Goerli](https://api.studio.thegraph.com/query/49279/nouns-builder-base-goerli/version/latest)
+
+To deploy your own version edit the `deploy` script in `package.json` with your deployment information
