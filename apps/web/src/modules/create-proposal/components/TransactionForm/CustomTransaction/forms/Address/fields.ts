@@ -1,8 +1,7 @@
-import { Provider } from '@ethersproject/abstract-provider'
 import * as Yup from 'yup'
 
 import { TEXT } from 'src/components/Fields/types'
-import { isValidAddress } from 'src/utils/ens'
+import { addressValidationSchema } from 'src/utils/yup'
 
 export const contractAddressFields = [
   {
@@ -15,13 +14,6 @@ export const contractAddressFields = [
   },
 ]
 
-export const validateContractAddress = (provider: Provider | undefined) =>
-  Yup.object().shape({
-    transactionContractAddress: Yup.string()
-      .test(
-        'isValidAddress',
-        'invalid address',
-        (value: string | undefined) => !!value && isValidAddress(value, provider)
-      )
-      .required('*'),
-  })
+export const validateContractAddress = Yup.object().shape({
+  transactionContractAddress: addressValidationSchema,
+})

@@ -13,9 +13,9 @@ import {
 import { Icon } from 'src/components/Icon'
 import { getEnsAddress } from 'src/utils/ens'
 import { isEmpty } from 'src/utils/helpers'
+import { addressValidationSchema } from 'src/utils/yup'
 
 import { useFormStore } from '../stores'
-import { deboucedValidateAddress } from './AllocationForm/AllocationForm.schema'
 
 interface VetoFormProps {
   title: string
@@ -39,9 +39,7 @@ export const vetoValidationSchema = Yup.object().shape({
   vetoPower: Yup.boolean().required(),
   vetoerAddress: Yup.string().when('vetoPower', {
     is: true,
-    then: Yup.string()
-      .required('*')
-      .test('isValidAddress', 'invalid address', deboucedValidateAddress),
+    then: addressValidationSchema,
   }),
 })
 

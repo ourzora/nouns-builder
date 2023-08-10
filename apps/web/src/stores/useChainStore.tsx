@@ -9,6 +9,8 @@ export interface ChainStoreProps {
   setChain: (chain: Chain) => void
 }
 
+export const CHAIN_STORE_IDENTIFIER = `nouns-builder-chain-${process.env.NEXT_PUBLIC_NETWORK_TYPE}`
+
 export const useChainStore = create(
   persist<ChainStoreProps>(
     (set) => ({
@@ -16,7 +18,7 @@ export const useChainStore = create(
       setChain: (chain) => set({ chain }),
     }),
     {
-      name: `nouns-builder-chain-${process.env.NEXT_PUBLIC_NETWORK_TYPE}`,
+      name: CHAIN_STORE_IDENTIFIER,
       storage: createJSONStorage(() => localStorage),
       version: 0,
     }

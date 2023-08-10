@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 
 import type { AddressType } from 'src/typings'
-import { isValidAddress } from 'src/utils/ens'
+import { addressValidationSchema } from 'src/utils/yup'
 
 export interface SendEthValues {
   recipientAddress?: string | AddressType
@@ -10,19 +10,7 @@ export interface SendEthValues {
 
 const sendEthSchema = (treasuryBalance: number) =>
   yup.object({
-    recipientAddress: yup
-      .string()
-      .strip()
-      .test(
-        'is-valid-address-or-ens',
-        'This address or ENS domain is not valid',
-        async (
-          _,
-          ctx: yup.TestContext<SendEthValues> & {
-            originalValue?: string
-          }
-        ) => await isValidAddress(ctx?.originalValue as string)
-      ),
+    recipientAddress: addressValidationSchema,
     amount: yup
       .number()
       .required()
