@@ -37,7 +37,8 @@ interface TokenPageProps {
   url: string
   chain: Chain
   collection: AddressType
-  collectionName: string
+  name: string
+  description: string
   tokenId: string
   addresses: DaoContractAddresses
   ogImageURL: string
@@ -47,7 +48,8 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   url,
   chain,
   collection,
-  collectionName,
+  name,
+  description,
   tokenId,
   addresses,
   ogImageURL,
@@ -110,7 +112,6 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       : baseSections
   }, [hasThreshold, collection])
 
-  const description = token?.description ?? ''
   const ogDescription =
     description.length > 111 ? `${description.slice(0, 111)}...` : description
 
@@ -119,8 +120,8 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   return (
     <Flex direction="column" pb="x30">
       <Meta
-        title={collectionName || ''}
-        type={`${collectionName}:nft`}
+        title={name || ''}
+        type={`${name}:nft`}
         image={ogImageURL}
         slug={url}
         description={ogDescription}
@@ -186,6 +187,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
     const {
       name,
+      description,
       contractImage,
       totalSupply,
       ownerCount,
@@ -224,16 +226,19 @@ export const getServerSideProps: GetServerSideProps = async ({
       `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
     )
 
+    const props: TokenPageProps = {
+      url: resolvedUrl,
+      chain,
+      collection,
+      name,
+      description: description || '',
+      tokenId,
+      addresses,
+      ogImageURL,
+    }
+
     return {
-      props: {
-        url: resolvedUrl,
-        chain,
-        collection,
-        name,
-        tokenId,
-        addresses,
-        ogImageURL,
-      },
+      props,
     }
   } catch (e) {
     return {

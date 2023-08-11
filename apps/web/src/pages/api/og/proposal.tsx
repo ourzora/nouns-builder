@@ -8,7 +8,6 @@ import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
 
 export const config = {
   runtime: 'edge',
-  unstable_allowDynamic: ['../../packages/zoralabs-zord/dist/index.js'],
 }
 
 export function parseState(state: ProposalState) {
