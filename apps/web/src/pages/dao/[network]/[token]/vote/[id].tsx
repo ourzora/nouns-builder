@@ -10,11 +10,13 @@ import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getProposalState } from 'src/data/contract/requests/getProposalState'
 import { SDK } from 'src/data/subgraph/client'
-import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
+import {
+  formatAndFetchState,
+  getProposal,
+} from 'src/data/subgraph/requests/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { DaoContractAddresses, SectionHandler, useDaoStore } from 'src/modules/dao'
+import { DaoContractAddresses, SectionHandler } from 'src/modules/dao'
 import {
   ProposalActions,
   ProposalDescription,
@@ -41,7 +43,6 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   ogImageURL,
 }) => {
   const { query } = useRouter()
-  const { governor } = useDaoStore((x) => x.addresses)
   const chain = useChainStore((x) => x.chain)
 
   const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], (_, id) =>
@@ -120,11 +121,17 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   const env = process.env.VERCEL_ENV || 'development'
   const protocol = env === 'development' ? 'http' : 'https'
 
-  const proposal = await SDK.connect(chain.id)
-    .proposalOGMetadata({
-      proposalId,
-    })
-    .then((x) => x.proposal)
+  const data = await SDK.connect(chain.id).proposalOGMetadata({
+    proposalId,
+  })
+
+  if (!data.proposal) {
+    return {
+      notFound: true,
+    }
+  }
+
+  const proposal = await formatAndFetchState(chain.id, data)
 
   if (!proposal) {
     return {
@@ -141,8 +148,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     }
   }
 
-  const state = await getProposalState(chain.id, proposal.dao.governorAddress, proposalId)
-
   const {
     name,
     contractImage,
@@ -151,7 +156,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     governorAddress,
     treasuryAddress,
     auctionAddress,
-  } = proposal.dao
+  } = data.proposal.dao
 
   const ogMetadata: ProposalOgMetadata = {
     proposal: {
@@ -160,7 +165,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       forVotes: proposal.forVotes,
       againstVotes: proposal.againstVotes,
       abstainVotes: proposal.abstainVotes,
-      state,
+      state: proposal.state,
     },
     daoName: name,
     daoImage: contractImage,
@@ -178,7 +183,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     req.headers.host
   }/api/og/proposal?data=${encodeURIComponent(JSON.stringify(ogMetadata))}`
 
-  const { maxAge, swr } = isProposalOpen(state)
+  const { maxAge, swr } = isProposalOpen(proposal.state)
     ? CACHE_TIMES.IN_PROGRESS_PROPOSAL
     : CACHE_TIMES.SETTLED_PROPOSAL
 
@@ -190,7 +195,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   return {
     props: {
       fallback: {
-        [unstable_serialize([SWR_KEYS.PROPOSAL, proposal.proposalId])]: proposal,
+        [unstable_serialize([SWR_KEYS.PROPOSAL, chain.id, proposal.proposalId])]:
+          proposal,
       },
       daoName: name,
       ogImageURL,
