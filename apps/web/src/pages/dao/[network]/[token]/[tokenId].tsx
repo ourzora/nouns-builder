@@ -112,8 +112,11 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       : baseSections
   }, [hasThreshold, collection])
 
+  // remove line breaks from description
+  const cleanDesc = description ? description.replace(/(\r\n|\n|\r)/gm, '') : ''
+
   const ogDescription =
-    description.length > 111 ? `${description.slice(0, 111)}...` : description
+    cleanDesc.length > 111 ? `${cleanDesc.slice(0, 111)}...` : cleanDesc
 
   const activeTab = query?.tab ? (query.tab as string) : 'About'
 
@@ -231,7 +234,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       chain,
       collection,
       name,
-      description: description || '',
+      description,
       tokenId,
       addresses,
       ogImageURL,
