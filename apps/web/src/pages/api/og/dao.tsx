@@ -1,9 +1,23 @@
 import { ImageResponse } from '@vercel/og'
+import BigNumber from 'bignumber.js'
+import { formatEther } from 'ethers/lib/utils.js'
 import { getFetchableUrl } from 'ipfs-service/src/gateway'
 import { NextRequest } from 'next/server'
 
-import { DaoOgMetadata } from 'src/data/contract/requests/getDaoOgMetadata'
+import { RPC_URL } from 'src/constants/rpc'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
+import { CHAIN_ID } from 'src/typings'
+import { formatCryptoVal } from 'src/utils/numbers'
+
+export type DaoOgMetadata = {
+  ownerCount: number
+  proposalCount: number
+  name: string | undefined
+  totalSupply: number | undefined
+  contractImage: string | undefined
+  chainId: CHAIN_ID
+  treasuryAddress: string
+}
 
 export const config = {
   runtime: 'edge',
@@ -20,6 +34,25 @@ const ptRootMedium = fetch(
 const ptRootBold = fetch(
   new URL('public/fonts/pt-root-ui_bold.ttf', import.meta.url)
 ).then((res) => res.arrayBuffer())
+
+const getTreasuryBalance = async (chainId: CHAIN_ID, address: string) => {
+  // query balance directly from the rpc (edge runtime compatible)
+  const { result } = await fetch(RPC_URL[chainId], {
+    method: 'POST',
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      method: 'eth_getBalance',
+      params: [address, 'latest'],
+      id: 1,
+    }),
+  }).then((x) => x.json())
+
+  //covert to eth value
+  const eth = BigNumber(formatEther(result))
+  const data = formatCryptoVal(eth)
+
+  return data
+}
 
 export default async function handler(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -95,7 +128,7 @@ export default async function handler(req: NextRequest) {
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <img
             alt="user image"
-            src={getFetchableUrl(data.daoImage)}
+            src={getFetchableUrl(data.contractImage)}
             style={{
               height: '180px',
               width: '180px',
@@ -108,9 +141,15 @@ export default async function handler(req: NextRequest) {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <p style={{ fontSize: '28px', fontWeight: 700 }}>{data.name}</p>
             <div style={{ display: 'flex' }}>
-              {daoDataWithLabel('Treasury', data.treasuryBalance)}
+              {daoDataWithLabel(
+                'Treasury',
+                await getTreasuryBalance(data.chainId, data.treasuryAddress)
+              )}
               {daoDataWithLabel('Owners', data.ownerCount.toString())}
-              {daoDataWithLabel('Total supply', data.totalSupply || '0')}
+              {daoDataWithLabel(
+                'Total supply',
+                data.totalSupply ? data.totalSupply.toString() : '0'
+              )}
               {daoDataWithLabel('Proposals', data.proposalCount.toString())}
             </div>
           </div>

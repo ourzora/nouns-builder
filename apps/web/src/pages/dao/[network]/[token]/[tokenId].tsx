@@ -15,6 +15,7 @@ import { CAST_ENABLED } from 'src/constants/farcasterEnabled'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
+import { SDK } from 'src/data/subgraph/client'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { Auction } from 'src/modules/auction'
@@ -29,7 +30,7 @@ import {
 } from 'src/modules/dao'
 import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { DaoResponse } from 'src/pages/api/dao/[network]/[token]'
+import { DaoOgMetadata } from 'src/pages/api/og/dao'
 import { AddressType, Chain } from 'src/typings'
 
 interface TokenPageProps {
@@ -161,22 +162,61 @@ export default TokenPage
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   res,
+  req,
   resolvedUrl,
 }) => {
   const collection = params?.token as AddressType
   const tokenId = params?.tokenId as string
   const network = params?.network
 
-  const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
-
   try {
+    const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
+    if (!chain) throw new Error('Invalid network')
+
     const env = process.env.VERCEL_ENV || 'development'
     const protocol = env === 'development' ? 'http' : 'https'
-    const baseUrl = process.env.VERCEL_URL || 'localhost:3000'
 
-    const { collectionName, addresses, ogImageURL } = await axios
-      .get<DaoResponse>(`${protocol}://${baseUrl}/api/dao/${network}/${collection}`)
-      .then((x) => x.data)
+    const dao = await SDK.connect(chain.id)
+      .daoOGMetadata({
+        tokenAddress: collection.toLowerCase(),
+      })
+      .then((x) => x.dao)
+
+    if (!dao) throw new Error('DAO not found')
+
+    const {
+      name,
+      contractImage,
+      totalSupply,
+      ownerCount,
+      proposalCount,
+      metadataAddress,
+      treasuryAddress,
+      governorAddress,
+      auctionAddress,
+    } = dao
+
+    const addresses: DaoContractAddresses = {
+      token: collection,
+      metadata: metadataAddress,
+      treasury: treasuryAddress,
+      governor: governorAddress,
+      auction: auctionAddress,
+    }
+
+    const daoOgMetadata: DaoOgMetadata = {
+      name,
+      contractImage,
+      totalSupply,
+      ownerCount,
+      proposalCount,
+      chainId: chain.id,
+      treasuryAddress,
+    }
+
+    const ogImageURL = `${protocol}://${
+      req.headers.host
+    }/api/og/dao?data=${encodeURIComponent(JSON.stringify(daoOgMetadata))}`
 
     const { maxAge, swr } = CACHE_TIMES.TOKEN_INFO
     res.setHeader(
@@ -189,7 +229,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         url: resolvedUrl,
         chain,
         collection,
-        collectionName,
+        name,
         tokenId,
         addresses,
         ogImageURL,
