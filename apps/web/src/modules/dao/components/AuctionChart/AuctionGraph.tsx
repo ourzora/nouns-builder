@@ -3,10 +3,9 @@ import { color } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 
-import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 import { useLayoutStore } from 'src/stores'
 
-import { StartTimes } from './AuctionChart'
+import { AuctionHistory, StartTimes } from './AuctionChart'
 import { graphOnLoadStyles, svgBox } from './AuctionChart.css'
 import {
   calculateVisibleIndex,

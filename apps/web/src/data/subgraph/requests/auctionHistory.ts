@@ -5,17 +5,11 @@ import { CHAIN_ID } from 'src/typings'
 
 import { Auction_OrderBy, OrderDirection } from '../sdk.generated'
 
-export type AuctionHistory = {
-  id: string
-  endTime: number
-  winningBidAmt: string
-}
-
 export const auctionHistoryRequest = async (
   chainId: CHAIN_ID,
   collectionAddress: string,
   startTime: number
-): Promise<AuctionHistory[] | undefined> => {
+) => {
   try {
     const data = await SDK.connect(chainId).auctionHistory({
       startTime,
@@ -25,11 +19,7 @@ export const auctionHistoryRequest = async (
       first: 1000,
     })
 
-    return data.dao?.auctions.map((auction) => ({
-      id: auction.id,
-      endTime: Number(auction.endTime),
-      winningBidAmt: auction?.winningBid?.amount || ('1' as string),
-    }))
+    return data
   } catch (error) {
     console.error(error)
     Sentry.captureException(error)

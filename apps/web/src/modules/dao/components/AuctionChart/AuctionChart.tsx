@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import useSWR from 'swr'
 
-import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
+import { AuctionHistoryQuery } from 'src/data/subgraph/sdk.generated'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
 
@@ -15,6 +15,12 @@ export enum StartTimes {
   '60d' = '60',
   '90d' = '90',
   'All' = '0',
+}
+
+export type AuctionHistory = {
+  id: string
+  endTime: number
+  winningBidAmt: string
 }
 
 const startTimeFromNow = (startTime: StartTimes) => {
@@ -40,10 +46,16 @@ export const AuctionChart = () => {
     isReady ? [token, chain.id, startSeconds] : undefined,
     () =>
       axios
-        .get<{ auctionHistory: AuctionHistory[] }>(
+        .get<{ auctionHistory: AuctionHistoryQuery }>(
           `/api/auctionHistory/${token}?chainId=${chain.id}&startTime=${startSeconds}`
         )
-        .then((x) => x.data.auctionHistory),
+        .then((x) =>
+          x.data.auctionHistory.dao?.auctions.map((auction) => ({
+            id: auction.id,
+            endTime: Number(auction.endTime),
+            winningBidAmt: auction?.winningBid?.amount || ('1' as string),
+          }))
+        ),
     { revalidateOnFocus: false }
   )
 

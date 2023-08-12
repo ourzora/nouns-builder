@@ -3,10 +3,9 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import React, { ReactNode, useMemo } from 'react'
 
-import { AuctionHistory } from 'src/data/subgraph/requests/auctionHistory'
 import { useLayoutStore } from 'src/stores'
 
-import { StartTimes } from './AuctionChart'
+import { AuctionHistory, StartTimes } from './AuctionChart'
 import {
   chartSkeleton,
   displayPanelBox,
