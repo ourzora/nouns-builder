@@ -35,7 +35,6 @@ export const Auction: React.FC<AuctionControllerProps> = ({
   auctionAddress,
   collection,
   token,
-  viewSwitcher,
 }) => {
   const { mintDate, name, image, price: tokenPrice, owner: tokenOwner } = token
 

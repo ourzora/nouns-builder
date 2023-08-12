@@ -78,6 +78,9 @@ export const AuctionGraph = ({
   const handleMouseMove = (
     e: React.MouseEvent<SVGSVGElement> | React.TouchEvent<SVGSVGElement>
   ) => {
+    if (cursorOpacity === 0) {
+      setCursorOpacity(1)
+    }
     const event = isTouchEvent(e) ? getTouchEventSource(e) : getMouseEventSource(e)
     const y = calculateY(event, e, paddingX)
     const visibleIndex = calculateVisibleIndex(y, e, paddingY, chartData.length)
