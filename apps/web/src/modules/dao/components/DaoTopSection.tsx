@@ -20,7 +20,7 @@ export enum TopSectionView {
   Chart = 'chart',
 }
 
-export const TopSection = ({
+export const DaoTopSection = ({
   chain,
   auctionAddress,
   collection,

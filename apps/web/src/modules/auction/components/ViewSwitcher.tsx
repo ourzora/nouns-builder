@@ -1,12 +1,12 @@
 import { Button, Flex, Text } from '@zoralabs/zord'
 import React, { ReactNode } from 'react'
 
-import { TopSectionView } from 'src/layouts/TopSection'
 import {
   newTag,
   selectedTab,
   unselectedTab,
 } from 'src/modules/dao/components/AuctionChart/AuctionChart.css'
+import { TopSectionView } from 'src/modules/dao/components/DaoTopSection'
 
 import { auctionWrapVariants, switcherBox } from './Auction.css'
 

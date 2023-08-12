@@ -17,7 +17,6 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { TopSection } from 'src/layouts/TopSection'
 import {
   About,
   Activity,
@@ -26,6 +25,7 @@ import {
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
+import { DaoTopSection } from 'src/modules/dao/components/DaoTopSection'
 import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { DaoResponse } from 'src/pages/api/dao/[network]/[token]'
@@ -124,7 +124,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         description={ogDescription}
       />
 
-      <TopSection
+      <DaoTopSection
         chain={chain}
         collection={collection}
         auctionAddress={addresses?.auction}
