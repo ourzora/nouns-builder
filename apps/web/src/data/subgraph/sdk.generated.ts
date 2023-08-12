@@ -2311,7 +2311,7 @@ export const AuctionHistoryDocument = gql`
   ) {
     dao(id: $daoId) {
       auctions(
-        where: { endTime_gt: $startTime }
+        where: { endTime_gt: $startTime, settled: true }
         orderBy: $orderBy
         orderDirection: $orderDirection
         first: $first

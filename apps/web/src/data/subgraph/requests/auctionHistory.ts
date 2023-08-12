@@ -25,13 +25,11 @@ export const auctionHistoryRequest = async (
       first: 1000,
     })
 
-    return data.dao?.auctions
-      .filter((auction) => auction.settled)
-      .map((auction) => ({
-        id: auction.id,
-        endTime: Number(auction.endTime),
-        winningBidAmt: auction?.winningBid?.amount || ('1' as string),
-      }))
+    return data.dao?.auctions.map((auction) => ({
+      id: auction.id,
+      endTime: Number(auction.endTime),
+      winningBidAmt: auction?.winningBid?.amount || ('1' as string),
+    }))
   } catch (error) {
     console.error(error)
     Sentry.captureException(error)

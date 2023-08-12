@@ -50,7 +50,6 @@ export const AuctionChart = () => {
   if (isValidating) {
     return (
       <AuctionGraphLayout
-        // viewSwitcher={viewSwitcher}
         startTime={startTime}
         setStartTime={setStartTime}
         chart={<SkeletonPanel />}
@@ -61,7 +60,6 @@ export const AuctionChart = () => {
   if (error) {
     return (
       <AuctionGraphLayout
-        // viewSwitcher={viewSwitcher}
         startTime={startTime}
         setStartTime={setStartTime}
         chart={
@@ -77,7 +75,6 @@ export const AuctionChart = () => {
   if (!data || !data.length || data.length < 2) {
     return (
       <AuctionGraphLayout
-        // viewSwitcher={viewSwitcher}
         startTime={startTime}
         setStartTime={setStartTime}
         chart={
