@@ -2,6 +2,7 @@ import { Box, Flex, Label, Stack, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
+import { BridgeModal } from 'src/components/BridgeModal/BridgeModal'
 import { NetworkController } from 'src/components/NetworkController'
 import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
 import { useBridgeModal } from 'src/hooks/useBridgeModal'
@@ -28,6 +29,7 @@ export const Nav = () => {
       }}
       className={NavContainer}
     >
+      <BridgeModal />
       <Flex align={'center'} className={NavWrapper} justify={'space-between'}>
         <Flex align={'center'}>
           <Link href={'/'} passHref>
