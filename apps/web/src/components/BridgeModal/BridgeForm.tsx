@@ -81,7 +81,7 @@ export const BridgeForm = () => {
         onSubmit={handleSubmit}
         validateOnBlur
         validateOnMount={false}
-        validateOnChange={false}
+        validateOnChange={true}
       >
         {({ errors, touched, isValid, submitForm }) => {
           const isAmountInvalid = !!errors.amount && touched.amount
