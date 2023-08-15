@@ -1,15 +1,7 @@
-import { Provider } from '@ethersproject/abstract-provider'
 import * as Yup from 'yup'
 
-import { isValidAddress } from 'src/utils/ens'
+import { addressValidationSchema } from 'src/utils/yup'
 
-export const delegateValidationSchema = (provider: Provider | undefined) =>
-  Yup.object().shape({
-    address: Yup.string()
-      .test(
-        'isValidAddress',
-        'invalid address',
-        (value: string | undefined) => !!value && isValidAddress(value, provider)
-      )
-      .required('*'),
-  })
+export const delegateValidationSchema = Yup.object().shape({
+  address: addressValidationSchema,
+})

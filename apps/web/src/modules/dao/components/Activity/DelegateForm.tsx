@@ -76,7 +76,7 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
       <Formik
         initialValues={{ address: '' }}
         onSubmit={submitCallback}
-        validationSchema={delegateValidationSchema(provider)}
+        validationSchema={delegateValidationSchema}
       >
         {({ isValid, dirty, values }) => (
           <FormikForm>

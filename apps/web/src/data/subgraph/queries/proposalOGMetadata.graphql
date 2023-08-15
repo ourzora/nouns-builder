@@ -1,0 +1,14 @@
+query proposalOGMetadata($proposalId: ID!) {
+  proposal(id: $proposalId) {
+    ...Proposal
+    dao {
+      name
+      contractImage
+      tokenAddress
+      metadataAddress
+      auctionAddress
+      treasuryAddress
+      governorAddress
+    }
+  }
+}

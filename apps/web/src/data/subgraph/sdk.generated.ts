@@ -1994,6 +1994,28 @@ export type DaoMembersListQuery = {
   }>
 }
 
+export type DaoOgMetadataQueryVariables = Exact<{
+  tokenAddress: Scalars['ID']
+}>
+
+export type DaoOgMetadataQuery = {
+  __typename?: 'Query'
+  dao?: {
+    __typename?: 'DAO'
+    name: string
+    description: string
+    contractImage: string
+    totalSupply: number
+    ownerCount: number
+    proposalCount: number
+    tokenAddress: any
+    metadataAddress: any
+    auctionAddress: any
+    treasuryAddress: any
+    governorAddress: any
+  } | null
+}
+
 export type DaoTokenOwnersQueryVariables = Exact<{
   where?: InputMaybe<DaoTokenOwner_Filter>
   first?: InputMaybe<Scalars['Int']>
@@ -2081,6 +2103,48 @@ export type ProposalQuery = {
       reason?: string | null
     }>
     dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
+  } | null
+}
+
+export type ProposalOgMetadataQueryVariables = Exact<{
+  proposalId: Scalars['ID']
+}>
+
+export type ProposalOgMetadataQuery = {
+  __typename?: 'Query'
+  proposal?: {
+    __typename?: 'Proposal'
+    abstainVotes: number
+    againstVotes: number
+    calldatas?: string | null
+    description?: string | null
+    descriptionHash: any
+    executableFrom?: any | null
+    expiresAt?: any | null
+    forVotes: number
+    proposalId: any
+    proposalNumber: number
+    proposalThreshold: any
+    proposer: any
+    quorumVotes: any
+    targets: Array<any>
+    timeCreated: any
+    title?: string | null
+    values: Array<any>
+    voteEnd: any
+    voteStart: any
+    snapshotBlockNumber: any
+    transactionHash: any
+    dao: {
+      __typename?: 'DAO'
+      name: string
+      contractImage: string
+      tokenAddress: any
+      metadataAddress: any
+      auctionAddress: any
+      treasuryAddress: any
+      governorAddress: any
+    }
   } | null
 }
 
@@ -2358,6 +2422,23 @@ export const DaoMembersListDocument = gql`
     }
   }
 `
+export const DaoOgMetadataDocument = gql`
+  query daoOGMetadata($tokenAddress: ID!) {
+    dao(id: $tokenAddress) {
+      name
+      description
+      contractImage
+      totalSupply
+      ownerCount
+      proposalCount
+      tokenAddress
+      metadataAddress
+      auctionAddress
+      treasuryAddress
+      governorAddress
+    }
+  }
+`
 export const DaoTokenOwnersDocument = gql`
   query daoTokenOwners($where: DAOTokenOwner_filter, $first: Int, $skip: Int) {
     daotokenOwners(where: $where, first: $first, skip: $skip) {
@@ -2413,6 +2494,23 @@ export const ProposalDocument = gql`
   }
   ${ProposalFragmentDoc}
   ${ProposalVoteFragmentDoc}
+`
+export const ProposalOgMetadataDocument = gql`
+  query proposalOGMetadata($proposalId: ID!) {
+    proposal(id: $proposalId) {
+      ...Proposal
+      dao {
+        name
+        contractImage
+        tokenAddress
+        metadataAddress
+        auctionAddress
+        treasuryAddress
+        governorAddress
+      }
+    }
+  }
+  ${ProposalFragmentDoc}
 `
 export const ProposalsDocument = gql`
   query proposals($where: Proposal_filter, $first: Int!, $skip: Int) {
@@ -2562,6 +2660,20 @@ export function getSdk(
         'query'
       )
     },
+    daoOGMetadata(
+      variables: DaoOgMetadataQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoOgMetadataQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoOgMetadataQuery>(DaoOgMetadataDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'daoOGMetadata',
+        'query'
+      )
+    },
     daoTokenOwners(
       variables?: DaoTokenOwnersQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
@@ -2615,6 +2727,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposal',
+        'query'
+      )
+    },
+    proposalOGMetadata(
+      variables: ProposalOgMetadataQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ProposalOgMetadataQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ProposalOgMetadataQuery>(ProposalOgMetadataDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'proposalOGMetadata',
         'query'
       )
     },

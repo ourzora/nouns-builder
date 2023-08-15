@@ -4,8 +4,11 @@ import * as Yup from 'yup'
 import { TokenAllocation, auctionSettingsValidationSchema } from 'src/modules/create-dao'
 import { allocationSchema } from 'src/modules/create-dao/components/AllocationForm/AllocationForm.schema'
 import { Duration } from 'src/typings'
-import { isValidAddress } from 'src/utils/ens'
-import { durationValidationSchema, urlValidationSchema } from 'src/utils/yup'
+import {
+  addressValidationSchema,
+  durationValidationSchema,
+  urlValidationSchema,
+} from 'src/utils/yup'
 
 export interface AdminFormValues {
   daoAvatar: string
@@ -35,13 +38,7 @@ export const adminValidationSchema = (provider: Provider | undefined) =>
         projectDescription: Yup.string().required('*').max(5000, '< 5000 characters'),
         daoWebsite: urlValidationSchema,
         rendererBaseUrl: urlValidationSchema,
-        vetoer: Yup.string()
-          .test(
-            'isValidAddress',
-            'invalid address',
-            (value: string | undefined) => !!value && isValidAddress(value, provider)
-          )
-          .required('*'),
+        vetoer: addressValidationSchema,
         votingDelay: durationValidationSchema(
           { value: 1, description: '1 second' },
           { value: twentyFourWeeks, description: '24 weeks' }

@@ -1,5 +1,4 @@
 import { Box, Flex } from '@zoralabs/zord'
-import axios from 'axios'
 import { ethers } from 'ethers'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
@@ -11,9 +10,13 @@ import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
+import { SDK } from 'src/data/subgraph/client'
+import {
+  formatAndFetchState,
+  getProposal,
+} from 'src/data/subgraph/requests/proposalQuery'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { SectionHandler, useDaoStore } from 'src/modules/dao'
+import { DaoContractAddresses, SectionHandler } from 'src/modules/dao'
 import {
   ProposalActions,
   ProposalDescription,
@@ -23,7 +26,6 @@ import {
 } from 'src/modules/proposal'
 import { ProposalVotes } from 'src/modules/proposal/components/ProposalVotes'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { DaoResponse } from 'src/pages/api/dao/[network]/[token]'
 import { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
@@ -41,7 +43,6 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   ogImageURL,
 }) => {
   const { query } = useRouter()
-  const { governor } = useDaoStore((x) => x.addresses)
   const chain = useChainStore((x) => x.chain)
 
   const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], (_, id) =>
@@ -106,7 +107,7 @@ export default VotePage
 
 export const getServerSideProps: GetServerSideProps = async ({ params, req, res }) => {
   const collection = params?.token as AddressType
-  const proposalId = params?.id as string
+  const proposalId = params?.id as `0x${string}`
   const network = params?.network as string
 
   const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
@@ -119,14 +120,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
 
   const env = process.env.VERCEL_ENV || 'development'
   const protocol = env === 'development' ? 'http' : 'https'
-  const baseUrl = process.env.VERCEL_URL || 'localhost:3000'
 
-  const [{ collectionName, collectionImage, addresses }, proposal] = await Promise.all([
-    axios
-      .get<DaoResponse>(`${protocol}://${baseUrl}/api/dao/${network}/${collection}`)
-      .then((x) => x.data),
-    getProposal(chain.id, proposalId),
-  ])
+  const data = await SDK.connect(chain.id).proposalOGMetadata({
+    proposalId,
+  })
+
+  if (!data.proposal) {
+    return {
+      notFound: true,
+    }
+  }
+
+  const proposal = await formatAndFetchState(chain.id, data)
 
   if (!proposal) {
     return {
@@ -143,6 +148,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     }
   }
 
+  const {
+    name,
+    contractImage,
+    tokenAddress,
+    metadataAddress,
+    governorAddress,
+    treasuryAddress,
+    auctionAddress,
+  } = data.proposal.dao
+
   const ogMetadata: ProposalOgMetadata = {
     proposal: {
       proposalNumber: proposal.proposalNumber,
@@ -152,8 +167,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       abstainVotes: proposal.abstainVotes,
       state: proposal.state,
     },
-    daoName: collectionName,
-    daoImage: collectionImage,
+    daoName: name,
+    daoImage: contractImage,
+  }
+
+  const addresses: DaoContractAddresses = {
+    token: tokenAddress,
+    metadata: metadataAddress,
+    governor: governorAddress,
+    treasury: treasuryAddress,
+    auction: auctionAddress,
   }
 
   const ogImageURL = `${protocol}://${
@@ -172,9 +195,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   return {
     props: {
       fallback: {
-        [unstable_serialize([SWR_KEYS.PROPOSAL, proposal.proposalId])]: proposal,
+        [unstable_serialize([SWR_KEYS.PROPOSAL, chain.id, proposal.proposalId])]:
+          proposal,
       },
-      daoName: collectionName,
+      daoName: name,
       ogImageURL,
       proposalId,
       addresses,

@@ -2,6 +2,7 @@ import { Flex, Label, Stack, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
+import { NetworkController } from 'src/components/NetworkController'
 import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
 import { useScrollDirection } from 'src/hooks/useScrollDirection'
 
@@ -58,6 +59,11 @@ export const Nav = () => {
             >
               <Label className={navMenuItem}>Docs</Label>
             </a>
+            <NetworkController.Mainnet>
+              <Link href={'/bridge'}>
+                <Label className={navMenuItem}>Bridge</Label>
+              </Link>
+            </NetworkController.Mainnet>
           </Flex>
         </Flex>
 
