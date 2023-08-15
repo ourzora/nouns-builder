@@ -57,7 +57,7 @@ export const AuctionGraphLayout = ({
         px={{ '@initial': 'x2', '@768': 'x6' }}
       >
         <Flex w={'100%'} justify={'space-between'} align="center" mb={'x4'}>
-          {isMobile || <Text variant="paragraph-sm">Auction History</Text>}
+          <Text variant="paragraph-sm">Auction History</Text>
           <Flex>
             {Object.entries(StartTimes).map(([label, value]) => {
               const isActive = startTime === value
