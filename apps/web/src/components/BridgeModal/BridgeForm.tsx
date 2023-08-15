@@ -144,12 +144,8 @@ export const BridgeForm = () => {
                 </Text>
               </Box>
 
-              <Flex mt="x3" w="100%" align={'center'} justify={'space-around'}>
-                <Icon id="arrowDown" />
-              </Flex>
-
               <Box
-                mt="x3"
+                mt="x5"
                 p="x4"
                 borderColor="border"
                 borderStyle="solid"
