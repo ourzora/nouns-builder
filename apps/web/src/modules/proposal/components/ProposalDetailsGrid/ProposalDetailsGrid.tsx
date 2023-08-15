@@ -6,17 +6,10 @@ import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propDataGrid } from 'src/styles/Proposals.css'
+import { handleGMTOffset } from 'src/utils/helpers'
 
 import { Tile } from './Tile'
 import { voteProgress, voteProgressVariants } from './Tile.css'
-
-const handleGMTOffset = () => {
-  const now = new Date()
-  const timezoneOffset = now.getTimezoneOffset()
-  const offsetHours = -timezoneOffset / 60
-
-  return `GMT ${offsetHours >= 0 ? '+' : ''}${offsetHours}:00`
-}
 
 export type ProposalDetailsGridProps = {
   proposal: Proposal
