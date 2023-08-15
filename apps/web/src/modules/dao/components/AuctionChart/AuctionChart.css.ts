@@ -7,12 +7,14 @@ export const selectedTab = style({
   borderBottomLeftRadius: '0px',
   borderBottomRightRadius: '0px',
   textTransform: 'capitalize',
+  width: 'fit-content',
 })
 export const unselectedTab = style({
   borderBottom: '2px solid transparent',
   borderBottomLeftRadius: '0px',
   borderBottomRightRadius: '0px',
   textTransform: 'capitalize',
+  width: 'fit-content',
 })
 export const chartSkeleton = style({
   animation: skeletonAnimation,
@@ -68,7 +70,7 @@ export const newTag = style({
   color: 'white',
   position: 'absolute',
   top: '0',
-  right: '-20px',
+  right: '-30px',
   zIndex: 100,
   padding: '2px 5px',
 })

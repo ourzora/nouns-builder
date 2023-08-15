@@ -24,14 +24,13 @@ export const ViewSwitcher = ({
       <Flex className={switcherBox}>
         {Object.values(TopSectionView).map((view) => (
           <Button
+            key={view}
+            variant={'ghost'}
             size="md"
             pos={'relative'}
             px={'x0'}
             mr={'x3'}
-            w={'x16'}
             onClick={() => setTopSectionView(view)}
-            variant={'ghost'}
-            key={view}
             className={view === topSectionView ? selectedTab : unselectedTab}
           >
             {view}

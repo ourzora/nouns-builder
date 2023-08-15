@@ -3,7 +3,6 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import React, { ReactNode, useMemo } from 'react'
 
-import { useLayoutStore } from 'src/stores'
 
 import { AuctionHistory, StartTimes } from './AuctionChart'
 import {
@@ -29,7 +28,6 @@ export const AuctionGraphLayout = ({
   setStartTime: (startTime: StartTimes) => void
   chartData?: AuctionHistory[]
 }) => {
-  const { isMobile } = useLayoutStore()
   const startTimeText = useMemo(() => {
     if (!chartData || !chartData.length) return '--'
 
@@ -66,11 +64,19 @@ export const AuctionGraphLayout = ({
                 <Button
                   key={label}
                   variant="ghost"
-                  size="xs"
                   px={'x0'}
-                  mr={'x2'}
+                  py={'x2'}
+                  height={'x1'}
+                  mr={'x6'}
                   className={isActive ? selectedTab : unselectedTab}
                   onClick={() => setStartTime(value)}
+                  // using md and inline to override the default width properties from zord
+                  size="md"
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    height: 'fit-content',
+                  }}
                 >
                   {label}
                 </Button>
