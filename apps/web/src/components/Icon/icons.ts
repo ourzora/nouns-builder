@@ -1,5 +1,4 @@
 import Airdrop from './assets/airdrop.svg'
-import ArrowDown from './assets/arrow-down.svg'
 import ArrowLeft from './assets/arrow-left.svg'
 import ArrowRight from './assets/arrow-right.svg'
 import ArrowTopRight from './assets/arrow-top-right.svg'
@@ -41,7 +40,6 @@ import Warning from './assets/warning.svg'
 
 export const icons = {
   airdrop: Airdrop,
-  arrowDown: ArrowDown,
   arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
   arrowTopRight: ArrowTopRight,
