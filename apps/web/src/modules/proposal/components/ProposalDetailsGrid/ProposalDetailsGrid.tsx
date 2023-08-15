@@ -10,6 +10,14 @@ import { propDataGrid } from 'src/styles/Proposals.css'
 import { Tile } from './Tile'
 import { voteProgress, voteProgressVariants } from './Tile.css'
 
+const handleGMTOffset = () => {
+  const now = new Date()
+  const timezoneOffset = now.getTimezoneOffset()
+  const offsetHours = -timezoneOffset / 60
+
+  return `GMT ${offsetHours >= 0 ? '+' : ''}${offsetHours}:00`
+}
+
 export type ProposalDetailsGridProps = {
   proposal: Proposal
 }
@@ -93,7 +101,7 @@ export const ProposalDetailsGrid: React.FC<ProposalDetailsGridProps> = ({ propos
         <Tile
           title={((Date.now() / 1000) | 0) >= voteEnd ? 'Ended' : 'Ending'}
           subtitle={dayjs(dayjs.unix(voteEnd)).format('MMM, D, YYYY')}
-          subtext={`${dayjs.unix(voteEnd).format('h:mm:ss A')} GMT+2`}
+          subtext={`${dayjs.unix(voteEnd).format('h:mm:ss A')} ${handleGMTOffset()}`}
         />
         <a
           href={`${ETHERSCAN_BASE_URL[chain.id]}/tx/${transactionHash}`}
