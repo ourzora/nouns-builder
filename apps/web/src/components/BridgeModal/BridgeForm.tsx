@@ -3,6 +3,7 @@ import { Box, Button, Flex, Heading, Text } from '@zoralabs/zord'
 import { parseEther } from 'ethers/lib/utils.js'
 import { Formik } from 'formik'
 import Image from 'next/image'
+import { useState } from 'react'
 import { useAccount, useBalance, useNetwork, useSwitchNetwork } from 'wagmi'
 
 import Input from 'src/components/Input/Input'
@@ -14,15 +15,21 @@ import { formatCryptoVal } from 'src/utils/numbers'
 
 import { Icon } from '../Icon'
 import bridgeFormSchema, { BridgeFormValues } from './BridgeForm.schema'
+import { NetworkSelector } from './NetworkSelector'
 
 export const BridgeForm = () => {
-  const { chain: l2Chain } = useChainStore()
   const { address } = useAccount()
   const { chain: userChain } = useNetwork()
   const { switchNetwork } = useSwitchNetwork()
   const { closeBridgeModal } = useBridgeModal()
+  const [loading, setLoading] = useState(false)
+
+  const { chain: appChain } = useChainStore()
 
   const l1Chain = PUBLIC_DEFAULT_CHAINS[0]
+  const [l2Chain, setL2Chain] = useState(
+    appChain !== l1Chain ? appChain : PUBLIC_DEFAULT_CHAINS[1]
+  )
 
   const isWalletOnL1 = userChain?.id === l1Chain.id
 
@@ -44,14 +51,22 @@ export const BridgeForm = () => {
     const bridge = PUBLIC_L1_BRIDGE_ADDRESS[l2Chain.id as L2ChainType]
 
     if (!values.amount || !bridge) return
-    const { wait } = await sendTransaction({
-      request: {
-        to: PUBLIC_L1_BRIDGE_ADDRESS[l2Chain.id as L2ChainType],
-        value: parseEther(values.amount.toString()),
-      },
-      mode: 'recklesslyUnprepared',
-    })
-    await wait()
+
+    setLoading(true)
+    try {
+      const { wait } = await sendTransaction({
+        request: {
+          to: PUBLIC_L1_BRIDGE_ADDRESS[l2Chain.id as L2ChainType],
+          value: parseEther(values.amount.toString()),
+        },
+        mode: 'recklesslyUnprepared',
+      })
+      await wait()
+    } catch (err) {
+      console.log('err', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const formattedL1Balance = userL1Balance ? parseFloat(userL1Balance.formatted) : 0
@@ -144,21 +159,14 @@ export const BridgeForm = () => {
                 <Input
                   name={'amount'}
                   label={
-                    <Flex>
+                    <Flex align={'center'}>
                       <Text mr="x2" fontWeight="heading">
                         To
                       </Text>
-                      <Box mr="x1">
-                        <Image
-                          alt="L2 Chain"
-                          style={{
-                            height: 20,
-                            width: 20,
-                          }}
-                          src={l2Chain.icon}
-                        />
-                      </Box>
-                      <Text fontWeight="heading">{l2Chain.name}</Text>
+                      <NetworkSelector
+                        selectedChain={l2Chain}
+                        setSelectedChain={setL2Chain}
+                      />
                     </Flex>
                   }
                   secondaryLabel={'ETH'}
@@ -176,13 +184,17 @@ export const BridgeForm = () => {
 
               {isWalletOnL1 ? (
                 <Button
-                  disabled={!isValid}
+                  disabled={!isValid || loading}
                   onClick={submitForm}
                   type="submit"
                   w="100%"
                   mt="x5"
                 >
-                  {isAmountInvalid ? 'Insufficent ETH balance' : 'Bridge'}
+                  {loading
+                    ? 'Bridging...'
+                    : isAmountInvalid
+                    ? 'Insufficent ETH balance'
+                    : 'Bridge'}
                 </Button>
               ) : (
                 <Button
