@@ -1916,7 +1916,8 @@ export type TokenFragment = {
 }
 
 export type ActiveAuctionsQueryVariables = Exact<{
-  endTime: Scalars['BigInt']
+  first: Scalars['Int']
+  where: Auction_Filter
 }>
 
 export type ActiveAuctionsQuery = {
@@ -2330,12 +2331,12 @@ export const TokenFragmentDoc = gql`
   }
 `
 export const ActiveAuctionsDocument = gql`
-  query activeAuctions($endTime: BigInt!) {
+  query activeAuctions($first: Int!, $where: Auction_filter!) {
     auctions(
       orderBy: highestBid__amount
       orderDirection: desc
-      first: 3
-      where: { bidCount_gt: 0, settled: false, endTime_gt: $endTime }
+      first: $first
+      where: $where
     ) {
       ...Auction
     }
