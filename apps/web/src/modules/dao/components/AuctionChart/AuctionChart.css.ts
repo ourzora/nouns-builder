@@ -1,21 +1,32 @@
-import { style } from '@vanilla-extract/css'
+import { style, styleVariants } from '@vanilla-extract/css'
 
 import { skeletonAnimation } from 'src/styles/animations.css'
 
-export const selectedTab = style({
+const tabBase = style({
+  textTransform: 'capitalize',
+  width: 'fit-content',
+  borderBottomLeftRadius: '0px',
+  borderBottomRightRadius: '0px',
+})
+const selected = style({
   borderBottom: '2px solid black',
-  borderBottomLeftRadius: '0px',
-  borderBottomRightRadius: '0px',
-  textTransform: 'capitalize',
-  width: 'fit-content',
 })
-export const unselectedTab = style({
+const unselected = style({
   borderBottom: '2px solid transparent',
-  borderBottomLeftRadius: '0px',
-  borderBottomRightRadius: '0px',
-  textTransform: 'capitalize',
-  width: 'fit-content',
 })
+const inner = style({
+  fontSize: '14px',
+  fontWeight: 500,
+  height: 'fit-content',
+})
+
+export const buttonTab = styleVariants({
+  selected: [tabBase, selected],
+  unselected: [tabBase, unselected],
+  innerSelected: [tabBase, selected, inner],
+  innerUnselected: [tabBase, unselected, inner],
+})
+
 export const chartSkeleton = style({
   animation: skeletonAnimation,
   height: '330px',
