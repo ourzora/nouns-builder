@@ -32,7 +32,7 @@ export const BridgeForm = () => {
 
   const l1Chain = PUBLIC_DEFAULT_CHAINS[0]
   const [l2Chain, setL2Chain] = useState(
-    appChain !== l1Chain ? appChain : PUBLIC_DEFAULT_CHAINS[1]
+    appChain.id !== l1Chain.id ? appChain : PUBLIC_DEFAULT_CHAINS[1]
   )
 
   const isWalletOnL1 = userChain?.id === l1Chain.id
@@ -107,7 +107,7 @@ export const BridgeForm = () => {
         onSubmit={handleSubmit}
         validateOnBlur
         validateOnMount={false}
-        validateOnChange={true}
+        validateOnChange={false}
       >
         {({ errors, touched, isValid, submitForm }) => {
           const isAmountInvalid = !!errors.amount && touched.amount
