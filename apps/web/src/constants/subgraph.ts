@@ -4,7 +4,7 @@ export const PUBLIC_SUBGRAPH_URL = {
   [CHAIN_ID.ETHEREUM]:
     'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-mainnet',
   [CHAIN_ID.OPTIMISM]:
-    'https://api.thegraph.com/subgraphs/name/neokry/noun-builder-optimism-mainnet',
+    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-optimism-mainnet/1.0.0/gn',
   [CHAIN_ID.GOERLI]:
     'https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli',
   [CHAIN_ID.OPTIMISM_GOERLI]:
