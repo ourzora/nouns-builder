@@ -1,3 +1,4 @@
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { sendTransaction } from '@wagmi/core'
 import { Box, Button, Flex, Heading, Text } from '@zoralabs/zord'
 import { parseEther } from 'ethers/lib/utils.js'
@@ -10,6 +11,7 @@ import Input from 'src/components/Input/Input'
 import { L2ChainType, PUBLIC_L1_BRIDGE_ADDRESS } from 'src/constants/addresses'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { useBridgeModal } from 'src/hooks/useBridgeModal'
+import { useIsContract } from 'src/hooks/useIsContract'
 import { useChainStore } from 'src/stores/useChainStore'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -22,6 +24,8 @@ export const BridgeForm = () => {
   const { chain: userChain } = useNetwork()
   const { switchNetwork } = useSwitchNetwork()
   const { closeBridgeModal } = useBridgeModal()
+  const { openConnectModal } = useConnectModal()
+  const { data: isContractWallet } = useIsContract({ address })
   const [loading, setLoading] = useState(false)
 
   const { chain: appChain } = useChainStore()
@@ -71,6 +75,13 @@ export const BridgeForm = () => {
 
   const formattedL1Balance = userL1Balance ? parseFloat(userL1Balance.formatted) : 0
   const formattedL2Balance = userL2Balance ? parseFloat(userL2Balance.formatted) : 0
+
+  const getButtonText = (isAmountInvalid: boolean) => {
+    if (isContractWallet) return 'Contract wallets are not supported'
+    if (loading) return 'Bridging...'
+    if (isAmountInvalid) return 'Insufficent ETH balance'
+    return 'Bridge'
+  }
 
   return (
     <Box position={'relative'}>
@@ -178,19 +189,19 @@ export const BridgeForm = () => {
                 </Text>
               </Box>
 
-              {isWalletOnL1 ? (
+              {!address ? (
+                <Button onClick={openConnectModal} type="button" w="100%" mt="x5">
+                  Connect wallet
+                </Button>
+              ) : isWalletOnL1 ? (
                 <Button
-                  disabled={!isValid || loading}
+                  disabled={!isValid || isContractWallet || loading}
                   onClick={submitForm}
                   type="submit"
                   w="100%"
                   mt="x5"
                 >
-                  {loading
-                    ? 'Bridging...'
-                    : isAmountInvalid
-                    ? 'Insufficent ETH balance'
-                    : 'Bridge'}
+                  {getButtonText(isAmountInvalid || false)}
                 </Button>
               ) : (
                 <Button
