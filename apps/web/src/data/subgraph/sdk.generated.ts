@@ -1930,6 +1930,7 @@ export type ActiveAuctionsQuery = {
 
 export type ActiveDaosQueryVariables = Exact<{
   first: Scalars['Int']
+  where: Dao_Filter
 }>
 
 export type ActiveDaosQuery = {
@@ -2344,8 +2345,8 @@ export const ActiveAuctionsDocument = gql`
   ${AuctionFragmentDoc}
 `
 export const ActiveDaosDocument = gql`
-  query activeDaos($first: Int!) {
-    daos(first: $first, where: { totalAuctionSales_gt: 1000000000000000 }) {
+  query activeDaos($first: Int!, $where: DAO_filter!) {
+    daos(first: $first, where: $where) {
       id
     }
   }

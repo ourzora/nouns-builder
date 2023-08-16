@@ -31,9 +31,10 @@ export const highestBidsRequest = async (
       const first = 30
       const activeDaos = await SDK.connect(chainId).activeDaos({
         first,
+        where: { totalAuctionSales_gt: 1000000000000000 },
       })
 
-      // If we have less than 30 active daos, we apply the filter
+      // If we have less than one explore page of active daos, we apply the filter
       if (activeDaos.daos.length !== first)
         where.dao_in = activeDaos.daos.map((x) => x.id)
     }

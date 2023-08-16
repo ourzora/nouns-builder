@@ -1,5 +1,5 @@
-query activeDaos($first: Int!) {
-  daos(first: $first, where: { totalAuctionSales_gt: 1000000000000000 }) {
+query activeDaos($first: Int!, $where: DAO_filter!) {
+  daos(first: $first, where: $where) {
     id
   }
 }
