@@ -6,7 +6,7 @@ import { SWRConfig } from 'swr'
 import { expect } from 'vitest'
 import { WagmiConfig, useConnect, useDisconnect } from 'wagmi'
 
-import { client } from './wagmi'
+import { config } from './wagmi'
 
 type ProvidersProps = {
   children: React.ReactNode
@@ -44,14 +44,14 @@ export async function disconnect() {
  */
 export function renderWagmiHook<TResult, TProps>(hook: (props: TProps) => TResult) {
   return renderHook<TResult, TProps>(hook, {
-    wrapper: (props) => <WagmiConfig client={client} {...props} />,
+    wrapper: (props) => <WagmiConfig config={config} {...props} />,
   })
 }
 export function Providers({ children }: ProvidersProps) {
   // render with a clear cache
   // https://swr.vercel.app/docs/advanced/cache#reset-cache-between-test-cases
   return (
-    <WagmiConfig client={client}>
+    <WagmiConfig config={config}>
       <SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
     </WagmiConfig>
   )

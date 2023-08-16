@@ -1,13 +1,15 @@
+import { Box, Flex, atoms } from '@zoralabs/zord'
+import { ethers } from 'ethers'
+import { getFetchableUrl } from 'ipfs-service'
+import React, { useState } from 'react'
+import { getAddress, parseEther } from 'viem'
+import { useAccount } from 'wagmi'
 import {
   WriteContractUnpreparedArgs,
   prepareWriteContract,
+  waitForTransaction,
   writeContract,
-} from '@wagmi/core'
-import { Box, Flex, atoms } from '@zoralabs/zord'
-import { BigNumber, ethers } from 'ethers'
-import { getFetchableUrl } from 'ipfs-service'
-import React, { useState } from 'react'
-import { useSigner } from 'wagmi'
+} from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { defaultBackButton } from 'src/components/Fields/styles.css'
@@ -54,12 +56,12 @@ const DEPLOYMENT_ERROR = {
 }
 
 export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
-  const { data: signer } = useSigner()
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [hasConfirmedTerms, setHasConfirmedTerms] = useState<boolean>(false)
   const [hasConfirmedChain, setHasConfirmedChain] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const chain = useChainStore((x) => x.chain)
+  const { address } = useAccount()
 
   const {
     founderAllocation,
@@ -87,8 +89,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     ...contributionAllocation,
   ].map(({ founderAddress, allocationPercentage: allocation, endDate }) => ({
     wallet: founderAddress as AddressType,
-    ownershipPct: allocation ? BigNumber.from(allocation) : BigNumber.from(0),
-    vestExpiry: BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
+    ownershipPct: allocation ? BigInt(allocation) : BigInt(0),
+    vestExpiry: BigInt(Math.floor(new Date(endDate).getTime() / 1000)),
   }))
 
   const abiCoder = new ethers.utils.AbiCoder()
@@ -108,31 +110,27 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
   const auctionParams = {
     reservePrice: auctionSettings.auctionReservePrice
-      ? ethers.utils.parseEther(auctionSettings.auctionReservePrice.toString())
-      : ethers.utils.parseEther('0'),
+      ? parseEther(auctionSettings.auctionReservePrice.toString())
+      : parseEther('0'),
     duration: auctionSettings?.auctionDuration
-      ? BigNumber.from(toSeconds(auctionSettings?.auctionDuration))
-      : BigNumber.from('86400'),
+      ? BigInt(toSeconds(auctionSettings?.auctionDuration))
+      : BigInt('86400'),
   }
 
   const govParams = {
-    timelockDelay: BigNumber.from(toSeconds({ days: 2 }).toString()),
-    votingDelay: BigNumber.from(toSeconds(auctionSettings.votingDelay)),
-    votingPeriod: BigNumber.from(toSeconds(auctionSettings.votingPeriod)),
+    timelockDelay: BigInt(toSeconds({ days: 2 }).toString()),
+    votingDelay: BigInt(toSeconds(auctionSettings.votingDelay)),
+    votingPeriod: BigInt(toSeconds(auctionSettings.votingPeriod)),
     proposalThresholdBps: auctionSettings?.proposalThreshold
-      ? BigNumber.from(
-          Number((Number(auctionSettings?.proposalThreshold) * 100).toFixed(2))
-        )
-      : BigNumber.from('0'),
+      ? BigInt(Number((Number(auctionSettings?.proposalThreshold) * 100).toFixed(2)))
+      : BigInt('0'),
     quorumThresholdBps: auctionSettings?.quorumThreshold
-      ? BigNumber.from(
-          Number((Number(auctionSettings?.quorumThreshold) * 100).toFixed(2))
-        )
-      : BigNumber.from('0'),
+      ? BigInt(Number((Number(auctionSettings?.quorumThreshold) * 100).toFixed(2)))
+      : BigInt('0'),
     vetoer:
       vetoPower === true
-        ? ethers.utils.getAddress(vetoerAddress as AddressType)
-        : ethers.utils.getAddress(NULL_ADDRESS),
+        ? getAddress(vetoerAddress as AddressType)
+        : getAddress(NULL_ADDRESS),
   }
 
   const handleDeploy = async () => {
@@ -147,8 +145,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       return
     }
 
-    const signerAddress = await signer?.getAddress()
-    if (founderParams[0].wallet !== signerAddress) {
+    if (founderParams[0].wallet !== address) {
       setDeploymentError(DEPLOYMENT_ERROR.MISMATCHING_SIGNER)
       return
     }
@@ -171,11 +168,10 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
         chainId: chain.id,
         abi: managerAbi,
         functionName: 'deploy',
-        signer: signer,
         args: [founderParams, tokenParams, auctionParams, govParams],
       })
-      const { wait } = await writeContract(config)
-      transaction = await wait()
+      const tx = await writeContract(config)
+      if (tx.hash) transaction = await waitForTransaction({ hash: tx.hash })
     } catch (e) {
       console.log('e', e)
       setIsPendingTransaction(false)
@@ -357,7 +353,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                 handleClick={handleDeploy}
                 w={'100%'}
                 disabled={
-                  !signer ||
+                  !address ||
                   !hasConfirmedTerms ||
                   !hasConfirmedChain ||
                   isPendingTransaction

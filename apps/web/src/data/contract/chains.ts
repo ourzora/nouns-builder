@@ -13,20 +13,18 @@ const TESTNET_CHAINS = [mainnet, goerli, optimismGoerli, baseGoerli, zoraGoerli]
 
 const AVAILIBLE_CHAINS = PUBLIC_IS_TESTNET ? TESTNET_CHAINS : MAINNET_CHAINS
 
-const { chains, provider } = configureChains(
+const { chains, publicClient } = configureChains(
   [...AVAILIBLE_CHAINS],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string,
-      stallTimeout: 1000,
     }),
     jsonRpcProvider({
       rpc: (chain) => ({
         http: RPC_URL[chain.id as CHAIN_ID],
       }),
-      stallTimeout: 1000,
     }),
   ]
 )
 
-export { chains, provider }
+export { chains, publicClient }

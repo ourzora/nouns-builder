@@ -3,7 +3,6 @@ import { ethers } from 'ethers'
 import React from 'react'
 
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
-import { useLayoutStore } from 'src/stores'
 import { AddressType } from 'src/typings'
 
 import { CustomTransactionForm } from '../CustomTransactionForm'
@@ -11,21 +10,17 @@ import { fields, validateABI } from './fields'
 
 export const ABI = () => {
   const { customTransaction, composeCustomTransaction } = useCustomTransactionStore()
-  const { provider } = useLayoutStore()
   const initialValues = {
     transactionCustomABI: customTransaction?.customABI || '',
   }
 
-  const { signer } = useLayoutStore()
-
   const submitCallback = React.useCallback(
     (values: { transactionCustomABI: string }) => {
       try {
-        if (!!signer && !!customTransaction.address && !!values.transactionCustomABI) {
+        if (!!customTransaction.address && !!values.transactionCustomABI) {
           const contract = new ethers.Contract(
             customTransaction.address,
-            values.transactionCustomABI || '[]',
-            signer
+            values.transactionCustomABI || '[]'
           )
           composeCustomTransaction({
             ...customTransaction,
@@ -58,7 +53,7 @@ export const ABI = () => {
       <CustomTransactionForm
         initialValues={initialValues}
         fields={fields}
-        validationSchema={validateABI(provider)}
+        validationSchema={validateABI()}
         submitCallback={(values) => submitCallback(values)}
       />
     </Flex>

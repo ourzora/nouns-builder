@@ -108,7 +108,7 @@ export const Activity: React.FC = () => {
             )}
             {isOwner && !hasThreshold && !isMobile && (
               <Flex mr={'x4'} color={'tertiary'}>
-                {proposalVotesRequired} votes required to propose.
+                {Number(proposalVotesRequired)} votes required to propose.
               </Flex>
             )}
             {isOwner || isDelegating ? (

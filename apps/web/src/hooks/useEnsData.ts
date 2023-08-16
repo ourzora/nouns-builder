@@ -10,7 +10,7 @@ export const useEnsData = (address?: string) => {
   })
 
   const { data: ensAvatar } = useEnsAvatar({
-    address: address as `0x${string}`,
+    name: ensName,
     chainId: CHAIN_ID.ETHEREUM,
   })
 

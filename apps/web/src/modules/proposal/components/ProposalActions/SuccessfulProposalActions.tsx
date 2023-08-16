@@ -1,5 +1,4 @@
 import { Flex, Text, vars } from '@zoralabs/zord'
-import { BigNumber } from 'ethers'
 import React, { Fragment, useState } from 'react'
 import { useSWRConfig } from 'swr'
 import { Address } from 'wagmi'
@@ -44,7 +43,7 @@ const Execute: React.FC<{
   descriptionHash: BytesType
   calldatas: BytesType[]
   targets: Address[]
-  values: BigNumber[]
+  values: bigint[]
 }> = ({ proposer, descriptionHash, calldatas, targets, values, ...props }) => {
   return (
     <GovernorContractButton
@@ -195,7 +194,7 @@ export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps>
                 })
               }
               targets={targets as Address[]}
-              values={values.map((v) => BigNumber.from(v))}
+              values={values.map((v) => BigInt(v))}
               calldatas={calldatas.map((c) => c as BytesType)}
               descriptionHash={descriptionHash as BytesType}
               proposer={proposer as Address}

@@ -1,12 +1,11 @@
-import { readContract } from '@wagmi/core'
-import { BigNumber } from 'ethers'
 import { useRouter } from 'next/router'
 import { useSWRConfig } from 'swr'
 import { useContractEvent } from 'wagmi'
+import { readContract } from 'wagmi/actions'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
-import getBids from 'src/data/contract/requests/getBids'
+import { getBids } from 'src/data/subgraph/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
@@ -30,8 +29,8 @@ export const useAuctionEvents = ({
     abi: auctionAbi,
     eventName: 'AuctionCreated',
     chainId,
-    listener: async (id) => {
-      const tokenId = BigNumber.from(id._hex).toNumber()
+    listener: async (logs) => {
+      const tokenId = logs[0].args.tokenId
 
       await mutate([SWR_KEYS.AUCTION, chainId, auction], () =>
         readContract({
@@ -43,7 +42,7 @@ export const useAuctionEvents = ({
       )
 
       await mutate([SWR_KEYS.AUCTION_BIDS, chainId, auction, tokenId], () =>
-        getBids(chainId, auction as string, tokenId)
+        getBids(chainId, collection, tokenId!.toString())
       )
 
       await router.push(`/dao/${router.query.network}/${collection}/${tokenId}`)

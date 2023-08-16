@@ -1,6 +1,6 @@
 import { Flex } from '@zoralabs/zord'
-import { BigNumber, ethers } from 'ethers'
 import React, { Fragment } from 'react'
+import { getAddress } from 'viem'
 import { useAccount, useContractReads } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
@@ -9,7 +9,6 @@ import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { ProposalVoteFragment as ProposalVote } from 'src/data/subgraph/sdk.generated'
 import { useDaoStore } from 'src/modules/dao'
 import { isProposalOpen, isProposalSuccessful } from 'src/modules/proposal'
-import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
 
@@ -29,7 +28,6 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   proposal,
 }) => {
   const { address: userAddress } = useAccount()
-  const signerAddress = useLayoutStore((state) => state.signerAddress)
   const addresses = useDaoStore((state) => state.addresses)
   const chain = useChainStore((x) => x.chain)
 
@@ -37,18 +35,19 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
     proposal
 
   const { data } = useContractReads({
-    enabled: !!signerAddress,
+    enabled: !!userAddress,
+    allowFailure: false,
     contracts: [
       {
         abi: governorAbi,
-        address: addresses?.governor,
+        address: addresses?.governor as AddressType,
         chainId: chain.id,
         functionName: 'getVotes',
-        args: [signerAddress as AddressType, BigNumber.from(timeCreated)],
+        args: [userAddress as AddressType, BigInt(timeCreated)],
       },
       {
         abi: governorAbi,
-        address: addresses?.governor,
+        address: addresses?.governor as AddressType,
         chainId: chain.id,
         functionName: 'vetoer',
       },
@@ -56,28 +55,23 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   })
 
   const shouldShowActions =
-    state === ProposalState.Active || state === ProposalState.Pending || signerAddress
+    state === ProposalState.Active || state === ProposalState.Pending || userAddress
 
   if (shouldShowActions && !userAddress) return <ConnectWalletAction />
   if (!shouldShowActions || !data) return null
 
   const [votes, vetoer] = data
 
-  const votesAvailable = !!votes ? votes.toNumber() : 0
+  const votesAvailable = !!votes ? Number(votes) : 0
 
-  const signerVote: ProposalVote | undefined = signerAddress
-    ? proposal.votes?.find(
-        (vote) =>
-          ethers.utils.getAddress(vote.voter) === ethers.utils.getAddress(signerAddress)
-      )
+  const signerVote: ProposalVote | undefined = userAddress
+    ? proposal.votes?.find((vote) => getAddress(vote.voter) === getAddress(userAddress))
     : undefined
 
   const proposalOpen = isProposalOpen(state)
-  const isProposer =
-    !!signerAddress &&
-    ethers.utils.getAddress(proposer) == ethers.utils.getAddress(signerAddress)
+  const isProposer = !!userAddress && getAddress(proposer) == getAddress(userAddress)
 
-  const isVetoer = signerAddress === vetoer
+  const isVetoer = userAddress ? userAddress === vetoer : false
 
   const showCancel = proposalOpen && isProposer
   const showVeto = proposalOpen && isVetoer

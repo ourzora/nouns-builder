@@ -1,9 +1,13 @@
-import { SendTransactionResult, prepareWriteContract, writeContract } from '@wagmi/core'
 import { Atoms, Box, Flex, Stack, Text, theme } from '@zoralabs/zord'
-import { BigNumber } from 'ethers'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { Fragment } from 'react'
 import { useSWRConfig } from 'swr'
+import {
+  SendTransactionResult,
+  prepareWriteContract,
+  waitForTransaction,
+  writeContract,
+} from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { Icon } from 'src/components/Icon'
@@ -68,20 +72,20 @@ const VoteModal: React.FC<{
       const config = await prepareWriteContract({
         ...governorContractParams,
         functionName: 'castVoteWithReason',
-        args: [proposalId as BytesType, BigNumber.from(values.choice), values.reason],
+        args: [proposalId as BytesType, BigInt(values.choice!), values.reason],
       })
       vote = writeContract(config)
     } else {
       const config = await prepareWriteContract({
         ...governorContractParams,
         functionName: 'castVote',
-        args: [proposalId as BytesType, BigNumber.from(values.choice)],
+        args: [proposalId as BytesType, BigInt(values.choice!)],
       })
       vote = writeContract(config)
     }
 
-    const tx = await vote
-    await tx?.wait()
+    const { hash } = await vote
+    await waitForTransaction({ hash })
 
     await mutate(
       [SWR_KEYS.PROPOSAL, chain.id, proposalId],

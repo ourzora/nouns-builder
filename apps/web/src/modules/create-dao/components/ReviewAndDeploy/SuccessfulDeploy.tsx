@@ -1,8 +1,8 @@
-import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { Box, Flex, Paragraph, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useContract, useContractRead, useSigner } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
+import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import CopyButton from 'src/components/CopyButton/CopyButton'
@@ -43,15 +43,10 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const { general, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
     useFormStore()
   const chain = useChainStore((x) => x.chain)
-  const { data: signer } = useSigner()
   const { addresses, setAddresses } = useDaoStore()
-  const metadataContract = useContract({
-    abi: metadataAbi,
-    address: addresses.metadata,
-    signerOrProvider: signer,
-  })
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
+  const { address } = useAccount()
 
   const { data: tokenOwner } = useContractRead({
     enabled: !!token,
@@ -93,8 +88,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
       return
     }
 
-    const signerAddress = await signer?.getAddress()
-    if (tokenOwner !== signerAddress) {
+    if (tokenOwner !== address) {
       setDeploymentError(DEPLOYMENT_ERROR.MISMATCHING_SIGNER)
       return
     }
@@ -109,8 +103,8 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
           chainId: chain.id,
           args: [transaction.names, transaction.items, transaction.data],
         })
-        const { wait } = await writeContract(config)
-        await wait()
+        const tx = await writeContract(config)
+        await waitForTransaction({ hash: tx.hash })
       } catch (err) {
         console.warn(err)
         setIsPendingTransaction(false)
@@ -227,7 +221,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
         size={'lg'}
         borderRadius={'curved'}
         className={isPendingTransaction ? deployPendingButtonStyle : undefined}
-        disabled={!transactions || isPendingTransaction || !metadataContract}
+        disabled={!transactions || isPendingTransaction}
         handleClick={handleDeployMetadata}
         w={'100%'}
         mt={'x8'}

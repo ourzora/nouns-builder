@@ -1,4 +1,3 @@
-import { Provider } from '@ethersproject/abstract-provider'
 import * as Yup from 'yup'
 
 import { TokenAllocation, auctionSettingsValidationSchema } from 'src/modules/create-dao'
@@ -29,7 +28,7 @@ export interface AdminFormValues {
 const twentyFourWeeks = 60 * 60 * 24 * 7 * 24
 const tenMinutes = 60 * 10
 
-export const adminValidationSchema = (provider: Provider | undefined) =>
+export const adminValidationSchema = () =>
   Yup.object()
     .concat(auctionSettingsValidationSchema)
     .concat(
