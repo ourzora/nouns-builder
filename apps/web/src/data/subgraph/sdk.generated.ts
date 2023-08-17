@@ -1916,7 +1916,8 @@ export type TokenFragment = {
 }
 
 export type ActiveAuctionsQueryVariables = Exact<{
-  endTime: Scalars['BigInt']
+  first: Scalars['Int']
+  where: Auction_Filter
 }>
 
 export type ActiveAuctionsQuery = {
@@ -1925,6 +1926,16 @@ export type ActiveAuctionsQuery = {
     __typename?: 'Auction'
     dao: { __typename?: 'DAO'; name: string; auctionAddress: any; tokenAddress: any }
   }>
+}
+
+export type ActiveDaosQueryVariables = Exact<{
+  first: Scalars['Int']
+  where: Dao_Filter
+}>
+
+export type ActiveDaosQuery = {
+  __typename?: 'Query'
+  daos: Array<{ __typename?: 'DAO'; id: string }>
 }
 
 export type AuctionBidsQueryVariables = Exact<{
@@ -2321,17 +2332,24 @@ export const TokenFragmentDoc = gql`
   }
 `
 export const ActiveAuctionsDocument = gql`
-  query activeAuctions($endTime: BigInt!) {
+  query activeAuctions($first: Int!, $where: Auction_filter!) {
     auctions(
       orderBy: highestBid__amount
       orderDirection: desc
-      first: 3
-      where: { bidCount_gt: 0, settled: false, endTime_gt: $endTime }
+      first: $first
+      where: $where
     ) {
       ...Auction
     }
   }
   ${AuctionFragmentDoc}
+`
+export const ActiveDaosDocument = gql`
+  query activeDaos($first: Int!, $where: DAO_filter!) {
+    daos(first: $first, where: $where) {
+      id
+    }
+  }
 `
 export const AuctionBidsDocument = gql`
   query auctionBids($id: ID!) {
@@ -2554,6 +2572,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'activeAuctions',
+        'query'
+      )
+    },
+    activeDaos(
+      variables: ActiveDaosQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ActiveDaosQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ActiveDaosQuery>(ActiveDaosDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'activeDaos',
         'query'
       )
     },
