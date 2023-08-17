@@ -56,7 +56,7 @@ export const exploreDaosRequest = async (
     ) {
       const activeDaos = await SDK.connect(chainId).activeDaos({
         first,
-        where: { totalAuctionSales_gt: 1000000000000000 },
+        where: { totalAuctionSales_gt: '1000000000000000' },
       })
 
       // If we have less than one explore page of active daos, we apply the filter
