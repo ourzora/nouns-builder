@@ -99,7 +99,7 @@ export const ReviewProposalForm = ({
               treasuryAddress: addresses?.treasury,
               chainId: chain.id,
               calldatas: calldata,
-              values: transactionValues,
+              values: transactionValues.map((x) => x.toString()),
               targets,
             })
             .then((res) => res.data)
