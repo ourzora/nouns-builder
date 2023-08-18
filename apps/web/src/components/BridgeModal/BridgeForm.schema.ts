@@ -9,10 +9,10 @@ const bridgeFormSchema = (userL1Balance: number) =>
     amount: yup
       .number()
       .required()
-      .max(userL1Balance, 'Your balance is insufficient to bridge ETH.')
+      .max(userL1Balance, 'Must bridge less than L1 balance.')
       .test(
         'is-greater-than-0',
-        'Must send more than 0 ETH',
+        'Must bridge more than 0 ETH',
         (value) => !!value && value > 0
       ),
   })
