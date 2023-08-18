@@ -3,7 +3,7 @@ import axios from 'axios'
 import { Field, FieldProps, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useContractRead } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
@@ -43,7 +43,7 @@ export const ReviewProposalForm = ({
   const addresses = useDaoStore((state) => state.addresses)
   const chain = useChainStore((x) => x.chain)
   //@ts-ignore
-  const signerAddress = signer?._address
+  const { address } = useAccount()
   const { clearProposal } = useProposalStore()
 
   const [error, setError] = useState<string | undefined>()
@@ -55,10 +55,10 @@ export const ReviewProposalForm = ({
   const { data: votes, isLoading } = useContractRead({
     address: addresses?.token as AddressType,
     abi: tokenAbi,
-    enabled: !!signerAddress,
+    enabled: !!address,
     functionName: 'getVotes',
     chainId: chain.id,
-    args: [signerAddress as AddressType],
+    args: [address as AddressType],
   })
 
   const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
@@ -74,7 +74,7 @@ export const ReviewProposalForm = ({
       setSimulationError(undefined)
       setSimulations([])
 
-      if (!proposalThreshold) return
+      if (proposalThreshold === undefined) return
 
       const votesToNumber = votes ? Number(votes) : 0
       const doesNotHaveEnoughVotes = votesToNumber <= Number(proposalThreshold)
@@ -173,7 +173,8 @@ export const ReviewProposalForm = ({
 
   if (isLoading || thresholdIsLoading) return null
 
-  const tokensNeeded = proposalThreshold && Number(proposalThreshold) + 1
+  const tokensNeeded =
+    proposalThreshold !== undefined ? Number(proposalThreshold) + 1 : undefined
 
   return (
     <Flex direction={'column'} width={'100%'} pb={'x24'}>
