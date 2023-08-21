@@ -1955,6 +1955,28 @@ export type AuctionBidsQuery = {
   } | null
 }
 
+export type AuctionHistoryQueryVariables = Exact<{
+  startTime: Scalars['BigInt']
+  daoId: Scalars['ID']
+  orderBy?: InputMaybe<Auction_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  first?: InputMaybe<Scalars['Int']>
+}>
+
+export type AuctionHistoryQuery = {
+  __typename?: 'Query'
+  dao?: {
+    __typename?: 'DAO'
+    auctions: Array<{
+      __typename?: 'Auction'
+      id: string
+      endTime: any
+      settled: boolean
+      winningBid?: { __typename?: 'AuctionBid'; amount: any } | null
+    }>
+  } | null
+}
+
 export type DaoInfoQueryVariables = Exact<{
   tokenAddress: Scalars['ID']
 }>
@@ -2361,6 +2383,31 @@ export const AuctionBidsDocument = gql`
   }
   ${AuctionBidFragmentDoc}
 `
+export const AuctionHistoryDocument = gql`
+  query auctionHistory(
+    $startTime: BigInt!
+    $daoId: ID!
+    $orderBy: Auction_orderBy
+    $orderDirection: OrderDirection
+    $first: Int
+  ) {
+    dao(id: $daoId) {
+      auctions(
+        where: { endTime_gt: $startTime, settled: true }
+        orderBy: $orderBy
+        orderDirection: $orderDirection
+        first: $first
+      ) {
+        id
+        endTime
+        winningBid {
+          amount
+        }
+        settled
+      }
+    }
+  }
+`
 export const DaoInfoDocument = gql`
   query daoInfo($tokenAddress: ID!) {
     dao(id: $tokenAddress) {
@@ -2600,6 +2647,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'auctionBids',
+        'query'
+      )
+    },
+    auctionHistory(
+      variables: AuctionHistoryQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<AuctionHistoryQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<AuctionHistoryQuery>(AuctionHistoryDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'auctionHistory',
         'query'
       )
     },
