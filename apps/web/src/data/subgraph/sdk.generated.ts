@@ -2118,12 +2118,13 @@ export type ProposalQuery = {
 }
 
 export type ProposalOgMetadataQueryVariables = Exact<{
-  proposalId: Scalars['ID']
+  where: Proposal_Filter
+  first: Scalars['Int']
 }>
 
 export type ProposalOgMetadataQuery = {
   __typename?: 'Query'
-  proposal?: {
+  proposals: Array<{
     __typename?: 'Proposal'
     abstainVotes: number
     againstVotes: number
@@ -2146,6 +2147,13 @@ export type ProposalOgMetadataQuery = {
     voteStart: any
     snapshotBlockNumber: any
     transactionHash: any
+    votes: Array<{
+      __typename?: 'ProposalVote'
+      voter: any
+      support: ProposalVoteSupport
+      weight: number
+      reason?: string | null
+    }>
     dao: {
       __typename?: 'DAO'
       name: string
@@ -2156,7 +2164,7 @@ export type ProposalOgMetadataQuery = {
       treasuryAddress: any
       governorAddress: any
     }
-  } | null
+  }>
 }
 
 export type ProposalsQueryVariables = Exact<{
@@ -2514,9 +2522,12 @@ export const ProposalDocument = gql`
   ${ProposalVoteFragmentDoc}
 `
 export const ProposalOgMetadataDocument = gql`
-  query proposalOGMetadata($proposalId: ID!) {
-    proposal(id: $proposalId) {
+  query proposalOGMetadata($where: Proposal_filter!, $first: Int!) {
+    proposals(where: $where, first: $first) {
       ...Proposal
+      votes {
+        ...ProposalVote
+      }
       dao {
         name
         contractImage
@@ -2529,6 +2540,7 @@ export const ProposalOgMetadataDocument = gql`
     }
   }
   ${ProposalFragmentDoc}
+  ${ProposalVoteFragmentDoc}
 `
 export const ProposalsDocument = gql`
   query proposals($where: Proposal_filter, $first: Int!, $skip: Int) {
