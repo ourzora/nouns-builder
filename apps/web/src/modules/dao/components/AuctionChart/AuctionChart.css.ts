@@ -82,6 +82,6 @@ export const newTag = style({
   position: 'absolute',
   top: '0',
   right: '-30px',
-  zIndex: 100,
+  zIndex: 30,
   padding: '2px 5px',
 })
