@@ -46,11 +46,27 @@ export const exploreDaosRequest = async (
       settled: false,
     }
 
+    const first = 30
+
+    // filter spam daos from L2
+    if (
+      chainId === CHAIN_ID.BASE ||
+      chainId === CHAIN_ID.ZORA ||
+      chainId === CHAIN_ID.OPTIMISM
+    ) {
+      const activeDaos = await SDK.connect(chainId).activeDaos({
+        first,
+        where: { totalAuctionSales_gt: '1000000000000000' },
+      })
+
+      // If we have less than one explore page of active daos, we apply the filter
+      if (activeDaos.daos.length !== first)
+        where.dao_in = activeDaos.daos.map((x) => x.id)
+    }
+
     if (orderBy === Auction_OrderBy.HighestBidAmount) where.bidCount_gt = 0
     if (orderBy === Auction_OrderBy.EndTime)
       where.endTime_gt = Math.floor(Date.now() / 1000)
-
-    const first = 30
 
     const data = await SDK.connect(chainId).exploreDaosPage({
       orderBy,

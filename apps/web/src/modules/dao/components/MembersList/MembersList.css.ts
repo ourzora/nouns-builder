@@ -1,10 +1,6 @@
-import { keyframes, style } from '@vanilla-extract/css'
+import { style } from '@vanilla-extract/css'
 
-const pulse = keyframes({
-  '0%': { opacity: '1' },
-  '100%': { opacity: '1' },
-  '50%': { opacity: '.5' },
-})
+import { skeletonAnimation } from 'src/styles/animations.css'
 
 export const row = style({
   width: '100%',
@@ -31,7 +27,7 @@ export const lastRowItem = style({
 })
 export const cardSkeleton = style({
   width: '100%',
-  animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+  animation: skeletonAnimation,
   height: '32px',
   '@media': {
     'screen and (max-width: 768px)': {
