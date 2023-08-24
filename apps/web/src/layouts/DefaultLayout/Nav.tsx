@@ -1,9 +1,11 @@
-import { Flex, Label, Stack, atoms } from '@zoralabs/zord'
+import { Box, Flex, Label, Stack, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
+import { BridgeModal } from 'src/components/BridgeModal/BridgeModal'
 import { NetworkController } from 'src/components/NetworkController'
 import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
+import { useBridgeModal } from 'src/hooks/useBridgeModal'
 import { useScrollDirection } from 'src/hooks/useScrollDirection'
 
 import NogglesLogo from '../assets/builder-framed.svg'
@@ -13,6 +15,7 @@ import { NavMenu } from './NavMenu'
 
 export const Nav = () => {
   const scrollDirection = useScrollDirection()
+  const { canUserBridge, openBridgeModal } = useBridgeModal()
 
   return (
     <Flex
@@ -26,6 +29,7 @@ export const Nav = () => {
       }}
       className={NavContainer}
     >
+      <BridgeModal />
       <Flex align={'center'} className={NavWrapper} justify={'space-between'}>
         <Flex align={'center'}>
           <Link href={'/'} passHref>
@@ -60,9 +64,15 @@ export const Nav = () => {
               <Label className={navMenuItem}>Docs</Label>
             </a>
             <NetworkController.Mainnet>
-              <Link href={'/bridge'}>
-                <Label className={navMenuItem}>Bridge</Label>
-              </Link>
+              {canUserBridge ? (
+                <Box as="span" onClick={openBridgeModal}>
+                  <Label className={navMenuItem}>Bridge</Label>
+                </Box>
+              ) : (
+                <Link href={'/bridge'}>
+                  <Label className={navMenuItem}>Bridge</Label>
+                </Link>
+              )}
             </NetworkController.Mainnet>
           </Flex>
         </Flex>
