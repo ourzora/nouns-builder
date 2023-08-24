@@ -217,8 +217,8 @@ export const BridgeForm = () => {
                 <Link href="/legal" style={{ textDecoration: 'underline' }}>
                   terms
                 </Link>
-                . THIS BRIDGE IS DEPOSIT ONLY. YOU MUST USE ANOTHER BRIDGE TO WITHDRAW
-                FUNDS BACK TO ETHEREUM MAINNET Learn more about{' '}
+                . THIS BRIDGE IS DEPOSIT ONLY. YOU MUST USE ANOTHER BRIDGE TO WITHDRAW.
+                Learn more about{' '}
                 <Box
                   as="a"
                   rel="noopener noreferrer"
