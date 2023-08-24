@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
+import axios from 'axios'
 
 import { SDK } from 'src/data/subgraph/client'
 import { CHAIN_ID } from 'src/typings'
@@ -9,6 +10,7 @@ import {
   ExploreDaoFragment,
   OrderDirection,
 } from '../sdk.generated'
+import { MyDaosResponse } from './daoQuery'
 
 export interface ExploreDaosResponse {
   daos: ExploreDaoFragment[]
@@ -16,21 +18,26 @@ export interface ExploreDaosResponse {
 }
 
 export const userDaosFilter = async (
-  chainId: CHAIN_ID,
   memberAddress: string
 ): Promise<ExploreDaosResponse | undefined> => {
-  const first = 30
-  const userDaos = await SDK.connect(chainId).daoTokenOwners({
-    where: {
-      owner: memberAddress,
-    },
-    first,
-  })
+  const userDaos = await axios
+    .get<MyDaosResponse>(`/api/daos/${memberAddress}`)
+    .then((x) => x.data)
 
-  const daoAddresses = userDaos.daotokenOwners.map((x) => x.dao.tokenAddress)
-  const data = await SDK.connect(chainId).myDaosPage({ daos: daoAddresses })
+  const daoChains = new Set(userDaos.map((x) => x.chainId))
 
-  return { daos: data.auctions, hasNextPage: data.auctions.length === first }
+  const data = await Promise.all(
+    Array.from(daoChains).map(async (chainId) => {
+      const daosByChain = userDaos
+        .filter((x) => x.chainId === chainId)
+        .map((x) => x.collectionAddress)
+      const res = await SDK.connect(chainId).myDaosPage({ daos: daosByChain })
+      return res.auctions.map((x) => ({ ...x, chainId }))
+    })
+  )
+
+  const auctions = data.flat().sort((a, b) => a.dao.name.localeCompare(b.dao.name))
+  return { daos: auctions, hasNextPage: false }
 }
 
 export const exploreDaosRequest = async (

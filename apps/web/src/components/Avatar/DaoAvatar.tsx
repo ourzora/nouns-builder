@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { useMemo } from 'react'
 
 import { useDaoFeedCard } from 'src/modules/dao'
+import { CHAIN_ID } from 'src/typings'
 import { gradientForAddress } from 'src/utils/gradient'
 
 import { avatarVariants, squareAvatar } from './Avatar.css'
@@ -10,6 +11,7 @@ import { avatarVariants, squareAvatar } from './Avatar.css'
 export interface DaoAvatarProps extends Omit<BoxProps, 'size'> {
   collectionAddress: string
   auctionAddress: string
+  chainId: CHAIN_ID
   size?: keyof typeof avatarVariants['size']
   variant?: keyof typeof avatarVariants['variant']
   src?: string | null
@@ -22,11 +24,13 @@ export function DaoAvatar({
   size,
   variant,
   src,
+  chainId,
   ...props
 }: DaoAvatarProps) {
   const { tokenUri } = useDaoFeedCard({
     collectionAddress: collectionAddress,
     auctionAddress: auctionAddress,
+    chainId,
   })
 
   const background = useMemo(() => {

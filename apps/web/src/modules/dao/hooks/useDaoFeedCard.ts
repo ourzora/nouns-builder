@@ -2,26 +2,26 @@ import { BigNumber, ethers } from 'ethers'
 import { useContractRead } from 'wagmi'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
-import { useChainStore } from 'src/stores/useChainStore'
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 interface useDaoCardProps {
   collectionAddress: string
   auctionAddress: string
+  chainId: CHAIN_ID
 }
 
 export const useDaoFeedCard = ({
   collectionAddress,
   auctionAddress,
+  chainId,
 }: useDaoCardProps) => {
-  const chain = useChainStore((x) => x.chain)
   const {
     data: auction,
     isError: isErrorAuction,
     isLoading: isLoadingAuction,
   } = useContractRead({
     address: auctionAddress as AddressType,
-    chainId: chain.id,
+    chainId,
     abi: auctionAbi,
     functionName: 'auction',
   })
@@ -32,7 +32,7 @@ export const useDaoFeedCard = ({
     isLoading: isLoadingToken,
   } = useContractRead({
     address: collectionAddress as AddressType,
-    chainId: chain.id,
+    chainId,
     abi: tokenAbi,
     functionName: 'tokenURI',
     args: [auction?.tokenId as BigNumber],
