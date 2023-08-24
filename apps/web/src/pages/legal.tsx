@@ -22,7 +22,7 @@ const LegalPage: NextPageWithLayout = () => {
                 Nouns Builder Terms of Service
               </Heading>
 
-              <Text>Last Updated: July 18, 2023</Text>
+              <Text>Last Updated: August 24, 2023</Text>
             </Box>
           </header>
 
@@ -137,15 +137,20 @@ const LegalPage: NextPageWithLayout = () => {
           <Box as="section" mt="x8">
             <Label>Services Provided by the Interface</Label>
 
+            <Label italic mt="x2">
+              Interface
+            </Label>
+
             <Paragraph mt="x2">
               The Interface is distinct from the Protocol and simply provides a means for
               accessing the Protocol. The Protocol is comprised of a set of smart
-              contracts deployed on various public blockchains, including but not limited
-              to Ethereum, which allow users to create and deploy Nouns-model DAOs. The
-              Protocol is maintained by Builder DAO and the Builder developer community.
-              Zora does not control or operate the Protocol. Rather, the Interface
-              simplifies interaction with the Protocol to provide a user-friendly method
-              to create and manage DAOs through the Protocol. Specifically:
+              contracts deployed on various public blockchains (each a “Supported
+              Network”), including but not limited to Ethereum, which allow users to
+              create and deploy Nouns-model DAOs. The Protocol is maintained by Builder
+              DAO and the Builder developer community. Zora does not control or operate
+              the Protocol. Rather, the Interface simplifies interaction with the Protocol
+              to provide a user-friendly method to create and manage DAOs through the
+              Protocol. Specifically:
             </Paragraph>
             <Box>
               <ul>
@@ -177,6 +182,20 @@ const LegalPage: NextPageWithLayout = () => {
               the applicable Wallet provider. We do not provide a Wallet service and do
               not at any time have custody, possession, or control over your NFTs, digital
               assets, or any other contents in your Wallet.
+            </Paragraph>
+
+            <Label italic mt="x2">
+              Bridge
+            </Label>
+
+            <Paragraph mt="x2">
+              Deployments on other blockchain networks typically rely on a series of smart
+              contracts to transfer crypto assets from one blockchain network to another.
+              As a result, before you are able to use the Protocol or the Services via a
+              Supported Network other than Ethereum, you may need to “bridge” the crypto
+              assets held within your Wallet on the Ethereum blockchain to the Supported
+              Network that you intend to utilize. This process is known as “bridging” and
+              the smart contracts that permit bridging are each known as a “bridge.”
             </Paragraph>
           </Box>
 
