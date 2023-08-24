@@ -4,6 +4,7 @@ import { Box, Button, Flex, Heading, Text } from '@zoralabs/zord'
 import { parseEther } from 'ethers/lib/utils.js'
 import { Formik } from 'formik'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { useAccount, useBalance, useNetwork, useSwitchNetwork } from 'wagmi'
 
@@ -97,9 +98,6 @@ export const BridgeForm = () => {
       <Heading size="xs" fontWeight="display">
         Bridge
       </Heading>
-      <Text mt="x5" color="text2">
-        Bridge ETH to participate in onchain governance and auctions on L2 chains.
-      </Text>
 
       <Formik
         initialValues={initialValues}
@@ -213,6 +211,25 @@ export const BridgeForm = () => {
                   Switch network
                 </Button>
               )}
+
+              <Box fontSize={12} color="text3" mt="x4">
+                By proceeding, you agree to Nouns Builder's{' '}
+                <Link href="/legal" style={{ textDecoration: 'underline' }}>
+                  terms
+                </Link>
+                . THIS BRIDGE IS DEPOSIT ONLY. YOU MUST USE ANOTHER BRIDGE TO WITHDRAW
+                FUNDS BACK TO ETHEREUM MAINNET Learn more about{' '}
+                <Box
+                  as="a"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  style={{ textDecoration: 'underline' }}
+                  href="https://docs.zora.co/docs/guides/builder-bridging"
+                >
+                  bridging
+                </Box>
+                .
+              </Box>
             </Box>
           )
         }}
