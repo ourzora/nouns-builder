@@ -25,6 +25,7 @@ export const DaoFeedCard: React.FC<DaoCardProps> = ({ dao }) => {
 
   return (
     <DaoCard
+      chainId={chain.id}
       tokenName={tokenUri?.name}
       tokenImage={tokenUri?.image}
       tokenId={tokenId?.toString()}

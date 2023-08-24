@@ -22,8 +22,6 @@ export const ExploreMyDaos = () => {
     { revalidateOnFocus: false }
   )
 
-  console.log('data', data, error)
-
   const isLoading = data ? false : isValidating && !data && !error
 
   return (
@@ -37,8 +35,11 @@ export const ExploreMyDaos = () => {
             const bid = dao.highestBid?.amount ?? undefined
             const bidInEth = bid ? ethers.utils.formatEther(bid) : undefined
 
+            if (!dao.chainId) return null
+
             return (
               <DaoCard
+                chainId={dao.chainId}
                 tokenId={dao.token?.tokenId ?? undefined}
                 key={dao.dao.tokenAddress}
                 tokenImage={dao.token?.image ?? undefined}

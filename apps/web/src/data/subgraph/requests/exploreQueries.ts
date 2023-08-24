@@ -12,8 +12,10 @@ import {
 } from '../sdk.generated'
 import { MyDaosResponse } from './daoQuery'
 
+export type ExploreDaoWithChainId = ExploreDaoFragment & { chainId?: CHAIN_ID }
+
 export interface ExploreDaosResponse {
-  daos: ExploreDaoFragment[]
+  daos: ExploreDaoWithChainId[]
   hasNextPage: boolean
 }
 
