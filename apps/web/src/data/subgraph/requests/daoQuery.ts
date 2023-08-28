@@ -21,7 +21,7 @@ export const myDaosRequest = async (
 ): Promise<MyDaosResponse | undefined> => {
   let daos: MyDaosResponse = []
 
-  if (!memberAddress) return
+  if (!memberAddress) throw new Error('No user address provided')
 
   try {
     const data = await Promise.all(

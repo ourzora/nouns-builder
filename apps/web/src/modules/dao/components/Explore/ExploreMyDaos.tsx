@@ -4,7 +4,7 @@ import React from 'react'
 import useSWR from 'swr'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { userDaosFilter } from 'src/data/subgraph/requests/exploreQueries'
+import { exploreMyDaosRequest } from 'src/data/subgraph/requests/exploreQueries'
 import { useLayoutStore } from 'src/stores'
 
 import { DaoCard } from '../DaoCard'
@@ -18,7 +18,7 @@ export const ExploreMyDaos = () => {
 
   const { data, error, isValidating } = useSWR(
     signerAddress ? [SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string)] : null,
-    () => userDaosFilter(signerAddress as string),
+    () => exploreMyDaosRequest(signerAddress as string),
     { revalidateOnFocus: false }
   )
 
@@ -35,11 +35,9 @@ export const ExploreMyDaos = () => {
             const bid = dao.highestBid?.amount ?? undefined
             const bidInEth = bid ? ethers.utils.formatEther(bid) : undefined
 
-            if (!dao.chainId) return null
-
             return (
               <DaoCard
-                chainId={dao.chainId}
+                chainId={dao.chainId!}
                 tokenId={dao.token?.tokenId ?? undefined}
                 key={dao.dao.tokenAddress}
                 tokenImage={dao.token?.image ?? undefined}

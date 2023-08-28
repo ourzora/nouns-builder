@@ -12,34 +12,41 @@ import {
 } from '../sdk.generated'
 import { MyDaosResponse } from './daoQuery'
 
-export type ExploreDaoWithChainId = ExploreDaoFragment & { chainId?: CHAIN_ID }
+export type ExploreDaoWithChainId = ExploreDaoFragment & { chainId: CHAIN_ID }
 
 export interface ExploreDaosResponse {
   daos: ExploreDaoWithChainId[]
   hasNextPage: boolean
 }
 
-export const userDaosFilter = async (
+export const exploreMyDaosRequest = async (
   memberAddress: string
 ): Promise<ExploreDaosResponse | undefined> => {
-  const userDaos = await axios
-    .get<MyDaosResponse>(`/api/daos/${memberAddress}`)
-    .then((x) => x.data)
+  try {
+    const userDaos = await axios
+      .get<MyDaosResponse>(`/api/daos/${memberAddress}`)
+      .then((x) => x.data)
 
-  const daoChains = new Set(userDaos.map((x) => x.chainId))
+    const daoChains = new Set(userDaos.map((x) => x.chainId))
 
-  const data = await Promise.all(
-    Array.from(daoChains).map(async (chainId) => {
-      const daosByChain = userDaos
-        .filter((x) => x.chainId === chainId)
-        .map((x) => x.collectionAddress)
-      const res = await SDK.connect(chainId).myDaosPage({ daos: daosByChain })
-      return res.auctions.map((x) => ({ ...x, chainId }))
-    })
-  )
+    const data = await Promise.all(
+      Array.from(daoChains).map(async (chainId) => {
+        const daosByChain = userDaos
+          .filter((x) => x.chainId === chainId)
+          .map((x) => x.collectionAddress)
+        const res = await SDK.connect(chainId).myDaosPage({ daos: daosByChain })
+        return res.auctions.map((x) => ({ ...x, chainId }))
+      })
+    )
 
-  const auctions = data.flat().sort((a, b) => a.dao.name.localeCompare(b.dao.name))
-  return { daos: auctions, hasNextPage: false }
+    const auctions = data.flat().sort((a, b) => a.dao.name.localeCompare(b.dao.name))
+    return { daos: auctions, hasNextPage: false }
+  } catch (error) {
+    console.error(error)
+    Sentry.captureException(error)
+    await Sentry.flush(2000)
+    return undefined
+  }
 }
 
 export const exploreDaosRequest = async (
@@ -86,7 +93,10 @@ export const exploreDaosRequest = async (
     })
 
     if (!data.auctions) return undefined
-    return { daos: data.auctions, hasNextPage: data.auctions.length === first }
+    return {
+      daos: data.auctions.map((x) => ({ ...x, chainId })),
+      hasNextPage: data.auctions.length === first,
+    }
   } catch (error) {
     console.error(error)
     Sentry.captureException(error)
