@@ -17,7 +17,7 @@ export const ABI = () => {
   const submitCallback = React.useCallback(
     (values: { transactionCustomABI: string }) => {
       try {
-        if (!!customTransaction.address && !!values.transactionCustomABI) {
+        if (customTransaction.address && values.transactionCustomABI) {
           const contract = new ethers.Contract(
             customTransaction.address,
             values.transactionCustomABI || '[]'

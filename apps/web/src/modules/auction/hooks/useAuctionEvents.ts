@@ -30,8 +30,6 @@ export const useAuctionEvents = ({
     eventName: 'AuctionCreated',
     chainId,
     listener: async (logs) => {
-      const tokenId = logs[0].args.tokenId
-
       await mutate([SWR_KEYS.AUCTION, chainId, auction], () =>
         readContract({
           abi: auctionAbi,
@@ -41,8 +39,10 @@ export const useAuctionEvents = ({
         })
       )
 
+      const tokenId = logs[0].args.tokenId as bigint
+
       await mutate([SWR_KEYS.AUCTION_BIDS, chainId, auction, tokenId], () =>
-        getBids(chainId, collection, tokenId!.toString())
+        getBids(chainId, collection, tokenId.toString())
       )
 
       await router.push(`/dao/${router.query.network}/${collection}/${tokenId}`)

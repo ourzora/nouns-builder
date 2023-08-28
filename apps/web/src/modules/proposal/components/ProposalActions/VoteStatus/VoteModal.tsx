@@ -72,7 +72,7 @@ const VoteModal: React.FC<{
       const config = await prepareWriteContract({
         ...governorContractParams,
         functionName: 'castVoteWithReason',
-        args: [proposalId as BytesType, BigInt(values.choice!), values.reason],
+        args: [proposalId as BytesType, BigInt(values.choice as Choice), values.reason],
       })
       vote = writeContract(config)
     } else {
