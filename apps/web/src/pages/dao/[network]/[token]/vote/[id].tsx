@@ -15,6 +15,7 @@ import {
   formatAndFetchState,
   getProposal,
 } from 'src/data/subgraph/requests/proposalQuery'
+import { Proposal_Filter } from 'src/data/subgraph/sdk.generated'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { DaoContractAddresses, SectionHandler } from 'src/modules/dao'
 import {
@@ -107,7 +108,7 @@ export default VotePage
 
 export const getServerSideProps: GetServerSideProps = async ({ params, req, res }) => {
   const collection = params?.token as AddressType
-  const proposalId = params?.id as `0x${string}`
+  const proposalIdOrNumber = params?.id as `0x${string}`
   const network = params?.network as string
 
   const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
@@ -121,11 +122,22 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   const env = process.env.VERCEL_ENV || 'development'
   const protocol = env === 'development' ? 'http' : 'https'
 
-  const data = await SDK.connect(chain.id).proposalOGMetadata({
-    proposalId,
-  })
+  let where: Proposal_Filter
 
-  if (!data.proposal) {
+  where = proposalIdOrNumber.startsWith('0x')
+    ? {
+        proposalId: proposalIdOrNumber,
+      }
+    : { proposalNumber: parseInt(proposalIdOrNumber), dao: collection.toLowerCase() }
+
+  const data = await SDK.connect(chain.id)
+    .proposalOGMetadata({
+      where,
+      first: 1,
+    })
+    .then((x) => (x.proposals.length > 0 ? x.proposals[0] : undefined))
+
+  if (!data) {
     return {
       notFound: true,
     }
@@ -156,7 +168,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     governorAddress,
     treasuryAddress,
     auctionAddress,
-  } = data.proposal.dao
+  } = data.dao
 
   const ogMetadata: ProposalOgMetadata = {
     proposal: {
@@ -200,7 +212,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       },
       daoName: name,
       ogImageURL,
-      proposalId,
+      proposalId: proposal.proposalId,
       addresses,
     },
   }

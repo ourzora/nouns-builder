@@ -1,5 +1,5 @@
 import { Flex, Grid } from '@zoralabs/zord'
-import React, { Fragment } from 'react'
+import React, { Fragment, ReactNode } from 'react'
 import useSWR from 'swr'
 import { readContract } from 'wagmi/actions'
 
@@ -11,7 +11,7 @@ import { AddressType, Chain } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 import { useAuctionEvents } from '../hooks'
-import { auctionGrid, auctionWrapVariants, auctionWrapper } from './Auction.css'
+import { auctionGrid, auctionWrapper } from './Auction.css'
 import { AuctionDetails } from './AuctionDetails'
 import { AuctionImage } from './AuctionImage'
 import { AuctionPaused } from './AuctionPaused'
@@ -26,6 +26,7 @@ interface AuctionControllerProps {
   auctionAddress: string
   collection: string
   token: TokenWithWinner
+  viewSwitcher?: ReactNode
 }
 
 export const Auction: React.FC<AuctionControllerProps> = ({
@@ -68,54 +69,51 @@ export const Auction: React.FC<AuctionControllerProps> = ({
   )
 
   return (
-    <Flex className={auctionWrapVariants['post']}>
-      <Grid className={auctionGrid}>
-        <AuctionImage
-          key={`auction-${collection}-image-${token.id}`}
-          image={image}
-          isLoading={!auction}
+    <Grid className={auctionGrid}>
+      <AuctionImage
+        key={`auction-${collection}-image-${token.id}`}
+        image={image}
+        isLoading={!auction}
+      />
+      <Flex
+        direction={'column'}
+        height={{ '@initial': 'auto', '@768': '100%' }}
+        mt={{ '@initial': 'x4', '@768': 'x0' }}
+        className={auctionWrapper}
+      >
+        <AuctionTokenPicker
+          mintDate={mintDate}
+          name={name}
+          collection={collection}
+          tokenId={Number(token.id)}
+          currentAuction={Number(tokenId)}
         />
 
-        <Flex
-          direction={'column'}
-          height={{ '@initial': 'auto', '@768': '100%' }}
-          mt={{ '@initial': 'x4', '@768': 'x0' }}
-          className={auctionWrapper}
-        >
-          <AuctionTokenPicker
-            mintDate={mintDate}
-            name={name}
-            collection={collection}
-            tokenId={Number(token.id)}
-            currentAuction={Number(tokenId)}
+        {isTokenActiveAuction && !!auction && (
+          <CurrentAuction
+            chain={chain}
+            tokenId={token.id}
+            auctionAddress={auctionAddress}
+            bid={highestBid}
+            owner={highestBidder}
+            endTime={endTime}
+            bids={bids || []}
           />
+        )}
 
-          {isTokenActiveAuction && !!auction && (
-            <CurrentAuction
-              chain={chain}
-              tokenId={token.id}
-              auctionAddress={auctionAddress}
-              bid={highestBid}
-              owner={highestBidder}
-              endTime={endTime}
-              bids={bids || []}
-            />
-          )}
-
-          {!isTokenActiveAuction && !!auction && (
-            <Fragment>
-              <AuctionDetails>
-                <BidAmount isOver bid={tokenPrice ?? undefined} />
-                <WinningBidder owner={tokenOwner ?? undefined} />
-              </AuctionDetails>
-              <ActionsWrapper>
-                <BidHistory bids={bids || []} />
-              </ActionsWrapper>
-              <AuctionPaused />
-            </Fragment>
-          )}
-        </Flex>
-      </Grid>
-    </Flex>
+        {!isTokenActiveAuction && !!auction && (
+          <Fragment>
+            <AuctionDetails>
+              <BidAmount isOver bid={tokenPrice ?? undefined} />
+              <WinningBidder owner={tokenOwner ?? undefined} />
+            </AuctionDetails>
+            <ActionsWrapper>
+              <BidHistory bids={bids || []} />
+            </ActionsWrapper>
+            <AuctionPaused />
+          </Fragment>
+        )}
+      </Flex>
+    </Grid>
   )
 }

@@ -1916,7 +1916,8 @@ export type TokenFragment = {
 }
 
 export type ActiveAuctionsQueryVariables = Exact<{
-  endTime: Scalars['BigInt']
+  first: Scalars['Int']
+  where: Auction_Filter
 }>
 
 export type ActiveAuctionsQuery = {
@@ -1925,6 +1926,16 @@ export type ActiveAuctionsQuery = {
     __typename?: 'Auction'
     dao: { __typename?: 'DAO'; name: string; auctionAddress: any; tokenAddress: any }
   }>
+}
+
+export type ActiveDaosQueryVariables = Exact<{
+  first: Scalars['Int']
+  where: Dao_Filter
+}>
+
+export type ActiveDaosQuery = {
+  __typename?: 'Query'
+  daos: Array<{ __typename?: 'DAO'; id: string }>
 }
 
 export type AuctionBidsQueryVariables = Exact<{
@@ -1941,6 +1952,28 @@ export type AuctionBidsQuery = {
       amount: any
       bidder: any
     }> | null
+  } | null
+}
+
+export type AuctionHistoryQueryVariables = Exact<{
+  startTime: Scalars['BigInt']
+  daoId: Scalars['ID']
+  orderBy?: InputMaybe<Auction_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  first?: InputMaybe<Scalars['Int']>
+}>
+
+export type AuctionHistoryQuery = {
+  __typename?: 'Query'
+  dao?: {
+    __typename?: 'DAO'
+    auctions: Array<{
+      __typename?: 'Auction'
+      id: string
+      endTime: any
+      settled: boolean
+      winningBid?: { __typename?: 'AuctionBid'; amount: any } | null
+    }>
   } | null
 }
 
@@ -2085,12 +2118,13 @@ export type ProposalQuery = {
 }
 
 export type ProposalOgMetadataQueryVariables = Exact<{
-  proposalId: Scalars['ID']
+  where: Proposal_Filter
+  first: Scalars['Int']
 }>
 
 export type ProposalOgMetadataQuery = {
   __typename?: 'Query'
-  proposal?: {
+  proposals: Array<{
     __typename?: 'Proposal'
     abstainVotes: number
     againstVotes: number
@@ -2113,6 +2147,13 @@ export type ProposalOgMetadataQuery = {
     voteStart: any
     snapshotBlockNumber: any
     transactionHash: any
+    votes: Array<{
+      __typename?: 'ProposalVote'
+      voter: any
+      support: ProposalVoteSupport
+      weight: number
+      reason?: string | null
+    }>
     dao: {
       __typename?: 'DAO'
       name: string
@@ -2123,7 +2164,7 @@ export type ProposalOgMetadataQuery = {
       treasuryAddress: any
       governorAddress: any
     }
-  } | null
+  }>
 }
 
 export type ProposalsQueryVariables = Exact<{
@@ -2321,17 +2362,24 @@ export const TokenFragmentDoc = gql`
   }
 `
 export const ActiveAuctionsDocument = gql`
-  query activeAuctions($endTime: BigInt!) {
+  query activeAuctions($first: Int!, $where: Auction_filter!) {
     auctions(
       orderBy: highestBid__amount
       orderDirection: desc
-      first: 3
-      where: { bidCount_gt: 0, settled: false, endTime_gt: $endTime }
+      first: $first
+      where: $where
     ) {
       ...Auction
     }
   }
   ${AuctionFragmentDoc}
+`
+export const ActiveDaosDocument = gql`
+  query activeDaos($first: Int!, $where: DAO_filter!) {
+    daos(first: $first, where: $where) {
+      id
+    }
+  }
 `
 export const AuctionBidsDocument = gql`
   query auctionBids($id: ID!) {
@@ -2342,6 +2390,31 @@ export const AuctionBidsDocument = gql`
     }
   }
   ${AuctionBidFragmentDoc}
+`
+export const AuctionHistoryDocument = gql`
+  query auctionHistory(
+    $startTime: BigInt!
+    $daoId: ID!
+    $orderBy: Auction_orderBy
+    $orderDirection: OrderDirection
+    $first: Int
+  ) {
+    dao(id: $daoId) {
+      auctions(
+        where: { endTime_gt: $startTime, settled: true }
+        orderBy: $orderBy
+        orderDirection: $orderDirection
+        first: $first
+      ) {
+        id
+        endTime
+        winningBid {
+          amount
+        }
+        settled
+      }
+    }
+  }
 `
 export const DaoInfoDocument = gql`
   query daoInfo($tokenAddress: ID!) {
@@ -2449,9 +2522,12 @@ export const ProposalDocument = gql`
   ${ProposalVoteFragmentDoc}
 `
 export const ProposalOgMetadataDocument = gql`
-  query proposalOGMetadata($proposalId: ID!) {
-    proposal(id: $proposalId) {
+  query proposalOGMetadata($where: Proposal_filter!, $first: Int!) {
+    proposals(where: $where, first: $first) {
       ...Proposal
+      votes {
+        ...ProposalVote
+      }
       dao {
         name
         contractImage
@@ -2464,6 +2540,7 @@ export const ProposalOgMetadataDocument = gql`
     }
   }
   ${ProposalFragmentDoc}
+  ${ProposalVoteFragmentDoc}
 `
 export const ProposalsDocument = gql`
   query proposals($where: Proposal_filter, $first: Int!, $skip: Int) {
@@ -2557,6 +2634,20 @@ export function getSdk(
         'query'
       )
     },
+    activeDaos(
+      variables: ActiveDaosQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ActiveDaosQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ActiveDaosQuery>(ActiveDaosDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'activeDaos',
+        'query'
+      )
+    },
     auctionBids(
       variables: AuctionBidsQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
@@ -2568,6 +2659,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'auctionBids',
+        'query'
+      )
+    },
+    auctionHistory(
+      variables: AuctionHistoryQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<AuctionHistoryQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<AuctionHistoryQuery>(AuctionHistoryDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'auctionHistory',
         'query'
       )
     },
