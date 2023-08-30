@@ -1,4 +1,4 @@
-import { BigNumber, utils } from 'ethers'
+import { parseEther } from 'viem'
 
 import { AddressType } from 'src/typings'
 
@@ -7,7 +7,7 @@ import { BuilderTransaction } from '../stores/useProposalStore'
 interface ProposalTransactions {
   calldata: string[]
   targets: AddressType[]
-  values: BigNumber[]
+  values: bigint[]
 }
 
 export const prepareProposalTransactions = (
@@ -20,7 +20,7 @@ export const prepareProposalTransactions = (
   const values = flattenedTransactions.map((txn) => {
     const value = !txn.value ? '0' : txn.value
 
-    return utils.parseEther(value.toString())
+    return parseEther(value.toString())
   })
 
   return { calldata, targets, values }

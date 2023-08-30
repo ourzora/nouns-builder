@@ -7,6 +7,7 @@ import { Icon } from 'src/components/Icon'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
+import { unpackOptionalArray } from 'src/utils/helpers'
 
 const AdminNav = () => {
   const router = useRouter()
@@ -21,13 +22,15 @@ const AdminNav = () => {
     enabled: !!addresses?.auction,
   })
 
+  const [tokenId] = unpackOptionalArray(auction, 6)
+
   const handleNavigation = async () => {
     await router.push({
       pathname: `/dao/[network]/[token]/[tokenId]`,
       query: {
         network: router.query?.network,
         token: router.query?.token,
-        tokenId: auction?.tokenId?.toNumber(),
+        tokenId: Number(tokenId),
         tab: 'admin',
       },
     })

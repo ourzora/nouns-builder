@@ -1,5 +1,6 @@
 import { Box, Button, Paragraph } from '@zoralabs/zord'
-import { useContract, useContractRead } from 'wagmi'
+import { encodeFunctionData } from 'viem'
+import { useContractRead } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
 import { TransactionType } from 'src/modules/create-proposal/constants'
@@ -12,7 +13,6 @@ export const PauseAuctions = () => {
   const { auction } = useDaoStore((state) => state.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const chain = useChainStore((x) => x.chain)
-  const auctionContract = useContract({ abi: auctionAbi, address: auction })
   const { data: paused } = useContractRead({
     abi: auctionAbi,
     address: auction,
@@ -24,7 +24,10 @@ export const PauseAuctions = () => {
     const pause = {
       target: auction as AddressType,
       functionSignature: 'pause()',
-      calldata: auctionContract?.interface.encodeFunctionData('pause') || '',
+      calldata: encodeFunctionData({
+        abi: auctionAbi,
+        functionName: 'pause',
+      }),
       value: '',
     }
 
@@ -56,7 +59,7 @@ export const PauseAuctions = () => {
         w={'100%'}
         type="button"
         onClick={handlePauseAuctionsTransaction}
-        disabled={paused || typeof auctionContract === 'undefined'}
+        disabled={paused}
       >
         Add Transaction to Queue
       </Button>

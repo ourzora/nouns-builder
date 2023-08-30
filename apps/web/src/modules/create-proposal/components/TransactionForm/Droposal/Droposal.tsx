@@ -1,7 +1,6 @@
 import { Stack } from '@zoralabs/zord'
-import { BigNumber, ethers } from 'ethers'
 import { FormikHelpers } from 'formik'
-import { useContract } from 'wagmi'
+import { encodeFunctionData, parseEther } from 'viem'
 
 import { PUBLIC_ZORA_NFT_CREATOR } from 'src/constants/addresses'
 import { zoraNFTCreatorAbi } from 'src/data/contract/abis/ZoraNFTCreator'
@@ -13,16 +12,14 @@ import { AddressType } from 'src/typings'
 import { DroposalForm } from './DroposalForm'
 import { DroposalFormValues } from './DroposalForm.schema'
 
-const UINT_64_MAX = BigNumber.from('18446744073709551615')
-const UINT_32_MAX = BigNumber.from('4294967295')
+const UINT_64_MAX = BigInt('18446744073709551615')
+const UINT_32_MAX = BigInt('4294967295')
+const HASH_ZERO =
+  '0x0000000000000000000000000000000000000000000000000000000000000000' as `0x${string}`
 
 export const Droposal: React.FC = () => {
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const chain = useChainStore((x) => x.chain)
-  const zoraNFTCreatorContract = useContract({
-    abi: zoraNFTCreatorAbi,
-    address: chain && PUBLIC_ZORA_NFT_CREATOR[chain.id],
-  })
 
   const handleDroposalTransaction = (
     values: DroposalFormValues,
@@ -47,37 +44,39 @@ export const Droposal: React.FC = () => {
     } = values
 
     const royaltyBPS = royaltyPercentage * 100
-    const salesConfig = [
-      ethers.utils.parseEther((publicSalePrice || 0).toString()),
-      maxSalePurchasePerAddress || UINT_32_MAX,
-      BigNumber.from(Math.floor(new Date(publicSaleStart).getTime() / 1000)),
-      BigNumber.from(Math.floor(new Date(publicSaleEnd).getTime() / 1000)),
-      0, // presaleStart
-      0, // presaleEnd
-      ethers.constants.HashZero, // presaleMerkleRoot
-    ]
+    const salesConfig = {
+      publicSalePrice: parseEther((publicSalePrice || 0).toString()),
+      maxSalePurchasePerAddress: maxSalePurchasePerAddress
+        ? maxSalePurchasePerAddress
+        : Number(UINT_32_MAX),
+      publicSaleStart: BigInt(Math.floor(new Date(publicSaleStart).getTime() / 1000)),
+      publicSaleEnd: BigInt(Math.floor(new Date(publicSaleEnd).getTime() / 1000)),
+      presaleStart: BigInt(0), // presaleStart
+      presaleEnd: BigInt(0), // presaleEnd
+      presaleMerkleRoot: HASH_ZERO, // presaleMerkleRoot
+    }
     const animationUri = mediaType?.startsWith('image') ? '' : mediaUrl
     const imageUri = mediaType?.startsWith('image') ? mediaUrl : coverUrl
 
     const createEdition = {
       target: PUBLIC_ZORA_NFT_CREATOR[chain.id] as AddressType,
       functionSignature: 'createEdition()',
-      calldata:
-        zoraNFTCreatorContract?.interface.encodeFunctionData(
-          'createEdition(string,string,uint64,uint16,address,address,(uint104,uint32,uint64,uint64,uint64,uint64,bytes32),string,string,string)',
-          [
-            name,
-            symbol,
-            editionSize || UINT_64_MAX,
-            royaltyBPS,
-            fundsRecipient,
-            defaultAdmin,
-            salesConfig,
-            description,
-            animationUri,
-            imageUri,
-          ]
-        ) || '',
+      calldata: encodeFunctionData({
+        abi: zoraNFTCreatorAbi,
+        functionName: 'createEdition',
+        args: [
+          name,
+          symbol,
+          BigInt(editionSize) || UINT_64_MAX,
+          royaltyBPS,
+          fundsRecipient as AddressType,
+          defaultAdmin as AddressType,
+          salesConfig,
+          description,
+          animationUri,
+          imageUri,
+        ],
+      }),
       value: '',
     }
 
@@ -92,10 +91,7 @@ export const Droposal: React.FC = () => {
 
   return (
     <Stack>
-      <DroposalForm
-        onSubmit={handleDroposalTransaction}
-        disabled={typeof zoraNFTCreatorContract === 'undefined'}
-      />
+      <DroposalForm onSubmit={handleDroposalTransaction} />
     </Stack>
   )
 }

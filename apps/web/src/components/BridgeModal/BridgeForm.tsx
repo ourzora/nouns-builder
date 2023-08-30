@@ -1,12 +1,12 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { sendTransaction } from '@wagmi/core'
 import { Box, Button, Flex, Heading, Text } from '@zoralabs/zord'
-import { parseEther } from 'ethers/lib/utils.js'
 import { Formik } from 'formik'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
+import { parseEther } from 'viem'
 import { useAccount, useBalance, useNetwork, useSwitchNetwork } from 'wagmi'
+import { sendTransaction, waitForTransaction } from 'wagmi/actions'
 
 import Input from 'src/components/Input/Input'
 import { L2ChainType, PUBLIC_L1_BRIDGE_ADDRESS } from 'src/constants/addresses'
@@ -59,14 +59,11 @@ export const BridgeForm = () => {
 
     setLoading(true)
     try {
-      const { wait } = await sendTransaction({
-        request: {
-          to: PUBLIC_L1_BRIDGE_ADDRESS[l2Chain.id as L2ChainType],
-          value: parseEther(values.amount.toString()),
-        },
-        mode: 'recklesslyUnprepared',
+      const { hash } = await sendTransaction({
+        to: PUBLIC_L1_BRIDGE_ADDRESS[l2Chain.id as L2ChainType],
+        value: parseEther(values.amount.toString()),
       })
-      await wait()
+      await waitForTransaction({ hash })
     } catch (err) {
       console.log('err', err)
     } finally {

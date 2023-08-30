@@ -15,7 +15,7 @@ import { WagmiConfig } from 'wagmi'
 import { Disclaimer } from 'src/components/Disclaimer'
 import { NetworkController } from 'src/components/NetworkController'
 import { chains } from 'src/data/contract/chains'
-import { client } from 'src/data/contract/client'
+import { config } from 'src/data/contract/config'
 import 'src/styles/globals.css'
 import 'src/styles/styles.css'
 
@@ -32,7 +32,7 @@ function App({ Component, pageProps, err }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
   const fallback = pageProps?.fallback ?? {}
   return (
-    <WagmiConfig client={client}>
+    <WagmiConfig config={config}>
       <RainbowKitProvider chains={chains} appInfo={{ disclaimer: Disclaimer }}>
         <SWRConfig value={{ fallback }}>
           <NextNProgress

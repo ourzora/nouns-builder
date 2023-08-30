@@ -1,4 +1,4 @@
-import { GetContractResult } from '@wagmi/core'
+import { GetContractResult } from 'wagmi/actions'
 import { create } from 'zustand'
 
 import {

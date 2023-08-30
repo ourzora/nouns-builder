@@ -1,11 +1,7 @@
 import { Button, Flex } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import {
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
-  useSigner,
-} from 'wagmi'
+import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { waitForTransaction } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -20,7 +16,6 @@ interface SettleProps {
 }
 
 export const Settle = ({ isEnding }: SettleProps) => {
-  const { data: signer } = useSigner()
   const chain = useChainStore((x) => x.chain)
   const addresses = useDaoStore((state) => state.addresses)
 
@@ -44,14 +39,12 @@ export const Settle = ({ isEnding }: SettleProps) => {
   const [settling, setSettling] = useState(false)
 
   const handleSettle = async () => {
-    if (!signer) return
-
     if (!!error) return
 
     setSettling(true)
     try {
-      const txn = await writeAsync?.()
-      await txn?.wait()
+      const tx = await writeAsync?.()
+      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
       setSettling(false)
     } catch (error) {
       setSettling(false)

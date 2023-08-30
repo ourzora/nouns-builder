@@ -1,7 +1,7 @@
 import { Box, Flex, Grid, Text } from '@zoralabs/zord'
-import { BigNumber, ethers } from 'ethers'
 import React from 'react'
 import useSWR from 'swr'
+import { formatEther } from 'viem'
 import { useBalance } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -36,7 +36,7 @@ export const Treasury = () => {
       SDK.connect(chainId)
         .totalAuctionSales({ tokenAddress: addresses.token?.toLowerCase() as string })
         .then((x) =>
-          x.dao?.totalAuctionSales ? ethers.utils.formatEther(x.dao.totalAuctionSales) : 0
+          x.dao?.totalAuctionSales ? formatEther(x.dao.totalAuctionSales) : 0
         )
   )
 
@@ -44,8 +44,8 @@ export const Treasury = () => {
 
   const ethToUsd = React.useMemo(() => {
     if (!balance) return 0
-    const wei = BigNumber.from(balance.value?._hex)
-    const eth = ethers.utils.formatEther(wei)
+    const wei = balance.value
+    const eth = formatEther(wei)
     const usd = ((eth as any) * ethUsd).toFixed(2)
     const usdFormatted = numberFormatter(usd)
     return usdFormatted

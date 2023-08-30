@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers'
+import { formatEther } from 'viem'
 
 const DEFAULT_MIN_BID_AMOUNT = 0.0001
 
@@ -7,30 +7,29 @@ export const useMinBidIncrement = ({
   reservePrice,
   minBidIncrement,
 }: {
-  highestBid?: BigNumber
-  reservePrice?: BigNumber
-  minBidIncrement?: BigNumber
+  highestBid?: bigint
+  reservePrice?: bigint
+  minBidIncrement?: bigint
 }) => {
   if (
-    !reservePrice ||
-    !minBidIncrement ||
+    reservePrice === undefined ||
+    minBidIncrement === undefined ||
     // force default min bid amount given reserve price of 0 and no current bids
-    (BigNumber.from(reservePrice).isZero() && BigNumber.from(highestBid).isZero())
+    (reservePrice === BigInt(0) && highestBid === BigInt(0))
   ) {
     return {
       minBidAmount: DEFAULT_MIN_BID_AMOUNT,
     }
   }
 
-  if (!highestBid || BigNumber.from(highestBid).isZero()) {
+  if (!highestBid || highestBid === BigInt(0)) {
     return {
-      minBidAmount: Number(ethers.utils.formatEther(reservePrice)),
+      minBidAmount: Number(formatEther(reservePrice)),
     }
   }
 
-  const currBid = BigNumber.from(highestBid)
-  const minBidRawAmount = currBid.mul(minBidIncrement).div(100).add(currBid)
-  const minBidFormattedAmount = Number(ethers.utils.formatEther(minBidRawAmount))
+  const minBidRawAmount = (highestBid * minBidIncrement) / BigInt(100) + highestBid
+  const minBidFormattedAmount = Number(formatEther(minBidRawAmount))
 
   return {
     minBidAmount: minBidFormattedAmount,

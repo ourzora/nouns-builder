@@ -1,10 +1,10 @@
-import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { Box, Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { Field, FieldProps, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useContractRead, useSigner } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
+import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import TextInput from 'src/components/Fields/TextInput'
@@ -40,11 +40,10 @@ export const ReviewProposalForm = ({
   transactions,
 }: ReviewProposalProps) => {
   const router = useRouter()
-  const { data: signer } = useSigner()
   const addresses = useDaoStore((state) => state.addresses)
   const chain = useChainStore((x) => x.chain)
   //@ts-ignore
-  const signerAddress = signer?._address
+  const { address } = useAccount()
   const { clearProposal } = useProposalStore()
 
   const [error, setError] = useState<string | undefined>()
@@ -56,10 +55,10 @@ export const ReviewProposalForm = ({
   const { data: votes, isLoading } = useContractRead({
     address: addresses?.token as AddressType,
     abi: tokenAbi,
-    enabled: !!signerAddress,
+    enabled: !!address,
     functionName: 'getVotes',
     chainId: chain.id,
-    args: [signerAddress as AddressType],
+    args: [address as AddressType],
   })
 
   const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
@@ -75,18 +74,10 @@ export const ReviewProposalForm = ({
       setSimulationError(undefined)
       setSimulations([])
 
-      try {
-        const isWrongNetwork =
-          (await signer?.provider?.getCode(addresses.auction || '')) === '0x'
-      } catch (e) {
-        setError(ERROR_CODE.WRONG_NETWORK)
-        return
-      }
+      if (proposalThreshold === undefined) return
 
-      if (!proposalThreshold) return
-
-      const votesToNumber = votes ? votes.toNumber() : 0
-      const doesNotHaveEnoughVotes = votesToNumber <= proposalThreshold.toNumber()
+      const votesToNumber = votes ? Number(votes) : 0
+      const doesNotHaveEnoughVotes = votesToNumber <= Number(proposalThreshold)
       if (doesNotHaveEnoughVotes) {
         setError(ERROR_CODE.NOT_ENOUGH_VOTES)
         return
@@ -108,7 +99,7 @@ export const ReviewProposalForm = ({
               treasuryAddress: addresses?.treasury,
               chainId: chain.id,
               calldatas: calldata,
-              values: transactionValues,
+              values: transactionValues.map((x) => x.toString()),
               targets,
             })
             .then((res) => res.data)
@@ -149,10 +140,10 @@ export const ReviewProposalForm = ({
           args: [params.targets, params.values, params.calldatas, params.description],
         })
 
-        const { wait } = await writeContract(config)
+        const { hash } = await writeContract(config)
 
         setProposing(true)
-        await wait()
+        await waitForTransaction({ hash })
 
         router
           .push({
@@ -177,12 +168,13 @@ export const ReviewProposalForm = ({
         setError(err.message)
       }
     },
-    [signer, router, addresses, proposalThreshold, votes, clearProposal]
+    [router, addresses, proposalThreshold, votes, clearProposal]
   )
 
   if (isLoading || thresholdIsLoading) return null
 
-  const tokensNeeded = proposalThreshold && proposalThreshold.toNumber() + 1
+  const tokensNeeded =
+    proposalThreshold !== undefined ? Number(proposalThreshold) + 1 : undefined
 
   return (
     <Flex direction={'column'} width={'100%'} pb={'x24'}>
@@ -239,7 +231,7 @@ export const ReviewProposalForm = ({
                 handleClick={() => formik.submitForm()}
               >
                 <Box>{'Submit Proposal'}</Box>
-                {votes && (
+                {!!votes && (
                   <Box
                     position={'absolute'}
                     right={{ '@initial': 'x2', '@768': 'x4' }}
@@ -250,7 +242,7 @@ export const ReviewProposalForm = ({
                       backgroundColor: 'rgba(255, 255, 255, 0.3)',
                     }}
                   >
-                    {votes.toNumber()} Votes
+                    {Number(votes)} Votes
                   </Box>
                 )}
               </ContractButton>
@@ -260,7 +252,7 @@ export const ReviewProposalForm = ({
       </Flex>
 
       <Flex mb={'x12'} mt={'x4'} color="text3" alignSelf={'center'}>
-        You must have {tokensNeeded}{' '}
+        You must have {Number(tokensNeeded)}{' '}
         {!!tokensNeeded && tokensNeeded > 1 ? 'votes' : 'vote'} to submit a proposal
       </Flex>
 

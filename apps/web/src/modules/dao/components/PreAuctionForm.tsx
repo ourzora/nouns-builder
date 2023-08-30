@@ -1,10 +1,11 @@
-import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { Flex, Stack } from '@zoralabs/zord'
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
-import { useContractReads, useSigner } from 'wagmi'
+import { parseEther } from 'viem'
+import { useContractReads } from 'wagmi'
+import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -13,6 +14,7 @@ import { NUMBER } from 'src/components/Fields/types'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
+import { AddressType } from 'src/typings'
 import {
   compareAndReturn,
   fromSeconds,
@@ -29,16 +31,16 @@ interface PreAuctionFormSettingsProps {
 
 export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const { addresses } = useDaoStore()
-  const { data: signer } = useSigner()
   const chain = useChainStore((x) => x.chain)
 
   const auctionContractParams = {
     abi: auctionAbi,
-    address: addresses.auction,
+    address: addresses.auction as AddressType,
     chainId: chain.id,
   }
 
   const { data } = useContractReads({
+    allowFailure: false,
     contracts: [
       { ...auctionContractParams, functionName: 'duration' },
       { ...auctionContractParams, functionName: 'reservePrice' },
@@ -68,10 +70,10 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
           ...auctionContractParams,
           address: auctionContractParams.address,
           functionName: 'setDuration',
-          args: [BigNumber.from(toSeconds(newDuration))],
+          args: [BigInt(toSeconds(newDuration))],
         })
-        const durationTxn = await writeContract(config)
-        await durationTxn?.wait()
+        const { hash } = await writeContract(config)
+        await waitForTransaction({ hash })
       }
 
       const newReservePrice = values.auctionReservePrice
@@ -80,10 +82,10 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
           ...auctionContractParams,
           address: auctionContractParams.address,
           functionName: 'setReservePrice',
-          args: [ethers.utils.parseEther(newReservePrice.toString())],
+          args: [parseEther(newReservePrice.toString())],
         })
-        const reservePriceTxn = await writeContract(config)
-        await reservePriceTxn?.wait()
+        const { hash } = await writeContract(config)
+        await waitForTransaction({ hash })
       }
     } finally {
       formik.setSubmitting(false)

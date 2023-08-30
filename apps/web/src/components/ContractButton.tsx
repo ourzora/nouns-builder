@@ -30,7 +30,7 @@ export const ContractButton = ({
 
   const handleClickWithValidation = () => {
     if (!userAddress) return openConnectModal?.()
-    if (canUserBridge && userBalance?.value.eq(0)) return openBridgeModal()
+    if (canUserBridge && userBalance?.decimals === 0) return openBridgeModal()
     if (userChain?.id !== appChain.id) return handleSwitchNetwork()
     handleClick()
   }

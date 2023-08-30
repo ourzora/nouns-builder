@@ -1,4 +1,3 @@
-import { Provider } from '@ethersproject/abstract-provider'
 import * as Yup from 'yup'
 
 import { TEXTAREA } from 'src/components/Fields/types'
@@ -13,7 +12,7 @@ export const fields = [
   },
 ]
 
-export const validateABI = (provider: Provider | undefined) =>
+export const validateABI = () =>
   Yup.object().shape({
     transactionCustomABI: Yup.string().test(
       'isABI',
