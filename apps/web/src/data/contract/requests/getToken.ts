@@ -1,7 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
-import { readContract } from '@wagmi/core'
-import { BigNumber } from 'ethers'
 import { base64 } from 'ethers/lib/utils'
+import { readContract } from 'wagmi/actions'
 
 import { tokenAbi } from 'src/data/contract/abis'
 import {
@@ -30,7 +29,7 @@ const readTokenContractData = async (
     abi: tokenAbi,
     address: tokenAddress,
     functionName: 'tokenURI',
-    args: [BigNumber.from(id)],
+    args: [BigInt(id)],
     chainId,
   })
 

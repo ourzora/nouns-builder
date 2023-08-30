@@ -15,6 +15,7 @@ import { NetworkController } from 'src/components/NetworkController'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { MyDaosResponse } from 'src/data/subgraph/requests/daoQuery'
+import { useBridgeModal } from 'src/hooks/useBridgeModal'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
@@ -47,6 +48,8 @@ export const NavMenu = () => {
   const { chain: selectedChain, setChain } = useChainStore()
 
   const { address } = useAccount()
+  const { canUserBridge, openBridgeModal } = useBridgeModal()
+
   const { displayName, ensAvatar } = useEnsData(address as string)
   const { data: balance } = useBalance({
     address: address as `0x${string}`,
@@ -392,13 +395,23 @@ export const NavMenu = () => {
                 </Flex>
               </a>
               <NetworkController.Mainnet>
-                <Link href={'/bridge'}>
-                  <Flex display="flex" align="center" justify={'center'} py={'x2'}>
-                    <Text cursor={'pointer'} fontWeight={'display'}>
-                      Bridge
-                    </Text>
-                  </Flex>
-                </Link>
+                {canUserBridge ? (
+                  <Box as="span" onClick={openBridgeModal}>
+                    <Flex display="flex" align="center" justify={'center'} py={'x2'}>
+                      <Text cursor={'pointer'} fontWeight={'display'}>
+                        Bridge
+                      </Text>
+                    </Flex>
+                  </Box>
+                ) : (
+                  <Link href={'/bridge'}>
+                    <Flex display="flex" align="center" justify={'center'} py={'x2'}>
+                      <Text cursor={'pointer'} fontWeight={'display'}>
+                        Bridge
+                      </Text>
+                    </Flex>
+                  </Link>
+                )}
               </NetworkController.Mainnet>
               <Box
                 color="border"

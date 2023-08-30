@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import React, { Fragment, useState } from 'react'
 
 import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
@@ -26,7 +26,7 @@ export const CurrentAuction = ({
   chain: Chain
   tokenId: string
   auctionAddress: string
-  bid?: BigNumber
+  bid?: bigint
   owner?: string
   endTime?: number
   bids: AuctionBidFragment[]

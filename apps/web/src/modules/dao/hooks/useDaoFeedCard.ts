@@ -1,8 +1,9 @@
-import { BigNumber, ethers } from 'ethers'
+import { formatEther } from 'viem'
 import { useContractRead } from 'wagmi'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType, CHAIN_ID } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 
 interface useDaoCardProps {
   collectionAddress: string
@@ -15,40 +16,35 @@ export const useDaoFeedCard = ({
   auctionAddress,
   chainId,
 }: useDaoCardProps) => {
-  const {
-    data: auction,
-    isError: isErrorAuction,
-    isLoading: isLoadingAuction,
-  } = useContractRead({
+  const { data: auction } = useContractRead({
     address: auctionAddress as AddressType,
     chainId,
     abi: auctionAbi,
     functionName: 'auction',
   })
 
-  const {
-    data: token,
-    isError: isErrorToken,
-    isLoading: isLoadingToken,
-  } = useContractRead({
+  const [tokenId, highestBid, highestBidder, startTime, endTime] = unpackOptionalArray(
+    auction,
+    6
+  )
+
+  const { data: token } = useContractRead({
     address: collectionAddress as AddressType,
     chainId,
     abi: tokenAbi,
     functionName: 'tokenURI',
-    args: [auction?.tokenId as BigNumber],
-    enabled: typeof auction !== 'undefined',
+    args: [tokenId!],
+    enabled: !!tokenId,
   })
 
   const decode = (token?: string) => {
     if (!token) return null
 
-    const decoded = ethers.utils.base64.decode(
-      token?.substring(29, token?.length) as string
-    )
+    const decoded = Buffer.from(token?.substring(29, token?.length) as string, 'base64')
 
     let data
     try {
-      data = JSON.parse(new Buffer(decoded).toString())
+      data = JSON.parse(decoded.toString())
     } catch (e) {
       console.error(e)
       data = null
@@ -58,11 +54,9 @@ export const useDaoFeedCard = ({
   }
 
   return {
-    highestBid: auction?.highestBid
-      ? ethers.utils.formatEther(auction?.highestBid)
-      : undefined,
+    highestBid: highestBid ? formatEther(highestBid) : undefined,
     tokenUri: decode(token),
-    endTime: auction?.endTime || 0,
-    tokenId: auction?.tokenId,
+    endTime: endTime || 0,
+    tokenId: tokenId,
   }
 }

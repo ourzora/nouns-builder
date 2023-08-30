@@ -2,8 +2,7 @@ import { Box, Flex, Text, vars } from '@zoralabs/zord'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
-
-import { useLayoutStore } from 'src/stores/useLayoutStore'
+import { useAccount } from 'wagmi'
 
 import ExploreSortMenu from './ExploreSortMenu'
 
@@ -14,13 +13,13 @@ interface ExploreToolbarProps {
 
 const ExploreToolbar: React.FC<ExploreToolbarProps> = ({ title, showSort = false }) => {
   const router = useRouter()
-  const signerAddress = useLayoutStore((state) => state.signerAddress)
+  const { address } = useAccount()
 
   return (
     <Flex
       direction={'column'}
       w={'100%'}
-      mb={signerAddress ? 'x0' : 'x5'}
+      mb={address ? 'x0' : 'x5'}
       align={'center'}
       style={{ maxWidth: 912 }}
     >
@@ -32,7 +31,7 @@ const ExploreToolbar: React.FC<ExploreToolbarProps> = ({ title, showSort = false
           <ExploreSortMenu choice={(router.query?.sortKey as string) || 'CREATED'} />
         )}
       </Flex>
-      {signerAddress && (
+      {address && (
         <>
           <Flex w={'100%'} justify={'center'}>
             <Link href={'/explore'} passHref>

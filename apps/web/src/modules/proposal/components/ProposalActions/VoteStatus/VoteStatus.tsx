@@ -1,7 +1,7 @@
 import { Button, Flex, Text } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import React, { Fragment, useEffect, useState } from 'react'
-import { useContractEvent } from 'wagmi'
+import { getAddress } from 'viem'
+import { useAccount, useContractEvent } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
@@ -10,7 +10,6 @@ import {
   ProposalVoteSupport as Support,
 } from 'src/data/subgraph/sdk.generated'
 import { useDaoStore } from 'src/modules/dao'
-import { useLayoutStore } from 'src/stores'
 import { proposalActionButtonVariants } from 'src/styles/Proposals.css'
 
 import Pending from './Pending'
@@ -43,49 +42,47 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
   daoName,
   title,
 }) => {
-  const signerAddress = useLayoutStore((state) => state.signerAddress)
+  const { address: userAddress } = useAccount()
   const { governor } = useDaoStore((state) => state.addresses)
   const [showVoteModal, setShowVoteModal] = useState<boolean>(false)
   const [vote, setVote] = useState<ProposalVote | undefined>(signerVote)
 
   useEffect(() => {
-    if (!signerAddress) {
+    if (!userAddress) {
       return
     }
 
-    const storedVote = sessionStorage.getItem(`vote-${proposalId}-${signerAddress}`)
+    const storedVote = sessionStorage.getItem(`vote-${proposalId}-${userAddress}`)
 
     if (storedVote) {
       if (!signerVote) {
         setVote(JSON.parse(storedVote))
       } else {
         // We don't need to store the signer vote anymore as the BE indexer has caught up
-        sessionStorage.removeItem(`vote-${proposalId}-${signerAddress}`)
+        sessionStorage.removeItem(`vote-${proposalId}-${userAddress}`)
       }
     }
-  }, [signerAddress, signerVote, proposalId])
+  }, [userAddress, signerVote, proposalId])
 
-  const shouldListen = !signerVote && !!signerAddress && state === ProposalState.Active
+  const shouldListen = !signerVote && !!userAddress && state === ProposalState.Active
 
   useContractEvent({
     address: shouldListen ? governor : undefined,
     abi: governorAbi,
     eventName: 'VoteCast',
-    listener: async (voter, id, supportValue, weight, reason) => {
-      if (
-        id === proposalId &&
-        ethers.utils.getAddress(voter) === ethers.utils.getAddress(signerAddress!)
-      ) {
+    listener: async (logs) => {
+      const { voter, proposalId: id, support, weight, reason } = logs[0].args
+      if (id === proposalId && voter && getAddress(voter) === getAddress(userAddress!)) {
         const eventVote: ProposalVote = {
           voter,
-          support: valueToSupport[supportValue.toNumber() as SupportValue],
-          weight: weight.toNumber(),
+          support: valueToSupport[Number(support) as SupportValue],
+          weight: Number(weight),
           reason,
         }
 
         setVote(eventVote)
         sessionStorage.setItem(
-          `vote-${proposalId}-${signerAddress}`,
+          `vote-${proposalId}-${userAddress}`,
           JSON.stringify(eventVote)
         )
       }

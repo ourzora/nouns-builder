@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers'
 import { normalizeIPFSUrl } from 'ipfs-service'
 
 import { IPFSUpload } from 'src/hooks'
@@ -6,7 +5,7 @@ import { IPFSUpload } from 'src/hooks'
 import { OrderedTraits } from '../../../components/Artwork/LayerBox'
 
 export interface PropertyItem {
-  propertyId: BigNumber
+  propertyId: bigint
   name: string
   isNewProperty: boolean
 }
@@ -29,7 +28,7 @@ function uploadsToPropertyItems(
 ): PropertyItem[] {
   return uploads.map((upload) => {
     return {
-      propertyId: BigNumber.from(traitIndex),
+      propertyId: BigInt(traitIndex),
       name: upload.name.substring(0, upload.name.lastIndexOf('.')),
       isNewProperty,
     }

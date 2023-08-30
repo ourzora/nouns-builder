@@ -1,6 +1,6 @@
 import { Wallet as RainbowkitWallet, connectorsForWallets } from '@rainbow-me/rainbowkit'
-import { Wallet, providers } from 'ethers'
-import { configureChains, createClient } from 'wagmi'
+import { createWalletClient, http } from 'viem'
+import { configureChains, createConfig } from 'wagmi'
 import { foundry } from 'wagmi/chains'
 import { MockConnector } from 'wagmi/connectors/mock'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
@@ -42,13 +42,16 @@ function makeCreateConnectorFor(address: `0x${string}`) {
     connector: new MockConnector({
       chains: [foundry],
       options: {
-        signer: new Wallet(address, new providers.JsonRpcProvider(ANVIL_URL)),
+        walletClient: createWalletClient({
+          account: address,
+          transport: http(ANVIL_URL),
+        }),
       },
     }),
   })
 }
 
-export const { provider, webSocketProvider, chains } = configureChains(
+export const { publicClient, webSocketPublicClient, chains } = configureChains(
   [foundry],
   [jsonRpcProvider({ rpc: () => ({ http: ANVIL_URL }) })]
 )
@@ -60,8 +63,8 @@ const connectors = connectorsForWallets([
   },
 ])
 
-export const client = createClient({
-  provider,
-  webSocketProvider,
+export const config = createConfig({
+  publicClient,
+  webSocketPublicClient,
   connectors,
 })

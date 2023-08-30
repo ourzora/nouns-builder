@@ -2,6 +2,7 @@ import { Button, Flex } from '@zoralabs/zord'
 import { FieldArray, Form, Formik, FormikProps } from 'formik'
 import sum from 'lodash/sum'
 import React, { useRef, useState } from 'react'
+import { useAccount } from 'wagmi'
 import { shallow } from 'zustand/shallow'
 
 import {
@@ -9,7 +10,6 @@ import {
   defaultFormButtonWithPrev,
 } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
-import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import { CHAIN_ID } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
@@ -63,20 +63,14 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
     shallow
   )
 
-  const { signerAddress } = useLayoutStore(
-    (state) => ({
-      signerAddress: state.signerAddress,
-      provider: state.provider,
-    }),
-    shallow
-  )
+  const { address } = useAccount()
 
   // should always default to the current signer address given this field is disabled
   const initialFounderValues =
     founderAllocation.length === 0
       ? [
           {
-            founderAddress: signerAddress || '',
+            founderAddress: address || '',
             allocationPercentage: '',
             endDate: '',
             admin: true,
@@ -84,7 +78,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
         ]
       : [
           {
-            founderAddress: signerAddress || '',
+            founderAddress: address || '',
             allocationPercentage: founderAllocation[0].allocationPercentage,
             endDate: founderAllocation[0].endDate,
             admin: true,
@@ -125,7 +119,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
     setActiveSection(activeSection + 1)
   }
 
-  if (!signerAddress) return null
+  if (!address) return null
 
   return (
     <>
@@ -136,7 +130,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
         innerRef={formRef}
         validateOnMount={true}
         validateOnChange={true}
-        validationSchema={validationSchemaFounderAllocation(signerAddress)}
+        validationSchema={validationSchemaFounderAllocation(address)}
         onSubmit={handleSubmit}
       >
         {(formik) => (

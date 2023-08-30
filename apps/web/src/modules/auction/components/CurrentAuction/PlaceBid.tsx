@@ -1,23 +1,16 @@
-import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { Box, Button, Flex } from '@zoralabs/zord'
-import { BigNumber, ethers } from 'ethers'
 import React, { Fragment, memo, useState } from 'react'
 import { useSWRConfig } from 'swr'
-import {
-  Address,
-  useAccount,
-  useBalance,
-  useContractReads,
-  useNetwork,
-  useSigner,
-} from 'wagmi'
+import { parseEther } from 'viem'
+import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
+import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
-import getBids from 'src/data/contract/requests/getBids'
+import { getBids } from 'src/data/subgraph/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
-import { Chain } from 'src/typings'
+import { AddressType, Chain } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -27,11 +20,10 @@ import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 interface PlaceBidProps {
   chain: Chain
   tokenId: string
-  highestBid?: BigNumber
+  highestBid?: bigint
 }
 
 export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
-  const { data: signer } = useSigner()
   const { address } = useAccount()
   const { chain: wagmiChain } = useNetwork()
   const { data: balance } = useBalance({ address: address, chainId: chain.id })
@@ -43,10 +35,11 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
 
   const auctionContractParams = {
     abi: auctionAbi,
-    address: addresses.auction,
+    address: addresses.auction as AddressType,
     chainId: chain.id,
   }
   const { data } = useContractReads({
+    allowFailure: false,
     contracts: [
       { ...auctionContractParams, functionName: 'reservePrice' },
       { ...auctionContractParams, functionName: 'minBidIncrement' },
@@ -61,7 +54,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
   })
 
   const handleCreateBid = async () => {
-    if (!isMinBid || !bidAmount || !signer || creatingBid) return
+    if (!isMinBid || !bidAmount || creatingBid) return
 
     try {
       setCreatingBid(true)
@@ -70,15 +63,14 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
         abi: auctionAbi,
         address: addresses.auction as Address,
         functionName: 'createBid',
-        signer: signer,
-        args: [BigNumber.from(tokenId)],
-        overrides: { value: ethers.utils.parseEther(bidAmount) },
+        args: [BigInt(tokenId)],
+        value: parseEther(bidAmount),
       })
-      const { wait } = await writeContract(config)
-      await wait()
+      const tx = await writeContract(config)
+      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
 
-      await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.auction, tokenId], () =>
-        getBids(chain.id, addresses.auction as string, tokenId)
+      await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.token, tokenId], () =>
+        getBids(chain.id, addresses.token!, tokenId)
       )
     } catch (error) {
       console.error(error)

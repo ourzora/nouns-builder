@@ -17,23 +17,24 @@ export const useVotes = ({
 }) => {
   const { data, isLoading } = useContractReads({
     enabled: !!collectionAddress && !!governorAddress && !!signerAddress,
+    allowFailure: false,
     contracts: [
       {
-        address: collectionAddress,
+        address: collectionAddress as AddressType,
         abi: tokenAbi,
         functionName: 'getVotes',
         args: [signerAddress as AddressType],
         chainId,
       },
       {
-        address: collectionAddress,
+        address: collectionAddress as AddressType,
         abi: tokenAbi,
         functionName: 'delegates',
         args: [signerAddress as AddressType],
         chainId,
       },
       {
-        address: governorAddress,
+        address: governorAddress as AddressType,
         abi: governorAbi,
         functionName: 'proposalThreshold',
         chainId,
@@ -54,8 +55,8 @@ export const useVotes = ({
   return {
     isLoading,
     isDelegating: delegates !== signerAddress,
-    isOwner: votes.toNumber() > 0,
-    hasThreshold: votes.toNumber() > proposalThreshold.toNumber(),
-    proposalVotesRequired: proposalThreshold.toNumber() + 1,
+    isOwner: votes > 0,
+    hasThreshold: votes > proposalThreshold,
+    proposalVotesRequired: proposalThreshold + BigInt(1),
   }
 }

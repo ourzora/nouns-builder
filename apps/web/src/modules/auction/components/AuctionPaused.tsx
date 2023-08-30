@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import useSWR from 'swr'
-import { useContract, useContractRead } from 'wagmi'
+import { encodeFunctionData } from 'viem'
+import { useContractRead } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -22,7 +23,7 @@ export const AuctionPaused = () => {
   const LIMIT = 20
 
   const { auction } = useDaoStore((x) => x.addresses)
-  const auctionContract = useContract({ abi: auctionAbi, address: auction })
+
   const { data: paused } = useContractRead({
     abi: auctionAbi,
     address: auction,
@@ -36,10 +37,17 @@ export const AuctionPaused = () => {
   )
 
   const pausedProposal = useMemo(() => {
-    if (!(paused && auctionContract)) return undefined
+    if (!(paused && auction)) return undefined
 
-    const pauseCalldata = auctionContract.interface.encodeFunctionData('pause')
-    const unpauseCalldata = auctionContract.interface.encodeFunctionData('unpause')
+    const pauseCalldata = encodeFunctionData({
+      abi: auctionAbi,
+      functionName: 'pause',
+    })
+
+    const unpauseCalldata = encodeFunctionData({
+      abi: auctionAbi,
+      functionName: 'unpause',
+    })
 
     return data?.proposals.find((proposal) => {
       if (proposal.state !== ProposalState.Executed) return false
@@ -57,7 +65,7 @@ export const AuctionPaused = () => {
 
       if (isPausing && !isUnpausing) return proposal
     })
-  }, [paused, data?.proposals, auctionContract])
+  }, [paused, data?.proposals])
 
   if (!paused) return null
 

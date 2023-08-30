@@ -5,7 +5,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
 import React, { BaseSyntheticEvent } from 'react'
-import { Address, useContract, useContractReads } from 'wagmi'
+import { encodeFunctionData } from 'viem'
+import { Address, useContractReads } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import Radio from 'src/components/Fields/Radio'
@@ -23,14 +24,13 @@ import {
   useProposalStore,
 } from 'src/modules/create-proposal'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
-import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 import { compareAndReturn, fromSeconds, unpackOptionalArray } from 'src/utils/helpers'
 
-import { DaoContracts, useDaoStore } from '../../stores'
+import { useDaoStore } from '../../stores'
 import { AdminFormValues, adminValidationSchema } from './AdminForm.schema'
 import { AdminFounderAllocationFields } from './AdminFounderAllocationFields'
 import { Section } from './Section'
@@ -54,12 +54,11 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
 
   const createProposal = useProposalStore((state) => state.createProposal)
   const addresses = useDaoStore((state) => state.addresses)
-  const provider = useLayoutStore((state) => state.provider)
   const chain = useChainStore((x) => x.chain)
 
   const auctionContractParams = {
     abi: auctionAbi,
-    address: addresses.auction,
+    address: addresses.auction as Address,
   }
 
   const governorContractParams = {
@@ -77,12 +76,8 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     address: addresses?.token as Address,
   }
 
-  const auctionContract = useContract(auctionContractParams)
-  const governorContract = useContract(governorContractParams)
-  const metadataContract = useContract(metadataContractParams)
-  const tokenContract = useContract(tokenContractParams)
-
   const { data } = useContractReads({
+    allowFailure: false,
     contracts: [
       { ...auctionContractParams, chainId: chain.id, functionName: 'duration' },
       { ...auctionContractParams, chainId: chain.id, functionName: 'reservePrice' },
@@ -122,13 +117,6 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     founders,
   ] = unpackOptionalArray(data, 12)
 
-  const contracts: DaoContracts = {
-    auctionContract: auctionContract ?? undefined,
-    governorContract: governorContract ?? undefined,
-    metadataContract: metadataContract ?? undefined,
-    tokenContract: tokenContract ?? undefined,
-  }
-
   const initialValues: AdminFormValues = {
     /* artwork */
     projectDescription: description?.replace(/\\n/g, String.fromCharCode(13, 10)) || '',
@@ -142,8 +130,8 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     /* governor */
     proposalThreshold: Number(proposalThresholdBps) / 100 || 0,
     quorumThreshold: Number(quorumVotesBps) / 100 || 0,
-    votingPeriod: fromSeconds(votingPeriod && Number(votingPeriod)),
-    votingDelay: fromSeconds(votingDelay && Number(votingDelay)),
+    votingPeriod: fromSeconds(votingPeriod && BigInt(votingPeriod)),
+    votingDelay: fromSeconds(votingDelay && BigInt(votingDelay)),
     founderAllocation:
       founders?.map((x) => ({
         founderAddress: x.wallet,
@@ -179,7 +167,10 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
         {
           functionSignature: 'pause()',
           target: auctionAddress,
-          calldata: auctionContract?.interface.encodeFunctionData('pause') || '',
+          calldata: encodeFunctionData({
+            abi: auctionAbi,
+            functionName: 'pause',
+          }),
           value: '',
         },
       ],
@@ -215,7 +206,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       }
 
       if (field === 'vetoer') {
-        value = await getEnsAddress(value as string, provider)
+        value = await getEnsAddress(value as string)
       }
 
       if (field === 'founderAllocation') {
@@ -268,8 +259,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
 
     const transactionsWithPauseUnpause = withPauseUnpause(
       transactions,
-      addresses?.auction as Address,
-      auctionContract ?? undefined
+      addresses?.auction as Address
     )
 
     createProposal({
@@ -287,7 +277,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       <Flex direction={'column'} w={'100%'}>
         <Formik
           initialValues={initialValues}
-          validationSchema={adminValidationSchema(provider)}
+          validationSchema={adminValidationSchema()}
           onSubmit={(values, formik: FormikValues) =>
             handleUpdateSettings(values, formik)
           }

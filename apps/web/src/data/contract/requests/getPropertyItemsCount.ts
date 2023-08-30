@@ -1,5 +1,4 @@
-import { readContract, readContracts } from '@wagmi/core'
-import { BigNumber } from 'ethers'
+import { readContract, readContracts } from 'wagmi/actions'
 
 import { AddressType, CHAIN_ID } from 'src/typings'
 
@@ -13,7 +12,7 @@ export const getPropertyItemsCount = async (
   const propertiesCount = await readContract({
     ...baseParams,
     functionName: 'propertiesCount',
-  }).then((x) => x.toNumber())
+  }).then((x) => Number(x))
 
   const contracts = Array(propertiesCount)
     .fill(0)
@@ -26,11 +25,12 @@ export const getPropertyItemsCount = async (
     })
 
   const propertyItemsCount = (await readContracts({
+    allowFailure: false,
     contracts,
-  })) as BigNumber[]
+  })) as bigint[]
 
   return {
     propertiesCount,
-    propertyItemsCount: propertyItemsCount.map((x) => x.toNumber()),
+    propertyItemsCount: propertyItemsCount.map((x) => Number(x)),
   }
 }

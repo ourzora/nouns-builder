@@ -1,4 +1,3 @@
-import { BigNumber } from 'ethers'
 import { describe, expect, it } from 'vitest'
 
 import { IPFSUpload } from 'src/hooks'
@@ -62,7 +61,7 @@ describe('Transform Properties', () => {
     expect(fileProperties[0].names).toEqual([trait])
     expect(fileProperties[0].items).toHaveLength(1)
     expect(fileProperties[0].items[0]).toEqual({
-      propertyId: BigNumber.from(0),
+      propertyId: BigInt(0),
       name: ipfsUpload.name.replace('.png', ''),
       isNewProperty: true,
     })
@@ -146,25 +145,25 @@ describe('Transform Properties', () => {
     expect(fileProperties[0].names).toHaveLength(1)
     expect(fileProperties[0].items).toHaveLength(10)
     for (var item of fileProperties[0].items) {
-      expect(item.propertyId).toEqual(BigNumber.from(0))
+      expect(item.propertyId).toEqual(BigInt(0))
       expect(item.isNewProperty).toEqual(true)
     }
 
     expect(fileProperties[1].items).toHaveLength(10)
     expect(fileProperties[1].names).toHaveLength(1)
     for (var item of fileProperties[1].items.slice(0, 2)) {
-      expect(item.propertyId).toEqual(BigNumber.from(0)) // 0th element in the total list of names
+      expect(item.propertyId).toEqual(BigInt(0)) // 0th element in the total list of names
       expect(item.isNewProperty).toEqual(false)
     }
     for (var item of fileProperties[1].items.slice(2)) {
-      expect(item.propertyId).toEqual(BigNumber.from(0)) // 0th element in this transactions list of names
+      expect(item.propertyId).toEqual(BigInt(0)) // 0th element in this transactions list of names
       expect(item.isNewProperty).toEqual(true)
     }
 
     expect(fileProperties[2].items).toHaveLength(4)
     expect(fileProperties[2].names).toHaveLength(0)
     for (var item of fileProperties[2].items) {
-      expect(item.propertyId).toEqual(BigNumber.from(1)) // 1st elemenet in the total list of names
+      expect(item.propertyId).toEqual(BigInt(1)) // 1st elemenet in the total list of names
       expect(item.isNewProperty).toEqual(false)
     }
   })

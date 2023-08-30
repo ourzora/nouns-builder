@@ -1,6 +1,5 @@
-import { BigNumber } from 'ethers'
-import { isAddress } from 'ethers/lib/utils'
 import isEqual from 'lodash/isEqual'
+import { isAddress } from 'viem'
 
 import { Duration } from 'src/typings'
 
@@ -50,7 +49,7 @@ export const toSeconds = ({ days, hours, minutes, seconds }: Duration): number =
   covert seconds to { days, hours, minutes }
 
 */
-export const fromSeconds = (value: BigNumber | number | undefined): Duration => {
+export const fromSeconds = (value: bigint | number | undefined): Duration => {
   if (!value) {
     return { days: 0, hours: 0, minutes: 0, seconds: 0 }
   }

@@ -2,10 +2,10 @@ import { Grid } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React from 'react'
 import useSWR from 'swr'
+import { useAccount } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { exploreMyDaosRequest } from 'src/data/subgraph/requests/exploreQueries'
-import { useLayoutStore } from 'src/stores'
 
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'
@@ -14,11 +14,11 @@ import { ExploreSkeleton } from './ExploreSkeleton'
 import ExploreToolbar from './ExploreToolbar'
 
 export const ExploreMyDaos = () => {
-  const signerAddress = useLayoutStore((state) => state.signerAddress)
+  const { address } = useAccount()
 
   const { data, error, isValidating } = useSWR(
-    signerAddress ? [SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string)] : null,
-    () => exploreMyDaosRequest(signerAddress as string),
+    address ? [SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(address as string)] : null,
+    () => exploreMyDaosRequest(address as string),
     { revalidateOnFocus: false }
   )
 

@@ -1,4 +1,4 @@
-import { readContract } from '@wagmi/core'
+import { readContract } from 'wagmi/actions'
 
 import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
 

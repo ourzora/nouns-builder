@@ -1,12 +1,14 @@
-import { readContract } from '@wagmi/core'
 import { Box, Button, Flex, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useContractWrite, usePrepareContractWrite, useSigner } from 'wagmi'
+import { useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { readContract } from 'wagmi/actions'
+import { waitForTransaction } from 'wagmi/actions'
 
 import { auctionAbi } from 'src/data/contract/abis'
 import { Chain } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 
 import { useDaoStore } from '../stores'
 import {
@@ -23,7 +25,7 @@ interface PreAuctionProps {
 
 export const PreAuction: React.FC<PreAuctionProps> = ({ chain, collectionAddress }) => {
   const router = useRouter()
-  const { data: signer } = useSigner()
+  const { address } = useAccount()
   const { addresses } = useDaoStore()
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -32,7 +34,6 @@ export const PreAuction: React.FC<PreAuctionProps> = ({ chain, collectionAddress
     abi: auctionAbi,
     address: addresses.auction,
     functionName: 'unpause',
-    signer: signer,
     chainId: chain.id,
   })
 
@@ -42,8 +43,8 @@ export const PreAuction: React.FC<PreAuctionProps> = ({ chain, collectionAddress
   const handleStartAuction = async () => {
     setIsLoading(true)
     try {
-      const txn = await writeAsync?.()
-      await txn?.wait()
+      const tx = await writeAsync?.()
+      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
       setIsLoading(false)
     } catch (e) {
       console.error(e)
@@ -58,7 +59,7 @@ export const PreAuction: React.FC<PreAuctionProps> = ({ chain, collectionAddress
       chainId: chain.id,
     })
 
-    const tokenId = auction?.tokenId?.toString()
+    const [tokenId] = unpackOptionalArray(auction, 6)
     router.push(`/dao/${router.query.network}/${collectionAddress}/${tokenId}`)
   }
 
@@ -66,7 +67,7 @@ export const PreAuction: React.FC<PreAuctionProps> = ({ chain, collectionAddress
     <Flex className={wrapper}>
       <Flex direction={'column'} justify={'center'} className={preAuctionWrapper}>
         <Button
-          disabled={isLoading || !signer || !writeAsync || isError}
+          disabled={isLoading || !address || !writeAsync || isError}
           loading={isLoading}
           onClick={handleStartAuction}
           className={preAuctionButtonVariants['start']}
