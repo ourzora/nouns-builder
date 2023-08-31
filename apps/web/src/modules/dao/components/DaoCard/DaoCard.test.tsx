@@ -3,6 +3,8 @@ import dayjs from 'dayjs'
 import React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
+import { CHAIN_ID } from 'src/typings'
+
 import { DaoCard } from './DaoCard'
 
 describe('Dao card', () => {
@@ -17,6 +19,7 @@ describe('Dao card', () => {
   it('should render a given dao with an ended auction', () => {
     render(
       <DaoCard
+        chainId={CHAIN_ID.FOUNDRY}
         tokenName="Token name"
         tokenImage="https://fakeimg.pl/300/"
         collectionName="Collection name"
@@ -35,6 +38,7 @@ describe('Dao card', () => {
   it('should render a dao given undefined values', () => {
     render(
       <DaoCard
+        chainId={CHAIN_ID.FOUNDRY}
         tokenName={undefined}
         tokenImage={undefined}
         collectionName={undefined}
@@ -54,6 +58,7 @@ describe('Dao card', () => {
   it('should render a given dao with an active auction', () => {
     render(
       <DaoCard
+        chainId={CHAIN_ID.FOUNDRY}
         tokenName="Token name"
         tokenImage="https://fakeimg.pl/300/"
         collectionName="Collection name"

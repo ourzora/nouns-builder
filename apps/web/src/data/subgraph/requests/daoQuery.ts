@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
 
+import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { SDK } from 'src/data/subgraph/client'
 import { CHAIN_ID } from 'src/typings'
 
@@ -7,6 +8,7 @@ export type MyDaosResponse = Array<{
   name: string
   collectionAddress: string
   auctionAddress: string
+  chainId: CHAIN_ID
 }>
 
 const DAOS_TO_EXCLUDE = [
@@ -15,31 +17,42 @@ const DAOS_TO_EXCLUDE = [
 ]
 
 export const myDaosRequest = async (
-  chainId: CHAIN_ID,
   memberAddress: string
 ): Promise<MyDaosResponse | undefined> => {
   let daos: MyDaosResponse = []
 
-  if (!memberAddress) return
+  if (!memberAddress) throw new Error('No user address provided')
 
   try {
-    const data = await SDK.connect(chainId).daoTokenOwners({
-      where: {
-        owner: memberAddress,
-      },
-      first: 25,
-    })
+    const data = await Promise.all(
+      PUBLIC_DEFAULT_CHAINS.map((chain) =>
+        SDK.connect(chain.id)
+          .daoTokenOwners({
+            where: {
+              owner: memberAddress,
+            },
+            first: 30,
+          })
+          .then((x) => ({ ...x, chainId: chain.id }))
+      )
+    )
 
-    return data.daotokenOwners
-      .map((x) => {
-        return x.dao
-      })
-      .filter((dao) => !DAOS_TO_EXCLUDE.includes(dao.tokenAddress))
-      .map((dao) => ({
-        name: dao.name || '',
-        collectionAddress: dao.tokenAddress,
-        auctionAddress: dao?.auctionAddress || '',
-      }))
+    return data
+      .map((queries) =>
+        queries.daotokenOwners
+          .map((x) => {
+            return x.dao
+          })
+          .filter((dao) => !DAOS_TO_EXCLUDE.includes(dao.tokenAddress))
+          .map((dao) => ({
+            name: dao.name || '',
+            collectionAddress: dao.tokenAddress,
+            auctionAddress: dao?.auctionAddress || '',
+            chainId: queries.chainId,
+          }))
+      )
+      .flat()
+      .sort((a, b) => a.name.localeCompare(b.name))
   } catch (e: any) {
     console.error(e)
     Sentry.captureException(e)

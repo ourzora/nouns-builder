@@ -64,10 +64,7 @@ export const NavMenu = () => {
 
   const { data: myDaos } = useSWR(
     address ? [selectedChain.slug, SWR_KEYS.DYNAMIC.MY_DAOS(address as string)] : null,
-    () =>
-      axios
-        .get<MyDaosResponse>(`/api/profile/${selectedChain.slug}/${address}/daos`)
-        .then((x) => x.data),
+    () => axios.get<MyDaosResponse>(`/api/daos/${address}`).then((x) => x.data),
     {
       revalidateOnFocus: false,
     }
@@ -267,7 +264,9 @@ export const NavMenu = () => {
                     {viewableDaos?.map((dao, index) => (
                       <Link
                         key={dao.collectionAddress}
-                        href={`/dao/${selectedChain.slug}/${dao.collectionAddress}`}
+                        href={`/dao/${
+                          PUBLIC_DEFAULT_CHAINS.find((x) => x.id === dao.chainId)?.slug
+                        }/${dao.collectionAddress}`}
                         passHref
                         legacyBehavior
                       >
@@ -283,6 +282,7 @@ export const NavMenu = () => {
                               collectionAddress={dao.collectionAddress}
                               size={'40'}
                               auctionAddress={dao.auctionAddress}
+                              chainId={dao.chainId}
                             />
                             <Text ml="x2" fontWeight={'display'}>
                               {dao.name}

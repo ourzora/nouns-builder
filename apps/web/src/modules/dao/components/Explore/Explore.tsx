@@ -92,6 +92,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
               return (
                 <DaoCard
                   tokenId={dao.token?.tokenId ?? undefined}
+                  chainId={chain.id}
                   key={dao.dao.tokenAddress}
                   tokenImage={dao.token?.image ?? undefined}
                   tokenName={dao.token?.name ?? undefined}

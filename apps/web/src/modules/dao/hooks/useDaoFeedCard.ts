@@ -2,23 +2,23 @@ import { formatEther } from 'viem'
 import { useContractRead } from 'wagmi'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
-import { useChainStore } from 'src/stores/useChainStore'
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 interface useDaoCardProps {
   collectionAddress: string
   auctionAddress: string
+  chainId: CHAIN_ID
 }
 
 export const useDaoFeedCard = ({
   collectionAddress,
   auctionAddress,
+  chainId,
 }: useDaoCardProps) => {
-  const chain = useChainStore((x) => x.chain)
   const { data: auction } = useContractRead({
     address: auctionAddress as AddressType,
-    chainId: chain.id,
+    chainId,
     abi: auctionAbi,
     functionName: 'auction',
   })
@@ -30,7 +30,7 @@ export const useDaoFeedCard = ({
 
   const { data: token } = useContractRead({
     address: collectionAddress as AddressType,
-    chainId: chain.id,
+    chainId,
     abi: tokenAbi,
     functionName: 'tokenURI',
     args: [tokenId!],

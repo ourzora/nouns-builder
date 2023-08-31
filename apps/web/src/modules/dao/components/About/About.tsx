@@ -170,7 +170,7 @@ export const About: React.FC = () => {
         Founders
       </Text>
 
-      {typeof founders !== 'undefined' && founders.length > 0 ? (
+      {founders && founders?.length > 0 ? (
         <Grid columns={isMobile ? 1 : 2} mt="x6" gap="x4">
           {founders
             .filter((founder) => founder.ownershipPct > 0)
