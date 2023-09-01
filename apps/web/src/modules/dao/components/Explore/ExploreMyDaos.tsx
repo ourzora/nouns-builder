@@ -1,7 +1,7 @@
 import { Grid } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import React from 'react'
 import useSWR from 'swr'
+import { formatEther } from 'viem'
 import { useAccount } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -33,7 +33,7 @@ export const ExploreMyDaos = () => {
         <Grid className={exploreGrid} mb={'x16'}>
           {data.daos.map((dao) => {
             const bid = dao.highestBid?.amount ?? undefined
-            const bidInEth = bid ? ethers.utils.formatEther(bid) : undefined
+            const bidInEth = bid ? formatEther(bid) : undefined
 
             return (
               <DaoCard

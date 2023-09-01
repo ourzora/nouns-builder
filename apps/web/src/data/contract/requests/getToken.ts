@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/nextjs'
-import { base64 } from 'ethers/lib/utils'
 import { readContract } from 'wagmi/actions'
 
 import { tokenAbi } from 'src/data/contract/abis'
@@ -33,8 +32,11 @@ const readTokenContractData = async (
     chainId,
   })
 
-  const decodeToUintArr = base64.decode(result?.substring(29, result.length) as string) //remove the url info from base64 encoding
-  const parsedBuffer = Buffer.from(decodeToUintArr)
+  const decodeToUintArr = Buffer.from(
+    result?.substring(29, result.length) as string,
+    'base64'
+  ) //remove the url info from base64 encoding
+  const parsedBuffer = decodeToUintArr
     .toString('utf-8')
     .replace(/style="/g, "style='")
     .replace(/;"/g, ";'") // using regex replace methods to prevent json parse error in the case of style tags with double quotes

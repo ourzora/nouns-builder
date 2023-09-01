@@ -1,11 +1,10 @@
 import { Flex, Stack, Text } from '@zoralabs/zord'
-import { BigNumber, Contract, ethers } from 'ethers'
 import { FieldArray, Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
 import React, { BaseSyntheticEvent } from 'react'
-import { encodeFunctionData } from 'viem'
+import { encodeFunctionData, formatEther } from 'viem'
 import { Address, useContractReads } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
@@ -144,14 +143,13 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     /* auction */
     auctionDuration: fromSeconds(auctionDuration && Number(auctionDuration)),
     auctionReservePrice: auctionReservePrice
-      ? parseFloat(ethers.utils.formatUnits(auctionReservePrice))
+      ? parseFloat(formatEther(auctionReservePrice))
       : 0,
   }
 
   const withPauseUnpause = (
     transactions: BuilderTransaction[],
-    auctionAddress: Address,
-    auctionContract?: Contract
+    auctionAddress: Address
   ) => {
     const targetAddresses = transactions
       .flatMap((txn) => txn.transactions)
@@ -182,7 +180,11 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
         {
           functionSignature: 'unpause()',
           target: auctionAddress,
-          calldata: auctionContract?.interface.encodeFunctionData('unpause') || '',
+          calldata:
+            encodeFunctionData({
+              abi: auctionAbi,
+              functionName: 'unpause',
+            }) || '',
           value: '',
         },
       ],
@@ -214,10 +216,8 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
         value = (value as TokenAllocation[]).map(
           ({ founderAddress, allocationPercentage, endDate }) => ({
             wallet: founderAddress as AddressType,
-            ownershipPct: allocationPercentage
-              ? BigNumber.from(allocationPercentage)
-              : BigNumber.from(0),
-            vestExpiry: BigNumber.from(Math.floor(new Date(endDate).getTime() / 1000)),
+            ownershipPct: allocationPercentage ? BigInt(allocationPercentage) : 0n,
+            vestExpiry: BigInt(Math.floor(new Date(endDate).getTime() / 1000)),
           })
         )
       }

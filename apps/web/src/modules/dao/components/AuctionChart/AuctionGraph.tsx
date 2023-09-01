@@ -1,7 +1,7 @@
 import { Box, Text } from '@zoralabs/zord'
 import { color } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { formatEther } from 'viem'
 
 import { useLayoutStore } from 'src/stores'
 
@@ -211,9 +211,7 @@ const XValues = React.memo(
               backgroundColor={'accent'}
               display={visibleIndex === index ? 'block' : 'none'}
             >
-              {Number(ethers.utils.formatEther(chartData[index]?.winningBidAmt)).toFixed(
-                4
-              )}{' '}
+              {Number(formatEther(BigInt(chartData[index]?.winningBidAmt))).toFixed(4)}{' '}
               ETH
             </Text>
           )

@@ -1,8 +1,8 @@
 import { Box, Flex, Stack, Text, atoms } from '@zoralabs/zord'
 import axios from 'axios'
-import { ethers } from 'ethers'
 import React, { Fragment } from 'react'
 import useSWR from 'swr'
+import { formatEther } from 'viem'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -28,7 +28,7 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
   
    */
   const formatSendEth = (value: string) => {
-    const amount = ethers.utils.formatEther(value)
+    const amount = formatEther(BigInt(value))
     return {
       functionName: 'Transfer',
       name: 'Transfer',

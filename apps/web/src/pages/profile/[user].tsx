@@ -1,10 +1,10 @@
 import { Box, Flex, Grid, Text } from '@zoralabs/zord'
 import axios from 'axios'
-import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
+import { isAddress } from 'viem'
 
 import { Avatar } from 'src/components/Avatar'
 import CopyButton from 'src/components/CopyButton/CopyButton'

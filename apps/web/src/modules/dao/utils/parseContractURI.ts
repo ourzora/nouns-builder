@@ -1,5 +1,3 @@
-import { base64 } from 'ethers/lib/utils.js'
-
 interface ParsedContractURI {
   name: string
   description: string
@@ -15,7 +13,7 @@ export function parseContractURI(uri: string | undefined): ParsedContractURI | u
     if (!parsedUri) {
       return
     }
-    const bufferString = Buffer.from(base64.decode(parsedUri)).toString()
+    const bufferString = Buffer.from(parsedUri, 'base64').toString()
     return JSON.parse(bufferString)
   } catch (e) {
     console.log(e)

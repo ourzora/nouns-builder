@@ -1,6 +1,6 @@
-import { ethers } from 'ethers'
 import isUndefined from 'lodash/isUndefined'
 import omitBy from 'lodash/omitBy'
+import { formatEther } from 'viem'
 
 import { SDK } from 'src/data/subgraph/client'
 import { CHAIN_ID } from 'src/typings'
@@ -64,7 +64,7 @@ export const tokenWinnerQuery = async (
     {
       highestBidder: data.auction?.winningBid?.bidder || undefined,
       price: data.auction?.winningBid?.amount
-        ? ethers.utils.formatEther(data.auction.winningBid.amount)
+        ? formatEther(data.auction.winningBid.amount)
         : undefined,
     },
     isUndefined

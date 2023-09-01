@@ -1,9 +1,9 @@
 import { Stack, Text } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import { FormikHelpers } from 'formik'
 import gte from 'lodash/gte'
 import React from 'react'
-import { useContractRead } from 'wagmi'
+import { encodeFunctionData } from 'viem'
+import { Address, useContractRead } from 'wagmi'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
@@ -53,33 +53,35 @@ export const Airdrop: React.FC = () => {
     values: AirdropFormValues,
     actions: FormikHelpers<AirdropFormValues>
   ) => {
-    if (!values.amount || !values.recipientAddress) return
+    if (!values.amount || !values.recipientAddress || !addresses.treasury) return
 
     const { amount, recipientAddress: recipient } = values
-
-    const tokenInterface = new ethers.utils.Interface(tokenAbi)
 
     const updateMinterTransaction = {
       functionSignature: 'updateMinters',
       target: addresses?.token as AddressType,
       value: '',
-      calldata: tokenInterface.encodeFunctionData('updateMinters((address,bool)[])', [
-        [{ minter: addresses?.treasury, allowed: true }],
-      ]),
+      calldata: encodeFunctionData({
+        abi: tokenAbi,
+        functionName: 'updateMinters',
+        args: [[{ minter: addresses.treasury, allowed: true }]],
+      }),
     }
 
     const resolvedRecipientAddress = await getEnsAddress(
       recipient || '',
       getProvider(CHAIN_ID.ETHEREUM)
     )
+
     const airdropTransaction = {
       functionSignature: 'mintBatchTo',
       target: addresses?.token as AddressType,
       value: '',
-      calldata: tokenInterface.encodeFunctionData('mintBatchTo(uint256,address)', [
-        amount,
-        resolvedRecipientAddress,
-      ]),
+      calldata: encodeFunctionData({
+        abi: tokenAbi,
+        functionName: 'mintBatchTo',
+        args: [BigInt(amount), resolvedRecipientAddress as Address],
+      }),
     }
 
     const unit = amount > 1 ? 'tokens' : 'token'

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
-import { ethers } from 'ethers'
 import React, { Fragment, useState } from 'react'
+import { formatEther } from 'viem'
 
 import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
 import { useTimeout } from 'src/hooks/useTimeout'
@@ -46,7 +46,7 @@ export const CurrentAuction = ({
   }
 
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
-  const formattedBid = bid ? ethers.utils.formatEther(bid) : ''
+  const formattedBid = bid ? formatEther(bid) : ''
 
   if (isEnded || isOver) {
     return (

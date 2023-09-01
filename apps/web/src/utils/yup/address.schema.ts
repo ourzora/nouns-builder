@@ -1,4 +1,5 @@
 import { debounce } from 'lodash'
+import { Address } from 'wagmi'
 import * as Yup from 'yup'
 
 import { CHAIN_ID } from 'src/typings'
@@ -13,7 +14,7 @@ const validateAddress = async (
   try {
     if (!value) return res(false)
     const { data: isValid, error } = await isValidAddress(
-      value,
+      value as Address,
       getProvider(CHAIN_ID.ETHEREUM)
     )
     if (error) return res(ctx.createError({ message: error, path: ctx.path }))

@@ -14,11 +14,11 @@
     "tsconfig": "workspace:*",
     "eslint": "8.13.0",
     "eslint-config-custom": "workspace:*",
-    "ethers": "^5.7.0",
+    "viem": "^1.6.0",
     "react": "^18.2.0",
-    "typescript": "^4.5.2"
+    "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "ethers": "^5.7.0"
+    "viem": "^1.6.0"
   }
 }

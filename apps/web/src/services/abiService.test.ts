@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Redis from 'ioredis'
+import { Hex } from 'viem'
 import { describe, expect, it, vi } from 'vitest'
 
 import { CHAIN_ID } from 'src/typings'
@@ -50,7 +51,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex
       )
 
       // We know the contract call will fail but we want to validate the slot call
@@ -72,7 +74,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex
       )
 
       vi.mocked(axios.get).mockResolvedValueOnce({
@@ -97,7 +100,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex
       )
 
       vi.mocked(axios.get).mockResolvedValueOnce({
@@ -116,7 +120,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex
       )
 
       vi.mocked(axios.get).mockResolvedValueOnce({
@@ -142,7 +147,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000123'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000123' as Hex
       )
 
       const response = await getContractABIByAddress(

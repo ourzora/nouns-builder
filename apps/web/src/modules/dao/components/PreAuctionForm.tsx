@@ -1,9 +1,8 @@
 import { Flex, Stack } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
-import { parseEther } from 'viem'
+import { formatEther, parseEther } from 'viem'
 import { useContractReads } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
@@ -52,7 +51,7 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const initialValues: PreAuctionFormValues = {
     auctionDuration: fromSeconds(auctionDuration),
     auctionReservePrice: auctionReservePrice
-      ? parseFloat(ethers.utils.formatUnits(auctionReservePrice))
+      ? parseFloat(formatEther(auctionReservePrice))
       : 0,
   }
 
