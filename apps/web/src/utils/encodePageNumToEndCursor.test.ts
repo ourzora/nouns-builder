@@ -5,7 +5,7 @@ import { encodePageNumToEndCursor } from './encodePageNumToEndCursor'
 
 const decode = (cursor: string) => {
   let decoded = ''
-  for (const char of Buffer.from(cursor)) {
+  for (const char of Buffer.from(cursor, 'base64')) {
     decoded += String.fromCharCode(char)
   }
   return decoded
