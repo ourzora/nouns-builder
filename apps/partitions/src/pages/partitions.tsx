@@ -1,3 +1,4 @@
+import { Button, Flex, Text, ThemeProvider, lightTheme } from '@zoralabs/zord'
 import React from 'react'
 import useSWR from 'swr'
 
@@ -33,6 +34,13 @@ const Partitions = () => {
 
   if (error) return <div>{error?.message}</div>
   if (!data) return <div>Loading...</div>
-  return <h1 className="text-3xl font-bold underline">Hello world!</h1>
+  return (
+    <ThemeProvider theme={lightTheme}>
+      <Flex>
+        <Text fontSize={80}>Hello world!</Text>
+        <Button>Text</Button>
+      </Flex>
+    </ThemeProvider>
+  )
 }
 export default Partitions

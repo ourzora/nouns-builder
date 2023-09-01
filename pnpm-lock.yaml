@@ -26,6 +26,12 @@ importers:
 
   apps/partitions:
     dependencies:
+      '@fontsource/inter':
+        specifier: 4.5.10
+        version: 4.5.10
+      '@fontsource/londrina-solid':
+        specifier: ^4.5.9
+        version: 4.5.11
       '@types/node':
         specifier: ^18.13.0
         version: 18.13.0
