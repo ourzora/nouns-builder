@@ -1,98 +1,33 @@
-:root {
-  --max-width: 1100px;
-  --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+/* combine */
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@400;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=M+PLUS+Rounded+1c:wght@900&display=swap');
 
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-
-  --primary-glow: conic-gradient(
-    from 180deg at 50% 50%,
-    #16abff33 0deg,
-    #0885ff33 55deg,
-    #54d6ff33 120deg,
-    #0071ff33 160deg,
-    transparent 360deg
-  );
-  --secondary-glow: radial-gradient(
-    rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0)
-  );
-
-  --tile-start-rgb: 239, 245, 249;
-  --tile-end-rgb: 228, 232, 233;
-  --tile-border: conic-gradient(
-    #00000080,
-    #00000040,
-    #00000030,
-    #00000020,
-    #00000010,
-    #00000010,
-    #00000080
-  );
-
-  --callout-rgb: 238, 240, 241;
-  --callout-border-rgb: 172, 175, 176;
-  --card-rgb: 180, 185, 188;
-  --card-border-rgb: 131, 134, 135;
+@font-face {
+  font-family: ptRoot;
+  src: url('/fonts/pt-root-ui_regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-
-    --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
-    --secondary-glow: linear-gradient(
-      to bottom right,
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0),
-      rgba(1, 65, 255, 0.3)
-    );
-
-    --tile-start-rgb: 2, 13, 46;
-    --tile-end-rgb: 2, 5, 19;
-    --tile-border: conic-gradient(
-      #ffffff80,
-      #ffffff40,
-      #ffffff30,
-      #ffffff20,
-      #ffffff10,
-      #ffffff10,
-      #ffffff80
-    );
-
-    --callout-rgb: 20, 20, 20;
-    --callout-border-rgb: 108, 108, 108;
-    --card-rgb: 100, 100, 100;
-    --card-border-rgb: 200, 200, 200;
-  }
+@font-face {
+  font-family: ptRoot;
+  src: url('/fonts/pt-root-ui_medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+@font-face {
+  font-family: ptRoot;
+  src: url('/fonts/pt-root-ui_bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
 }
 
 html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -100,8 +35,42 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+a:hover {
+  color: #000;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+#connect-button-wrapper * div,
+#connect-button-wrapper * button {
+  background: #000;
+  border: 0;
+  font-family: 'ptRoot', 'Arial', 'Helvetica', 'sans-serif' !important;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: none;
+  font-size: 16px;
+  line-height: 24px;
+  z-index: 2;
+  padding: 8px 0 8px 0;
+  width: 100%;
+  border-radius: 8px;
+  text-align: center;
+}
+
+#connect-button-wrapper > div {
+  width: 100%;
+}
+
+#connect-button-wrapper * div:hover,
+#connect-button-wrapper * button:hover {
+  cursor: pointer;
 }
