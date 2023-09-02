@@ -1,8 +1,9 @@
-import { readContract } from '@wagmi/core'
 import { ethers } from 'ethers'
+import { readContract } from 'wagmi/actions'
 
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { AddressType, CHAIN_ID } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 
 import { managerAbi } from '../abis'
 
@@ -15,6 +16,8 @@ const getDAOAddresses = async (chainId: CHAIN_ID, tokenAddress: AddressType) => 
     chainId,
   })
 
+  const [metadata, auction, treasury, governor] = unpackOptionalArray(addresses, 4)
+
   const hasMissingAddresses = Object.values(addresses).includes(
     ethers.constants.AddressZero
   )
@@ -22,10 +25,10 @@ const getDAOAddresses = async (chainId: CHAIN_ID, tokenAddress: AddressType) => 
 
   return {
     token: tokenAddress,
-    auction: addresses.auction,
-    governor: addresses.governor,
-    metadata: addresses.metadata,
-    treasury: addresses.treasury,
+    auction,
+    governor,
+    metadata,
+    treasury,
   }
 }
 

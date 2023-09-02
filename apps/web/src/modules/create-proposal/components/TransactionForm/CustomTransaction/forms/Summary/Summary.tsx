@@ -4,7 +4,6 @@ import React from 'react'
 
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
 import { getEnsAddress } from 'src/utils/ens'
 import { RAW_DATA_KEY, matchTypeParameters, normalizePathName } from 'src/utils/formABI'
 import { walletSnippet } from 'src/utils/helpers'
@@ -19,7 +18,6 @@ interface SummaryProps {
 }
 
 export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
-  const { signer, provider } = useLayoutStore()
   const { customTransaction, composeCustomTransaction, previous } =
     useCustomTransactionStore()
 
@@ -38,12 +36,11 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
       return rawData[1]
     }
 
-    if (!signer || !customTransaction?.contract?.abi) return
+    if (!customTransaction?.contract?.abi) return
 
     const contract = new ethers.Contract(
       customTransaction?.address,
-      customTransaction?.contract?.abi,
-      signer
+      customTransaction?.contract?.abi
     )
 
     const args: [string, string][] = customTransaction.arguments
@@ -87,7 +84,7 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
       console.error(err)
       return
     }
-  }, [customTransaction, signer])
+  }, [customTransaction])
 
   /*
     
@@ -96,7 +93,7 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
    */
 
   const handleAddTransaction = React.useCallback(async () => {
-    const address = await getEnsAddress(customTransaction.address, provider)
+    const address = await getEnsAddress(customTransaction.address)
     if (!calldata) {
       if (customTransaction.address && customTransaction.value) {
         composeCustomTransaction({

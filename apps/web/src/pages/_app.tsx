@@ -7,6 +7,7 @@ import '@zoralabs/zord/index.css'
 import { VercelAnalytics } from 'analytics'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
+import NextNProgress from 'nextjs-progressbar'
 import type { ReactElement, ReactNode } from 'react'
 import { SWRConfig } from 'swr'
 import { WagmiConfig } from 'wagmi'
@@ -14,7 +15,7 @@ import { WagmiConfig } from 'wagmi'
 import { Disclaimer } from 'src/components/Disclaimer'
 import { NetworkController } from 'src/components/NetworkController'
 import { chains } from 'src/data/contract/chains'
-import { client } from 'src/data/contract/client'
+import { config } from 'src/data/contract/config'
 import 'src/styles/globals.css'
 import 'src/styles/styles.css'
 
@@ -31,9 +32,17 @@ function App({ Component, pageProps, err }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page)
   const fallback = pageProps?.fallback ?? {}
   return (
-    <WagmiConfig client={client}>
+    <WagmiConfig config={config}>
       <RainbowKitProvider chains={chains} appInfo={{ disclaimer: Disclaimer }}>
         <SWRConfig value={{ fallback }}>
+          <NextNProgress
+            color={'#008BFF'}
+            startPosition={0.125}
+            stopDelayMs={200}
+            height={2}
+            showOnShallow={false}
+            options={{ showSpinner: false }}
+          />
           {getLayout(<Component {...pageProps} err={err} />)}
         </SWRConfig>
         <NetworkController.Mainnet>

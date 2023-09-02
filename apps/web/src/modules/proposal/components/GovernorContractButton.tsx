@@ -1,8 +1,8 @@
-import { PrepareWriteContractConfig, Signer } from '@wagmi/core'
 import { Box, ButtonProps } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import { useSWRConfig } from 'swr'
 import { useContractWrite, usePrepareContractWrite } from 'wagmi'
+import { PrepareWriteContractConfig, waitForTransaction } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -15,11 +15,10 @@ import { uploadingSpinnerWhite } from './GovernorContractButton.css'
 
 type GovernorContractButtonProps<
   TFunctionName extends string = string,
-  TChainId extends number = number,
-  TSigner extends Signer = Signer
-> = Pick<
-  PrepareWriteContractConfig<typeof governorAbi, TFunctionName, TChainId, TSigner>,
-  'args' | 'functionName'
+  TChainId extends number = number
+> = Omit<
+  PrepareWriteContractConfig<typeof governorAbi, TFunctionName, TChainId>,
+  'address' | 'abi'
 > & {
   proposalId: string
   buttonText: string
@@ -29,8 +28,7 @@ type GovernorContractButtonProps<
 
 export function GovernorContractButton<
   TFunctionName extends string = string,
-  TChainId extends number = number,
-  TSigner extends Signer = Signer
+  TChainId extends number = number
 >({
   functionName,
   args,
@@ -57,10 +55,12 @@ export function GovernorContractButton<
   const { writeAsync } = useContractWrite(config)
 
   const handleClick = async () => {
+    if (!writeAsync) return
+
     try {
       setIsPending(true)
-      const txn = await writeAsync?.()
-      await txn?.wait()
+      const { hash } = await writeAsync?.()
+      await waitForTransaction({ hash })
 
       await mutate(
         [SWR_KEYS.PROPOSAL, chain.id, proposalId],

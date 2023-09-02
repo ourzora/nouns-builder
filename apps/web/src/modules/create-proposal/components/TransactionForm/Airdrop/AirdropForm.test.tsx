@@ -27,11 +27,7 @@ describe('Airdrop form with errors', () => {
     fireEvent.change(amountInput, { target: { value: 0 } })
     fireEvent.focusOut(amountInput)
 
-    await waitFor(() =>
-      expect(
-        screen.getByText('This address or ENS domain is not valid')
-      ).toBeInTheDocument()
-    )
+    await waitFor(() => expect(screen.getByText('Invalid address')).toBeInTheDocument())
     await waitFor(() =>
       expect(screen.getByText('Must be at least 1 token')).toBeInTheDocument()
     )

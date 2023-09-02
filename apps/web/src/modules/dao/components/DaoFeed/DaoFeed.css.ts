@@ -36,13 +36,13 @@ export const daoFeedGrid = style([
     maxWidth: 'calc(1440px - 2 * 32px)',
     '@media': {
       'screen and (min-width: 1024px)': {
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: 'repeat(3, 33.33%)',
       },
       'screen and (min-width: 600px) and (max-width: 1023px)': {
-        gridTemplateColumns: 'repeat(2, 1fr)',
+        gridTemplateColumns: 'repeat(2, 50%)',
       },
       'screen and (max-width: 600px)': {
-        gridTemplateColumns: 'repeat(1, 1fr)',
+        gridTemplateColumns: 'repeat(1, 100%)',
       },
     },
   },

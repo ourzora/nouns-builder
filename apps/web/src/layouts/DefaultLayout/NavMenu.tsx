@@ -15,6 +15,7 @@ import { NetworkController } from 'src/components/NetworkController'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { MyDaosResponse } from 'src/data/subgraph/requests/daoQuery'
+import { useBridgeModal } from 'src/hooks/useBridgeModal'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
@@ -47,6 +48,8 @@ export const NavMenu = () => {
   const { chain: selectedChain, setChain } = useChainStore()
 
   const { address } = useAccount()
+  const { canUserBridge, openBridgeModal } = useBridgeModal()
+
   const { displayName, ensAvatar } = useEnsData(address as string)
   const { data: balance } = useBalance({
     address: address as `0x${string}`,
@@ -61,10 +64,7 @@ export const NavMenu = () => {
 
   const { data: myDaos } = useSWR(
     address ? [selectedChain.slug, SWR_KEYS.DYNAMIC.MY_DAOS(address as string)] : null,
-    () =>
-      axios
-        .get<MyDaosResponse>(`/api/profile/${selectedChain.slug}/${address}/daos`)
-        .then((x) => x.data),
+    () => axios.get<MyDaosResponse>(`/api/daos/${address}`).then((x) => x.data),
     {
       revalidateOnFocus: false,
     }
@@ -264,7 +264,9 @@ export const NavMenu = () => {
                     {viewableDaos?.map((dao, index) => (
                       <Link
                         key={dao.collectionAddress}
-                        href={`/dao/${selectedChain.slug}/${dao.collectionAddress}`}
+                        href={`/dao/${
+                          PUBLIC_DEFAULT_CHAINS.find((x) => x.id === dao.chainId)?.slug
+                        }/${dao.collectionAddress}`}
                         passHref
                         legacyBehavior
                       >
@@ -280,6 +282,7 @@ export const NavMenu = () => {
                               collectionAddress={dao.collectionAddress}
                               size={'40'}
                               auctionAddress={dao.auctionAddress}
+                              chainId={dao.chainId}
                             />
                             <Text ml="x2" fontWeight={'display'}>
                               {dao.name}
@@ -392,13 +395,23 @@ export const NavMenu = () => {
                 </Flex>
               </a>
               <NetworkController.Mainnet>
-                <Link href={'/bridge'}>
-                  <Flex display="flex" align="center" justify={'center'} py={'x2'}>
-                    <Text cursor={'pointer'} fontWeight={'display'}>
-                      Bridge
-                    </Text>
-                  </Flex>
-                </Link>
+                {canUserBridge ? (
+                  <Box as="span" onClick={openBridgeModal}>
+                    <Flex display="flex" align="center" justify={'center'} py={'x2'}>
+                      <Text cursor={'pointer'} fontWeight={'display'}>
+                        Bridge
+                      </Text>
+                    </Flex>
+                  </Box>
+                ) : (
+                  <Link href={'/bridge'}>
+                    <Flex display="flex" align="center" justify={'center'} py={'x2'}>
+                      <Text cursor={'pointer'} fontWeight={'display'}>
+                        Bridge
+                      </Text>
+                    </Flex>
+                  </Link>
+                )}
               </NetworkController.Mainnet>
               <Box
                 color="border"

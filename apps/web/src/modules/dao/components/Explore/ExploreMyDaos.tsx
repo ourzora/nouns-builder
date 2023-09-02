@@ -2,11 +2,10 @@ import { Grid } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import React from 'react'
 import useSWR from 'swr'
+import { useAccount } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
-import { userDaosFilter } from 'src/data/subgraph/requests/exploreQueries'
-import { useLayoutStore } from 'src/stores'
-import { useChainStore } from 'src/stores/useChainStore'
+import { exploreMyDaosRequest } from 'src/data/subgraph/requests/exploreQueries'
 
 import { DaoCard } from '../DaoCard'
 import { exploreGrid } from './Explore.css'
@@ -15,14 +14,11 @@ import { ExploreSkeleton } from './ExploreSkeleton'
 import ExploreToolbar from './ExploreToolbar'
 
 export const ExploreMyDaos = () => {
-  const signerAddress = useLayoutStore((state) => state.signerAddress)
-  const chain = useChainStore((x) => x.chain)
+  const { address } = useAccount()
 
   const { data, error, isValidating } = useSWR(
-    signerAddress
-      ? [chain.id, SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(signerAddress as string)]
-      : null,
-    () => userDaosFilter(chain.id, signerAddress as string),
+    address ? [SWR_KEYS.DYNAMIC.MY_DAOS_PAGE(address as string)] : null,
+    () => exploreMyDaosRequest(address as string),
     { revalidateOnFocus: false }
   )
 
@@ -30,7 +26,7 @@ export const ExploreMyDaos = () => {
 
   return (
     <>
-      <ExploreToolbar title={`My DAOs on ${chain.name}`} />
+      <ExploreToolbar title={`My DAOs`} />
       {isLoading ? (
         <ExploreSkeleton />
       ) : data?.daos?.length ? (
@@ -41,6 +37,7 @@ export const ExploreMyDaos = () => {
 
             return (
               <DaoCard
+                chainId={dao.chainId!}
                 tokenId={dao.token?.tokenId ?? undefined}
                 key={dao.dao.tokenAddress}
                 tokenImage={dao.token?.image ?? undefined}

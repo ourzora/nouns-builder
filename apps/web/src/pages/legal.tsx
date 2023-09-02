@@ -22,7 +22,7 @@ const LegalPage: NextPageWithLayout = () => {
                 Nouns Builder Terms of Service
               </Heading>
 
-              <Text>Last Updated: July 18, 2023</Text>
+              <Text>Last Updated: August 24, 2023</Text>
             </Box>
           </header>
 
@@ -137,15 +137,20 @@ const LegalPage: NextPageWithLayout = () => {
           <Box as="section" mt="x8">
             <Label>Services Provided by the Interface</Label>
 
+            <Label italic mt="x2">
+              Interface
+            </Label>
+
             <Paragraph mt="x2">
               The Interface is distinct from the Protocol and simply provides a means for
               accessing the Protocol. The Protocol is comprised of a set of smart
-              contracts deployed on various public blockchains, including but not limited
-              to Ethereum, which allow users to create and deploy Nouns-model DAOs. The
-              Protocol is maintained by Builder DAO and the Builder developer community.
-              Zora does not control or operate the Protocol. Rather, the Interface
-              simplifies interaction with the Protocol to provide a user-friendly method
-              to create and manage DAOs through the Protocol. Specifically:
+              contracts deployed on various public blockchains (each a “Supported
+              Network”), including but not limited to Ethereum, which allow users to
+              create and deploy Nouns-model DAOs. The Protocol is maintained by Builder
+              DAO and the Builder developer community. Zora does not control or operate
+              the Protocol. Rather, the Interface simplifies interaction with the Protocol
+              to provide a user-friendly method to create and manage DAOs through the
+              Protocol. Specifically:
             </Paragraph>
             <Box>
               <ul>
@@ -177,6 +182,88 @@ const LegalPage: NextPageWithLayout = () => {
               the applicable Wallet provider. We do not provide a Wallet service and do
               not at any time have custody, possession, or control over your NFTs, digital
               assets, or any other contents in your Wallet.
+            </Paragraph>
+
+            <Label italic mt="x2">
+              Bridge
+            </Label>
+
+            <Paragraph mt="x2">
+              Deployments on other blockchain networks typically rely on a series of smart
+              contracts to transfer crypto assets from one blockchain network to another.
+              As a result, before you are able to use the Protocol or the Services via a
+              Supported Network other than Ethereum, you may need to “bridge” the crypto
+              assets held within your Wallet on the Ethereum blockchain to the Supported
+              Network that you intend to utilize. This process is known as “bridging” and
+              the smart contracts that permit bridging are each known as a “bridge.”
+            </Paragraph>
+
+            <Paragraph mt="x2">
+              Crypto assets that have not been bridged to a Supported Network cannot be
+              used in transactions on such Supported Network. Similarly, crypto assets
+              that have been bridged to a Supported Network cannot be used in transactions
+              on the Ethereum blockchain until such crypto assets have been “withdrawn”
+              (this process is known as “withdrawing”) from the Supported Network. The
+              crypto assets that you bridge to a Supported Network will appear in your
+              Wallet on the Supported Network, but will not appear in your Wallet on the
+              Ethereum blockchain.
+            </Paragraph>
+
+            <Paragraph mt="x2">
+              If you attempt to bridge any crypto assets that are not supported by a
+              bridge designed for a Supported Network, you may destroy or irretrievably
+              lose access to such crypto assets. You own, control, and are responsible for
+              all crypto assets held in and bridged via your Wallet and Zora is not liable
+              or responsible for any crypto assets that are destroyed or irretrievably
+              lost by users through the bridging and withdrawing process.
+            </Paragraph>
+
+            <Paragraph mt="x2">
+              The Services include a bridge (the “Builder Bridge”) that permits users to
+              transfer crypto assets from Ethereum to Supported Networks built on the OP
+              Stack, available to the public at
+              https://github.com/ethereum-optimism/optimism (collectively “OP Stack
+              Networks”).
+            </Paragraph>
+
+            <Paragraph mt="x2">
+              THE BUILDER BRIDGE ONLY ALLOWS USERS TO BRIDGE (I.E. SEND) FUNDS FROM THE
+              ETHEREUM NETWORK TO AN OP STACK NETWORK. YOU CANNOT USE THE BUILDER BRIDGE
+              TO WITHDRAW FUNDS FROM OP STACK NETWORKS TO ETHEREUM MAINNET.
+            </Paragraph>
+
+            <Paragraph mt="x2">
+              Third-party developers may release third-party bridges that allow users to
+              bridge crypto assets, from the Ethereum blockchain to and from OP Stack
+              Networks (“Third-Party Bridges”). Third-Party Bridges may allow you to: 1)
+              withdraw funds from OP Stack Networks to Ethereum Mainnet; and 2) access
+              your crypto assets at a faster rate than the Builder Bridge as Third-Party
+              Bridges may offer different deposit times. Third-Party Bridges may also
+              charge you additional or different transaction or “gas” fees than the
+              Builder Bridge. You must exercise caution when accessing and using
+              Third-Party Bridges. Once your crypto assets are locked in a Third-Party
+              Bridge, control over such Third-Party Bridge is typically with the
+              third-party developer or the smart contract itself. At no point in time will
+              we be liable to you for any loss involving a Third-Party Bridge, have the
+              ability to exercise control over any Third Party Bridge, or assist you if
+              your crypto assets get locked in a Third-Party Bridge. The applicable
+              service provider for the Third-Party Bridge is solely responsible for the
+              crypto assets you use in connection with a Third-Party Bridge and any
+              transaction that is facilitated via such Third-Party Bridge whether
+              successful, incomplete, subject to dispute, or otherwise.
+            </Paragraph>
+
+            <Paragraph mt="x2">
+              Warning. Zora does not make any representation or warranty or approve of
+              your use of any Third-Party Bridges software or other products
+              (collectively, “Third-Party Products”) as such products are developed
+              independent of Zora by third parties. Zora does not and will never assume
+              responsibility for any of the Third-Party Products or the losses or damages
+              that may result therefrom. Your use of any Third-Party Products is at your
+              own risk and expense and subject to the terms and conditions of any such
+              Third-Party Product. Prior to your use or access of any Third-Party
+              Products, please carefully review the terms of conditions related to the
+              Third-Party Product.
             </Paragraph>
           </Box>
 

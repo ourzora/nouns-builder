@@ -31,9 +31,7 @@ export const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const [daos, tokens] = await Promise.all([
-      axios
-        .get<MyDaosResponse>(`${baseUrl}/api/profile/${network}/${address}/daos`)
-        .then((x) => x.data),
+      axios.get<MyDaosResponse>(`${baseUrl}/api/daos/${address}`).then((x) => x.data),
       tokensQuery(chain.id, address, page ? parseInt(page as string) : undefined),
     ])
 

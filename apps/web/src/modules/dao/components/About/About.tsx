@@ -49,6 +49,7 @@ export const About: React.FC = () => {
   }
 
   const { data: contractData } = useContractReads({
+    allowFailure: false,
     contracts: [
       { ...tokenContractParams, functionName: 'name' },
       { ...tokenContractParams, functionName: 'totalSupply' },
@@ -137,7 +138,7 @@ export const About: React.FC = () => {
           address={treasury}
         />
         <Statistic title="Owners" content={data?.ownerCount} />
-        <Statistic title="Total supply" content={totalSupply?.toNumber()} />
+        <Statistic title="Total supply" content={Number(totalSupply)} />
         <Box className={statistic} width={'100%'}>
           <Text color="tertiary">Chain</Text>
           <Flex align={'center'} mt={{ '@initial': 'x1', '@768': 'x3' }}>
@@ -169,7 +170,7 @@ export const About: React.FC = () => {
         Founders
       </Text>
 
-      {typeof founders !== 'undefined' && founders.length > 0 ? (
+      {founders && founders?.length > 0 ? (
         <Grid columns={isMobile ? 1 : 2} mt="x6" gap="x4">
           {founders
             .filter((founder) => founder.ownershipPct > 0)
@@ -182,7 +183,7 @@ export const About: React.FC = () => {
           No founders allocation set.
         </Text>
       )}
-      <MembersList totalSupply={totalSupply?.toNumber()} ownerCount={data?.ownerCount} />
+      <MembersList totalSupply={Number(totalSupply)} ownerCount={data?.ownerCount} />
     </Box>
   )
 }

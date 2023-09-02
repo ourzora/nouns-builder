@@ -12,6 +12,7 @@ import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { Queue, TransactionType, useProposalStore } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
+import { AddressType } from 'src/typings'
 
 interface ProposalNavigationProps {
   transactionType?: TransactionType
@@ -32,15 +33,21 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
   const metadata = addresses?.metadata
 
   const { data } = useContractReads({
+    allowFailure: false,
     enabled: !!token && !!metadata,
     contracts: [
       {
         abi: metadataAbi,
-        address: metadata,
+        address: metadata as AddressType,
         chainId: chain.id,
         functionName: 'contractImage',
       },
-      { abi: tokenAbi, address: token, chainId: chain.id, functionName: 'name' },
+      {
+        abi: tokenAbi,
+        address: token as AddressType,
+        chainId: chain.id,
+        functionName: 'name',
+      },
     ] as const,
   })
 

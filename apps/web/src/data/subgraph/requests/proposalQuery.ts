@@ -7,8 +7,6 @@ import {
 import { SDK } from 'src/data/subgraph/client'
 import {
   ProposalFragment,
-  ProposalOgMetadataQuery,
-  ProposalQuery,
   ProposalVoteFragment as ProposalVote,
 } from 'src/data/subgraph/sdk.generated'
 import { CHAIN_ID } from 'src/typings'
@@ -22,14 +20,8 @@ export interface Proposal
   votes?: ProposalVote[]
 }
 
-export type ProposalQueryLike = ProposalQuery | ProposalOgMetadataQuery
-
-export const formatAndFetchState = async (chainId: CHAIN_ID, data: ProposalQueryLike) => {
-  if (!data?.proposal) {
-    return undefined
-  }
-
-  const { executableFrom, expiresAt, calldatas, ...proposal } = data?.proposal
+export const formatAndFetchState = async (chainId: CHAIN_ID, data: ProposalFragment) => {
+  const { executableFrom, expiresAt, calldatas, ...proposal } = data
 
   const baseProposal = {
     ...proposal,
@@ -61,7 +53,7 @@ export const getProposal = async (
       proposalId,
     })
 
-    return await formatAndFetchState(chainId, data)
+    return await formatAndFetchState(chainId, data.proposal!)
   } catch (e) {
     console.log('err', e)
     Sentry.captureException(e)

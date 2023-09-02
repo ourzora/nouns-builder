@@ -18,8 +18,6 @@ import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { SDK } from 'src/data/subgraph/client'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { Auction } from 'src/modules/auction'
-import { AuctionSkeleton } from 'src/modules/auction/components/AuctionSkeleton'
 import {
   About,
   Activity,
@@ -28,6 +26,7 @@ import {
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
+import { DaoTopSection } from 'src/modules/dao/components/DaoTopSection'
 import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { DaoOgMetadata } from 'src/pages/api/og/dao'
@@ -96,7 +95,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       component: [<AdminForm key={'admin'} collectionAddress={collection} />],
     }
     const smartContractsSection = {
-      title: 'Smart Contracts',
+      title: 'Contracts',
       component: [<SmartContracts key={'smart_contracts'} />],
     }
     const daoFeed = {
@@ -129,16 +128,13 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         slug={url}
         description={ogDescription}
       />
-      {token && addresses?.auction ? (
-        <Auction
-          chain={chain}
-          auctionAddress={addresses.auction}
-          collection={collection}
-          token={token}
-        />
-      ) : (
-        <AuctionSkeleton />
-      )}
+
+      <DaoTopSection
+        chain={chain}
+        collection={collection}
+        auctionAddress={addresses?.auction}
+        token={token}
+      />
       <SectionHandler
         sections={sections}
         activeTab={activeTab}

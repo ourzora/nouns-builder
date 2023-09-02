@@ -1,11 +1,11 @@
-import { Contract } from 'ethers'
 import intersection from 'lodash/intersection'
 import isNil from 'lodash/isNil'
 import isUndefined from 'lodash/isUndefined'
 import lt from 'lodash/lt'
 import pickBy from 'lodash/pickBy'
 import useSWR from 'swr'
-import { useContract, useContractReads } from 'wagmi'
+import { encodeFunctionData } from 'viem'
+import { useContractReads } from 'wagmi'
 
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -55,16 +55,13 @@ export const useAvailableUpgrade = ({
     chainId,
   }
 
-  const auctionContract = useContract({ abi: auctionAbi, address: addresses?.auction })
-
-  const managerContract = useContract(contract)
-
   const { data: proposals } = useSWR(
     !!addresses?.token ? [SWR_KEYS.PROPOSALS_CALLDATAS, chainId, addresses?.token] : null,
     () => getProposals(chainId, addresses?.token as string, 100)
   )
 
   const { data, isLoading, isError } = useContractReads({
+    allowFailure: false,
     enabled: !!addresses?.token,
     contracts: [
       {
@@ -168,26 +165,28 @@ export const useAvailableUpgrade = ({
     }
   }
 
-  const withPauseUnpause = (
-    paused: boolean,
-    upgrades: Transaction[],
-    auctionContract?: Contract
-  ): Transaction[] => {
-    if (paused || typeof auctionContract === undefined) {
+  const withPauseUnpause = (paused: boolean, upgrades: Transaction[]): Transaction[] => {
+    if (paused) {
       return upgrades
     }
 
     const pause = {
       target: addresses?.auction as AddressType,
       functionSignature: 'pause()',
-      calldata: auctionContract?.interface.encodeFunctionData('pause') || '',
+      calldata: encodeFunctionData({
+        abi: auctionAbi,
+        functionName: 'pause',
+      }),
       value: '',
     }
 
     const unpause = {
       target: addresses?.auction as AddressType,
       functionSignature: 'unpause()',
-      calldata: auctionContract?.interface.encodeFunctionData('unpause') || '',
+      calldata: encodeFunctionData({
+        abi: auctionAbi,
+        functionName: 'unpause',
+      }),
       value: '',
     }
 
@@ -195,17 +194,17 @@ export const useAvailableUpgrade = ({
   }
 
   const createUpgradeTransactions = (
-    upgrades: Record<AddressType, string>,
-    managerContract?: Contract
+    upgrades: Record<AddressType, string>
   ): Transaction[] =>
     Object.keys(upgrades).map((contract) => ({
       value: '',
       target: addresses[contract as ContractType] as AddressType,
       functionSignature: 'upgradeTo(address)',
-      calldata:
-        managerContract?.interface?.encodeFunctionData('upgradeTo(address)', [
-          managerImplementationAddresses[contract as ContractType],
-        ]) || '',
+      calldata: encodeFunctionData({
+        abi: managerAbi,
+        functionName: 'upgradeTo',
+        args: [managerImplementationAddresses[contract as ContractType]],
+      }),
     }))
 
   const findActiveUpgradeProposal = (
@@ -231,10 +230,7 @@ export const useAvailableUpgrade = ({
 
   const upgradesNeededForLatestVersion = getUpgradesForVersion(daoVersions, latest)
 
-  const upgradeTransactions = createUpgradeTransactions(
-    upgradesNeededForLatestVersion,
-    managerContract ?? undefined
-  )
+  const upgradeTransactions = createUpgradeTransactions(upgradesNeededForLatestVersion)
 
   const activeUpgradeProposal = findActiveUpgradeProposal(
     proposals?.proposals,
@@ -246,11 +242,7 @@ export const useAvailableUpgrade = ({
   const upgrade = {
     type: TransactionType.UPGRADE,
     summary: `Upgrade contracts to Nouns Builder v${latest}`,
-    transactions: withPauseUnpause(
-      paused,
-      upgradeTransactions,
-      auctionContract ?? undefined
-    ),
+    transactions: withPauseUnpause(paused, upgradeTransactions),
   }
 
   return {

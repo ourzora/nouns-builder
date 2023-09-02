@@ -1,9 +1,9 @@
 import { getDefaultWallets } from '@rainbow-me/rainbowkit'
-import { createClient } from 'wagmi'
+import { createConfig } from 'wagmi'
 
 import { PUBLIC_WALLLET_CONNECT_PROJECT_ID } from 'src/constants/walletconnect'
 
-import { chains, provider } from './chains'
+import { chains, publicClient } from './chains'
 
 const { connectors } = getDefaultWallets({
   appName: 'Nouns builder',
@@ -11,8 +11,8 @@ const { connectors } = getDefaultWallets({
   projectId: PUBLIC_WALLLET_CONNECT_PROJECT_ID,
 })
 
-export const client = createClient({
+export const config = createConfig({
   autoConnect: true,
   connectors,
-  provider,
+  publicClient,
 })

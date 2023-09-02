@@ -1,10 +1,10 @@
-import { Address, readContracts } from '@wagmi/core'
 import { Flex, Text, atoms, theme } from '@zoralabs/zord'
 import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useAccount, useContractRead } from 'wagmi'
+import { readContracts } from 'wagmi/actions'
 
 import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
@@ -23,12 +23,13 @@ import {
   useDaoStore,
 } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { Chain } from 'src/typings'
+import { AddressType, Chain } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 
 interface DaoPageProps {
   chain: Chain
   addresses: DaoContractAddresses
-  collectionAddress: Address
+  collectionAddress: AddressType
 }
 
 const DaoPage: NextPageWithLayout<DaoPageProps> = ({ chain, collectionAddress }) => {
@@ -109,7 +110,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
   )
 
-  const collectionAddress = context?.params?.token as string
+  const collectionAddress = context?.params?.token as AddressType
   const network = context?.params?.network
   const tab = context?.query?.tab as string
 
@@ -130,24 +131,28 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     const [auction, owner] = await readContracts({
+      allowFailure: false,
       contracts: [
         {
           abi: auctionAbi,
-          address: addresses.auction,
+          address: addresses.auction as AddressType,
           functionName: 'auction',
           chainId: chain.id,
         },
         {
           abi: auctionAbi,
-          address: addresses.auction,
+          address: addresses.auction as AddressType,
           functionName: 'owner',
           chainId: chain.id,
         },
       ],
     })
 
+    const [tokenId, highestBid, highestBidder, startTime, endTime, settled] =
+      unpackOptionalArray(auction, 6)
+
     const initialized: boolean =
-      auction?.endTime !== 0 && auction?.startTime !== 0 && owner === addresses.treasury
+      endTime !== 0 && startTime !== 0 && owner === addresses.treasury
 
     if (!initialized) {
       return {
@@ -161,7 +166,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       redirect: {
-        destination: `/dao/${network}/${collectionAddress}/${auction.tokenId}${
+        destination: `/dao/${network}/${collectionAddress}/${tokenId}${
           tab ? `?tab=${tab}` : ''
         }`,
         permanent: false,

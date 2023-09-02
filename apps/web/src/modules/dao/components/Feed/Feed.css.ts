@@ -1,5 +1,7 @@
-import { keyframes, style } from '@vanilla-extract/css'
+import { style } from '@vanilla-extract/css'
 import { atoms } from '@zoralabs/zord'
+
+import { skeletonAnimation } from 'src/styles/animations.css'
 
 export const feed = style([
   atoms({
@@ -12,14 +14,8 @@ export const feed = style([
 
 export const castCardStyle = style({})
 
-const pulse = keyframes({
-  '0%': { opacity: '1' },
-  '100%': { opacity: '1' },
-  '50%': { opacity: '.5' },
-})
-
 export const cardSkeleton = style({
-  animation: `${pulse} 2s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+  animation: skeletonAnimation,
   height: '10rem',
   marginBottom: '1.6rem',
 })

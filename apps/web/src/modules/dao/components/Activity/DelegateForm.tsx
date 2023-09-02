@@ -1,14 +1,13 @@
-import { prepareWriteContract, writeContract } from '@wagmi/core'
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { useState } from 'react'
-import { Address, useContract, useSigner } from 'wagmi'
+import { Address } from 'wagmi'
+import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SmartInput from 'src/components/Fields/SmartInput'
 import { Icon } from 'src/components/Icon'
 import { tokenAbi } from 'src/data/contract/abis'
-import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import { proposalFormTitle } from 'src/styles/Proposals.css'
 import { getEnsAddress } from 'src/utils/ens'
@@ -28,22 +27,14 @@ interface DelegateFormProps {
 export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) => {
   const [isLoading, setIsLoading] = useState(false)
   const { addresses } = useDaoStore()
-  const { provider } = useLayoutStore()
   const chain = useChainStore((x) => x.chain)
-  const { data: signer } = useSigner()
-
-  const tokenContract = useContract({
-    abi: tokenAbi,
-    address: addresses.token,
-    signerOrProvider: signer,
-  })
 
   const submitCallback = async (values: AddressFormProps) => {
     if (!values.address || !addresses.token) return
 
     setIsLoading(true)
     try {
-      const delegate = (await getEnsAddress(values.address, provider)) as Address
+      const delegate = (await getEnsAddress(values.address)) as Address
       const config = await prepareWriteContract({
         abi: tokenAbi,
         address: addresses.token,
@@ -51,8 +42,8 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
         functionName: 'delegate',
         args: [delegate],
       })
-      const txn = await writeContract(config)
-      await txn?.wait()
+      const { hash } = await writeContract(config)
+      await waitForTransaction({ hash })
 
       handleUpdate(values.address)
     } catch (e) {
@@ -113,7 +104,7 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
                     submitCallback(values)
                   }}
                   style={{ flex: 'auto' }}
-                  disabled={!dirty || !isValid || !tokenContract}
+                  disabled={!dirty || !isValid}
                   size="lg"
                 >
                   Update delegate

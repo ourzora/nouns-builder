@@ -4,11 +4,12 @@ import { BigNumberish } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import Link from 'next/link'
-import React, { Fragment, useState } from 'react'
+import React, { useState } from 'react'
 
+import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { useCountdown } from 'src/hooks/useCountdown'
 import { useIsMounted } from 'src/hooks/useIsMounted'
-import { useChainStore } from 'src/stores/useChainStore'
+import { CHAIN_ID } from 'src/typings'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { auction, daoImage, name, title } from './DaoCard.css'
@@ -16,6 +17,7 @@ import { Detail } from './Detail'
 
 interface DaoCardProps {
   collectionAddress: string
+  chainId: CHAIN_ID
   tokenName?: string
   tokenId?: string
   tokenImage?: string
@@ -31,6 +33,7 @@ const Countdown = ({ end, onEnd }: { end: any; onEnd: () => void }) => {
 
 export const DaoCard = ({
   collectionAddress,
+  chainId,
   tokenName,
   tokenImage,
   tokenId,
@@ -41,7 +44,6 @@ export const DaoCard = ({
   const isMounted = useIsMounted()
   const [imgErr, setImgErr] = React.useState<boolean>(false)
   const [isEnded, setIsEnded] = useState(false)
-  const chain = useChainStore((x) => x.chain)
 
   const onEnd = () => {
     setIsEnded(true)
@@ -50,9 +52,10 @@ export const DaoCard = ({
   if (!isMounted) return null
 
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
+  const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.id === chainId)
 
   return (
-    <Link href={`/dao/${chain.slug}/${collectionAddress}/${tokenId}`} prefetch={false}>
+    <Link href={`/dao/${chain?.slug}/${collectionAddress}/${tokenId}`} prefetch={false}>
       <Box borderRadius="curved" height={'100%'} overflow="hidden">
         <Box
           backgroundColor="background2"
