@@ -1,5 +1,6 @@
-import { Button, Flex, Text, ThemeProvider, lightTheme } from '@zoralabs/zord'
+import { Box, Flex, Text, ThemeProvider, lightTheme } from '@zoralabs/zord'
 import React from 'react'
+import { PieChart } from 'react-minimal-pie-chart'
 import useSWR from 'swr'
 
 type Partition = { name: string; description: string; allocation: number }
@@ -29,6 +30,8 @@ const fetchPartitions = async (): Promise<Partition[]> => {
   )
 }
 
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
+
 const Partitions = () => {
   const { data, error } = useSWR('/api/partitions', fetchPartitions)
 
@@ -36,9 +39,27 @@ const Partitions = () => {
   if (!data) return <div>Loading...</div>
   return (
     <ThemeProvider theme={lightTheme}>
-      <Flex>
-        <Text fontSize={80}>Hello world!</Text>
-        <Button>Text</Button>
+      <Flex direction="column" align={'center'} justify={'center'}>
+        <Text fontFamily="heading" fontSize={80} mb={'x10'} mt={'x6'}>
+          Builder DAO Partitions
+        </Text>
+        <Box style={{ height: '600px', width: '600px' }}>
+          <PieChart
+            label={({ dataEntry }) =>
+              `${dataEntry.title} - ${Math.round(dataEntry.value)}%`
+            }
+            labelStyle={{
+              fontSize: '5px',
+            }}
+            animate
+            lengthAngle={360}
+            data={data.map((row, index) => ({
+              title: row.name,
+              value: row.allocation,
+              color: COLORS[index],
+            }))}
+          />
+        </Box>
       </Flex>
     </ThemeProvider>
   )
