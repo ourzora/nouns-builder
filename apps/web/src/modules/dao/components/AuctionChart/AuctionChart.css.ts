@@ -7,6 +7,11 @@ const tabBase = style({
   width: 'fit-content',
   borderBottomLeftRadius: '0px',
   borderBottomRightRadius: '0px',
+  selectors: {
+    '&:not([disabled]):hover': {
+      backgroundColor: 'transparent ',
+    },
+  },
 })
 const selected = style({
   borderBottom: '2px solid black',
