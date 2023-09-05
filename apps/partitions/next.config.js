@@ -9,7 +9,7 @@ const nextConfig = {
       {
         source: '/',
         destination: '/partitions',
-        permanent: true,
+        permanent: false,
       },
     ]
   },

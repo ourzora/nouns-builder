@@ -1,42 +1,32 @@
+import { fetchExpenditures } from './queries/fetchExpenditures'
+import { fetchPartitions } from './queries/fetchPartitions'
 import { Box, Flex, Text, ThemeProvider, lightTheme } from '@zoralabs/zord'
 import React from 'react'
 import { PieChart } from 'react-minimal-pie-chart'
+import { QueryType } from 'src/utils/constants'
 import useSWR from 'swr'
-
-type Partition = { name: string; description: string; allocation: number }
-
-const fetchPartitions = async (): Promise<Partition[]> => {
-  const res = await fetch('/api/partitions')
-  const data = await res.json()
-  // const headers = data.values[0] as string[];
-  const rows = data.values.slice(1) as string[][]
-
-  if (!Array.isArray(data.values)) throw new Error('Invalid data')
-  const partitions = rows.map((row) => {
-    return {
-      name: row[0] as string,
-      description: row[1] as string,
-      allocation: Number(row[2]) as number,
-    }
-  })
-  return partitions.filter(
-    (partition) =>
-      partition.name &&
-      partition.description &&
-      partition.allocation &&
-      typeof partition.name === 'string' &&
-      typeof partition.description === 'string' &&
-      typeof partition.allocation === 'number'
-  )
-}
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
 const Partitions = () => {
-  const { data, error } = useSWR('/api/partitions', fetchPartitions)
+  const {
+    data: partitions,
+    error: partError,
+    isValidating: partLoading,
+  } = useSWR(QueryType.Partitions, fetchPartitions)
+  const {
+    data: expenditures,
+    error: spendError,
+    isValidating: spendLoading,
+  } = useSWR(QueryType.Expenditures, fetchExpenditures)
 
-  if (error) return <div>{error?.message}</div>
-  if (!data) return <div>Loading...</div>
+  if (partError || spendError)
+    return <div>{partError?.message || spendError?.message}</div>
+  if (partLoading || spendLoading || !partitions || !expenditures)
+    return <div>Loading...</div>
+
+  console.log('expenditures', expenditures)
+
   return (
     <ThemeProvider theme={lightTheme}>
       <Flex direction="column" align={'center'} justify={'center'}>
@@ -53,7 +43,7 @@ const Partitions = () => {
             }}
             animate
             lengthAngle={360}
-            data={data.map((row, index) => ({
+            data={partitions.map((row, index) => ({
               title: row.name,
               value: row.allocation,
               color: COLORS[index],
