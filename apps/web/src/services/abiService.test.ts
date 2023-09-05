@@ -64,10 +64,10 @@ describe('abiService', () => {
       } catch (err) {}
 
       expect(spy).toHaveBeenCalledOnce()
-      expect(spy).toHaveBeenCalledWith(
-        '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D',
-        '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc'
-      )
+      expect(spy).toHaveBeenCalledWith({
+        address: '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D',
+        slot: '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc',
+      })
     })
 
     it('skips redis check and checks original contract with etherscan', async () => {

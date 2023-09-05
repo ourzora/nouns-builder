@@ -1,8 +1,15 @@
 import axios from 'axios'
-import { Address, TransactionReceipt, createPublicClient, http, parseEther } from 'viem'
+import {
+  Address,
+  TransactionReceipt,
+  createTestClient,
+  http,
+  parseEther,
+  publicActions,
+} from 'viem'
 import { vi } from 'vitest'
+import { foundry } from 'wagmi/chains'
 
-import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { CHAIN_ID } from 'src/typings'
 
 import { InvalidRequestError } from './errors'
@@ -20,11 +27,11 @@ vi.mock('axios', () => {
   }
 })
 
-vi.mock('viem', () => {
+vi.mock('viem', async () => {
+  const actual = await vi.importActual<any>('viem')
   return {
-    default: {
-      createPublicClient: vi.fn(),
-    },
+    ...actual,
+    createPublicClient: vi.fn(),
   }
 })
 
@@ -37,7 +44,7 @@ describe('simulationService', () => {
     const treasuryAddress: Address = '0xbcdfd67cce7bf4f49c0631ddd14eadff4d5ca15d'
     const request = {
       treasuryAddress,
-      chainId: CHAIN_ID.ETHEREUM,
+      chainId: CHAIN_ID.FOUNDRY,
       targets: [
         '0x7d8ba3e0745079b292f68e421d292c05da2d0721',
         '0xa7c8f84ec8cbed6e8fb793904cd1ec9ddfc9c35d',
@@ -67,7 +74,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
-          chainId: CHAIN_ID.ETHEREUM,
+          chainId: CHAIN_ID.FOUNDRY,
           targets: ['t1', 't2', 't3'],
           calldatas: ['c1', 'c2'],
           values: ['v1, v2'],
@@ -77,7 +84,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
-          chainId: CHAIN_ID.ETHEREUM,
+          chainId: CHAIN_ID.FOUNDRY,
           targets: ['t1'],
           calldatas: ['c1'],
           values: ['v1, v2'],
@@ -87,7 +94,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
-          chainId: CHAIN_ID.ETHEREUM,
+          chainId: CHAIN_ID.FOUNDRY,
           targets: ['t1'],
           calldatas: ['c1', 'c2'],
           values: ['v1, v2'],
@@ -117,10 +124,12 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createPublicClient({
-        chain: PUBLIC_ALL_CHAINS.find((x) => x.id === CHAIN_ID.ETHEREUM),
-        transport: http(`https://rpc.tenderly.co/fork/${forkId}`),
-      })
+      const forkProvider = createTestClient({
+        chain: foundry,
+        mode: 'anvil',
+        transport: http(`https://rpc.tenderly.co/fork/forkId`),
+      }).extend(publicActions)
+
       vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
@@ -178,10 +187,11 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createPublicClient({
-        chain: PUBLIC_ALL_CHAINS.find((x) => x.id === CHAIN_ID.ETHEREUM),
-        transport: http(`https://rpc.tenderly.co/fork/${forkId}`),
-      })
+      const forkProvider = createTestClient({
+        chain: foundry,
+        mode: 'anvil',
+        transport: http(`https://rpc.tenderly.co/fork/forkId`),
+      }).extend(publicActions)
 
       vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
@@ -242,10 +252,11 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createPublicClient({
-        chain: PUBLIC_ALL_CHAINS.find((x) => x.id === CHAIN_ID.ETHEREUM),
-        transport: http(`https://rpc.tenderly.co/fork/${forkId}`),
-      })
+      const forkProvider = createTestClient({
+        chain: foundry,
+        mode: 'anvil',
+        transport: http(`https://rpc.tenderly.co/fork/forkId`),
+      }).extend(publicActions)
 
       vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
