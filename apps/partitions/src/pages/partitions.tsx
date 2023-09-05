@@ -33,7 +33,7 @@ const createDisplayData = (partitions: Partition[], expenditures: Expenditure[])
       .reduce((acc, curr) => ({ ...acc, value: acc.value + curr.amount }), {
         title: `Spent ${partition.name}`,
         value: 0,
-        color: `rgb(${COLORS[index]})`,
+        color: `rgba(${COLORS[index]}, 0.5)`,
         partitionType: 'spent',
         partitionName: partition.name,
         partitionTotal,
@@ -42,7 +42,7 @@ const createDisplayData = (partitions: Partition[], expenditures: Expenditure[])
     const unspent = {
       title: `Unspent ${partition.name}`,
       value: partitionTotal - spent.value,
-      color: `rgba(${COLORS[index]},0.5)`,
+      color: `rgba(${COLORS[index]},0.3)`,
       partitionType: 'unspent',
       partitionName: partition.name,
       partitionTotal,
@@ -80,7 +80,7 @@ const Partitions = () => {
   return (
     <ThemeProvider theme={lightTheme}>
       <Flex direction="column" align={'center'} justify={'center'}>
-        <Text fontSize={80} mb={'x10'} mt={'x6'}>
+        <Text fontFamily={'heading'} fontSize={80} mb={'x10'} mt={'x6'}>
           Builder DAO Partitions
         </Text>
         <Box style={{ height: '600px', width: '600px' }}>
