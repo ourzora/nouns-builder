@@ -1,6 +1,11 @@
 import { Button, Flex } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi'
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from 'wagmi'
 import { waitForTransaction } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
@@ -13,11 +18,15 @@ import { auctionActionButtonVariants } from '../Auction.css'
 interface SettleProps {
   isEnding: boolean
   collectionAddress?: string
+  owner?: string | undefined
 }
 
-export const Settle = ({ isEnding }: SettleProps) => {
+export const Settle = ({ isEnding, owner }: SettleProps) => {
   const chain = useChainStore((x) => x.chain)
   const addresses = useDaoStore((state) => state.addresses)
+
+  const { address } = useAccount()
+  const isWinner = owner != undefined && address == owner
 
   const { data: paused } = useContractRead({
     enabled: !!addresses?.auction,
@@ -77,7 +86,7 @@ export const Settle = ({ isEnding }: SettleProps) => {
         handleClick={handleSettle}
         className={auctionActionButtonVariants['settle']}
       >
-        Settle Auction
+        {isWinner ? 'Claim NFT' : 'Start next auction'}
       </ContractButton>
     </Flex>
   )
