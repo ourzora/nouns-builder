@@ -82,11 +82,3 @@ export const cursorText = style({
     },
   },
 })
-export const newTag = style({
-  color: 'white',
-  position: 'absolute',
-  top: '0',
-  right: '-30px',
-  zIndex: 30,
-  padding: '2px 5px',
-})
