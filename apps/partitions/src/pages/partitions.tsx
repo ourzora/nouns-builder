@@ -2,7 +2,7 @@ import { fetchExpenditures } from './queries/fetchExpenditures'
 import { fetchPartitions } from './queries/fetchPartitions'
 import { Box, Flex, Text, ThemeProvider, lightTheme } from '@zoralabs/zord'
 import React, { useMemo } from 'react'
-import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
+import { Cell, LabelList, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 // import { PieChart } from 'react-minimal-pie-chart'
 import { QueryType, TREASURY_SNAPSHOT } from 'src/utils/constants'
 import { Expenditure, Partition } from 'src/utils/types'
@@ -46,6 +46,8 @@ const createDisplayData = (partitions: Partition[], expenditures: Expenditure[])
       partitionTotal,
       partitionType: 'total',
       partitionName: partition.name,
+      description: partition.description,
+      color: `rgba(${COLORS[index]}, 1)`,
     }
 
     const spent = expenditures
@@ -53,19 +55,21 @@ const createDisplayData = (partitions: Partition[], expenditures: Expenditure[])
       .reduce((acc, curr) => ({ ...acc, value: acc.value + curr.amount }), {
         name: `Spent ${partition.name}`,
         value: 0,
-        color: `rgba(${COLORS[index]}, 0.5)`,
+        color: `rgba(${COLORS[index]}, 0.7)`,
         partitionType: 'spent',
         partitionName: partition.name,
         partitionTotal,
+        description: `Total amount spent on ${partition.name}`,
       })
 
     const unspent = {
       name: `Unspent ${partition.name}`,
       value: partitionTotal - spent.value,
-      color: `rgba(${COLORS[index]},0.3)`,
+      color: `rgba(${COLORS[index]},0.6)`,
       partitionType: 'unspent',
       partitionName: partition.name,
       partitionTotal,
+      description: `Total amount available for ${partition.name}`,
     }
     totalDisplay.push(total)
     spendingDisplay.push([unspent, spent])
@@ -77,7 +81,7 @@ const createDisplayData = (partitions: Partition[], expenditures: Expenditure[])
   }
 }
 
-const renderCustomLabel = ({
+const renderCustomInnerLabel = ({
   cx,
   cy,
   midAngle,
@@ -99,6 +103,18 @@ const renderCustomLabel = ({
       dominantBaseline="central"
     >
       {`${name} ${(percent * 100).toFixed(0)}%`}
+    </text>
+  )
+}
+
+const renderCustomOuterLabel = (props: any) => {
+  const { name, value } = props
+  // Customize the text as you want. For this example, I'm just appending " units" to the value.
+  const customText = `${name} ${value.toFixed(1)} ETH`
+
+  return (
+    <text {...props} fill="black" className="recharts-text recharts-label">
+      {customText}
     </text>
   )
 }
@@ -136,9 +152,9 @@ const Partitions = () => {
         <Text fontFamily={'heading'} fontSize={80} mb={'x10'} mt={'x6'}>
           Builder DAO Partitions
         </Text>
-        <Box style={{ height: '750px', width: '900px' }}>
+        <Box style={{ height: '750px', width: '1200px' }}>
           <ResponsiveContainer height={'100%'} width={'100%'}>
-            <PieChart height={750} width={900}>
+            <PieChart height={750} width={1200}>
               <Tooltip content={CustomTooltip} />
               <Pie
                 data={graphValues.total}
@@ -147,10 +163,14 @@ const Partitions = () => {
                 cx="50%"
                 cy="50%"
                 outerRadius={200}
-                fill="#8884d8"
+                fill="#88c9e7"
                 labelLine={false}
-                label={renderCustomLabel}
-              />
+                label={renderCustomInnerLabel}
+              >
+                {/* {graphValues.spending.map((entry, index) => (
+                  <Cell key={`inner-cell-${index}`} fill={entry.color} />
+                ))} */}
+              </Pie>
               <Pie
                 data={graphValues.spending}
                 dataKey="value"
@@ -158,9 +178,17 @@ const Partitions = () => {
                 cy="50%"
                 innerRadius={220}
                 outerRadius={270}
-                fill="#82ca9d"
-                label
-              />
+                label={renderCustomOuterLabel}
+              >
+                <LabelList content={renderCustomOuterLabel} />
+                {graphValues.spending.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={'#535eff'}
+                    opacity={entry.partitionType === 'unspent' ? '0.7' : '1'}
+                  />
+                ))}
+              </Pie>
             </PieChart>
           </ResponsiveContainer>
         </Box>
@@ -173,18 +201,17 @@ export default Partitions
 type CustomTooltipProps = {
   active?: boolean
   payload?: any
-  label?: string
 }
 
-const CustomTooltip = (data: any) => {
-  const { active, payload, label } = data
+const CustomTooltip = (data: CustomTooltipProps) => {
+  const { active, payload } = data
   if (active && payload && payload.length) {
     const name = payload[0].payload.name
     const value = payload[0].value.toFixed(2)
-    console.log('data', data)
+    const description = payload[0].payload.payload.description
+
     return (
       <Box
-        className="custom-tooltip"
         style={{
           backgroundColor: 'white',
           opacity: '0.7',
@@ -195,8 +222,10 @@ const CustomTooltip = (data: any) => {
         <Text className="label">
           <b>Partition</b> : {name}
         </Text>
-        <Text className="intro">{payload[0].payload.name}</Text>
-        <Text className="desc">Anything you want can be displayed here.</Text>
+        <Text>
+          <b>Total Amount</b> : {value} ETH
+        </Text>
+        <Text>{description}</Text>
       </Box>
     )
   }
