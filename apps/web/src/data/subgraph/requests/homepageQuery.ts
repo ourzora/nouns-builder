@@ -17,7 +17,6 @@ export const highestBidsRequest = async (
 
   try {
     const where: Auction_Filter = {
-      bidCount_gt: 0,
       settled: false,
       endTime_gt: Math.floor(Date.now() / 1000),
     }
