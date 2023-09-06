@@ -2363,12 +2363,7 @@ export const TokenFragmentDoc = gql`
 `
 export const ActiveAuctionsDocument = gql`
   query activeAuctions($first: Int!, $where: Auction_filter!) {
-    auctions(
-      orderBy: highestBid__amount
-      orderDirection: desc
-      first: $first
-      where: $where
-    ) {
+    auctions(orderBy: endTime, orderDirection: asc, first: $first, where: $where) {
       ...Auction
     }
   }
