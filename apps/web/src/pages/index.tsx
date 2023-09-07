@@ -1,5 +1,7 @@
 import { Stack } from '@zoralabs/zord'
+import { useRouter } from 'next/router'
 import React from 'react'
+import { useAccount } from 'wagmi'
 
 import Everything from 'src/components/Home/Everything'
 import FAQ from 'src/components/Home/FAQ'
@@ -17,10 +19,21 @@ import { NextPageWithLayout } from './_app'
 export type DaoProps = AuctionFragment['dao']
 
 const HomePage: NextPageWithLayout = () => {
+  const router = useRouter()
+  const _account = useAccount({
+    onConnect({ address, isReconnected }) {
+      const wasRedirected = sessionStorage.getItem('wasRedirected')
+      if (address && isReconnected && !wasRedirected) {
+        sessionStorage.setItem('wasRedirected', 'true')
+        router.push('/about')
+      }
+    },
+  })
   return (
     <>
       <Meta title={'Nouns your ideas'} type={'website'} slug={'/'} />
       <Stack align={'center'}>
+        {/* <Redirect /> */}
         <Marquee />
         <GetStarted />
         <VisitAlternate />
