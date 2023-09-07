@@ -1,6 +1,6 @@
 import { Stack } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useAccount } from 'wagmi'
 
 import Everything from 'src/components/Home/Everything'
@@ -20,15 +20,26 @@ export type DaoProps = AuctionFragment['dao']
 
 const HomePage: NextPageWithLayout = () => {
   const router = useRouter()
-  const _account = useAccount({
-    onConnect({ address, isReconnected }) {
-      const wasRedirected = sessionStorage.getItem('wasRedirected')
-      if (address && isReconnected && !wasRedirected) {
-        sessionStorage.setItem('wasRedirected', 'true')
-        router.push('/about')
-      }
-    },
-  })
+  const { address } = useAccount()
+  //   {
+  //   onConnect({ address }) {
+  //     const wasRedirected = sessionStorage.getItem('wasRedirected')
+
+  //     if (address && !wasRedirected) {
+  //       sessionStorage.setItem('wasRedirected', 'true')
+  //       router.push('/about')
+  //     }
+  //   },
+  // }
+
+  // useEffect helps load redirect a little faster on page load
+  useEffect(() => {
+    const wasRedirected = sessionStorage.getItem('wasRedirected')
+    if (address && !wasRedirected) {
+      sessionStorage.setItem('wasRedirected', 'true')
+      router.push('/about')
+    }
+  }, [address])
   return (
     <>
       <Meta title={'Nouns your ideas'} type={'website'} slug={'/'} />
