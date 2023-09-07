@@ -2041,6 +2041,56 @@ export type DaoTokenOwnersQuery = {
   }>
 }
 
+export type DashboardQueryVariables = Exact<{
+  where?: InputMaybe<DaoTokenOwner_Filter>
+  first?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+}>
+
+export type DashboardQuery = {
+  __typename?: 'Query'
+  daotokenOwners: Array<{
+    __typename?: 'DAOTokenOwner'
+    dao: {
+      __typename?: 'DAO'
+      name: string
+      tokenAddress: any
+      auctionAddress: any
+      proposals: Array<{
+        __typename?: 'Proposal'
+        abstainVotes: number
+        againstVotes: number
+        calldatas?: string | null
+        description?: string | null
+        descriptionHash: any
+        executableFrom?: any | null
+        expiresAt?: any | null
+        forVotes: number
+        proposalId: any
+        proposalNumber: number
+        proposalThreshold: any
+        proposer: any
+        quorumVotes: any
+        targets: Array<any>
+        timeCreated: any
+        title?: string | null
+        values: Array<any>
+        voteEnd: any
+        voteStart: any
+        snapshotBlockNumber: any
+        transactionHash: any
+        dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
+      }>
+      currentAuction?: {
+        __typename?: 'Auction'
+        endTime: any
+        highestBid?: { __typename?: 'AuctionBid'; amount: any } | null
+        token: { __typename?: 'Token'; name: string; image: string }
+      } | null
+    }
+  }>
+}
+
 export type ExploreDaosPageQueryVariables = Exact<{
   orderBy?: InputMaybe<Auction_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
@@ -2363,7 +2413,7 @@ export const TokenFragmentDoc = gql`
 `
 export const ActiveAuctionsDocument = gql`
   query activeAuctions($first: Int!, $where: Auction_filter!) {
-    auctions(orderBy: endTime, orderDirection: asc, first: $first, where: $where) {
+    auctions(orderBy: endTime, orderDirection: desc, first: $first, where: $where) {
       ...Auction
     }
   }
@@ -2469,6 +2519,36 @@ export const DaoTokenOwnersDocument = gql`
     }
   }
   ${DaoFragmentDoc}
+`
+export const DashboardDocument = gql`
+  query dashboard($where: DAOTokenOwner_filter, $first: Int, $skip: Int) {
+    daotokenOwners(where: $where, first: $first, skip: $skip) {
+      dao {
+        ...DAO
+        proposals(
+          where: { executed_not: true, canceled_not: true, vetoed_not: true }
+          first: 10
+          skip: 0
+          orderBy: proposalNumber
+          orderDirection: desc
+        ) {
+          ...Proposal
+        }
+        currentAuction {
+          endTime
+          highestBid {
+            amount
+          }
+          token {
+            name
+            image
+          }
+        }
+      }
+    }
+  }
+  ${DaoFragmentDoc}
+  ${ProposalFragmentDoc}
 `
 export const ExploreDaosPageDocument = gql`
   query exploreDaosPage(
@@ -2724,6 +2804,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoTokenOwners',
+        'query'
+      )
+    },
+    dashboard(
+      variables?: DashboardQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DashboardQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DashboardQuery>(DashboardDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'dashboard',
         'query'
       )
     },

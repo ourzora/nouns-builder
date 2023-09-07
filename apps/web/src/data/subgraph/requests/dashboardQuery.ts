@@ -20,14 +20,14 @@ export const dashboardRequest = async (memberAddress: string) => {
   //   let daos: MyDaosResponse = []
 
   if (!memberAddress) throw new Error('No user address provided')
-
+  console.log('memberAddress', memberAddress)
   try {
     const data = await Promise.all(
       PUBLIC_DEFAULT_CHAINS.map((chain) =>
         SDK.connect(chain.id)
-          .daoTokenOwners({
+          .dashboard({
             where: {
-              owner: memberAddress,
+              owner: memberAddress.toLowerCase(),
             },
             first: 30,
           })
@@ -43,6 +43,7 @@ export const dashboardRequest = async (memberAddress: string) => {
           })
           .filter((dao) => !DAOS_TO_EXCLUDE.includes(dao.tokenAddress))
           .map((dao) => ({
+            ...dao,
             name: dao.name || '',
             collectionAddress: dao.tokenAddress,
             auctionAddress: dao?.auctionAddress || '',
