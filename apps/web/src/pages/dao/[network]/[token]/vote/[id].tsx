@@ -5,7 +5,9 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 import useSWR, { unstable_serialize } from 'swr'
+import { isAddressEqual } from 'viem'
 
+import { Icon } from 'src/components/Icon'
 import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
@@ -71,6 +73,10 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   }
 
   const displayActions = isProposalOpen(proposal.state)
+  const warn = isAddressEqual(
+    proposal.proposer,
+    '0xfd637806e0D22Ca8158AB8bb5826e6fEDa82c15f'
+  )
 
   return (
     <Fragment>
@@ -84,6 +90,23 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
       <Flex position="relative" direction="column">
         <Flex className={propPageWrapper} gap={{ '@initial': 'x2', '@768': 'x4' }}>
           <ProposalHeader proposal={proposal} />
+
+          {warn && (
+            <Flex
+              w="100%"
+              backgroundColor="negative"
+              color="onNegative"
+              p="x4"
+              borderRadius="curved"
+              align="center"
+              justify="center"
+            >
+              <Icon fill="onNegative" id="warning" mr="x2" />
+              <Box fontWeight={'heading'}>
+                This proposal may be malicious. Please review and vote accordingly.
+              </Box>
+            </Flex>
+          )}
 
           {displayActions && <ProposalActions daoName={daoName} proposal={proposal} />}
 
