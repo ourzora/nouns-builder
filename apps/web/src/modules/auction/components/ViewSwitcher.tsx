@@ -1,10 +1,7 @@
-import { Button, Flex, Text } from '@zoralabs/zord'
+import { Button, Flex } from '@zoralabs/zord'
 import React, { ReactNode } from 'react'
 
-import {
-  buttonTab,
-  newTag,
-} from 'src/modules/dao/components/AuctionChart/AuctionChart.css'
+import { buttonTab } from 'src/modules/dao/components/AuctionChart/AuctionChart.css'
 import { TopSectionView } from 'src/modules/dao/components/DaoTopSection'
 
 import { auctionWrapVariants, switcherBox } from './Auction.css'
@@ -35,16 +32,6 @@ export const ViewSwitcher = ({
             }
           >
             {view}
-            {view === 'chart' && (
-              <Text
-                backgroundColor="positive"
-                className={newTag}
-                borderRadius={'phat'}
-                fontSize={12}
-              >
-                New
-              </Text>
-            )}
           </Button>
         ))}
       </Flex>
