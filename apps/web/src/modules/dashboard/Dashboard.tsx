@@ -1,13 +1,17 @@
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
+import dayjs from 'dayjs'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import useSWR from 'swr'
+import { formatEther } from 'viem'
 import { useAccount } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar'
+import { ContractButton } from 'src/components/ContractButton'
 import { Meta } from 'src/components/Meta'
+import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import {
   ProposalState,
   getProposalState,
@@ -17,7 +21,10 @@ import {
   DaoFragment,
   ProposalFragment,
 } from 'src/data/subgraph/sdk.generated'
+import { useCountdown, useIsMounted } from 'src/hooks'
 import { CHAIN_ID } from 'src/typings'
+
+import { bidInput } from '../auction/components/Auction.css'
 
 const ACTIVE_PROPOSAL_STATES = [
   ProposalState.Active,
@@ -127,10 +134,40 @@ const Dashboard = () => {
 
 export default Dashboard
 
-const DaoAuctionCard = ({ daoImage, tokenAddress }: DashboardDao) => {
-  const daoImageSrc = React.useMemo(() => {
-    return daoImage ? getFetchableUrl(daoImage) : null
-  }, [daoImage])
+const DashCountdown = ({
+  endTime,
+  onEnd,
+  isOver,
+}: {
+  endTime: string | null
+  onEnd: () => void
+  isOver: boolean
+}) => {
+  const { countdownString } = useCountdown(Number(endTime), onEnd)
+  const isMounted = useIsMounted()
+  const countdownText = !endTime || isOver ? 'N/A' : countdownString
+  if (!isMounted) return null
+  return (
+    <Text fontSize={18} fontWeight="label">
+      {countdownText}
+    </Text>
+  )
+}
+
+const DaoAuctionCard = ({ currentAuction, chainId }: DashboardDao) => {
+  const { name: chainName, icon: chainIcon } =
+    PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
+  const bidText = currentAuction.highestBid?.amount
+    ? formatEther(BigInt(currentAuction.highestBid.amount))
+    : 'N/A'
+  const { endTime } = currentAuction
+  const [isEnded, setIsEnded] = useState(false)
+
+  const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
+  const onEnd = () => {
+    setIsEnded(true)
+  }
+
   return (
     <Flex
       mb={'x4'}
@@ -142,24 +179,75 @@ const DaoAuctionCard = ({ daoImage, tokenAddress }: DashboardDao) => {
       cursor={'pointer'}
       py={{ '@initial': 'x2', '@768': 'x3' }}
       px={{ '@initial': 'x2', '@768': 'x6' }}
+      align={'center'}
     >
-      {daoImageSrc ? (
-        <Box mr="x4">
-          <Image
-            src={daoImageSrc}
-            layout="fixed"
-            objectFit="contain"
-            style={{ borderRadius: '12px' }}
-            alt=""
-            height={64}
-            width={64}
-          />
+      <Box mr="x6">
+        <Image
+          src={currentAuction.token.image}
+          layout="fixed"
+          objectFit="contain"
+          style={{ borderRadius: '12px' }}
+          alt=""
+          height={64}
+          width={64}
+        />
+      </Box>
+      <Flex
+        direction={'column'}
+        style={{
+          width: '30%',
+        }}
+      >
+        <Flex mb="x1" align="center">
+          {chainIcon && (
+            <Image
+              src={chainIcon}
+              layout="fixed"
+              objectFit="contain"
+              style={{ borderRadius: '12px', maxHeight: '22px' }}
+              alt=""
+              height={22}
+              width={22}
+            />
+          )}
+          <Text fontSize={16} color="text3" ml={'x1'}>
+            {chainName}
+          </Text>
+        </Flex>
+        <Text fontSize={20} fontWeight="label">
+          {currentAuction.token.name}
+        </Text>
+      </Flex>
+      <Flex
+        direction={'column'}
+        style={{
+          width: '15%',
+        }}
+      >
+        <Text fontSize={16} color="text3" mb={'x1'}>
+          Current Bid
+        </Text>
+        <Text fontSize={18} fontWeight="label">
+          {bidText}
+        </Text>
+      </Flex>
+      <Flex
+        direction={'column'}
+        style={{
+          width: '15%',
+        }}
+      >
+        <Text fontSize={16} color="text3" mb={'x1'}>
+          Ends In
+        </Text>
+        <DashCountdown endTime={endTime} onEnd={onEnd} isOver={isOver} />
+      </Flex>
+      <form>
+        <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
+          <input className={bidInput} />
         </Box>
-      ) : (
-        <Box mr="x4" borderRadius="phat">
-          <Avatar address={tokenAddress ?? undefined} size="52" />
-        </Box>
-      )}
+      </form>
+      <ContractButton handleClick={() => {}}>Bid</ContractButton>
     </Flex>
   )
 }
@@ -193,6 +281,7 @@ const DaoProposals = ({ daoImage, tokenAddress, name, proposals }: DashboardDao)
             {name}
           </Text>
         </Flex>
+
         <Button variant="outline" borderRadius="curved">
           Submit Proposal
         </Button>
