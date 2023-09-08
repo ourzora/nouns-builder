@@ -3,10 +3,55 @@ import React from 'react'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 
+import {
+  ProposalState,
+  getProposalState,
+} from 'src/data/contract/requests/getProposalState'
+import {
+  CurrentAuctionFragment,
+  DaoFragment,
+  ProposalFragment,
+} from 'src/data/subgraph/sdk.generated'
+import { CHAIN_ID } from 'src/typings'
+
+const ACTIVE_PROPOSAL_STATES = [
+  ProposalState.Active,
+  ProposalState.Pending,
+  ProposalState.Queued,
+]
+
+type DashboardDao = DaoFragment & {
+  chainId: CHAIN_ID
+  proposals: ProposalFragment[]
+  currentAuction: CurrentAuctionFragment
+}
+
+const fetchDaoProposalState = async (dao: DashboardDao) => {
+  const proposals = await Promise.all(
+    dao.proposals.map(async (proposal) => {
+      const proposalState = await getProposalState(
+        dao.chainId,
+        proposal.dao.governorAddress,
+        proposal.proposalId
+      )
+      return { ...proposal, proposalState }
+    })
+  )
+  return {
+    ...dao,
+    proposals: proposals.filter((proposal) =>
+      ACTIVE_PROPOSAL_STATES.includes(proposal.proposalState)
+    ),
+  }
+}
+
 const fetchDashboardData = async (address: string) => {
-  const userDaos = await axios.get(`/api/dashboard/${address}`).then((x) => x.data)
-  console.log('userDaos', userDaos)
-  return userDaos
+  const userDaos = await axios
+    .get<DashboardDao[]>(`/api/dashboard/${address}`)
+    .then((x) => x.data)
+
+  const resolved = await Promise.all(userDaos.map(fetchDaoProposalState))
+  return resolved
 }
 
 const Dashboard = () => {
@@ -17,7 +62,17 @@ const Dashboard = () => {
     address ? () => fetchDashboardData(address) : null
   )
 
-  return <div>Dashboard</div>
+  if (error) {
+    return <div>error</div>
+  }
+  if (isValidating) {
+    return <div>loading</div>
+  }
+  if (!data) {
+    return <div>no data</div>
+  }
+
+  return <div>{data?.map((dao) => dao.name)}</div>
 }
 
 export default Dashboard

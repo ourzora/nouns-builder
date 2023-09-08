@@ -12,14 +12,7 @@ query dashboard($where: DAOTokenOwner_filter, $first: Int, $skip: Int) {
         ...Proposal
       }
       currentAuction {
-        endTime
-        highestBid {
-          amount
-        }
-        token {
-          name
-          image
-        }
+        ...CurrentAuction
       }
     }
   }

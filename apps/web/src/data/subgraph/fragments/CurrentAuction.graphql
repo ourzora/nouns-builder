@@ -1,0 +1,11 @@
+fragment CurrentAuction on Auction {
+  endTime
+  highestBid {
+    amount
+  }
+  token {
+    name
+    image
+    tokenId
+  }
+}

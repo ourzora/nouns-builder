@@ -1855,6 +1855,13 @@ export type AuctionBidFragment = {
   bidder: any
 }
 
+export type CurrentAuctionFragment = {
+  __typename?: 'Auction'
+  endTime: any
+  highestBid?: { __typename?: 'AuctionBid'; amount: any } | null
+  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+}
+
 export type DaoFragment = {
   __typename?: 'DAO'
   name: string
@@ -2085,7 +2092,7 @@ export type DashboardQuery = {
         __typename?: 'Auction'
         endTime: any
         highestBid?: { __typename?: 'AuctionBid'; amount: any } | null
-        token: { __typename?: 'Token'; name: string; image: string }
+        token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
       } | null
     }
   }>
@@ -2336,6 +2343,19 @@ export const AuctionBidFragmentDoc = gql`
     bidder
   }
 `
+export const CurrentAuctionFragmentDoc = gql`
+  fragment CurrentAuction on Auction {
+    endTime
+    highestBid {
+      amount
+    }
+    token {
+      name
+      image
+      tokenId
+    }
+  }
+`
 export const DaoFragmentDoc = gql`
   fragment DAO on DAO {
     name
@@ -2535,20 +2555,14 @@ export const DashboardDocument = gql`
           ...Proposal
         }
         currentAuction {
-          endTime
-          highestBid {
-            amount
-          }
-          token {
-            name
-            image
-          }
+          ...CurrentAuction
         }
       }
     }
   }
   ${DaoFragmentDoc}
   ${ProposalFragmentDoc}
+  ${CurrentAuctionFragmentDoc}
 `
 export const ExploreDaosPageDocument = gql`
   query exploreDaosPage(
