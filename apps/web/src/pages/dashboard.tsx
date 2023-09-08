@@ -72,7 +72,32 @@ const Dashboard = () => {
     return <div>no data</div>
   }
 
-  return <div>{data?.map((dao) => dao.name)}</div>
+  return (
+    <div>
+      <h1 style={{ marginBottom: '20px' }}>Dashboard</h1>
+      <div style={{ marginBottom: '16px' }}>
+        <h2 style={{ marginBottom: '12px' }}>DAOs</h2>
+        <div>
+          {data?.map((dao) => (
+            <div> {dao.name}</div>
+          ))}
+        </div>
+      </div>
+      <div style={{ marginBottom: '16px' }}>
+        <h2 style={{ marginBottom: '12px' }}>Proposals</h2>
+        <div>
+          {data?.map((dao) => (
+            <>
+              <h4 style={{ marginBottom: '8px' }}> {dao.name}</h4>
+              {dao.proposals.map((proposal) => (
+                <div>{proposal.title}</div>
+              ))}
+            </>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
 }
 
 export default Dashboard
