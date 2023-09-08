@@ -1,8 +1,10 @@
+import { Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import React from 'react'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 
+import { Meta } from 'src/components/Meta'
 import {
   ProposalState,
   getProposalState,
@@ -59,7 +61,8 @@ const Dashboard = () => {
 
   const { data, error, isValidating } = useSWR(
     [`dashboard:${address}`],
-    address ? () => fetchDashboardData(address) : null
+    address ? () => fetchDashboardData(address) : null,
+    { revalidateOnFocus: false }
   )
 
   if (error) {
@@ -73,7 +76,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div>
+    <Flex direction={'column'} mt={'x5'} minH={'100vh'}>
+      <Meta title={'Dashboard'} type={'website'} slug={'/'} />
       <h1 style={{ marginBottom: '20px' }}>Dashboard</h1>
       <div style={{ marginBottom: '16px' }}>
         <h2 style={{ marginBottom: '12px' }}>DAOs</h2>
@@ -96,7 +100,7 @@ const Dashboard = () => {
           ))}
         </div>
       </div>
-    </div>
+    </Flex>
   )
 }
 

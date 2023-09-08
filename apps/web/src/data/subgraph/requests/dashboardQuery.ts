@@ -9,8 +9,6 @@ const DAOS_TO_EXCLUDE = [
 ]
 
 export const dashboardRequest = async (memberAddress: string) => {
-  //   let daos: MyDaosResponse = []
-
   if (!memberAddress) throw new Error('No user address provided')
 
   try {
