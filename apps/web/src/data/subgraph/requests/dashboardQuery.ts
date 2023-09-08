@@ -39,6 +39,7 @@ export const dashboardRequest = async (memberAddress: string) => {
             proposals: dao.proposals,
             currentAuction: dao.currentAuction,
             chainId: queries.chainId,
+            daoImage: dao.contractImage,
           }))
       )
       .flat()

@@ -2060,6 +2060,7 @@ export type DashboardQuery = {
     __typename?: 'DAOTokenOwner'
     dao: {
       __typename?: 'DAO'
+      contractImage: string
       name: string
       tokenAddress: any
       auctionAddress: any
@@ -2545,6 +2546,7 @@ export const DashboardDocument = gql`
     daotokenOwners(where: $where, first: $first, skip: $skip) {
       dao {
         ...DAO
+        contractImage
         proposals(
           where: { executed_not: true, canceled_not: true, vetoed_not: true }
           first: 10
