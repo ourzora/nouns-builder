@@ -89,7 +89,7 @@ export const formValuesToTransactionMap: FormValuesTransactionMap = {
       encodeFunctionData({
         abi: governorAbi,
         functionName: 'updateProposalThresholdBps',
-        args: [BigInt((Number(value) * 100).toFixed(2))],
+        args: [BigInt(Number(value) * 100)],
       }),
   },
   quorumThreshold: {
@@ -99,7 +99,7 @@ export const formValuesToTransactionMap: FormValuesTransactionMap = {
       encodeFunctionData({
         abi: governorAbi,
         functionName: 'updateQuorumThresholdBps',
-        args: [BigInt((Number(value) * 100).toFixed(2))],
+        args: [BigInt(Number(value) * 100)],
       }),
   },
   votingPeriod: {
