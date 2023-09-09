@@ -4,14 +4,16 @@ import dayjs from 'dayjs'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/image'
 import React, { useState } from 'react'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { formatEther } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useContractEvent } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar'
 import { ContractButton } from 'src/components/ContractButton'
 import { Meta } from 'src/components/Meta'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { auctionAbi } from 'src/data/contract/abis'
 import {
   ProposalState,
   getProposalState,
@@ -24,7 +26,7 @@ import {
 import { useCountdown, useIsMounted } from 'src/hooks'
 import { CHAIN_ID } from 'src/typings'
 
-import { bidInput } from '../auction/components/Auction.css'
+import { bidInput } from './dashboard.css'
 
 const ACTIVE_PROPOSAL_STATES = [
   ProposalState.Active,
@@ -71,7 +73,7 @@ const Dashboard = () => {
   const { address } = useAccount()
 
   const { data, error, isValidating } = useSWR(
-    [`dashboard:${address}`],
+    [`${SWR_KEYS.DASHBOARD}:${address}`],
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
   )
@@ -81,6 +83,9 @@ const Dashboard = () => {
   }
   if (isValidating) {
     return <div>loading</div>
+  }
+  if (!address) {
+    return <div>no address</div>
   }
   if (!data) {
     return <div>no data</div>
@@ -103,7 +108,7 @@ const Dashboard = () => {
             DAOs
           </Text>
           {data?.map((dao) => (
-            <DaoAuctionCard {...dao} />
+            <DaoAuctionCard {...dao} userAddress={address} />
           ))}
         </Box>
         <Box>
@@ -115,17 +120,6 @@ const Dashboard = () => {
             .map((dao) => (
               <DaoProposals {...dao} />
             ))}
-
-          {/* <div>
-            {data?.map((dao) => (
-              <>
-                <h4 style={{ marginBottom: '8px' }}> {dao.name}</h4>
-                {dao.proposals.map((proposal) => (
-                  <div>{proposal.title}</div>
-                ))}
-              </>
-            ))}
-          </div> */}
         </Box>
       </Box>
     </Flex>
@@ -154,7 +148,12 @@ const DashCountdown = ({
   )
 }
 
-const DaoAuctionCard = ({ currentAuction, chainId }: DashboardDao) => {
+const DaoAuctionCard = ({
+  currentAuction,
+  chainId,
+  auctionAddress,
+  userAddress,
+}: DashboardDao & { userAddress: string }) => {
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
   const bidText = currentAuction.highestBid?.amount
@@ -167,6 +166,29 @@ const DaoAuctionCard = ({ currentAuction, chainId }: DashboardDao) => {
   const onEnd = () => {
     setIsEnded(true)
   }
+
+  useContractEvent({
+    address: auctionAddress,
+    abi: auctionAbi,
+    eventName: 'AuctionCreated',
+    chainId,
+    listener: async () => {
+      await mutate([`${SWR_KEYS.DASHBOARD}:${userAddress}`, userAddress], () =>
+        fetchDashboardData(userAddress)
+      )
+    },
+  })
+  useContractEvent({
+    address: auctionAddress,
+    abi: auctionAbi,
+    eventName: 'AuctionBid',
+    chainId,
+    listener: async () => {
+      await mutate([`${SWR_KEYS.DASHBOARD}:${userAddress}`, userAddress], () =>
+        fetchDashboardData(userAddress)
+      )
+    },
+  })
 
   return (
     <Flex
