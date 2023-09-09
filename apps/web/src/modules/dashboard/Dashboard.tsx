@@ -37,6 +37,10 @@ const ACTIVE_PROPOSAL_STATES = [
 type DashboardDao = DaoFragment & {
   chainId: CHAIN_ID
   daoImage: string
+  auctionConfig: {
+    minimumBidIncrement: string
+    reservePrice: string
+  }
   proposals: ProposalFragment[]
   currentAuction: CurrentAuctionFragment
 }
@@ -77,7 +81,7 @@ const Dashboard = () => {
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
   )
-
+  console.log('data', data)
   if (error) {
     return <div>error</div>
   }
@@ -269,7 +273,9 @@ const DaoAuctionCard = ({
           <input className={bidInput} />
         </Box>
       </form>
-      <ContractButton handleClick={() => {}}>Bid</ContractButton>
+      <ContractButton handleClick={() => {}} borderRadius={'curved'}>
+        Bid
+      </ContractButton>
     </Flex>
   )
 }

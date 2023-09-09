@@ -33,6 +33,7 @@ export const dashboardRequest = async (memberAddress: string) => {
           })
           .filter((dao) => !DAOS_TO_EXCLUDE.includes(dao.tokenAddress))
           .map((dao) => ({
+            ...dao,
             name: dao.name || '',
             tokenAddress: dao.tokenAddress,
             auctionAddress: dao?.auctionAddress || '',

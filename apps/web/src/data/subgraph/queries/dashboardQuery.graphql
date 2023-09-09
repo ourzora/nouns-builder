@@ -3,6 +3,10 @@ query dashboard($where: DAOTokenOwner_filter, $first: Int, $skip: Int) {
     dao {
       ...DAO
       contractImage
+      auctionConfig {
+        minimumBidIncrement
+        reservePrice
+      }
       proposals(
         where: { executed_not: true, canceled_not: true, vetoed_not: true }
         first: 10

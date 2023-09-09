@@ -2064,6 +2064,11 @@ export type DashboardQuery = {
       name: string
       tokenAddress: any
       auctionAddress: any
+      auctionConfig: {
+        __typename?: 'AuctionConfig'
+        minimumBidIncrement: any
+        reservePrice: any
+      }
       proposals: Array<{
         __typename?: 'Proposal'
         abstainVotes: number
@@ -2547,6 +2552,10 @@ export const DashboardDocument = gql`
       dao {
         ...DAO
         contractImage
+        auctionConfig {
+          minimumBidIncrement
+          reservePrice
+        }
         proposals(
           where: { executed_not: true, canceled_not: true, vetoed_not: true }
           first: 10
