@@ -21,7 +21,7 @@ export const bidInput = style([
   },
   atoms({
     backgroundColor: 'background2',
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 24,
   }),
 ])

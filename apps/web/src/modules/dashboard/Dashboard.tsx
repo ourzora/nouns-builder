@@ -6,7 +6,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { formatEther } from 'viem'
-import { useAccount, useContractEvent } from 'wagmi'
+import { useAccount, useBalance, useContractEvent } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar'
 import { ContractButton } from 'src/components/ContractButton'
@@ -24,8 +24,10 @@ import {
   ProposalFragment,
 } from 'src/data/subgraph/sdk.generated'
 import { useCountdown, useIsMounted } from 'src/hooks'
-import { CHAIN_ID } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
+import { formatCryptoVal } from 'src/utils/numbers'
 
+import { useMinBidIncrement } from '../auction'
 import { bidInput } from './dashboard.css'
 
 const ACTIVE_PROPOSAL_STATES = [
@@ -81,7 +83,7 @@ const Dashboard = () => {
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
   )
-  console.log('data', data)
+
   if (error) {
     return <div>error</div>
   }
@@ -157,15 +159,28 @@ const DaoAuctionCard = ({
   chainId,
   auctionAddress,
   userAddress,
-}: DashboardDao & { userAddress: string }) => {
+  auctionConfig,
+}: DashboardDao & { userAddress: AddressType }) => {
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
+
+  const { endTime, highestBid } = currentAuction
+  const { minimumBidIncrement, reservePrice } = auctionConfig
+  const [bidAmount, setBidAmount] = useState('')
+  const [isEnded, setIsEnded] = useState(false)
+
+  const { data: balance } = useBalance({ address: userAddress, chainId })
+
   const bidText = currentAuction.highestBid?.amount
     ? formatEther(BigInt(currentAuction.highestBid.amount))
     : 'N/A'
-  const { endTime } = currentAuction
-  const [isEnded, setIsEnded] = useState(false)
 
+  const { minBidAmount } = useMinBidIncrement({
+    highestBid: highestBid?.amount ? BigInt(highestBid?.amount) : undefined,
+    reservePrice: BigInt(reservePrice),
+    minBidIncrement: BigInt(minimumBidIncrement),
+  })
+  const formattedMinBid = formatCryptoVal(minBidAmount)
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
   const onEnd = () => {
     setIsEnded(true)
@@ -270,7 +285,40 @@ const DaoAuctionCard = ({
       </Flex>
       <form>
         <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
-          <input className={bidInput} />
+          <input
+            className={bidInput}
+            placeholder={`${formattedMinBid} ETH`}
+            type={'number'}
+            min={formattedMinBid}
+            max={balance?.formatted}
+            value={bidAmount}
+            onChange={(e) => setBidAmount(e.target.value)}
+          />
+          <Flex
+            position="absolute"
+            style={{ top: 0, right: 0, bottom: 0 }}
+            align={'center'}
+            justify={'center'}
+          >
+            <Button
+              height={'100%'}
+              mr={'x4'}
+              px={'x0'}
+              fontWeight={'label'}
+              size="sm"
+              variant="ghost"
+              style={{
+                minWidth: 'fit-content',
+                fontWeight: 500,
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+              onClick={() => setBidAmount(formattedMinBid)}
+              disabled={bidAmount >= formattedMinBid}
+            >
+              Min
+            </Button>
+          </Flex>
         </Box>
       </form>
       <ContractButton handleClick={() => {}} borderRadius={'curved'}>
