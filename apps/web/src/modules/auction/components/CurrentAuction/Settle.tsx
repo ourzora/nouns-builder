@@ -12,6 +12,7 @@ import { ContractButton } from 'src/components/ContractButton'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
+import { AddressType } from 'src/typings'
 
 import { auctionActionButtonVariants } from '../Auction.css'
 
@@ -19,26 +20,29 @@ interface SettleProps {
   isEnding: boolean
   collectionAddress?: string
   owner?: string | undefined
+  externalAuctionAddress?: string
 }
 
-export const Settle = ({ isEnding, owner }: SettleProps) => {
+export const Settle = ({ isEnding, owner, externalAuctionAddress }: SettleProps) => {
   const chain = useChainStore((x) => x.chain)
-  const addresses = useDaoStore((state) => state.addresses)
+  const addresses = useDaoStore?.((state) => state.addresses) || {}
 
   const { address } = useAccount()
   const isWinner = owner != undefined && address == owner
 
+  const auctionAddress = (externalAuctionAddress as AddressType) || addresses?.auction
+
   const { data: paused } = useContractRead({
-    enabled: !!addresses?.auction,
-    address: addresses?.auction,
+    enabled: !!auctionAddress,
+    address: auctionAddress,
     chainId: chain.id,
     abi: auctionAbi,
     functionName: 'paused',
   })
 
   const { config, error } = usePrepareContractWrite({
-    enabled: !!addresses?.auction,
-    address: addresses?.auction,
+    enabled: !!auctionAddress,
+    address: auctionAddress,
     abi: auctionAbi,
     functionName: paused ? 'settleAuction' : 'settleCurrentAndCreateNewAuction',
   })

@@ -1858,7 +1858,7 @@ export type AuctionBidFragment = {
 export type CurrentAuctionFragment = {
   __typename?: 'Auction'
   endTime: any
-  highestBid?: { __typename?: 'AuctionBid'; amount: any } | null
+  highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
   token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
 }
 
@@ -2097,7 +2097,7 @@ export type DashboardQuery = {
       currentAuction?: {
         __typename?: 'Auction'
         endTime: any
-        highestBid?: { __typename?: 'AuctionBid'; amount: any } | null
+        highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
         token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
       } | null
     }
@@ -2354,6 +2354,7 @@ export const CurrentAuctionFragmentDoc = gql`
     endTime
     highestBid {
       amount
+      bidder
     }
     token {
       name

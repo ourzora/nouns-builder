@@ -6,7 +6,11 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { formatEther } from 'viem'
-import { useAccount, useBalance, useContractEvent } from 'wagmi'
+import {
+  useAccount,
+  useBalance,
+  useContractEvent,
+} from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar'
 import { ContractButton } from 'src/components/ContractButton'
@@ -23,11 +27,12 @@ import {
   DaoFragment,
   ProposalFragment,
 } from 'src/data/subgraph/sdk.generated'
-import { useCountdown, useIsMounted } from 'src/hooks'
+import { useCountdown, useIsMounted, useTimeout } from 'src/hooks'
 import { AddressType, CHAIN_ID } from 'src/typings'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useMinBidIncrement } from '../auction'
+import { Settle } from '../auction/components/CurrentAuction/Settle'
 import { bidInput } from './dashboard.css'
 
 const ACTIVE_PROPOSAL_STATES = [
@@ -154,33 +159,19 @@ const DashCountdown = ({
   )
 }
 
-const DaoAuctionCard = ({
-  currentAuction,
-  chainId,
-  auctionAddress,
-  userAddress,
-  auctionConfig,
-}: DashboardDao & { userAddress: AddressType }) => {
+const DaoAuctionCard = (props: DashboardDao & { userAddress: AddressType }) => {
+  const { currentAuction, chainId, auctionAddress, userAddress, auctionConfig } = props
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
 
-  const { endTime, highestBid } = currentAuction
-  const { minimumBidIncrement, reservePrice } = auctionConfig
-  const [bidAmount, setBidAmount] = useState('')
-  const [isEnded, setIsEnded] = useState(false)
+  const { endTime } = currentAuction
 
-  const { data: balance } = useBalance({ address: userAddress, chainId })
+  const [isEnded, setIsEnded] = useState(false)
 
   const bidText = currentAuction.highestBid?.amount
     ? formatEther(BigInt(currentAuction.highestBid.amount))
     : 'N/A'
 
-  const { minBidAmount } = useMinBidIncrement({
-    highestBid: highestBid?.amount ? BigInt(highestBid?.amount) : undefined,
-    reservePrice: BigInt(reservePrice),
-    minBidIncrement: BigInt(minimumBidIncrement),
-  })
-  const formattedMinBid = formatCryptoVal(minBidAmount)
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
   const onEnd = () => {
     setIsEnded(true)
@@ -283,47 +274,7 @@ const DaoAuctionCard = ({
         </Text>
         <DashCountdown endTime={endTime} onEnd={onEnd} isOver={isOver} />
       </Flex>
-      <form>
-        <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
-          <input
-            className={bidInput}
-            placeholder={`${formattedMinBid} ETH`}
-            type={'number'}
-            min={formattedMinBid}
-            max={balance?.formatted}
-            value={bidAmount}
-            onChange={(e) => setBidAmount(e.target.value)}
-          />
-          <Flex
-            position="absolute"
-            style={{ top: 0, right: 0, bottom: 0 }}
-            align={'center'}
-            justify={'center'}
-          >
-            <Button
-              height={'100%'}
-              mr={'x4'}
-              px={'x0'}
-              fontWeight={'label'}
-              size="sm"
-              variant="ghost"
-              style={{
-                minWidth: 'fit-content',
-                fontWeight: 500,
-                paddingLeft: 0,
-                paddingRight: 0,
-              }}
-              onClick={() => setBidAmount(formattedMinBid)}
-              disabled={bidAmount >= formattedMinBid}
-            >
-              Min
-            </Button>
-          </Flex>
-        </Box>
-      </form>
-      <ContractButton handleClick={() => {}} borderRadius={'curved'}>
-        Bid
-      </ContractButton>
+      <BidActionButton {...props} isOver={isOver} isEnded={isEnded} />
     </Flex>
   )
 }
@@ -391,5 +342,104 @@ const DaoProposalCard = ({ title, proposalNumber }: ProposalFragment) => {
         </Text>
       </Flex>
     </Flex>
+  )
+}
+
+const BidActionButton = ({
+  userAddress,
+  chainId,
+  auctionConfig,
+  currentAuction,
+  isEnded,
+  auctionAddress,
+  isOver,
+}: DashboardDao & { userAddress: AddressType; isOver: boolean; isEnded: boolean }) => {
+  const { data: balance } = useBalance({ address: userAddress, chainId })
+  const { minimumBidIncrement, reservePrice } = auctionConfig
+  const { highestBid } = currentAuction
+  const { minBidAmount } = useMinBidIncrement({
+    highestBid: highestBid?.amount ? BigInt(highestBid?.amount) : undefined,
+    reservePrice: BigInt(reservePrice),
+    minBidIncrement: BigInt(minimumBidIncrement),
+  })
+  // const { data: paused } = useContractRead({
+  //   enabled: !!auctionAddress,
+  //   address: auctionAddress,
+  //   chainId,
+  //   abi: auctionAbi,
+  //   functionName: 'paused',
+  // })
+  // const { config, error } = usePrepareContractWrite({
+  //   enabled: !!auctionAddress,
+  //   address: auctionAddress,
+  //   abi: auctionAbi,
+  //   functionName: paused ? 'settleAuction' : 'settleCurrentAndCreateNewAuction',
+  // })
+  // const {writeAsync, status} = useContractWrite(config)
+  const [bidAmount, setBidAmount] = useState('')
+  const [isEnding, setIsEnding] = useState(false)
+  const formattedMinBid = formatCryptoVal(minBidAmount)
+
+  const isEndingTimeout = isEnded ? 4000 : null
+  useTimeout(() => {
+    setIsEnding(false)
+  }, isEndingTimeout)
+
+  if (isEnded || isOver) {
+    return (
+      <Box ml={'auto'}>
+        <Settle
+          isEnding={isEnding}
+          owner={highestBid?.bidder}
+          externalAuctionAddress={auctionAddress}
+        />
+      </Box>
+    )
+  }
+
+  return (
+    <>
+      <form style={{ marginLeft: 'auto' }}>
+        <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
+          <input
+            className={bidInput}
+            placeholder={`${formattedMinBid} ETH`}
+            type={'number'}
+            min={formattedMinBid}
+            max={balance?.formatted}
+            value={bidAmount}
+            onChange={(e) => setBidAmount(e.target.value)}
+          />
+          <Flex
+            position="absolute"
+            style={{ top: 0, right: 0, bottom: 0 }}
+            align={'center'}
+            justify={'center'}
+          >
+            <Button
+              height={'100%'}
+              mr={'x4'}
+              px={'x0'}
+              fontWeight={'label'}
+              size="sm"
+              variant="ghost"
+              style={{
+                minWidth: 'fit-content',
+                fontWeight: 500,
+                paddingLeft: 0,
+                paddingRight: 0,
+              }}
+              onClick={() => setBidAmount(formattedMinBid)}
+              disabled={bidAmount >= formattedMinBid}
+            >
+              Min
+            </Button>
+          </Flex>
+        </Box>
+      </form>
+      <ContractButton handleClick={() => {}} borderRadius={'curved'}>
+        Bid
+      </ContractButton>
+    </>
   )
 }

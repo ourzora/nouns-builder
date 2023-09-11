@@ -2,6 +2,7 @@ fragment CurrentAuction on Auction {
   endTime
   highestBid {
     amount
+    bidder
   }
   token {
     name
