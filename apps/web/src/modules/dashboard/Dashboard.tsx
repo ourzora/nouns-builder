@@ -1,3 +1,4 @@
+import { Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
@@ -94,6 +95,8 @@ const Dashboard = () => {
     setMutating(false)
   }
 
+  const hasLiveProposals = data.some((dao) => dao.proposals.length)
+
   return (
     <DashboardLayout
       auctionCards={data?.map((dao) => (
@@ -104,11 +107,33 @@ const Dashboard = () => {
           handleMutate={handleMutate}
         />
       ))}
-      daoProposals={data
-        .filter((dao) => dao.proposals.length)
-        .map((dao) => (
-          <DaoProposals key={dao.tokenAddress} {...dao} />
-        ))}
+      daoProposals={
+        hasLiveProposals ? (
+          data
+            .filter((dao) => dao.proposals.length)
+            .map((dao) => <DaoProposals key={dao.tokenAddress} {...dao} />)
+        ) : (
+          <Flex
+            borderRadius={'phat'}
+            borderStyle={'solid'}
+            height={'x32'}
+            width={'100%'}
+            borderWidth={'normal'}
+            borderColor={'border'}
+            direction={'column'}
+            justify={'center'}
+            align={'center'}
+          >
+            <Text fontSize={20} fontWeight={'display'} mb="x4" color={'text3'}>
+              No Active Proposals
+            </Text>
+            <Text color={'text3'}>
+              Currently, none of your DAOs have proposals that are in active, queue, or
+              pending states. Check back later!
+            </Text>
+          </Flex>
+        )
+      }
     />
   )
 }

@@ -6,10 +6,6 @@ import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/a
 
 import { ContractButton } from 'src/components/ContractButton'
 import { auctionAbi } from 'src/data/contract/abis'
-
-
-
-
 import { AddressType } from 'src/typings'
 import { maxChar } from 'src/utils/helpers'
 
