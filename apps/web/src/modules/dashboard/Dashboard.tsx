@@ -6,12 +6,7 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { formatEther } from 'viem'
-import {
-  useAccount,
-  useBalance,
-  useContractEvent,
-} from 'wagmi'
-import { readContract } from 'wagmi/actions'
+import { useAccount, useBalance, useContractEvent } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar'
 import { ContractButton } from 'src/components/ContractButton'
@@ -28,9 +23,8 @@ import {
   DaoFragment,
   ProposalFragment,
 } from 'src/data/subgraph/sdk.generated'
-import { useCountdown, useIsMounted, useTimeout } from 'src/hooks'
+import { useCountdown, useIsMounted } from 'src/hooks'
 import { AddressType, CHAIN_ID } from 'src/typings'
-import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useMinBidIncrement } from '../auction'
@@ -91,11 +85,13 @@ const Dashboard = () => {
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
   )
-  console.log('data', data)
+
+  const [mutating, setMutating] = useState(false)
+
   if (error) {
     return <div>error</div>
   }
-  if (isValidating) {
+  if (isValidating && !mutating) {
     return <div>loading</div>
   }
   if (!address) {
@@ -103,6 +99,12 @@ const Dashboard = () => {
   }
   if (!data) {
     return <div>no data</div>
+  }
+
+  const handleMutate = async () => {
+    setMutating(true)
+    await mutate([`${SWR_KEYS.DASHBOARD}:${address}`], () => fetchDashboardData(address))
+    setMutating(false)
   }
 
   return (
@@ -122,7 +124,12 @@ const Dashboard = () => {
             DAOs
           </Text>
           {data?.map((dao) => (
-            <DaoAuctionCard {...dao} userAddress={address} />
+            <DaoAuctionCard
+              key={`${dao.tokenAddress}:${dao.currentAuction.token.tokenId}`}
+              {...dao}
+              userAddress={address}
+              handleMutate={handleMutate}
+            />
           ))}
         </Box>
         <Box>
@@ -132,7 +139,7 @@ const Dashboard = () => {
           {data
             .filter((dao) => dao.proposals.length)
             .map((dao) => (
-              <DaoProposals {...dao} />
+              <DaoProposals key={dao.tokenAddress} {...dao} />
             ))}
         </Box>
       </Box>
@@ -162,32 +169,35 @@ const DashCountdown = ({
   )
 }
 
-const DaoAuctionCard = (props: DashboardDao & { userAddress: AddressType }) => {
+const DaoAuctionCard = (
+  props: DashboardDao & { userAddress: AddressType; handleMutate: () => void }
+) => {
   const {
     currentAuction,
     chainId,
     auctionAddress,
     userAddress,
     auctionConfig,
+    handleMutate,
     tokenAddress,
   } = props
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
 
-  const { data: auction } = useSWR(
-    [SWR_KEYS.AUCTION, chainId, auctionAddress],
-    (_, chainId, auctionAddress) =>
-      readContract({
-        abi: auctionAbi,
-        address: auctionAddress as AddressType,
-        functionName: 'auction',
-        chainId,
-      }),
-    { revalidateOnFocus: true }
-  )
+  // const { data: auction } = useSWR(
+  //   [SWR_KEYS.AUCTION, chainId, auctionAddress],
+  //   (_, chainId, auctionAddress) =>
+  //     readContract({
+  //       abi: auctionAbi,
+  //       address: auctionAddress as AddressType,
+  //       functionName: 'auction',
+  //       chainId,
+  //     }),
+  //   { revalidateOnFocus: true }
+  // )
 
-  const [liveTokenId, liveHighestBid, liveHighestBidder, _, liveEndTime, liveSettled] =
-    unpackOptionalArray(auction, 6)
+  // const [liveTokenId, liveHighestBid, liveHighestBidder, _, liveEndTime, liveSettled] =
+  //   unpackOptionalArray(auction, 6)
 
   // const { data: token } = useSWR(
   //   [
@@ -215,10 +225,10 @@ const DaoAuctionCard = (props: DashboardDao & { userAddress: AddressType }) => {
     setIsEnded(true)
   }
 
-  const isTokenActiveAuction =
-    !liveSettled &&
-    !!liveTokenId &&
-    liveTokenId.toString() == currentAuction.token.tokenId
+  // const isTokenActiveAuction =
+  //   !liveSettled &&
+  //   !!liveTokenId &&
+  //   liveTokenId.toString() == currentAuction.token.tokenId
 
   useContractEvent({
     address: auctionAddress,
@@ -226,10 +236,9 @@ const DaoAuctionCard = (props: DashboardDao & { userAddress: AddressType }) => {
     eventName: 'AuctionCreated',
     chainId,
     listener: async () => {
+      console.log('AuctionCreated')
       setTimeout(() => {
-        mutate([`${SWR_KEYS.DASHBOARD}:${userAddress}`], () =>
-          fetchDashboardData(userAddress)
-        )
+        handleMutate()
       }, 3000)
     },
   })
@@ -240,9 +249,7 @@ const DaoAuctionCard = (props: DashboardDao & { userAddress: AddressType }) => {
     chainId,
     listener: async () => {
       setTimeout(() => {
-        mutate([`${SWR_KEYS.DASHBOARD}:${userAddress}`], () =>
-          fetchDashboardData(userAddress)
-        )
+        handleMutate()
       }, 3000)
     },
   })
@@ -361,7 +368,7 @@ const DaoProposals = ({ daoImage, tokenAddress, name, proposals }: DashboardDao)
         </Button>
       </Flex>
       {proposals.map((proposal) => (
-        <DaoProposalCard {...proposal} />
+        <DaoProposalCard key={proposal.proposalNumber} {...proposal} />
       ))}
     </Box>
   )
@@ -418,20 +425,20 @@ const BidActionButton = ({
   // })
   // const {writeAsync, status} = useContractWrite(config)
   const [bidAmount, setBidAmount] = useState('')
-  const [isEnding, setIsEnding] = useState(false)
+  // const [isEnding, setIsEnding] = useState(false)
   const formattedMinBid = formatCryptoVal(minBidAmount)
 
   const isEndingTimeout = isEnded ? 4000 : null
-  useTimeout(() => {
-    console.log('timeout fired')
-    setIsEnding(false)
-  }, isEndingTimeout)
+  // useTimeout(() => {
+  //   console.log('timeout fired')
+  //   setIsEnding(false)
+  // }, isEndingTimeout)
 
   if (isEnded || isOver) {
     return (
       <Box ml={'auto'}>
         <Settle
-          isEnding={isEnding}
+          isEnding={false}
           owner={highestBid?.bidder}
           externalAuctionAddress={auctionAddress}
         />
