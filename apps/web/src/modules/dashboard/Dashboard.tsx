@@ -5,8 +5,9 @@ import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
-import { formatEther } from 'viem'
-import { useAccount, useBalance, useContractEvent } from 'wagmi'
+import { Address, formatEther, parseEther } from 'viem'
+import { useAccount, useBalance, useContractEvent, useNetwork } from 'wagmi'
+import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { Avatar } from 'src/components/Avatar'
 import { ContractButton } from 'src/components/ContractButton'
@@ -25,11 +26,17 @@ import {
 } from 'src/data/subgraph/sdk.generated'
 import { useCountdown, useIsMounted } from 'src/hooks'
 import { AddressType, CHAIN_ID } from 'src/typings'
-import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useMinBidIncrement } from '../auction'
 import { Settle } from '../auction/components/CurrentAuction/Settle'
 import { bidInput } from './dashboard.css'
+
+function maxChar(str: string, maxLength: number) {
+  if (str.length <= maxLength) {
+    return str
+  }
+  return str.slice(0, maxLength) + '...'
+}
 
 const ACTIVE_PROPOSAL_STATES = [
   ProposalState.Active,
@@ -73,7 +80,6 @@ const fetchDashboardData = async (address: string) => {
     .then((x) => x.data)
 
   const resolved = await Promise.all(userDaos.map(fetchDaoProposalState))
-  console.log('resolved', resolved)
   return resolved
 }
 
@@ -411,28 +417,44 @@ const BidActionButton = ({
   const { data: balance } = useBalance({ address: userAddress, chainId })
   const { minimumBidIncrement, reservePrice } = auctionConfig
   const { highestBid } = currentAuction
+  const { chain: wagmiChain } = useNetwork()
   const { minBidAmount } = useMinBidIncrement({
     highestBid: highestBid?.amount ? BigInt(highestBid?.amount) : undefined,
     reservePrice: BigInt(reservePrice),
     minBidIncrement: BigInt(minimumBidIncrement),
   })
 
-  // const { config, error } = usePrepareContractWrite({
-  //   enabled: !!auctionAddress,
-  //   address: auctionAddress,
-  //   abi: auctionAbi,
-  //   functionName: paused ? 'settleAuction' : 'settleCurrentAndCreateNewAuction',
-  // })
-  // const {writeAsync, status} = useContractWrite(config)
   const [bidAmount, setBidAmount] = useState('')
-  // const [isEnding, setIsEnding] = useState(false)
-  const formattedMinBid = formatCryptoVal(minBidAmount)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const isEndingTimeout = isEnded ? 4000 : null
-  // useTimeout(() => {
-  //   console.log('timeout fired')
-  //   setIsEnding(false)
-  // }, isEndingTimeout)
+  const isMinBid = Number(bidAmount) >= minBidAmount
+
+  const isValidBid = bidAmount && isMinBid
+
+  const isValidChain = wagmiChain?.id === chainId
+
+  const handleCreateBid = async () => {
+    if (!isMinBid || !bidAmount || isLoading) return
+
+    try {
+      setIsLoading(true)
+
+      const config = await prepareWriteContract({
+        abi: auctionAbi,
+        address: auctionAddress as Address,
+        functionName: 'createBid',
+        args: [BigInt(currentAuction.token.tokenId)],
+        value: parseEther(bidAmount.toString()),
+      })
+      const tx = await writeContract(config)
+      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
+      setBidAmount('')
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   if (isEnded || isOver) {
     return (
@@ -446,15 +468,21 @@ const BidActionButton = ({
     )
   }
 
+  // const handleCreateBid = async () => {
+
+  //   if(!isMinBid)
+
+  // }
+
   return (
     <>
       <form style={{ marginLeft: 'auto' }}>
         <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
           <input
             className={bidInput}
-            placeholder={`${formattedMinBid} ETH`}
+            placeholder={maxChar(`${minBidAmount} ETH`, 12)}
             type={'number'}
-            min={formattedMinBid}
+            min={minBidAmount}
             max={balance?.formatted}
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
@@ -478,15 +506,20 @@ const BidActionButton = ({
                 paddingLeft: 0,
                 paddingRight: 0,
               }}
-              onClick={() => setBidAmount(formattedMinBid)}
-              disabled={bidAmount >= formattedMinBid}
+              onClick={() => setBidAmount(minBidAmount.toString())}
+              disabled={Number(bidAmount) >= minBidAmount}
             >
               Min
             </Button>
           </Flex>
         </Box>
       </form>
-      <ContractButton handleClick={() => {}} borderRadius={'curved'}>
+      <ContractButton
+        borderRadius={'curved'}
+        disabled={!isValidBid || !isValidChain}
+        loading={isLoading}
+        handleClick={() => handleCreateBid()}
+      >
         Bid
       </ContractButton>
     </>

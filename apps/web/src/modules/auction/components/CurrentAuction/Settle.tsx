@@ -21,6 +21,10 @@ interface SettleProps {
   collectionAddress?: string
   owner?: string | undefined
   externalAuctionAddress?: AddressType
+  customStyles?: {
+    settle: string
+    settling: string
+  }
 }
 
 export const Settle = ({ isEnding, owner, externalAuctionAddress }: SettleProps) => {
