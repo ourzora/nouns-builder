@@ -77,15 +77,15 @@ const Dashboard = () => {
   const [mutating, setMutating] = useState(false)
 
   if (error) {
-    return <div>error</div>
+    return <div>Error</div>
   }
   if (isValidating && !mutating) {
     return <div>loading</div>
   }
   if (!address) {
-    return <div>no address</div>
+    return <div>No address</div>
   }
-  if (!data) {
+  if (!data?.length) {
     return <div>no data</div>
   }
 

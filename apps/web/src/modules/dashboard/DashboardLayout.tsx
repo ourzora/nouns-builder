@@ -8,7 +8,7 @@ export const DashboardLayout = ({
   daoProposals,
 }: {
   auctionCards: ReactNode
-  daoProposals: ReactNode
+  daoProposals?: ReactNode
 }) => {
   return (
     <Flex
