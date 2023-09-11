@@ -11,6 +11,7 @@ import {
   useBalance,
   useContractEvent,
 } from 'wagmi'
+import { readContract } from 'wagmi/actions'
 
 import { Avatar } from 'src/components/Avatar'
 import { ContractButton } from 'src/components/ContractButton'
@@ -29,6 +30,7 @@ import {
 } from 'src/data/subgraph/sdk.generated'
 import { useCountdown, useIsMounted, useTimeout } from 'src/hooks'
 import { AddressType, CHAIN_ID } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useMinBidIncrement } from '../auction'
@@ -77,6 +79,7 @@ const fetchDashboardData = async (address: string) => {
     .then((x) => x.data)
 
   const resolved = await Promise.all(userDaos.map(fetchDaoProposalState))
+  console.log('resolved', resolved)
   return resolved
 }
 
@@ -88,7 +91,7 @@ const Dashboard = () => {
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
   )
-
+  console.log('data', data)
   if (error) {
     return <div>error</div>
   }
@@ -160,9 +163,44 @@ const DashCountdown = ({
 }
 
 const DaoAuctionCard = (props: DashboardDao & { userAddress: AddressType }) => {
-  const { currentAuction, chainId, auctionAddress, userAddress, auctionConfig } = props
+  const {
+    currentAuction,
+    chainId,
+    auctionAddress,
+    userAddress,
+    auctionConfig,
+    tokenAddress,
+  } = props
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
+
+  const { data: auction } = useSWR(
+    [SWR_KEYS.AUCTION, chainId, auctionAddress],
+    (_, chainId, auctionAddress) =>
+      readContract({
+        abi: auctionAbi,
+        address: auctionAddress as AddressType,
+        functionName: 'auction',
+        chainId,
+      }),
+    { revalidateOnFocus: true }
+  )
+
+  const [liveTokenId, liveHighestBid, liveHighestBidder, _, liveEndTime, liveSettled] =
+    unpackOptionalArray(auction, 6)
+
+  // const { data: token } = useSWR(
+  //   [
+  //     `${SWR_KEYS.TOKEN}:${tokenAddress}:${liveTokenId}`,
+  //     chainId,
+  //     tokenAddress,
+  //     liveTokenId,
+  //   ],
+  //   (_, id) =>
+  //     axios
+  //       .get<TokenWithWinner>(`/api/dao/${chainId}/${tokenAddress}/${liveTokenId}`)
+  //       .then((x) => x.data)
+  // )
 
   const { endTime } = currentAuction
 
@@ -177,15 +215,22 @@ const DaoAuctionCard = (props: DashboardDao & { userAddress: AddressType }) => {
     setIsEnded(true)
   }
 
+  const isTokenActiveAuction =
+    !liveSettled &&
+    !!liveTokenId &&
+    liveTokenId.toString() == currentAuction.token.tokenId
+
   useContractEvent({
     address: auctionAddress,
     abi: auctionAbi,
     eventName: 'AuctionCreated',
     chainId,
     listener: async () => {
-      await mutate([`${SWR_KEYS.DASHBOARD}:${userAddress}`, userAddress], () =>
-        fetchDashboardData(userAddress)
-      )
+      setTimeout(() => {
+        mutate([`${SWR_KEYS.DASHBOARD}:${userAddress}`], () =>
+          fetchDashboardData(userAddress)
+        )
+      }, 3000)
     },
   })
   useContractEvent({
@@ -194,9 +239,11 @@ const DaoAuctionCard = (props: DashboardDao & { userAddress: AddressType }) => {
     eventName: 'AuctionBid',
     chainId,
     listener: async () => {
-      await mutate([`${SWR_KEYS.DASHBOARD}:${userAddress}`, userAddress], () =>
-        fetchDashboardData(userAddress)
-      )
+      setTimeout(() => {
+        mutate([`${SWR_KEYS.DASHBOARD}:${userAddress}`], () =>
+          fetchDashboardData(userAddress)
+        )
+      }, 3000)
     },
   })
 
@@ -362,13 +409,7 @@ const BidActionButton = ({
     reservePrice: BigInt(reservePrice),
     minBidIncrement: BigInt(minimumBidIncrement),
   })
-  // const { data: paused } = useContractRead({
-  //   enabled: !!auctionAddress,
-  //   address: auctionAddress,
-  //   chainId,
-  //   abi: auctionAbi,
-  //   functionName: 'paused',
-  // })
+
   // const { config, error } = usePrepareContractWrite({
   //   enabled: !!auctionAddress,
   //   address: auctionAddress,
@@ -382,6 +423,7 @@ const BidActionButton = ({
 
   const isEndingTimeout = isEnded ? 4000 : null
   useTimeout(() => {
+    console.log('timeout fired')
     setIsEnding(false)
   }, isEndingTimeout)
 

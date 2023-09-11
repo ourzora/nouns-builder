@@ -20,7 +20,7 @@ interface SettleProps {
   isEnding: boolean
   collectionAddress?: string
   owner?: string | undefined
-  externalAuctionAddress?: string
+  externalAuctionAddress?: AddressType
 }
 
 export const Settle = ({ isEnding, owner, externalAuctionAddress }: SettleProps) => {
@@ -30,7 +30,7 @@ export const Settle = ({ isEnding, owner, externalAuctionAddress }: SettleProps)
   const { address } = useAccount()
   const isWinner = owner != undefined && address == owner
 
-  const auctionAddress = (externalAuctionAddress as AddressType) || addresses?.auction
+  const auctionAddress = externalAuctionAddress || addresses?.auction
 
   const { data: paused } = useContractRead({
     enabled: !!auctionAddress,
