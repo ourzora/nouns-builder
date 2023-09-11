@@ -53,7 +53,7 @@ export const Nav = () => {
             <Link href={'/about'}>
               <Label className={navMenuItem}>About</Label>
             </Link>
-            <Link href={'/dashboard'}>
+            <Link href={'/'}>
               <Label className={navMenuItem}>Dashboard</Label>
             </Link>
             <Link href={'/explore'}>

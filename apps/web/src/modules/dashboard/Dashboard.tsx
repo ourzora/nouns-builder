@@ -178,45 +178,9 @@ const DashCountdown = ({
 const DaoAuctionCard = (
   props: DashboardDao & { userAddress: AddressType; handleMutate: () => void }
 ) => {
-  const {
-    currentAuction,
-    chainId,
-    auctionAddress,
-    userAddress,
-    auctionConfig,
-    handleMutate,
-    tokenAddress,
-  } = props
+  const { currentAuction, chainId, auctionAddress, handleMutate } = props
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
-
-  // const { data: auction } = useSWR(
-  //   [SWR_KEYS.AUCTION, chainId, auctionAddress],
-  //   (_, chainId, auctionAddress) =>
-  //     readContract({
-  //       abi: auctionAbi,
-  //       address: auctionAddress as AddressType,
-  //       functionName: 'auction',
-  //       chainId,
-  //     }),
-  //   { revalidateOnFocus: true }
-  // )
-
-  // const [liveTokenId, liveHighestBid, liveHighestBidder, _, liveEndTime, liveSettled] =
-  //   unpackOptionalArray(auction, 6)
-
-  // const { data: token } = useSWR(
-  //   [
-  //     `${SWR_KEYS.TOKEN}:${tokenAddress}:${liveTokenId}`,
-  //     chainId,
-  //     tokenAddress,
-  //     liveTokenId,
-  //   ],
-  //   (_, id) =>
-  //     axios
-  //       .get<TokenWithWinner>(`/api/dao/${chainId}/${tokenAddress}/${liveTokenId}`)
-  //       .then((x) => x.data)
-  // )
 
   const { endTime } = currentAuction
 
@@ -230,11 +194,6 @@ const DaoAuctionCard = (
   const onEnd = () => {
     setIsEnded(true)
   }
-
-  // const isTokenActiveAuction =
-  //   !liveSettled &&
-  //   !!liveTokenId &&
-  //   liveTokenId.toString() == currentAuction.token.tokenId
 
   useContractEvent({
     address: auctionAddress,
@@ -467,12 +426,6 @@ const BidActionButton = ({
       </Box>
     )
   }
-
-  // const handleCreateBid = async () => {
-
-  //   if(!isMinBid)
-
-  // }
 
   return (
     <>
