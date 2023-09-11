@@ -58,14 +58,9 @@ export const DaoAuctionCard = (
       }, 3000)
     },
   })
-
+  const currentChainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
   return (
-    <Link
-      href={`/dao/${
-        PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-      }/${tokenAddress}`}
-      passHref
-    >
+    <Link href={`/dao/${currentChainSlug}/${tokenAddress}`} passHref>
       <Flex
         mb={'x4'}
         w={'100%'}
