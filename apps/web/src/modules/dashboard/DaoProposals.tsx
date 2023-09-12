@@ -67,6 +67,7 @@ export const DaoProposals = ({
           {...proposal}
           chainId={chainId}
           tokenAddress={tokenAddress}
+          proposalState={proposal.proposalState}
         />
       ))}
     </Box>

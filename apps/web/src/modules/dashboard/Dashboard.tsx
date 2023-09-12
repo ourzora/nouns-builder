@@ -33,7 +33,7 @@ export type DashboardDao = DaoFragment & {
     minimumBidIncrement: string
     reservePrice: string
   }
-  proposals: ProposalFragment[]
+  proposals: (ProposalFragment & { proposalState: ProposalState })[]
   currentAuction: CurrentAuctionFragment
 }
 
@@ -45,7 +45,7 @@ const fetchDaoProposalState = async (dao: DashboardDao) => {
         proposal.dao.governorAddress,
         proposal.proposalId
       )
-      return { ...proposal, proposalState }
+      return { ...proposal, proposalState: proposalState }
     })
   )
   return {

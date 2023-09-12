@@ -15,6 +15,9 @@ query dashboard($where: DAOTokenOwner_filter, $first: Int, $skip: Int) {
         orderDirection: desc
       ) {
         ...Proposal
+        voteEnd
+        voteStart
+        expiresAt
       }
       currentAuction {
         ...CurrentAuction

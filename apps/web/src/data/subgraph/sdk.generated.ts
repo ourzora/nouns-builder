@@ -2071,13 +2071,15 @@ export type DashboardQuery = {
       }
       proposals: Array<{
         __typename?: 'Proposal'
+        voteEnd: any
+        voteStart: any
+        expiresAt?: any | null
         abstainVotes: number
         againstVotes: number
         calldatas?: string | null
         description?: string | null
         descriptionHash: any
         executableFrom?: any | null
-        expiresAt?: any | null
         forVotes: number
         proposalId: any
         proposalNumber: number
@@ -2088,8 +2090,6 @@ export type DashboardQuery = {
         timeCreated: any
         title?: string | null
         values: Array<any>
-        voteEnd: any
-        voteStart: any
         snapshotBlockNumber: any
         transactionHash: any
         dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
@@ -2565,6 +2565,9 @@ export const DashboardDocument = gql`
           orderDirection: desc
         ) {
           ...Proposal
+          voteEnd
+          voteStart
+          expiresAt
         }
         currentAuction {
           ...CurrentAuction
