@@ -1,4 +1,4 @@
-import { Flex, Text } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
@@ -19,6 +19,7 @@ import { CHAIN_ID } from 'src/typings'
 import { DaoAuctionCard } from './DaoAuctionCard'
 import { DaoProposals } from './DaoProposals'
 import { DashboardLayout } from './DashboardLayout'
+import { AuctionCardSkeleton, DAOCardSkeleton, ProposalCardSkeleton } from './Skeletons'
 
 const ACTIVE_PROPOSAL_STATES = [
   ProposalState.Active,
@@ -80,7 +81,21 @@ const Dashboard = () => {
     return <div>Error</div>
   }
   if (isValidating && !mutating) {
-    return <div>loading</div>
+    return (
+      <DashboardLayout
+        auctionCards={Array.from({ length: 3 }).map((_, i) => (
+          <AuctionCardSkeleton key={`auctionCardSkeleton:${i}`} />
+        ))}
+        daoProposals={
+          <Box>
+            <DAOCardSkeleton />
+            {Array.from({ length: 2 }).map((_, i) => (
+              <ProposalCardSkeleton key={`daoCardSkeleton:${i}`} />
+            ))}
+          </Box>
+        }
+      />
+    )
   }
   if (!address) {
     return <div>No address</div>
