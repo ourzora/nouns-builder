@@ -89,6 +89,7 @@ export const BidActionButton = ({
             max={balance?.formatted}
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
           />
           <Flex
             position="absolute"
@@ -109,7 +110,10 @@ export const BidActionButton = ({
                 paddingLeft: 0,
                 paddingRight: 0,
               }}
-              onClick={() => setBidAmount(minBidAmount.toString())}
+              onClick={(e: any) => {
+                e.stopPropagation()
+                setBidAmount(minBidAmount.toString())
+              }}
               disabled={Number(bidAmount) >= minBidAmount}
             >
               Min
@@ -121,7 +125,10 @@ export const BidActionButton = ({
         borderRadius={'curved'}
         disabled={!isValidBid || !isValidChain}
         loading={isLoading}
-        handleClick={() => handleCreateBid()}
+        handleClick={(e: any) => {
+          e.stopPropagation()
+          handleCreateBid()
+        }}
       >
         Bid
       </ContractButton>
