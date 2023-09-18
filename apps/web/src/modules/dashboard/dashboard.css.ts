@@ -6,7 +6,6 @@ import { skeletonAnimation } from 'src/styles/animations.css'
 export const bidInput = style([
   {
     width: '100%',
-    maxWidth: '150px',
     border: 'none',
     borderRadius: '12px',
     height: '48px',

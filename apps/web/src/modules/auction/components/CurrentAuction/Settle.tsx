@@ -21,13 +21,15 @@ interface SettleProps {
   collectionAddress?: string
   owner?: string | undefined
   externalAuctionAddress?: AddressType
-  customStyles?: {
-    settle: string
-    settling: string
-  }
+  compact?: boolean
 }
 
-export const Settle = ({ isEnding, owner, externalAuctionAddress }: SettleProps) => {
+export const Settle = ({
+  isEnding,
+  owner,
+  externalAuctionAddress,
+  compact = false,
+}: SettleProps) => {
   const chain = useChainStore((x) => x.chain)
   const addresses = useDaoStore?.((state) => state.addresses) || {}
 
@@ -81,7 +83,15 @@ export const Settle = ({ isEnding, owner, externalAuctionAddress }: SettleProps)
   if (settling) {
     return (
       <Flex direction="column" align="center" width={'100%'}>
-        <Button disabled className={auctionActionButtonVariants['settling']}>
+        <Button
+          disabled
+          className={
+            compact
+              ? auctionActionButtonVariants['dashSettle']
+              : auctionActionButtonVariants['settling']
+          }
+          variant={compact ? 'outline' : 'primary'}
+        >
           Settling
         </Button>
       </Flex>
@@ -92,7 +102,12 @@ export const Settle = ({ isEnding, owner, externalAuctionAddress }: SettleProps)
     <Flex direction="column" align="center" width={'100%'}>
       <ContractButton
         handleClick={handleSettle}
-        className={auctionActionButtonVariants['settle']}
+        className={
+          compact
+            ? auctionActionButtonVariants['dashSettle']
+            : auctionActionButtonVariants['settle']
+        }
+        variant={compact ? 'outline' : 'primary'}
       >
         {isWinner ? 'Claim NFT' : 'Start next auction'}
       </ContractButton>

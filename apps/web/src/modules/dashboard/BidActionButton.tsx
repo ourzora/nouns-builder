@@ -69,19 +69,31 @@ export const BidActionButton = ({
 
   if (isEnded || isOver) {
     return (
-      <Box ml={'auto'}>
+      <Box
+        ml={'auto'}
+        style={{
+          maxWidth: '230px',
+          width: '100%',
+        }}
+      >
         <Settle
           isEnding={false}
           owner={highestBid?.bidder}
           externalAuctionAddress={auctionAddress}
+          compact={true}
         />
       </Box>
     )
   }
 
   return (
-    <>
-      <form style={{ marginLeft: 'auto' }}>
+    <Flex
+      ml="auto"
+      style={{
+        width: '230px',
+      }}
+    >
+      <form>
         <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
           <input
             className={bidInput}
@@ -113,7 +125,6 @@ export const BidActionButton = ({
                 paddingRight: 0,
               }}
               onClick={(e: any) => {
-                e.stopPropagation()
                 setBidAmount(minBidAmount.toString())
               }}
               disabled={Number(bidAmount) >= minBidAmount}
@@ -127,14 +138,13 @@ export const BidActionButton = ({
         borderRadius={'curved'}
         disabled={!isValidBid || !isValidChain}
         loading={isLoading}
-        handleClick={(e: any) => {
-          e.stopPropagation()
+        handleClick={() => {
           handleCreateBid()
         }}
         position={'relative'}
       >
         Bid
       </ContractButton>
-    </>
+    </Flex>
   )
 }
