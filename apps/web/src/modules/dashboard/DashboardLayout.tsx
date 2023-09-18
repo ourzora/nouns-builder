@@ -19,10 +19,10 @@ export const DashboardLayout = ({
     >
       <Meta title={'Dashboard'} type={'website'} slug={'/'} />
       <Box w="100%" style={{ maxWidth: 912 }}>
-        <Text fontSize={35} fontWeight={'display'} mb={'x10'}>
+        <Text fontSize={35} fontWeight={'display'} mb={'x12'}>
           Dashboard
         </Text>
-        <Box mb={'x8'}>
+        <Box mb={'x12'}>
           <Text fontSize={28} fontWeight={'display'} mb={'x6'}>
             DAOs
           </Text>
