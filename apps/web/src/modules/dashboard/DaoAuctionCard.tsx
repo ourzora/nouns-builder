@@ -64,19 +64,17 @@ export const DaoAuctionCard = (
   }
   return (
     <Flex
-      onClick={handleSelectAuction}
       mb={'x4'}
       w={'100%'}
       borderColor={'border'}
       borderStyle={'solid'}
       borderRadius={'curved'}
       borderWidth={'normal'}
-      cursor={'pointer'}
       py={{ '@initial': 'x2', '@768': 'x3' }}
       px={{ '@initial': 'x2', '@768': 'x6' }}
       align={'center'}
     >
-      <Box mr="x6">
+      <Box pr="x6" onClick={handleSelectAuction} cursor="pointer">
         <Image
           src={currentAuction.token.image}
           layout="fixed"
@@ -92,6 +90,8 @@ export const DaoAuctionCard = (
         style={{
           width: '30%',
         }}
+        onClick={handleSelectAuction}
+        cursor="pointer"
       >
         <Flex mb="x1" align="center">
           {chainIcon && (

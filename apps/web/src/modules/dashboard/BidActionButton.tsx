@@ -35,6 +35,7 @@ export const BidActionButton = ({
 
   const [bidAmount, setBidAmount] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showTooltip, setShowTooltip] = useState(false)
 
   const isMinBid = Number(bidAmount) >= minBidAmount
 
@@ -55,6 +56,7 @@ export const BidActionButton = ({
         args: [BigInt(currentAuction.token.tokenId)],
         value: parseEther(bidAmount.toString()),
       })
+      console.log('config', config)
       const tx = await writeContract(config)
       if (tx?.hash) await waitForTransaction({ hash: tx.hash })
       setBidAmount('')
@@ -129,6 +131,7 @@ export const BidActionButton = ({
           e.stopPropagation()
           handleCreateBid()
         }}
+        position={'relative'}
       >
         Bid
       </ContractButton>
