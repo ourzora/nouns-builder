@@ -162,3 +162,14 @@ export const minButton = style({
   right: 0,
   bottom: 0,
 })
+export const daoName = style({
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  width: 300,
+  '@media': {
+    'screen and (max-width: 484px)': {
+      width: '200px',
+    },
+  },
+})

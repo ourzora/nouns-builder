@@ -9,6 +9,7 @@ import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 
 import { DaoProposalCard } from './DaoProposalCard'
 import { DashboardDao } from './Dashboard'
+import { daoName } from './dashboard.css'
 
 export const DaoProposals = ({
   daoImage,
@@ -27,7 +28,7 @@ export const DaoProposals = ({
 
   return (
     <Box mb={'x10'}>
-      <Flex justify={'space-between'} mb={'x6'}>
+      <Flex justify={'space-between'} mb={'x6'} align="center">
         <Flex align={'center'}>
           {daoImageSrc ? (
             <Box mr="x4">
@@ -46,7 +47,7 @@ export const DaoProposals = ({
               <Avatar address={tokenAddress ?? undefined} size="52" />
             </Box>
           )}
-          <Text fontSize={20} fontWeight="label">
+          <Text fontSize={20} fontWeight="label" className={daoName}>
             {name}
           </Text>
         </Flex>
@@ -54,6 +55,7 @@ export const DaoProposals = ({
         <Button
           variant="outline"
           borderRadius="curved"
+          size={'sm'}
           onClick={() =>
             router.push(`/dao/${currentChainSlug}/${tokenAddress}/proposal/create`)
           }
@@ -61,15 +63,17 @@ export const DaoProposals = ({
           Submit Proposal
         </Button>
       </Flex>
-      {proposals.map((proposal) => (
-        <DaoProposalCard
-          key={proposal.proposalNumber}
-          {...proposal}
-          chainId={chainId}
-          tokenAddress={tokenAddress}
-          proposalState={proposal.proposalState}
-        />
-      ))}
+      <Box>
+        {proposals.map((proposal) => (
+          <DaoProposalCard
+            key={proposal.proposalNumber}
+            {...proposal}
+            chainId={chainId}
+            tokenAddress={tokenAddress}
+            proposalState={proposal.proposalState}
+          />
+        ))}
+      </Box>
     </Box>
   )
 }
