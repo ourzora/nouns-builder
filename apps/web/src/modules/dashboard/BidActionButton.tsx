@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from '@zoralabs/zord'
+import { Box, Button } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import { Address, parseEther } from 'viem'
 import { useBalance, useNetwork } from 'wagmi'
@@ -12,7 +12,7 @@ import { maxChar } from 'src/utils/helpers'
 import { useMinBidIncrement } from '../auction'
 import { Settle } from '../auction/components/CurrentAuction/Settle'
 import { DashboardDao } from './Dashboard'
-import { bidInput } from './dashboard.css'
+import { bidButton, bidForm, bidInput, inputBox, minButton } from './dashboard.css'
 
 export const BidActionButton = ({
   userAddress,
@@ -69,32 +69,19 @@ export const BidActionButton = ({
 
   if (isEnded || isOver) {
     return (
-      <Box
-        ml={'auto'}
-        style={{
-          maxWidth: '230px',
-          width: '100%',
-        }}
-      >
-        <Settle
-          isEnding={false}
-          owner={highestBid?.bidder}
-          externalAuctionAddress={auctionAddress}
-          compact={true}
-        />
-      </Box>
+      <Settle
+        isEnding={false}
+        owner={highestBid?.bidder}
+        externalAuctionAddress={auctionAddress}
+        compact={true}
+      />
     )
   }
 
   return (
-    <Flex
-      ml="auto"
-      style={{
-        width: '230px',
-      }}
-    >
-      <form>
-        <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
+    <>
+      <form className={bidForm}>
+        <Box position="relative" mr={'x2'} className={inputBox}>
           <input
             className={bidInput}
             placeholder={maxChar(`${minBidAmount} ETH`, 12)}
@@ -105,33 +92,22 @@ export const BidActionButton = ({
             onChange={(e) => setBidAmount(e.target.value)}
             onClick={(e) => e.stopPropagation()}
           />
-          <Flex
+          <Button
             position="absolute"
-            style={{ top: 0, right: 0, bottom: 0 }}
-            align={'center'}
-            justify={'center'}
+            height={'100%'}
+            mr={'x4'}
+            px={'x0'}
+            fontWeight={'label'}
+            size="sm"
+            variant="ghost"
+            className={minButton}
+            onClick={() => {
+              setBidAmount(minBidAmount.toString())
+            }}
+            disabled={Number(bidAmount) >= minBidAmount}
           >
-            <Button
-              height={'100%'}
-              mr={'x4'}
-              px={'x0'}
-              fontWeight={'label'}
-              size="sm"
-              variant="ghost"
-              style={{
-                minWidth: 'fit-content',
-                fontWeight: 500,
-                paddingLeft: 0,
-                paddingRight: 0,
-              }}
-              onClick={(e: any) => {
-                setBidAmount(minBidAmount.toString())
-              }}
-              disabled={Number(bidAmount) >= minBidAmount}
-            >
-              Min
-            </Button>
-          </Flex>
+            Min
+          </Button>
         </Box>
       </form>
       <ContractButton
@@ -142,9 +118,10 @@ export const BidActionButton = ({
           handleCreateBid()
         }}
         position={'relative'}
+        className={bidButton}
       >
         Bid
       </ContractButton>
-    </Flex>
+    </>
   )
 }

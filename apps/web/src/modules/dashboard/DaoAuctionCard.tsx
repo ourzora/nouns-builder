@@ -13,6 +13,16 @@ import { AddressType } from 'src/typings'
 
 import { BidActionButton } from './BidActionButton'
 import { DashboardDao } from './Dashboard'
+import {
+  auctionCardBrand,
+  bidBox,
+  daoAvatar,
+  daoAvatarBox,
+  daoTokenName,
+  outerAuctionCard,
+  stats,
+  statsBox,
+} from './dashboard.css'
 
 export const DaoAuctionCard = (
   props: DashboardDao & { userAddress: AddressType; handleMutate: () => void }
@@ -40,7 +50,6 @@ export const DaoAuctionCard = (
     eventName: 'AuctionCreated',
     chainId,
     listener: async () => {
-      console.log('AuctionCreated')
       setTimeout(() => {
         handleMutate()
       }, 3000)
@@ -63,81 +72,55 @@ export const DaoAuctionCard = (
     router.push(`/dao/${currentChainSlug}/${tokenAddress}`)
   }
   return (
-    <Flex
-      mb={'x4'}
-      w={'100%'}
-      borderColor={'border'}
-      borderStyle={'solid'}
-      borderRadius={'curved'}
-      borderWidth={'normal'}
-      py={{ '@initial': 'x2', '@768': 'x3' }}
-      px={{ '@initial': 'x2', '@768': 'x6' }}
-      align={'center'}
-    >
-      <Box pr="x6" onClick={handleSelectAuction} cursor="pointer">
-        <Image
-          src={currentAuction.token.image}
-          layout="fixed"
-          objectFit="contain"
-          style={{ borderRadius: '12px' }}
-          alt=""
-          height={64}
-          width={64}
-        />
-      </Box>
-      <Flex
-        direction={'column'}
-        style={{
-          width: '30%',
-        }}
-        onClick={handleSelectAuction}
-        cursor="pointer"
-      >
-        <Flex mb="x1" align="center">
-          {chainIcon && (
-            <Image
-              src={chainIcon}
-              layout="fixed"
-              objectFit="contain"
-              style={{ borderRadius: '12px', maxHeight: '22px' }}
-              alt=""
-              height={22}
-              width={22}
-            />
-          )}
-          <Text fontSize={16} color="text3" ml={'x1'}>
-            {chainName}
+    <Flex className={outerAuctionCard}>
+      <Flex className={auctionCardBrand} onClick={handleSelectAuction}>
+        <Box className={daoAvatarBox}>
+          <Image
+            className={daoAvatar}
+            src={currentAuction.token.image}
+            layout="fixed"
+            alt=""
+          />
+        </Box>
+        <Box>
+          <Flex mb="x1" align="center">
+            {chainIcon && (
+              <Image
+                src={chainIcon}
+                layout="fixed"
+                objectFit="contain"
+                style={{ borderRadius: '12px', maxHeight: '22px' }}
+                alt=""
+                height={22}
+                width={22}
+              />
+            )}
+            <Text fontSize={16} color="text3" ml={'x1'}>
+              {chainName}
+            </Text>
+          </Flex>
+          <Text className={daoTokenName}>{currentAuction.token.name}</Text>
+        </Box>
+      </Flex>
+      <Flex className={statsBox}>
+        <Box className={stats}>
+          <Text fontSize={16} color="text3" mb={'x1'}>
+            Current Bid
           </Text>
-        </Flex>
-        <Text fontSize={20} fontWeight="label">
-          {currentAuction.token.name}
-        </Text>
+          <Text fontSize={18} fontWeight="label">
+            {bidText}
+          </Text>
+        </Box>
+        <Box className={stats}>
+          <Text fontSize={16} color="text3" mb={'x1'}>
+            Ends In
+          </Text>
+          <DashCountdown endTime={endTime} onEnd={onEnd} isOver={isOver} />
+        </Box>
       </Flex>
-      <Flex
-        direction={'column'}
-        style={{
-          width: '15%',
-        }}
-      >
-        <Text fontSize={16} color="text3" mb={'x1'}>
-          Current Bid
-        </Text>
-        <Text fontSize={18} fontWeight="label">
-          {bidText}
-        </Text>
+      <Flex className={bidBox}>
+        <BidActionButton {...props} isOver={isOver} isEnded={isEnded} />
       </Flex>
-      <Flex
-        direction={'column'}
-        style={{
-          width: '15%',
-        }}
-      >
-        <Text fontSize={16} color="text3" mb={'x1'}>
-          Ends In
-        </Text>
-        <DashCountdown endTime={endTime} onEnd={onEnd} isOver={isOver} />
-      </Flex>
-      <BidActionButton {...props} isOver={isOver} isEnded={isEnded} />
     </Flex>
   )
 }
