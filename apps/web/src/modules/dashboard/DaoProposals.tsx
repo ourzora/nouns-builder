@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 
@@ -29,28 +30,30 @@ export const DaoProposals = ({
   return (
     <Box mb={'x10'}>
       <Flex justify={'space-between'} mb={'x6'} align="center">
-        <Flex align={'center'}>
-          {daoImageSrc ? (
-            <Box mr="x4">
-              <Image
-                src={daoImageSrc}
-                layout="fixed"
-                objectFit="contain"
-                style={{ borderRadius: '12px' }}
-                alt=""
-                height={48}
-                width={48}
-              />
-            </Box>
-          ) : (
-            <Box mr="x4" borderRadius="phat">
-              <Avatar address={tokenAddress ?? undefined} size="52" />
-            </Box>
-          )}
-          <Text fontSize={20} fontWeight="label" className={daoName}>
-            {name}
-          </Text>
-        </Flex>
+        <Link href={`/dao/${currentChainSlug}/${tokenAddress}`} passHref>
+          <Flex align={'center'}>
+            {daoImageSrc ? (
+              <Box mr="x4">
+                <Image
+                  src={daoImageSrc}
+                  layout="fixed"
+                  objectFit="contain"
+                  style={{ borderRadius: '12px' }}
+                  alt=""
+                  height={48}
+                  width={48}
+                />
+              </Box>
+            ) : (
+              <Box mr="x4" borderRadius="phat">
+                <Avatar address={tokenAddress ?? undefined} size="52" />
+              </Box>
+            )}
+            <Text fontSize={20} fontWeight="label" className={daoName} mr={'x2'}>
+              {name}
+            </Text>
+          </Flex>
+        </Link>
 
         <Button
           variant="outline"

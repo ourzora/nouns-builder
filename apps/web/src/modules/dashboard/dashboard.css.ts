@@ -166,10 +166,10 @@ export const daoName = style({
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
-  width: 300,
+  maxWidth: '250px',
   '@media': {
     'screen and (max-width: 484px)': {
-      width: '200px',
+      maxWidth: '200px',
     },
   },
 })
