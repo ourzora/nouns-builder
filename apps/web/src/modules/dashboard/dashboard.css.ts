@@ -81,12 +81,15 @@ export const statsBox = style({
     'screen and (max-width: 768px)': {
       width: '80%',
     },
+    'screen and (max-width: 484px)': {
+      width: '100%',
+    },
   },
 })
 
 export const bidBox = style({
   marginLeft: 'auto',
-  width: '220px',
+  width: '250px',
   '@media': {
     'screen and (max-width: 768px)': {
       width: '100%',
@@ -96,23 +99,11 @@ export const bidBox = style({
 })
 
 export const bidForm = style({
-  width: '70%',
-  '@media': {
-    'screen and (max-width: 768px)': {
-      width: '80%',
-    },
-  },
+  width: '75%',
 })
-export const inputBox = style({
-  // width: '80%',
-})
+
 export const bidButton = style({
-  width: '30%',
-  '@media': {
-    'screen and (max-width: 768px)': {
-      width: '20%',
-    },
-  },
+  width: '25%',
 })
 export const bidInput = style([
   {

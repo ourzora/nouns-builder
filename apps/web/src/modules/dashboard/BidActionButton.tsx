@@ -12,7 +12,7 @@ import { maxChar } from 'src/utils/helpers'
 import { useMinBidIncrement } from '../auction'
 import { Settle } from '../auction/components/CurrentAuction/Settle'
 import { DashboardDao } from './Dashboard'
-import { bidButton, bidForm, bidInput, inputBox, minButton } from './dashboard.css'
+import { bidButton, bidForm, bidInput, minButton } from './dashboard.css'
 
 export const BidActionButton = ({
   userAddress,
@@ -81,7 +81,7 @@ export const BidActionButton = ({
   return (
     <>
       <form className={bidForm}>
-        <Box position="relative" mr={'x2'} className={inputBox}>
+        <Box position="relative" mr={'x2'}>
           <input
             className={bidInput}
             placeholder={maxChar(`${minBidAmount} ETH`, 12)}
