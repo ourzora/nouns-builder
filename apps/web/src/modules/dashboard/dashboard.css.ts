@@ -56,6 +56,11 @@ export const daoAvatar = style({
 export const daoAvatarBox = style({
   marginRight: '24px',
   width: '64px',
+  '@media': {
+    'screen and (max-width: 768px)': {
+      marginRight: '16px',
+    },
+  },
 })
 
 export const auctionCardBrand = style({

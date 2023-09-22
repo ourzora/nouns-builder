@@ -23,7 +23,6 @@ type ProposalCardProps = {
 }
 
 export const ProposalCard: React.FC<ProposalCardProps> = ({
-  proposalId,
   title,
   proposalNumber,
   state,

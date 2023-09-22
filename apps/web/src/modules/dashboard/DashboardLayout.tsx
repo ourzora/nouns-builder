@@ -13,7 +13,7 @@ export const DashboardLayout = ({
   return (
     <Flex
       minH={'100vh'}
-      pt={{ '@initial': 'x20', '@768': 'x32' }}
+      pt={{ '@initial': 'x8', '@480': 'x32' }}
       w={'100%'}
       justify="center"
     >
