@@ -16,9 +16,10 @@ import {
 } from 'src/data/subgraph/sdk.generated'
 import { CHAIN_ID } from 'src/typings'
 
+import { DaoFeed } from '../dao'
 import { DaoAuctionCard } from './DaoAuctionCard'
 import { DaoProposals } from './DaoProposals'
-import { DashboardLayout } from './DashboardLayout'
+import { DashPage, DashboardLayout } from './DashboardLayout'
 import { AuctionCardSkeleton, DAOCardSkeleton, ProposalCardSkeleton } from './Skeletons'
 
 const ACTIVE_PROPOSAL_STATES = [
@@ -101,7 +102,12 @@ const Dashboard = () => {
     return <div>No address</div>
   }
   if (!data?.length) {
-    return <div>no data</div>
+    return (
+      <DashPage>
+        <Text fontSize={18}>It looks like you haven’t joined any DAOs yet.</Text>
+        <DaoFeed isDashboard />
+      </DashPage>
+    )
   }
 
   const handleMutate = async () => {

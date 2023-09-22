@@ -35,7 +35,6 @@ export const BidActionButton = ({
 
   const [bidAmount, setBidAmount] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [showTooltip, setShowTooltip] = useState(false)
 
   const isMinBid = Number(bidAmount) >= minBidAmount
 
@@ -78,6 +77,8 @@ export const BidActionButton = ({
     )
   }
 
+  console.log('isMinBid', isMinBid)
+  console.log('isValidBid', isValidBid)
   return (
     <>
       <form className={bidForm}>
@@ -87,7 +88,7 @@ export const BidActionButton = ({
             placeholder={maxChar(`${minBidAmount} ETH`, 12)}
             type={'number'}
             min={minBidAmount}
-            max={balance?.formatted}
+            // max={balance?.formatted}
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
             onClick={(e) => e.stopPropagation()}

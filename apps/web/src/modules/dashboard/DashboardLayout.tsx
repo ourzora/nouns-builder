@@ -11,6 +11,25 @@ export const DashboardLayout = ({
   daoProposals?: ReactNode
 }) => {
   return (
+    <DashPage>
+      <Box mb={'x12'}>
+        <Text fontSize={28} fontWeight={'display'} mb={'x6'}>
+          DAOs
+        </Text>
+        {auctionCards}
+      </Box>
+      <Box>
+        <Text fontSize={28} fontWeight={'display'} mb={'x6'}>
+          Proposals
+        </Text>
+        {daoProposals}
+      </Box>
+    </DashPage>
+  )
+}
+
+export const DashPage = ({ children }: { children: ReactNode }) => {
+  return (
     <Flex
       minH={'100vh'}
       pt={{ '@initial': 'x8', '@480': 'x32' }}
@@ -22,18 +41,7 @@ export const DashboardLayout = ({
         <Text fontSize={35} fontWeight={'display'} mb={'x12'}>
           Dashboard
         </Text>
-        <Box mb={'x12'}>
-          <Text fontSize={28} fontWeight={'display'} mb={'x6'}>
-            DAOs
-          </Text>
-          {auctionCards}
-        </Box>
-        <Box>
-          <Text fontSize={28} fontWeight={'display'} mb={'x6'}>
-            Proposals
-          </Text>
-          {daoProposals}
-        </Box>
+        {children}
       </Box>
     </Flex>
   )
