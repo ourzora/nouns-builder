@@ -1,18 +1,10 @@
 import axios from 'axios'
-import {
-  Address,
-  createTestClient,
-  http,
-  isAddress,
-  parseEther,
-  publicActions,
-  toHex,
-  walletActions,
-} from 'viem'
+import { Address, isAddress, parseEther, toHex } from 'viem'
 
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { CHAIN_ID } from 'src/typings'
 
+import { createClient } from './createClient'
 import { InvalidRequestError } from './errors'
 
 export interface SimulationRequestBody {
@@ -73,12 +65,8 @@ export async function simulate({
 
   const forkResponse = await axios.post(TENDERLY_FORK_API, body, opts)
   const forkId = forkResponse.data.simulation_fork.id
-  const forkProvider = createTestClient({
-    mode: 'anvil',
-    transport: http(`https://rpc.tenderly.co/fork/${forkId}`),
-  })
-    .extend(publicActions)
-    .extend(walletActions)
+
+  const forkProvider = createClient(forkId)
 
   const simulations: Simulation[] = []
 
@@ -109,6 +97,7 @@ export async function simulate({
     const forkViewRes = (await axios.get(`${TENDERLY_FORK_V2_BASE_URL}/${forkId}`, opts))
       .data
     const simulationId = forkViewRes.fork.head_simulation_id
+
     simulations.push({
       index: i,
       simulationId,

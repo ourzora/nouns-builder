@@ -1,17 +1,10 @@
 import axios from 'axios'
-import {
-  Address,
-  TransactionReceipt,
-  createTestClient,
-  http,
-  parseEther,
-  publicActions,
-} from 'viem'
+import { Address, TransactionReceipt, parseEther } from 'viem'
 import { vi } from 'vitest'
-import { foundry } from 'wagmi/chains'
 
 import { CHAIN_ID } from 'src/typings'
 
+import { createClient } from './createClient'
 import { InvalidRequestError } from './errors'
 import { InsufficientFundsError, Simulation, simulate } from './simulationService'
 
@@ -27,11 +20,14 @@ vi.mock('axios', () => {
   }
 })
 
-vi.mock('viem', async () => {
-  const actual = await vi.importActual<any>('viem')
+vi.mock('./createClient', async () => {
   return {
-    ...actual,
-    createPublicClient: vi.fn(),
+    createClient: vi.fn().mockReturnValue({
+      getBalance: vi.fn(),
+      sendTransaction: vi.fn(),
+      getTransactionReceipt: vi.fn(),
+      request: vi.fn(),
+    }),
   }
 })
 
@@ -124,19 +120,15 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createTestClient({
-        chain: foundry,
-        mode: 'anvil',
-        transport: http(`https://rpc.tenderly.co/fork/forkId`),
-      }).extend(publicActions)
+      const forkProvider = createClient(forkId)
 
-      vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
+      vi.mocked(forkProvider.request).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
         data: { simulation_fork: { id: forkId } },
       })
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValue({
         ...receipt,
         status: 'success', // success status
@@ -159,21 +151,21 @@ describe('simulationService', () => {
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5'),
+          gasUsed: parseEther('0.5').toString(),
         },
         {
           index: 1,
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5'),
+          gasUsed: parseEther('0.5').toString(),
         },
       ]
 
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: true,
-        totalGasUsed: parseEther('1'),
+        totalGasUsed: parseEther('1').toString(),
       })
 
       expect(spy).toHaveBeenCalledOnce()
@@ -187,11 +179,7 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createTestClient({
-        chain: foundry,
-        mode: 'anvil',
-        transport: http(`https://rpc.tenderly.co/fork/forkId`),
-      }).extend(publicActions)
+      const forkProvider = createClient(forkId)
 
       vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
@@ -199,8 +187,8 @@ describe('simulationService', () => {
         data: { simulation_fork: { id: forkId } },
       })
 
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
         ...receipt,
         status: 'success', // success status
@@ -208,7 +196,7 @@ describe('simulationService', () => {
       })
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
         ...receipt,
-        status: 'success', // failed status
+        status: 'reverted', // failed status
         gasUsed: parseEther('0.5'),
       })
 
@@ -228,21 +216,21 @@ describe('simulationService', () => {
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5'),
+          gasUsed: parseEther('0.5').toString(),
         },
         {
           index: 1,
           simulationId,
           success: false,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5'),
+          gasUsed: parseEther('0.5').toString(),
         },
       ]
 
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: false,
-        totalGasUsed: parseEther('1'),
+        totalGasUsed: parseEther('1').toString(),
       })
 
       expect(spy).not.toHaveBeenCalled()
@@ -252,20 +240,16 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createTestClient({
-        chain: foundry,
-        mode: 'anvil',
-        transport: http(`https://rpc.tenderly.co/fork/forkId`),
-      }).extend(publicActions)
+      const forkProvider = createClient(forkId)
 
-      vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
+      vi.mocked(forkProvider.request).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
         data: { simulation_fork: { id: forkId } },
       })
 
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
         ...receipt,
         status: 'success', // success status
