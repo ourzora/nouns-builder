@@ -1,5 +1,14 @@
 import axios from 'axios'
-import { Address, createPublicClient, http, isAddress, parseEther, toHex } from 'viem'
+import {
+  Address,
+  createTestClient,
+  http,
+  isAddress,
+  parseEther,
+  publicActions,
+  toHex,
+  walletActions,
+} from 'viem'
 
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { CHAIN_ID } from 'src/typings'
@@ -19,13 +28,13 @@ export interface Simulation {
   simulationId: string
   success: boolean
   simulationUrl: string
-  gasUsed: bigint
+  gasUsed: string
 }
 
 export interface SimulationResult {
   simulations: Simulation[]
   success: boolean
-  totalGasUsed: bigint
+  totalGasUsed: string
 }
 
 const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
@@ -64,36 +73,35 @@ export async function simulate({
 
   const forkResponse = await axios.post(TENDERLY_FORK_API, body, opts)
   const forkId = forkResponse.data.simulation_fork.id
-  const forkProvider = createPublicClient({
-    chain: PUBLIC_ALL_CHAINS.find((x) => x.id === chainId),
+  const forkProvider = createTestClient({
+    mode: 'anvil',
     transport: http(`https://rpc.tenderly.co/fork/${forkId}`),
   })
+    .extend(publicActions)
+    .extend(walletActions)
 
   const simulations: Simulation[] = []
 
   // Mock balance of treasury to ensure gas costs are covered as this will be covered by proposal
   // executor in reality
+
   await forkProvider.request({
     method: 'tenderly_addBalance' as any,
-    arguments: [[treasuryAddress], toHex(MOCK_BALANCE)],
+    params: [[treasuryAddress], toHex(MOCK_BALANCE)],
   })
 
   let totalGasUsed = 0n
 
   // Loop through the transactions and simulate them against the fork
   for (let i = 0; i < targets.length; i++) {
-    const txParams = {
-      from: treasuryAddress.toLowerCase(),
-      to: targets[i].toLowerCase(),
-      gas: '0x163CCD40',
-      gasPrice: '0x3',
-      // We have to wrap this in a hexValue() call because .toHexString() adds a 0x0 padding to the front of the value.
-      value: toHex(BigInt(values[i]).toString(16)),
-      data: calldatas[i],
-    }
-    const txHash: `0x${string}` = await forkProvider.request({
-      method: 'eth_sendTransaction' as any,
-      arguments: [txParams],
+    const txHash = await forkProvider.sendTransaction({
+      chain: PUBLIC_ALL_CHAINS.find((x) => x.id === chainId),
+      account: treasuryAddress.toLowerCase() as `0x{string}`,
+      to: targets[i].toLowerCase() as `0x{string}`,
+      gas: BigInt('0x163CCD40'),
+      gasPrice: BigInt('0x3'),
+      value: BigInt(values[i]),
+      data: calldatas[i] as `0x{string}`,
     })
 
     const receipt = await forkProvider.getTransactionReceipt({ hash: txHash })
@@ -106,7 +114,7 @@ export async function simulate({
       simulationId,
       success: receipt.status !== 'reverted',
       simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-      gasUsed: receipt.gasUsed,
+      gasUsed: receipt.gasUsed.toString(),
     })
     totalGasUsed += receipt.gasUsed
   }
@@ -136,5 +144,9 @@ export async function simulate({
     }
   }
 
-  return { simulations, success: simulationSucceeded, totalGasUsed }
+  return {
+    simulations,
+    success: simulationSucceeded,
+    totalGasUsed: totalGasUsed.toString(),
+  }
 }

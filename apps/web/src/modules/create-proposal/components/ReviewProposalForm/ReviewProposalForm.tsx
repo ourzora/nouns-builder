@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Field, FieldProps, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { toHex } from 'viem'
 import { useAccount, useContractRead } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
@@ -99,7 +100,7 @@ export const ReviewProposalForm = ({
               treasuryAddress: addresses?.treasury,
               chainId: chain.id,
               calldatas: calldata,
-              values: transactionValues.map((x) => x.toString()),
+              values: transactionValues.map((x) => toHex(x)),
               targets,
             })
             .then((res) => res.data)
