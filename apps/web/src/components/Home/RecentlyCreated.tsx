@@ -16,7 +16,11 @@ const RecentlyCreated: React.FC<{
       mx={'auto'}
       mb={isDashboard ? 'x16' : 'auto'}
       justify={'flex-start'}
-      mt={{ '@initial': 'x16', '@768': 'x32' }}
+      mt={
+        isDashboard
+          ? { '@initial': 'x12', '@768': 'x24' }
+          : { '@initial': 'x16', '@768': 'x32' }
+      }
       className={homeSectionWrapper}
     >
       {isDashboard ? (

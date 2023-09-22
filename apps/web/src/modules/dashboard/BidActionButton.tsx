@@ -1,7 +1,7 @@
 import { Box, Button } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import { Address, parseEther } from 'viem'
-import { useBalance, useNetwork } from 'wagmi'
+import { useNetwork } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
@@ -23,7 +23,6 @@ export const BidActionButton = ({
   auctionAddress,
   isOver,
 }: DashboardDao & { userAddress: AddressType; isOver: boolean; isEnded: boolean }) => {
-  const { data: balance } = useBalance({ address: userAddress, chainId })
   const { minimumBidIncrement, reservePrice } = auctionConfig
   const { highestBid } = currentAuction
   const { chain: wagmiChain } = useNetwork()
@@ -52,7 +51,7 @@ export const BidActionButton = ({
         abi: auctionAbi,
         address: auctionAddress as Address,
         functionName: 'createBid',
-        args: [BigInt(currentAuction.token.tokenId)],
+        args: [BigInt(currentAuction?.token?.tokenId)],
         value: parseEther(bidAmount.toString()),
       })
       console.log('config', config)
@@ -77,8 +76,6 @@ export const BidActionButton = ({
     )
   }
 
-  console.log('isMinBid', isMinBid)
-  console.log('isValidBid', isValidBid)
   return (
     <>
       <form className={bidForm}>
@@ -88,7 +85,6 @@ export const BidActionButton = ({
             placeholder={maxChar(`${minBidAmount} ETH`, 12)}
             type={'number'}
             min={minBidAmount}
-            // max={balance?.formatted}
             value={bidAmount}
             onChange={(e) => setBidAmount(e.target.value)}
             onClick={(e) => e.stopPropagation()}

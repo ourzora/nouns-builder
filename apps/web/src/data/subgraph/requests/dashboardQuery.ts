@@ -50,6 +50,4 @@ export const dashboardRequest = async (memberAddress: string) => {
     Sentry.captureException(e)
     await Sentry.flush(2000)
   }
-
-  //   return daos
 }

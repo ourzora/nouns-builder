@@ -77,7 +77,7 @@ export const DaoAuctionCard = (
         <Box className={daoAvatarBox}>
           <Image
             className={daoAvatar}
-            src={currentAuction.token.image}
+            src={currentAuction?.token?.image}
             layout="fixed"
             alt=""
           />

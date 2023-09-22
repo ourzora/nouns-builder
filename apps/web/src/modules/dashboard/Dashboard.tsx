@@ -120,14 +120,16 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout
-      auctionCards={data?.map((dao) => (
-        <DaoAuctionCard
-          key={`${dao.tokenAddress}:${dao.currentAuction.token.tokenId}`}
-          {...dao}
-          userAddress={address}
-          handleMutate={handleMutate}
-        />
-      ))}
+      auctionCards={data
+        ?.filter((dao) => dao.currentAuction)
+        .map((dao) => (
+          <DaoAuctionCard
+            key={`auctionCard:${dao.tokenAddress}`}
+            {...dao}
+            userAddress={address}
+            handleMutate={handleMutate}
+          />
+        ))}
       daoProposals={
         hasLiveProposals ? (
           data
