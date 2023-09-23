@@ -15,7 +15,6 @@ import { DashboardDao } from './Dashboard'
 import { bidButton, bidForm, bidInput, minButton } from './dashboard.css'
 
 export const BidActionButton = ({
-  userAddress,
   chainId,
   auctionConfig,
   currentAuction,
@@ -24,7 +23,7 @@ export const BidActionButton = ({
   isOver,
 }: DashboardDao & { userAddress: AddressType; isOver: boolean; isEnded: boolean }) => {
   const { minimumBidIncrement, reservePrice } = auctionConfig
-  const { highestBid } = currentAuction
+  const { highestBid } = currentAuction || {}
   const { chain: wagmiChain } = useNetwork()
   const { minBidAmount } = useMinBidIncrement({
     highestBid: highestBid?.amount ? BigInt(highestBid?.amount) : undefined,
@@ -54,7 +53,7 @@ export const BidActionButton = ({
         args: [BigInt(currentAuction?.token?.tokenId)],
         value: parseEther(bidAmount.toString()),
       })
-      console.log('config', config)
+
       const tx = await writeContract(config)
       if (tx?.hash) await waitForTransaction({ hash: tx.hash })
       setBidAmount('')

@@ -36,7 +36,7 @@ export type DashboardDao = DaoFragment & {
     reservePrice: string
   }
   proposals: (ProposalFragment & { proposalState: ProposalState })[]
-  currentAuction: CurrentAuctionFragment
+  currentAuction?: CurrentAuctionFragment | null
 }
 
 const fetchDaoProposalState = async (dao: DashboardDao) => {
@@ -120,16 +120,14 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout
-      auctionCards={data
-        ?.filter((dao) => dao.currentAuction)
-        .map((dao) => (
-          <DaoAuctionCard
-            key={`auctionCard:${dao.tokenAddress}`}
-            {...dao}
-            userAddress={address}
-            handleMutate={handleMutate}
-          />
-        ))}
+      auctionCards={data.map((dao) => (
+        <DaoAuctionCard
+          key={`auctionCard:${dao.tokenAddress}`}
+          {...dao}
+          userAddress={address}
+          handleMutate={handleMutate}
+        />
+      ))}
       daoProposals={
         hasLiveProposals ? (
           data

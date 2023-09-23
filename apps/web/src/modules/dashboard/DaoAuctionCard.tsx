@@ -11,6 +11,7 @@ import { auctionAbi } from 'src/data/contract/abis'
 import { useCountdown, useIsMounted } from 'src/hooks'
 import { AddressType } from 'src/typings'
 
+import { AuctionPaused } from './AuctionPaused'
 import { BidActionButton } from './BidActionButton'
 import { DashboardDao } from './Dashboard'
 import {
@@ -31,13 +32,9 @@ export const DaoAuctionCard = (
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
   const router = useRouter()
-  const { endTime } = currentAuction
+  const { endTime } = currentAuction ?? {}
 
   const [isEnded, setIsEnded] = useState(false)
-
-  const bidText = currentAuction.highestBid?.amount
-    ? formatEther(BigInt(currentAuction.highestBid.amount))
-    : 'N/A'
 
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
   const onEnd = () => {
@@ -66,11 +63,27 @@ export const DaoAuctionCard = (
       }, 3000)
     },
   })
-  const currentChainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-
   const handleSelectAuction = () => {
     router.push(`/dao/${currentChainSlug}/${tokenAddress}`)
   }
+  const currentChainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
+
+  if (!currentAuction) {
+    return (
+      <AuctionPaused
+        {...props}
+        currentChainSlug={currentChainSlug}
+        tokenAddress={tokenAddress}
+        chainName={chainName}
+        chainIcon={chainIcon}
+      />
+    )
+  }
+
+  const bidText = currentAuction.highestBid?.amount
+    ? formatEther(BigInt(currentAuction.highestBid.amount))
+    : 'N/A'
+
   return (
     <Flex className={outerAuctionCard}>
       <Flex className={auctionCardBrand} onClick={handleSelectAuction}>
