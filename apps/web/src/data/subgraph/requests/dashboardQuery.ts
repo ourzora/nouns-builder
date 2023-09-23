@@ -1,12 +1,8 @@
 import * as Sentry from '@sentry/nextjs'
 
+import { DAOS_TO_EXCLUDE } from 'src/constants/addresses'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { SDK } from 'src/data/subgraph/client'
-
-const DAOS_TO_EXCLUDE = [
-  '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
-  '0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b',
-]
 
 export const dashboardRequest = async (memberAddress: string) => {
   if (!memberAddress) throw new Error('No user address provided')
