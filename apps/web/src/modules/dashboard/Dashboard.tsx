@@ -1,4 +1,5 @@
-import { Box, Flex, Text } from '@zoralabs/zord'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
@@ -99,7 +100,7 @@ const Dashboard = () => {
     )
   }
   if (!address) {
-    return <div>No address</div>
+    return <DashConnect />
   }
   if (!data?.length) {
     return (
@@ -160,3 +161,22 @@ const Dashboard = () => {
 }
 
 export default Dashboard
+
+const DashConnect = () => {
+  const { openConnectModal } = useConnectModal()
+  return (
+    <DashPage>
+      <Flex
+        direction={{ '@initial': 'column', '@768': 'row' }}
+        align={{ '@initial': 'flex-start', '@768': 'center' }}
+        justify={{ '@initial': 'flex-start', '@768': 'space-between' }}
+      >
+        <Text fontSize={18}>You must connect your wallet to see your DAOs</Text>
+        <Button onClick={openConnectModal} mt={{ '@initial': 'x6', '@768': 'x0' }}>
+          Connect Wallet
+        </Button>
+      </Flex>
+      <DaoFeed isDashboard />
+    </DashPage>
+  )
+}
