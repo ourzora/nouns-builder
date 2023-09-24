@@ -376,7 +376,7 @@ export const NavMenu = () => {
                   </Text>
                 </Flex>
               </Link>
-              <Link href={'/'}>
+              <Link href={'/dashboard'}>
                 <Flex display="flex" align="center" justify={'center'} py={'x2'}>
                   <Text cursor={'pointer'} fontWeight={'display'}>
                     Dashboard
