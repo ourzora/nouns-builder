@@ -1,10 +1,10 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { Box, Button, Flex, Text } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { useAccount } from 'wagmi'
 
+import { DisplayPanel } from 'src/components/DisplayPanel'
 import SWR_KEYS from 'src/constants/swrKeys'
 import {
   ProposalState,
@@ -20,6 +20,7 @@ import { CHAIN_ID } from 'src/typings'
 import { DaoFeed } from '../dao'
 import { DaoAuctionCard } from './DaoAuctionCard'
 import { DaoProposals } from './DaoProposals'
+import { DashConnect } from './DashConnect'
 import { DashPage, DashboardLayout } from './DashboardLayout'
 import { AuctionCardSkeleton, DAOCardSkeleton, ProposalCardSkeleton } from './Skeletons'
 
@@ -80,7 +81,19 @@ const Dashboard = () => {
   const [mutating, setMutating] = useState(false)
 
   if (error) {
-    return <div>Error</div>
+    return (
+      <DashPage>
+        <Text fontSize={18} mb={'x6'}>
+          Something went wrong.
+        </Text>
+        <DisplayPanel
+          title="Error"
+          description={
+            error?.message || 'Error fetching display data. Error message not found.'
+          }
+        />
+      </DashPage>
+    )
   }
   if (isValidating && !mutating) {
     return (
@@ -161,22 +174,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard
-
-const DashConnect = () => {
-  const { openConnectModal } = useConnectModal()
-  return (
-    <DashPage>
-      <Flex
-        direction={{ '@initial': 'column', '@768': 'row' }}
-        align={{ '@initial': 'flex-start', '@768': 'center' }}
-        justify={{ '@initial': 'flex-start', '@768': 'space-between' }}
-      >
-        <Text fontSize={18}>You must connect your wallet to see your DAOs</Text>
-        <Button onClick={openConnectModal} mt={{ '@initial': 'x6', '@768': 'x0' }}>
-          Connect Wallet
-        </Button>
-      </Flex>
-      <DaoFeed isDashboard />
-    </DashPage>
-  )
-}

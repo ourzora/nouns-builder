@@ -7,9 +7,9 @@ import useSWRInfinite from 'swr/infinite'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
+import { DisplayPanel } from '../../../../components/DisplayPanel'
 import { CardSkeleton } from './CardSkeleton'
 import { CastCard } from './CastCard'
-import { DisplayPanel } from './DisplayPanel'
 import { loadMoreButton } from './Feed.css'
 import { FeedTab } from './FeedTab'
 
