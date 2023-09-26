@@ -1,5 +1,5 @@
 import { Flex, Stack, Text } from '@zoralabs/zord'
-import { FieldArray, Formik, FormikValues } from 'formik'
+import { Field, FieldArray, FieldProps, Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
@@ -11,7 +11,6 @@ import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import Radio from 'src/components/Fields/Radio'
 import SmartInput from 'src/components/Fields/SmartInput'
 import StickySave from 'src/components/Fields/StickySave'
-import TextArea from 'src/components/Fields/TextArea'
 import { NUMBER, TEXT } from 'src/components/Fields/types'
 import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
 import { NULL_ADDRESS } from 'src/constants/addresses'
@@ -22,6 +21,7 @@ import {
   TransactionType,
   useProposalStore,
 } from 'src/modules/create-proposal'
+import { MarkdownEditor } from 'src/modules/create-proposal/components/ReviewProposalForm/MarkdownEditor'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
@@ -196,6 +196,9 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     let transactions: BuilderTransaction[] = []
 
     let field: keyof AdminFormValues
+
+    console.log('values', values)
+    console.log('formik', formik)
     for (field in values) {
       let value = values[field]
 
@@ -258,6 +261,10 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       addresses?.auction as Address
     )
 
+    console.log('transactions', transactions)
+
+    const updatedDescription = values.projectDescription
+
     createProposal({
       disabled: false,
       title: undefined,
@@ -290,6 +297,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
             const changes =
               compareAndReturn(formik.initialValues, formik.values).length +
               founderChanges
+
             return (
               <Flex direction={'column'} w={'100%'}>
                 <Stack>
@@ -307,7 +315,21 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
                       helperText={'Upload'}
                     />
 
-                    <TextArea
+                    <Field name="projectDescription">
+                      {({ field }: FieldProps) => (
+                        <MarkdownEditor
+                          value={field.value}
+                          onChange={(value: string) =>
+                            formik?.setFieldValue(field.name, value)
+                          }
+                          // disabled={disabledForm}
+                          inputLabel={'DAO Description'}
+                          errorMessage={formik.errors['projectDescription']}
+                        />
+                      )}
+                    </Field>
+
+                    {/* <TextArea
                       {...formik.getFieldProps('projectDescription')}
                       inputLabel={'Collection Description'}
                       formik={formik}
@@ -316,7 +338,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
                       onBlur={formik.handleBlur}
                       errorMessage={formik.errors['projectDescription']}
                       placeholder={'Nouns is an experiment which combines...'}
-                    />
+                    /> */}
 
                     <SmartInput
                       {...formik.getFieldProps('daoWebsite')}
