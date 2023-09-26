@@ -11,6 +11,7 @@ export enum TransactionType {
   PAUSE_AUCTIONS = 'pause-auctions',
   UPDATE_MINTER = 'update-minter',
   REPLACE_ARTWORK = 'replace-artwork',
+  MIGRATION = 'migration',
 }
 
 export interface TransactionTypeProps {
@@ -67,5 +68,11 @@ export const TRANSACTION_TYPES = {
     subTitle: 'Create any other kind of transaction',
     icon: 'plus',
     iconBackdrop: color.ghostHover,
+  },
+  [TransactionType.MIGRATION]: {
+    title: 'Migration',
+    subTitle: 'Migrate from L1 to L2',
+    icon: 'download',
+    iconBackdrop: 'rgba(350,100,0,.1)',
   },
 } as TransactionTypesPropsMap
