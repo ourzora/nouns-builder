@@ -1,8 +1,11 @@
-import { Box, Flex, Grid, Text } from '@zoralabs/zord'
-import HtmlReactParser from 'html-react-parser'
+import { Box, Flex, Grid, Heading, Text } from '@zoralabs/zord'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import React from 'react'
+import ReactMarkdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
+import remarkGfm from 'remark-gfm'
 import useSWR from 'swr'
 import { Address, useBalance, useContractReads } from 'wagmi'
 
@@ -10,11 +13,11 @@ import { Avatar } from 'src/components/Avatar/Avatar'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { SDK } from 'src/data/subgraph/client'
+import { proposalDescription } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import {
   about,
-  daoDescription,
   daoInfo,
   daoName,
   statistic,
@@ -92,6 +95,12 @@ export const About: React.FC = () => {
     return daoImage ? getFetchableUrl(daoImage) : null
   }, [daoImage])
 
+  const correctedDescription = React.useMemo(() => {
+    if (typeof description === 'string') {
+      return description.replace(/\\n/g, '\n').replace(/\\r/g, '\r')
+    }
+  }, [description])
+
   return (
     <Box className={about}>
       <Flex
@@ -152,11 +161,37 @@ export const About: React.FC = () => {
         </Box>
       </Flex>
 
-      {typeof description !== 'undefined' && description !== null ? (
+      {typeof correctedDescription === 'string' ? (
         <Box mt={{ '@initial': 'x4', '@768': 'x6' }}>
-          <Text className={daoDescription}>
-            {HtmlReactParser(description.replace(/\\n/g, '<br />'))}
-          </Text>
+          <ReactMarkdown
+            className={proposalDescription}
+            rehypePlugins={[rehypeRaw, rehypeSanitize]}
+            remarkPlugins={[remarkGfm]}
+            components={{
+              h1: ({ node, ...props }) => {
+                return (
+                  <Heading size={'xl'} mb={'x6'} mt={'x6'}>
+                    {props.children}
+                  </Heading>
+                )
+              },
+              h2: ({ node, ...props }) => {
+                return (
+                  <Heading size={'lg'} mb={'x4'} mt={'x4'}>
+                    {props.children}
+                  </Heading>
+                )
+              },
+              h3: ({ node, ...props }) => {
+                return <Heading size={'md'}>{props.children} </Heading>
+              },
+              p: ({ node, ...props }) => {
+                return <Text mb="x2">{props.children}</Text>
+              },
+            }}
+          >
+            {correctedDescription}
+          </ReactMarkdown>
         </Box>
       ) : null}
 
