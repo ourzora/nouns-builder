@@ -1,20 +1,23 @@
 import { DAODeployed as DAODeployedEvent } from '../generated/Manager/Manager'
+import { Manager as ManagerContract } from '../generated/Manager/Manager'
 import { AuctionConfig, DAO } from '../generated/schema'
 import {
   Auction as AuctionTemplate,
   Governor as GovernorTemplate,
-  MetadataRenderer as MetadataRendererTemplate,
+  BaseMetadata as MetadataRendererTemplate,
   Token as TokenTemplate,
 } from '../generated/templates'
 import { Auction as AuctionContract } from '../generated/templates/Auction/Auction'
 import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
 import { Token as TokenContract } from '../generated/templates/Token/Token'
+import { MetadataType, getMetadataType } from './utils/getMetadataType'
 import { BigInt, DataSourceContext } from '@graphprotocol/graph-ts'
 
 export function handleDAODeployed(event: DAODeployedEvent): void {
   let tokenContract = TokenContract.bind(event.params.token)
   let metadataContract = MetadataContract.bind(event.params.metadata)
   let auctionContract = AuctionContract.bind(event.params.auction)
+  let managerContract = ManagerContract.bind(event.address)
 
   let auctionConfig = new AuctionConfig(event.params.token.toHexString())
 
@@ -25,7 +28,15 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
 
   auctionConfig.save()
 
+  let metadataType = getMetadataType(managerContract, event.params.metadata)
+
   let dao = new DAO(event.params.token.toHexString())
+
+  if (metadataType !== MetadataType.Unknown) {
+    dao.description = metadataContract.description()
+    dao.contractImage = metadataContract.contractImage()
+    dao.projectURI = metadataContract.projectURI()
+  }
 
   dao.tokenAddress = event.params.token
   dao.metadataAddress = event.params.metadata
@@ -34,10 +45,7 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   dao.governorAddress = event.params.governor
   dao.name = tokenContract.name()
   dao.symbol = tokenContract.symbol()
-  dao.description = metadataContract.description()
   dao.totalSupply = 0
-  dao.contractImage = metadataContract.contractImage()
-  dao.projectURI = metadataContract.projectURI()
   dao.proposalCount = 0
   dao.ownerCount = 0
   dao.totalAuctionSales = BigInt.fromI32(0)
@@ -47,6 +55,7 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
 
   let tokenCtx = new DataSourceContext()
   tokenCtx.setString('metadataAddress', event.params.metadata.toHexString())
+  tokenCtx.setI32('metadataType', metadataType)
   TokenTemplate.createWithContext(event.params.token, tokenCtx)
 
   let govCtx = new DataSourceContext()
@@ -57,6 +66,8 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   let ctx = new DataSourceContext()
   ctx.setString('tokenAddress', event.params.token.toHexString())
 
-  MetadataRendererTemplate.createWithContext(event.params.metadata, ctx)
+  if (metadataType !== MetadataType.Unknown)
+    MetadataRendererTemplate.createWithContext(event.params.metadata, ctx)
+
   AuctionTemplate.createWithContext(event.params.auction, ctx)
 }

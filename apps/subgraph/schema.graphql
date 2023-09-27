@@ -3,9 +3,9 @@ type DAO @entity {
   name: String!
   symbol: String!
   totalSupply: Int!
-  description: String!
-  contractImage: String!
-  projectURI: String!
+  description: String
+  contractImage: String
+  projectURI: String
   tokenAddress: Bytes!
   metadataAddress: Bytes!
   auctionAddress: Bytes!
@@ -33,7 +33,8 @@ type DAOTokenOwner @entity {
 type Token @entity {
   id: ID!
   name: String!
-  image: String!
+  image: String
+  content: String
   tokenContract: Bytes!
   tokenId: BigInt!
   owner: Bytes!

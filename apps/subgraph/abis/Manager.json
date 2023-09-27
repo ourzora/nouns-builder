@@ -1,36 +1,105 @@
 [
   {
-    "inputs": [
-      { "internalType": "address", "name": "_tokenImpl", "type": "address" },
-      { "internalType": "address", "name": "_metadataImpl", "type": "address" },
-      { "internalType": "address", "name": "_auctionImpl", "type": "address" },
-      { "internalType": "address", "name": "_treasuryImpl", "type": "address" },
-      { "internalType": "address", "name": "_governorImpl", "type": "address" }
-    ],
-    "stateMutability": "payable",
-    "type": "constructor"
+    "inputs": [],
+    "name": "ADDRESS_ZERO",
+    "type": "error"
   },
-  { "inputs": [], "name": "ADDRESS_ZERO", "type": "error" },
-  { "inputs": [], "name": "ALREADY_INITIALIZED", "type": "error" },
-  { "inputs": [], "name": "DELEGATE_CALL_FAILED", "type": "error" },
-  { "inputs": [], "name": "FOUNDER_REQUIRED", "type": "error" },
-  { "inputs": [], "name": "INITIALIZING", "type": "error" },
-  { "inputs": [], "name": "INVALID_TARGET", "type": "error" },
+  {
+    "inputs": [],
+    "name": "ALREADY_INITIALIZED",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "DELEGATE_CALL_FAILED",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FOUNDER_REQUIRED",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "IMPLEMENTATION_NOT_REGISTERED",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INITIALIZING",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INVALID_IMPLEMENTATION_PARAMS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INVALID_IMPLEMENTATION_TYPE",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INVALID_TARGET",
+    "type": "error"
+  },
   {
     "inputs": [
-      { "internalType": "address", "name": "impl", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "impl",
+        "type": "address"
+      }
     ],
     "name": "INVALID_UPGRADE",
     "type": "error"
   },
-  { "inputs": [], "name": "NOT_INITIALIZING", "type": "error" },
-  { "inputs": [], "name": "ONLY_CALL", "type": "error" },
-  { "inputs": [], "name": "ONLY_DELEGATECALL", "type": "error" },
-  { "inputs": [], "name": "ONLY_OWNER", "type": "error" },
-  { "inputs": [], "name": "ONLY_PENDING_OWNER", "type": "error" },
-  { "inputs": [], "name": "ONLY_PROXY", "type": "error" },
-  { "inputs": [], "name": "ONLY_UUPS", "type": "error" },
-  { "inputs": [], "name": "UNSUPPORTED_UUID", "type": "error" },
+  {
+    "inputs": [],
+    "name": "NOT_INITIALIZING",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_CALL",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_DELEGATECALL",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_OWNER",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_PENDING_OWNER",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_PROXY",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_TOKEN_OWNER",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ONLY_UUPS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UNSUPPORTED_UUID",
+    "type": "error"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -73,12 +142,69 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "uint8",
+        "name": "implType",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "implAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ImplementationRegistered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "implType",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "implAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ImplementationRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "version",
         "type": "uint256"
       }
     ],
     "name": "Initialized",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "renderer",
+        "type": "address"
+      }
+    ],
+    "name": "MetadataRendererUpdated",
     "type": "event"
   },
   {
@@ -191,16 +317,87 @@
   },
   {
     "inputs": [],
-    "name": "acceptOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "IMPLEMENTATION_TYPE_AUCTION",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "auctionImpl",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "IMPLEMENTATION_TYPE_COUNT",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "IMPLEMENTATION_TYPE_GOVERNOR",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "IMPLEMENTATION_TYPE_METADATA",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "IMPLEMENTATION_TYPE_TOKEN",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "IMPLEMENTATION_TYPE_TREASURY",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "acceptOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -213,7 +410,13 @@
   {
     "inputs": [],
     "name": "contractVersion",
-    "outputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "stateMutability": "pure",
     "type": "function"
   },
@@ -221,150 +424,155 @@
     "inputs": [
       {
         "components": [
-          { "internalType": "address", "name": "wallet", "type": "address" },
+          {
+            "internalType": "address",
+            "name": "wallet",
+            "type": "address"
+          },
           {
             "internalType": "uint256",
             "name": "ownershipPct",
             "type": "uint256"
           },
-          { "internalType": "uint256", "name": "vestExpiry", "type": "uint256" }
+          {
+            "internalType": "uint256",
+            "name": "vestExpiry",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct IManager.FounderParams[]",
         "name": "_founderParams",
         "type": "tuple[]"
       },
       {
-        "components": [
-          { "internalType": "bytes", "name": "initStrings", "type": "bytes" }
-        ],
-        "internalType": "struct IManager.TokenParams",
-        "name": "_tokenParams",
-        "type": "tuple"
+        "internalType": "address[]",
+        "name": "_implAddresses",
+        "type": "address[]"
       },
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "reservePrice",
-            "type": "uint256"
-          },
-          { "internalType": "uint256", "name": "duration", "type": "uint256" }
-        ],
-        "internalType": "struct IManager.AuctionParams",
-        "name": "_auctionParams",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "timelockDelay",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "votingDelay",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "votingPeriod",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "proposalThresholdBps",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "quorumThresholdBps",
-            "type": "uint256"
-          },
-          { "internalType": "address", "name": "vetoer", "type": "address" }
-        ],
-        "internalType": "struct IManager.GovParams",
-        "name": "_govParams",
-        "type": "tuple"
+        "internalType": "bytes[]",
+        "name": "_implData",
+        "type": "bytes[]"
       }
     ],
     "name": "deploy",
     "outputs": [
-      { "internalType": "address", "name": "token", "type": "address" },
-      { "internalType": "address", "name": "metadata", "type": "address" },
-      { "internalType": "address", "name": "auction", "type": "address" },
-      { "internalType": "address", "name": "treasury", "type": "address" },
-      { "internalType": "address", "name": "governor", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "metadata",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "auction",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "treasury",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "governor",
+        "type": "address"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
     ],
     "name": "getAddresses",
     "outputs": [
-      { "internalType": "address", "name": "metadata", "type": "address" },
-      { "internalType": "address", "name": "auction", "type": "address" },
-      { "internalType": "address", "name": "treasury", "type": "address" },
-      { "internalType": "address", "name": "governor", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "metadata",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "auction",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "treasury",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "governor",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "token", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      }
     ],
     "name": "getDAOVersions",
     "outputs": [
       {
         "components": [
-          { "internalType": "string", "name": "token", "type": "string" },
-          { "internalType": "string", "name": "metadata", "type": "string" },
-          { "internalType": "string", "name": "auction", "type": "string" },
-          { "internalType": "string", "name": "treasury", "type": "string" },
-          { "internalType": "string", "name": "governor", "type": "string" }
+          {
+            "internalType": "string",
+            "name": "token",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "metadata",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "auction",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "treasury",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "governor",
+            "type": "string"
+          }
         ],
         "internalType": "struct IManager.DAOVersionInfo",
         "name": "",
         "type": "tuple"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getLatestVersions",
-    "outputs": [
-      {
-        "components": [
-          { "internalType": "string", "name": "token", "type": "string" },
-          { "internalType": "string", "name": "metadata", "type": "string" },
-          { "internalType": "string", "name": "auction", "type": "string" },
-          { "internalType": "string", "name": "treasury", "type": "string" },
-          { "internalType": "string", "name": "governor", "type": "string" }
-        ],
-        "internalType": "struct IManager.DAOVersionInfo",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "governorImpl",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
     ],
     "name": "initialize",
     "outputs": [],
@@ -373,46 +581,121 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_baseImpl", "type": "address" },
-      { "internalType": "address", "name": "_upgradeImpl", "type": "address" }
+      {
+        "internalType": "uint8",
+        "name": "_implType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "_implAddress",
+        "type": "address"
+      }
     ],
-    "name": "isRegisteredUpgrade",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "name": "isRegisteredImplementation",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "metadataImpl",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_baseImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_upgradeImpl",
+        "type": "address"
+      }
+    ],
+    "name": "isRegisteredUpgrade",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "pendingOwner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "proxiableUUID",
-    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_baseImpl", "type": "address" },
-      { "internalType": "address", "name": "_upgradeImpl", "type": "address" }
+      {
+        "internalType": "uint8",
+        "name": "_implType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "_implAddress",
+        "type": "address"
+      }
+    ],
+    "name": "registerImplementation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_baseImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_upgradeImpl",
+        "type": "address"
+      }
     ],
     "name": "registerUpgrade",
     "outputs": [],
@@ -421,8 +704,34 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_baseImpl", "type": "address" },
-      { "internalType": "address", "name": "_upgradeImpl", "type": "address" }
+      {
+        "internalType": "uint8",
+        "name": "_implType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "address",
+        "name": "_implAddress",
+        "type": "address"
+      }
+    ],
+    "name": "removeImplementation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_baseImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_upgradeImpl",
+        "type": "address"
+      }
     ],
     "name": "removeUpgrade",
     "outputs": [],
@@ -431,7 +740,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
     ],
     "name": "safeTransferOwnership",
     "outputs": [],
@@ -439,15 +752,65 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "tokenImpl",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_newRendererImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_setupRenderer",
+        "type": "bytes"
+      }
+    ],
+    "name": "setMetadataRenderer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "metadata",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_target",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes4",
+        "name": "_interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -455,15 +818,12 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "treasuryImpl",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
-      { "internalType": "address", "name": "_newImpl", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_newImpl",
+        "type": "address"
+      }
     ],
     "name": "upgradeTo",
     "outputs": [],
@@ -472,8 +832,16 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_newImpl", "type": "address" },
-      { "internalType": "bytes", "name": "_data", "type": "bytes" }
+      {
+        "internalType": "address",
+        "name": "_newImpl",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_data",
+        "type": "bytes"
+      }
     ],
     "name": "upgradeToAndCall",
     "outputs": [],

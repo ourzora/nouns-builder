@@ -35,10 +35,10 @@
       "startBlock": 1991500
     }
   },
-  "base-testnet": {
+  "base-goerli": {
     "Manager": {
-      "address": "0x550c326d688fD51ae65AC6A2d48749E631023A03",
-      "startBlock": 6585050
+      "address": "0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3",
+      "startBlock": 10259200
     }
   }
 }

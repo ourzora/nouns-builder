@@ -3,7 +3,7 @@ import {
   ContractImageUpdated as ContractImageUpdatedEvent,
   DescriptionUpdated as DescriptionUpdatedEvent,
   WebsiteURIUpdated as URIUpdatedEvent,
-} from '../generated/templates/MetadataRenderer/MetadataRenderer'
+} from '../generated/templates/BaseMetadata/BaseMetadata'
 import { dataSource } from '@graphprotocol/graph-ts'
 
 export function handleContractImageUpdated(event: ContractImageUpdatedEvent): void {
