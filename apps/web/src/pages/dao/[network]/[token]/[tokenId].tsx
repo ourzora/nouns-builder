@@ -112,8 +112,6 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       : baseSections
   }, [hasThreshold, collection])
 
-  // remove line breaks and formatting from og description
-
   const ogDescription = useMemo(() => {
     if (!description) return ''
     const isMarkdown = isPossibleMarkdown(description)
@@ -123,9 +121,10 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         name || 'This DAO'
       } was created on Builder Nouns. Please click the link to see more.`
     }
+    // remove line breaks and formatting from og description
     const cleanDesc = description.replace(/(\r\n|\n|\r|\t|\v|\f|\\n)/gm, '')
     return cleanDesc.length > 111 ? `${cleanDesc.slice(0, 111)}...` : cleanDesc
-  }, [description])
+  }, [description, name])
 
   const activeTab = query?.tab ? (query.tab as string) : 'About'
 
