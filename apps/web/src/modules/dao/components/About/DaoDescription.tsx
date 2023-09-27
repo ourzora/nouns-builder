@@ -1,9 +1,13 @@
-import { Box, Button, Flex } from '@zoralabs/zord'
-import React, { useEffect, useRef } from 'react'
+import { Box, Button, Flex, Text } from '@zoralabs/zord'
+import HTMLReactParser from 'html-react-parser'
+import React, { useEffect, useMemo, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
+
+import { daoDescription as plainDesciption } from 'src/styles/About.css'
+import { isPossibleMarkdown } from 'src/utils/helpers'
 
 import { daoDescription, fadingEffect } from './mdRender.css'
 
@@ -13,7 +17,6 @@ export const DaoDescription = ({ description }: { description?: string }) => {
   const textRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    console.log('textRef.current', textRef.current?.clientHeight)
     if (
       textRef.current &&
       textRef?.current?.scrollHeight > textRef?.current?.clientHeight
@@ -27,7 +30,22 @@ export const DaoDescription = ({ description }: { description?: string }) => {
       return description.replace(/\\n/g, '\n').replace(/\\r/g, '\r')
     }
   }, [description])
-  if (!correctedDescription) return null
+  const isMarkdown = useMemo(() => {
+    if (!description) return false
+    return isPossibleMarkdown(description)
+  }, [description])
+  if (!correctedDescription || !description) return null
+
+  // This regex check is large. Memoizing it for perf
+
+  if (!isMarkdown)
+    return (
+      <Box mt={{ '@initial': 'x4', '@768': 'x6' }}>
+        <Text className={plainDesciption}>
+          {HTMLReactParser(description.replace(/\\n/g, '<br />'))}
+        </Text>
+      </Box>
+    )
 
   return (
     <Flex direction="column" align="flex-end">
