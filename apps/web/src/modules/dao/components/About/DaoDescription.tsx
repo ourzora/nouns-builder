@@ -13,6 +13,7 @@ import { daoDescription, fadingEffect } from './mdRender.css'
 
 export const DaoDescription = ({ description }: { description?: string }) => {
   const [isOverHeight, setIsOverHeight] = React.useState(false)
+  const [isExpanded, setIsExpanded] = React.useState(false)
 
   const textRef = useRef<HTMLDivElement>(null)
 
@@ -21,6 +22,7 @@ export const DaoDescription = ({ description }: { description?: string }) => {
       textRef.current &&
       textRef?.current?.scrollHeight > textRef?.current?.clientHeight
     ) {
+      console.log('fired')
       setIsOverHeight(true)
     }
   }, [])
@@ -46,6 +48,14 @@ export const DaoDescription = ({ description }: { description?: string }) => {
         </Text>
       </Box>
     )
+  console.log('isExpanded', isExpanded)
+  console.log('isOverHeight', isOverHeight)
+
+  const getFadingEffect = () => {
+    if (isExpanded) return ''
+    if (isOverHeight) return fadingEffect
+    return ''
+  }
 
   return (
     <Flex direction="column" align="flex-end">
@@ -59,9 +69,9 @@ export const DaoDescription = ({ description }: { description?: string }) => {
         borderColor={'border'}
         ref={textRef}
         width="100%"
-        className={isOverHeight ? fadingEffect : ''}
+        className={getFadingEffect()}
         style={{
-          maxHeight: isOverHeight ? '320px' : 'none',
+          maxHeight: '300px',
         }}
       >
         <ReactMarkdown
@@ -72,14 +82,16 @@ export const DaoDescription = ({ description }: { description?: string }) => {
           {correctedDescription}
         </ReactMarkdown>
       </Box>
-      <Button
-        variant="ghost"
-        onClick={() => setIsOverHeight(!isOverHeight)}
-        size="sm"
-        px={'x0'}
-      >
-        {isOverHeight ? 'Read More' : 'Collapse'}
-      </Button>
+      {isOverHeight && (
+        <Button
+          variant="ghost"
+          onClick={() => setIsExpanded(!isExpanded)}
+          size="sm"
+          px={'x0'}
+        >
+          {isExpanded ? 'Collapse' : 'Read More'}
+        </Button>
+      )}
     </Flex>
   )
 }
