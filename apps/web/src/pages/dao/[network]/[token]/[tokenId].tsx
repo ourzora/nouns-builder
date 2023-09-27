@@ -2,7 +2,7 @@ import { Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useMemo } from 'react'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 
@@ -31,6 +31,7 @@ import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { DaoOgMetadata } from 'src/pages/api/og/dao'
 import { AddressType, Chain } from 'src/typings'
+import { isPossibleMarkdown } from 'src/utils/helpers'
 
 interface TokenPageProps {
   url: string
@@ -112,10 +113,19 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   }, [hasThreshold, collection])
 
   // remove line breaks and formatting from og description
-  const cleanDesc = description.replace(/(\r\n|\n|\r|\t|\v|\f|\\n)/gm, '')
 
-  const ogDescription =
-    cleanDesc.length > 111 ? `${cleanDesc.slice(0, 111)}...` : cleanDesc
+  const ogDescription = useMemo(() => {
+    if (!description) return ''
+    const isMarkdown = isPossibleMarkdown(description)
+
+    if (isMarkdown) {
+      return `${
+        name || 'This DAO'
+      } was created on Builder Nouns. Please click the link to see more.`
+    }
+    const cleanDesc = description.replace(/(\r\n|\n|\r|\t|\v|\f|\\n)/gm, '')
+    return cleanDesc.length > 111 ? `${cleanDesc.slice(0, 111)}...` : cleanDesc
+  }, [description])
 
   const activeTab = query?.tab ? (query.tab as string) : 'About'
 

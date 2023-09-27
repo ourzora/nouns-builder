@@ -30,13 +30,13 @@ export const DaoDescription = ({ description }: { description?: string }) => {
       return description.replace(/\\n/g, '\n').replace(/\\r/g, '\r')
     }
   }, [description])
+
+  // This regex check is large. Memoizing it for perf
   const isMarkdown = useMemo(() => {
     if (!description) return false
     return isPossibleMarkdown(description)
   }, [description])
   if (!correctedDescription || !description) return null
-
-  // This regex check is large. Memoizing it for perf
 
   if (!isMarkdown)
     return (
