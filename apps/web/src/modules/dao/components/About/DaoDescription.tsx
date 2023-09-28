@@ -71,7 +71,7 @@ export const DaoDescription = ({ description }: { description?: string }) => {
         width="100%"
         className={getFadingEffect()}
         style={{
-          maxHeight: UNEXPANDED_BOX_HEIGHT,
+          maxHeight: isExpanded ? '100%' : UNEXPANDED_BOX_HEIGHT,
         }}
       >
         <ReactMarkdown
