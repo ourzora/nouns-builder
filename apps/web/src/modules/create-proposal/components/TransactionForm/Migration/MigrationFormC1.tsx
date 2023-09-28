@@ -1,8 +1,9 @@
-import { Box, Button, Flex, Paragraph } from '@zoralabs/zord'
+import { Box, Button, Flex, Paragraph, Text } from '@zoralabs/zord'
 import { useState } from 'react'
 import { encodeFunctionData } from 'viem'
 import { useContractRead } from 'wagmi'
 
+import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon/Icon'
 import { auctionAbi, governorAbi } from 'src/data/contract/abis'
 import { useProposalStore } from 'src/modules/create-proposal'
@@ -14,7 +15,7 @@ import { toSeconds } from 'src/utils/helpers'
 
 import { checkboxStyleVariants } from '../ReplaceArtwork/ReplaceArtworkForm.css'
 
-export const MigrationFormC0: React.FC<{}> = ({}) => {
+export const MigrationFormC1: React.FC<{}> = ({}) => {
   const { auction, governor } = useDaoStore((state) => state.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const chain = useChainStore((x) => x.chain)
@@ -89,13 +90,14 @@ export const MigrationFormC0: React.FC<{}> = ({}) => {
           </Paragraph>
         </Box>
       ) : (
-        <Box mb={'x8'}>
-          <Paragraph size="md" color="text1">
-            In order to start the migration, you first need to pause auctions. In
-            parallel, we also recommend reducing the voting delay and period so you can
-            quickly bridge to L2 after this proposal goes through.
-          </Paragraph>
-        </Box>
+        <Text mb="x8" ml="x2" className={defaultHelperTextStyle}>
+          In order to start the migration, you first need to pause auctions. In parallel,
+          we also recommend reducing the voting delay and period so you can quickly start
+          the bridging transaction after this proposal goes through.{' '}
+          <a target="_blank" rel="noreferrer noopener" href="">
+            Learn more
+          </a>
+        </Text>
       )}
       <Flex align={'center'} justify={'flex-start'} gap={'x4'} mt="x2" mb="x8">
         <Flex

@@ -16,6 +16,7 @@ query daoMembersList(
     owner
     daoTokenCount
     daoTokens {
+      tokenId
       mintedAt
     }
   }

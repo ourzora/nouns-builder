@@ -2001,7 +2001,7 @@ export type DaoMembersListQuery = {
     id: string
     owner: any
     daoTokenCount: number
-    daoTokens: Array<{ __typename?: 'Token'; mintedAt: any }>
+    daoTokens: Array<{ __typename?: 'Token'; tokenId: any; mintedAt: any }>
   }>
 }
 
@@ -2363,7 +2363,7 @@ export const TokenFragmentDoc = gql`
 `
 export const ActiveAuctionsDocument = gql`
   query activeAuctions($first: Int!, $where: Auction_filter!) {
-    auctions(orderBy: endTime, orderDirection: asc, first: $first, where: $where) {
+    auctions(orderBy: endTime, orderDirection: desc, first: $first, where: $where) {
       ...Auction
     }
   }
@@ -2438,6 +2438,7 @@ export const DaoMembersListDocument = gql`
       owner
       daoTokenCount
       daoTokens {
+        tokenId
         mintedAt
       }
     }

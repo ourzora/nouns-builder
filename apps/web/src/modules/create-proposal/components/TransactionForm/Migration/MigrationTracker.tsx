@@ -1,12 +1,9 @@
 import { Box, Flex } from '@zoralabs/zord'
 
-
-
-
 export const MigrationTracker: React.FC<{ checkpoint: number }> = ({ checkpoint }) => {
   const sections = ['Pause Auctions', 'Deploy to L2', 'Bridge Treasury']
   return (
-    <Box w={'100%'}>
+    <Box w={'100%'} mb="x4">
       <Flex direction={'column'}>
         {sections.map((section, i) => (
           <Flex direction={'row'} align={'center'} mb={'x1'}>
@@ -30,7 +27,6 @@ export const MigrationTracker: React.FC<{ checkpoint: number }> = ({ checkpoint 
       <Box
         w={'100%'}
         mt="x4"
-        mb="x4"
         h={'x0'}
         borderColor="text2"
         borderStyle="solid"
