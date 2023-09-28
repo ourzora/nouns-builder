@@ -102,9 +102,11 @@ globalStyle(`${daoDescription} blockquote`, {
   marginBottom: 20,
 })
 
+export const UNEXPANDED_BOX_HEIGHT = '300px'
+
 export const fadingEffect = style({
   position: 'relative',
-  maxHeight: '300px',
+  maxHeight: UNEXPANDED_BOX_HEIGHT,
   overflow: 'hidden',
   ':after': {
     content: '""',

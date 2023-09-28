@@ -15,7 +15,7 @@ export const allocationSchema = Yup.object().shape({
     }),
   endDate: Yup.string()
     .required('*')
-    .test('isDateInFuture', 'Must be in future', (value: string | undefined) => {
+    .test('isDateInFuture', 'Must be in future', (value: string | undefined, ...rest) => {
       if (!value) return false
       const date = new Date(value)
       const now = new Date()

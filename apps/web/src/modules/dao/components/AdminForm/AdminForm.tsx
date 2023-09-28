@@ -197,8 +197,6 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
 
     let field: keyof AdminFormValues
 
-    console.log('values', values)
-    console.log('formik', formik)
     for (field in values) {
       let value = values[field]
 
@@ -261,10 +259,6 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       addresses?.auction as Address
     )
 
-    console.log('transactions', transactions)
-
-    const updatedDescription = values.projectDescription
-
     createProposal({
       disabled: false,
       title: undefined,
@@ -280,7 +274,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       <Flex direction={'column'} w={'100%'}>
         <Formik
           initialValues={initialValues}
-          validationSchema={adminValidationSchema()}
+          validationSchema={adminValidationSchema(initialValues)}
           onSubmit={(values, formik: FormikValues) =>
             handleUpdateSettings(values, formik)
           }
@@ -328,17 +322,6 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
                         />
                       )}
                     </Field>
-
-                    {/* <TextArea
-                      {...formik.getFieldProps('projectDescription')}
-                      inputLabel={'Collection Description'}
-                      formik={formik}
-                      id={'projectDescription'}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorMessage={formik.errors['projectDescription']}
-                      placeholder={'Nouns is an experiment which combines...'}
-                    /> */}
 
                     <SmartInput
                       {...formik.getFieldProps('daoWebsite')}
