@@ -10,6 +10,7 @@ import { auctionAbi } from 'src/data/contract/abis'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
 import { TransactionType } from 'src/modules/create-proposal/constants/transactionType'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
+import { prepareMerkle } from 'src/modules/create-proposal/utils/prepareMerkle'
 import { useDaoStore } from 'src/modules/dao/stores/useDaoStore'
 import { useChainStore } from 'src/stores/useChainStore'
 
@@ -54,7 +55,10 @@ export const Migration: React.FC = () => {
           chain.id
         }&page=${undefined}&limit=${10000}`
       )
-      .then((x) => x.data.membersList)
+      .then((x) => {
+        x.data.membersList
+        prepareMerkle(x.data.membersList)
+      })
   )
 
   const deployed = false

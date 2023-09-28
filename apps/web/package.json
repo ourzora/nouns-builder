@@ -47,6 +47,7 @@
     "ioredis": "^5.2.3",
     "ipfs-http-client": "^59.0.0",
     "ipfs-service": "workspace:*",
+    "lanyard": "^1.1.2",
     "lodash": "^4.17.21",
     "multiformats": "9.9.0",
     "next": "^13.0.3",
