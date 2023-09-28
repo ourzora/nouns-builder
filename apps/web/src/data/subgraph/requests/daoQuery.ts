@@ -1,6 +1,5 @@
 import * as Sentry from '@sentry/nextjs'
 
-import { DAOS_TO_EXCLUDE } from 'src/constants/addresses'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { SDK } from 'src/data/subgraph/client'
 import { CHAIN_ID } from 'src/typings'
@@ -35,17 +34,12 @@ export const myDaosRequest = async (
 
     return data
       .map((queries) =>
-        queries.daotokenOwners
-          .map((x) => {
-            return x.dao
-          })
-          .filter((dao) => !DAOS_TO_EXCLUDE.includes(dao.tokenAddress))
-          .map((dao) => ({
-            name: dao.name || '',
-            collectionAddress: dao.tokenAddress,
-            auctionAddress: dao?.auctionAddress || '',
-            chainId: queries.chainId,
-          }))
+        queries.daotokenOwners.map(({ dao }) => ({
+          name: dao.name || '',
+          collectionAddress: dao.tokenAddress,
+          auctionAddress: dao?.auctionAddress || '',
+          chainId: queries.chainId,
+        }))
       )
       .flat()
       .sort((a, b) => a.name.localeCompare(b.name))

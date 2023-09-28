@@ -52,8 +52,3 @@ export const PUBLIC_ZORA_NFT_CREATOR = {
 }
 
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000' as AddressType
-
-export const DAOS_TO_EXCLUDE = [
-  '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
-  '0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b',
-]
