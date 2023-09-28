@@ -45,6 +45,9 @@ const allocationSchema = Yup.object().shape({
       'Must be in future',
       (value: string | undefined, fieldData) => {
         if (!value) return false
+        // override validation if parent endDate is the same as this endDate
+        // This prevents the form from locking up if the founder allocation end data
+        // has already passed.
         if (value === fieldData?.parent?.endDate) return true
         const date = new Date(value)
         const now = new Date()

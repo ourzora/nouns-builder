@@ -35,7 +35,6 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
   }
 
   const handleSubmit = (_values: ArtworkFormValues) => {
-    console.log('_values', _values)
     setFulfilledSections(title)
     setActiveSection(activeSection + 1)
   }
@@ -54,7 +53,6 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
         <Form>
           <Field name="projectDescription" id={'projectDescription'}>
             {({ field }: FieldProps) => {
-              console.log('field', field)
               return (
                 <MarkdownEditor
                   value={field.value}
