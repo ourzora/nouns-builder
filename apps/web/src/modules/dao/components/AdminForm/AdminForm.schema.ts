@@ -27,26 +27,6 @@ export interface AdminFormValues {
 const twentyFourWeeks = 60 * 60 * 24 * 7 * 24
 const tenMinutes = 60 * 10
 
-// const newAllocationSchema = {
-//   ...allocationSchema,
-//   fields: {
-//     ...allocationSchema?.fields,
-//     endDate: Yup.string()
-//       .required('*')
-//       .test(
-//         'isDateInFuture',
-//         'Must be in future',
-//         (value: string | undefined, ...rest) => {
-//           console.log('rest', rest)
-//           if (!value) return false
-//           const date = new Date(value)
-//           const now = new Date()
-//           return date > now
-//         }
-//       ),
-//   },
-// } as typeof allocationSchema
-
 const allocationSchema = Yup.object().shape({
   founderAddress: addressValidationSchema,
   allocationPercentage: Yup.number()

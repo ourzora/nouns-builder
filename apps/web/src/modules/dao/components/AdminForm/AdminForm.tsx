@@ -274,7 +274,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       <Flex direction={'column'} w={'100%'}>
         <Formik
           initialValues={initialValues}
-          validationSchema={adminValidationSchema(initialValues)}
+          validationSchema={adminValidationSchema()}
           onSubmit={(values, formik: FormikValues) =>
             handleUpdateSettings(values, formik)
           }
@@ -316,7 +316,6 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
                           onChange={(value: string) =>
                             formik?.setFieldValue(field.name, value)
                           }
-                          // disabled={disabledForm}
                           inputLabel={'DAO Description'}
                           errorMessage={formik.errors['projectDescription']}
                         />

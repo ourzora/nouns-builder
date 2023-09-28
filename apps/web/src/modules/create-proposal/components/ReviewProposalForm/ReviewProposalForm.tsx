@@ -13,6 +13,7 @@ import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
+import { ErrorResult } from 'src/services/errorResult'
 import { Simulation, SimulationResult } from 'src/services/simulationService'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType, CHAIN_ID } from 'src/typings'
@@ -69,7 +70,6 @@ export const ReviewProposalForm = ({
 
   const onSubmit = React.useCallback(
     async (values: FormValues) => {
-      console.log('fired')
       setError(undefined)
       setSimulationError(undefined)
       setSimulations([])
@@ -91,7 +91,7 @@ export const ReviewProposalForm = ({
 
       if (!!CHAINS_TO_SIMULATE.find((x) => x === chain.id)) {
         let simulationResults
-        console.log('simulating')
+
         try {
           setSimulating(true)
 
@@ -106,13 +106,13 @@ export const ReviewProposalForm = ({
             .then((res) => res.data)
         } catch (err) {
           console.log('err', err)
-          // if (axios.isAxiosError(err)) {
-          //   const data = err.response?.data as ErrorResult
-          //   setSimulationError(data.error)
-          // } else {
-          //   setSimulationError('Unable to simulate these transactions')
-          // }
-          // return
+          if (axios.isAxiosError(err)) {
+            const data = err.response?.data as ErrorResult
+            setSimulationError(data.error)
+          } else {
+            setSimulationError('Unable to simulate these transactions')
+          }
+          return
         } finally {
           setSimulating(false)
         }
