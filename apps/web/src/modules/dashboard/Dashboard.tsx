@@ -1,5 +1,4 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
-import axios from 'axios'
 import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { useAccount } from 'wagmi'
@@ -10,6 +9,7 @@ import {
   ProposalState,
   getProposalState,
 } from 'src/data/contract/requests/getProposalState'
+import { dashboardRequest } from 'src/data/subgraph/requests/dashboardQuery'
 import {
   CurrentAuctionFragment,
   DaoFragment,
@@ -61,12 +61,14 @@ const fetchDaoProposalState = async (dao: DashboardDao) => {
 }
 
 const fetchDashboardData = async (address: string) => {
-  const userDaos = await axios
-    .get<DashboardDao[]>(`/api/dashboard/${address}`)
-    .then((x) => x.data)
-
-  const resolved = await Promise.all(userDaos.map(fetchDaoProposalState))
-  return resolved
+  try {
+    const userDaos = (await dashboardRequest(address)) as unknown as DashboardDao[]
+    if (!userDaos) throw new Error('Dashboard DAO query returned undefined')
+    const resolved = await Promise.all(userDaos.map(fetchDaoProposalState))
+    return resolved
+  } catch (error) {
+    throw new Error('Error fetching dashboard data')
+  }
 }
 
 const Dashboard = () => {
