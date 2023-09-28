@@ -16,6 +16,9 @@ type DAO @entity {
   totalAuctionSales: BigInt!
   auctionConfig: AuctionConfig!
   currentAuction: Auction
+  tokenToMirror: Bytes
+  merkleMint: MerkleMint @derivedFrom(field: "dao")
+  redeemMint: RedeemMint @derivedFrom(field: "dao")
   owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
   tokens: [Token!]! @derivedFrom(field: "dao")
   proposals: [Proposal!]! @derivedFrom(field: "dao")
@@ -120,4 +123,22 @@ type AuctionBid @entity {
   bidder: Bytes!
   auction: Auction!
   bidTime: BigInt!
+}
+
+type MerkleMint @entity {
+  id: ID!
+  dao: DAO!
+  pricePerToken: BigInt!
+  mintStart: BigInt!
+  mintEnd: BigInt!
+  merkleRoot: Bytes!
+}
+
+type RedeemMint @entity {
+  id: ID!
+  dao: DAO!
+  pricePerToken: BigInt!
+  mintStart: BigInt!
+  mintEnd: BigInt!
+  redeemToken: Bytes!
 }

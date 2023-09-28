@@ -35,9 +35,17 @@
       "startBlock": 1991500
     }
   },
-  "base-goerli": {
+  "base-testnet": {
     "Manager": {
       "address": "0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3",
+      "startBlock": 10259200
+    },
+    "MerkleMinter": {
+      "address": "0x0300ba2fbc45c4191c475731b0876eeef3271b86",
+      "startBlock": 10259200
+    },
+    "RedeemMinter": {
+      "address": "0x82accbf10febc39f0d1ad3fed84137dde6542455",
       "startBlock": 10259200
     }
   }

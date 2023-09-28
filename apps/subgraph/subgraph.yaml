@@ -4,10 +4,10 @@ schema:
 dataSources:
   - kind: ethereum
     name: Manager
-    network: base-goerli
+    network: base-testnet
     source:
       abi: Manager
-      address: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3'
+      address: "0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3"
       startBlock: 10259200
     mapping:
       kind: ethereum/events
@@ -25,14 +25,56 @@ dataSources:
           file: ./abis/BaseMetadata.json
         - name: Auction
           file: ./abis/Auction.json
+        - name: PartialMirrorToken
+          file: ./abis/PartialMirrorToken.json
       eventHandlers:
         - event: DAODeployed(address,address,address,address,address)
           handler: handleDAODeployed
       file: ./src/manager.ts
+  - kind: ethereum
+    name: MerkleMinter
+    network: base-testnet
+    source:
+      abi: MerkleMinter
+      address: "0x0300ba2fbc45c4191c475731b0876eeef3271b86"
+      startBlock: 10259200
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DAO
+      abis:
+        - name: MerkleMinter
+          file: ./abis/MerkleMinter.json
+      eventHandlers:
+        - event: MinterSet(indexed address,(uint64,uint64,uint64,bytes32))
+          handler: handleMinterSet
+      file: ./src/merkle_minter.ts
+  - kind: ethereum
+    name: RedeemMinter
+    network: base-testnet
+    source:
+      abi: RedeemMinter
+      address: "0x82accbf10febc39f0d1ad3fed84137dde6542455"
+      startBlock: 10259200
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DAO
+      abis:
+        - name: RedeemMinter
+          file: ./abis/RedeemMinter.json
+      eventHandlers:
+        - event: MinterSet(indexed address,(uint64,uint64,uint64,address))
+          handler: handleMinterSet
+      file: ./src/redeem_minter.ts
 templates:
   - kind: ethereum
     name: Token
-    network: base-goerli
+    network: base-testnet
     source:
       abi: Token
     mapping:
@@ -56,7 +98,7 @@ templates:
       file: ./src/token.ts
   - kind: ethereum
     name: Governor
-    network: base-goerli
+    network: base-testnet
     source:
       abi: Governor
     mapping:
@@ -87,7 +129,7 @@ templates:
       file: ./src/governor.ts
   - kind: ethereum
     name: BaseMetadata
-    network: base-goerli
+    network: base-testnet
     source:
       abi: BaseMetadata
     mapping:
@@ -109,7 +151,7 @@ templates:
       file: ./src/metadata.ts
   - kind: ethereum
     name: Auction
-    network: base-goerli
+    network: base-testnet
     source:
       abi: Auction
     mapping:

@@ -1,5 +1,6 @@
 import { DAODeployed as DAODeployedEvent } from '../generated/Manager/Manager'
 import { Manager as ManagerContract } from '../generated/Manager/Manager'
+import { PartialMirrorToken as PartialMirrorTokenContract } from '../generated/Manager/PartialMirrorToken'
 import { AuctionConfig, DAO } from '../generated/schema'
 import {
   Auction as AuctionTemplate,
@@ -11,6 +12,7 @@ import { Auction as AuctionContract } from '../generated/templates/Auction/Aucti
 import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
 import { Token as TokenContract } from '../generated/templates/Token/Token'
 import { MetadataType, getMetadataType } from './utils/getMetadataType'
+import { TokenType, getTokenType } from './utils/getTokenType'
 import { BigInt, DataSourceContext } from '@graphprotocol/graph-ts'
 
 export function handleDAODeployed(event: DAODeployedEvent): void {
@@ -28,14 +30,21 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
 
   auctionConfig.save()
 
-  let metadataType = getMetadataType(managerContract, event.params.metadata)
-
   let dao = new DAO(event.params.token.toHexString())
+
+  let metadataType = getMetadataType(managerContract, event.params.metadata)
 
   if (metadataType !== MetadataType.Unknown) {
     dao.description = metadataContract.description()
     dao.contractImage = metadataContract.contractImage()
     dao.projectURI = metadataContract.projectURI()
+  }
+
+  let tokenType = getTokenType(managerContract, event.params.token)
+
+  if (tokenType === TokenType.Mirror) {
+    let mirrorToken = PartialMirrorTokenContract.bind(event.params.token)
+    dao.tokenToMirror = mirrorToken.tokenToMirror()
   }
 
   dao.tokenAddress = event.params.token
