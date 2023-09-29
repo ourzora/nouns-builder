@@ -119,7 +119,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
     if (isMarkdown) {
       return `${
         name || 'This DAO'
-      } was created on Builder Nouns. Please click the link to see more.`
+      } was created on Nouns Builder. Please click the link to see more.`
     }
     // remove line breaks and formatting from og description
     const cleanDesc = description.replace(/(\r\n|\n|\r|\t|\v|\f|\\n)/gm, '')
