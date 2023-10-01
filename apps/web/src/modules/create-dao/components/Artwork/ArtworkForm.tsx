@@ -58,6 +58,7 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
             id={'projectDescription'}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            autoSubmit
             errorMessage={
               formik.touched?.projectDescription && formik.errors?.projectDescription
                 ? formik.errors?.projectDescription
