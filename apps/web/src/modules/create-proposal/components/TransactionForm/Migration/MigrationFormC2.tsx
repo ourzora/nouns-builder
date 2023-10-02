@@ -34,11 +34,9 @@ export const MigrationFormC2: React.FC<MigrationFormC2Props> = ({
 }) => {
   const [receivingChain, setReceivingChain] = useState<ChainType>('ZORA')
 
-  const defaultSettler = 'mrtn.eth'
-
   const initialValues: MigrationFormC2Values = {
-    L2: '',
-    settler: defaultSettler,
+    L2: 'ZORA',
+    starter: '',
   }
 
   const handleSubmit = useCallback(
@@ -79,7 +77,7 @@ export const MigrationFormC2: React.FC<MigrationFormC2Props> = ({
                 style={{ outline: 0, border: 0, padding: 0, margin: 0 }}
               >
                 <Flex as={Form} direction={'column'}>
-                  <label className={defaultInputLabelStyle}>Chain type</label>
+                  <label className={defaultInputLabelStyle}>L2 Chain</label>
 
                   <DropdownSelect
                     options={chainOptions}
@@ -88,21 +86,21 @@ export const MigrationFormC2: React.FC<MigrationFormC2Props> = ({
                   />
 
                   <SmartInput
-                    {...formik.getFieldProps('settler')}
-                    inputLabel={'L2 Settler'}
+                    {...formik.getFieldProps('starter')}
+                    inputLabel={'L2 Starter'}
                     placeholder={'0x... or .eth'}
                     type={TEXT}
                     formik={formik}
-                    id={'settler'}
+                    id={'starter'}
                     isAddress={true}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     helperText={
-                      'The DAO treasury address is set as the default payout address. This address will receive any withdrawals and royalties. It can be your personal wallet, a multisignature wallet, or an external splits contract.'
+                      'This address will need to re-start the auctions on the L2 side, make sure it is an active wallet.'
                     }
                     errorMessage={
-                      formik.touched['settler'] && formik.errors['settler']
-                        ? formik.errors['settler']
+                      formik.touched['starter'] && formik.errors['starter']
+                        ? formik.errors['starter']
                         : undefined
                     }
                   />

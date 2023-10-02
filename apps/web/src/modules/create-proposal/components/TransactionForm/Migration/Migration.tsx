@@ -4,15 +4,17 @@ import { FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import useSWR from 'swr'
+import { encodeFunctionData } from 'viem'
 import { useBalance, useContractRead } from 'wagmi'
 
-import { auctionAbi } from 'src/data/contract/abis'
+import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
 import { TransactionType } from 'src/modules/create-proposal/constants/transactionType'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { prepareMerkle } from 'src/modules/create-proposal/utils/prepareMerkle'
 import { useDaoStore } from 'src/modules/dao/stores/useDaoStore'
 import { useChainStore } from 'src/stores/useChainStore'
+import { AddressType } from 'src/typings'
 
 import { MigrationFormC1 } from './MigrationFormC1'
 import { MigrationFormC2 } from './MigrationFormC2'
@@ -25,12 +27,9 @@ type MembersQuery = {
 
 export const Migration: React.FC = () => {
   const chain = useChainStore((x) => x.chain)
-  const { treasury, auction } = useDaoStore((x) => x.addresses)
+  const { treasury, auction, token } = useDaoStore((x) => x.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const { isReady } = useRouter()
-  const {
-    addresses: { token },
-  } = useDaoStore()
 
   const { data: treasuryBalance } = useBalance({
     address: treasury as `0x${string}`,
@@ -41,6 +40,13 @@ export const Migration: React.FC = () => {
     abi: auctionAbi,
     address: auction,
     functionName: 'paused',
+    chainId: chain.id,
+  })
+
+  const { data: existingFounders } = useContractRead({
+    abi: tokenAbi,
+    address: token,
+    functionName: 'getFounders',
     chainId: chain.id,
   })
 
@@ -83,7 +89,8 @@ export const Migration: React.FC = () => {
     actions: FormikHelpers<MigrationFormC2Values>
   ) => {
     if (!chain) return
-    const { L2, settler } = values
+    const { L2, starter } = values
+    console.log('here')
 
     /*if(members && members.length > 0){
       createMerkleTree(members)
@@ -102,12 +109,46 @@ export const Migration: React.FC = () => {
       value: '',
     }*/
 
+    const zeroFounder = {
+      wallet: starter as AddressType,
+      ownershipPct: BigInt(0),
+      vestExpiry: BigInt(Math.floor(new Date('2040-01-01').getTime() / 1000)),
+    }
+    const newFounders = existingFounders
+      ? [
+          zeroFounder,
+          ...existingFounders.map((x) => ({
+            wallet: x.wallet,
+            ownershipPct: BigInt(x.ownershipPct),
+            vestExpiry: BigInt(x.vestExpiry),
+          })),
+        ]
+      : [zeroFounder]
+    const updateFounders = {
+      target: token as AddressType,
+      functionSignature: 'updateFounders',
+      calldata: encodeFunctionData({
+        abi: tokenAbi,
+        functionName: 'updateFounders',
+        args: [newFounders],
+      }),
+      value: '',
+    }
+
+    console.log(newFounders)
+
     addTransaction({
       type: TransactionType.MIGRATION,
       summary: 'Migrate to L2',
       transactions: [
         /*migrationTxn*/
       ],
+    })
+
+    addTransaction({
+      type: TransactionType.CUSTOM,
+      summary: 'Set L2 Starter Address',
+      transactions: [updateFounders],
     })
 
     actions.resetForm()
