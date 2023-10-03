@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import HTMLReactParser from 'html-react-parser'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useLayoutEffect, useMemo, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
@@ -17,14 +17,14 @@ export const DaoDescription = ({ description }: { description?: string }) => {
 
   const textRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (
       textRef.current &&
       textRef?.current?.scrollHeight > textRef?.current?.clientHeight
     ) {
       setIsOverHeight(true)
     }
-  }, [])
+  }, [description])
 
   const correctedDescription = React.useMemo(() => {
     if (typeof description === 'string') {
