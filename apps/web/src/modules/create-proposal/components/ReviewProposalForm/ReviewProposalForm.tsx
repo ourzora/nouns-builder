@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { Box, Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { Field, FieldProps, Formik } from 'formik'
@@ -31,6 +32,13 @@ interface ReviewProposalProps {
   title?: string
   summary?: string
   transactions: BuilderTransaction[]
+}
+
+const logError = async (e: unknown) => {
+  console.error(e)
+  Sentry.captureException(e)
+  await Sentry.flush(2000)
+  return
 }
 
 export const ReviewProposalForm = ({
@@ -105,12 +113,13 @@ export const ReviewProposalForm = ({
             })
             .then((res) => res.data)
         } catch (err) {
-          console.log('err', err)
           if (axios.isAxiosError(err)) {
             const data = err.response?.data as ErrorResult
             setSimulationError(data.error)
+            logError(err)
           } else {
-            setSimulationError('Unable to simulate these transactions')
+            logError(err)
+            setSimulationError('Unable to simulate transactions on DAO create form')
           }
           return
         } finally {
@@ -166,7 +175,7 @@ export const ReviewProposalForm = ({
           setError(ERROR_CODE.REJECTED)
           return
         }
-
+        logError(err)
         setError(err.message)
       }
     },
