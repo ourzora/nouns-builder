@@ -6,7 +6,7 @@ import { useBridgeModal } from 'src/hooks/useBridgeModal'
 import { useChainStore } from 'src/stores/useChainStore'
 
 interface ContractButtonProps extends ButtonProps {
-  handleClick: (e?: any) => void
+  handleClick: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 export const ContractButton = ({
@@ -28,7 +28,9 @@ export const ContractButton = ({
 
   const handleSwitchNetwork = () => switchNetwork?.(appChain.id)
 
-  const handleClickWithValidation = (e?: any) => {
+  const handleClickWithValidation = (
+    e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     if (!userAddress) return openConnectModal?.()
     if (canUserBridge && userBalance?.decimals === 0) return openBridgeModal()
     if (userChain?.id !== appChain.id) return handleSwitchNetwork()

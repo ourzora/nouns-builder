@@ -4,9 +4,8 @@ import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { SDK } from 'src/data/subgraph/client'
 
 export const dashboardRequest = async (memberAddress: string) => {
-  if (!memberAddress) throw new Error('No user address provided')
-
   try {
+    if (!memberAddress) throw new Error('No user address provided')
     const data = await Promise.all(
       PUBLIC_DEFAULT_CHAINS.map((chain) =>
         SDK.connect(chain.id)

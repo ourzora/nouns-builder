@@ -118,7 +118,7 @@ export const bidInput = style([
     borderRadius: '12px',
     height: '48px',
     paddingLeft: '16px',
-    paddingRight: '16px',
+    paddingRight: '44px',
     outline: 'none',
     boxSizing: 'border-box',
     transition: '.3s',

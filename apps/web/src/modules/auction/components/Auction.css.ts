@@ -157,10 +157,6 @@ export const auctionActionButton = style({
   height: 56,
 })
 
-export const auctionActionDash = style({
-  borderRadius: '12px',
-})
-
 export const auctionActionButtonVariants = styleVariants({
   bid: [auctionActionButton],
   bidding: [
@@ -172,7 +168,7 @@ export const auctionActionButtonVariants = styleVariants({
     auctionActionButton,
     { width: '100%', background: '#F1F1F1', color: '#808080' },
   ],
-  dashSettle: [auctionActionDash, { width: '100%' }],
+  dashSettle: { borderRadius: '12px', width: '100%' },
 })
 
 export const bidForm = style({
