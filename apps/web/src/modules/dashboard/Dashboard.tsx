@@ -1,6 +1,7 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
+import { deepStrictEqual } from 'assert'
 import React, { useMemo, useState } from 'react'
-import useSWR, { mutate } from 'swr'
+import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 
 import { DisplayPanel } from 'src/components/DisplayPanel'
@@ -74,7 +75,7 @@ const fetchDashboardData = async (address: string) => {
 const Dashboard = () => {
   const { address } = useAccount()
 
-  const { data, error, isValidating } = useSWR(
+  const { data, error, isValidating, mutate } = useSWR(
     [`${SWR_KEYS.DASHBOARD}:${address}`],
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
@@ -160,7 +161,14 @@ const Dashboard = () => {
 
   const handleMutate = async () => {
     setMutating(true)
-    await mutate([`${SWR_KEYS.DASHBOARD}:${address}`], () => fetchDashboardData(address))
+    const beforeMutate = [...data]
+    console.log('beforeMutate', beforeMutate)
+    await mutate(() => fetchDashboardData(address))
+    const afterMutate = [...data]
+    console.log('afterMutate', afterMutate)
+
+    const isEqual = deepStrictEqual(beforeMutate, afterMutate)
+    console.log('isEqual', isEqual)
     setMutating(false)
   }
 
@@ -168,7 +176,11 @@ const Dashboard = () => {
     <DashboardLayout
       auctionCards={data.map((dao) => (
         <DaoAuctionCard
-          key={`auctionCard:${dao.tokenAddress}`}
+          // React diffing wasn't catching new auctions starting, so this
+          // long key is to help rerender when new auction starts
+          key={`auctionCard:${dao.tokenAddress}:${dao}:${
+            dao?.currentAuction?.endTime || 0
+          }`}
           {...dao}
           userAddress={address}
           handleMutate={handleMutate}
