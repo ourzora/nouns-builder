@@ -17,6 +17,7 @@ interface ArtworkProps {
 export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
   const {
     setUpArtwork,
+    setSetUpArtwork,
     setFulfilledSections,
     activeSection,
     setActiveSection,
@@ -34,9 +35,13 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
     setActiveSection(activeSection - 1)
   }
 
-  const handleSubmit = (_values: ArtworkFormValues) => {
+  const handleSubmit = (values: ArtworkFormValues) => {
     setFulfilledSections(title)
     setActiveSection(activeSection + 1)
+    setSetUpArtwork({
+      ...setUpArtwork,
+      projectDescription: values.projectDescription,
+    })
   }
 
   return (

@@ -4,8 +4,6 @@ export const daoDescription = style({
   wordBreak: 'break-word',
 })
 
-const mqMobile = '@media (max-width: 768px)'
-
 globalStyle(`${daoDescription} :is(h1)`, {
   fontSize: '2.6rem',
   fontWeight: 700,
