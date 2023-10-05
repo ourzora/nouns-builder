@@ -1,5 +1,4 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
-import { deepStrictEqual } from 'assert'
 import React, { useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
@@ -161,14 +160,7 @@ const Dashboard = () => {
 
   const handleMutate = async () => {
     setMutating(true)
-    const beforeMutate = [...data]
-    console.log('beforeMutate', beforeMutate)
     await mutate(() => fetchDashboardData(address))
-    const afterMutate = [...data]
-    console.log('afterMutate', afterMutate)
-
-    const isEqual = deepStrictEqual(beforeMutate, afterMutate)
-    console.log('isEqual', isEqual)
     setMutating(false)
   }
 
