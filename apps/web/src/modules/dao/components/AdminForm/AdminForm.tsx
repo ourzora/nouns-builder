@@ -12,6 +12,7 @@ import Radio from 'src/components/Fields/Radio'
 import SmartInput from 'src/components/Fields/SmartInput'
 import StickySave from 'src/components/Fields/StickySave'
 import { NUMBER, TEXT } from 'src/components/Fields/types'
+import { MarkdownEditor } from 'src/components/MarkdownEditor'
 import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { auctionAbi, governorAbi, metadataAbi, tokenAbi } from 'src/data/contract/abis'
@@ -21,7 +22,6 @@ import {
   TransactionType,
   useProposalStore,
 } from 'src/modules/create-proposal'
-import { MarkdownEditor } from 'src/modules/create-proposal/components/ReviewProposalForm/MarkdownEditor'
 import { formValuesToTransactionMap } from 'src/modules/dao/utils/adminFormFieldToTransaction'
 import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'

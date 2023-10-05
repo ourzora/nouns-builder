@@ -4,7 +4,7 @@ import isEmpty from 'lodash/isEmpty'
 import React from 'react'
 
 import { Icon } from 'src/components/Icon'
-import { MarkdownEditor } from 'src/modules/create-proposal/components/ReviewProposalForm/MarkdownEditor'
+import { MarkdownEditor } from 'src/components/MarkdownEditor'
 
 import { useFormStore } from '../../stores'
 import { ArtworkFormValues, validationSchemaArtwork } from './ArtworkForm.schema'

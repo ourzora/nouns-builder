@@ -9,6 +9,7 @@ import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/a
 
 import { ContractButton } from 'src/components/ContractButton'
 import TextInput from 'src/components/Fields/TextInput'
+import { MarkdownEditor } from 'src/components/MarkdownEditor'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
@@ -21,7 +22,6 @@ import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
-import { MarkdownEditor } from './MarkdownEditor'
 import { Transactions } from './Transactions'
 import { ERROR_CODE, FormValues, validationSchema } from './fields'
 
