@@ -5,31 +5,29 @@ import { skeletonAnimation } from 'src/styles/animations.css'
 
 export const outerAuctionCard = style([
   {
-    marginBottom: '24px',
-    width: '100%',
-    alignItems: 'center',
-    padding: '12px 24px',
     '@media': {
       'screen and (max-width: 768px)': {
-        flexDirection: 'column',
-        padding: '16px 8px',
-        alignItems: 'flex-start',
         gap: '16px',
       },
     },
   },
   atoms({
+    width: '100%',
+    alignItems: { '@initial': 'flex-start', '@768': 'center' },
+    flexDirection: { '@initial': 'column', '@768': 'row' },
+    marginBottom: 'x6',
     borderColor: 'border',
     borderStyle: 'solid',
     borderRadius: 'curved',
     borderWidth: 'normal',
+    py: { '@initial': 'x4', '@768': 'x3' },
+    px: { '@initial': 'x2', '@768': 'x6' },
   }),
 ])
 
 export const daoTokenName = style([
   {
     whiteSpace: 'nowrap',
-    overflow: 'hidden',
     textOverflow: 'ellipsis',
     width: '200px',
     '@media': {
@@ -42,17 +40,20 @@ export const daoTokenName = style([
     },
   },
   atoms({
+    overflow: 'hidden',
     fontWeight: 'label',
     fontSize: 20,
   }),
 ])
 
-export const daoAvatar = style({
-  objectFit: 'contain',
-  borderRadius: '16px',
-  height: 64,
-  width: 64,
-})
+export const daoAvatar = style([
+  atoms({
+    objectFit: 'contain',
+    borderRadius: 'curved',
+    height: 'x16',
+    width: 'x16',
+  }),
+])
 export const daoAvatarBox = style({
   marginRight: '24px',
   width: '64px',
@@ -64,19 +65,23 @@ export const daoAvatarBox = style({
   },
 })
 
-export const auctionCardBrand = style({
-  alignItems: 'center',
-  width: '40%',
-  cursor: 'pointer',
-  '@media': {
-    'screen and (max-width: 912px)': {
-      width: '35%',
-    },
-    'screen and (max-width: 768px)': {
-      width: '100%',
+export const auctionCardBrand = style([
+  {
+    width: '40%',
+    '@media': {
+      'screen and (max-width: 912px)': {
+        width: '35%',
+      },
+      'screen and (max-width: 768px)': {
+        width: '100%',
+      },
     },
   },
-})
+  atoms({
+    cursor: 'pointer',
+    alignItems: 'center',
+  }),
+])
 
 export const stats = style({
   width: '50%',
@@ -93,16 +98,20 @@ export const statsBox = style({
   },
 })
 
-export const bidBox = style({
-  marginLeft: 'auto',
-  width: '250px',
-  '@media': {
-    'screen and (max-width: 768px)': {
-      width: '100%',
-      marginLeft: 0,
+export const bidBox = style([
+  {
+    width: '250px',
+    '@media': {
+      'screen and (max-width: 768px)': {
+        width: '100%',
+        marginLeft: 0,
+      },
     },
   },
-})
+  atoms({
+    marginLeft: 'auto',
+  }),
+])
 
 export const bidForm = style({
   width: '75%',
@@ -113,12 +122,6 @@ export const bidButton = style({
 })
 export const bidInput = style([
   {
-    width: '100%',
-    border: 'none',
-    borderRadius: '12px',
-    height: '48px',
-    paddingLeft: '16px',
-    paddingRight: '44px',
     outline: 'none',
     boxSizing: 'border-box',
     transition: '.3s',
@@ -129,6 +132,12 @@ export const bidInput = style([
     },
   },
   atoms({
+    borderWidth: 'none',
+    borderRadius: 'curved',
+    height: 'x12',
+    width: '100%',
+    paddingLeft: 'x4',
+    paddingRight: 'x11',
     backgroundColor: 'background2',
     fontSize: 14,
     lineHeight: 24,
