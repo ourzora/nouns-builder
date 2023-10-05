@@ -13,7 +13,7 @@ import { AddressType } from 'src/typings'
 
 import { AuctionPaused } from './AuctionPaused'
 import { BidActionButton } from './BidActionButton'
-import { DashboardDao } from './Dashboard'
+import { DashboardDaoProps } from './Dashboard'
 import {
   auctionCardBrand,
   bidBox,
@@ -25,9 +25,12 @@ import {
   statsBox,
 } from './dashboard.css'
 
-export const DaoAuctionCard = (
-  props: DashboardDao & { userAddress: AddressType; handleMutate: () => void }
-) => {
+type DaoAuctionCardProps = DashboardDaoProps & {
+  userAddress: AddressType
+  handleMutate: () => void
+}
+
+export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
   const { currentAuction, chainId, auctionAddress, handleMutate, tokenAddress } = props
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}

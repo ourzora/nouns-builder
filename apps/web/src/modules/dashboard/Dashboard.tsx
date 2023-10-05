@@ -30,7 +30,7 @@ const ACTIVE_PROPOSAL_STATES = [
   ProposalState.Queued,
 ]
 
-export type DashboardDao = DaoFragment & {
+export type DashboardDaoProps = DaoFragment & {
   chainId: CHAIN_ID
   daoImage: string
   auctionConfig: {
@@ -41,7 +41,7 @@ export type DashboardDao = DaoFragment & {
   currentAuction?: CurrentAuctionFragment | null
 }
 
-const fetchDaoProposalState = async (dao: DashboardDao) => {
+const fetchDaoProposalState = async (dao: DashboardDaoProps) => {
   const proposals = await Promise.all(
     dao.proposals.map(async (proposal) => {
       const proposalState = await getProposalState(
@@ -62,7 +62,7 @@ const fetchDaoProposalState = async (dao: DashboardDao) => {
 
 const fetchDashboardData = async (address: string) => {
   try {
-    const userDaos = (await dashboardRequest(address)) as unknown as DashboardDao[]
+    const userDaos = (await dashboardRequest(address)) as unknown as DashboardDaoProps[]
     if (!userDaos) throw new Error('Dashboard DAO query returned undefined')
     const resolved = await Promise.all(userDaos.map(fetchDaoProposalState))
     return resolved

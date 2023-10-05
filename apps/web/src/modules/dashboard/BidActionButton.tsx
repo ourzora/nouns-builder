@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { Box, Button } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import { Address, parseEther } from 'viem'
@@ -11,7 +12,7 @@ import { maxChar } from 'src/utils/helpers'
 
 import { useMinBidIncrement } from '../auction'
 import { Settle } from '../auction/components/CurrentAuction/Settle'
-import { DashboardDao } from './Dashboard'
+import { DashboardDaoProps } from './Dashboard'
 import { bidButton, bidForm, bidInput, minButton } from './dashboard.css'
 
 export const BidActionButton = ({
@@ -21,7 +22,11 @@ export const BidActionButton = ({
   isEnded,
   auctionAddress,
   isOver,
-}: DashboardDao & { userAddress: AddressType; isOver: boolean; isEnded: boolean }) => {
+}: DashboardDaoProps & {
+  userAddress: AddressType
+  isOver: boolean
+  isEnded: boolean
+}) => {
   const { minimumBidIncrement, reservePrice } = auctionConfig
   const { highestBid } = currentAuction || {}
   const { chain: wagmiChain } = useNetwork()
@@ -59,6 +64,8 @@ export const BidActionButton = ({
       setBidAmount('')
     } catch (error) {
       console.error(error)
+      Sentry.captureException(error)
+      await Sentry.flush(2000)
     } finally {
       setIsLoading(false)
     }

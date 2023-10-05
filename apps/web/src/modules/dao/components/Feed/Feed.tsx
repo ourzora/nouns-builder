@@ -4,10 +4,10 @@ import axios from 'axios'
 import React, { useMemo } from 'react'
 import useSWRInfinite from 'swr/infinite'
 
+import { DisplayPanel } from 'src/components/DisplayPanel'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
-import { DisplayPanel } from '../../../../components/DisplayPanel'
 import { CardSkeleton } from './CardSkeleton'
 import { CastCard } from './CastCard'
 import { loadMoreButton } from './Feed.css'

@@ -6,7 +6,7 @@ import React from 'react'
 
 import { Icon, icons } from 'src/components/Icon'
 
-import { DashboardDao } from './Dashboard'
+import { DashboardDaoProps } from './Dashboard'
 import {
   auctionCardBrand,
   bidBox,
@@ -17,7 +17,7 @@ import {
   statsBox,
 } from './dashboard.css'
 
-type PausedType = DashboardDao & {
+type PausedType = DashboardDaoProps & {
   chainName?: string
   chainIcon?: string
   currentChainSlug?: string

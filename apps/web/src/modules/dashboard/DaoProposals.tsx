@@ -9,7 +9,7 @@ import { Avatar } from 'src/components/Avatar'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 
 import { DaoProposalCard } from './DaoProposalCard'
-import { DashboardDao } from './Dashboard'
+import { DashboardDaoProps } from './Dashboard'
 import { daoName } from './dashboard.css'
 
 export const DaoProposals = ({
@@ -18,7 +18,7 @@ export const DaoProposals = ({
   name,
   proposals,
   chainId,
-}: DashboardDao) => {
+}: DashboardDaoProps) => {
   const daoImageSrc = React.useMemo(() => {
     return daoImage ? getFetchableUrl(daoImage) : null
   }, [daoImage])
