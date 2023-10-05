@@ -73,6 +73,7 @@ type Proposal @entity {
   snapshotBlockNumber: BigInt!
   transactionHash: Bytes!
   votes: [ProposalVote!]! @derivedFrom(field: "proposal")
+  executionHash: Bytes
 }
 
 enum ProposalVoteSupport {
