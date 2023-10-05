@@ -116,6 +116,9 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
     if (!description) return ''
     const isMarkdown = isPossibleMarkdown(description)
 
+    // DAO descriptions are full of MD syntax and do not provide a pleasant
+    // reading experience for social embeds. For this, we'll check if the
+    // description is markdown and if so, we'll provide a generic description
     if (isMarkdown) {
       return `${
         name || 'This DAO'
