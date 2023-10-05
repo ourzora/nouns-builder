@@ -279,3 +279,12 @@ export const tokenImage = style({
   },
 })
 export const switcherBox = style({ width: '100%', maxWidth: '912px' })
+export const overflowEllipsis = style([
+  {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  atoms({
+    overflow: 'hidden',
+  }),
+])

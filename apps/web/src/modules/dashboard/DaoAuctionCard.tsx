@@ -11,6 +11,7 @@ import { auctionAbi } from 'src/data/contract/abis'
 import { useCountdown, useIsMounted } from 'src/hooks'
 import { AddressType } from 'src/typings'
 
+import { overflowEllipsis } from '../auction/components/Auction.css'
 import { AuctionPaused } from './AuctionPaused'
 import { BidActionButton } from './BidActionButton'
 import { DashboardDaoProps } from './Dashboard'
@@ -84,7 +85,7 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
   }
 
   const bidText = currentAuction.highestBid?.amount
-    ? formatEther(BigInt(currentAuction.highestBid.amount))
+    ? `${formatEther(BigInt(currentAuction.highestBid.amount))} ETH`
     : 'N/A'
 
   return (
@@ -123,7 +124,7 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
           <Text fontSize={16} color="text3" mb={'x1'}>
             Current Bid
           </Text>
-          <Text fontSize={18} fontWeight="label">
+          <Text fontSize={18} fontWeight="label" className={overflowEllipsis}>
             {bidText}
           </Text>
         </Box>
