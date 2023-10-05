@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { useAccount } from 'wagmi'
 
@@ -82,6 +82,38 @@ const Dashboard = () => {
 
   const [mutating, setMutating] = useState(false)
 
+  const proposalList = useMemo(() => {
+    if (!data) return null
+    const hasLiveProposals = data.some((dao) => dao.proposals.length)
+
+    if (!hasLiveProposals)
+      return (
+        <Flex
+          borderRadius={'phat'}
+          borderStyle={'solid'}
+          height={'x32'}
+          width={'100%'}
+          borderWidth={'normal'}
+          borderColor={'border'}
+          direction={'column'}
+          justify={'center'}
+          align={'center'}
+        >
+          <Text fontSize={20} fontWeight={'display'} mb="x4" color={'text3'}>
+            No Active Proposals
+          </Text>
+          <Text color={'text3'}>
+            Currently, none of your DAOs have proposals that are in active, queue, or
+            pending states. Check back later!
+          </Text>
+        </Flex>
+      )
+
+    return data
+      .filter((dao) => dao.proposals.length)
+      .map((dao) => <DaoProposals key={dao.tokenAddress} {...dao} />)
+  }, [data])
+
   if (error) {
     return (
       <DashPage>
@@ -132,8 +164,6 @@ const Dashboard = () => {
     setMutating(false)
   }
 
-  const hasLiveProposals = data.some((dao) => dao.proposals.length)
-
   return (
     <DashboardLayout
       auctionCards={data.map((dao) => (
@@ -144,33 +174,7 @@ const Dashboard = () => {
           handleMutate={handleMutate}
         />
       ))}
-      daoProposals={
-        hasLiveProposals ? (
-          data
-            .filter((dao) => dao.proposals.length)
-            .map((dao) => <DaoProposals key={dao.tokenAddress} {...dao} />)
-        ) : (
-          <Flex
-            borderRadius={'phat'}
-            borderStyle={'solid'}
-            height={'x32'}
-            width={'100%'}
-            borderWidth={'normal'}
-            borderColor={'border'}
-            direction={'column'}
-            justify={'center'}
-            align={'center'}
-          >
-            <Text fontSize={20} fontWeight={'display'} mb="x4" color={'text3'}>
-              No Active Proposals
-            </Text>
-            <Text color={'text3'}>
-              Currently, none of your DAOs have proposals that are in active, queue, or
-              pending states. Check back later!
-            </Text>
-          </Flex>
-        )
-      }
+      daoProposals={proposalList}
     />
   )
 }

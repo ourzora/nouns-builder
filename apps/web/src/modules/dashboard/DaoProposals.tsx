@@ -72,6 +72,7 @@ export const DaoProposals = ({
             key={proposal.proposalNumber}
             {...proposal}
             chainId={chainId}
+            currentChainSlug={currentChainSlug}
             tokenAddress={tokenAddress}
             proposalState={proposal.proposalState}
           />

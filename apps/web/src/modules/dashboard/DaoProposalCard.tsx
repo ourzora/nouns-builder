@@ -1,12 +1,18 @@
 import { Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
 
-import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { ProposalFragment } from 'src/data/subgraph/sdk.generated'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { ProposalStatus } from '../proposal/components/ProposalStatus'
+
+type DaoProposalCardProps = ProposalFragment & {
+  chainId: CHAIN_ID
+  tokenAddress: AddressType
+  proposalState: ProposalState
+  currentChainSlug?: string
+}
 
 export const DaoProposalCard = ({
   title,
@@ -17,12 +23,8 @@ export const DaoProposalCard = ({
   voteEnd,
   voteStart,
   expiresAt,
-}: ProposalFragment & {
-  chainId: CHAIN_ID
-  tokenAddress: AddressType
-  proposalState: ProposalState
-}) => {
-  const currentChainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
+  currentChainSlug,
+}: DaoProposalCardProps) => {
   return (
     <Link
       href={`/dao/${currentChainSlug}/${tokenAddress}/vote/${proposalNumber}`}
