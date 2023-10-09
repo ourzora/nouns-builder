@@ -7,6 +7,7 @@ import { AddressType } from 'src/typings'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { network, token, tokenId } = req.query
+
   const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug == network)
 
   if (!chain) {
