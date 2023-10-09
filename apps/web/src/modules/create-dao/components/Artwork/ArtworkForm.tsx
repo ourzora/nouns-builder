@@ -17,12 +17,12 @@ interface ArtworkProps {
 export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
   const {
     setUpArtwork,
-    setSetUpArtwork,
     setFulfilledSections,
     activeSection,
     setActiveSection,
     ipfsUpload,
     isUploadingToIPFS,
+    setSetUpArtwork,
   } = useFormStore()
 
   const initialValues = {

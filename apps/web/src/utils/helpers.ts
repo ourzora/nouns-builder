@@ -276,3 +276,9 @@ export const isPossibleMarkdown = (text: string) => {
     /(?:\*\*[^\*]+\*\*)|(?:__[^\_]+__)|(?:\*[^\*]+\*)|(?:_[^\_]+_)|(?:\#[^\#]+\#)|(?:\!\[[^\]]*\]\([^\)]+\))|(?:\[[^\]]+\]\([^\)]+\))/g
   return markdownRegex.test(text)
 }
+export function maxChar(str: string, maxLength: number) {
+  if (str.length <= maxLength) {
+    return str
+  }
+  return str.slice(0, maxLength) + '...'
+}
