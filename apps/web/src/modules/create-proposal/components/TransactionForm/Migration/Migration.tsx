@@ -4,8 +4,8 @@ import { FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import useSWR from 'swr'
-import { encodeFunctionData } from 'viem'
-import { useBalance, useContractRead } from 'wagmi'
+import { Chain, useBalance, useContractRead } from 'wagmi'
+import { base, optimism, zora } from 'wagmi/dist/chains'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
@@ -50,6 +50,8 @@ export const Migration: React.FC = () => {
     chainId: chain.id,
   })
 
+  let y: string
+
   const {
     data: members,
     error,
@@ -61,9 +63,9 @@ export const Migration: React.FC = () => {
           chain.id
         }&page=${undefined}&limit=${10000}`
       )
-      .then((x) => {
+      .then(async (x) => {
         x.data.membersList
-        prepareMerkle(x.data.membersList)
+        y = await prepareMerkle(x.data.membersList)
       })
   )
 
@@ -91,6 +93,12 @@ export const Migration: React.FC = () => {
     if (!chain) return
     const { L2, starter } = values
     console.log('here')
+    const chainStringToObj: { [key in string]: Chain } = {
+      ['BASE']: base,
+      ['ZORA']: zora,
+      ['OP']: optimism,
+    }
+    const targetChain = chainStringToObj[L2]
 
     /*if(members && members.length > 0){
       createMerkleTree(members)
@@ -114,28 +122,8 @@ export const Migration: React.FC = () => {
       ownershipPct: BigInt(0),
       vestExpiry: BigInt(Math.floor(new Date('2040-01-01').getTime() / 1000)),
     }
-    const newFounders = existingFounders
-      ? [
-          zeroFounder,
-          ...existingFounders.map((x) => ({
-            wallet: x.wallet,
-            ownershipPct: BigInt(x.ownershipPct),
-            vestExpiry: BigInt(x.vestExpiry),
-          })),
-        ]
-      : [zeroFounder]
-    const updateFounders = {
-      target: token as AddressType,
-      functionSignature: 'updateFounders',
-      calldata: encodeFunctionData({
-        abi: tokenAbi,
-        functionName: 'updateFounders',
-        args: [newFounders],
-      }),
-      value: '',
-    }
 
-    console.log(newFounders)
+    // const res = usePrepareMigrationDeploy(targetChain, zeroFounder, y)
 
     addTransaction({
       type: TransactionType.MIGRATION,
@@ -143,12 +131,6 @@ export const Migration: React.FC = () => {
       transactions: [
         /*migrationTxn*/
       ],
-    })
-
-    addTransaction({
-      type: TransactionType.CUSTOM,
-      summary: 'Set L2 Starter Address',
-      transactions: [updateFounders],
     })
 
     actions.resetForm()
