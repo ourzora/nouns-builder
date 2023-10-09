@@ -22,6 +22,7 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
     setActiveSection,
     ipfsUpload,
     isUploadingToIPFS,
+    setSetUpArtwork,
   } = useFormStore()
 
   const initialValues = {
@@ -34,9 +35,13 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
     setActiveSection(activeSection - 1)
   }
 
-  const handleSubmit = (_values: ArtworkFormValues) => {
+  const handleSubmit = (values: ArtworkFormValues) => {
     setFulfilledSections(title)
     setActiveSection(activeSection + 1)
+    setSetUpArtwork({
+      ...setUpArtwork,
+      projectDescription: values.projectDescription,
+    })
   }
 
   return (
@@ -49,73 +54,77 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
       validationSchema={validationSchemaArtwork}
       onSubmit={handleSubmit}
     >
-      {(formik) => (
-        <Form>
-          <TextArea
-            {...formik.getFieldProps('projectDescription')}
-            inputLabel={'Collection Description'}
-            formik={formik}
-            id={'projectDescription'}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            errorMessage={
-              formik.touched?.projectDescription && formik.errors?.projectDescription
-                ? formik.errors?.projectDescription
-                : undefined
-            }
-            placeholder={'Nouns is an experiment which combines...'}
-          />
-
-          <ArtworkUpload
-            {...formik.getFieldProps('artwork')}
-            inputLabel={'Artwork'}
-            formik={formik}
-            id={'artwork'}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            helperText={
-              'Builder uses folder hierarchy to organize your assets. Upload a single folder containing a subfolder for each trait. Each subfolder should contain every variant for that trait.'
-            }
-            errorMessage={
-              formik.touched.artwork && formik.errors?.artwork
-                ? formik.errors?.artwork
-                : undefined
-            }
-          />
-
-          <Flex justify={'space-between'} mt={'x8'}>
-            <Button
-              justify={'center'}
-              align={'center'}
-              borderRadius={'curved'}
-              h={'x15'}
-              minH={'x15'}
-              minW={'x15'}
-              variant={'secondary'}
-              onClick={handlePrevious}
-              aria-label="Back"
-            >
-              <Icon id="arrowLeft" />
-            </Button>
-            <Button
-              flex={1}
-              borderRadius={'curved'}
-              width={'auto'}
-              ml={'x2'}
-              minH={'x15'}
-              type="submit"
-              disabled={
-                !isEmpty(formik.errors) ||
-                formik.isSubmitting ||
-                isUploadingToIPFS ||
-                ipfsUpload.length === 0
+      {(formik) => {
+        return (
+          <Form>
+            <TextArea
+              {...formik.getFieldProps('projectDescription')}
+              inputLabel={'Collection Description'}
+              formik={formik}
+              id={'projectDescription'}
+              onChange={(e) => {
+                formik.handleChange(e)
+              }}
+              onBlur={formik.handleBlur}
+              errorMessage={
+                formik.touched?.projectDescription && formik.errors?.projectDescription
+                  ? formik.errors?.projectDescription
+                  : undefined
               }
-            >
-              Continue
-            </Button>
-          </Flex>
-        </Form>
-      )}
+              placeholder={'Nouns is an experiment which combines...'}
+            />
+
+            <ArtworkUpload
+              {...formik.getFieldProps('artwork')}
+              inputLabel={'Artwork'}
+              formik={formik}
+              id={'artwork'}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              helperText={
+                'Builder uses folder hierarchy to organize your assets. Upload a single folder containing a subfolder for each trait. Each subfolder should contain every variant for that trait.'
+              }
+              errorMessage={
+                formik.touched.artwork && formik.errors?.artwork
+                  ? formik.errors?.artwork
+                  : undefined
+              }
+            />
+
+            <Flex justify={'space-between'} mt={'x8'}>
+              <Button
+                justify={'center'}
+                align={'center'}
+                borderRadius={'curved'}
+                h={'x15'}
+                minH={'x15'}
+                minW={'x15'}
+                variant={'secondary'}
+                onClick={handlePrevious}
+                aria-label="Back"
+              >
+                <Icon id="arrowLeft" />
+              </Button>
+              <Button
+                flex={1}
+                borderRadius={'curved'}
+                width={'auto'}
+                ml={'x2'}
+                minH={'x15'}
+                type="submit"
+                disabled={
+                  !isEmpty(formik.errors) ||
+                  formik.isSubmitting ||
+                  isUploadingToIPFS ||
+                  ipfsUpload.length === 0
+                }
+              >
+                Continue
+              </Button>
+            </Flex>
+          </Form>
+        )
+      }}
     </Formik>
   )
 }
