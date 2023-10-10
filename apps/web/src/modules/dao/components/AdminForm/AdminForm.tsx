@@ -1,5 +1,5 @@
 import { Flex, Stack, Text } from '@zoralabs/zord'
-import { FieldArray, Formik, FormikValues } from 'formik'
+import { Field, FieldArray, FieldProps, Formik, FormikValues } from 'formik'
 import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
@@ -11,8 +11,8 @@ import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import Radio from 'src/components/Fields/Radio'
 import SmartInput from 'src/components/Fields/SmartInput'
 import StickySave from 'src/components/Fields/StickySave'
-import TextArea from 'src/components/Fields/TextArea'
 import { NUMBER, TEXT } from 'src/components/Fields/types'
+import { MarkdownEditor } from 'src/components/MarkdownEditor'
 import SingleImageUpload from 'src/components/SingleImageUpload/SingleImageUpload'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { auctionAbi, governorAbi, metadataAbi, tokenAbi } from 'src/data/contract/abis'
@@ -196,6 +196,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     let transactions: BuilderTransaction[] = []
 
     let field: keyof AdminFormValues
+
     for (field in values) {
       let value = values[field]
 
@@ -290,6 +291,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
             const changes =
               compareAndReturn(formik.initialValues, formik.values).length +
               founderChanges
+
             return (
               <Flex direction={'column'} w={'100%'}>
                 <Stack>
@@ -307,16 +309,18 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
                       helperText={'Upload'}
                     />
 
-                    <TextArea
-                      {...formik.getFieldProps('projectDescription')}
-                      inputLabel={'Collection Description'}
-                      formik={formik}
-                      id={'projectDescription'}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      errorMessage={formik.errors['projectDescription']}
-                      placeholder={'Nouns is an experiment which combines...'}
-                    />
+                    <Field name="projectDescription">
+                      {({ field }: FieldProps) => (
+                        <MarkdownEditor
+                          value={field.value}
+                          onChange={(value: string) =>
+                            formik?.setFieldValue(field.name, value)
+                          }
+                          inputLabel={'DAO Description'}
+                          errorMessage={formik.errors['projectDescription']}
+                        />
+                      )}
+                    </Field>
 
                     <SmartInput
                       {...formik.getFieldProps('daoWebsite')}
