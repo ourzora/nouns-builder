@@ -33,7 +33,6 @@ export const DaoProposalCard = ({
   timeCreated,
   proposalId,
   dao,
-  ...rest
 }: DaoProposalCardProps) => {
   return (
     <Link
@@ -122,12 +121,13 @@ const NeedsVote = ({
     async () => {
       if (proposalState !== ProposalState.Active) return null
       const hasVoted = await hasUserVoted(proposalId, userAddress as AddressType, chainId)
+
       return hasVoted
     },
     { revalidateOnFocus: false }
   )
 
-  if (hasVoted === true || hasVoted == null) return null
+  if (hasVoted == null) return null
 
   return (
     <Flex>
@@ -137,11 +137,18 @@ const NeedsVote = ({
         onMouseOver={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
-        <Icon id="warning-16" color="warning" fill="warning" size={'sm'} />
+        <Icon
+          id={hasVoted ? 'checkInCircle' : 'warning-16'}
+          fill={hasVoted ? 'positive' : 'warning'}
+          style={{
+            transform: hasVoted ? 'scale(0.8)' : 'scale(1)',
+          }}
+          size={hasVoted ? 'md' : 'sm'}
+        />
       </Box>
 
       <PopUp open={showTooltip} trigger={<></>} placement="right">
-        <Text>Vote Needed</Text>
+        <Text>{hasVoted ? 'Vote Submitted' : 'Vote Needed'}</Text>
       </PopUp>
     </Flex>
   )
