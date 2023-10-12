@@ -118,7 +118,7 @@ const Dashboard = () => {
           userAddress={address as AddressType}
         />
       ))
-  }, [data])
+  }, [data, address])
 
   if (error) {
     return (

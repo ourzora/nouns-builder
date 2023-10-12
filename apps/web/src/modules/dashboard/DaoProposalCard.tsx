@@ -1,9 +1,9 @@
 import { Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
-import { useContractReads } from 'wagmi'
+import useSWR from 'swr'
 
-import { governorAbi } from 'src/data/contract/abis'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
+import { hasUserVoted } from 'src/data/subgraph/requests/proposalVotes'
 import { ProposalFragment } from 'src/data/subgraph/sdk.generated'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
@@ -29,6 +29,7 @@ export const DaoProposalCard = ({
   userAddress,
   chainId,
   timeCreated,
+  proposalId,
   dao,
   ...rest
 }: DaoProposalCardProps) => {
@@ -91,8 +92,8 @@ export const DaoProposalCard = ({
             <NeedsVote
               userAddress={userAddress}
               chainId={chainId}
-              governorAddress={dao.governorAddress}
-              timeCreated={timeCreated}
+              proposalId={proposalId}
+              proposalState={proposalState}
             />
           )}
         </Flex>
@@ -104,30 +105,27 @@ export const DaoProposalCard = ({
 type NeedsVoteProps = {
   userAddress: AddressType
   chainId: CHAIN_ID
-  timeCreated: string
-  governorAddress: AddressType
+  proposalId: string
+  proposalState: ProposalState
 }
 const NeedsVote = ({
   userAddress,
   chainId,
-  timeCreated,
-  governorAddress,
+  proposalState,
+  proposalId,
 }: NeedsVoteProps) => {
-  const { data } = useContractReads({
-    enabled: !!userAddress,
-    allowFailure: false,
-    contracts: [
-      {
-        abi: governorAbi,
-        address: governorAddress,
-        chainId,
-        functionName: 'getVotes',
-        args: [userAddress as AddressType, BigInt(timeCreated)],
-      },
-    ],
-  })
+  const { data: hasVoted } = useSWR(
+    [proposalId, userAddress, chainId],
 
-  console.log('data', data)
+    async () => {
+      if (proposalState !== ProposalState.Active) return null
+      const hasVoted = await hasUserVoted(proposalId, userAddress, chainId)
+      return hasVoted
+    },
+    { revalidateOnFocus: false }
+  )
 
-  return null
+  if (hasVoted === true || hasVoted === null) return null
+
+  return 'no vote'
 }
