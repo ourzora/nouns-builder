@@ -13,6 +13,10 @@ import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
+import {
+  ProposalState,
+  getProposalState,
+} from 'src/data/contract/requests/getProposalState'
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
@@ -34,6 +38,13 @@ import { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import { AddressType } from 'src/typings'
+
+const ACTIVE_PROPOSAL_STATES = [
+  ProposalState.Active,
+  ProposalState.Pending,
+  ProposalState.Queued,
+  ProposalState.Succeeded,
+]
 
 export interface VotePageProps {
   proposalId: string
@@ -67,9 +78,27 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
     chainId: chain.id,
   })
 
-  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], (_, id) =>
-    getProposal(chain.id, proposalId)
+  const { data } = useSWR(
+    [SWR_KEYS.PROPOSAL, chain.id, proposalId, addresses.governor],
+    async (_, id) => {
+      try {
+        const proposal = await getProposal(chain.id, proposalId)
+        const state = await getProposalState(
+          chain.id,
+          addresses.governor as AddressType,
+          proposalId as AddressType
+        )
+        return { proposal, proposalState: state }
+      } catch (error) {
+        throw new Error('Proposal Data not found')
+      }
+    }
   )
+
+  const { proposal, proposalState } = data || {}
+
+  console.log('proposal', proposal)
+  console.log('proposalState', proposalState)
 
   const sections = React.useMemo(() => {
     if (!proposal) return []
@@ -95,8 +124,9 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   const isBadActor = BAD_ACTORS.some((baddie) =>
     isAddressEqual(proposal.proposer, baddie as AddressType)
   )
+  const isActive = proposalState && ACTIVE_PROPOSAL_STATES.includes(proposalState)
   const isPossibleDrain = balance?.value && checkDrain(proposal.values, balance?.value)
-  const warn = isBadActor || isPossibleDrain
+  const warn = isActive && (isBadActor || isPossibleDrain)
 
   return (
     <Fragment>
