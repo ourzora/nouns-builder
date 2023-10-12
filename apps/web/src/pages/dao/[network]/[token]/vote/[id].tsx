@@ -97,9 +97,6 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
 
   const { proposal, proposalState } = data || {}
 
-  console.log('proposal', proposal)
-  console.log('proposalState', proposalState)
-
   const sections = React.useMemo(() => {
     if (!proposal) return []
     return [
