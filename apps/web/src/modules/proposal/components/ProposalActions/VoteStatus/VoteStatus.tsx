@@ -71,7 +71,6 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
     abi: governorAbi,
     eventName: 'VoteCast',
     listener: async (logs) => {
-      console.log('LISTENER FIRED')
       const { voter, proposalId: id, support, weight, reason } = logs[0].args
       if (id === proposalId && voter && getAddress(voter) === getAddress(userAddress!)) {
         const eventVote: ProposalVote = {
