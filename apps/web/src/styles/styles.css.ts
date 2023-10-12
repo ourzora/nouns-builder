@@ -6,7 +6,7 @@ globalStyle('*', {
 })
 
 globalStyle('h1, h2, h3, h4', {
-  fontFamily: "'Londrina Solid', cursive!important",
+  fontFamily: "'Londrina Solid', cursive",
   lineHeight: 'initial',
 })
 

@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { Box, Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { Field, FieldProps, Formik } from 'formik'
@@ -8,6 +9,7 @@ import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/a
 
 import { ContractButton } from 'src/components/ContractButton'
 import TextInput from 'src/components/Fields/TextInput'
+import { MarkdownEditor } from 'src/components/MarkdownEditor'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
@@ -20,7 +22,6 @@ import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
-import { MarkdownEditor } from './MarkdownEditor'
 import { Transactions } from './Transactions'
 import { ERROR_CODE, FormValues, validationSchema } from './fields'
 
@@ -31,6 +32,13 @@ interface ReviewProposalProps {
   title?: string
   summary?: string
   transactions: BuilderTransaction[]
+}
+
+const logError = async (e: unknown) => {
+  console.error(e)
+  Sentry.captureException(e)
+  await Sentry.flush(2000)
+  return
 }
 
 export const ReviewProposalForm = ({
@@ -91,6 +99,7 @@ export const ReviewProposalForm = ({
 
       if (!!CHAINS_TO_SIMULATE.find((x) => x === chain.id)) {
         let simulationResults
+
         try {
           setSimulating(true)
 
@@ -107,8 +116,10 @@ export const ReviewProposalForm = ({
           if (axios.isAxiosError(err)) {
             const data = err.response?.data as ErrorResult
             setSimulationError(data.error)
+            logError(err)
           } else {
-            setSimulationError('Unable to simulate these transactions')
+            logError(err)
+            setSimulationError('Unable to simulate transactions on DAO create form')
           }
           return
         } finally {
@@ -164,7 +175,7 @@ export const ReviewProposalForm = ({
           setError(ERROR_CODE.REJECTED)
           return
         }
-
+        logError(err)
         setError(err.message)
       }
     },
