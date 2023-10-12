@@ -1,7 +1,9 @@
-import { Flex, Text } from '@zoralabs/zord'
+import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
 import Link from 'next/link'
+import { useState } from 'react'
 import useSWR from 'swr'
 
+import { Icon } from 'src/components/Icon'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { hasUserVoted } from 'src/data/subgraph/requests/proposalVotes'
 import { ProposalFragment } from 'src/data/subgraph/sdk.generated'
@@ -50,6 +52,7 @@ export const DaoProposalCard = ({
         cursor={'pointer'}
         py={{ '@initial': 'x3', '@768': 'x6' }}
         px={{ '@initial': 'x6', '@768': 'x3' }}
+        position={'relative'}
       >
         <Text
           fontSize={18}
@@ -60,15 +63,22 @@ export const DaoProposalCard = ({
         >
           {proposalNumber}
         </Text>
-
-        <Text
-          fontSize={18}
-          fontWeight="label"
-          mr={'auto'}
-          mb={{ '@initial': 'x2', '@768': 'x0' }}
-        >
-          {title}
-        </Text>
+        <Flex mr={'auto'} align="center">
+          <Text
+            fontSize={18}
+            fontWeight="label"
+            mb={{ '@initial': 'x2', '@768': 'x0' }}
+            mr="x2"
+          >
+            {title}
+          </Text>
+          <NeedsVote
+            userAddress={userAddress}
+            chainId={chainId}
+            proposalId={proposalId}
+            proposalState={proposalState}
+          />
+        </Flex>
         <Flex
           justify={'space-between'}
           width={{ '@initial': '100%', '@768': 'unset' }}
@@ -88,14 +98,6 @@ export const DaoProposalCard = ({
               {proposalNumber}
             </Text>
           </Flex>
-          {userAddress && (
-            <NeedsVote
-              userAddress={userAddress}
-              chainId={chainId}
-              proposalId={proposalId}
-              proposalState={proposalState}
-            />
-          )}
         </Flex>
       </Flex>
     </Link>
@@ -103,7 +105,7 @@ export const DaoProposalCard = ({
 }
 
 type NeedsVoteProps = {
-  userAddress: AddressType
+  userAddress?: AddressType
   chainId: CHAIN_ID
   proposalId: string
   proposalState: ProposalState
@@ -114,18 +116,33 @@ const NeedsVote = ({
   proposalState,
   proposalId,
 }: NeedsVoteProps) => {
+  const [showTooltip, setShowTooltip] = useState(false)
   const { data: hasVoted } = useSWR(
     [proposalId, userAddress, chainId],
-
     async () => {
       if (proposalState !== ProposalState.Active) return null
-      const hasVoted = await hasUserVoted(proposalId, userAddress, chainId)
+      const hasVoted = await hasUserVoted(proposalId, userAddress as AddressType, chainId)
       return hasVoted
     },
     { revalidateOnFocus: false }
   )
 
-  if (hasVoted === true || hasVoted === null) return null
+  if (hasVoted === true || hasVoted == null) return null
 
-  return 'no vote'
+  return (
+    <Flex>
+      <Box
+        cursor="pointer"
+        style={{ zIndex: 102 }}
+        onMouseOver={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
+        <Icon id="warning-16" color="warning" fill="warning" size={'sm'} />
+      </Box>
+
+      <PopUp open={showTooltip} trigger={<></>} placement="right">
+        <Text>Vote Needed</Text>
+      </PopUp>
+    </Flex>
+  )
 }
