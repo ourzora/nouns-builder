@@ -1,0 +1,7 @@
+query proposalVotes($proposalId: ID!) {
+  proposal(id: $proposalId) {
+    votes {
+      ...ProposalVote
+    }
+  }
+}

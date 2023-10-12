@@ -1,6 +1,8 @@
 import { Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
+import { useContractReads } from 'wagmi'
 
+import { governorAbi } from 'src/data/contract/abis'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { ProposalFragment } from 'src/data/subgraph/sdk.generated'
 import { AddressType, CHAIN_ID } from 'src/typings'
@@ -12,18 +14,23 @@ type DaoProposalCardProps = ProposalFragment & {
   tokenAddress: AddressType
   proposalState: ProposalState
   currentChainSlug?: string
+  userAddress?: AddressType
 }
 
 export const DaoProposalCard = ({
   title,
   proposalNumber,
   tokenAddress,
-  chainId,
   proposalState,
   voteEnd,
   voteStart,
   expiresAt,
   currentChainSlug,
+  userAddress,
+  chainId,
+  timeCreated,
+  dao,
+  ...rest
 }: DaoProposalCardProps) => {
   return (
     <Link
@@ -80,8 +87,47 @@ export const DaoProposalCard = ({
               {proposalNumber}
             </Text>
           </Flex>
+          {userAddress && (
+            <NeedsVote
+              userAddress={userAddress}
+              chainId={chainId}
+              governorAddress={dao.governorAddress}
+              timeCreated={timeCreated}
+            />
+          )}
         </Flex>
       </Flex>
     </Link>
   )
+}
+
+type NeedsVoteProps = {
+  userAddress: AddressType
+  chainId: CHAIN_ID
+  timeCreated: string
+  governorAddress: AddressType
+}
+const NeedsVote = ({
+  userAddress,
+  chainId,
+  timeCreated,
+  governorAddress,
+}: NeedsVoteProps) => {
+  const { data } = useContractReads({
+    enabled: !!userAddress,
+    allowFailure: false,
+    contracts: [
+      {
+        abi: governorAbi,
+        address: governorAddress,
+        chainId,
+        functionName: 'getVotes',
+        args: [userAddress as AddressType, BigInt(timeCreated)],
+      },
+    ],
+  })
+
+  console.log('data', data)
+
+  return null
 }

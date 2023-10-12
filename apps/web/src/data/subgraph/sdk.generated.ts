@@ -2230,6 +2230,24 @@ export type ProposalOgMetadataQuery = {
   }>
 }
 
+export type ProposalVotesQueryVariables = Exact<{
+  proposalId: Scalars['ID']
+}>
+
+export type ProposalVotesQuery = {
+  __typename?: 'Query'
+  proposal?: {
+    __typename?: 'Proposal'
+    votes: Array<{
+      __typename?: 'ProposalVote'
+      voter: any
+      support: ProposalVoteSupport
+      weight: number
+      reason?: string | null
+    }>
+  } | null
+}
+
 export type ProposalsQueryVariables = Exact<{
   where?: InputMaybe<Proposal_Filter>
   first: Scalars['Int']
@@ -2646,6 +2664,16 @@ export const ProposalOgMetadataDocument = gql`
   ${ProposalFragmentDoc}
   ${ProposalVoteFragmentDoc}
 `
+export const ProposalVotesDocument = gql`
+  query proposalVotes($proposalId: ID!) {
+    proposal(id: $proposalId) {
+      votes {
+        ...ProposalVote
+      }
+    }
+  }
+  ${ProposalVoteFragmentDoc}
+`
 export const ProposalsDocument = gql`
   query proposals($where: Proposal_filter, $first: Int!, $skip: Int) {
     proposals(
@@ -2903,6 +2931,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposalOGMetadata',
+        'query'
+      )
+    },
+    proposalVotes(
+      variables: ProposalVotesQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ProposalVotesQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ProposalVotesQuery>(ProposalVotesDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'proposalVotes',
         'query'
       )
     },
