@@ -276,6 +276,7 @@ export const tokenImage = style({
     top: 0,
     width: '100%',
     borderRadius: 12,
+    pointerEvents: 'none',
   },
 })
 export const switcherBox = style({ width: '100%', maxWidth: '912px' })
