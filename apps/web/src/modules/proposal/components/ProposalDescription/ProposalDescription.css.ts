@@ -3,6 +3,7 @@ import { globalStyle, style } from '@vanilla-extract/css'
 export const proposalDescription = style({})
 
 globalStyle(`${proposalDescription} :is(h1, h2, h3, h4, h5, h6)`, {
+  fontFamily: 'Londrina Solid!important',
   marginTop: 12,
   marginBottom: 6,
 })
