@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
-import { Address, Chain, encodeAbiParameters } from 'viem'
-import { useContractReads } from 'wagmi'
+import { Address, encodeAbiParameters } from 'viem'
+import { readContracts } from 'wagmi'
 
 import { MIGRATION_ADDRESSES } from 'src/constants/addresses'
 import {
@@ -10,13 +10,14 @@ import {
   tokenAbi,
   treasuryAbi,
 } from 'src/data/contract/abis'
-import { useDaoStore } from 'src/modules/dao'
-import { useChainStore } from 'src/stores/useChainStore'
+import { DaoStoreProps } from 'src/modules/dao'
+import { ChainStoreProps } from 'src/stores/useChainStore'
 import { CHAIN_ID } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
-export function usePrepareMigrationDeploy(
-  targetChain: Chain,
+export async function prepareMigrationDeploy(
+  currentChain: ChainStoreProps,
+  currentDao: DaoStoreProps,
   zeroFounder: {
     wallet: `0x${string}`
     ownershipPct: bigint
@@ -24,8 +25,8 @@ export function usePrepareMigrationDeploy(
   },
   merkleRoot: `0x${string}`
 ) {
-  const { treasury, auction, token, metadata, governor } = useDaoStore((x) => x.addresses)
-  const chain = useChainStore((x) => x.chain)
+  const { treasury, auction, token, metadata, governor } = currentDao.addresses
+  const chain = currentChain.chain
   const tokenContractParams = {
     abi: tokenAbi,
     address: token as Address,
@@ -56,7 +57,7 @@ export function usePrepareMigrationDeploy(
     chainId: chain.id,
   }
 
-  const { data: contractData } = useContractReads({
+  const contractData = await readContracts({
     allowFailure: false,
     contracts: [
       { ...tokenContractParams, functionName: 'name' },

@@ -3,7 +3,7 @@ import { Address, encodeAbiParameters } from 'viem'
 
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
 
-export const prepareMerkle = async (members: DaoMember[]): Promise<string> => {
+export const prepareMerkle = async (members: DaoMember[]): Promise<`0x${string}`> => {
   const leaves = members
     .map((member) => member.tokens.map((token) => encode(member.address, token)))
     .flat()
@@ -35,7 +35,7 @@ export const prepareMerkle = async (members: DaoMember[]): Promise<string> => {
     )
   ) // true
 
-  return root
+  return root as `0x${string}`
 }
 
 const encode = (owner: string, token: number): `0x${string}` => {

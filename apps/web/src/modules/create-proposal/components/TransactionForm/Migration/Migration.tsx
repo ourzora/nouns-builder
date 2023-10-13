@@ -20,6 +20,7 @@ import { MigrationFormC1 } from './MigrationFormC1'
 import { MigrationFormC2 } from './MigrationFormC2'
 import { MigrationFormC2Values } from './MigrationFormC2.schema'
 import { MigrationTracker } from './MigrationTracker'
+import { prepareMigrationDeploy } from './prepareMigrationDeploy'
 
 type MembersQuery = {
   membersList: DaoMember[]
@@ -27,6 +28,8 @@ type MembersQuery = {
 
 export const Migration: React.FC = () => {
   const chain = useChainStore((x) => x.chain)
+  const thisDao = useDaoStore()
+  const thisChain = useChainStore()
   const { treasury, auction, token } = useDaoStore((x) => x.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const { isReady } = useRouter()
@@ -50,7 +53,7 @@ export const Migration: React.FC = () => {
     chainId: chain.id,
   })
 
-  let y: string
+  let merkleRoot: `0x${string}`
 
   const {
     data: members,
@@ -65,7 +68,7 @@ export const Migration: React.FC = () => {
       )
       .then(async (x) => {
         x.data.membersList
-        y = await prepareMerkle(x.data.membersList)
+        merkleRoot = await prepareMerkle(x.data.membersList)
       })
   )
 
@@ -86,7 +89,7 @@ export const Migration: React.FC = () => {
   }
   daoProgress = 1
 
-  const handleC2Submit = (
+  const handleC2Submit = async (
     values: MigrationFormC2Values,
     actions: FormikHelpers<MigrationFormC2Values>
   ) => {
@@ -99,10 +102,6 @@ export const Migration: React.FC = () => {
       ['OP']: optimism,
     }
     const targetChain = chainStringToObj[L2]
-
-    /*if(members && members.length > 0){
-      createMerkleTree(members)
-    }*/
 
     /*const migrationTxn = {
       target: PUBLIC_ZORA_NFT_CREATOR[chain.id] as AddressType,
@@ -123,7 +122,7 @@ export const Migration: React.FC = () => {
       vestExpiry: BigInt(Math.floor(new Date('2040-01-01').getTime() / 1000)),
     }
 
-    // const res = usePrepareMigrationDeploy(targetChain, zeroFounder, y)
+    const res = await prepareMigrationDeploy(thisChain, thisDao, zeroFounder, merkleRoot)
 
     addTransaction({
       type: TransactionType.MIGRATION,
