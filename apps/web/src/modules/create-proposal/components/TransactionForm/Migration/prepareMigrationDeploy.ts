@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import { Address, encodeAbiParameters } from 'viem'
 import { readContracts } from 'wagmi'
 
-import { MIGRATION_ADDRESSES } from 'src/constants/addresses'
+import { L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
 import {
   auctionAbi,
   governorAbi,
@@ -16,6 +16,7 @@ import { CHAIN_ID } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 export async function prepareMigrationDeploy(
+  targetChainId: CHAIN_ID,
   currentChain: ChainStoreProps,
   currentDao: DaoStoreProps,
   zeroFounder: {
@@ -124,7 +125,7 @@ export async function prepareMigrationDeploy(
     ]
   )
 
-  const initialMinter = MIGRATION_ADDRESSES[CHAIN_ID.BASE_GOERLI].MERKLERESERVEMINTER // figure it out based on chain going to
+  const initialMinter = L2_DEPLOYMENT_ADDRESSES[targetChainId].MERKLERESERVEMINTER // figure it out based on chain going to
   const tokenParamsHex = encodeAbiParameters(
     [
       { name: 'name', type: 'string' },
@@ -159,7 +160,7 @@ export async function prepareMigrationDeploy(
   )
 
   const { TOKEN, MEDIAMETADATARENDERER, AUCTION, TREASURY, GOVERNOR } =
-    MIGRATION_ADDRESSES[CHAIN_ID.BASE_GOERLI]
+    L2_DEPLOYMENT_ADDRESSES[targetChainId]
 
   const implData = [
     tokenParamsHex,

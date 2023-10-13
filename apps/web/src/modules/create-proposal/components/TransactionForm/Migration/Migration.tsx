@@ -4,8 +4,7 @@ import { FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import useSWR from 'swr'
-import { Chain, useBalance, useContractRead } from 'wagmi'
-import { base, optimism, zora } from 'wagmi/dist/chains'
+import { useBalance, useContractRead } from 'wagmi'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
@@ -14,7 +13,7 @@ import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { prepareMerkle } from 'src/modules/create-proposal/utils/prepareMerkle'
 import { useDaoStore } from 'src/modules/dao/stores/useDaoStore'
 import { useChainStore } from 'src/stores/useChainStore'
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { MigrationFormC1 } from './MigrationFormC1'
 import { MigrationFormC2 } from './MigrationFormC2'
@@ -96,25 +95,11 @@ export const Migration: React.FC = () => {
     if (!chain) return
     const { L2, starter } = values
     console.log('here')
-    const chainStringToObj: { [key in string]: Chain } = {
-      ['BASE']: base,
-      ['ZORA']: zora,
-      ['OP']: optimism,
+    const chainStringToObj: { [key in string]: CHAIN_ID } = {
+      ['BASE']: CHAIN_ID.BASE,
+      ['ZORA']: CHAIN_ID.ZORA,
+      ['OP']: CHAIN_ID.OPTIMISM,
     }
-    const targetChain = chainStringToObj[L2]
-
-    /*const migrationTxn = {
-      target: PUBLIC_ZORA_NFT_CREATOR[chain.id] as AddressType,
-      functionSignature: 'createEdition()',
-      calldata: encodeFunctionData({
-        abi: zoraNFTCreatorAbi,
-        functionName: 'createEdition',
-        args: [
-          L2
-        ],
-      }),
-      value: '',
-    }*/
 
     const zeroFounder = {
       wallet: starter as AddressType,
@@ -122,7 +107,13 @@ export const Migration: React.FC = () => {
       vestExpiry: BigInt(Math.floor(new Date('2040-01-01').getTime() / 1000)),
     }
 
-    const res = await prepareMigrationDeploy(thisChain, thisDao, zeroFounder, merkleRoot)
+    const res = await prepareMigrationDeploy(
+      CHAIN_ID.BASE_GOERLI,
+      thisChain,
+      thisDao,
+      zeroFounder,
+      merkleRoot
+    )
 
     addTransaction({
       type: TransactionType.MIGRATION,

@@ -53,7 +53,8 @@ export const PUBLIC_ZORA_NFT_CREATOR = {
 
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000' as AddressType
 
-export const MIGRATION_ADDRESSES = {
+export const L2_DEPLOYMENT_ADDRESSES = {
+  // ONLY BASE_GOERLI DATA, NOT ALL CHAINS REAL YET, BUT NEED THEM TO WORK
   [CHAIN_ID.BASE_GOERLI]: {
     MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
     MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
@@ -64,4 +65,93 @@ export const MIGRATION_ADDRESSES = {
     GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
     MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
   },
+  [CHAIN_ID.ETHEREUM]: {
+    MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
+    MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
+    AUCTION: '0x8c40618313de873978e1e8d403896f169aff3d9c' as AddressType,
+    TOKEN: '0x93f9d43a7bd751f8546a54785ae48d049ddd2697' as AddressType,
+    MEDIAMETADATARENDERER: '0x4dc60f832c1d19301e45a66ad1752c6f47ad4c68' as AddressType,
+    TREASURY: '0xdab522800bd789ddb61e01b52088b6a6d95b50eb' as AddressType,
+    GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
+    MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
+  },
+  [CHAIN_ID.OPTIMISM]: {
+    MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
+    MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
+    AUCTION: '0x8c40618313de873978e1e8d403896f169aff3d9c' as AddressType,
+    TOKEN: '0x93f9d43a7bd751f8546a54785ae48d049ddd2697' as AddressType,
+    MEDIAMETADATARENDERER: '0x4dc60f832c1d19301e45a66ad1752c6f47ad4c68' as AddressType,
+    TREASURY: '0xdab522800bd789ddb61e01b52088b6a6d95b50eb' as AddressType,
+    GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
+    MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
+  },
+  [CHAIN_ID.GOERLI]: {
+    MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
+    MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
+    AUCTION: '0x8c40618313de873978e1e8d403896f169aff3d9c' as AddressType,
+    TOKEN: '0x93f9d43a7bd751f8546a54785ae48d049ddd2697' as AddressType,
+    MEDIAMETADATARENDERER: '0x4dc60f832c1d19301e45a66ad1752c6f47ad4c68' as AddressType,
+    TREASURY: '0xdab522800bd789ddb61e01b52088b6a6d95b50eb' as AddressType,
+    GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
+    MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
+  },
+  [CHAIN_ID.OPTIMISM_GOERLI]: {
+    MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
+    MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
+    AUCTION: '0x8c40618313de873978e1e8d403896f169aff3d9c' as AddressType,
+    TOKEN: '0x93f9d43a7bd751f8546a54785ae48d049ddd2697' as AddressType,
+    MEDIAMETADATARENDERER: '0x4dc60f832c1d19301e45a66ad1752c6f47ad4c68' as AddressType,
+    TREASURY: '0xdab522800bd789ddb61e01b52088b6a6d95b50eb' as AddressType,
+    GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
+    MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
+  },
+  [CHAIN_ID.BASE]: {
+    MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
+    MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
+    AUCTION: '0x8c40618313de873978e1e8d403896f169aff3d9c' as AddressType,
+    TOKEN: '0x93f9d43a7bd751f8546a54785ae48d049ddd2697' as AddressType,
+    MEDIAMETADATARENDERER: '0x4dc60f832c1d19301e45a66ad1752c6f47ad4c68' as AddressType,
+    TREASURY: '0xdab522800bd789ddb61e01b52088b6a6d95b50eb' as AddressType,
+    GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
+    MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
+  },
+  [CHAIN_ID.ZORA]: {
+    MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
+    MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
+    AUCTION: '0x8c40618313de873978e1e8d403896f169aff3d9c' as AddressType,
+    TOKEN: '0x93f9d43a7bd751f8546a54785ae48d049ddd2697' as AddressType,
+    MEDIAMETADATARENDERER: '0x4dc60f832c1d19301e45a66ad1752c6f47ad4c68' as AddressType,
+    TREASURY: '0xdab522800bd789ddb61e01b52088b6a6d95b50eb' as AddressType,
+    GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
+    MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
+  },
+  [CHAIN_ID.ZORA_GOERLI]: {
+    MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
+    MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
+    AUCTION: '0x8c40618313de873978e1e8d403896f169aff3d9c' as AddressType,
+    TOKEN: '0x93f9d43a7bd751f8546a54785ae48d049ddd2697' as AddressType,
+    MEDIAMETADATARENDERER: '0x4dc60f832c1d19301e45a66ad1752c6f47ad4c68' as AddressType,
+    TREASURY: '0xdab522800bd789ddb61e01b52088b6a6d95b50eb' as AddressType,
+    GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
+    MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
+  },
+  [CHAIN_ID.FOUNDRY]: {
+    MANAGER: '0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3' as AddressType,
+    MANAGER_IMPL: '0xbf84fb51891656797df77a66857c63e80c1d6036' as AddressType,
+    AUCTION: '0x8c40618313de873978e1e8d403896f169aff3d9c' as AddressType,
+    TOKEN: '0x93f9d43a7bd751f8546a54785ae48d049ddd2697' as AddressType,
+    MEDIAMETADATARENDERER: '0x4dc60f832c1d19301e45a66ad1752c6f47ad4c68' as AddressType,
+    TREASURY: '0xdab522800bd789ddb61e01b52088b6a6d95b50eb' as AddressType,
+    GOVERNOR: '0xaca9b2ddd5060ff81b1bf5ccaacd5b20429111cd' as AddressType,
+    MERKLERESERVEMINTER: '0x0300ba2fbc45c4191c475731b0876eeef3271b86' as AddressType,
+  },
+}
+
+export const L1_MESSENGERS = {
+  //NEED ALL CHAIN TO WORK
+  [CHAIN_ID.BASE_GOERLI]: '0x8e5693140eA606bcEB98761d9beB1BC87383706D' as AddressType,
+  [CHAIN_ID.OPTIMISM]: '0xDa2332D0a7608919Cd331B1304Cd179129a90495' as AddressType,
+  [CHAIN_ID.ZORA]: '0x363B4B1ADa52E50353f746999bd9E94395190d2C' as AddressType,
+  [CHAIN_ID.ZORA_GOERLI]: '0x9779A9D2f3B66A4F4d27cB99Ab6cC1266b3Ca9af' as AddressType,
+  [CHAIN_ID.BASE]: '0x866E82a600A1414e583f7F13623F1aC5d58b0Afa' as AddressType,
 }
