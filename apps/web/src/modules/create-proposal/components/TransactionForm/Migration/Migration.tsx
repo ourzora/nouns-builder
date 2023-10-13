@@ -7,7 +7,7 @@ import useSWR from 'swr'
 import { encodeFunctionData, parseAbi } from 'viem'
 import { useBalance, useContractRead } from 'wagmi'
 
-import { L1_MESSENGERS } from 'src/constants/addresses'
+import { L1_MESSENGERS, L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
 import { TransactionType } from 'src/modules/create-proposal/constants/transactionType'
@@ -127,10 +127,20 @@ export const Migration: React.FC = () => {
       value: '',
       calldata: encodeFunctionData({
         abi: parseAbi([
-          'function deploy(FounderParams[] calldata _founderParams, address[] calldata _implAddresses, bytes[] calldata _implData)',
+          'function sendMessage(address _target, bytes memory _message, uint32 _gasLimit)',
         ]),
-        functionName: 'deploy',
-        args: [res._founderParams, res._implAddresses, res._implData],
+        functionName: 'sendMessage',
+        args: [
+          L2_DEPLOYMENT_ADDRESSES[targetChainID].MANAGER,
+          encodeFunctionData({
+            abi: parseAbi([
+              'function deploy(FounderParams[] calldata _founderParams, address[] calldata _implAddresses, bytes[] calldata _implData)',
+            ]),
+            functionName: 'deploy',
+            args: [res._founderParams, res._implAddresses, res._implData],
+          }),
+          0, // not sure what to put here
+        ],
       }),
     }
 
