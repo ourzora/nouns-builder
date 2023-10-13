@@ -4,8 +4,10 @@ import { FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import useSWR from 'swr'
+import { encodeFunctionData, parseAbi } from 'viem'
 import { useBalance, useContractRead } from 'wagmi'
 
+import { L1_MESSENGERS } from 'src/constants/addresses'
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
 import { TransactionType } from 'src/modules/create-proposal/constants/transactionType'
@@ -101,6 +103,8 @@ export const Migration: React.FC = () => {
       ['OP']: CHAIN_ID.OPTIMISM,
     }
 
+    const targetChainID = CHAIN_ID.BASE_GOERLI // for testing
+
     const zeroFounder = {
       wallet: starter as AddressType,
       ownershipPct: BigInt(0),
@@ -108,19 +112,35 @@ export const Migration: React.FC = () => {
     }
 
     const res = await prepareMigrationDeploy(
-      CHAIN_ID.BASE_GOERLI,
+      targetChainID,
       thisChain,
       thisDao,
       zeroFounder,
       merkleRoot
     )
 
+    const L1_MESSENGER = L1_MESSENGERS[targetChainID]
+
+    const migrationTxn = {
+      functionSignature: 'sendMessage',
+      target: L1_MESSENGER,
+      value: '',
+      calldata: encodeFunctionData({
+        abi: parseAbi([
+          'function deploy(FounderParams[] calldata _founderParams, address[] calldata _implAddresses, bytes[] calldata _implData)',
+        ]),
+        functionName: 'deploy',
+        args: [res._founderParams, res._implAddresses, res._implData],
+      }),
+    }
+
+    //    address _target,
+    //   bytes memory _message,
+    //   uint32 _gasLimit
     addTransaction({
       type: TransactionType.MIGRATION,
       summary: 'Migrate to L2',
-      transactions: [
-        /*migrationTxn*/
-      ],
+      transactions: [migrationTxn],
     })
 
     actions.resetForm()

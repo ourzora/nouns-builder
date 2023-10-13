@@ -163,11 +163,11 @@ export async function prepareMigrationDeploy(
     L2_DEPLOYMENT_ADDRESSES[targetChainId]
 
   const implData = [
-    tokenParamsHex,
-    propertyMetadataParamsHex,
-    auctionParamsHex,
-    treasuryParamsHex,
-    governorParamsHex,
+    tokenParamsHex as `0x${string}`,
+    propertyMetadataParamsHex as `0x${string}`,
+    auctionParamsHex as `0x${string}`,
+    treasuryParamsHex as `0x${string}`,
+    governorParamsHex as `0x${string}`,
   ]
   const implAddresses: Address[] = [
     TOKEN,
