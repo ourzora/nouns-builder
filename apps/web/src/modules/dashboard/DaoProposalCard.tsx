@@ -30,9 +30,7 @@ export const DaoProposalCard = ({
   currentChainSlug,
   userAddress,
   chainId,
-  timeCreated,
   proposalId,
-  dao,
 }: DaoProposalCardProps) => {
   return (
     <Link
@@ -62,13 +60,8 @@ export const DaoProposalCard = ({
         >
           {proposalNumber}
         </Text>
-        <Flex mr={'auto'} align="center">
-          <Text
-            fontSize={18}
-            fontWeight="label"
-            mb={{ '@initial': 'x2', '@768': 'x0' }}
-            mr="x2"
-          >
+        <Flex mr={'auto'} align="center" mb={{ '@initial': 'x2', '@768': 'x0' }}>
+          <Text fontSize={18} fontWeight="label" mr="x2">
             {title}
           </Text>
           <NeedsVote
