@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "codegen": "graphql-codegen",
-    "generate-abis": "node ./scripts/generate-abis.js"
+    "generate-abis": "node ./scripts/generate-abis.js",
+    "tunnel": "node ./scripts/start_tunnel.js"
   },
   "dependencies": {
     "@ethersproject/abstract-provider": "^5.7.0",
@@ -91,6 +92,7 @@
     "eslint": "8.16.0",
     "eslint-config-custom": "workspace:*",
     "jsdom": "^20.0.1",
+    "localtunnel": "^2.0.2",
     "tsconfig": "workspace:*",
     "typescript": "^5.1.6",
     "vite": "^4.1.4",

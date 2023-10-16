@@ -52,6 +52,7 @@
     "NODE_ENV",
     "TEST_PUSH_PUBLIC",
     "TEST_PUSH_PK",
+    "TUNNEL_SUBDOMAIN",
     "TEST_PUSH_MNEMONIC"
   ]
 }
