@@ -15,7 +15,7 @@ import {
   DaoFragment,
   ProposalFragment,
 } from 'src/data/subgraph/sdk.generated'
-import { CHAIN_ID } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { DaoFeed } from '../dao'
 import { DaoAuctionCard } from './DaoAuctionCard'
@@ -37,7 +37,12 @@ export type DashboardDaoProps = DaoFragment & {
     minimumBidIncrement: string
     reservePrice: string
   }
-  proposals: (ProposalFragment & { proposalState: ProposalState })[]
+  proposals: (ProposalFragment & {
+    proposalState: ProposalState
+    votes: {
+      voter: string
+    }[]
+  })[]
   currentAuction?: CurrentAuctionFragment | null
 }
 
@@ -111,8 +116,14 @@ const Dashboard = () => {
 
     return data
       .filter((dao) => dao.proposals.length)
-      .map((dao) => <DaoProposals key={dao.tokenAddress} {...dao} />)
-  }, [data])
+      .map((dao) => (
+        <DaoProposals
+          key={dao.tokenAddress}
+          {...dao}
+          userAddress={address as AddressType}
+        />
+      ))
+  }, [data, address])
 
   if (error) {
     return (

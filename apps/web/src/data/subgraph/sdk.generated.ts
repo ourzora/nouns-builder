@@ -2092,6 +2092,7 @@ export type DashboardQuery = {
         values: Array<any>
         snapshotBlockNumber: any
         transactionHash: any
+        votes: Array<{ __typename?: 'ProposalVote'; voter: any }>
         dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
       }>
       currentAuction?: {
@@ -2228,6 +2229,24 @@ export type ProposalOgMetadataQuery = {
       governorAddress: any
     }
   }>
+}
+
+export type ProposalVotesQueryVariables = Exact<{
+  proposalId: Scalars['ID']
+}>
+
+export type ProposalVotesQuery = {
+  __typename?: 'Query'
+  proposal?: {
+    __typename?: 'Proposal'
+    votes: Array<{
+      __typename?: 'ProposalVote'
+      voter: any
+      support: ProposalVoteSupport
+      weight: number
+      reason?: string | null
+    }>
+  } | null
 }
 
 export type ProposalsQueryVariables = Exact<{
@@ -2568,6 +2587,9 @@ export const DashboardDocument = gql`
           voteEnd
           voteStart
           expiresAt
+          votes {
+            voter
+          }
         }
         currentAuction {
           ...CurrentAuction
@@ -2644,6 +2666,16 @@ export const ProposalOgMetadataDocument = gql`
     }
   }
   ${ProposalFragmentDoc}
+  ${ProposalVoteFragmentDoc}
+`
+export const ProposalVotesDocument = gql`
+  query proposalVotes($proposalId: ID!) {
+    proposal(id: $proposalId) {
+      votes {
+        ...ProposalVote
+      }
+    }
+  }
   ${ProposalVoteFragmentDoc}
 `
 export const ProposalsDocument = gql`
@@ -2903,6 +2935,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposalOGMetadata',
+        'query'
+      )
+    },
+    proposalVotes(
+      variables: ProposalVotesQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<ProposalVotesQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<ProposalVotesQuery>(ProposalVotesDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'proposalVotes',
         'query'
       )
     },
