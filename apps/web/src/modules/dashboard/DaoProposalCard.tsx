@@ -113,7 +113,7 @@ const NeedsVote = ({ userAddress, proposalState, votes }: NeedsVoteProps) => {
     if (proposalState !== ProposalState.Active) return undefined
 
     return votes.some((vote) => vote.voter === userAddress?.toLowerCase())
-  }, [proposalState, votes])
+  }, [proposalState, votes, userAddress])
 
   if (hasVoted == null) return null
 
