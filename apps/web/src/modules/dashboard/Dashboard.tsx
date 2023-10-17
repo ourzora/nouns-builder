@@ -84,7 +84,7 @@ const Dashboard = () => {
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
   )
-  console.log('data', data)
+
   const [mutating, setMutating] = useState(false)
 
   const proposalList = useMemo(() => {
