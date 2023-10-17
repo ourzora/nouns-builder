@@ -106,13 +106,7 @@ type NeedsVoteProps = {
   proposalState: ProposalState
   votes: { voter: string }[]
 }
-const NeedsVote = ({
-  userAddress,
-  chainId,
-  proposalState,
-  proposalId,
-  votes,
-}: NeedsVoteProps) => {
+const NeedsVote = ({ userAddress, proposalState, votes }: NeedsVoteProps) => {
   const [showTooltip, setShowTooltip] = useState(false)
 
   const hasVoted = useMemo(() => {
