@@ -2092,6 +2092,7 @@ export type DashboardQuery = {
         values: Array<any>
         snapshotBlockNumber: any
         transactionHash: any
+        votes: Array<{ __typename?: 'ProposalVote'; voter: any }>
         dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
       }>
       currentAuction?: {
@@ -2586,6 +2587,9 @@ export const DashboardDocument = gql`
           voteEnd
           voteStart
           expiresAt
+          votes {
+            voter
+          }
         }
         currentAuction {
           ...CurrentAuction

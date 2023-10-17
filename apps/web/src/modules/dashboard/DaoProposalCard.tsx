@@ -1,11 +1,9 @@
 import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
 import Link from 'next/link'
-import { useState } from 'react'
-import useSWR from 'swr'
+import { useMemo, useState } from 'react'
 
 import { Icon } from 'src/components/Icon'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
-import { hasUserVoted } from 'src/data/subgraph/requests/proposalVotes'
 import { ProposalFragment } from 'src/data/subgraph/sdk.generated'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
@@ -17,6 +15,9 @@ type DaoProposalCardProps = ProposalFragment & {
   proposalState: ProposalState
   currentChainSlug?: string
   userAddress?: AddressType
+  votes: {
+    voter: string
+  }[]
 }
 
 export const DaoProposalCard = ({
@@ -31,6 +32,7 @@ export const DaoProposalCard = ({
   userAddress,
   chainId,
   proposalId,
+  votes,
 }: DaoProposalCardProps) => {
   return (
     <Link
@@ -69,6 +71,7 @@ export const DaoProposalCard = ({
             chainId={chainId}
             proposalId={proposalId}
             proposalState={proposalState}
+            votes={votes}
           />
         </Flex>
         <Flex
@@ -101,24 +104,22 @@ type NeedsVoteProps = {
   chainId: CHAIN_ID
   proposalId: string
   proposalState: ProposalState
+  votes: { voter: string }[]
 }
 const NeedsVote = ({
   userAddress,
   chainId,
   proposalState,
   proposalId,
+  votes,
 }: NeedsVoteProps) => {
   const [showTooltip, setShowTooltip] = useState(false)
-  const { data: hasVoted } = useSWR(
-    [proposalId, userAddress, chainId],
-    async () => {
-      if (proposalState !== ProposalState.Active) return null
-      const hasVoted = await hasUserVoted(proposalId, userAddress as AddressType, chainId)
 
-      return hasVoted
-    },
-    { revalidateOnFocus: false }
-  )
+  const hasVoted = useMemo(() => {
+    if (proposalState !== ProposalState.Active) return undefined
+
+    return votes.some((vote) => vote.voter === userAddress?.toLowerCase())
+  }, [proposalState, votes])
 
   if (hasVoted == null) return null
 

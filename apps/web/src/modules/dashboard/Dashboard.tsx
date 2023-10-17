@@ -37,7 +37,12 @@ export type DashboardDaoProps = DaoFragment & {
     minimumBidIncrement: string
     reservePrice: string
   }
-  proposals: (ProposalFragment & { proposalState: ProposalState })[]
+  proposals: (ProposalFragment & {
+    proposalState: ProposalState
+    votes: {
+      voter: string
+    }[]
+  })[]
   currentAuction?: CurrentAuctionFragment | null
 }
 
@@ -79,7 +84,7 @@ const Dashboard = () => {
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
   )
-
+  console.log('data', data)
   const [mutating, setMutating] = useState(false)
 
   const proposalList = useMemo(() => {
