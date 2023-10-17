@@ -1,8 +1,11 @@
-import * as PushAPI from '@pushprotocol/restapi'
+import { PushAPI } from '@pushprotocol/restapi'
 import { ENV } from '@pushprotocol/restapi/src/lib/constants'
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { createWalletClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
+import { goerli } from 'viem/chains'
 
+import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { SDK } from 'src/data/subgraph/client'
 import { AddressType } from 'src/typings'
 
@@ -40,25 +43,70 @@ const isNewToken = (body: any) => {
     : false
 }
 
+// const pushNotification = async ({
+//   title,
+//   body,
+//   cta,
+//   img,
+// }: {
+//   title: string
+//   body: string
+//   cta: string
+//   img: string
+// }) => {
+//   const pk = `0x${process.env.TEST_PUSH_PK}`
+
+//   const account = privateKeyToAccount(pk as AddressType)
+
+//   const apiResponse = await OldPushAPI.payloads.sendNotification({
+//     signer: account,
+//     type: 1,
+//     identityType: 2,
+//     notification: {
+//       title,
+//       body,
+//     },
+//     payload: {
+//       title,
+//       body,
+//       img,
+//       cta,
+//     },
+//     channel: `eip155:5:${process.env.TEST_PUSH_PUBLIC}`,
+//     env: ENV.STAGING,
+//   })
+//   return apiResponse
+// }
+
 const pushNotification = async ({
   title,
   body,
   cta,
   img,
+  embed,
 }: {
   title: string
   body: string
   cta: string
   img: string
+  embed: string
 }) => {
   const pk = `0x${process.env.TEST_PUSH_PK}`
 
   const account = privateKeyToAccount(pk as AddressType)
 
-  const apiResponse = await PushAPI.payloads.sendNotification({
-    signer: account,
-    type: 1,
-    identityType: 2,
+  const signer = createWalletClient({
+    account,
+    chain: goerli,
+    transport: http(
+      `https://eth-goerli.g.alchemy.com/v2/${process.env.PRIVATE_ALCHEMY_ID}`
+    ),
+  })
+  const notifAccount = await PushAPI.initialize(signer, {
+    env: ENV.STAGING,
+  })
+
+  const sendNotifRes = await notifAccount.channel.send(['*'], {
     notification: {
       title,
       body,
@@ -66,13 +114,13 @@ const pushNotification = async ({
     payload: {
       title,
       body,
-      img,
       cta,
+      embed,
     },
-    channel: 'eip155:5:0x825771E927b024423c66bB7bF09A2ddf0A657011',
-    env: ENV.STAGING,
+    channel: `eip155:5:${process.env.TEST_PUSH_PUBLIC}`,
   })
-  return apiResponse
+
+  return sendNotifRes
 }
 
 const getDaoData = async (daoId: string, chainId: number) => {
@@ -102,6 +150,7 @@ const handleNewToken = async (body: any, chainId: number) => {
 
   const tokenData = await getTokenData(tokenId, chainId)
   const daoData = await getDaoData(daoId, chainId)
+  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
   if (!daoData || !tokenData) throw new Error('daoData not found')
 
   await pushNotification({
@@ -109,6 +158,7 @@ const handleNewToken = async (body: any, chainId: number) => {
     body: `${tokenData.name} is up for auction!`,
     cta: 'View Auction',
     img: tokenData.image,
+    embed: `https://nouns.build/dao/${chainSlug}/${daoId}/${tokenId}`,
   })
 }
 
@@ -122,6 +172,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         console.log('chainId not found')
       }
       if (isNewToken(req.body)) {
+        console.log('NEW TOKEN')
         await handleNewToken(req.body, chainId)
       }
 

@@ -55,8 +55,8 @@ importers:
         specifier: ^4.5.9
         version: 4.5.11
       '@pushprotocol/restapi':
-        specifier: ^1.4.22
-        version: 1.4.22(@types/react@18.0.28)(ethers@5.7.2)(react@18.2.0)(typescript@5.1.6)
+        specifier: ^1.4.24
+        version: 1.4.24(@types/react@18.0.28)(ethers@5.7.2)(react@18.2.0)(typescript@5.1.6)
       '@rainbow-me/rainbowkit':
         specifier: ^1.0.8
         version: 1.0.8(@types/react@18.0.28)(react-dom@18.2.0)(react@18.2.0)(viem@1.6.0)(wagmi@1.3.10)
@@ -4064,8 +4064,8 @@ packages:
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
     dev: false
 
-  /@pushprotocol/restapi@1.4.22(@types/react@18.0.28)(ethers@5.7.2)(react@18.2.0)(typescript@5.1.6):
-    resolution: {integrity: sha512-+2uCHq58iDlcWFis+SZefviy52wQXD5pgt9ujlGX99rCWjxSyWBkLoC9oKR/29WPG5p7Drxc7MRvbBbZoLwhAg==}
+  /@pushprotocol/restapi@1.4.24(@types/react@18.0.28)(ethers@5.7.2)(react@18.2.0)(typescript@5.1.6):
+    resolution: {integrity: sha512-gR3Ty/p+154xEiwDLifoSOG7r4WNwjjxXWIrGknlqS83SUdGPoMvuI/Qkv/kFIQAxj2vq3NZgv5plMe3qOJ8ew==}
     peerDependencies:
       ethers: ^5.6.8
     dependencies:
@@ -6641,7 +6641,7 @@ packages:
   /axios@0.27.2:
     resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
     dependencies:
-      follow-redirects: 1.15.2(debug@4.3.4)
+      follow-redirects: 1.15.2(debug@4.3.2)
       form-data: 4.0.0
     transitivePeerDependencies:
       - debug
@@ -7717,7 +7717,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /debug@4.3.4(supports-color@8.1.1):
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -9476,7 +9475,6 @@ packages:
         optional: true
     dependencies:
       debug: 4.3.2
-    dev: true
 
   /follow-redirects@1.15.2(debug@4.3.4):
     resolution: {integrity: sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==}
