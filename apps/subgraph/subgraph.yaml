@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Manager
-    network: base-testnet
+    network: base-goerli
     source:
       abi: Manager
-      address: "0xaa21afd73e6fd5f69c87a6839d0beedee075e9a3"
-      startBlock: 10259200
+      address: '0x12dddc8a7a1947297732ebb841eae2f1f33b1d18'
+      startBlock: 11161500
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -33,11 +33,11 @@ dataSources:
       file: ./src/manager.ts
   - kind: ethereum
     name: MerkleMinter
-    network: base-testnet
+    network: base-goerli
     source:
       abi: MerkleMinter
-      address: "0x0300ba2fbc45c4191c475731b0876eeef3271b86"
-      startBlock: 10259200
+      address: '0xdd908dfaf5e13bac01abe96e4b6d992f92c1fca0'
+      startBlock: 11161500
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -53,11 +53,11 @@ dataSources:
       file: ./src/merkle_minter.ts
   - kind: ethereum
     name: RedeemMinter
-    network: base-testnet
+    network: base-goerli
     source:
       abi: RedeemMinter
-      address: "0x82accbf10febc39f0d1ad3fed84137dde6542455"
-      startBlock: 10259200
+      address: '0xef49483419bc5516ec4c6d601adfac4a359ef8a6'
+      startBlock: 11161500
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -74,7 +74,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: Token
-    network: base-testnet
+    network: base-goerli
     source:
       abi: Token
     mapping:
@@ -98,7 +98,7 @@ templates:
       file: ./src/token.ts
   - kind: ethereum
     name: Governor
-    network: base-testnet
+    network: base-goerli
     source:
       abi: Governor
     mapping:
@@ -129,7 +129,7 @@ templates:
       file: ./src/governor.ts
   - kind: ethereum
     name: BaseMetadata
-    network: base-testnet
+    network: base-goerli
     source:
       abi: BaseMetadata
     mapping:
@@ -151,7 +151,7 @@ templates:
       file: ./src/metadata.ts
   - kind: ethereum
     name: Auction
-    network: base-testnet
+    network: base-goerli
     source:
       abi: Auction
     mapping:

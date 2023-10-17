@@ -8,4 +8,5 @@ export function handleMinterSet(event: MinterSetEvent): void {
   mint.mintEnd = event.params.merkleSaleSettings.mintEnd
   mint.pricePerToken = event.params.merkleSaleSettings.pricePerToken
   mint.merkleRoot = event.params.merkleSaleSettings.merkleRoot
+  mint.save()
 }

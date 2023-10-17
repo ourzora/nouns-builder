@@ -8,4 +8,5 @@ export function handleMinterSet(event: MinterSetEvent): void {
   mint.mintEnd = event.params.redeemSettings.mintEnd
   mint.pricePerToken = event.params.redeemSettings.pricePerToken
   mint.redeemToken = event.params.redeemSettings.redeemToken
+  mint.save()
 }
