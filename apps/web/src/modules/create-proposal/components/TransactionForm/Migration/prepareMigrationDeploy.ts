@@ -125,7 +125,7 @@ export async function prepareMigrationDeploy(
     ]
   )
 
-  const initialMinter = L2_DEPLOYMENT_ADDRESSES[targetChainId].MERKLERESERVEMINTER // figure it out based on chain going to
+  const initialMinter = L2_DEPLOYMENT_ADDRESSES[targetChainId].MERKLE_RESERVE_MINTER // figure it out based on chain going to
   const tokenParamsHex = encodeAbiParameters(
     [
       { name: 'name', type: 'string' },
@@ -159,7 +159,7 @@ export async function prepareMigrationDeploy(
     [votingDelay, votingPeriod, proposalThresholdBps, quorumThresholdBps, vetoer]
   )
 
-  const { TOKEN, MEDIAMETADATARENDERER, AUCTION, TREASURY, GOVERNOR } =
+  const { TOKEN, MEDIA_METADATA_RENDERER, AUCTION, TREASURY, GOVERNOR } =
     L2_DEPLOYMENT_ADDRESSES[targetChainId]
 
   const implData = [
@@ -171,7 +171,7 @@ export async function prepareMigrationDeploy(
   ]
   const implAddresses: Address[] = [
     TOKEN,
-    MEDIAMETADATARENDERER,
+    MEDIA_METADATA_RENDERER,
     AUCTION,
     TREASURY,
     GOVERNOR,

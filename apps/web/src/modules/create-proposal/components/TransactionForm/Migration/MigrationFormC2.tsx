@@ -8,6 +8,7 @@ import {
   defaultInputLabelStyle,
 } from 'src/components/Fields/styles.css'
 import { TEXT } from 'src/components/Fields/types'
+import { CHAIN_ID } from 'src/typings'
 
 import { DropdownSelect } from '../../DropdownSelect'
 import MigrationFormC2Schema, { MigrationFormC2Values } from './MigrationFormC2.schema'
@@ -20,22 +21,16 @@ export interface MigrationFormC2Props {
   disabled?: boolean
 }
 
-export type ChainType = 'BASE' | 'ZORA' | 'OP'
-
-const chainOptions = [
-  { label: 'Base', value: 'BASE' },
-  { label: 'Zora', value: 'ZORA' },
-  { label: 'Optimisim', value: 'OP' },
-]
+const chainOptions = [{ label: 'BASE_GOERLI', value: CHAIN_ID.BASE_GOERLI }]
 
 export const MigrationFormC2: React.FC<MigrationFormC2Props> = ({
   onSubmit,
   disabled,
 }) => {
-  const [receivingChain, setReceivingChain] = useState<ChainType>('ZORA')
+  const [receivingChain, setReceivingChain] = useState<CHAIN_ID>(CHAIN_ID.BASE_GOERLI)
 
   const initialValues: MigrationFormC2Values = {
-    L2: 'ZORA',
+    L2: CHAIN_ID.BASE_GOERLI,
     starter: '',
   }
 
@@ -57,10 +52,11 @@ export const MigrationFormC2: React.FC<MigrationFormC2Props> = ({
         validateOnChange={false}
       >
         {(formik) => {
-          const handleChainChange = (value: string) => {
+          const handleChainChange = (value: CHAIN_ID) => {
             console.log(value)
-            setReceivingChain(value as ChainType)
+            setReceivingChain(value)
           }
+
           return (
             <>
               <Text mb="x8" ml="x2" className={defaultHelperTextStyle}>

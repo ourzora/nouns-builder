@@ -15,7 +15,7 @@ import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { prepareMerkle } from 'src/modules/create-proposal/utils/prepareMerkle'
 import { useDaoStore } from 'src/modules/dao/stores/useDaoStore'
 import { useChainStore } from 'src/stores/useChainStore'
-import { AddressType, CHAIN_ID } from 'src/typings'
+import { AddressType } from 'src/typings'
 
 import { MigrationFormC1 } from './MigrationFormC1'
 import { MigrationFormC2 } from './MigrationFormC2'
@@ -25,6 +25,13 @@ import { prepareMigrationDeploy } from './prepareMigrationDeploy'
 
 type MembersQuery = {
   membersList: DaoMember[]
+}
+
+export enum DAOMigrationProgress {
+  DEFAULT = 0,
+  PAUSED = 1,
+  DEPLOYED = 2,
+  FINALIZED = 3,
 }
 
 export const Migration: React.FC = () => {
@@ -74,36 +81,22 @@ export const Migration: React.FC = () => {
   )
 
   const deployed = false
+  const treasuryMigrated = treasuryBalance && treasuryBalance.value < 1000000000000000
 
-  let daoProgress = 0
-  if (paused) {
-    if (deployed) {
-      if (treasuryBalance && treasuryBalance.value < 1000000000000000) {
-        // 0.001 ETH
-        daoProgress = 3 // ALL DONE
-      } else {
-        daoProgress = 2
-      }
-    } else {
-      daoProgress = 1
-    }
-  }
-  daoProgress = 1
+  let x: number = DAOMigrationProgress.DEFAULT
+
+  let daoProgress = DAOMigrationProgress.FINALIZED
+  if (!paused) daoProgress = DAOMigrationProgress.DEFAULT
+  else if (!deployed) daoProgress = DAOMigrationProgress.PAUSED
+  else if (!treasuryMigrated) daoProgress = DAOMigrationProgress.DEPLOYED
 
   const handleC2Submit = async (
     values: MigrationFormC2Values,
     actions: FormikHelpers<MigrationFormC2Values>
   ) => {
     if (!chain) return
-    const { L2, starter } = values
+    const { L2: targetChainID, starter } = values
     console.log('here')
-    const chainStringToObj: { [key in string]: CHAIN_ID } = {
-      ['BASE']: CHAIN_ID.BASE,
-      ['ZORA']: CHAIN_ID.ZORA,
-      ['OP']: CHAIN_ID.OPTIMISM,
-    }
-
-    const targetChainID = CHAIN_ID.BASE_GOERLI // for testing
 
     const zeroFounder = {
       wallet: starter as AddressType,
