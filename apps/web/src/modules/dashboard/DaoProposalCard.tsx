@@ -68,8 +68,6 @@ export const DaoProposalCard = ({
           </Text>
           <NeedsVote
             userAddress={userAddress}
-            chainId={chainId}
-            proposalId={proposalId}
             proposalState={proposalState}
             votes={votes}
           />
@@ -101,8 +99,6 @@ export const DaoProposalCard = ({
 
 type NeedsVoteProps = {
   userAddress?: AddressType
-  chainId: CHAIN_ID
-  proposalId: string
   proposalState: ProposalState
   votes: { voter: string }[]
 }
