@@ -1,128 +1,33 @@
-import { PushAPI } from '@pushprotocol/restapi'
-import { ENV } from '@pushprotocol/restapi/src/lib/constants'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createWalletClient, formatEther, http } from 'viem'
-import { privateKeyToAccount } from 'viem/accounts'
-import { goerli } from 'viem/chains'
+import { formatEther } from 'viem'
 
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
-import { SDK } from 'src/data/subgraph/client'
 import { auctionBidRequest } from 'src/data/subgraph/requests/auctionBid'
-import { AddressType } from 'src/typings'
-import { getEnsName } from 'src/utils/ens'
-import { walletSnippet } from 'src/utils/helpers'
-
-enum OP {
-  INSERT = 'INSERT',
-  UPDATE = 'UPDATE',
-}
-
-const CHAIN_ID_BY_SUBGRAPH: Record<string, number> = {
-  'auction-test-goerli': 5,
-}
-
-const ALCHEMY_URL = `https://eth-goerli.g.alchemy.com/v2/${process.env.PRIVATE_ALCHEMY_ID}`
-
-const isBid = (body: any) => {
-  const { op, data } = body
-  return (
-    op === OP.INSERT &&
-    data.old === null &&
-    data.new.settled === false &&
-    typeof data.new.highest_bid === 'string'
-  )
-}
-
-const isSettled = (body: any) => {
-  const { op, data } = body
-  return op === OP.INSERT && data.old === null && data.new.settled === true ? true : false
-}
-
-const isNewToken = (body: any) => {
-  const { op, data } = body
-  return op === OP.INSERT &&
-    data.old === null &&
-    data.new.highest_bid === null &&
-    data.new.settled === false
-    ? true
-    : false
-}
-
-const pushNotification = async ({
-  title,
-  body,
-  cta,
-  embed,
-}: {
-  title: string
-  body: string
-  cta: string
-  embed: string
-}) => {
-  const pk = `0x${process.env.TEST_PUSH_PK}`
-
-  const account = privateKeyToAccount(pk as AddressType)
-
-  const signer = createWalletClient({
-    account,
-    chain: goerli,
-    transport: http(ALCHEMY_URL),
-  })
-  const notifAccount = await PushAPI.initialize(signer, {
-    env: ENV.STAGING,
-  })
-
-  const sendNotifRes = await notifAccount.channel.send(['*'], {
-    notification: {
-      title,
-      body,
-    },
-    payload: {
-      title,
-      body,
-      cta,
-      embed,
-    },
-    channel: `eip155:5:${process.env.TEST_PUSH_PUBLIC}`,
-  })
-
-  return sendNotifRes
-}
-
-const getDaoData = async (daoId: string, chainId: number) => {
-  const dao = await SDK.connect(chainId)
-    .daoOGMetadata({
-      tokenAddress: daoId.toLowerCase(),
-    })
-    .then((x) => x.dao)
-  return dao
-}
-
-const getUserData = async (address: string) => {
-  const ensName = await getEnsName(address)
-
-  return { displayName: ensName ? ensName : walletSnippet(address, 6), address }
-}
-
-const getTokenData = async (auctionId: string, chainId: number) => {
-  const token = await SDK.connect(chainId)
-    .token({
-      id: auctionId,
-    })
-    .then((x) => x.token)
-  return token
-}
+import { AuctionEvent, Entity } from 'src/typings/pushWebhookTypes'
+import {
+  CHAIN_ID_BY_SUBGRAPH,
+  getDaoData,
+  getTokenData,
+  getUserData,
+  isBid,
+  isNewToken,
+  isSettled,
+  pushNotification,
+} from 'src/utils/pushWebhook'
 
 const handleNewToken = async (body: any, chainId: number) => {
   const daoId = body?.data?.new?.dao
   const tokenId = body?.data?.new?.token
   if (!daoId || !tokenId) throw new Error('daoId or tokenId not found')
 
-  const tokenData = await getTokenData(tokenId, chainId)
-  const daoData = await getDaoData(daoId, chainId)
-  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
+  const [tokenData, daoData] = await Promise.all([
+    getTokenData(tokenId, chainId),
+    getDaoData(daoId, chainId),
+  ])
 
   if (!daoData || !tokenData) throw new Error('daoData not found')
+
+  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
 
   await pushNotification({
     title: `New Token available for auction at ${daoData.name}`,
@@ -137,9 +42,11 @@ const handleNewBid = async (body: any, chainId: number) => {
   const tokenId = body?.data?.new?.token
   const bidId = body?.data?.new?.highest_bid
 
-  const tokenData = await getTokenData(tokenId, chainId)
-  const daoData = await getDaoData(daoId, chainId)
-  const bidData = await auctionBidRequest(bidId, chainId)
+  const [tokenData, daoData, bidData] = await Promise.all([
+    getTokenData(tokenId, chainId),
+    getDaoData(daoId, chainId),
+    auctionBidRequest(bidId, chainId),
+  ])
 
   if (!daoData || !tokenData || !bidData)
     throw new Error('Error fetching populating notification data')
@@ -154,14 +61,18 @@ const handleNewBid = async (body: any, chainId: number) => {
   })
 }
 
-const handleIsSettled = async (body: any, chainId: number) => {
+const handleIsSettled = async (body: AuctionEvent, chainId: number) => {
   const daoId = body?.data?.new?.dao
   const tokenId = body?.data?.new?.token
   const bidId = body?.data?.new?.highest_bid
 
-  const tokenData = await getTokenData(tokenId, chainId)
-  const daoData = await getDaoData(daoId, chainId)
-  const bidData = await auctionBidRequest(bidId, chainId)
+  if (!daoId || !tokenId || !bidId) throw new Error('daoId, tokenId, or bidId not found')
+
+  const [tokenData, daoData, bidData] = await Promise.all([
+    getTokenData(tokenId, chainId),
+    getDaoData(daoId, chainId),
+    auctionBidRequest(bidId, chainId),
+  ])
 
   if (!daoData || !tokenData || !bidData)
     throw new Error('Error fetching populating notification data')
@@ -177,27 +88,24 @@ const handleIsSettled = async (body: any, chainId: number) => {
   })
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const chainId =
     CHAIN_ID_BY_SUBGRAPH?.[req.body.webhook_name as keyof typeof CHAIN_ID_BY_SUBGRAPH]
 
   try {
-    if (req.body.entity === 'auction') {
+    if (req.body.entity === Entity.Auction) {
       if (!chainId) {
-        console.log('chainId not found')
+        throw new Error('Chain ID not found')
       }
-      // if (isNewToken(req.body)) {
-      //   console.log('NEW TOKEN')
-      //   await handleNewToken(req.body, chainId)
-      // }
       if (isBid(req.body)) {
         handleNewBid(req.body, chainId)
-        console.log('NEW BID')
+      }
+
+      if (isNewToken(req.body)) {
+        handleNewToken(req.body, chainId)
       }
 
       if (isSettled(req.body)) {
-        console.log('AUCTION SETTLED')
-
         handleIsSettled(req.body, chainId)
       }
     }
@@ -206,3 +114,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ error: error?.message || 'Error ' })
   }
 }
+export default handler

@@ -1,0 +1,113 @@
+import { PushAPI } from '@pushprotocol/restapi'
+import { ENV } from '@pushprotocol/restapi/src/lib/constants'
+import { createWalletClient, http } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { goerli } from 'viem/chains'
+
+import { SDK } from 'src/data/subgraph/client'
+import { AddressType } from 'src/typings'
+import { AuctionEvent, DataSource, OP } from 'src/typings/pushWebhookTypes'
+
+import { getEnsName } from './ens'
+import { walletSnippet } from './helpers'
+
+// *** CONSTANTS ***
+const ALCHEMY_URL = `https://eth-goerli.g.alchemy.com/v2/${process.env.PRIVATE_ALCHEMY_ID}`
+
+export const CHAIN_ID_BY_SUBGRAPH: Record<string, number> = {
+  [DataSource.Goerli]: 5,
+}
+
+// *** TYPE GUARDS ***
+export const isBid = (body: any): body is AuctionEvent => {
+  const { op, data } = body
+  return (
+    op === OP.INSERT &&
+    data.old === null &&
+    data.new.settled === false &&
+    typeof data.new.highest_bid === 'string'
+  )
+}
+export const isSettled = (body: any): body is AuctionEvent => {
+  const { op, data } = body
+  return op === OP.INSERT && data.old === null && data.new.settled === true ? true : false
+}
+
+export const isNewToken = (body: any): body is AuctionEvent => {
+  const { op, data } = body
+  return op === OP.INSERT &&
+    data.old === null &&
+    data.new.highest_bid === null &&
+    data.new.settled === false
+    ? true
+    : false
+}
+
+// *** DATA FETCHING ***
+
+export const getDaoData = async (daoId: string, chainId: number) => {
+  const dao = await SDK.connect(chainId)
+    .daoOGMetadata({
+      tokenAddress: daoId.toLowerCase(),
+    })
+    .then((x) => x.dao)
+  return dao
+}
+
+export const getUserData = async (address: string) => {
+  const ensName = await getEnsName(address)
+
+  return { displayName: ensName ? ensName : walletSnippet(address, 6), address }
+}
+
+export const getTokenData = async (auctionId: string, chainId: number) => {
+  const token = await SDK.connect(chainId)
+    .token({
+      id: auctionId,
+    })
+    .then((x) => x.token)
+  return token
+}
+
+// *** NOTIFICATION TEMPLATE ***
+
+export const pushNotification = async ({
+  title,
+  body,
+  cta,
+  embed,
+}: {
+  title: string
+  body: string
+  cta: string
+  embed: string
+}) => {
+  const pk = `0x${process.env.TEST_PUSH_PK}`
+
+  const account = privateKeyToAccount(pk as AddressType)
+
+  const signer = createWalletClient({
+    account,
+    chain: goerli,
+    transport: http(ALCHEMY_URL),
+  })
+  const notifAccount = await PushAPI.initialize(signer, {
+    env: ENV.STAGING,
+  })
+
+  const sendNotifRes = await notifAccount.channel.send(['*'], {
+    notification: {
+      title,
+      body,
+    },
+    payload: {
+      title,
+      body,
+      cta,
+      embed,
+    },
+    channel: `eip155:5:${process.env.TEST_PUSH_PUBLIC}`,
+  })
+
+  return sendNotifRes
+}
