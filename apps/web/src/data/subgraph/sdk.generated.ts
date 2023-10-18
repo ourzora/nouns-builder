@@ -1945,6 +1945,15 @@ export type ActiveDaosQuery = {
   daos: Array<{ __typename?: 'DAO'; id: string }>
 }
 
+export type AuctionBidQueryVariables = Exact<{
+  id: Scalars['ID']
+}>
+
+export type AuctionBidQuery = {
+  __typename?: 'Query'
+  auctionBid?: { __typename?: 'AuctionBid'; id: string; amount: any; bidder: any } | null
+}
+
 export type AuctionBidsQueryVariables = Exact<{
   id: Scalars['ID']
 }>
@@ -2453,6 +2462,14 @@ export const ActiveDaosDocument = gql`
     }
   }
 `
+export const AuctionBidDocument = gql`
+  query auctionBid($id: ID!) {
+    auctionBid(id: $id) {
+      ...AuctionBid
+    }
+  }
+  ${AuctionBidFragmentDoc}
+`
 export const AuctionBidsDocument = gql`
   query auctionBids($id: ID!) {
     auction(id: $id) {
@@ -2749,6 +2766,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'activeDaos',
+        'query'
+      )
+    },
+    auctionBid(
+      variables: AuctionBidQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<AuctionBidQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<AuctionBidQuery>(AuctionBidDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'auctionBid',
         'query'
       )
     },

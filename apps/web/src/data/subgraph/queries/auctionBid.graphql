@@ -1,0 +1,5 @@
+query auctionBid($id: ID!) {
+  auctionBid(id: $id) {
+    ...AuctionBid
+  }
+}

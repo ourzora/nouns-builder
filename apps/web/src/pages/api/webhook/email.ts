@@ -1,13 +1,16 @@
 import { PushAPI } from '@pushprotocol/restapi'
 import { ENV } from '@pushprotocol/restapi/src/lib/constants'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { createWalletClient, http } from 'viem'
+import { createWalletClient, formatEther, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { goerli } from 'viem/chains'
 
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { SDK } from 'src/data/subgraph/client'
+import { auctionBidRequest } from 'src/data/subgraph/requests/auctionBid'
 import { AddressType } from 'src/typings'
+import { getEnsName } from 'src/utils/ens'
+import { walletSnippet } from 'src/utils/helpers'
 
 enum OP {
   INSERT = 'INSERT',
@@ -17,6 +20,8 @@ enum OP {
 const CHAIN_ID_BY_SUBGRAPH: Record<string, number> = {
   'auction-test-goerli': 5,
 }
+
+const ALCHEMY_URL = `https://eth-goerli.g.alchemy.com/v2/${process.env.PRIVATE_ALCHEMY_ID}`
 
 const isBid = (body: any) => {
   const { op, data } = body
@@ -61,9 +66,7 @@ const pushNotification = async ({
   const signer = createWalletClient({
     account,
     chain: goerli,
-    transport: http(
-      `https://eth-goerli.g.alchemy.com/v2/${process.env.PRIVATE_ALCHEMY_ID}`
-    ),
+    transport: http(ALCHEMY_URL),
   })
   const notifAccount = await PushAPI.initialize(signer, {
     env: ENV.STAGING,
@@ -95,7 +98,11 @@ const getDaoData = async (daoId: string, chainId: number) => {
   return dao
 }
 
-const getUserData = async (userAddress: string) => {}
+const getUserData = async (address: string) => {
+  const ensName = await getEnsName(address)
+
+  return { displayName: ensName ? ensName : walletSnippet(address, 6), address }
+}
 
 const getTokenData = async (auctionId: string, chainId: number) => {
   const token = await SDK.connect(chainId)
@@ -128,11 +135,23 @@ const handleNewToken = async (body: any, chainId: number) => {
 const handleNewBid = async (body: any, chainId: number) => {
   const daoId = body?.data?.new?.dao
   const tokenId = body?.data?.new?.token
+  const bidId = body?.data?.new?.highest_bid
 
   const tokenData = await getTokenData(tokenId, chainId)
   const daoData = await getDaoData(daoId, chainId)
+  const bidData = await auctionBidRequest(bidId, chainId)
 
+  if (!daoData || !tokenData || !bidData)
+    throw new Error('Error fetching populating notification data')
+  const userData = await getUserData(bidData.bidder)
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
+  const bidAmount = formatEther(bidData.amount)
+  await pushNotification({
+    title: `New bid on ${tokenData.name}!`,
+    body: `${userData.displayName} has placed on ${tokenData.name} for ${bidAmount} ETH `,
+    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
+    embed: tokenData.image,
+  })
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -148,8 +167,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         console.log('NEW TOKEN')
         await handleNewToken(req.body, chainId)
       }
-
       if (isBid(req.body)) {
+        handleNewBid(req.body, chainId)
         console.log('NEW BID')
       }
 
