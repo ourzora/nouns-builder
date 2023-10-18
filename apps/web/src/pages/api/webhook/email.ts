@@ -126,7 +126,7 @@ const handleNewToken = async (body: any, chainId: number) => {
 
   await pushNotification({
     title: `New Token available for auction at ${daoData.name}`,
-    body: `${tokenData.name} is up for auction!//nVisit to start bidding!`,
+    body: `${tokenData.name} is up for auction!`,
     cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
     embed: tokenData.image,
   })
@@ -154,6 +154,29 @@ const handleNewBid = async (body: any, chainId: number) => {
   })
 }
 
+const handleIsSettled = async (body: any, chainId: number) => {
+  const daoId = body?.data?.new?.dao
+  const tokenId = body?.data?.new?.token
+  const bidId = body?.data?.new?.highest_bid
+
+  const tokenData = await getTokenData(tokenId, chainId)
+  const daoData = await getDaoData(daoId, chainId)
+  const bidData = await auctionBidRequest(bidId, chainId)
+
+  if (!daoData || !tokenData || !bidData)
+    throw new Error('Error fetching populating notification data')
+
+  const userData = await getUserData(tokenData.owner)
+  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
+  const bidAmount = formatEther(bidData.amount)
+  await pushNotification({
+    title: `Token Claimed!`,
+    body: `${userData.displayName} has claimed ${tokenData.name} for ${bidAmount} ETH`,
+    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
+    embed: tokenData.image,
+  })
+}
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const chainId =
     CHAIN_ID_BY_SUBGRAPH?.[req.body.webhook_name as keyof typeof CHAIN_ID_BY_SUBGRAPH]
@@ -163,25 +186,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!chainId) {
         console.log('chainId not found')
       }
-      if (isNewToken(req.body)) {
-        console.log('NEW TOKEN')
-        await handleNewToken(req.body, chainId)
-      }
+      // if (isNewToken(req.body)) {
+      //   console.log('NEW TOKEN')
+      //   await handleNewToken(req.body, chainId)
+      // }
       if (isBid(req.body)) {
         handleNewBid(req.body, chainId)
         console.log('NEW BID')
       }
 
-      //   if (isSettled(req.body)) {
-      //     console.log('AUCTION SETTLED')
+      if (isSettled(req.body)) {
+        console.log('AUCTION SETTLED')
 
-      //     // check if has highest bid
-      //     // get highest bid
-      //     //bidder
-      //     //amount
-      //     // get token
-      //     // get picture
-      //   }
+        handleIsSettled(req.body, chainId)
+      }
     }
     res.status(200).json({ status: 'ok' })
   } catch (error: any) {
