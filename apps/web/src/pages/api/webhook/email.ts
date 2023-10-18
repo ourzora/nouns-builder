@@ -43,52 +43,15 @@ const isNewToken = (body: any) => {
     : false
 }
 
-// const pushNotification = async ({
-//   title,
-//   body,
-//   cta,
-//   img,
-// }: {
-//   title: string
-//   body: string
-//   cta: string
-//   img: string
-// }) => {
-//   const pk = `0x${process.env.TEST_PUSH_PK}`
-
-//   const account = privateKeyToAccount(pk as AddressType)
-
-//   const apiResponse = await OldPushAPI.payloads.sendNotification({
-//     signer: account,
-//     type: 1,
-//     identityType: 2,
-//     notification: {
-//       title,
-//       body,
-//     },
-//     payload: {
-//       title,
-//       body,
-//       img,
-//       cta,
-//     },
-//     channel: `eip155:5:${process.env.TEST_PUSH_PUBLIC}`,
-//     env: ENV.STAGING,
-//   })
-//   return apiResponse
-// }
-
 const pushNotification = async ({
   title,
   body,
   cta,
-  img,
   embed,
 }: {
   title: string
   body: string
   cta: string
-  img: string
   embed: string
 }) => {
   const pk = `0x${process.env.TEST_PUSH_PK}`
@@ -151,15 +114,25 @@ const handleNewToken = async (body: any, chainId: number) => {
   const tokenData = await getTokenData(tokenId, chainId)
   const daoData = await getDaoData(daoId, chainId)
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
+
   if (!daoData || !tokenData) throw new Error('daoData not found')
 
   await pushNotification({
-    title: 'New Auction',
-    body: `${tokenData.name} is up for auction!`,
-    cta: 'View Auction',
-    img: tokenData.image,
-    embed: `https://nouns.build/dao/${chainSlug}/${daoId}/${tokenId}`,
+    title: `New Token available for auction at ${daoData.name}`,
+    body: `${tokenData.name} is up for auction!//nVisit to start bidding!`,
+    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
+    embed: tokenData.image,
   })
+}
+
+const handleNewBid = async (body: any, chainId: number) => {
+  const daoId = body?.data?.new?.dao
+  const tokenId = body?.data?.new?.token
+
+  const tokenData = await getTokenData(tokenId, chainId)
+  const daoData = await getDaoData(daoId, chainId)
+
+  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -178,15 +151,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (isBid(req.body)) {
         console.log('NEW BID')
-        // get DAO
-        // get name
-        // get logo
-        // create link to DAO
-        // get highest bid
-        //bidder
-        //amount
-        // get token
-        // get picture
       }
 
       //   if (isSettled(req.body)) {
