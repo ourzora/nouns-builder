@@ -3,14 +3,20 @@ import { formatEther } from 'viem'
 
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { auctionBidRequest } from 'src/data/subgraph/requests/auctionBid'
-import { AuctionEvent, Entity } from 'src/typings/pushWebhookTypes'
+import { AuctionEvent } from 'src/typings/pushWebhookTypes'
 import {
   CHAIN_ID_BY_SUBGRAPH,
+  Entity,
   getDaoData,
   getTokenData,
   getUserData,
   isBid,
   isNewToken,
+  isProposalCanceled,
+  isProposalCreate,
+  isProposalExecuted,
+  isProposalQueued,
+  isProposalVetoed,
   isSettled,
   pushNotification,
 } from 'src/utils/pushWebhook'
@@ -66,7 +72,15 @@ const handleIsSettled = async (body: AuctionEvent, chainId: number) => {
   const tokenId = body?.data?.new?.token
   const bidId = body?.data?.new?.highest_bid
 
-  if (!daoId || !tokenId || !bidId) throw new Error('daoId, tokenId, or bidId not found')
+  if (!daoId || !tokenId) {
+    console.log(`daoId: ${daoId}, tokenId: ${tokenId}`)
+    throw new Error('daoId tokenId not found')
+  }
+
+  if (!bidId) {
+    // since no one is claiming this token, we don't need to send a notification
+    return
+  }
 
   const [tokenData, daoData, bidData] = await Promise.all([
     getTokenData(tokenId, chainId),
@@ -91,7 +105,7 @@ const handleIsSettled = async (body: AuctionEvent, chainId: number) => {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const chainId =
     CHAIN_ID_BY_SUBGRAPH?.[req.body.data_source as keyof typeof CHAIN_ID_BY_SUBGRAPH]
-  console.log('req.body', req.body)
+
   try {
     if (req.body.entity === Entity.Auction) {
       if (!chainId) {
@@ -110,6 +124,25 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       if (isSettled(req.body)) {
         console.log('SETTLED')
         handleIsSettled(req.body, chainId)
+      }
+    }
+
+    if (req.body.entity === Entity.Proposal) {
+      if (isProposalCreate(req.body)) {
+        console.log('PROPOSAL CREATE')
+        // handleNewProposal(req.body, chainId)
+      }
+      if (isProposalVetoed(req.body)) {
+        console.log('PROPOSAL VETOED')
+      }
+      if (isProposalExecuted(req.body)) {
+        console.log('PROPOSAL EXECUTED')
+      }
+      if (isProposalCanceled(req.body)) {
+        console.log('PROPOSAL CANCELLED')
+      }
+      if (isProposalQueued(req.body)) {
+        console.log('PROPOSAL QUEUED')
       }
     }
     res.status(200).json({ status: 'ok' })

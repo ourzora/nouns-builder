@@ -6,7 +6,7 @@ import { goerli } from 'viem/chains'
 
 import { SDK } from 'src/data/subgraph/client'
 import { AddressType } from 'src/typings'
-import { AuctionEvent, OP } from 'src/typings/pushWebhookTypes'
+import { AuctionEvent, OP, ProposalEvent } from 'src/typings/pushWebhookTypes'
 
 import { getEnsName } from './ens'
 import { walletSnippet } from './helpers'
@@ -15,6 +15,11 @@ import { walletSnippet } from './helpers'
 
 export enum DataSource {
   Goerli = 'nouns-builder-goerli-testnet/1.0.0',
+}
+
+export enum Entity {
+  Auction = 'auction',
+  Proposal = 'proposal',
 }
 
 const ALCHEMY_URL = `https://eth-goerli.g.alchemy.com/v2/${process.env.PRIVATE_ALCHEMY_ID}`
@@ -35,17 +40,58 @@ export const isBid = (body: any): body is AuctionEvent => {
 }
 export const isSettled = (body: any): body is AuctionEvent => {
   const { op, data } = body
-  return op === OP.INSERT && data.old === null && data.new.settled === true ? true : false
+  return op === OP.INSERT && data.old === null && data.new.settled === true
 }
 
 export const isNewToken = (body: any): body is AuctionEvent => {
   const { op, data } = body
-  return op === OP.INSERT &&
+  return (
+    op === OP.INSERT &&
     data.old === null &&
     data.new.highest_bid === null &&
     data.new.settled === false
-    ? true
-    : false
+  )
+}
+
+export const isProposalCreate = (body: any): body is ProposalEvent => {
+  const { op, data } = body
+  return (
+    op === OP.INSERT &&
+    data.old === null &&
+    data.new.queued === false &&
+    data.new.canceled === false &&
+    data.new.executed === false &&
+    data.new.vetoed === false &&
+    data.new.for_votes === 0 &&
+    data.new.against_votes === 0 &&
+    data.new.abstain_votes === 0
+  )
+}
+
+export const isProposalVetoed = (body: any): body is ProposalEvent => {
+  const { op, data } = body
+  return op === OP.INSERT && data.old === null && data.new.vetoed === true
+}
+
+export const isProposalExecuted = (body: any): body is ProposalEvent => {
+  const { op, data } = body
+  return op === OP.INSERT && data.old === null && data.new.executed === true
+}
+
+export const isProposalCanceled = (body: any): body is ProposalEvent => {
+  const { op, data } = body
+  return op === OP.INSERT && data.old === null && data.new.canceled === true
+}
+
+export const isProposalQueued = (body: any): body is ProposalEvent => {
+  const { op, data } = body
+  return (
+    op === OP.INSERT &&
+    data.old === null &&
+    data.new.queued === true &&
+    data.new.executed === false &&
+    data.new.vetoed === false
+  )
 }
 
 // *** DATA FETCHING ***

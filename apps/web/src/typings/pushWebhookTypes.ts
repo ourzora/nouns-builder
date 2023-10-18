@@ -1,12 +1,8 @@
-import { DataSource } from 'src/utils/pushWebhook'
+import { DataSource, Entity } from 'src/utils/pushWebhook'
 
 export enum OP {
   INSERT = 'INSERT',
   UPDATE = 'UPDATE',
-}
-
-export enum Entity {
-  Auction = 'auction',
 }
 
 export type WebHookBodyType<Old, New> = {
@@ -42,4 +38,38 @@ export type AuctionEntity = {
   block_range: string
 }
 
+export type ProposalEntity = {
+  proposal_threshold: string
+  time_created: string
+  queued: boolean
+  values: string[]
+  vote_end: string
+  executed: boolean
+  proposer: string
+  proposal_id: string
+  executable_from: null | string
+  vetoed: boolean
+  transaction_hash: string
+  vote_count: number
+  for_votes: number
+  vote_start: string
+  canceled: boolean
+  expires_at: null | string
+  dao: string
+  targets: any[]
+  id: string
+  quorum_votes: string
+  proposal_number: number
+  title: string
+  vid: string
+  against_votes: number
+  description_hash: string
+  snapshot_block_number: string
+  abstain_votes: number
+  description: string
+  calldatas: string
+  block_range: string
+}
+
 export type AuctionEvent = WebHookBodyType<null, AuctionEntity>
+export type ProposalEvent = WebHookBodyType<null, ProposalEntity>
