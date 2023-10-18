@@ -152,7 +152,7 @@ export const pushNotification = async ({
   title: string
   body: string
   cta: string
-  embed: string
+  embed?: string
 }) => {
   const notifAccount = await getNotificationsAccount()
   const sendNotifRes = await notifAccount.channel.send(['*'], {
