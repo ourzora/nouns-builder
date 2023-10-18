@@ -3,8 +3,8 @@ import axios from 'axios'
 import React from 'react'
 
 const TestNotifs = () => {
-  const fireNotification = () => {
-    const res = axios.post('api/webhook/test')
+  const fireNotification = async () => {
+    const res = await axios.get('api/webhook/test')
   }
 
   return (

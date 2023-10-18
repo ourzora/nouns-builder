@@ -1,17 +1,15 @@
+import { DataSource } from 'src/utils/pushWebhook'
+
 export enum OP {
   INSERT = 'INSERT',
   UPDATE = 'UPDATE',
-}
-
-export enum DataSource {
-  Goerli = 'nouns-builder-goerli-testnet/1.0.0',
 }
 
 export enum Entity {
   Auction = 'auction',
 }
 
-export type WebHookBodyType<Old = unknown, New = unknown> = {
+export type WebHookBodyType<Old, New> = {
   op: OP
   data_source: DataSource
   data: {

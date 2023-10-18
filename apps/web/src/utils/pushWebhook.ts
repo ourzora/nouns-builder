@@ -6,12 +6,17 @@ import { goerli } from 'viem/chains'
 
 import { SDK } from 'src/data/subgraph/client'
 import { AddressType } from 'src/typings'
-import { AuctionEvent, DataSource, OP } from 'src/typings/pushWebhookTypes'
+import { AuctionEvent, OP } from 'src/typings/pushWebhookTypes'
 
 import { getEnsName } from './ens'
 import { walletSnippet } from './helpers'
 
 // *** CONSTANTS ***
+
+export enum DataSource {
+  Goerli = 'nouns-builder-goerli-testnet/1.0.0',
+}
+
 const ALCHEMY_URL = `https://eth-goerli.g.alchemy.com/v2/${process.env.PRIVATE_ALCHEMY_ID}`
 
 export const CHAIN_ID_BY_SUBGRAPH: Record<string, number> = {
@@ -71,6 +76,27 @@ export const getTokenData = async (auctionId: string, chainId: number) => {
 
 // *** NOTIFICATION TEMPLATE ***
 
+export const getNotificationsAccount = async () => {
+  const pk = `0x${process.env.TEST_PUSH_PK}`
+
+  const account = privateKeyToAccount(pk as AddressType)
+  const signer = createWalletClient({
+    account,
+    chain: goerli,
+    transport: http(ALCHEMY_URL),
+  })
+  const notifAccount = await PushAPI.initialize(signer, {
+    env: ENV.STAGING,
+  })
+
+  return notifAccount
+}
+
+export const getSubscribers = async () => {
+  const notifAccount = await getNotificationsAccount()
+  return await notifAccount.channel.info()
+}
+
 export const pushNotification = async ({
   title,
   body,
@@ -82,19 +108,7 @@ export const pushNotification = async ({
   cta: string
   embed: string
 }) => {
-  const pk = `0x${process.env.TEST_PUSH_PK}`
-
-  const account = privateKeyToAccount(pk as AddressType)
-
-  const signer = createWalletClient({
-    account,
-    chain: goerli,
-    transport: http(ALCHEMY_URL),
-  })
-  const notifAccount = await PushAPI.initialize(signer, {
-    env: ENV.STAGING,
-  })
-
+  const notifAccount = await getNotificationsAccount()
   const sendNotifRes = await notifAccount.channel.send(['*'], {
     notification: {
       title,

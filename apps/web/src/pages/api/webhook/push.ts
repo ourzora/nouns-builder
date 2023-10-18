@@ -90,27 +90,31 @@ const handleIsSettled = async (body: AuctionEvent, chainId: number) => {
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const chainId =
-    CHAIN_ID_BY_SUBGRAPH?.[req.body.webhook_name as keyof typeof CHAIN_ID_BY_SUBGRAPH]
-
+    CHAIN_ID_BY_SUBGRAPH?.[req.body.data_source as keyof typeof CHAIN_ID_BY_SUBGRAPH]
+  console.log('req.body', req.body)
   try {
     if (req.body.entity === Entity.Auction) {
       if (!chainId) {
         throw new Error('Chain ID not found')
       }
       if (isBid(req.body)) {
+        console.log('BID')
         handleNewBid(req.body, chainId)
       }
 
       if (isNewToken(req.body)) {
+        console.log('NEW TOKEN')
         handleNewToken(req.body, chainId)
       }
 
       if (isSettled(req.body)) {
+        console.log('SETTLED')
         handleIsSettled(req.body, chainId)
       }
     }
     res.status(200).json({ status: 'ok' })
   } catch (error: any) {
+    console.error(error)
     res.status(500).json({ error: error?.message || 'Error ' })
   }
 }
