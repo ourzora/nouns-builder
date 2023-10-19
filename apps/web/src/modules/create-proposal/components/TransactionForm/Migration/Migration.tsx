@@ -4,11 +4,12 @@ import { FormikHelpers } from 'formik'
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
 import useSWR from 'swr'
-import { encodeFunctionData, parseAbi } from 'viem'
+import { encodeFunctionData } from 'viem'
 import { useBalance, useContractRead } from 'wagmi'
 
 import { L1_MESSENGERS, L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
-import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
+import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
+import { messengerABI } from 'src/data/contract/abis/L1CrossDomainMessenger'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
 import { TransactionType } from 'src/modules/create-proposal/constants/transactionType'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
@@ -119,18 +120,19 @@ export const Migration: React.FC = () => {
       target: L1_MESSENGER,
       value: '',
       calldata: encodeFunctionData({
-        abi: parseAbi([
-          'function sendMessage(address _target, bytes memory _message, uint32 _gasLimit)',
-        ]),
+        abi: messengerABI,
         functionName: 'sendMessage',
         args: [
           L2_DEPLOYMENT_ADDRESSES[targetChainID].MANAGER,
           encodeFunctionData({
-            abi: parseAbi([
-              'function deploy(FounderParams[] calldata _founderParams, address[] calldata _implAddresses, bytes[] calldata _implData)',
-            ]),
+            abi: managerAbi,
             functionName: 'deploy',
-            args: [res._founderParams, res._implAddresses, res._implData],
+            args: [
+              res._founderParams,
+              res._implData.token,
+              res._implData.auction,
+              res._implData.gov,
+            ],
           }),
           0, // not sure what to put here
         ],

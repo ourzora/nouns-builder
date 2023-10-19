@@ -1,5 +1,9 @@
-import { ethers } from 'ethers'
-import { Address, encodeAbiParameters } from 'viem'
+import {
+  Address,
+  encodeAbiParameters,
+  parseAbiParameters,
+  toHex,
+} from 'viem'
 import { readContracts } from 'wagmi'
 
 import { L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
@@ -12,7 +16,7 @@ import {
 } from 'src/data/contract/abis'
 import { DaoStoreProps } from 'src/modules/dao'
 import { ChainStoreProps } from 'src/stores/useChainStore'
-import { CHAIN_ID } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 export async function prepareMigrationDeploy(
@@ -108,9 +112,7 @@ export async function prepareMigrationDeploy(
       ]
     : [zeroFounder]
 
-  const abiCoder = new ethers.utils.AbiCoder()
-
-  const merkleMinterSettingsHex = encodeAbiParameters(
+  /*const merkleMinterSettingsHex = encodeAbiParameters(
     [
       { name: 'mintStart', type: 'uint64' },
       { name: 'mintEnd', type: 'uint64' },
@@ -125,50 +127,47 @@ export async function prepareMigrationDeploy(
     ]
   )
 
-  const initialMinter = L2_DEPLOYMENT_ADDRESSES[targetChainId].MERKLE_RESERVE_MINTER // figure it out based on chain going to
+  // const initialMinter = L2_DEPLOYMENT_ADDRESSES[targetChainId].MERKLE_RESERVE_MINTER figure it out based on chain going to
+  */
   const tokenParamsHex = encodeAbiParameters(
+    parseAbiParameters(
+      'string name, string symbol, string description, string daoImage, string daoWebsite, string baseRenderer'
+    ),
     [
-      { name: 'name', type: 'string' },
-      { name: 'symbol', type: 'string' },
-      { name: 'reservedUntilTokenId', type: 'uint256' },
-      { name: 'initialMinter', type: 'address' },
-      { name: 'initialMinterData', type: 'bytes' },
-    ],
-    [name!, symbol!, totalSupply!, initialMinter, merkleMinterSettingsHex]
-  )
-
-  const propertyMetadataParamsHex = abiCoder.encode(
-    ['string', 'string', 'string', 'string'],
-    [description, daoImage, contractURI, 'https://api.zora.co/renderer/stack-images']
-  )
-
-  const auctionParamsHex = abiCoder.encode(
-    ['uint256', 'uint256', 'address', 'uint256'],
-    [
-      duration,
-      reservePrice,
-      '0x0000000000000000000000000000000000000000', // founderRewardRecipient
-      0, // founderRewardBPS
+      name!,
+      symbol!,
+      description!,
+      daoImage!,
+      contractURI!,
+      'https://api.zora.co/renderer/stack-images',
     ]
   )
+  const tokenParams = { initStrings: toHex(tokenParamsHex) as AddressType }
 
-  const treasuryParamsHex = abiCoder.encode(['uint256'], [timelockDelay])
+  const auctionParams = {
+    reservePrice: reservePrice!,
+    duration: BigInt(duration!),
+  }
 
-  const governorParamsHex = abiCoder.encode(
-    ['uint256', 'uint256', 'uint256', 'uint256', 'address'],
-    [votingDelay, votingPeriod, proposalThresholdBps, quorumThresholdBps, vetoer]
-  )
+  const govParams = {
+    timelockDelay: timelockDelay!,
+    votingDelay: votingDelay!,
+    votingPeriod: votingPeriod!,
+    proposalThresholdBps: proposalThresholdBps!,
+    quorumThresholdBps: quorumThresholdBps!,
+    vetoer: vetoer!,
+  }
 
   const { TOKEN, MEDIA_METADATA_RENDERER, AUCTION, TREASURY, GOVERNOR } =
     L2_DEPLOYMENT_ADDRESSES[targetChainId]
 
-  const implData = [
-    tokenParamsHex as `0x${string}`,
-    propertyMetadataParamsHex as `0x${string}`,
-    auctionParamsHex as `0x${string}`,
-    treasuryParamsHex as `0x${string}`,
-    governorParamsHex as `0x${string}`,
-  ]
+  const implData = {
+    token: tokenParams,
+    founder: founderParams,
+    auction: auctionParams,
+    gov: govParams,
+  }
+
   const implAddresses: Address[] = [
     TOKEN,
     MEDIA_METADATA_RENDERER,
