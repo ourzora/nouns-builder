@@ -2,6 +2,7 @@ import Airdrop from './assets/airdrop.svg'
 import ArrowLeft from './assets/arrow-left.svg'
 import ArrowRight from './assets/arrow-right.svg'
 import ArrowTopRight from './assets/arrow-top-right.svg'
+import Bell16 from './assets/bell-16.svg'
 import Brush from './assets/brush.svg'
 import Burger from './assets/burger.svg'
 import CheckInCircle from './assets/check-in-circle.svg'
@@ -55,6 +56,7 @@ export const icons = {
   collection: Collection,
   copy: Copy,
   cross: Cross,
+  'bell-16': Bell16,
   'cross-16': Cross16,
   dash: Dash,
   discord: Discord,
