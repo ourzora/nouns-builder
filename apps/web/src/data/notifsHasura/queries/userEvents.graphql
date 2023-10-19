@@ -1,7 +1,0 @@
-query GetUser($id: String!) {
-  testnet_users_by_pk(id: $id) {
-    events {
-      event
-    }
-  }
-}
