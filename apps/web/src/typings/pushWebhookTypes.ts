@@ -1,4 +1,3 @@
-
 import { ProposalVoteSupport } from 'src/data/subgraph/sdk.generated'
 import { DataSource, Entity } from 'src/utils/pushWebhook'
 
