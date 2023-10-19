@@ -1,3 +1,5 @@
+
+import { ProposalVoteSupport } from 'src/data/subgraph/sdk.generated'
 import { DataSource, Entity } from 'src/utils/pushWebhook'
 
 export enum OP {
@@ -71,5 +73,17 @@ export type ProposalEntity = {
   block_range: string
 }
 
+export type VoteEntity = {
+  id: string
+  voter: string
+  weight: number
+  reason: string | null
+  proposal: string
+  support: ProposalVoteSupport
+  vid: string
+  block_range: string
+}
+
 export type AuctionEvent = WebHookBodyType<null, AuctionEntity>
 export type ProposalEvent = WebHookBodyType<null, ProposalEntity>
+export type VoteEvent = WebHookBodyType<null, VoteEntity>

@@ -20,6 +20,7 @@ export enum DataSource {
 export enum Entity {
   Auction = 'auction',
   Proposal = 'proposal',
+  Vote = 'proposal_vote',
 }
 
 const ALCHEMY_URL = `https://eth-goerli.g.alchemy.com/v2/${process.env.PRIVATE_ALCHEMY_ID}`

@@ -4,7 +4,8 @@ import { formatEther } from 'viem'
 
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { auctionBidRequest } from 'src/data/subgraph/requests/auctionBid'
-import { AuctionEvent, ProposalEvent } from 'src/typings/pushWebhookTypes'
+import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
+import { AuctionEvent, ProposalEvent, VoteEvent } from 'src/typings/pushWebhookTypes'
 import {
   CHAIN_ID_BY_SUBGRAPH,
   Entity,
@@ -145,17 +146,105 @@ const handleProposalCreate = async (body: ProposalEvent, chainId: number) => {
   })
 }
 
-const handleProposalCanceled = async (body: ProposalEvent, chainId: number) => {}
+const handleProposalStateChange = async ({
+  body,
+  chainId,
+  title,
+  textBody,
+}: {
+  body: ProposalEvent
+  chainId: number
+  title: string
+  textBody: string
+}) => {
+  const proposaldata = correctHexInShallowObject(body.data.new)
+  const { proposal_number } = proposaldata
+  const daoId = body.data.new.dao
 
-// user submitted proposal
+  const daoData = await getDaoData(daoId, chainId)
 
-// canceled proposal
+  if (!daoData) throw new Error('Error populating notification data')
 
-// queued proposal
+  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
 
-// executed proposal
+  await pushNotification({
+    title,
+    body: textBody,
+    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/vote/${proposal_number}`,
+    embed: getFetchableUrl(daoData.contractImage),
+  })
+}
 
-// vetoed proposal
+const handleProposalCancelled = async (body: ProposalEvent, chainId: number) => {
+  const { proposal_number, title } = body?.data?.new || {}
+  return handleProposalStateChange({
+    body,
+    chainId,
+    title: `Proposal #${proposal_number} Canceled`,
+    textBody: `Proposal #${proposal_number}: "${title}" has been canceled`,
+  })
+}
+
+const handleProposalQueued = async (body: ProposalEvent, chainId: number) => {
+  const { proposal_number, title } = body?.data?.new || {}
+  return handleProposalStateChange({
+    body,
+    chainId,
+    title: `Proposal #${proposal_number} Queued`,
+    textBody: `Proposal #${proposal_number}: "${title}" has been queued`,
+  })
+}
+
+const handleProposalExecuted = async (body: ProposalEvent, chainId: number) => {
+  const { proposal_number, title } = body?.data?.new || {}
+  return handleProposalStateChange({
+    body,
+    chainId,
+    title: `Proposal #${proposal_number} Executed`,
+    textBody: `Proposal #${proposal_number}: "${title}" has been executed`,
+  })
+}
+
+const handleProposalVetoed = async (body: ProposalEvent, chainId: number) => {
+  const { proposal_number, title } = body?.data?.new || {}
+
+  return handleProposalStateChange({
+    body,
+    chainId,
+    title: `Proposal #${proposal_number} Vetoed`,
+    textBody: `Proposal #${proposal_number}: "${title}" has been vetoed`,
+  })
+}
+
+const handleVote = async (body: VoteEvent, chainId: number) => {
+  const { proposal, voter, reason, support, weight } =
+    correctHexInShallowObject(body?.data?.new) || {}
+
+  const [proposalData, voterData] = await Promise.all([
+    getProposal(chainId, proposal),
+    getUserData(voter),
+  ])
+
+  const daoData = await getDaoData(
+    proposalData?.dao?.tokenAddress?.toLowerCase?.(),
+    chainId
+  )
+  if (!voterData || !daoData || !proposalData)
+    throw new Error('Error populating notification data')
+
+  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
+
+  await pushNotification({
+    title: `${voterData.displayName} Voted '${support}' on Proposal #${proposalData.proposalNumber}`,
+    body: `
+DAO: ${daoData.name}
+Voting Weight: ${weight}
+Reason: ${reason || 'No reason provided'}
+    `,
+    cta: `https://testnet.nouns.build/dao/${chainSlug}/${proposalData.dao.tokenAddress}/vote/${proposalData.proposalNumber}`,
+    embed: getFetchableUrl(daoData.contractImage),
+  })
+}
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { body, headers } = req
@@ -197,17 +286,26 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       }
       if (isProposalVetoed(body)) {
         console.log('PROPOSAL VETOED')
+        handleProposalVetoed(body, chainId)
       }
       if (isProposalExecuted(body)) {
         console.log('PROPOSAL EXECUTED')
+        handleProposalExecuted(body, chainId)
       }
       if (isProposalCanceled(body)) {
         console.log('PROPOSAL CANCELLED')
+        handleProposalCancelled(body, chainId)
       }
       if (isProposalQueued(body)) {
         console.log('PROPOSAL QUEUED')
+        handleProposalQueued(body, chainId)
       }
     }
+    if (body.entity === Entity.Vote) {
+      console.log('VOTE')
+      handleVote(body, chainId)
+    }
+
     res.status(200).json({ status: 'ok' })
   } catch (error: any) {
     console.error(error)
