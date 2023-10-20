@@ -2,7 +2,8 @@ import { Button, Flex } from '@zoralabs/zord'
 import React from 'react'
 import { useAccount } from 'wagmi'
 
-import { addEventUser } from 'src/data/notifsHasura/actions/addEventUser'
+import { subscribeToNotif } from 'src/data/notifsHasura/actions/subscribeToNotif'
+import { NotificationType } from 'src/typings/pushWebhookTypes'
 
 const TestNotifs = () => {
   const { address } = useAccount()
@@ -11,7 +12,7 @@ const TestNotifs = () => {
   const eventId = `${eventType}:5:${daoAddress}`
   const fireNotification = async () => {
     if (!address) return
-    const res = await addEventUser(address, eventId)
+    const res = await subscribeToNotif(address, daoAddress, 5, NotificationType.Auction)
 
     console.log('res', res)
   }

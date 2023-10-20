@@ -1,6 +1,7 @@
+import { AddressType } from 'src/typings'
 import { createHasuraClient } from 'src/utils/hasura'
 
-import { eventUsers, queryEvent } from '../gql/queries'
+import { eventUsers, queryEvent, queryEventUser } from '../gql/queries'
 
 export const getEventUsers = async (eventId: string) => {
   const client = createHasuraClient()
@@ -15,5 +16,16 @@ export const getEvent = async (eventId: string) => {
 
   const res = await client.request(queryEvent, { id: eventId })
   const data = res?.testnet_events_by_pk
+  return data
+}
+
+export const getEventUser = async (eventId: string, userAddress: AddressType) => {
+  const client = createHasuraClient()
+
+  const res = await client.request(queryEventUser, {
+    eventId: eventId,
+    userAddress: userAddress,
+  })
+  const data = res?.testnet_event_user_by_pk
   return data
 }
