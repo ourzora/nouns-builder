@@ -1,4 +1,3 @@
-
 import { AddressType } from 'src/typings'
 import { createHasuraClient } from 'src/utils/hasura'
 

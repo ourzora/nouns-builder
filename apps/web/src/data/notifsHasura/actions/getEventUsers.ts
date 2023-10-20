@@ -1,4 +1,3 @@
-
 import { createHasuraClient } from 'src/utils/hasura'
 
 import { eventUsers } from '../gql/queries'

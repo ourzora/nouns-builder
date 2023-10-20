@@ -2,16 +2,17 @@ import { Button, Flex } from '@zoralabs/zord'
 import React from 'react'
 import { useAccount } from 'wagmi'
 
-import { getEventUsers } from 'src/data/notifsHasura/actions/getEventUsers'
+import { addEventUser } from 'src/data/notifsHasura/actions/addEventUser'
 
 const TestNotifs = () => {
   const { address } = useAccount()
-
+  const daoAddress = '0x7e44c762db83c0f2f2d9a9ed8b5e6b640148fcce'
+  const eventType = 'auction'
+  const eventId = `${eventType}:5:${daoAddress}`
   const fireNotification = async () => {
     if (!address) return
-    const res = await getEventUsers(
-      'auction:5:0xcdd6bf3ce0e31937864d9c83cbf4455202e8d9c6'
-    )
+    const res = await addEventUser(address, eventId)
+
     console.log('res', res)
   }
 
