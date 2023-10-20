@@ -5,8 +5,13 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { goerli } from 'viem/chains'
 
 import { SDK } from 'src/data/subgraph/client'
-import { AddressType } from 'src/typings'
-import { AuctionEvent, OP, ProposalEvent } from 'src/typings/pushWebhookTypes'
+import { AddressType, CHAIN_ID } from 'src/typings'
+import {
+  AuctionEvent,
+  NotificationType,
+  OP,
+  ProposalEvent,
+} from 'src/typings/pushWebhookTypes'
 
 import { getEnsName } from './ens'
 import { walletSnippet } from './helpers'
@@ -171,4 +176,15 @@ export const pushNotification = async ({
   })
 
   return sendNotifRes
+}
+
+export const createEventId = (
+  daoAddress: AddressType,
+  chainId: CHAIN_ID,
+  eventType: NotificationType
+) => `${eventType}:${chainId}:${daoAddress}`
+
+export const parseEventId = (eventId: string) => {
+  const [eventType, chainId, daoAddress] = eventId.split(':')
+  return { eventType, chainId: Number(chainId), daoAddress }
 }

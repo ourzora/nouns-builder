@@ -6,6 +6,11 @@ export enum OP {
   UPDATE = 'UPDATE',
 }
 
+export enum NotificationType {
+  Auction = 'auction',
+  Governance = 'governance',
+}
+
 export type WebHookBodyType<Old, New> = {
   op: OP
   data_source: DataSource

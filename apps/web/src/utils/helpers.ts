@@ -1,7 +1,8 @@
 import isEqual from 'lodash/isEqual'
 import { isAddress } from 'viem'
 
-import { Duration } from 'src/typings'
+import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
+import { CHAIN_ID, Duration } from 'src/typings'
 
 /**
  *
@@ -275,4 +276,8 @@ export function maxChar(str: string, maxLength: number) {
     return str
   }
   return str.slice(0, maxLength) + '...'
+}
+
+export const isValidNetworkId = (chainId: number): chainId is CHAIN_ID => {
+  return PUBLIC_ALL_CHAINS.some((chain) => chainId === chain.id)
 }
