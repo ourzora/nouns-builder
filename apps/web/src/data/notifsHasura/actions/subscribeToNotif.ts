@@ -1,4 +1,3 @@
-
 import { AddressType, CHAIN_ID } from 'src/typings'
 import { NotificationType } from 'src/typings/pushWebhookTypes'
 import { createHasuraClient } from 'src/utils/hasura'

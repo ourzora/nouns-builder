@@ -186,5 +186,9 @@ export const createEventId = (
 
 export const parseEventId = (eventId: string) => {
   const [eventType, chainId, daoAddress] = eventId.split(':')
-  return { eventType, chainId: Number(chainId), daoAddress }
+  return {
+    eventType: eventType as NotificationType,
+    chainId: Number(chainId) as CHAIN_ID,
+    daoAddress: daoAddress as AddressType,
+  }
 }

@@ -1,6 +1,8 @@
 import { ProposalVoteSupport } from 'src/data/subgraph/sdk.generated'
 import { DataSource, Entity } from 'src/utils/pushWebhook'
 
+import { AddressType, CHAIN_ID } from '.'
+
 export enum OP {
   INSERT = 'INSERT',
   UPDATE = 'UPDATE',
@@ -9,6 +11,12 @@ export enum OP {
 export enum NotificationType {
   Auction = 'auction',
   Governance = 'governance',
+}
+
+export type UserNotification = {
+  daoAddress: AddressType
+  chainId: CHAIN_ID
+  eventType: NotificationType
 }
 
 export type WebHookBodyType<Old, New> = {

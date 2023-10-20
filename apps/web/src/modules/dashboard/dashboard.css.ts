@@ -16,11 +16,12 @@ export const outerAuctionCard = style([
     alignItems: { '@initial': 'flex-start', '@768': 'center' },
     flexDirection: { '@initial': 'column', '@768': 'row' },
     marginBottom: 'x6',
+    position: 'relative',
     borderColor: 'border',
     borderStyle: 'solid',
     borderRadius: 'curved',
     borderWidth: 'normal',
-    py: { '@initial': 'x4', '@768': 'x3' },
+    py: { '@initial': 'x4', '@768': 'x4' },
     px: { '@initial': 'x2', '@768': 'x6' },
   }),
 ])

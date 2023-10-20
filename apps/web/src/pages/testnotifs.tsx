@@ -10,17 +10,21 @@ const TestNotifs = () => {
   const daoAddress = '0x7e44c762db83c0f2f2d9a9ed8b5e6b640148fcce'
   const eventType = 'auction'
   const eventId = `${eventType}:5:${daoAddress}`
-  const fireNotification = async () => {
+  const handleSubscribe = async () => {
     if (!address) return
     const res = await subscribeToNotif(address, daoAddress, 5, NotificationType.Auction)
 
     console.log('res', res)
   }
+  const handleUnsubscribe = async () => {}
 
   return (
     <Flex height="100%" width={'100%'} justify="center" align={'center'}>
-      <Button size="lg" onClick={fireNotification}>
-        Test
+      <Button size="lg" onClick={handleSubscribe}>
+        Subscribe
+      </Button>
+      <Button size="lg" onClick={handleUnsubscribe}>
+        Unsubscribe
       </Button>
     </Flex>
   )

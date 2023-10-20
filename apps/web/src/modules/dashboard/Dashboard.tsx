@@ -9,6 +9,7 @@ import {
   ProposalState,
   getProposalState,
 } from 'src/data/contract/requests/getProposalState'
+import { getUserEvents } from 'src/data/notifsHasura/actions/getUser'
 import { dashboardRequest } from 'src/data/subgraph/requests/dashboardQuery'
 import {
   CurrentAuctionFragment,
@@ -16,6 +17,7 @@ import {
   ProposalFragment,
 } from 'src/data/subgraph/sdk.generated'
 import { CHAIN_ID } from 'src/typings'
+import { parseEventId } from 'src/utils/pushWebhook'
 
 import { DaoFeed } from '../dao'
 import { DaoAuctionCard } from './DaoAuctionCard'
@@ -79,8 +81,18 @@ const Dashboard = () => {
     address ? () => fetchDashboardData(address) : null,
     { revalidateOnFocus: false }
   )
+  const { data: notifData, mutate: mutateNotifations } = useSWR(
+    [`${SWR_KEYS.PUSH}:${address}`],
+    address ? () => getUserEvents(address) : null,
+    { revalidateOnFocus: false }
+  )
 
   const [mutating, setMutating] = useState(false)
+
+  const userNotifications = useMemo(() => {
+    if (!notifData) return undefined
+    return notifData.map((notif) => parseEventId(notif))
+  }, [notifData])
 
   const proposalList = useMemo(() => {
     if (!data) return null
@@ -164,6 +176,10 @@ const Dashboard = () => {
     setMutating(false)
   }
 
+  const handleNotifChange = async () => {
+    await mutateNotifations(() => getUserEvents(address))
+  }
+
   return (
     <DashboardLayout
       auctionCards={data.map((dao) => (
@@ -176,6 +192,8 @@ const Dashboard = () => {
           {...dao}
           userAddress={address}
           handleMutate={handleMutate}
+          handleNotifChange={handleNotifChange}
+          userNotifications={userNotifications}
         />
       ))}
       daoProposals={proposalList}

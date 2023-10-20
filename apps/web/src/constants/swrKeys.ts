@@ -20,6 +20,7 @@ const SWR_KEYS = {
   MEMBERS: 'members',
   TOKEN_IMAGE: 'token-image',
   DASHBOARD: 'dashboard',
+  PUSH: 'push',
   DYNAMIC: {
     MY_DAOS(str: string) {
       return `my-daos-${str}`
