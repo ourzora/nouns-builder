@@ -10,6 +10,7 @@ import { Icon } from 'src/components/Icon'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { auctionAbi } from 'src/data/contract/abis'
 import { subscribeToNotif } from 'src/data/notifsHasura/actions/subscribeToNotif'
+import { unsubscribeToNotif } from 'src/data/notifsHasura/actions/unsubscribeToNotif'
 import { useCountdown, useIsMounted } from 'src/hooks'
 import { AddressType } from 'src/typings'
 import { NotificationType, UserNotification } from 'src/typings/pushWebhookTypes'
@@ -89,21 +90,27 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
 
   const toggleSubscribe = () => {
     if (!address) return
-
-    if (!userSubscription) {
-      setIsLoadingSub(true)
-      subscribeToNotif(address, tokenAddress, chainId, NotificationType.Auction).then(
-        () => {
-          setIsLoadingSub(false)
-          handleNotifChange()
-        }
-      )
-    } else {
-      // setIsLoadingSub(true)
-      // unsubscribeToNotif(address, tokenAddress, chainId, NotificationType.Auction).then(() => {
-      //   setIsLoadingSub(false)
-      //   handleNotifChange()
-      // })
+    try {
+      if (!userSubscription) {
+        setIsLoadingSub(true)
+        subscribeToNotif(address, tokenAddress, chainId, NotificationType.Auction).then(
+          () => {
+            setIsLoadingSub(false)
+            handleNotifChange()
+          }
+        )
+      } else {
+        setIsLoadingSub(true)
+        unsubscribeToNotif(address, tokenAddress, chainId, NotificationType.Auction).then(
+          () => {
+            setIsLoadingSub(false)
+            handleNotifChange()
+          }
+        )
+      }
+    } catch (error) {
+      console.error(error)
+      setIsLoadingSub(false)
     }
   }
   const handleSelectAuction = () => {
@@ -132,9 +139,12 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
       <Box
         position="absolute"
         top="x1"
-        right="x0"
         cursor="pointer"
         onClick={toggleSubscribe}
+        style={{
+          top: '43%',
+          right: -4,
+        }}
       >
         {isLoadingSub ? (
           <Spinner mr="x2" />

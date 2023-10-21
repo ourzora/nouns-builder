@@ -26,3 +26,11 @@ export const addEventUserMutation = gql`
     }
   }
 `
+export const removeEventUserMutation = gql`
+  mutation RemoveEventUser($eventId: String!, $userAddress: String!) {
+    delete_testnet_event_user_by_pk(event: $eventId, user: $userAddress) {
+      event
+      user
+    }
+  }
+`

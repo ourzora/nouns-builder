@@ -50,18 +50,9 @@ export const subscribeToNotif = async (
 
     const client = createHasuraClient()
 
-    const res = await client.batchRequests(batch)
+    return await client.batchRequests(batch)
   } catch (error: any) {
     console.error(error)
     throw new Error(error)
   }
-
-  // if yes, skip
-  // if no, batch addUser call
-  // check if user exists
-  // if yes, skip
-  // if no, batch addEvent call
-  // chack if user is subscribed to event
-  // if yes, return error('a'ready subscribed')
-  // if no, batch addEventUser call
 }
