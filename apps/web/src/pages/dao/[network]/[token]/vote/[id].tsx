@@ -13,10 +13,7 @@ import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
-import {
-  ProposalState,
-  getProposalState,
-} from 'src/data/contract/requests/getProposalState'
+import { getProposalState } from 'src/data/contract/requests/getProposalState'
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
@@ -38,13 +35,6 @@ import { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import { AddressType } from 'src/typings'
-
-const ACTIVE_PROPOSAL_STATES = [
-  ProposalState.Active,
-  ProposalState.Pending,
-  ProposalState.Queued,
-  ProposalState.Succeeded,
-]
 
 export interface VotePageProps {
   proposalId: string
@@ -121,8 +111,10 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   const isBadActor = BAD_ACTORS.some((baddie) =>
     isAddressEqual(proposal.proposer, baddie as AddressType)
   )
-  const isActive = proposalState && ACTIVE_PROPOSAL_STATES.includes(proposalState)
-  const isPossibleDrain = balance?.value && checkDrain(proposal.values, balance?.value)
+  const isActive = proposalState ? isProposalOpen(proposalState) : false
+  const isPossibleDrain = balance?.value
+    ? checkDrain(proposal.values, balance?.value)
+    : false
   const warn = isActive && (isBadActor || isPossibleDrain)
 
   return (

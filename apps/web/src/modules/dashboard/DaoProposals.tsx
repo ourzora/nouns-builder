@@ -7,6 +7,7 @@ import React from 'react'
 
 import { Avatar } from 'src/components/Avatar'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
+import { AddressType } from 'src/typings'
 
 import { DaoProposalCard } from './DaoProposalCard'
 import { DashboardDaoProps } from './Dashboard'
@@ -18,7 +19,8 @@ export const DaoProposals = ({
   name,
   proposals,
   chainId,
-}: DashboardDaoProps) => {
+  userAddress,
+}: DashboardDaoProps & { userAddress?: AddressType }) => {
   const daoImageSrc = React.useMemo(() => {
     return daoImage ? getFetchableUrl(daoImage) : null
   }, [daoImage])
@@ -75,6 +77,7 @@ export const DaoProposals = ({
             currentChainSlug={currentChainSlug}
             tokenAddress={tokenAddress}
             proposalState={proposal.proposalState}
+            userAddress={userAddress}
           />
         ))}
       </Box>

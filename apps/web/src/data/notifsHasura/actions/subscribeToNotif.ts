@@ -1,17 +1,15 @@
+import { isAddress } from 'viem'
+
 import { AddressType, CHAIN_ID } from 'src/typings'
 import { NotificationType } from 'src/typings/pushWebhookTypes'
 import { createHasuraClient } from 'src/utils/hasura'
+import { isValidNetworkId } from 'src/utils/helpers'
 import { createEventId } from 'src/utils/pushWebhook'
 
 import { addEventMutation, addEventUserMutation, addUserMutation } from '../gql/mutations'
 import { getEvent, getEventUser } from './getEvent'
 import { getUser } from './getUser'
 
-// extra validation to ensure correct data is passed
-// if (!isAddress(userAddress)) throw new Error('invalid user address')
-// if (!isAddress(collectionAddress)) throw new Error('invalid collection address')
-// if (!Object.values(NotificationType)[eventType]) throw new Error('invalid event type')
-// if (!isValidNetworkId(chainId)) throw new Error('invalid network id')
 export const subscribeToNotif = async (
   _userAddress: AddressType,
   _collectionAddress: AddressType,
@@ -19,6 +17,13 @@ export const subscribeToNotif = async (
   eventType: NotificationType
 ) => {
   try {
+    // extra run-time validation to ensure correct data is passed to db
+    if (!isAddress(_userAddress)) throw new Error('invalid user address')
+    if (!isAddress(_collectionAddress)) throw new Error('invalid collection address')
+    if (!Object.values(NotificationType).includes(eventType))
+      throw new Error('invalid event type')
+    if (!isValidNetworkId(chainId)) throw new Error('invalid network id')
+
     const userAddress = _userAddress.toLowerCase() as AddressType
     const collectionAddress = _collectionAddress.toLowerCase() as AddressType
     const eventId = createEventId(collectionAddress, chainId, eventType)
@@ -28,7 +33,6 @@ export const subscribeToNotif = async (
       await getEvent(eventId),
       await getEventUser(eventId, userAddress),
     ])
-    console.log({ userExists, eventExists, subscriptionExists })
 
     if (subscriptionExists && userExists && eventExists) {
       throw new Error('Already subscribed')
@@ -50,6 +54,7 @@ export const subscribeToNotif = async (
 
     const client = createHasuraClient()
 
+    // uses batch request to ensure all mutations are executed
     return await client.batchRequests(batch)
   } catch (error: any) {
     console.error(error)

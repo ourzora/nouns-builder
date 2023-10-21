@@ -1,6 +1,8 @@
-import { Flex, Text } from '@zoralabs/zord'
+import { Box, Flex, PopUp, Text } from '@zoralabs/zord'
 import Link from 'next/link'
+import { useMemo, useState } from 'react'
 
+import { Icon } from 'src/components/Icon'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { ProposalFragment } from 'src/data/subgraph/sdk.generated'
 import { AddressType, CHAIN_ID } from 'src/typings'
@@ -12,18 +14,25 @@ type DaoProposalCardProps = ProposalFragment & {
   tokenAddress: AddressType
   proposalState: ProposalState
   currentChainSlug?: string
+  userAddress?: AddressType
+  votes: {
+    voter: string
+  }[]
 }
 
 export const DaoProposalCard = ({
   title,
   proposalNumber,
   tokenAddress,
-  chainId,
   proposalState,
   voteEnd,
   voteStart,
   expiresAt,
   currentChainSlug,
+  userAddress,
+  chainId,
+  proposalId,
+  votes,
 }: DaoProposalCardProps) => {
   return (
     <Link
@@ -42,6 +51,7 @@ export const DaoProposalCard = ({
         cursor={'pointer'}
         py={{ '@initial': 'x3', '@768': 'x6' }}
         px={{ '@initial': 'x6', '@768': 'x3' }}
+        position={'relative'}
       >
         <Text
           fontSize={18}
@@ -52,15 +62,16 @@ export const DaoProposalCard = ({
         >
           {proposalNumber}
         </Text>
-
-        <Text
-          fontSize={18}
-          fontWeight="label"
-          mr={'auto'}
-          mb={{ '@initial': 'x2', '@768': 'x0' }}
-        >
-          {title}
-        </Text>
+        <Flex mr={'auto'} align="center" mb={{ '@initial': 'x2', '@768': 'x0' }}>
+          <Text fontSize={18} fontWeight="label" mr="x2">
+            {title}
+          </Text>
+          <NeedsVote
+            userAddress={userAddress}
+            proposalState={proposalState}
+            votes={votes}
+          />
+        </Flex>
         <Flex
           justify={'space-between'}
           width={{ '@initial': '100%', '@768': 'unset' }}
@@ -83,5 +94,46 @@ export const DaoProposalCard = ({
         </Flex>
       </Flex>
     </Link>
+  )
+}
+
+type NeedsVoteProps = {
+  userAddress?: AddressType
+  proposalState: ProposalState
+  votes: { voter: string }[]
+}
+const NeedsVote = ({ userAddress, proposalState, votes }: NeedsVoteProps) => {
+  const [showTooltip, setShowTooltip] = useState(false)
+
+  const hasVoted = useMemo(() => {
+    if (proposalState !== ProposalState.Active) return undefined
+
+    return votes.some((vote) => vote.voter === userAddress?.toLowerCase())
+  }, [proposalState, votes, userAddress])
+
+  if (hasVoted == null) return null
+
+  return (
+    <Flex>
+      <Box
+        cursor="pointer"
+        style={{ zIndex: 102 }}
+        onMouseOver={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
+        <Icon
+          id={hasVoted ? 'checkInCircle' : 'warning-16'}
+          fill={hasVoted ? 'positive' : 'warning'}
+          style={{
+            transform: hasVoted ? 'scale(0.8)' : 'scale(1)',
+          }}
+          size={hasVoted ? 'md' : 'sm'}
+        />
+      </Box>
+
+      <PopUp open={showTooltip} trigger={<></>} placement="right">
+        <Text>{hasVoted ? 'Vote Submitted' : 'Vote Needed'}</Text>
+      </PopUp>
+    </Flex>
   )
 }
