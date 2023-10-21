@@ -1,24 +1,19 @@
-import { getFetchableUrl } from 'ipfs-service'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { formatEther } from 'viem'
 
-import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
-import { auctionBidRequest } from 'src/data/subgraph/requests/auctionBid'
-import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
-import { AddressType } from 'src/typings'
-import {
-  AuctionEvent,
-  NotificationType,
-  ProposalEvent,
-  VoteEvent,
-} from 'src/typings/pushWebhookTypes'
+import { CHAIN_ID } from 'src/typings'
+import { AuctionEvent, ProposalEvent } from 'src/typings/pushWebhookTypes'
 import {
   CHAIN_ID_BY_SUBGRAPH,
   Entity,
-  createEventId,
-  getDaoData,
-  getTokenData,
-  getUserData,
+  handleIsSettled,
+  handleNewBid,
+  handleNewToken,
+  handleProposalCancelled,
+  handleProposalCreate,
+  handleProposalExecuted,
+  handleProposalQueued,
+  handleProposalVetoed,
+  handleVote,
   isBid,
   isNewToken,
   isProposalCanceled,
@@ -27,254 +22,44 @@ import {
   isProposalQueued,
   isProposalVetoed,
   isSettled,
-  pushNotification,
 } from 'src/utils/pushWebhook'
 
-/**
- * Corrects the hexadecimal string prefixes in the object received from the Subgraph API.
- * Due to a known issue with the Subgraph API, hexadecimal strings are sometimes returned with an incorrect '\\x' prefix.
- * This utility function iterates over a shallow object and corrects these prefixes to the standard '0x' used in hexadecimal notation.
- * Note: This function only checks the first level of object properties and expects a shallow data structure.
- */
-const correctHexInShallowObject = (obj: Record<string, any>) => {
-  let correctedObject: Record<string, any> = {}
+const LOGGER = false
 
-  for (const [key, value] of Object.entries(obj)) {
-    if (typeof value === 'string' && value.startsWith('\\x')) {
-      correctedObject[key] = '0x' + value.substring(2)
-    } else {
-      correctedObject[key] = value // Keep the original value if no correction is needed
-    }
+const handleAuctionEvent = (body: AuctionEvent, chainId: CHAIN_ID) => {
+  if (isBid(body)) {
+    LOGGER && console.log('BID')
+    handleNewBid(body, chainId)
+  } else if (isNewToken(body)) {
+    LOGGER && console.log('NEW TOKEN')
+    handleNewToken(body, chainId)
+  } else if (isSettled(body)) {
+    LOGGER && console.log('SETTLED')
+    handleIsSettled(body, chainId)
+  } else {
+    console.warn('Unknown Auction Event', body)
   }
-
-  return correctedObject
 }
 
-const handleNewToken = async (body: any, chainId: number) => {
-  const daoId = body?.data?.new?.dao
-  const tokenId = body?.data?.new?.token
-  if (!daoId || !tokenId) throw new Error('daoId or tokenId not found')
-
-  const [tokenData, daoData] = await Promise.all([
-    getTokenData(tokenId, chainId),
-    getDaoData(daoId, chainId),
-  ])
-
-  if (!daoData || !tokenData) throw new Error('daoData not found')
-
-  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-  const eventId = createEventId(daoId, chainId, NotificationType.Auction)
-  console.log('eventId', eventId)
-  await pushNotification({
-    title: `New Token available for auction at ${daoData.name}`,
-    body: `${tokenData.name} is up for auction!`,
-    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
-    embed: getFetchableUrl(tokenData.image),
-    eventId,
-  })
-}
-
-const handleNewBid = async (body: any, chainId: number) => {
-  const daoId = body?.data?.new?.dao
-  const tokenId = body?.data?.new?.token
-  const bidId = body?.data?.new?.highest_bid
-
-  const [tokenData, daoData, bidData] = await Promise.all([
-    getTokenData(tokenId, chainId),
-    getDaoData(daoId, chainId),
-    auctionBidRequest(bidId, chainId),
-  ])
-
-  if (!daoData || !tokenData || !bidData)
-    throw new Error('Error fetching populating notification data')
-  const userData = await getUserData(bidData.bidder)
-  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-  const bidAmount = formatEther(bidData.amount)
-  const eventId = createEventId(daoId, chainId, NotificationType.Auction)
-
-  console.log('eventId', eventId)
-  await pushNotification({
-    title: `New bid on ${tokenData.name}!`,
-    body: `${userData.displayName} has placed on ${tokenData.name} for ${bidAmount} ETH `,
-    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
-    embed: getFetchableUrl(tokenData.image),
-    eventId,
-  })
-}
-
-const handleIsSettled = async (body: AuctionEvent, chainId: number) => {
-  const daoId = body?.data?.new?.dao
-  const tokenId = body?.data?.new?.token
-  const bidId = body?.data?.new?.highest_bid
-
-  if (!daoId || !tokenId) {
-    console.log(`daoId: ${daoId}, tokenId: ${tokenId}`)
-    throw new Error('daoId tokenId not found')
+const handleProposalEvent = (body: ProposalEvent, chainId: CHAIN_ID) => {
+  if (isProposalCreate(body)) {
+    LOGGER && console.log('PROPOSAL CREATE')
+    return handleProposalCreate(body, chainId)
+  } else if (isProposalVetoed(body)) {
+    LOGGER && console.log('PROPOSAL VETOED')
+    return handleProposalVetoed(body, chainId)
+  } else if (isProposalExecuted(body)) {
+    LOGGER && console.log('PROPOSAL EXECUTED')
+    return handleProposalExecuted(body, chainId)
+  } else if (isProposalCanceled(body)) {
+    LOGGER && console.log('PROPOSAL CANCELLED')
+    handleProposalCancelled(body, chainId)
+  } else if (isProposalQueued(body)) {
+    LOGGER && console.log('PROPOSAL QUEUED')
+    handleProposalQueued(body, chainId)
+  } else {
+    console.warn('Unknown Proposal Event', body)
   }
-
-  if (!bidId) {
-    // since no one is claiming this token, we don't need to send a notification
-    return
-  }
-
-  const [tokenData, daoData, bidData] = await Promise.all([
-    getTokenData(tokenId, chainId),
-    getDaoData(daoId, chainId),
-    auctionBidRequest(bidId, chainId),
-  ])
-
-  if (!daoData || !tokenData || !bidData)
-    throw new Error('Error fetching populating notification data')
-
-  const userData = await getUserData(tokenData.owner)
-  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-  const bidAmount = formatEther(bidData.amount)
-  const eventId = createEventId(daoId as AddressType, chainId, NotificationType.Auction)
-  console.log('eventId', eventId)
-  await pushNotification({
-    title: `Token Claimed!`,
-    body: `${userData.displayName} has claimed ${tokenData.name} for ${bidAmount} ETH`,
-    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
-    embed: getFetchableUrl(tokenData.image),
-    eventId,
-  })
-}
-
-const handleProposalCreate = async (body: ProposalEvent, chainId: number) => {
-  const proposaldata = correctHexInShallowObject(body.data.new)
-  const { proposer, proposal_number, title } = proposaldata
-  const daoId = body.data.new.dao
-
-  const [proposerData, daoData] = await Promise.all([
-    getUserData(proposer),
-    getDaoData(daoId, chainId),
-  ])
-
-  if (!proposerData || !daoData) throw new Error('Error populating notification data')
-
-  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-  const eventId = createEventId(
-    daoId as AddressType,
-    chainId,
-    NotificationType.Governance
-  )
-  await pushNotification({
-    title: `${proposerData.displayName} Submitted a New Proposal at ${daoData.name}`,
-    body: `Proposal #${proposal_number}: "${title}" has been submitted`,
-    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/vote/${proposal_number}`,
-    embed: getFetchableUrl(daoData.contractImage),
-    eventId,
-  })
-}
-
-const handleProposalStateChange = async ({
-  body,
-  chainId,
-  title,
-  textBody,
-}: {
-  body: ProposalEvent
-  chainId: number
-  title: string
-  textBody: string
-}) => {
-  const proposaldata = correctHexInShallowObject(body.data.new)
-  const { proposal_number } = proposaldata
-  const daoId = body.data.new.dao
-
-  const daoData = await getDaoData(daoId, chainId)
-
-  if (!daoData) throw new Error('Error populating notification data')
-
-  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-  const eventId = createEventId(
-    daoId as AddressType,
-    chainId,
-    NotificationType.Governance
-  )
-  await pushNotification({
-    title,
-    body: textBody,
-    cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/vote/${proposal_number}`,
-    embed: getFetchableUrl(daoData.contractImage),
-    eventId,
-  })
-}
-
-const handleProposalCancelled = async (body: ProposalEvent, chainId: number) => {
-  const { proposal_number, title } = body?.data?.new || {}
-  return handleProposalStateChange({
-    body,
-    chainId,
-    title: `Proposal #${proposal_number} Canceled`,
-    textBody: `Proposal #${proposal_number}: "${title}" has been canceled`,
-  })
-}
-
-const handleProposalQueued = async (body: ProposalEvent, chainId: number) => {
-  const { proposal_number, title } = body?.data?.new || {}
-  return handleProposalStateChange({
-    body,
-    chainId,
-    title: `Proposal #${proposal_number} Queued`,
-    textBody: `Proposal #${proposal_number}: "${title}" has been queued`,
-  })
-}
-
-const handleProposalExecuted = async (body: ProposalEvent, chainId: number) => {
-  const { proposal_number, title } = body?.data?.new || {}
-  return handleProposalStateChange({
-    body,
-    chainId,
-    title: `Proposal #${proposal_number} Executed`,
-    textBody: `Proposal #${proposal_number}: "${title}" has been executed`,
-  })
-}
-
-const handleProposalVetoed = async (body: ProposalEvent, chainId: number) => {
-  const { proposal_number, title } = body?.data?.new || {}
-
-  return handleProposalStateChange({
-    body,
-    chainId,
-    title: `Proposal #${proposal_number} Vetoed`,
-    textBody: `Proposal #${proposal_number}: "${title}" has been vetoed`,
-  })
-}
-
-const handleVote = async (body: VoteEvent, chainId: number) => {
-  const { proposal, voter, reason, support, weight } =
-    correctHexInShallowObject(body?.data?.new) || {}
-
-  const [proposalData, voterData] = await Promise.all([
-    getProposal(chainId, proposal),
-    getUserData(voter),
-  ])
-
-  const daoData = await getDaoData(
-    proposalData?.dao?.tokenAddress?.toLowerCase?.(),
-    chainId
-  )
-  if (!voterData || !daoData || !proposalData)
-    throw new Error('Error populating notification data')
-
-  const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-  const eventId = createEventId(
-    proposalData.dao.tokenAddress as AddressType,
-    chainId,
-    NotificationType.Governance
-  )
-  await pushNotification({
-    title: `${voterData.displayName} Voted '${support}' on Proposal #${proposalData.proposalNumber}`,
-    body: `
-DAO: ${daoData.name}
-Voting Weight: ${weight}
-Reason: ${reason || 'No reason provided'}
-    `,
-    cta: `https://testnet.nouns.build/dao/${chainSlug}/${proposalData.dao.tokenAddress}/vote/${proposalData.proposalNumber}`,
-    embed: getFetchableUrl(daoData.contractImage),
-    eventId,
-  })
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -282,59 +67,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const webhookSecret = headers['goldsky-webhook-secret'] as string
 
-  const isAuthrorized = process.env.WEBHOOK_KEYS?.split(':')?.includes?.(webhookSecret)
-
-  const chainId =
-    CHAIN_ID_BY_SUBGRAPH?.[body.data_source as keyof typeof CHAIN_ID_BY_SUBGRAPH]
-
-  if (!isAuthrorized) throw new Error('Unauthorized Request')
-
   try {
+    const isAuthorized = process.env.WEBHOOK_KEYS?.split(':')?.includes?.(webhookSecret)
+    if (!isAuthorized) throw new Error('Unauthorized Request')
+
+    const chainId =
+      CHAIN_ID_BY_SUBGRAPH?.[body.data_source as keyof typeof CHAIN_ID_BY_SUBGRAPH]
+    if (!chainId) {
+      throw new Error('Unable to derive chainId from subgraph entity')
+    }
     if (body.entity === Entity.Auction) {
-      if (!chainId) {
-        throw new Error('Chain ID not found')
-      }
-      if (isBid(body)) {
-        console.log('BID')
-        handleNewBid(body, chainId)
-      }
-
-      if (isNewToken(body)) {
-        console.log('NEW TOKEN')
-        handleNewToken(body, chainId)
-      }
-
-      if (isSettled(body)) {
-        console.log('SETTLED')
-        handleIsSettled(body, chainId)
-      }
-    }
-
-    if (body.entity === Entity.Proposal) {
-      if (isProposalCreate(body)) {
-        console.log('PROPOSAL CREATE')
-        handleProposalCreate(body, chainId)
-      }
-      if (isProposalVetoed(body)) {
-        console.log('PROPOSAL VETOED')
-        handleProposalVetoed(body, chainId)
-      }
-      if (isProposalExecuted(body)) {
-        console.log('PROPOSAL EXECUTED')
-        handleProposalExecuted(body, chainId)
-      }
-      if (isProposalCanceled(body)) {
-        console.log('PROPOSAL CANCELLED')
-        handleProposalCancelled(body, chainId)
-      }
-      if (isProposalQueued(body)) {
-        console.log('PROPOSAL QUEUED')
-        handleProposalQueued(body, chainId)
-      }
-    }
-    if (body.entity === Entity.Vote) {
-      console.log('VOTE')
+      handleAuctionEvent(body, chainId)
+    } else if (body.entity === Entity.Proposal) {
+      handleProposalEvent(body, chainId)
+    } else if (body.entity === Entity.Vote) {
+      LOGGER && console.log('VOTE')
       handleVote(body, chainId)
+    } else {
+      console.warn('Unknown Event', body)
     }
 
     res.status(200).json({ status: 'ok' })
