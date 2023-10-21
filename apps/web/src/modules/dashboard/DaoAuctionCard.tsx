@@ -1,16 +1,13 @@
-import { Box, Flex, Spinner, Text } from '@zoralabs/zord'
+import { Box, Flex, Text } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { formatEther } from 'viem'
 import { useAccount, useContractEvent } from 'wagmi'
 
-import { Icon } from 'src/components/Icon'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { auctionAbi } from 'src/data/contract/abis'
-import { subscribeToNotif } from 'src/data/notifsHasura/actions/subscribeToNotif'
-import { unsubscribeToNotif } from 'src/data/notifsHasura/actions/unsubscribeToNotif'
 import { useCountdown, useIsMounted } from 'src/hooks'
 import { AddressType } from 'src/typings'
 import { NotificationType, UserNotification } from 'src/typings/pushWebhookTypes'
@@ -19,6 +16,7 @@ import { overflowEllipsis } from '../auction/components/Auction.css'
 import { AuctionPaused } from './AuctionPaused'
 import { BidActionButton } from './BidActionButton'
 import { DashboardDaoProps } from './Dashboard'
+import { NotifButton } from './NotifButton'
 import {
   auctionCardBrand,
   bidBox,
@@ -53,7 +51,6 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
   const { endTime } = currentAuction ?? {}
   const { address } = useAccount()
   const [isEnded, setIsEnded] = useState(false)
-  const [isLoadingSub, setIsLoadingSub] = useState(false)
 
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
   const onEnd = () => {
@@ -82,37 +79,7 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
       }, 3000)
     },
   })
-  const userSubscription = useMemo(() => {
-    if (!userNotifications) return
 
-    return userNotifications.find((notif) => notif.daoAddress === tokenAddress)
-  }, [userNotifications, tokenAddress])
-
-  const toggleSubscribe = () => {
-    if (!address) return
-    try {
-      if (!userSubscription) {
-        setIsLoadingSub(true)
-        subscribeToNotif(address, tokenAddress, chainId, NotificationType.Auction).then(
-          () => {
-            setIsLoadingSub(false)
-            handleNotifChange()
-          }
-        )
-      } else {
-        setIsLoadingSub(true)
-        unsubscribeToNotif(address, tokenAddress, chainId, NotificationType.Auction).then(
-          () => {
-            setIsLoadingSub(false)
-            handleNotifChange()
-          }
-        )
-      }
-    } catch (error) {
-      console.error(error)
-      setIsLoadingSub(false)
-    }
-  }
   const handleSelectAuction = () => {
     router.push(`/dao/${currentChainSlug}/${tokenAddress}`)
   }
@@ -136,22 +103,14 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
 
   return (
     <Flex className={outerAuctionCard}>
-      <Box
-        position="absolute"
-        top="x1"
-        cursor="pointer"
-        onClick={toggleSubscribe}
-        style={{
-          top: '43%',
-          right: -4,
-        }}
-      >
-        {isLoadingSub ? (
-          <Spinner mr="x2" />
-        ) : (
-          <Icon id="bell-16" fill={userSubscription ? 'positive' : 'text4'} />
-        )}
-      </Box>
+      <NotifButton
+        userNotifications={userNotifications}
+        tokenAddress={tokenAddress}
+        chainId={chainId}
+        userAddress={address}
+        handleNotifChange={handleNotifChange}
+        eventType={NotificationType.Auction}
+      />
       <Flex className={auctionCardBrand} onClick={handleSelectAuction}>
         <Box className={daoAvatarBox}>
           <Image

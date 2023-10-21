@@ -4,20 +4,14 @@ const ngrok = require('ngrok')
 
 ;(async function () {
   try {
-    // Specify your authtoken here; you could also store it in an environment variable or a config file
-    const authtoken = '2X5Qbw9X0rg4nf1EsdYTEAA0TNu_7LqpzppGaaaDqkwdmuekL'
+    const authtoken = process.env.NGROK_AUTHTOKEN
+    const subdomain = process.env.TUNNEL_SUBDOMAIN
 
-    // Set your desired custom subdomain
-    const subdomain = 'nouns-webhook-test'
-
-    // Connect your ngrok with the authtoken (this is required for reserved domains)
     await ngrok.authtoken(authtoken)
 
-    // Creating the tunnel
     const url = await ngrok.connect({
-      addr: 3000, // your local server port
-      subdomain: subdomain, // your reserved subdomain
-      // Add more options here if required
+      addr: 3000,
+      subdomain: subdomain,
     })
 
     console.log('Tunnel Created -> ', url)
