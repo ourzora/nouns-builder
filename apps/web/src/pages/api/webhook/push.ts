@@ -64,6 +64,7 @@ const handleNewToken = async (body: any, chainId: number) => {
 
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
   const eventId = createEventId(daoId, chainId, NotificationType.Auction)
+  console.log('eventId', eventId)
   await pushNotification({
     title: `New Token available for auction at ${daoData.name}`,
     body: `${tokenData.name} is up for auction!`,
@@ -90,6 +91,8 @@ const handleNewBid = async (body: any, chainId: number) => {
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
   const bidAmount = formatEther(bidData.amount)
   const eventId = createEventId(daoId, chainId, NotificationType.Auction)
+
+  console.log('eventId', eventId)
   await pushNotification({
     title: `New bid on ${tokenData.name}!`,
     body: `${userData.displayName} has placed on ${tokenData.name} for ${bidAmount} ETH `,
@@ -127,6 +130,7 @@ const handleIsSettled = async (body: AuctionEvent, chainId: number) => {
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
   const bidAmount = formatEther(bidData.amount)
   const eventId = createEventId(daoId as AddressType, chainId, NotificationType.Auction)
+  console.log('eventId', eventId)
   await pushNotification({
     title: `Token Claimed!`,
     body: `${userData.displayName} has claimed ${tokenData.name} for ${bidAmount} ETH`,

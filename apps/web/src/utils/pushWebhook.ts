@@ -166,7 +166,6 @@ export const pushNotification = async ({
   const notifAccount = await getNotificationsAccount()
   const subset = await getEventUsers(eventId)
 
-  console.log('subset', subset)
   if (!subset.length) return console.log('No users to notify')
 
   const sendNotifRes = await notifAccount.channel.send(subset, {

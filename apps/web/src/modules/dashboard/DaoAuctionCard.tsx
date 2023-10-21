@@ -86,7 +86,7 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
     if (!userNotifications) return
 
     return userNotifications.find((notif) => notif.daoAddress === tokenAddress)
-  }, [userNotifications])
+  }, [userNotifications, tokenAddress])
 
   const toggleSubscribe = () => {
     if (!address) return
