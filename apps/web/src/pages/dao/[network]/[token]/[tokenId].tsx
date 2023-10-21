@@ -2,7 +2,7 @@ import { Flex } from '@zoralabs/zord'
 import axios from 'axios'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useMemo } from 'react'
 import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 
@@ -31,6 +31,7 @@ import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { DaoOgMetadata } from 'src/pages/api/og/dao'
 import { AddressType, Chain } from 'src/typings'
+import { isPossibleMarkdown } from 'src/utils/helpers'
 
 interface TokenPageProps {
   url: string
@@ -111,11 +112,22 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
       : baseSections
   }, [hasThreshold, collection])
 
-  // remove line breaks and formatting from og description
-  const cleanDesc = description.replace(/(\r\n|\n|\r|\t|\v|\f|\\n)/gm, '')
+  const ogDescription = useMemo(() => {
+    if (!description) return ''
+    const isMarkdown = isPossibleMarkdown(description)
 
-  const ogDescription =
-    cleanDesc.length > 111 ? `${cleanDesc.slice(0, 111)}...` : cleanDesc
+    // DAO descriptions are full of MD syntax and do not provide a pleasant
+    // reading experience for social embeds. For this, we'll check if the
+    // description is markdown and if so, we'll provide a generic description
+    if (isMarkdown) {
+      return `${
+        name || 'This DAO'
+      } was created on Nouns Builder. Please click the link to see more.`
+    }
+    // remove line breaks and formatting from og description
+    const cleanDesc = description.replace(/(\r\n|\n|\r|\t|\v|\f|\\n)/gm, '')
+    return cleanDesc.length > 111 ? `${cleanDesc.slice(0, 111)}...` : cleanDesc
+  }, [description, name])
 
   const activeTab = query?.tab ? (query.tab as string) : 'About'
 

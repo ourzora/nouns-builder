@@ -1,5 +1,4 @@
 import { Box, Flex, Grid, Text } from '@zoralabs/zord'
-import HtmlReactParser from 'html-react-parser'
 import { getFetchableUrl } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import React from 'react'
@@ -14,7 +13,6 @@ import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import {
   about,
-  daoDescription,
   daoInfo,
   daoName,
   statistic,
@@ -26,6 +24,7 @@ import { formatCryptoVal } from 'src/utils/numbers'
 import { useDaoStore } from '../../stores'
 import { parseContractURI } from '../../utils'
 import { MembersList } from '../MembersList'
+import { DaoDescription } from './DaoDescription'
 import { ExternalLinks } from './ExternalLinks'
 import { Founder } from './Founder'
 import { Statistic } from './Statistic'
@@ -152,13 +151,7 @@ export const About: React.FC = () => {
         </Box>
       </Flex>
 
-      {typeof description !== 'undefined' && description !== null ? (
-        <Box mt={{ '@initial': 'x4', '@768': 'x6' }}>
-          <Text className={daoDescription}>
-            {HtmlReactParser(description.replace(/\\n/g, '<br />'))}
-          </Text>
-        </Box>
-      ) : null}
+      <DaoDescription description={description} />
 
       <Box
         mt={{ '@initial': 'x4', '@768': 'x6' }}

@@ -271,6 +271,12 @@ export function unpackOptionalArray<T = []>(
   return array
 }
 
+// Markdown is impossible to detect in all cases, but this should cover most of the cases we'll run into
+export const isPossibleMarkdown = (text: string) => {
+  const markdownRegex =
+    /(?:\*\*[^\*]+\*\*)|(?:__[^\_]+__)|(?:\*[^\*]+\*)|(?:_[^\_]+_)|(?:\#[^\#]+\#)|(?:\!\[[^\]]*\]\([^\)]+\))|(?:\[[^\]]+\]\([^\)]+\))/g
+  return markdownRegex.test(text)
+}
 export function maxChar(str: string, maxLength: number) {
   if (str.length <= maxLength) {
     return str
