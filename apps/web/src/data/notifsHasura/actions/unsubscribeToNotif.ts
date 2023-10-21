@@ -3,9 +3,7 @@ import { NotificationType } from 'src/typings/pushWebhookTypes'
 import { createHasuraClient } from 'src/utils/hasura'
 import { createEventId } from 'src/utils/pushWebhook'
 
-import {
-  removeEventUserMutation,
-} from '../gql/mutations'
+import { removeEventUserMutation } from '../gql/mutations'
 
 export const unsubscribeToNotif = async (
   _userAddress: AddressType,

@@ -19,6 +19,14 @@ export type UserNotification = {
   eventType: NotificationType
 }
 
+export type EventUsersQuery = {
+  testnet_events_by_pk: {
+    users: {
+      user: string
+    }[]
+  }
+}
+
 export type WebHookBodyType<Old, New> = {
   op: OP
   data_source: DataSource

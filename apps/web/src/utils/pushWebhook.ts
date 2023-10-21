@@ -4,6 +4,7 @@ import { createWalletClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { goerli } from 'viem/chains'
 
+import { getEventUsers } from 'src/data/notifsHasura/actions/getEvent'
 import { SDK } from 'src/data/subgraph/client'
 import { AddressType, CHAIN_ID } from 'src/typings'
 import {
@@ -154,14 +155,21 @@ export const pushNotification = async ({
   body,
   cta,
   embed,
+  eventId,
 }: {
   title: string
   body: string
   cta: string
   embed?: string
+  eventId: string
 }) => {
   const notifAccount = await getNotificationsAccount()
-  const sendNotifRes = await notifAccount.channel.send(['*'], {
+  const subset = await getEventUsers(eventId)
+
+  console.log('subset', subset)
+  if (!subset.length) return console.log('No users to notify')
+
+  const sendNotifRes = await notifAccount.channel.send(subset, {
     notification: {
       title,
       body,

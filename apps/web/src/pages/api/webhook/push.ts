@@ -5,10 +5,17 @@ import { formatEther } from 'viem'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { auctionBidRequest } from 'src/data/subgraph/requests/auctionBid'
 import { getProposal } from 'src/data/subgraph/requests/proposalQuery'
-import { AuctionEvent, ProposalEvent, VoteEvent } from 'src/typings/pushWebhookTypes'
+import { AddressType } from 'src/typings'
+import {
+  AuctionEvent,
+  NotificationType,
+  ProposalEvent,
+  VoteEvent,
+} from 'src/typings/pushWebhookTypes'
 import {
   CHAIN_ID_BY_SUBGRAPH,
   Entity,
+  createEventId,
   getDaoData,
   getTokenData,
   getUserData,
@@ -56,12 +63,13 @@ const handleNewToken = async (body: any, chainId: number) => {
   if (!daoData || !tokenData) throw new Error('daoData not found')
 
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-
+  const eventId = createEventId(daoId, chainId, NotificationType.Auction)
   await pushNotification({
     title: `New Token available for auction at ${daoData.name}`,
     body: `${tokenData.name} is up for auction!`,
     cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
     embed: getFetchableUrl(tokenData.image),
+    eventId,
   })
 }
 
@@ -81,11 +89,13 @@ const handleNewBid = async (body: any, chainId: number) => {
   const userData = await getUserData(bidData.bidder)
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
   const bidAmount = formatEther(bidData.amount)
+  const eventId = createEventId(daoId, chainId, NotificationType.Auction)
   await pushNotification({
     title: `New bid on ${tokenData.name}!`,
     body: `${userData.displayName} has placed on ${tokenData.name} for ${bidAmount} ETH `,
     cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
     embed: getFetchableUrl(tokenData.image),
+    eventId,
   })
 }
 
@@ -116,11 +126,13 @@ const handleIsSettled = async (body: AuctionEvent, chainId: number) => {
   const userData = await getUserData(tokenData.owner)
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
   const bidAmount = formatEther(bidData.amount)
+  const eventId = createEventId(daoId as AddressType, chainId, NotificationType.Auction)
   await pushNotification({
     title: `Token Claimed!`,
     body: `${userData.displayName} has claimed ${tokenData.name} for ${bidAmount} ETH`,
     cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/${tokenData.tokenId}`,
     embed: getFetchableUrl(tokenData.image),
+    eventId,
   })
 }
 
@@ -137,12 +149,17 @@ const handleProposalCreate = async (body: ProposalEvent, chainId: number) => {
   if (!proposerData || !daoData) throw new Error('Error populating notification data')
 
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-
+  const eventId = createEventId(
+    daoId as AddressType,
+    chainId,
+    NotificationType.Governance
+  )
   await pushNotification({
     title: `${proposerData.displayName} Submitted a New Proposal at ${daoData.name}`,
     body: `Proposal #${proposal_number}: "${title}" has been submitted`,
     cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/vote/${proposal_number}`,
     embed: getFetchableUrl(daoData.contractImage),
+    eventId,
   })
 }
 
@@ -166,12 +183,17 @@ const handleProposalStateChange = async ({
   if (!daoData) throw new Error('Error populating notification data')
 
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-
+  const eventId = createEventId(
+    daoId as AddressType,
+    chainId,
+    NotificationType.Governance
+  )
   await pushNotification({
     title,
     body: textBody,
     cta: `https://testnet.nouns.build/dao/${chainSlug}/${daoId}/vote/${proposal_number}`,
     embed: getFetchableUrl(daoData.contractImage),
+    eventId,
   })
 }
 
@@ -233,7 +255,11 @@ const handleVote = async (body: VoteEvent, chainId: number) => {
     throw new Error('Error populating notification data')
 
   const chainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
-
+  const eventId = createEventId(
+    proposalData.dao.tokenAddress as AddressType,
+    chainId,
+    NotificationType.Governance
+  )
   await pushNotification({
     title: `${voterData.displayName} Voted '${support}' on Proposal #${proposalData.proposalNumber}`,
     body: `
@@ -243,6 +269,7 @@ Reason: ${reason || 'No reason provided'}
     `,
     cta: `https://testnet.nouns.build/dao/${chainSlug}/${proposalData.dao.tokenAddress}/vote/${proposalData.proposalNumber}`,
     embed: getFetchableUrl(daoData.contractImage),
+    eventId,
   })
 }
 
