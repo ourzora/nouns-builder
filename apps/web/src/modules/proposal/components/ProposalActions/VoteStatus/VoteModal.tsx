@@ -1,4 +1,4 @@
-import { Atoms, Box, Flex, Stack, Text, theme } from '@zoralabs/zord'
+import { Atoms, Box, Button, Flex, Stack, Text, theme } from '@zoralabs/zord'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { Fragment } from 'react'
 import { useSWRConfig } from 'swr'
@@ -116,11 +116,7 @@ const VoteModal: React.FC<{
   return (
     <Fragment>
       {/* Vote Modal */}
-      <AnimatedModal
-        open={showVoteModal}
-        close={() => setShowVoteModal(false)}
-        size={isCastVoteSuccess ? 'small' : 'medium'}
-      >
+      <AnimatedModal open={showVoteModal} size={isCastVoteSuccess ? 'small' : 'medium'}>
         {isCastVoteSuccess ? (
           <SuccessModalContent
             success={true}
@@ -129,14 +125,28 @@ const VoteModal: React.FC<{
           />
         ) : (
           <Box>
-            <Box>
-              <Text variant="heading-md" className={proposalFormTitle}>
-                {votesAvailable === 0 ? 'Submit Vote' : 'Submit Votes'}
-              </Text>
-              <Text variant="paragraph-sm" color="tertiary">
-                Proposal: {title}
-              </Text>
-            </Box>
+            <Flex justify={'space-between'}>
+              <Box>
+                <Text variant="heading-md" className={proposalFormTitle}>
+                  {votesAvailable === 0 ? 'Submit Vote' : 'Submit Votes'}
+                </Text>
+                <Text variant="paragraph-sm" color="tertiary">
+                  Proposal: {title}
+                </Text>
+              </Box>
+              <Button
+                variant="ghost"
+                onClick={() => setShowVoteModal(false)}
+                p={'x0'}
+                size="xs"
+                style={{
+                  // prop padding change padding to 0
+                  padding: 0,
+                }}
+              >
+                <Icon id="cross" />
+              </Button>
+            </Flex>
 
             <Formik initialValues={initialValues} onSubmit={handleSubmit}>
               {({ values, submitForm, isSubmitting, setFieldValue }) => (
