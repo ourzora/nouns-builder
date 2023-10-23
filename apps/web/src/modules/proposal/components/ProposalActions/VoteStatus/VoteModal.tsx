@@ -140,7 +140,7 @@ const VoteModal: React.FC<{
                 p={'x0'}
                 size="xs"
                 style={{
-                  // prop padding change padding to 0
+                  // prop padding does not change padding to 0
                   padding: 0,
                 }}
               >
