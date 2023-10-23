@@ -13,9 +13,7 @@ import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
-import {
-  getProposalState,
-} from 'src/data/contract/requests/getProposalState'
+import { getProposalState } from 'src/data/contract/requests/getProposalState'
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
