@@ -40,10 +40,8 @@ export function handleAddProperties(event: AddPropertiesFunctionCall): void {
     newHashes = [thisHash]
   } else {
     // copy past transaction hashes
-    for (let i = 0; i < pastHashes.length; i++) {
-      newHashes[i] = pastHashes[i]
-    }
-    newHashes[pastHashes.length] = thisHash
+    newHashes = pastHashes
+    newHashes.push(thisHash)
   }
   dao.metadataUpdateHashes = newHashes
   dao.save()
