@@ -16,6 +16,7 @@ type DAO @entity {
   totalAuctionSales: BigInt!
   auctionConfig: AuctionConfig!
   currentAuction: Auction
+  metadataUpdateHashes: [Bytes!]
   owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
   tokens: [Token!]! @derivedFrom(field: "dao")
   proposals: [Proposal!]! @derivedFrom(field: "dao")
@@ -73,7 +74,6 @@ type Proposal @entity {
   snapshotBlockNumber: BigInt!
   transactionHash: Bytes!
   votes: [ProposalVote!]! @derivedFrom(field: "proposal")
-  executionHash: Bytes
 }
 
 enum ProposalVoteSupport {
