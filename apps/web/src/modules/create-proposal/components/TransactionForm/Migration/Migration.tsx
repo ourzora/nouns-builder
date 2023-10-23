@@ -6,8 +6,13 @@ import { ReactNode } from 'react'
 import useSWR from 'swr'
 import { encodeFunctionData } from 'viem'
 import { useBalance, useContractRead } from 'wagmi'
+import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
-import { L1_MESSENGERS, L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
+import {
+  L1_MESSENGERS,
+  L2_DEPLOYMENT_ADDRESSES,
+  PUBLIC_MANAGER_ADDRESS,
+} from 'src/constants/addresses'
 import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
 import { messengerABI } from 'src/data/contract/abis/L1CrossDomainMessenger'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
@@ -16,7 +21,8 @@ import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { prepareMerkle } from 'src/modules/create-proposal/utils/prepareMerkle'
 import { useDaoStore } from 'src/modules/dao/stores/useDaoStore'
 import { useChainStore } from 'src/stores/useChainStore'
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
+import { getEnsAddress } from 'src/utils/ens'
 
 import { MigrationFormC1 } from './MigrationFormC1'
 import { MigrationFormC2 } from './MigrationFormC2'
@@ -91,13 +97,16 @@ export const Migration: React.FC = () => {
   else if (!deployed) daoProgress = DAOMigrationProgress.PAUSED
   else if (!treasuryMigrated) daoProgress = DAOMigrationProgress.DEPLOYED
 
+  daoProgress = DAOMigrationProgress.PAUSED
+
   const handleC2Submit = async (
     values: MigrationFormC2Values,
     actions: FormikHelpers<MigrationFormC2Values>
   ) => {
     if (!chain) return
-    const { L2: targetChainID, starter } = values
+    const { L2: targetChainID, starter: starterRaw } = values
     console.log('here')
+    const starter = await getEnsAddress(starterRaw)
 
     const zeroFounder = {
       wallet: starter as AddressType,
@@ -114,7 +123,40 @@ export const Migration: React.FC = () => {
     )
 
     const L1_MESSENGER = L1_MESSENGERS[targetChainID]
+    const v1goerliManager = PUBLIC_MANAGER_ADDRESS[CHAIN_ID.BASE_GOERLI]
+    console.log('here')
+    console.log(res._implData)
+    try {
+      const config = await prepareWriteContract({
+        abi: messengerABI,
+        address: L1_MESSENGER,
+        functionName: 'sendMessage',
+        args: [
+          v1goerliManager,
+          encodeFunctionData({
+            abi: managerAbi,
+            functionName: 'deploy',
+            args: [
+              res._implData.founder,
+              res._implData.token,
+              res._implData.auction,
+              res._implData.gov,
+            ],
+          }),
+          6000000,
+        ],
+        value: 0n,
+      })
 
+      // test sending eth to self
+
+      console.log(config)
+      const tx = await writeContract(config)
+      if (tx.hash) console.log(await waitForTransaction({ hash: tx.hash }))
+    } catch (e) {
+      console.log('e', e)
+      return
+    }
     const migrationTxn = {
       functionSignature: 'sendMessage',
       target: L1_MESSENGER,

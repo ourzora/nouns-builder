@@ -1,9 +1,4 @@
-import {
-  Address,
-  encodeAbiParameters,
-  parseAbiParameters,
-  toHex,
-} from 'viem'
+import { Address, encodeAbiParameters, parseAbiParameters } from 'viem'
 import { readContracts } from 'wagmi'
 
 import { L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
@@ -142,7 +137,7 @@ export async function prepareMigrationDeploy(
       'https://api.zora.co/renderer/stack-images',
     ]
   )
-  const tokenParams = { initStrings: toHex(tokenParamsHex) as AddressType }
+  const tokenParams = { initStrings: tokenParamsHex as AddressType }
 
   const auctionParams = {
     reservePrice: reservePrice!,
