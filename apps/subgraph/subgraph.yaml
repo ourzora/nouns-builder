@@ -105,7 +105,7 @@ templates:
         - event: WebsiteURIUpdated(string,string)
           handler: handleWebsiteURIUpdated
       callHandlers:
-        - function: addProperties(string[],(uint256,string,bool)[],(string,string)
+        - function: addProperties(string[],(uint256,string,bool)[],(string,string))
           handler: handleAddProperties
       file: ./src/metadata.ts
   - kind: ethereum
