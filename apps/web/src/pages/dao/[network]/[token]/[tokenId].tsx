@@ -143,7 +143,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
           name,
           contractAddress: collection,
           chain,
-          image: token.image || ogImageURL,
+          image: ogImageURL,
         }}
       />
 
