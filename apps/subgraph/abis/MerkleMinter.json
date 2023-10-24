@@ -91,6 +91,11 @@
             "internalType": "bytes32",
             "name": "merkleRoot",
             "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "snapshotBlock",
+            "type": "uint256"
           }
         ],
         "indexed": false,
@@ -131,6 +136,11 @@
         "internalType": "bytes32",
         "name": "merkleRoot",
         "type": "bytes32"
+      },
+      {
+        "internalType": "uint256",
+        "name": "snapshotBlock",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -187,19 +197,6 @@
   {
     "inputs": [
       {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
-    ],
-    "name": "setMintSettings",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "tokenContract",
         "type": "address"
@@ -225,6 +222,11 @@
             "internalType": "bytes32",
             "name": "merkleRoot",
             "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "snapshotBlock",
+            "type": "uint256"
           }
         ],
         "internalType": "struct MerkleReserveMinter.MerkleMinterSettings",

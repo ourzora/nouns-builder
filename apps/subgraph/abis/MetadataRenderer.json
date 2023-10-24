@@ -145,7 +145,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct PropertyMetadataTypesV2.AdditionalTokenProperty[]",
+        "internalType": "struct MetadataRendererTypesV2.AdditionalTokenProperty[]",
         "name": "_additionalJsonProperties",
         "type": "tuple[]"
       }
@@ -299,7 +299,7 @@
             "type": "bool"
           }
         ],
-        "internalType": "struct PropertyMetadataTypesV1.ItemParam[]",
+        "internalType": "struct MetadataRendererTypesV1.ItemParam[]",
         "name": "_items",
         "type": "tuple[]"
       },
@@ -316,7 +316,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct PropertyMetadataTypesV1.IPFSGroup",
+        "internalType": "struct MetadataRendererTypesV1.IPFSGroup",
         "name": "_ipfsGroup",
         "type": "tuple"
       }
@@ -414,7 +414,7 @@
             "type": "bool"
           }
         ],
-        "internalType": "struct PropertyMetadataTypesV1.ItemParam[]",
+        "internalType": "struct MetadataRendererTypesV1.ItemParam[]",
         "name": "_items",
         "type": "tuple[]"
       },
@@ -431,7 +431,7 @@
             "type": "string"
           }
         ],
-        "internalType": "struct PropertyMetadataTypesV1.IPFSGroup",
+        "internalType": "struct MetadataRendererTypesV1.IPFSGroup",
         "name": "_ipfsGroup",
         "type": "tuple"
       }
@@ -452,30 +452,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "startId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "endId",
-        "type": "uint256"
-      }
-    ],
-    "name": "generateMetadataForTokenIds",
-    "outputs": [
-      {
-        "internalType": "bool[]",
-        "name": "results",
-        "type": "bool[]"
-      }
-    ],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -506,7 +482,7 @@
     "inputs": [
       {
         "internalType": "bytes",
-        "name": "_data",
+        "name": "_initStrings",
         "type": "bytes"
       },
       {
@@ -699,7 +675,7 @@
             "type": "bool"
           }
         ],
-        "internalType": "struct PropertyMetadataTypesV2.AdditionalTokenProperty[]",
+        "internalType": "struct MetadataRendererTypesV2.AdditionalTokenProperty[]",
         "name": "_additionalTokenProperties",
         "type": "tuple[]"
       }

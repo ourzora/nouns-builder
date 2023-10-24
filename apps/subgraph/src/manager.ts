@@ -5,7 +5,7 @@ import { AuctionConfig, DAO } from '../generated/schema'
 import {
   Auction as AuctionTemplate,
   Governor as GovernorTemplate,
-  BaseMetadata as MetadataRendererTemplate,
+  MetadataRenderer as MetadataRendererTemplate,
   Token as TokenTemplate,
 } from '../generated/templates'
 import { Auction as AuctionContract } from '../generated/templates/Auction/Auction'
@@ -27,6 +27,8 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   auctionConfig.reservePrice = auctionContract.reservePrice()
   auctionConfig.timeBuffer = auctionContract.timeBuffer()
   auctionConfig.minimumBidIncrement = auctionContract.minBidIncrement()
+  auctionConfig.founderRewardRecipient = auctionContract.founderRewardRecipient()
+  auctionConfig.founderRewardBPS = auctionContract.founderRewardBPS()
 
   auctionConfig.save()
 
@@ -35,9 +37,14 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   let metadataType = getMetadataType(managerContract, event.params.metadata)
 
   if (metadataType !== MetadataType.Unknown) {
-    dao.description = metadataContract.description()
-    dao.contractImage = metadataContract.contractImage()
-    dao.projectURI = metadataContract.projectURI()
+    let descRes = metadataContract.try_description()
+    if (!descRes.reverted) dao.description = descRes.value
+
+    let contractImgRes = metadataContract.try_contractImage()
+    if (!contractImgRes.reverted) dao.contractImage = contractImgRes.value
+
+    let projectURIRes = metadataContract.try_projectURI()
+    if (!projectURIRes.reverted) dao.projectURI = projectURIRes.value
   }
 
   let tokenType = getTokenType(managerContract, event.params.token)

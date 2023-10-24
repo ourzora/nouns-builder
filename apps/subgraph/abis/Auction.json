@@ -299,7 +299,7 @@
         "type": "address"
       }
     ],
-    "name": "FounderRewardRecipentUpdated",
+    "name": "FounderRewardRecipientUpdated",
     "type": "event"
   },
   {
@@ -587,7 +587,7 @@
   },
   {
     "inputs": [],
-    "name": "founderRewardRecipent",
+    "name": "founderRewardRecipient",
     "outputs": [
       {
         "internalType": "address",
@@ -607,7 +607,7 @@
       },
       {
         "internalType": "address",
-        "name": "_initalOwner",
+        "name": "_founder",
         "type": "address"
       },
       {
@@ -616,9 +616,24 @@
         "type": "address"
       },
       {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
+        "internalType": "uint256",
+        "name": "_duration",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_reservePrice",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_founderRewardRecipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_founderRewardBPS",
+        "type": "uint256"
       }
     ],
     "name": "initialize",
@@ -834,7 +849,7 @@
     "name": "token",
     "outputs": [
       {
-        "internalType": "contract IBaseToken",
+        "internalType": "contract Token",
         "name": "",
         "type": "address"
       }

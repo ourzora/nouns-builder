@@ -1,4 +1,4 @@
-import { MinterSet as MinterSetEvent } from '../generated//MerkleMinter/MerkleMinter'
+import { MinterSet as MinterSetEvent } from '../generated/MerkleMinter/MerkleMinter'
 import { MerkleMint } from '../generated/schema'
 
 export function handleMinterSet(event: MinterSetEvent): void {
@@ -8,5 +8,6 @@ export function handleMinterSet(event: MinterSetEvent): void {
   mint.mintEnd = event.params.merkleSaleSettings.mintEnd
   mint.pricePerToken = event.params.merkleSaleSettings.pricePerToken
   mint.merkleRoot = event.params.merkleSaleSettings.merkleRoot
+  mint.snapshotBlock = event.params.merkleSaleSettings.snapshotBlock
   mint.save()
 }

@@ -1,5 +1,5 @@
 import { Manager as ManagerContract } from '../../generated/Manager/Manager'
-import { BASE_METADATA_INTERFACE_ID, PROPERTY_METADATA_INTERFACE_ID } from './constants'
+import { BASE_METADATA_INTERFACE_ID } from './constants'
 import { Address } from '@graphprotocol/graph-ts'
 
 export enum MetadataType {
@@ -15,8 +15,5 @@ export const getMetadataType = (
   if (manager.supportsInterface(metadata, BASE_METADATA_INTERFACE_ID))
     return MetadataType.Base
 
-  if (manager.supportsInterface(metadata, PROPERTY_METADATA_INTERFACE_ID))
-    return MetadataType.Property
-
-  return MetadataType.Unknown
+  return MetadataType.Property
 }

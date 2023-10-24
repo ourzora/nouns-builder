@@ -324,6 +324,19 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "renderer",
+        "type": "address"
+      }
+    ],
+    "name": "MetadataRendererUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "baseTokenId",
         "type": "uint256"
@@ -353,7 +366,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct PartialMirrorTokenTypesV1.Founder",
+        "internalType": "struct TokenTypesV1.Founder",
         "name": "founder",
         "type": "tuple"
       }
@@ -395,7 +408,7 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct PartialMirrorTokenTypesV1.Founder",
+        "internalType": "struct TokenTypesV1.Founder",
         "name": "founder",
         "type": "tuple"
       }
@@ -750,7 +763,7 @@
             "type": "uint32"
           }
         ],
-        "internalType": "struct PartialMirrorTokenTypesV1.Founder",
+        "internalType": "struct TokenTypesV1.Founder",
         "name": "",
         "type": "tuple"
       }
@@ -780,7 +793,7 @@
             "type": "uint32"
           }
         ],
-        "internalType": "struct PartialMirrorTokenTypesV1.Founder[]",
+        "internalType": "struct TokenTypesV1.Founder[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -840,7 +853,7 @@
             "type": "uint32"
           }
         ],
-        "internalType": "struct PartialMirrorTokenTypesV1.Founder",
+        "internalType": "struct TokenTypesV1.Founder",
         "name": "",
         "type": "tuple"
       }
@@ -906,8 +919,18 @@
       },
       {
         "internalType": "bytes",
-        "name": "_data",
+        "name": "_initStrings",
         "type": "bytes"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_reservedUntilTokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_tokenToMirror",
+        "type": "address"
       },
       {
         "internalType": "address",
@@ -1481,7 +1504,7 @@
             "type": "bool"
           }
         ],
-        "internalType": "struct PartialMirrorTokenTypesV1.MinterParams[]",
+        "internalType": "struct TokenTypesV2.MinterParams[]",
         "name": "_minters",
         "type": "tuple[]"
       }

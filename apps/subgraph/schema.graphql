@@ -100,6 +100,8 @@ type AuctionConfig @entity {
   reservePrice: BigInt!
   timeBuffer: BigInt!
   minimumBidIncrement: BigInt!
+  founderRewardRecipient: Bytes
+  founderRewardBPS: BigInt
 }
 
 type Auction @entity {
@@ -132,6 +134,7 @@ type MerkleMint @entity {
   mintStart: BigInt!
   mintEnd: BigInt!
   merkleRoot: Bytes!
+  snapshotBlock: BigInt!
 }
 
 type RedeemMint @entity {

@@ -1062,9 +1062,29 @@
         "type": "address"
       },
       {
-        "internalType": "bytes",
-        "name": "_data",
-        "type": "bytes"
+        "internalType": "address",
+        "name": "_vetoer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_votingDelay",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_votingPeriod",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_proposalThresholdBps",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_quorumThresholdBps",
+        "type": "uint256"
       }
     ],
     "name": "initialize",

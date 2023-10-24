@@ -7,7 +7,7 @@ dataSources:
     network: base-goerli
     source:
       abi: Manager
-      address: '0x12dddc8a7a1947297732ebb841eae2f1f33b1d18'
+      address: '0x0351045fda7eb52635d516f2a0ffc0b9d1d21f75'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
@@ -21,8 +21,8 @@ dataSources:
           file: ./abis/Manager.json
         - name: Token
           file: ./abis/Token.json
-        - name: BaseMetadata
-          file: ./abis/BaseMetadata.json
+        - name: MetadataRenderer
+          file: ./abis/MetadataRenderer.json
         - name: Auction
           file: ./abis/Auction.json
         - name: PartialMirrorToken
@@ -36,7 +36,7 @@ dataSources:
     network: base-goerli
     source:
       abi: MerkleMinter
-      address: '0xdd908dfaf5e13bac01abe96e4b6d992f92c1fca0'
+      address: '0xf2dcdd37bec020b07faff1014dd7b23db193f104'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
@@ -48,7 +48,7 @@ dataSources:
         - name: MerkleMinter
           file: ./abis/MerkleMinter.json
       eventHandlers:
-        - event: MinterSet(indexed address,(uint64,uint64,uint64,bytes32))
+        - event: MinterSet(indexed address,(uint64,uint64,uint64,bytes32,uint256))
           handler: handleMinterSet
       file: ./src/merkle_minter.ts
   - kind: ethereum
@@ -56,7 +56,7 @@ dataSources:
     network: base-goerli
     source:
       abi: RedeemMinter
-      address: '0xef49483419bc5516ec4c6d601adfac4a359ef8a6'
+      address: '0x6cbd4119cc78df069673b34f42e643bffe3e473a'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
@@ -88,8 +88,8 @@ templates:
       abis:
         - name: Token
           file: ./abis/Token.json
-        - name: BaseMetadata
-          file: ./abis/BaseMetadata.json
+        - name: MetadataRenderer
+          file: ./abis/MetadataRenderer.json
         - name: PropertyMetadata
           file: ./abis/PropertyMetadata.json
       eventHandlers:
@@ -128,10 +128,10 @@ templates:
           handler: handleVoteCast
       file: ./src/governor.ts
   - kind: ethereum
-    name: BaseMetadata
+    name: MetadataRenderer
     network: base-goerli
     source:
-      abi: BaseMetadata
+      abi: MetadataRenderer
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -139,8 +139,8 @@ templates:
       entities:
         - Proposal
       abis:
-        - name: BaseMetadata
-          file: ./abis/BaseMetadata.json
+        - name: MetadataRenderer
+          file: ./abis/MetadataRenderer.json
       eventHandlers:
         - event: ContractImageUpdated(string,string)
           handler: handleContractImageUpdated
@@ -181,4 +181,8 @@ templates:
           handler: handleTimeBufferUpdated
         - event: MinBidIncrementPercentageUpdated(uint256)
           handler: handleMinBidIncrementPercentageUpdated
+        - event: FounderRewardRecipientUpdated(address)
+          handler: handleFounderRewardRecipientUpdated
+        - event: FounderRewardBPSUpdated(uint256)
+          handler: handleFounderRewardBPSUpdated
       file: ./src/auction.ts
