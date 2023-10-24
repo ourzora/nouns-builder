@@ -140,17 +140,13 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         image={ogImageURL}
         slug={url}
         description={ogDescription}
+        farcaster={{
+          name,
+          contractAddress: collection,
+          chain,
+          image: token.image,
+        }}
       />
-
-      <Head>
-        {/* Warpcast-specific NFT meta tags: https://warpcast.notion.site/NFT-extended-Open-Graph-Spec-4e350bd8e4c34e3b86e77d58bf1f5575 */}
-        <meta name="eth:nft:collection" content={name} />
-        <meta name="eth:nft:contract_address" content={collection} />
-        {/* Is there a better address we can use for the creator? */}
-        <meta name="eth:nft:creator_address" content={collection} />
-        <meta name="eth:nft:schema" content="erc721" />
-        <meta name="eth:nft:chain" content={chain.slug} />
-      </Head>
 
       <DaoTopSection
         chain={chain}

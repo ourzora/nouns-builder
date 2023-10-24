@@ -2,6 +2,7 @@ import Head from 'next/head'
 import React from 'react'
 
 import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
+import { AddressType, Chain } from 'src/typings'
 
 interface MetaProps {
   title: string
@@ -9,9 +10,16 @@ interface MetaProps {
   type?: string
   image?: string
   description?: string
+  farcaster?: {
+    name: string
+    contractAddress: AddressType
+    chain: Chain
+    image: string
+  }
 }
 
-export const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description }) => {
+export const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description, farcaster }) => {
+  // @ts-ignore
   return (
     <Head>
       <title>{`Nouns Builder | ${title}`}</title>
@@ -47,6 +55,19 @@ export const Meta: React.FC<MetaProps> = ({ title, type, slug, image, descriptio
         name="twitter:image"
         content={image || 'https://nouns.build/social-preview.jpg'}
       />
+
+      {/* Warpcast-specific NFT meta tags: https://warpcast.notion.site/NFT-extended-Open-Graph-Spec-4e350bd8e4c34e3b86e77d58bf1f5575 */}
+      {farcaster && (
+        <>
+          <meta name="eth:nft:collection" content={farcaster.name} />
+          <meta name="eth:nft:contract_address" content={farcaster.contractAddress} />
+          {/* Is there a better address we can use for the creator? */}
+          <meta name="eth:nft:creator_address" content={farcaster.contractAddress} />
+          <meta name="eth:nft:schema" content="erc721" />
+          <meta name="eth:nft:chain" content={farcaster.chain.slug} />
+          <meta name="eth:nft:media_url" content={farcaster.image} />
+        </>
+      )}
     </Head>
   )
 }
