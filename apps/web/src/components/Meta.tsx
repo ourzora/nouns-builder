@@ -19,7 +19,6 @@ interface MetaProps {
 }
 
 export const Meta: React.FC<MetaProps> = ({ title, type, slug, image, description, farcaster }) => {
-  // @ts-ignore
   return (
     <Head>
       <title>{`Nouns Builder | ${title}`}</title>
