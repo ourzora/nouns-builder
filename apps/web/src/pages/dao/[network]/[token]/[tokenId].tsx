@@ -139,6 +139,12 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
         image={ogImageURL}
         slug={url}
         description={ogDescription}
+        farcaster={{
+          name,
+          contractAddress: collection,
+          chain,
+          image: ogImageURL,
+        }}
       />
 
       <DaoTopSection
