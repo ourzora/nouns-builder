@@ -7,7 +7,7 @@ dataSources:
     network: base-goerli
     source:
       abi: Manager
-      address: '0x0351045fda7eb52635d516f2a0ffc0b9d1d21f75'
+      address: '0x2177ab5b03866ca31b5acd0b837d7fd54c7d2936'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
@@ -25,8 +25,6 @@ dataSources:
           file: ./abis/MetadataRenderer.json
         - name: Auction
           file: ./abis/Auction.json
-        - name: PartialMirrorToken
-          file: ./abis/PartialMirrorToken.json
       eventHandlers:
         - event: DAODeployed(address,address,address,address,address)
           handler: handleDAODeployed
@@ -36,7 +34,7 @@ dataSources:
     network: base-goerli
     source:
       abi: MerkleMinter
-      address: '0xf2dcdd37bec020b07faff1014dd7b23db193f104'
+      address: '0x1991abb6d9613ae4e339a1a747a894201d5e4dae'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
@@ -48,29 +46,9 @@ dataSources:
         - name: MerkleMinter
           file: ./abis/MerkleMinter.json
       eventHandlers:
-        - event: MinterSet(indexed address,(uint64,uint64,uint64,bytes32,uint256))
+        - event: MinterSet(indexed address,(uint64,uint64,uint64,bytes32))
           handler: handleMinterSet
       file: ./src/merkle_minter.ts
-  - kind: ethereum
-    name: RedeemMinter
-    network: base-goerli
-    source:
-      abi: RedeemMinter
-      address: '0x6cbd4119cc78df069673b34f42e643bffe3e473a'
-      startBlock: 11161500
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - DAO
-      abis:
-        - name: RedeemMinter
-          file: ./abis/RedeemMinter.json
-      eventHandlers:
-        - event: MinterSet(indexed address,(uint64,uint64,uint64,address))
-          handler: handleMinterSet
-      file: ./src/redeem_minter.ts
 templates:
   - kind: ethereum
     name: Token
@@ -90,8 +68,6 @@ templates:
           file: ./abis/Token.json
         - name: MetadataRenderer
           file: ./abis/MetadataRenderer.json
-        - name: PropertyMetadata
-          file: ./abis/PropertyMetadata.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
@@ -181,8 +157,6 @@ templates:
           handler: handleTimeBufferUpdated
         - event: MinBidIncrementPercentageUpdated(uint256)
           handler: handleMinBidIncrementPercentageUpdated
-        - event: FounderRewardRecipientUpdated(address)
-          handler: handleFounderRewardRecipientUpdated
-        - event: FounderRewardBPSUpdated(uint256)
-          handler: handleFounderRewardBPSUpdated
+        - event: FounderRewardUpdated((address,uint16))
+          handler: handleFounderRewardUpdated
       file: ./src/auction.ts

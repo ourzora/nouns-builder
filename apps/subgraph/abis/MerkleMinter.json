@@ -5,6 +5,11 @@
         "internalType": "contract IManager",
         "name": "_manager",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_builderFundsRecipent",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -91,11 +96,6 @@
             "internalType": "bytes32",
             "name": "merkleRoot",
             "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "snapshotBlock",
-            "type": "uint256"
           }
         ],
         "indexed": false,
@@ -106,6 +106,19 @@
     ],
     "name": "MinterSet",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "BUILDER_DAO_FEE",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [
@@ -136,10 +149,29 @@
         "internalType": "bytes32",
         "name": "merkleRoot",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "tokenContract",
+        "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "snapshotBlock",
+        "name": "quantity",
+        "type": "uint256"
+      }
+    ],
+    "name": "getTotalFeesForMint",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
         "type": "uint256"
       }
     ],
@@ -222,11 +254,6 @@
             "internalType": "bytes32",
             "name": "merkleRoot",
             "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "snapshotBlock",
-            "type": "uint256"
           }
         ],
         "internalType": "struct MerkleReserveMinter.MerkleMinterSettings",

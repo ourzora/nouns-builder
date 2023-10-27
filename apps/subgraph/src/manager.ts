@@ -1,6 +1,4 @@
 import { DAODeployed as DAODeployedEvent } from '../generated/Manager/Manager'
-import { Manager as ManagerContract } from '../generated/Manager/Manager'
-import { PartialMirrorToken as PartialMirrorTokenContract } from '../generated/Manager/PartialMirrorToken'
 import { AuctionConfig, DAO } from '../generated/schema'
 import {
   Auction as AuctionTemplate,
@@ -11,15 +9,12 @@ import {
 import { Auction as AuctionContract } from '../generated/templates/Auction/Auction'
 import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
 import { Token as TokenContract } from '../generated/templates/Token/Token'
-import { MetadataType, getMetadataType } from './utils/getMetadataType'
-import { TokenType, getTokenType } from './utils/getTokenType'
 import { BigInt, DataSourceContext } from '@graphprotocol/graph-ts'
 
 export function handleDAODeployed(event: DAODeployedEvent): void {
   let tokenContract = TokenContract.bind(event.params.token)
   let metadataContract = MetadataContract.bind(event.params.metadata)
   let auctionContract = AuctionContract.bind(event.params.auction)
-  let managerContract = ManagerContract.bind(event.address)
 
   let auctionConfig = new AuctionConfig(event.params.token.toHexString())
 
@@ -27,32 +22,24 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   auctionConfig.reservePrice = auctionContract.reservePrice()
   auctionConfig.timeBuffer = auctionContract.timeBuffer()
   auctionConfig.minimumBidIncrement = auctionContract.minBidIncrement()
-  auctionConfig.founderRewardRecipient = auctionContract.founderRewardRecipient()
-  auctionConfig.founderRewardBPS = auctionContract.founderRewardBPS()
+
+  let rewards = auctionContract.founderReward()
+  auctionConfig.founderRewardBPS = rewards.getPercentBps()
+  auctionConfig.founderRewardRecipient = rewards.getRecipient()
 
   auctionConfig.save()
 
   let dao = new DAO(event.params.token.toHexString())
 
-  let metadataType = getMetadataType(managerContract, event.params.metadata)
+  // Metadata contract is not guaranteed to have these functions with custom renderers
+  let descRes = metadataContract.try_description()
+  if (!descRes.reverted) dao.description = descRes.value
 
-  if (metadataType !== MetadataType.Unknown) {
-    let descRes = metadataContract.try_description()
-    if (!descRes.reverted) dao.description = descRes.value
+  let contractImgRes = metadataContract.try_contractImage()
+  if (!contractImgRes.reverted) dao.contractImage = contractImgRes.value
 
-    let contractImgRes = metadataContract.try_contractImage()
-    if (!contractImgRes.reverted) dao.contractImage = contractImgRes.value
-
-    let projectURIRes = metadataContract.try_projectURI()
-    if (!projectURIRes.reverted) dao.projectURI = projectURIRes.value
-  }
-
-  let tokenType = getTokenType(managerContract, event.params.token)
-
-  if (tokenType === TokenType.Mirror) {
-    let mirrorToken = PartialMirrorTokenContract.bind(event.params.token)
-    dao.tokenToMirror = mirrorToken.tokenToMirror()
-  }
+  let projectURIRes = metadataContract.try_projectURI()
+  if (!projectURIRes.reverted) dao.projectURI = projectURIRes.value
 
   dao.tokenAddress = event.params.token
   dao.metadataAddress = event.params.metadata
@@ -71,7 +58,6 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
 
   let tokenCtx = new DataSourceContext()
   tokenCtx.setString('metadataAddress', event.params.metadata.toHexString())
-  tokenCtx.setI32('metadataType', metadataType)
   TokenTemplate.createWithContext(event.params.token, tokenCtx)
 
   let govCtx = new DataSourceContext()
@@ -82,8 +68,6 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   let ctx = new DataSourceContext()
   ctx.setString('tokenAddress', event.params.token.toHexString())
 
-  if (metadataType !== MetadataType.Unknown)
-    MetadataRendererTemplate.createWithContext(event.params.metadata, ctx)
-
+  MetadataRendererTemplate.createWithContext(event.params.metadata, ctx)
   AuctionTemplate.createWithContext(event.params.auction, ctx)
 }

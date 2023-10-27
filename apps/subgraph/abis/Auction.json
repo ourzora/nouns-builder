@@ -8,7 +8,7 @@
       },
       {
         "internalType": "address",
-        "name": "_rewards",
+        "name": "_rewardsManager",
         "type": "address"
       },
       {
@@ -73,6 +73,11 @@
   {
     "inputs": [],
     "name": "INSOLVENT",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INVALID_REWARD_TOTAL",
     "type": "error"
   },
   {
@@ -280,26 +285,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "percentBps",
+            "type": "uint16"
+          }
+        ],
         "indexed": false,
-        "internalType": "uint256",
-        "name": "founderRewardBPS",
-        "type": "uint256"
+        "internalType": "struct AuctionTypesV2.FounderReward",
+        "name": "reward",
+        "type": "tuple"
       }
     ],
-    "name": "FounderRewardBPSUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "founderRewardRecipient",
-        "type": "address"
-      }
-    ],
-    "name": "FounderRewardRecipientUpdated",
+    "name": "FounderRewardUpdated",
     "type": "event"
   },
   {
@@ -574,25 +578,17 @@
   },
   {
     "inputs": [],
-    "name": "founderRewardBPS",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "founderRewardRecipient",
+    "name": "founderReward",
     "outputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "recipient",
         "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "percentBps",
+        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -631,9 +627,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "_founderRewardBPS",
-        "type": "uint256"
+        "internalType": "uint16",
+        "name": "_founderRewardBps",
+        "type": "uint16"
       }
     ],
     "name": "initialize",
@@ -755,25 +751,24 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_founderRewardBPS",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "address",
+            "name": "recipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "percentBps",
+            "type": "uint16"
+          }
+        ],
+        "internalType": "struct AuctionTypesV2.FounderReward",
+        "name": "reward",
+        "type": "tuple"
       }
     ],
-    "name": "setFounderRewardBPS",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_founder",
-        "type": "address"
-      }
-    ],
-    "name": "setFounderRewardsRecipent",
+    "name": "setFounderReward",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

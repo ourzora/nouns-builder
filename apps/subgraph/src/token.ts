@@ -1,7 +1,7 @@
 import { DAO, DAOTokenOwner, Token } from '../generated/schema'
+import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
 import { Transfer as TransferEvent } from '../generated/templates/Token/Token'
 import { Token as TokenContract } from '../generated/templates/Token/Token'
-import { getTokenData } from './utils/getTokenData'
 import { Address, Bytes, dataSource } from '@graphprotocol/graph-ts'
 import { store } from '@graphprotocol/graph-ts'
 
@@ -16,24 +16,17 @@ export function handleTransfer(event: TransferEvent): void {
   if (!token) {
     let context = dataSource.context()
     let metadataAddress = context.getString('metadataAddress')
-    let metadataType = context.getI32('metadataType')
 
     let tokenContract = TokenContract.bind(event.address)
 
+    let metadataContract = MetadataContract.bind(Address.fromString(metadataAddress))
+
+    let attributes = metadataContract.getAttributes(event.params.tokenId)
+
     token = new Token(tokenId)
 
-    let tokenData = getTokenData(
-      tokenContract,
-      metadataType,
-      Address.fromString(metadataAddress),
-      event.params.tokenId
-    )
-
-    if (tokenData) {
-      if (tokenData.name.length > 0) token.name = tokenData.name
-      if (tokenData.image.length > 0) token.image = tokenData.image
-      if (tokenData.content.length > 0) token.content = tokenData.content
-    }
+    token.name = `${tokenContract.name()} #${event.params.tokenId.toString()}`
+    token.image = `${metadataContract.rendererBase()}${attributes.value1}`
 
     token.tokenContract = event.address
     token.tokenId = event.params.tokenId

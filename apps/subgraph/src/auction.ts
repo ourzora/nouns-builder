@@ -4,8 +4,7 @@ import {
   AuctionCreated as AuctionCreatedEvent,
   AuctionSettled as AuctionSettledEvent,
   DurationUpdated as DurationUpdatedEvent,
-  FounderRewardBPSUpdated,
-  FounderRewardRecipientUpdated,
+  FounderRewardUpdated as FounderRewardUpdatedEvent,
   MinBidIncrementPercentageUpdated as MinBidIncrementPercentageUpdatedEvent,
   ReservePriceUpdated as ReservePriceUpdatedEvent,
   TimeBufferUpdated as TimeBufferUpdatedEvent,
@@ -117,24 +116,13 @@ export function handleMinBidIncrementPercentageUpdated(
   auctionConfig.save()
 }
 
-export function handleFounderRewardRecipientUpdated(
-  event: FounderRewardRecipientUpdated
-): void {
+export function handleFounderRewardUpdated(event: FounderRewardUpdatedEvent): void {
   let context = dataSource.context()
 
   let tokenAddress = context.getString('tokenAddress')
   let auctionConfig = AuctionConfig.load(tokenAddress)!
 
-  auctionConfig.founderRewardRecipient = event.params.founderRewardRecipient
-  auctionConfig.save()
-}
-
-export function handleFounderRewardBPSUpdated(event: FounderRewardBPSUpdated): void {
-  let context = dataSource.context()
-
-  let tokenAddress = context.getString('tokenAddress')
-  let auctionConfig = AuctionConfig.load(tokenAddress)!
-
-  auctionConfig.founderRewardBPS = event.params.founderRewardBPS
+  auctionConfig.founderRewardBPS = event.params.reward.percentBps
+  auctionConfig.founderRewardRecipient = event.params.reward.recipient
   auctionConfig.save()
 }

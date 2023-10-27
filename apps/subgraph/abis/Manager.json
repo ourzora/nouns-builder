@@ -8,11 +8,6 @@
       },
       {
         "internalType": "address",
-        "name": "_mirrorTokenImpl",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_metadataImpl",
         "type": "address"
       },
@@ -370,6 +365,11 @@
             "type": "bytes"
           },
           {
+            "internalType": "address",
+            "name": "metadataRenderer",
+            "type": "address"
+          },
+          {
             "internalType": "uint256",
             "name": "reservedUntilTokenId",
             "type": "uint256"
@@ -397,9 +397,9 @@
             "type": "address"
           },
           {
-            "internalType": "uint256",
-            "name": "founderRewardBPS",
-            "type": "uint256"
+            "internalType": "uint16",
+            "name": "founderRewardBps",
+            "type": "uint16"
           }
         ],
         "internalType": "struct IManager.AuctionParams",
@@ -445,148 +445,6 @@
       }
     ],
     "name": "deploy",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "metadata",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "auction",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "treasury",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "governor",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "wallet",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "ownershipPct",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "vestExpiry",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IManager.FounderParams[]",
-        "name": "_founderParams",
-        "type": "tuple[]"
-      },
-      {
-        "components": [
-          {
-            "internalType": "bytes",
-            "name": "initStrings",
-            "type": "bytes"
-          },
-          {
-            "internalType": "uint256",
-            "name": "reservedUntilTokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "tokenToMirror",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct IManager.MirrorTokenParams",
-        "name": "_mirrorTokenParams",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "reservePrice",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "duration",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "founderRewardRecipent",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "founderRewardBPS",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct IManager.AuctionParams",
-        "name": "_auctionParams",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "timelockDelay",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "votingDelay",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "votingPeriod",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "proposalThresholdBps",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "quorumThresholdBps",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "vetoer",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct IManager.GovParams",
-        "name": "_govParams",
-        "type": "tuple"
-      }
-    ],
-    "name": "deployWithMirror",
     "outputs": [
       {
         "internalType": "address",
@@ -802,19 +660,6 @@
   },
   {
     "inputs": [],
-    "name": "mirrorTokenImpl",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -889,6 +734,29 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "rewards",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "builderRecipient",
+        "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "referralBps",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "builderBps",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -933,25 +801,31 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_target",
-        "type": "address"
-      },
-      {
-        "internalType": "bytes4",
-        "name": "_interfaceId",
-        "type": "bytes4"
+        "components": [
+          {
+            "internalType": "address",
+            "name": "builderRecipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint16",
+            "name": "referralBps",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "builderBps",
+            "type": "uint16"
+          }
+        ],
+        "internalType": "struct ManagerTypesV2.RewardConfig",
+        "name": "_rewards",
+        "type": "tuple"
       }
     ],
-    "name": "supportsInterface",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "setRewardConfig",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
