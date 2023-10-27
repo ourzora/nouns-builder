@@ -12,7 +12,7 @@ import { auctionDateNavButton, auctionTextVariants } from './Auction.css'
 interface AuctionTokenPickerProps {
   collection: string
   tokenId: number
-  mintDate?: string
+  mintDate?: number
   name?: string
   currentAuction?: number
 }
