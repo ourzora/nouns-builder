@@ -1,12 +1,13 @@
 import { Flex, Grid } from '@zoralabs/zord'
 import React, { Fragment, ReactNode } from 'react'
 import useSWR from 'swr'
+import { formatEther } from 'viem'
 import { readContract } from 'wagmi/actions'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
-import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { getBids } from 'src/data/subgraph/requests/getBids'
+import { TokenWithDao } from 'src/pages/dao/[network]/[token]/[tokenId]'
 import { AddressType, Chain } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
@@ -25,7 +26,7 @@ interface AuctionControllerProps {
   chain: Chain
   auctionAddress: string
   collection: string
-  token: TokenWithWinner
+  token: TokenWithDao
   viewSwitcher?: ReactNode
 }
 
@@ -35,7 +36,10 @@ export const Auction: React.FC<AuctionControllerProps> = ({
   collection,
   token,
 }) => {
-  const { mintDate, name, image, price: tokenPrice, owner: tokenOwner } = token
+  const { mintedAt, name, image, owner: tokenOwner, tokenId: queriedTokenId } = token
+  const mintDate = mintedAt * 1000
+  const bidAmount = token.auction?.winningBid?.amount
+  const tokenPrice = bidAmount ? formatEther(bidAmount) : undefined
 
   const { data: auction } = useSWR(
     [SWR_KEYS.AUCTION, chain.id, auctionAddress],
@@ -49,29 +53,28 @@ export const Auction: React.FC<AuctionControllerProps> = ({
     { revalidateOnFocus: true }
   )
 
-  const [tokenId, highestBid, highestBidder, _, endTime, settled] = unpackOptionalArray(
-    auction,
-    6
-  )
+  const [currentTokenId, highestBid, highestBidder, _, endTime, settled] =
+    unpackOptionalArray(auction, 6)
 
-  const isTokenActiveAuction = !settled && !!tokenId && tokenId.toString() == token.id
+  const isTokenActiveAuction =
+    !settled && !!currentTokenId && currentTokenId.toString() == queriedTokenId
 
   useAuctionEvents({
     chainId: chain.id,
     collection,
     isTokenActiveAuction,
-    tokenId: token.id,
+    tokenId: queriedTokenId,
   })
 
   const { data: bids } = useSWR(
-    [SWR_KEYS.AUCTION_BIDS, chain.id, collection, token.id],
-    () => getBids(chain.id, collection, token.id)
+    [SWR_KEYS.AUCTION_BIDS, chain.id, collection, queriedTokenId],
+    () => getBids(chain.id, collection, queriedTokenId)
   )
 
   return (
     <Grid className={auctionGrid}>
       <AuctionImage
-        key={`auction-${collection}-image-${token.id}`}
+        key={`auction-${collection}-image-${queriedTokenId}`}
         image={image}
         isLoading={!auction}
       />
@@ -85,14 +88,14 @@ export const Auction: React.FC<AuctionControllerProps> = ({
           mintDate={mintDate}
           name={name}
           collection={collection}
-          tokenId={Number(token.id)}
-          currentAuction={Number(tokenId)}
+          tokenId={Number(queriedTokenId)}
+          currentAuction={Number(currentTokenId)}
         />
 
         {isTokenActiveAuction && !!auction && (
           <CurrentAuction
             chain={chain}
-            tokenId={token.id}
+            tokenId={queriedTokenId}
             auctionAddress={auctionAddress}
             bid={highestBid}
             owner={highestBidder}

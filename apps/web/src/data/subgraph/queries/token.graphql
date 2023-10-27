@@ -1,5 +1,0 @@
-query token($id: ID!) {
-  token(id: $id) {
-    ...Token
-  }
-}
