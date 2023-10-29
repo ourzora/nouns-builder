@@ -85,6 +85,12 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const sentryEnabled = NEXT_PUBLIC_SENTRY_DSN && SENTRY_ORG && SENTRY_PROJECT
 const enhancedConfig = withBundleAnalyzer(withVanillaExtract(nextConfig))
 
-module.exports = sentryEnabled
-  ? withSentryConfig(enhancedConfig, sentryWebpackPluginOptions)
-  : enhancedConfig
+const withPWA = require('next-pwa')({
+  dest: 'public',
+})
+
+module.exports = withPWA(
+  sentryEnabled
+    ? withSentryConfig(enhancedConfig, sentryWebpackPluginOptions)
+    : enhancedConfig
+)
