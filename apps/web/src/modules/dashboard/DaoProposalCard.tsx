@@ -65,9 +65,9 @@ export const DaoProposalCard = ({
           align="center"
           mb={{ '@initial': 'x2', '@768': 'x0' }}
           w="100%"
-          justify={{ '@initial': 'space-between', '@768': 'flex-start' }}
+          justify={{ '@initial': 'space-between' }}
         >
-          <Text fontSize={18} fontWeight="label" mr="x3" style={{ maxWidth: '90%' }}>
+          <Text fontSize={18} fontWeight="label" mr="x3">
             {title}
           </Text>
           <NeedsVote
@@ -82,7 +82,7 @@ export const DaoProposalCard = ({
           align={'center'}
           mb={{ '@initial': 'x3', '@768': 'x0' }}
         >
-          <Box width="x64">
+          <Box style={{ width: '225px' }}>
             <ProposalStatus
               state={proposalState}
               voteEnd={voteEnd}
