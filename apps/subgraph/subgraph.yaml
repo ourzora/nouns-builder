@@ -7,7 +7,7 @@ dataSources:
     network: base-goerli
     source:
       abi: Manager
-      address: '0x0dbb5669615a3d60e4d86686272483ebaee19a12'
+      address: '0x58cc1c84f1176cb1b05d1c3e63eafbbc10019efb'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
@@ -34,7 +34,7 @@ dataSources:
     network: base-goerli
     source:
       abi: MerkleMinter
-      address: '0xcb9fcf06451fc8573f0bf9e5abee3ca32c403135'
+      address: '0x8dfa3bc1683c8ad8ef34eabfd39bc733a1df5395'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
