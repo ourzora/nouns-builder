@@ -158,6 +158,11 @@ export const tokenAbi = [
   },
   {
     inputs: [],
+    name: 'TOKEN_NOT_RESERVED',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'UNSUPPORTED_UUID',
     type: 'error',
   },
@@ -302,6 +307,19 @@ export const tokenAbi = [
       },
     ],
     name: 'Initialized',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'renderer',
+        type: 'address',
+      },
+    ],
+    name: 'MetadataRendererUpdated',
     type: 'event',
   },
   {
@@ -882,6 +900,11 @@ export const tokenAbi = [
         type: 'bytes',
       },
       {
+        internalType: 'uint256',
+        name: '_reservedUntilTokenId',
+        type: 'uint256',
+      },
+      {
         internalType: 'address',
         name: '_metadataRenderer',
         type: 'address',
@@ -992,6 +1015,24 @@ export const tokenAbi = [
         type: 'uint256[]',
       },
     ],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'mintFromReserveTo',
+    outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
@@ -1131,6 +1172,19 @@ export const tokenAbi = [
     type: 'function',
   },
   {
+    inputs: [],
+    name: 'reservedUntilTokenId',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [
       {
         internalType: 'address',
@@ -1208,6 +1262,19 @@ export const tokenAbi = [
       },
     ],
     name: 'setApprovalForAll',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'contract IBaseMetadata',
+        name: 'newRenderer',
+        type: 'address',
+      },
+    ],
+    name: 'setMetadataRenderer',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
