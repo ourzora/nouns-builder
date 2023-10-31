@@ -15,6 +15,16 @@
         "internalType": "address",
         "name": "_weth",
         "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_builderRewardsBPS",
+        "type": "uint16"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_referralRewardsBPS",
+        "type": "uint16"
       }
     ],
     "stateMutability": "payable",
@@ -73,6 +83,16 @@
   {
     "inputs": [],
     "name": "INSOLVENT",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INVALID_REWARDS_BPS",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "INVALID_REWARDS_RECIPIENT",
     "type": "error"
   },
   {

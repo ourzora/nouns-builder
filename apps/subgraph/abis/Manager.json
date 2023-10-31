@@ -25,6 +25,11 @@
         "internalType": "address",
         "name": "_governorImpl",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_builderRewardsRecipient",
+        "type": "address"
       }
     ],
     "stateMutability": "payable",
@@ -303,6 +308,19 @@
   {
     "inputs": [],
     "name": "auctionImpl",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "builderRewardsRecipient",
     "outputs": [
       {
         "internalType": "address",
@@ -734,29 +752,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "rewards",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "builderRecipient",
-        "type": "address"
-      },
-      {
-        "internalType": "uint16",
-        "name": "referralBps",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "builderBps",
-        "type": "uint16"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -795,36 +790,6 @@
         "type": "address"
       }
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "builderRecipient",
-            "type": "address"
-          },
-          {
-            "internalType": "uint16",
-            "name": "referralBps",
-            "type": "uint16"
-          },
-          {
-            "internalType": "uint16",
-            "name": "builderBps",
-            "type": "uint16"
-          }
-        ],
-        "internalType": "struct ManagerTypesV2.RewardConfig",
-        "name": "_rewards",
-        "type": "tuple"
-      }
-    ],
-    "name": "setRewardConfig",
-    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
