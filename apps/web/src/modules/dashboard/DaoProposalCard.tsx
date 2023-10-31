@@ -30,8 +30,6 @@ export const DaoProposalCard = ({
   expiresAt,
   currentChainSlug,
   userAddress,
-  chainId,
-  proposalId,
   votes,
 }: DaoProposalCardProps) => {
   return (
@@ -62,8 +60,14 @@ export const DaoProposalCard = ({
         >
           {proposalNumber}
         </Text>
-        <Flex mr={'auto'} align="center" mb={{ '@initial': 'x2', '@768': 'x0' }}>
-          <Text fontSize={18} fontWeight="label" mr="x2">
+        <Flex
+          mr={'auto'}
+          align="center"
+          mb={{ '@initial': 'x2', '@768': 'x0' }}
+          w="100%"
+          justify={{ '@initial': 'space-between', '@768': 'flex-start' }}
+        >
+          <Text fontSize={18} fontWeight="label" mr="x3" style={{ maxWidth: '90%' }}>
             {title}
           </Text>
           <NeedsVote
@@ -78,14 +82,16 @@ export const DaoProposalCard = ({
           align={'center'}
           mb={{ '@initial': 'x3', '@768': 'x0' }}
         >
-          <ProposalStatus
-            state={proposalState}
-            voteEnd={voteEnd}
-            voteStart={voteStart}
-            expiresAt={expiresAt}
-            flipped
-            showTime
-          />
+          <Box width="x64">
+            <ProposalStatus
+              state={proposalState}
+              voteEnd={voteEnd}
+              voteStart={voteStart}
+              expiresAt={expiresAt}
+              flipped
+              showTime
+            />
+          </Box>
           <Flex display={{ '@initial': 'flex', '@768': 'none' }}>
             <Text fontSize={18} fontWeight="label" color={'text4'}>
               {proposalNumber}
