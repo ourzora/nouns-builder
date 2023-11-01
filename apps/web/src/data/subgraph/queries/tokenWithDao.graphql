@@ -19,6 +19,9 @@ query tokenWithDao($id: ID!) {
       auctionAddress
       treasuryAddress
       governorAddress
+      merkleMint {
+        ...MerkleMint
+      }
     }
   }
 }

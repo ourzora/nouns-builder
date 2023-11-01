@@ -137,6 +137,8 @@ export enum AuctionBid_OrderBy {
 export type AuctionConfig = {
   __typename?: 'AuctionConfig'
   duration: Scalars['BigInt']
+  founderRewardBPS?: Maybe<Scalars['Int']>
+  founderRewardRecipient?: Maybe<Scalars['Bytes']>
   id: Scalars['ID']
   minimumBidIncrement: Scalars['BigInt']
   reservePrice: Scalars['BigInt']
@@ -155,6 +157,24 @@ export type AuctionConfig_Filter = {
   duration_lte?: InputMaybe<Scalars['BigInt']>
   duration_not?: InputMaybe<Scalars['BigInt']>
   duration_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  founderRewardBPS?: InputMaybe<Scalars['Int']>
+  founderRewardBPS_gt?: InputMaybe<Scalars['Int']>
+  founderRewardBPS_gte?: InputMaybe<Scalars['Int']>
+  founderRewardBPS_in?: InputMaybe<Array<Scalars['Int']>>
+  founderRewardBPS_lt?: InputMaybe<Scalars['Int']>
+  founderRewardBPS_lte?: InputMaybe<Scalars['Int']>
+  founderRewardBPS_not?: InputMaybe<Scalars['Int']>
+  founderRewardBPS_not_in?: InputMaybe<Array<Scalars['Int']>>
+  founderRewardRecipient?: InputMaybe<Scalars['Bytes']>
+  founderRewardRecipient_contains?: InputMaybe<Scalars['Bytes']>
+  founderRewardRecipient_gt?: InputMaybe<Scalars['Bytes']>
+  founderRewardRecipient_gte?: InputMaybe<Scalars['Bytes']>
+  founderRewardRecipient_in?: InputMaybe<Array<Scalars['Bytes']>>
+  founderRewardRecipient_lt?: InputMaybe<Scalars['Bytes']>
+  founderRewardRecipient_lte?: InputMaybe<Scalars['Bytes']>
+  founderRewardRecipient_not?: InputMaybe<Scalars['Bytes']>
+  founderRewardRecipient_not_contains?: InputMaybe<Scalars['Bytes']>
+  founderRewardRecipient_not_in?: InputMaybe<Array<Scalars['Bytes']>>
   id?: InputMaybe<Scalars['ID']>
   id_gt?: InputMaybe<Scalars['ID']>
   id_gte?: InputMaybe<Scalars['ID']>
@@ -192,6 +212,8 @@ export type AuctionConfig_Filter = {
 
 export enum AuctionConfig_OrderBy {
   Duration = 'duration',
+  FounderRewardBps = 'founderRewardBPS',
+  FounderRewardRecipient = 'founderRewardRecipient',
   Id = 'id',
   MinimumBidIncrement = 'minimumBidIncrement',
   ReservePrice = 'reservePrice',
@@ -369,6 +391,7 @@ export enum Auction_OrderBy {
   Settled = 'settled',
   StartTime = 'startTime',
   Token = 'token',
+  TokenContent = 'token__content',
   TokenId = 'token__id',
   TokenImage = 'token__image',
   TokenMintedAt = 'token__mintedAt',
@@ -398,16 +421,17 @@ export type Dao = {
   auctionAddress: Scalars['Bytes']
   auctionConfig: AuctionConfig
   auctions: Array<Auction>
-  contractImage: Scalars['String']
+  contractImage?: Maybe<Scalars['String']>
   currentAuction?: Maybe<Auction>
-  description: Scalars['String']
+  description?: Maybe<Scalars['String']>
   governorAddress: Scalars['Bytes']
   id: Scalars['ID']
+  merkleMint?: Maybe<MerkleMint>
   metadataAddress: Scalars['Bytes']
   name: Scalars['String']
   ownerCount: Scalars['Int']
   owners: Array<DaoTokenOwner>
-  projectURI: Scalars['String']
+  projectURI?: Maybe<Scalars['String']>
   proposalCount: Scalars['Int']
   proposals: Array<Proposal>
   symbol: Scalars['String']
@@ -660,6 +684,7 @@ export type Dao_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>
   id_not?: InputMaybe<Scalars['ID']>
   id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  merkleMint_?: InputMaybe<MerkleMint_Filter>
   metadataAddress?: InputMaybe<Scalars['Bytes']>
   metadataAddress_contains?: InputMaybe<Scalars['Bytes']>
   metadataAddress_gt?: InputMaybe<Scalars['Bytes']>
@@ -792,6 +817,8 @@ export enum Dao_OrderBy {
   AuctionAddress = 'auctionAddress',
   AuctionConfig = 'auctionConfig',
   AuctionConfigDuration = 'auctionConfig__duration',
+  AuctionConfigFounderRewardBps = 'auctionConfig__founderRewardBPS',
+  AuctionConfigFounderRewardRecipient = 'auctionConfig__founderRewardRecipient',
   AuctionConfigId = 'auctionConfig__id',
   AuctionConfigMinimumBidIncrement = 'auctionConfig__minimumBidIncrement',
   AuctionConfigReservePrice = 'auctionConfig__reservePrice',
@@ -809,6 +836,12 @@ export enum Dao_OrderBy {
   Description = 'description',
   GovernorAddress = 'governorAddress',
   Id = 'id',
+  MerkleMint = 'merkleMint',
+  MerkleMintId = 'merkleMint__id',
+  MerkleMintMerkleRoot = 'merkleMint__merkleRoot',
+  MerkleMintMintEnd = 'merkleMint__mintEnd',
+  MerkleMintMintStart = 'merkleMint__mintStart',
+  MerkleMintPricePerToken = 'merkleMint__pricePerToken',
   MetadataAddress = 'metadataAddress',
   Name = 'name',
   OwnerCount = 'ownerCount',
@@ -822,6 +855,110 @@ export enum Dao_OrderBy {
   TotalAuctionSales = 'totalAuctionSales',
   TotalSupply = 'totalSupply',
   TreasuryAddress = 'treasuryAddress',
+}
+
+export type MerkleMint = {
+  __typename?: 'MerkleMint'
+  dao: Dao
+  id: Scalars['ID']
+  merkleRoot: Scalars['Bytes']
+  mintEnd: Scalars['BigInt']
+  mintStart: Scalars['BigInt']
+  pricePerToken: Scalars['BigInt']
+}
+
+export type MerkleMint_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>
+  and?: InputMaybe<Array<InputMaybe<MerkleMint_Filter>>>
+  dao?: InputMaybe<Scalars['String']>
+  dao_?: InputMaybe<Dao_Filter>
+  dao_contains?: InputMaybe<Scalars['String']>
+  dao_contains_nocase?: InputMaybe<Scalars['String']>
+  dao_ends_with?: InputMaybe<Scalars['String']>
+  dao_ends_with_nocase?: InputMaybe<Scalars['String']>
+  dao_gt?: InputMaybe<Scalars['String']>
+  dao_gte?: InputMaybe<Scalars['String']>
+  dao_in?: InputMaybe<Array<Scalars['String']>>
+  dao_lt?: InputMaybe<Scalars['String']>
+  dao_lte?: InputMaybe<Scalars['String']>
+  dao_not?: InputMaybe<Scalars['String']>
+  dao_not_contains?: InputMaybe<Scalars['String']>
+  dao_not_contains_nocase?: InputMaybe<Scalars['String']>
+  dao_not_ends_with?: InputMaybe<Scalars['String']>
+  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  dao_not_in?: InputMaybe<Array<Scalars['String']>>
+  dao_not_starts_with?: InputMaybe<Scalars['String']>
+  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  dao_starts_with?: InputMaybe<Scalars['String']>
+  dao_starts_with_nocase?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['ID']>
+  id_gt?: InputMaybe<Scalars['ID']>
+  id_gte?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  id_lt?: InputMaybe<Scalars['ID']>
+  id_lte?: InputMaybe<Scalars['ID']>
+  id_not?: InputMaybe<Scalars['ID']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  merkleRoot?: InputMaybe<Scalars['Bytes']>
+  merkleRoot_contains?: InputMaybe<Scalars['Bytes']>
+  merkleRoot_gt?: InputMaybe<Scalars['Bytes']>
+  merkleRoot_gte?: InputMaybe<Scalars['Bytes']>
+  merkleRoot_in?: InputMaybe<Array<Scalars['Bytes']>>
+  merkleRoot_lt?: InputMaybe<Scalars['Bytes']>
+  merkleRoot_lte?: InputMaybe<Scalars['Bytes']>
+  merkleRoot_not?: InputMaybe<Scalars['Bytes']>
+  merkleRoot_not_contains?: InputMaybe<Scalars['Bytes']>
+  merkleRoot_not_in?: InputMaybe<Array<Scalars['Bytes']>>
+  mintEnd?: InputMaybe<Scalars['BigInt']>
+  mintEnd_gt?: InputMaybe<Scalars['BigInt']>
+  mintEnd_gte?: InputMaybe<Scalars['BigInt']>
+  mintEnd_in?: InputMaybe<Array<Scalars['BigInt']>>
+  mintEnd_lt?: InputMaybe<Scalars['BigInt']>
+  mintEnd_lte?: InputMaybe<Scalars['BigInt']>
+  mintEnd_not?: InputMaybe<Scalars['BigInt']>
+  mintEnd_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  mintStart?: InputMaybe<Scalars['BigInt']>
+  mintStart_gt?: InputMaybe<Scalars['BigInt']>
+  mintStart_gte?: InputMaybe<Scalars['BigInt']>
+  mintStart_in?: InputMaybe<Array<Scalars['BigInt']>>
+  mintStart_lt?: InputMaybe<Scalars['BigInt']>
+  mintStart_lte?: InputMaybe<Scalars['BigInt']>
+  mintStart_not?: InputMaybe<Scalars['BigInt']>
+  mintStart_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  or?: InputMaybe<Array<InputMaybe<MerkleMint_Filter>>>
+  pricePerToken?: InputMaybe<Scalars['BigInt']>
+  pricePerToken_gt?: InputMaybe<Scalars['BigInt']>
+  pricePerToken_gte?: InputMaybe<Scalars['BigInt']>
+  pricePerToken_in?: InputMaybe<Array<Scalars['BigInt']>>
+  pricePerToken_lt?: InputMaybe<Scalars['BigInt']>
+  pricePerToken_lte?: InputMaybe<Scalars['BigInt']>
+  pricePerToken_not?: InputMaybe<Scalars['BigInt']>
+  pricePerToken_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+}
+
+export enum MerkleMint_OrderBy {
+  Dao = 'dao',
+  DaoAuctionAddress = 'dao__auctionAddress',
+  DaoContractImage = 'dao__contractImage',
+  DaoDescription = 'dao__description',
+  DaoGovernorAddress = 'dao__governorAddress',
+  DaoId = 'dao__id',
+  DaoMetadataAddress = 'dao__metadataAddress',
+  DaoName = 'dao__name',
+  DaoOwnerCount = 'dao__ownerCount',
+  DaoProjectUri = 'dao__projectURI',
+  DaoProposalCount = 'dao__proposalCount',
+  DaoSymbol = 'dao__symbol',
+  DaoTokenAddress = 'dao__tokenAddress',
+  DaoTotalAuctionSales = 'dao__totalAuctionSales',
+  DaoTotalSupply = 'dao__totalSupply',
+  DaoTreasuryAddress = 'dao__treasuryAddress',
+  Id = 'id',
+  MerkleRoot = 'merkleRoot',
+  MintEnd = 'mintEnd',
+  MintStart = 'mintStart',
+  PricePerToken = 'pricePerToken',
 }
 
 /** Defines the order direction, either ascending or descending */
@@ -1329,6 +1466,8 @@ export type Query = {
   daos: Array<Dao>
   daotokenOwner?: Maybe<DaoTokenOwner>
   daotokenOwners: Array<DaoTokenOwner>
+  merkleMint?: Maybe<MerkleMint>
+  merkleMints: Array<MerkleMint>
   proposal?: Maybe<Proposal>
   proposalVote?: Maybe<ProposalVote>
   proposalVotes: Array<ProposalVote>
@@ -1421,6 +1560,22 @@ export type QueryDaotokenOwnersArgs = {
   where?: InputMaybe<DaoTokenOwner_Filter>
 }
 
+export type QueryMerkleMintArgs = {
+  block?: InputMaybe<Block_Height>
+  id: Scalars['ID']
+  subgraphError?: _SubgraphErrorPolicy_
+}
+
+export type QueryMerkleMintsArgs = {
+  block?: InputMaybe<Block_Height>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<MerkleMint_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  skip?: InputMaybe<Scalars['Int']>
+  subgraphError?: _SubgraphErrorPolicy_
+  where?: InputMaybe<MerkleMint_Filter>
+}
+
 export type QueryProposalArgs = {
   block?: InputMaybe<Block_Height>
   id: Scalars['ID']
@@ -1483,6 +1638,8 @@ export type Subscription = {
   daos: Array<Dao>
   daotokenOwner?: Maybe<DaoTokenOwner>
   daotokenOwners: Array<DaoTokenOwner>
+  merkleMint?: Maybe<MerkleMint>
+  merkleMints: Array<MerkleMint>
   proposal?: Maybe<Proposal>
   proposalVote?: Maybe<ProposalVote>
   proposalVotes: Array<ProposalVote>
@@ -1575,6 +1732,22 @@ export type SubscriptionDaotokenOwnersArgs = {
   where?: InputMaybe<DaoTokenOwner_Filter>
 }
 
+export type SubscriptionMerkleMintArgs = {
+  block?: InputMaybe<Block_Height>
+  id: Scalars['ID']
+  subgraphError?: _SubgraphErrorPolicy_
+}
+
+export type SubscriptionMerkleMintsArgs = {
+  block?: InputMaybe<Block_Height>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<MerkleMint_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  skip?: InputMaybe<Scalars['Int']>
+  subgraphError?: _SubgraphErrorPolicy_
+  where?: InputMaybe<MerkleMint_Filter>
+}
+
 export type SubscriptionProposalArgs = {
   block?: InputMaybe<Block_Height>
   id: Scalars['ID']
@@ -1626,9 +1799,10 @@ export type SubscriptionTokensArgs = {
 export type Token = {
   __typename?: 'Token'
   auction?: Maybe<Auction>
+  content?: Maybe<Scalars['String']>
   dao: Dao
   id: Scalars['ID']
-  image: Scalars['String']
+  image?: Maybe<Scalars['String']>
   mintedAt: Scalars['BigInt']
   name: Scalars['String']
   owner: Scalars['Bytes']
@@ -1642,6 +1816,26 @@ export type Token_Filter = {
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<Token_Filter>>>
   auction_?: InputMaybe<Auction_Filter>
+  content?: InputMaybe<Scalars['String']>
+  content_contains?: InputMaybe<Scalars['String']>
+  content_contains_nocase?: InputMaybe<Scalars['String']>
+  content_ends_with?: InputMaybe<Scalars['String']>
+  content_ends_with_nocase?: InputMaybe<Scalars['String']>
+  content_gt?: InputMaybe<Scalars['String']>
+  content_gte?: InputMaybe<Scalars['String']>
+  content_in?: InputMaybe<Array<Scalars['String']>>
+  content_lt?: InputMaybe<Scalars['String']>
+  content_lte?: InputMaybe<Scalars['String']>
+  content_not?: InputMaybe<Scalars['String']>
+  content_not_contains?: InputMaybe<Scalars['String']>
+  content_not_contains_nocase?: InputMaybe<Scalars['String']>
+  content_not_ends_with?: InputMaybe<Scalars['String']>
+  content_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  content_not_in?: InputMaybe<Array<Scalars['String']>>
+  content_not_starts_with?: InputMaybe<Scalars['String']>
+  content_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  content_starts_with?: InputMaybe<Scalars['String']>
+  content_starts_with_nocase?: InputMaybe<Scalars['String']>
   dao?: InputMaybe<Scalars['String']>
   dao_?: InputMaybe<Dao_Filter>
   dao_contains?: InputMaybe<Scalars['String']>
@@ -1780,6 +1974,7 @@ export enum Token_OrderBy {
   AuctionId = 'auction__id',
   AuctionSettled = 'auction__settled',
   AuctionStartTime = 'auction__startTime',
+  Content = 'content',
   Dao = 'dao',
   DaoAuctionAddress = 'dao__auctionAddress',
   DaoContractImage = 'dao__contractImage',
@@ -1859,7 +2054,7 @@ export type CurrentAuctionFragment = {
   __typename?: 'Auction'
   endTime: any
   highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+  token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
 }
 
 export type DaoFragment = {
@@ -1874,7 +2069,15 @@ export type ExploreDaoFragment = {
   endTime: any
   dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
   highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+  token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
+}
+
+export type MerkleMintFragment = {
+  __typename?: 'MerkleMint'
+  mintStart: any
+  mintEnd: any
+  pricePerToken: any
+  merkleRoot: any
 }
 
 export type ProposalFragment = {
@@ -1916,10 +2119,10 @@ export type TokenFragment = {
   tokenId: any
   tokenContract: any
   name: string
-  image: string
+  image?: string | null
   owner: any
   mintedAt: any
-  dao: { __typename?: 'DAO'; description: string }
+  dao: { __typename?: 'DAO'; description?: string | null }
 }
 
 export type ActiveAuctionsQueryVariables = Exact<{
@@ -2021,8 +2224,8 @@ export type DaoOgMetadataQuery = {
   dao?: {
     __typename?: 'DAO'
     name: string
-    description: string
-    contractImage: string
+    description?: string | null
+    contractImage?: string | null
     totalSupply: number
     ownerCount: number
     proposalCount: number
@@ -2060,7 +2263,7 @@ export type DashboardQuery = {
     __typename?: 'DAOTokenOwner'
     dao: {
       __typename?: 'DAO'
-      contractImage: string
+      contractImage?: string | null
       name: string
       tokenAddress: any
       auctionAddress: any
@@ -2099,7 +2302,7 @@ export type DashboardQuery = {
         __typename?: 'Auction'
         endTime: any
         highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-        token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+        token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
       } | null
     }
   }>
@@ -2120,7 +2323,7 @@ export type ExploreDaosPageQuery = {
     endTime: any
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
     highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+    token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
   }>
 }
 
@@ -2137,7 +2340,7 @@ export type MyDaosPageQuery = {
     endTime: any
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
     highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+    token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
   }>
 }
 
@@ -2221,7 +2424,7 @@ export type ProposalOgMetadataQuery = {
     dao: {
       __typename?: 'DAO'
       name: string
-      contractImage: string
+      contractImage?: string | null
       tokenAddress: any
       metadataAddress: any
       auctionAddress: any
@@ -2284,7 +2487,7 @@ export type TokenWithDaoQuery = {
     tokenId: any
     tokenContract: any
     name: string
-    image: string
+    image?: string | null
     owner: any
     mintedAt: any
     auction?: {
@@ -2294,8 +2497,8 @@ export type TokenWithDaoQuery = {
     dao: {
       __typename?: 'DAO'
       name: string
-      description: string
-      contractImage: string
+      description?: string | null
+      contractImage?: string | null
       totalSupply: number
       ownerCount: number
       proposalCount: number
@@ -2304,6 +2507,13 @@ export type TokenWithDaoQuery = {
       auctionAddress: any
       treasuryAddress: any
       governorAddress: any
+      merkleMint?: {
+        __typename?: 'MerkleMint'
+        mintStart: any
+        mintEnd: any
+        pricePerToken: any
+        merkleRoot: any
+      } | null
     }
   } | null
 }
@@ -2323,10 +2533,10 @@ export type TokensQuery = {
     tokenId: any
     tokenContract: any
     name: string
-    image: string
+    image?: string | null
     owner: any
     mintedAt: any
-    dao: { __typename?: 'DAO'; description: string }
+    dao: { __typename?: 'DAO'; description?: string | null }
   }>
 }
 
@@ -2392,6 +2602,14 @@ export const ExploreDaoFragmentDoc = gql`
       image
       tokenId
     }
+  }
+`
+export const MerkleMintFragmentDoc = gql`
+  fragment MerkleMint on MerkleMint {
+    mintStart
+    mintEnd
+    pricePerToken
+    merkleRoot
   }
 `
 export const ProposalFragmentDoc = gql`
@@ -2695,10 +2913,14 @@ export const TokenWithDaoDocument = gql`
         auctionAddress
         treasuryAddress
         governorAddress
+        merkleMint {
+          ...MerkleMint
+        }
       }
     }
   }
   ${TokenFragmentDoc}
+  ${MerkleMintFragmentDoc}
 `
 export const TokensDocument = gql`
   query tokens(

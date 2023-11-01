@@ -1,3 +1,4 @@
+import { Stack } from '@zoralabs/zord'
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
 
@@ -30,20 +31,22 @@ export const DaoTopSection = ({
   )
 
   return (
-    <ViewSwitcher topSectionView={topSectionView} setTopSectionView={setTopSectionView}>
-      <TabSwitchAnimation topSectionView={topSectionView}>
-        {topSectionView === TopSectionView.Chart ? (
-          <AuctionChart />
-        ) : (
-          <Auction
-            chain={chain}
-            auctionAddress={auctionAddress}
-            collection={collection}
-            token={token}
-          />
-        )}
-      </TabSwitchAnimation>
-    </ViewSwitcher>
+    <Stack>
+      <ViewSwitcher topSectionView={topSectionView} setTopSectionView={setTopSectionView}>
+        <TabSwitchAnimation topSectionView={topSectionView}>
+          {topSectionView === TopSectionView.Chart ? (
+            <AuctionChart />
+          ) : (
+            <Auction
+              chain={chain}
+              auctionAddress={auctionAddress}
+              collection={collection}
+              token={token}
+            />
+          )}
+        </TabSwitchAnimation>
+      </ViewSwitcher>
+    </Stack>
   )
 }
 

@@ -23,6 +23,7 @@ import {
   SectionHandler,
   SmartContracts,
 } from 'src/modules/dao'
+import { ClaimButton } from 'src/modules/dao/components/AllowListClaim/ClaimButton'
 import { DaoTopSection } from 'src/modules/dao/components/DaoTopSection'
 import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
@@ -138,9 +139,10 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
           name,
           contractAddress: collection,
           chain,
-          image: token.image,
+          image: token.image!,
         }}
       />
+      {token.dao.merkleMint && <ClaimButton merkleMint={token.dao.merkleMint} />}
 
       <DaoTopSection
         chain={chain}
@@ -220,7 +222,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
     const daoOgMetadata: DaoOgMetadata = {
       name,
-      contractImage,
+      contractImage: contractImage!,
       totalSupply,
       ownerCount,
       proposalCount,

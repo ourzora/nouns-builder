@@ -1,0 +1,6 @@
+fragment MerkleMint on MerkleMint {
+  mintStart
+  mintEnd
+  pricePerToken
+  merkleRoot
+}
