@@ -47,21 +47,29 @@ export type DashboardDaoProps = DaoFragment & {
 }
 
 const fetchDaoProposalState = async (dao: DashboardDaoProps) => {
-  const proposals = await Promise.all(
-    dao.proposals.map(async (proposal) => {
-      const proposalState = await getProposalState(
-        dao.chainId,
-        proposal.dao.governorAddress,
-        proposal.proposalId
-      )
-      return { ...proposal, proposalState: proposalState }
-    })
-  )
-  return {
-    ...dao,
-    proposals: proposals.filter((proposal) =>
-      ACTIVE_PROPOSAL_STATES.includes(proposal.proposalState)
-    ),
+  try {
+    const proposals = await Promise.all(
+      dao.proposals.map(async (proposal) => {
+        const proposalState = await getProposalState(
+          dao.chainId,
+          proposal.dao.governorAddress,
+          proposal.proposalId
+        )
+        return { ...proposal, proposalState: proposalState }
+      })
+    )
+    return {
+      ...dao,
+      proposals: proposals.filter((proposal) =>
+        ACTIVE_PROPOSAL_STATES.includes(proposal.proposalState)
+      ),
+    }
+  } catch (error: any) {
+    throw new Error(
+      error?.message
+        ? `RPC Error: ${error.message}`
+        : 'Error fetch Dashboard data from RPC'
+    )
   }
 }
 
@@ -70,9 +78,10 @@ const fetchDashboardData = async (address: string) => {
     const userDaos = (await dashboardRequest(address)) as unknown as DashboardDaoProps[]
     if (!userDaos) throw new Error('Dashboard DAO query returned undefined')
     const resolved = await Promise.all(userDaos.map(fetchDaoProposalState))
+
     return resolved
-  } catch (error) {
-    throw new Error('Error fetching dashboard data')
+  } catch (error: any) {
+    throw new Error(error?.message || 'Error fetching dashboard data')
   }
 }
 
