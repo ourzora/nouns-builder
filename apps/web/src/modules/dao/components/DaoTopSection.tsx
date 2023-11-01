@@ -1,18 +1,17 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import React, { ReactElement } from 'react'
 
-import { TokenWithWinner } from 'src/data/contract/requests/getToken'
 import { Auction } from 'src/modules/auction'
-import { AuctionSkeleton } from 'src/modules/auction/components/AuctionSkeleton'
 import { ViewSwitcher } from 'src/modules/auction/components/ViewSwitcher'
 import { AuctionChart } from 'src/modules/dao/components/AuctionChart/AuctionChart'
+import { TokenWithDao } from 'src/pages/dao/[network]/[token]/[tokenId]'
 import { Chain } from 'src/typings'
 
 type TopSectionProps = {
   chain: Chain
   collection: string
-  auctionAddress?: string
-  token?: TokenWithWinner
+  auctionAddress: string
+  token: TokenWithDao
 }
 
 export enum TopSectionView {
@@ -30,29 +29,21 @@ export const DaoTopSection = ({
     TopSectionView.Auction
   )
 
-  if (topSectionView === TopSectionView.Chart) {
-    return (
-      <ViewSwitcher topSectionView={topSectionView} setTopSectionView={setTopSectionView}>
-        <TabSwitchAnimation topSectionView={topSectionView}>
-          <AuctionChart />
-        </TabSwitchAnimation>
-      </ViewSwitcher>
-    )
-  }
-
-  return token && auctionAddress ? (
+  return (
     <ViewSwitcher topSectionView={topSectionView} setTopSectionView={setTopSectionView}>
       <TabSwitchAnimation topSectionView={topSectionView}>
-        <Auction
-          chain={chain}
-          auctionAddress={auctionAddress}
-          collection={collection}
-          token={token}
-        />
+        {topSectionView === TopSectionView.Chart ? (
+          <AuctionChart />
+        ) : (
+          <Auction
+            chain={chain}
+            auctionAddress={auctionAddress}
+            collection={collection}
+            token={token}
+          />
+        )}
       </TabSwitchAnimation>
     </ViewSwitcher>
-  ) : (
-    <AuctionSkeleton />
   )
 }
 

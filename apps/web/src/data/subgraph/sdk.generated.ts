@@ -2231,24 +2231,6 @@ export type ProposalOgMetadataQuery = {
   }>
 }
 
-export type ProposalVotesQueryVariables = Exact<{
-  proposalId: Scalars['ID']
-}>
-
-export type ProposalVotesQuery = {
-  __typename?: 'Query'
-  proposal?: {
-    __typename?: 'Proposal'
-    votes: Array<{
-      __typename?: 'ProposalVote'
-      voter: any
-      support: ProposalVoteSupport
-      weight: number
-      reason?: string | null
-    }>
-  } | null
-}
-
 export type ProposalsQueryVariables = Exact<{
   where?: InputMaybe<Proposal_Filter>
   first: Scalars['Int']
@@ -2291,11 +2273,11 @@ export type ProposalsQuery = {
   }>
 }
 
-export type TokenQueryVariables = Exact<{
+export type TokenWithDaoQueryVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type TokenQuery = {
+export type TokenWithDaoQuery = {
   __typename?: 'Query'
   token?: {
     __typename?: 'Token'
@@ -2305,19 +2287,24 @@ export type TokenQuery = {
     image: string
     owner: any
     mintedAt: any
-    dao: { __typename?: 'DAO'; description: string }
-  } | null
-}
-
-export type TokenWinnerQueryVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type TokenWinnerQuery = {
-  __typename?: 'Query'
-  auction?: {
-    __typename?: 'Auction'
-    winningBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+    auction?: {
+      __typename?: 'Auction'
+      winningBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+    } | null
+    dao: {
+      __typename?: 'DAO'
+      name: string
+      description: string
+      contractImage: string
+      totalSupply: number
+      ownerCount: number
+      proposalCount: number
+      tokenAddress: any
+      metadataAddress: any
+      auctionAddress: any
+      treasuryAddress: any
+      governorAddress: any
+    }
   } | null
 }
 
@@ -2668,16 +2655,6 @@ export const ProposalOgMetadataDocument = gql`
   ${ProposalFragmentDoc}
   ${ProposalVoteFragmentDoc}
 `
-export const ProposalVotesDocument = gql`
-  query proposalVotes($proposalId: ID!) {
-    proposal(id: $proposalId) {
-      votes {
-        ...ProposalVote
-      }
-    }
-  }
-  ${ProposalVoteFragmentDoc}
-`
 export const ProposalsDocument = gql`
   query proposals($where: Proposal_filter, $first: Int!, $skip: Int) {
     proposals(
@@ -2696,23 +2673,32 @@ export const ProposalsDocument = gql`
   ${ProposalFragmentDoc}
   ${ProposalVoteFragmentDoc}
 `
-export const TokenDocument = gql`
-  query token($id: ID!) {
+export const TokenWithDaoDocument = gql`
+  query tokenWithDao($id: ID!) {
     token(id: $id) {
       ...Token
-    }
-  }
-  ${TokenFragmentDoc}
-`
-export const TokenWinnerDocument = gql`
-  query tokenWinner($id: ID!) {
-    auction(id: $id) {
-      winningBid {
-        amount
-        bidder
+      auction {
+        winningBid {
+          amount
+          bidder
+        }
+      }
+      dao {
+        name
+        description
+        contractImage
+        totalSupply
+        ownerCount
+        proposalCount
+        tokenAddress
+        metadataAddress
+        auctionAddress
+        treasuryAddress
+        governorAddress
       }
     }
   }
+  ${TokenFragmentDoc}
 `
 export const TokensDocument = gql`
   query tokens(
@@ -2938,20 +2924,6 @@ export function getSdk(
         'query'
       )
     },
-    proposalVotes(
-      variables: ProposalVotesQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
-    ): Promise<ProposalVotesQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<ProposalVotesQuery>(ProposalVotesDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'proposalVotes',
-        'query'
-      )
-    },
     proposals(
       variables: ProposalsQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
@@ -2966,31 +2938,17 @@ export function getSdk(
         'query'
       )
     },
-    token(
-      variables: TokenQueryVariables,
+    tokenWithDao(
+      variables: TokenWithDaoQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
-    ): Promise<TokenQuery> {
+    ): Promise<TokenWithDaoQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<TokenQuery>(TokenDocument, variables, {
+          client.request<TokenWithDaoQuery>(TokenWithDaoDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        'token',
-        'query'
-      )
-    },
-    tokenWinner(
-      variables: TokenWinnerQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
-    ): Promise<TokenWinnerQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<TokenWinnerQuery>(TokenWinnerDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'tokenWinner',
+        'tokenWithDao',
         'query'
       )
     },
