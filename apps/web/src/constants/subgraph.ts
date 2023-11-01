@@ -6,7 +6,8 @@ export const PUBLIC_SUBGRAPH_URL = {
   [CHAIN_ID.OPTIMISM]:
     'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-optimism-mainnet/stable/gn',
   [CHAIN_ID.GOERLI]:
-    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-goerli-testnet/stable/gn',
+    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-goerli-sandbox/1.0.1/gn',
+  // FOR TESTING ONLY, DONT' PUSH
   [CHAIN_ID.OPTIMISM_GOERLI]:
     'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-optimism-testnet/stable/gn',
   [CHAIN_ID.BASE]:

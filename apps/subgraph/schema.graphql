@@ -15,8 +15,8 @@ type DAO @entity {
   proposalCount: Int!
   totalAuctionSales: BigInt!
   auctionConfig: AuctionConfig!
-  currentAuction: Auction
   metadataUpdateHashes: [Bytes!]
+  currentAuction: Auction
   owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
   tokens: [Token!]! @derivedFrom(field: "dao")
   proposals: [Proposal!]! @derivedFrom(field: "dao")

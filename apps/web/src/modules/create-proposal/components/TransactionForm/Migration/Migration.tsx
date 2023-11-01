@@ -8,20 +8,16 @@ import { encodeFunctionData } from 'viem'
 import { useBalance, useContractRead } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
-import {
-  L1_MESSENGERS,
-  L2_DEPLOYMENT_ADDRESSES,
-  PUBLIC_MANAGER_ADDRESS,
-} from 'src/constants/addresses'
-import { auctionAbi, managerAbi, tokenAbi } from 'src/data/contract/abis'
+import { L1_MESSENGERS, L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
+import { auctionAbi, managerAbi } from 'src/data/contract/abis'
 import { messengerABI } from 'src/data/contract/abis/L1CrossDomainMessenger'
+import { L2DeployerABI } from 'src/data/contract/abis/L2MigrationDeployer'
 import { DaoMember } from 'src/data/subgraph/requests/memberSnapshot'
 import { TransactionType } from 'src/modules/create-proposal/constants/transactionType'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { prepareMerkle } from 'src/modules/create-proposal/utils/prepareMerkle'
 import { useDaoStore } from 'src/modules/dao/stores/useDaoStore'
 import { useChainStore } from 'src/stores/useChainStore'
-import { AddressType, CHAIN_ID } from 'src/typings'
 import { getEnsAddress } from 'src/utils/ens'
 
 import { MigrationFormC1 } from './MigrationFormC1'
@@ -61,20 +57,7 @@ export const Migration: React.FC = () => {
     chainId: chain.id,
   })
 
-  const { data: existingFounders } = useContractRead({
-    abi: tokenAbi,
-    address: token,
-    functionName: 'getFounders',
-    chainId: chain.id,
-  })
-
-  let merkleRoot: `0x${string}`
-
-  const {
-    data: members,
-    error,
-    isValidating,
-  } = useSWR(isReady ? [token, chain.id] : undefined, () =>
+  const { data: merkleRoot } = useSWR(isReady ? [token, chain.id] : undefined, () =>
     axios
       .get<MembersQuery>(
         `/api/memberSnapshot/${token}?chainId=${
@@ -82,15 +65,13 @@ export const Migration: React.FC = () => {
         }&page=${undefined}&limit=${10000}`
       )
       .then(async (x) => {
-        x.data.membersList
-        merkleRoot = await prepareMerkle(x.data.membersList)
+        console.log('swr ended')
+        return await prepareMerkle(x.data.membersList)
       })
   )
 
   const deployed = false
   const treasuryMigrated = treasuryBalance && treasuryBalance.value < 1000000000000000
-
-  let x: number = DAOMigrationProgress.DEFAULT
 
   let daoProgress = DAOMigrationProgress.FINALIZED
   if (!paused) daoProgress = DAOMigrationProgress.DEFAULT
@@ -103,44 +84,38 @@ export const Migration: React.FC = () => {
     values: MigrationFormC2Values,
     actions: FormikHelpers<MigrationFormC2Values>
   ) => {
+    console.log('in handleC2Submit')
     if (!chain) return
     const { L2: targetChainID, starter: starterRaw } = values
-    console.log('here')
     const starter = await getEnsAddress(starterRaw)
-
-    const zeroFounder = {
-      wallet: starter as AddressType,
-      ownershipPct: BigInt(0),
-      vestExpiry: BigInt(Math.floor(new Date('2040-01-01').getTime() / 1000)),
-    }
+    console.log(merkleRoot)
 
     const res = await prepareMigrationDeploy(
       targetChainID,
       thisChain,
       thisDao,
-      zeroFounder,
-      merkleRoot
+      merkleRoot!
     )
 
     const L1_MESSENGER = L1_MESSENGERS[targetChainID]
-    const v1goerliManager = PUBLIC_MANAGER_ADDRESS[CHAIN_ID.BASE_GOERLI]
-    console.log('here')
-    console.log(res._implData)
     try {
-      const config = await prepareWriteContract({
+      const deployHelper = '0x01e2d618d5752f99047ba611ad35d9f8a9cc85bf'
+      console.log(res)
+      const testDeployConfig = await prepareWriteContract({
         abi: messengerABI,
         address: L1_MESSENGER,
         functionName: 'sendMessage',
         args: [
-          v1goerliManager,
+          deployHelper,
           encodeFunctionData({
-            abi: managerAbi,
+            abi: L2DeployerABI,
             functionName: 'deploy',
             args: [
-              res._implData.founder,
-              res._implData.token,
-              res._implData.auction,
-              res._implData.gov,
+              res.implData.founder,
+              res.implData.token,
+              res.implData.auction,
+              res.implData.gov,
+              res.merkleMinterSettingsHex,
             ],
           }),
           6000000,
@@ -148,15 +123,15 @@ export const Migration: React.FC = () => {
         value: 0n,
       })
 
-      // test sending eth to self
-
-      console.log(config)
-      const tx = await writeContract(config)
+      console.log(testDeployConfig)
+      const tx = await writeContract(testDeployConfig)
       if (tx.hash) console.log(await waitForTransaction({ hash: tx.hash }))
     } catch (e) {
-      console.log('e', e)
+      console.log('error in deploy', e)
       return
     }
+
+    // OLD
     const migrationTxn = {
       functionSignature: 'sendMessage',
       target: L1_MESSENGER,
@@ -170,26 +145,21 @@ export const Migration: React.FC = () => {
             abi: managerAbi,
             functionName: 'deploy',
             args: [
-              res._founderParams,
-              res._implData.token,
-              res._implData.auction,
-              res._implData.gov,
+              res.founderParams,
+              res.implData.token,
+              res.implData.auction,
+              res.implData.gov,
             ],
           }),
           0, // not sure what to put here
         ],
       }),
     }
-
-    //    address _target,
-    //   bytes memory _message,
-    //   uint32 _gasLimit
     addTransaction({
       type: TransactionType.MIGRATION,
       summary: 'Migrate to L2',
       transactions: [migrationTxn],
     })
-
     actions.resetForm()
   }
 

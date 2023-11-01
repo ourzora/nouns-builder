@@ -1,7 +1,15 @@
-import { Address, encodeAbiParameters, parseAbiParameters } from 'viem'
+import {
+  Address,
+  createPublicClient,
+  encodeAbiParameters,
+  http,
+  parseAbiParameters,
+} from 'viem'
 import { readContracts } from 'wagmi'
 
-import { L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
+import { L2_DEPLOYMENT_ADDRESSES, NULL_ADDRESS } from 'src/constants/addresses'
+import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
+import { RPC_URL } from 'src/constants/rpc'
 import {
   auctionAbi,
   governorAbi,
@@ -9,6 +17,7 @@ import {
   tokenAbi,
   treasuryAbi,
 } from 'src/data/contract/abis'
+import { SDK } from 'src/data/subgraph/client'
 import { DaoStoreProps } from 'src/modules/dao'
 import { ChainStoreProps } from 'src/stores/useChainStore'
 import { AddressType, CHAIN_ID } from 'src/typings'
@@ -18,11 +27,6 @@ export async function prepareMigrationDeploy(
   targetChainId: CHAIN_ID,
   currentChain: ChainStoreProps,
   currentDao: DaoStoreProps,
-  zeroFounder: {
-    wallet: `0x${string}`
-    ownershipPct: bigint
-    vestExpiry: bigint
-  },
   merkleRoot: `0x${string}`
 ) {
   const { treasury, auction, token, metadata, governor } = currentDao.addresses
@@ -96,35 +100,53 @@ export async function prepareMigrationDeploy(
     timelockDelay,
   ] = unpackOptionalArray(contractData, 13)
 
+  // L2 MESSAGE RELAYER 0x9f6793140ea606BCeB98761d9bEB1bc87383817e or 0x4200000000000000000000000000000000000007 ?
+  const L2DAOAddressZeroFounder = {
+    // L2 Message Relayer will
+    wallet: '0x4200000000000000000000000000000000000007' as AddressType,
+    ownershipPct: 0n,
+    vestExpiry: BigInt(Math.floor(new Date('2040-01-01').getTime() / 1000)),
+  }
+
   const founderParams = existingFounders
     ? [
-        zeroFounder,
+        L2DAOAddressZeroFounder,
         ...existingFounders.map((x) => ({
           wallet: x.wallet,
           ownershipPct: BigInt(x.ownershipPct),
           vestExpiry: BigInt(x.vestExpiry),
         })),
       ]
-    : [zeroFounder]
+    : [L2DAOAddressZeroFounder]
 
-  /*const merkleMinterSettingsHex = encodeAbiParameters(
-    [
-      { name: 'mintStart', type: 'uint64' },
-      { name: 'mintEnd', type: 'uint64' },
-      { name: 'pricePerToken', type: 'uint64' },
-      { name: 'merkleRoot', type: 'bytes32' },
-    ],
-    [
-      BigInt(0), // can it just be 0?
-      18446744073709551615n, //  max
-      BigInt(0),
-      merkleRoot,
-    ]
-  )
+  /// GET SAMPLE METADATA, TO DECODE.
+  /// NEED TO GET TXN HASH
+  const sdkDATA = await SDK.connect(currentChain.chain.id).daoMetadataHashes({
+    tokenAddress: `${token?.toLowerCase()}`,
+  })
+  const metadataUpdateHashes = sdkDATA.dao?.metadataUpdateHashes as Array<`0x${string}`>
+  console.log('sdk data: ', metadataUpdateHashes)
 
-  // const initialMinter = L2_DEPLOYMENT_ADDRESSES[targetChainId].MERKLE_RESERVE_MINTER figure it out based on chain going to
-  */
-  const tokenParamsHex = encodeAbiParameters(
+  const client = createPublicClient({
+    chain: PUBLIC_ALL_CHAINS.find((x) => x.id === currentChain.chain.id),
+    transport: http(RPC_URL[currentChain.chain.id]),
+  })
+
+  const metadataTxn = await client.getTransaction({
+    hash: metadataUpdateHashes[0],
+  })
+
+  const encodedMetadata = metadataTxn.input
+
+  const merkleMinterSettingsHex = {
+    mintStart: 0n,
+    mintEnd: 18446744073709551615n,
+    pricePerToken: 0n,
+    merkleRoot: merkleRoot,
+  }
+
+  // TOKEN PARAMS
+  const tokenInitStrings = encodeAbiParameters(
     parseAbiParameters(
       'string name, string symbol, string description, string daoImage, string daoWebsite, string baseRenderer'
     ),
@@ -137,11 +159,18 @@ export async function prepareMigrationDeploy(
       'https://api.zora.co/renderer/stack-images',
     ]
   )
-  const tokenParams = { initStrings: tokenParamsHex as AddressType }
+
+  const tokenParams = {
+    initStrings: tokenInitStrings as AddressType,
+    reservedUntilTokenId: totalSupply!,
+    metadataRenderer: NULL_ADDRESS,
+  }
 
   const auctionParams = {
     reservePrice: reservePrice!,
     duration: BigInt(duration!),
+    founderRewardRecipent: NULL_ADDRESS,
+    founderRewardBps: 0,
   }
 
   const govParams = {
@@ -177,8 +206,10 @@ export async function prepareMigrationDeploy(
   /// bytes[] calldata _implData [token, metadata, auction, treasury, governor]
 
   return {
-    _founderParams: founderParams,
-    _implAddresses: implAddresses,
-    _implData: implData,
+    founderParams,
+    implAddresses,
+    implData,
+    encodedMetadata,
+    merkleMinterSettingsHex,
   }
 }

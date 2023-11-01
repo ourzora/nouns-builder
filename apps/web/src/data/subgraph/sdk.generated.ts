@@ -404,6 +404,7 @@ export type Dao = {
   governorAddress: Scalars['Bytes']
   id: Scalars['ID']
   metadataAddress: Scalars['Bytes']
+  metadataUpdateHashes?: Maybe<Array<Scalars['Bytes']>>
   name: Scalars['String']
   ownerCount: Scalars['Int']
   owners: Array<DaoTokenOwner>
@@ -670,6 +671,12 @@ export type Dao_Filter = {
   metadataAddress_not?: InputMaybe<Scalars['Bytes']>
   metadataAddress_not_contains?: InputMaybe<Scalars['Bytes']>
   metadataAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>
+  metadataUpdateHashes?: InputMaybe<Array<Scalars['Bytes']>>
+  metadataUpdateHashes_contains?: InputMaybe<Array<Scalars['Bytes']>>
+  metadataUpdateHashes_contains_nocase?: InputMaybe<Array<Scalars['Bytes']>>
+  metadataUpdateHashes_not?: InputMaybe<Array<Scalars['Bytes']>>
+  metadataUpdateHashes_not_contains?: InputMaybe<Array<Scalars['Bytes']>>
+  metadataUpdateHashes_not_contains_nocase?: InputMaybe<Array<Scalars['Bytes']>>
   name?: InputMaybe<Scalars['String']>
   name_contains?: InputMaybe<Scalars['String']>
   name_contains_nocase?: InputMaybe<Scalars['String']>
@@ -810,6 +817,7 @@ export enum Dao_OrderBy {
   GovernorAddress = 'governorAddress',
   Id = 'id',
   MetadataAddress = 'metadataAddress',
+  MetadataUpdateHashes = 'metadataUpdateHashes',
   Name = 'name',
   OwnerCount = 'ownerCount',
   Owners = 'owners',
@@ -2005,6 +2013,19 @@ export type DaoMembersListQuery = {
   }>
 }
 
+export type DaoMetadataHashesQueryVariables = Exact<{
+  tokenAddress: Scalars['ID']
+}>
+
+export type DaoMetadataHashesQuery = {
+  __typename?: 'Query'
+  dao?: {
+    __typename?: 'DAO'
+    metadataAddress: any
+    metadataUpdateHashes?: Array<any> | null
+  } | null
+}
+
 export type DaoOgMetadataQueryVariables = Exact<{
   tokenAddress: Scalars['ID']
 }>
@@ -2444,6 +2465,14 @@ export const DaoMembersListDocument = gql`
     }
   }
 `
+export const DaoMetadataHashesDocument = gql`
+  query daoMetadataHashes($tokenAddress: ID!) {
+    dao(id: $tokenAddress) {
+      metadataAddress
+      metadataUpdateHashes
+    }
+  }
+`
 export const DaoOgMetadataDocument = gql`
   query daoOGMetadata($tokenAddress: ID!) {
     dao(id: $tokenAddress) {
@@ -2697,6 +2726,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoMembersList',
+        'query'
+      )
+    },
+    daoMetadataHashes(
+      variables: DaoMetadataHashesQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoMetadataHashesQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoMetadataHashesQuery>(DaoMetadataHashesDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'daoMetadataHashes',
         'query'
       )
     },
