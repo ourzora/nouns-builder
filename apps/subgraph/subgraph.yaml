@@ -7,7 +7,7 @@ dataSources:
     network: base-goerli
     source:
       abi: Manager
-      address: '0x5e89c0d43b47af1855b1033fc5b80845ba859c3f'
+      address: '0x5d5a243a69128db6fab3a65d9929ff85a7774571'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
