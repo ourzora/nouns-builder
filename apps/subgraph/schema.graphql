@@ -16,7 +16,6 @@ type DAO @entity {
   totalAuctionSales: BigInt!
   auctionConfig: AuctionConfig!
   currentAuction: Auction
-  tokenToMirror: Bytes
   merkleMint: MerkleMint @derivedFrom(field: "dao")
   owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
   tokens: [Token!]! @derivedFrom(field: "dao")
