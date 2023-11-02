@@ -1,4 +1,4 @@
-import { getProof, getTree } from 'lanyard'
+import { getTree } from 'lanyard'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { decodeAbiParameters, parseAbiParameters } from 'viem'
 
@@ -8,7 +8,6 @@ export interface AllowListItem {
   claimant: AddressType
   tokenId: string
   leaf: string
-  proof?: string[]
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -26,9 +25,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           parseAbiParameters('address claimant, uint256 tokenId'),
           x as BytesType
         )
-        const proof = await getProof({ merkleRoot: root as string, unhashedLeaf: x })
 
-        return { claimant, tokenId: tokenId.toString(), leaf: x, proof: proof?.proof }
+        return { claimant, tokenId: tokenId.toString(), leaf: x }
       })
     )
 
