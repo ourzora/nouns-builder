@@ -38,5 +38,10 @@ export const dashboardRequest = async (memberAddress: string) => {
     console.error(e)
     Sentry.captureException(e)
     await Sentry.flush(2000)
+    throw new Error(
+      e?.message
+        ? `Goldsky Request Error: ${e.message}`
+        : 'Error fetching dashboard data from Goldsky subgraph.'
+    )
   }
 }
