@@ -21,7 +21,15 @@ export const PUBLIC_MANAGER_ADDRESS = {
 }
 
 export const MERKLE_RESERVE_MINTER = {
-  [CHAIN_ID.BASE]: '0x2b8aeb7c62c37b289e326616f73988ee96fa2cc1' as AddressType,
+  [CHAIN_ID.ETHEREUM]: '0x0' as AddressType,
+  [CHAIN_ID.OPTIMISM]: '0x0' as AddressType,
+  [CHAIN_ID.GOERLI]: '0x0' as AddressType,
+  [CHAIN_ID.OPTIMISM_GOERLI]: '0x0' as AddressType,
+  [CHAIN_ID.BASE]: '0x0' as AddressType,
+  [CHAIN_ID.BASE_GOERLI]: '0xcb7442f81ebed5d525d2e97f8410751a08a7cd1d' as AddressType,
+  [CHAIN_ID.ZORA]: '0x0' as AddressType,
+  [CHAIN_ID.ZORA_GOERLI]: '0x0' as AddressType,
+  [CHAIN_ID.FOUNDRY]: '0x0' as AddressType,
 }
 
 export const PUBLIC_L1_BRIDGE_ADDRESS = {

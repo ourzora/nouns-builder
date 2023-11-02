@@ -1,39 +1,71 @@
-import { Box, Heading } from '@zoralabs/zord'
-import axios from 'axios'
+import { Box, Button, Heading, Text } from '@zoralabs/zord'
+import { getProof } from 'lanyard'
 import { omit } from 'lodash'
 import { useRouter } from 'next/router'
-import { Fragment, useEffect, useMemo } from 'react'
-import useSWR from 'swr'
-import { isAddressEqual } from 'viem'
-import { useAccount } from 'wagmi'
+import { useEffect, useState } from 'react'
+import { waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { Icon } from 'src/components/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
-import SWR_KEYS from 'src/constants/swrKeys'
+import { MERKLE_RESERVE_MINTER } from 'src/constants/addresses'
+import { MerkleReserveMinter } from 'src/data/contract/abis/MerkleReserveMinter'
 import { MerkleMintFragment } from 'src/data/subgraph/sdk.generated'
-import { AllowListItem } from 'src/pages/api/allowList/[root]'
+import { AllowListItem } from 'src/pages/api/allowList'
+import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
 
-export const ClaimModal = ({ merkleMint }: { merkleMint: MerkleMintFragment }) => {
+export const ClaimModal = ({
+  merkleMint,
+  userClaims,
+  chainId,
+  token,
+}: {
+  chainId: CHAIN_ID
+  token: AddressType
+  merkleMint: MerkleMintFragment
+  userClaims: AllowListItem[]
+}) => {
   const router = useRouter()
-  const { address } = useAccount()
   const { claim } = router.query
 
-  const { data: allowList } = useSWR<AllowListItem[]>(
-    [SWR_KEYS.ALLOWLIST, merkleMint.merkleRoot],
-    (_, merkleRoot) => axios.get(`/api/allowList/${merkleRoot}`).then((x) => x.data)
-  )
+  const [loading, setLoading] = useState(false)
 
-  const userClaims = useMemo(
-    () =>
-      address && allowList && allowList.length > 0
-        ? allowList.filter((item) => isAddressEqual(item.claimant, address))
-        : null,
-    [address, allowList]
-  )
+  const handleClaim = async () => {
+    try {
+      setLoading(true)
 
-  console.log('userClaims', allowList, userClaims)
+      const merkleClaims = await Promise.all(
+        userClaims.map(async (x) => {
+          const res = await getProof({
+            merkleRoot: merkleMint.merkleRoot,
+            unhashedLeaf: x.leaf,
+          })
 
-  const handleClick = () => {
+          if (!res?.proof) throw new Error('No proof found')
+
+          return {
+            mintTo: x.claimant,
+            tokenId: BigInt(x.tokenId),
+            merkleProof: res.proof as BytesType[],
+          }
+        })
+      )
+
+      const { hash } = await writeContract({
+        abi: MerkleReserveMinter,
+        functionName: 'mintFromReserve',
+        address: MERKLE_RESERVE_MINTER[chainId],
+        args: [token, merkleClaims],
+        value: 0n,
+      })
+      await waitForTransaction({ hash })
+    } catch (error) {
+      console.log('err', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleClose = () => {
     router.push(
       {
         pathname: router.pathname,
@@ -50,12 +82,12 @@ export const ClaimModal = ({ merkleMint }: { merkleMint: MerkleMintFragment }) =
 
   return (
     <AnimatedModal open={!!claim}>
-      <Fragment>
+      <Box>
         <Box
-          onClick={handleClick}
+          onClick={handleClose}
           cursor={'pointer'}
           position={'absolute'}
-          top="x0"
+          top="x3"
           right="x3"
         >
           <Icon id="cross" fill="text3" />
@@ -63,7 +95,13 @@ export const ClaimModal = ({ merkleMint }: { merkleMint: MerkleMintFragment }) =
         <Heading size="xs" fontWeight="display">
           Claim tokens
         </Heading>
-      </Fragment>
+        <Text color="text3">You have {userClaims.length} tokens availible to claim</Text>
+        <Button onClick={handleClaim} disabled={loading} w="100%" mt="x3">
+          {loading
+            ? `Claiming ${userClaims.length} tokens ...`
+            : `Claim ${userClaims.length} tokens`}
+        </Button>
+      </Box>
     </AnimatedModal>
   )
 }

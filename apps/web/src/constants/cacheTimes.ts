@@ -40,4 +40,8 @@ export const CACHE_TIMES = {
     maxAge: ONE_DAY,
     swr: ONE_WEEK,
   },
+  ALLOWLIST: {
+    maxAge: ONE_HOUR,
+    swr: ONE_DAY,
+  },
 }

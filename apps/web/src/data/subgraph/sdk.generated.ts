@@ -374,6 +374,7 @@ export enum Auction_OrderBy {
   DaoOwnerCount = 'dao__ownerCount',
   DaoProjectUri = 'dao__projectURI',
   DaoProposalCount = 'dao__proposalCount',
+  DaoReservedUntilTokenId = 'dao__reservedUntilTokenId',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
   DaoTotalAuctionSales = 'dao__totalAuctionSales',
@@ -391,7 +392,6 @@ export enum Auction_OrderBy {
   Settled = 'settled',
   StartTime = 'startTime',
   Token = 'token',
-  TokenContent = 'token__content',
   TokenId = 'token__id',
   TokenImage = 'token__image',
   TokenMintedAt = 'token__mintedAt',
@@ -421,9 +421,9 @@ export type Dao = {
   auctionAddress: Scalars['Bytes']
   auctionConfig: AuctionConfig
   auctions: Array<Auction>
-  contractImage?: Maybe<Scalars['String']>
+  contractImage: Scalars['String']
   currentAuction?: Maybe<Auction>
-  description?: Maybe<Scalars['String']>
+  description: Scalars['String']
   governorAddress: Scalars['Bytes']
   id: Scalars['ID']
   merkleMint?: Maybe<MerkleMint>
@@ -431,9 +431,10 @@ export type Dao = {
   name: Scalars['String']
   ownerCount: Scalars['Int']
   owners: Array<DaoTokenOwner>
-  projectURI?: Maybe<Scalars['String']>
+  projectURI: Scalars['String']
   proposalCount: Scalars['Int']
   proposals: Array<Proposal>
+  reservedUntilTokenId: Scalars['BigInt']
   symbol: Scalars['String']
   tokenAddress: Scalars['Bytes']
   tokens: Array<Token>
@@ -560,6 +561,7 @@ export enum DaoTokenOwner_OrderBy {
   DaoOwnerCount = 'dao__ownerCount',
   DaoProjectUri = 'dao__projectURI',
   DaoProposalCount = 'dao__proposalCount',
+  DaoReservedUntilTokenId = 'dao__reservedUntilTokenId',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
   DaoTotalAuctionSales = 'dao__totalAuctionSales',
@@ -754,6 +756,14 @@ export type Dao_Filter = {
   proposalCount_not?: InputMaybe<Scalars['Int']>
   proposalCount_not_in?: InputMaybe<Array<Scalars['Int']>>
   proposals_?: InputMaybe<Proposal_Filter>
+  reservedUntilTokenId?: InputMaybe<Scalars['BigInt']>
+  reservedUntilTokenId_gt?: InputMaybe<Scalars['BigInt']>
+  reservedUntilTokenId_gte?: InputMaybe<Scalars['BigInt']>
+  reservedUntilTokenId_in?: InputMaybe<Array<Scalars['BigInt']>>
+  reservedUntilTokenId_lt?: InputMaybe<Scalars['BigInt']>
+  reservedUntilTokenId_lte?: InputMaybe<Scalars['BigInt']>
+  reservedUntilTokenId_not?: InputMaybe<Scalars['BigInt']>
+  reservedUntilTokenId_not_in?: InputMaybe<Array<Scalars['BigInt']>>
   symbol?: InputMaybe<Scalars['String']>
   symbol_contains?: InputMaybe<Scalars['String']>
   symbol_contains_nocase?: InputMaybe<Scalars['String']>
@@ -849,6 +859,7 @@ export enum Dao_OrderBy {
   ProjectUri = 'projectURI',
   ProposalCount = 'proposalCount',
   Proposals = 'proposals',
+  ReservedUntilTokenId = 'reservedUntilTokenId',
   Symbol = 'symbol',
   TokenAddress = 'tokenAddress',
   Tokens = 'tokens',
@@ -949,6 +960,7 @@ export enum MerkleMint_OrderBy {
   DaoOwnerCount = 'dao__ownerCount',
   DaoProjectUri = 'dao__projectURI',
   DaoProposalCount = 'dao__proposalCount',
+  DaoReservedUntilTokenId = 'dao__reservedUntilTokenId',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
   DaoTotalAuctionSales = 'dao__totalAuctionSales',
@@ -1421,6 +1433,7 @@ export enum Proposal_OrderBy {
   DaoOwnerCount = 'dao__ownerCount',
   DaoProjectUri = 'dao__projectURI',
   DaoProposalCount = 'dao__proposalCount',
+  DaoReservedUntilTokenId = 'dao__reservedUntilTokenId',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
   DaoTotalAuctionSales = 'dao__totalAuctionSales',
@@ -1799,10 +1812,9 @@ export type SubscriptionTokensArgs = {
 export type Token = {
   __typename?: 'Token'
   auction?: Maybe<Auction>
-  content?: Maybe<Scalars['String']>
   dao: Dao
   id: Scalars['ID']
-  image?: Maybe<Scalars['String']>
+  image: Scalars['String']
   mintedAt: Scalars['BigInt']
   name: Scalars['String']
   owner: Scalars['Bytes']
@@ -1816,26 +1828,6 @@ export type Token_Filter = {
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<Token_Filter>>>
   auction_?: InputMaybe<Auction_Filter>
-  content?: InputMaybe<Scalars['String']>
-  content_contains?: InputMaybe<Scalars['String']>
-  content_contains_nocase?: InputMaybe<Scalars['String']>
-  content_ends_with?: InputMaybe<Scalars['String']>
-  content_ends_with_nocase?: InputMaybe<Scalars['String']>
-  content_gt?: InputMaybe<Scalars['String']>
-  content_gte?: InputMaybe<Scalars['String']>
-  content_in?: InputMaybe<Array<Scalars['String']>>
-  content_lt?: InputMaybe<Scalars['String']>
-  content_lte?: InputMaybe<Scalars['String']>
-  content_not?: InputMaybe<Scalars['String']>
-  content_not_contains?: InputMaybe<Scalars['String']>
-  content_not_contains_nocase?: InputMaybe<Scalars['String']>
-  content_not_ends_with?: InputMaybe<Scalars['String']>
-  content_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  content_not_in?: InputMaybe<Array<Scalars['String']>>
-  content_not_starts_with?: InputMaybe<Scalars['String']>
-  content_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  content_starts_with?: InputMaybe<Scalars['String']>
-  content_starts_with_nocase?: InputMaybe<Scalars['String']>
   dao?: InputMaybe<Scalars['String']>
   dao_?: InputMaybe<Dao_Filter>
   dao_contains?: InputMaybe<Scalars['String']>
@@ -1974,7 +1966,6 @@ export enum Token_OrderBy {
   AuctionId = 'auction__id',
   AuctionSettled = 'auction__settled',
   AuctionStartTime = 'auction__startTime',
-  Content = 'content',
   Dao = 'dao',
   DaoAuctionAddress = 'dao__auctionAddress',
   DaoContractImage = 'dao__contractImage',
@@ -1986,6 +1977,7 @@ export enum Token_OrderBy {
   DaoOwnerCount = 'dao__ownerCount',
   DaoProjectUri = 'dao__projectURI',
   DaoProposalCount = 'dao__proposalCount',
+  DaoReservedUntilTokenId = 'dao__reservedUntilTokenId',
   DaoSymbol = 'dao__symbol',
   DaoTokenAddress = 'dao__tokenAddress',
   DaoTotalAuctionSales = 'dao__totalAuctionSales',
@@ -2054,7 +2046,7 @@ export type CurrentAuctionFragment = {
   __typename?: 'Auction'
   endTime: any
   highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-  token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
+  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
 }
 
 export type DaoFragment = {
@@ -2069,7 +2061,7 @@ export type ExploreDaoFragment = {
   endTime: any
   dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
   highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-  token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
+  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
 }
 
 export type MerkleMintFragment = {
@@ -2119,10 +2111,10 @@ export type TokenFragment = {
   tokenId: any
   tokenContract: any
   name: string
-  image?: string | null
+  image: string
   owner: any
   mintedAt: any
-  dao: { __typename?: 'DAO'; description?: string | null }
+  dao: { __typename?: 'DAO'; description: string }
 }
 
 export type ActiveAuctionsQueryVariables = Exact<{
@@ -2224,8 +2216,8 @@ export type DaoOgMetadataQuery = {
   dao?: {
     __typename?: 'DAO'
     name: string
-    description?: string | null
-    contractImage?: string | null
+    description: string
+    contractImage: string
     totalSupply: number
     ownerCount: number
     proposalCount: number
@@ -2263,7 +2255,7 @@ export type DashboardQuery = {
     __typename?: 'DAOTokenOwner'
     dao: {
       __typename?: 'DAO'
-      contractImage?: string | null
+      contractImage: string
       name: string
       tokenAddress: any
       auctionAddress: any
@@ -2302,7 +2294,7 @@ export type DashboardQuery = {
         __typename?: 'Auction'
         endTime: any
         highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-        token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
+        token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
       } | null
     }
   }>
@@ -2323,7 +2315,7 @@ export type ExploreDaosPageQuery = {
     endTime: any
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
     highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-    token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
+    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
   }>
 }
 
@@ -2340,7 +2332,7 @@ export type MyDaosPageQuery = {
     endTime: any
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
     highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-    token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
+    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
   }>
 }
 
@@ -2424,7 +2416,7 @@ export type ProposalOgMetadataQuery = {
     dao: {
       __typename?: 'DAO'
       name: string
-      contractImage?: string | null
+      contractImage: string
       tokenAddress: any
       metadataAddress: any
       auctionAddress: any
@@ -2487,7 +2479,7 @@ export type TokenWithDaoQuery = {
     tokenId: any
     tokenContract: any
     name: string
-    image?: string | null
+    image: string
     owner: any
     mintedAt: any
     auction?: {
@@ -2497,9 +2489,10 @@ export type TokenWithDaoQuery = {
     dao: {
       __typename?: 'DAO'
       name: string
-      description?: string | null
-      contractImage?: string | null
+      description: string
+      contractImage: string
       totalSupply: number
+      reservedUntilTokenId: any
       ownerCount: number
       proposalCount: number
       tokenAddress: any
@@ -2533,10 +2526,10 @@ export type TokensQuery = {
     tokenId: any
     tokenContract: any
     name: string
-    image?: string | null
+    image: string
     owner: any
     mintedAt: any
-    dao: { __typename?: 'DAO'; description?: string | null }
+    dao: { __typename?: 'DAO'; description: string }
   }>
 }
 
@@ -2906,6 +2899,7 @@ export const TokenWithDaoDocument = gql`
         description
         contractImage
         totalSupply
+        reservedUntilTokenId
         ownerCount
         proposalCount
         tokenAddress
