@@ -27,6 +27,16 @@ export const tokenAbi = [
   },
   {
     inputs: [],
+    name: 'CANNOT_CHANGE_RESERVE',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'CANNOT_DECREASE_RESERVE',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'DELEGATE_CALL_FAILED',
     type: 'error',
   },
@@ -480,6 +490,19 @@ export const tokenAbi = [
       },
     ],
     name: 'OwnerUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'reservedUntilTokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'ReservedUntilTokenIDUpdated',
     type: 'event',
   },
   {
@@ -1275,6 +1298,19 @@ export const tokenAbi = [
       },
     ],
     name: 'setMetadataRenderer',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'newReservedUntilTokenId',
+        type: 'uint256',
+      },
+    ],
+    name: 'setReservedUntilTokenId',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
