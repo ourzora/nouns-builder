@@ -2,13 +2,13 @@
   {
     "inputs": [
       {
-        "internalType": "contract IManager",
+        "internalType": "address",
         "name": "_manager",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_builderFundsRecipent",
+        "name": "_protocolRewards",
         "type": "address"
       }
     ],

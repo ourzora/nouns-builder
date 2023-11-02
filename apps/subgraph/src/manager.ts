@@ -1,4 +1,5 @@
 import { DAODeployed as DAODeployedEvent } from '../generated/Manager/Manager'
+import { Manager as ManagerContract } from '../generated/Manager/Manager'
 import { AuctionConfig, DAO } from '../generated/schema'
 import {
   Auction as AuctionTemplate,
@@ -15,6 +16,9 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   let tokenContract = TokenContract.bind(event.params.token)
   let metadataContract = MetadataContract.bind(event.params.metadata)
   let auctionContract = AuctionContract.bind(event.params.auction)
+  let managerContract = ManagerContract.bind(event.address)
+
+  let versions = managerContract.getDAOVersions(event.params.token)
 
   let auctionConfig = new AuctionConfig(event.params.token.toHexString())
 
@@ -23,9 +27,11 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   auctionConfig.timeBuffer = auctionContract.timeBuffer()
   auctionConfig.minimumBidIncrement = auctionContract.minBidIncrement()
 
-  let rewards = auctionContract.founderReward()
-  auctionConfig.founderRewardBPS = rewards.getPercentBps()
-  auctionConfig.founderRewardRecipient = rewards.getRecipient()
+  if (versions.auction.startsWith('2')) {
+    let rewards = auctionContract.founderReward()
+    auctionConfig.founderRewardBPS = rewards.getPercentBps()
+    auctionConfig.founderRewardRecipient = rewards.getRecipient()
+  }
 
   auctionConfig.save()
 
@@ -53,6 +59,10 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   dao.ownerCount = 0
   dao.totalAuctionSales = BigInt.fromI32(0)
   dao.auctionConfig = auctionConfig.id
+
+  if (versions.token.startsWith('2')) {
+    dao.reservedUntilTokenId = tokenContract.reservedUntilTokenId()
+  }
 
   dao.save()
 

@@ -7,7 +7,7 @@ dataSources:
     network: base-goerli
     source:
       abi: Manager
-      address: '0x5d5a243a69128db6fab3a65d9929ff85a7774571'
+      address: '0x43aa19d53764c7c3154ee14d887f9e955745b104'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
@@ -34,7 +34,7 @@ dataSources:
     network: base-goerli
     source:
       abi: MerkleMinter
-      address: '0x2b8aeb7c62c37b289e326616f73988ee96fa2cc1'
+      address: '0xcb7442f81ebed5d525d2e97f8410751a08a7cd1d'
       startBlock: 11161500
     mapping:
       kind: ethereum/events
@@ -71,6 +71,8 @@ templates:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
+        - event: ReservedUntilTokenIDUpdated(uint256)
+          handler: handleReservedUntilTokenIDUpdated
       file: ./src/token.ts
   - kind: ethereum
     name: Governor

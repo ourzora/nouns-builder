@@ -1,6 +1,9 @@
 import { DAO, DAOTokenOwner, Token } from '../generated/schema'
 import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
-import { Transfer as TransferEvent } from '../generated/templates/Token/Token'
+import {
+  ReservedUntilTokenIDUpdated,
+  Transfer as TransferEvent,
+} from '../generated/templates/Token/Token'
 import { Token as TokenContract } from '../generated/templates/Token/Token'
 import { Address, Bytes, dataSource } from '@graphprotocol/graph-ts'
 import { store } from '@graphprotocol/graph-ts'
@@ -72,5 +75,13 @@ export function handleTransfer(event: TransferEvent): void {
     }
   }
 
+  dao.save()
+}
+
+export function handleReservedUntilTokenIDUpdated(
+  event: ReservedUntilTokenIDUpdated
+): void {
+  let dao = new DAO(event.address.toHexString())
+  dao.reservedUntilTokenId = event.params.reservedUntilTokenId
   dao.save()
 }
