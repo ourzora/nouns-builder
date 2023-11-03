@@ -32,8 +32,7 @@ export interface SimulationResult {
 const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
 
 const TENDERLY_FORK_API = `https://api.tenderly.co/api/v1/account/${TENDERLY_USER}/project/${TENDERLY_PROJECT}/fork`
-const TENDERLY_FORK_V2_BASE_URL =
-  'https://api.tenderly.co/api/v2/project/nouns-builder-public/forks'
+const TENDERLY_FORK_V2_BASE_URL = `https://api.tenderly.co/api/v2/project/${TENDERLY_PROJECT}/forks`
 
 const MOCK_BALANCE = ethers.utils.parseUnits('100', 'ether')
 

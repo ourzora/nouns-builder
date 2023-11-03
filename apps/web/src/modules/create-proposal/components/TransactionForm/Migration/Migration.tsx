@@ -6,7 +6,6 @@ import { ReactNode } from 'react'
 import useSWR from 'swr'
 import { encodeFunctionData } from 'viem'
 import { useBalance, useContractRead } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { L1_MESSENGERS, L2_DEPLOYMENT_ADDRESSES } from 'src/constants/addresses'
 import { auctionAbi, managerAbi } from 'src/data/contract/abis'
@@ -78,8 +77,6 @@ export const Migration: React.FC = () => {
   else if (!deployed) daoProgress = DAOMigrationProgress.PAUSED
   else if (!treasuryMigrated) daoProgress = DAOMigrationProgress.DEPLOYED
 
-  daoProgress = DAOMigrationProgress.PAUSED
-
   const handleC2Submit = async (
     values: MigrationFormC2Values,
     actions: FormikHelpers<MigrationFormC2Values>
@@ -98,12 +95,14 @@ export const Migration: React.FC = () => {
     )
 
     const L1_MESSENGER = L1_MESSENGERS[targetChainID]
-    try {
-      const deployHelper = '0x01e2d618d5752f99047ba611ad35d9f8a9cc85bf'
-      console.log(res)
-      const testDeployConfig = await prepareWriteContract({
+
+    const deployHelper = '0x01e2d618d5752f99047ba611ad35d9f8a9cc85bf'
+    const newMigrationTxn = {
+      target: L1_MESSENGER,
+      functionSignature: 'sendMessage',
+      value: '',
+      calldata: encodeFunctionData({
         abi: messengerABI,
-        address: L1_MESSENGER,
         functionName: 'sendMessage',
         args: [
           deployHelper,
@@ -118,17 +117,9 @@ export const Migration: React.FC = () => {
               res.merkleMinterSettingsHex,
             ],
           }),
-          6000000,
+          10000000, // try again with more gas?
         ],
-        value: 0n,
-      })
-
-      console.log(testDeployConfig)
-      const tx = await writeContract(testDeployConfig)
-      if (tx.hash) console.log(await waitForTransaction({ hash: tx.hash }))
-    } catch (e) {
-      console.log('error in deploy', e)
-      return
+      }),
     }
 
     // OLD
@@ -155,10 +146,11 @@ export const Migration: React.FC = () => {
         ],
       }),
     }
+    console.log(res.implData.token.initStrings, newMigrationTxn)
     addTransaction({
       type: TransactionType.MIGRATION,
       summary: 'Migrate to L2',
-      transactions: [migrationTxn],
+      transactions: [newMigrationTxn],
     })
     actions.resetForm()
   }

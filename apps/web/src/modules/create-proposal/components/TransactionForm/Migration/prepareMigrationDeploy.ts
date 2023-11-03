@@ -36,31 +36,26 @@ export async function prepareMigrationDeploy(
     address: token as Address,
     chainId: chain.id,
   }
-
   const metadataContractParams = {
     abi: metadataAbi,
     address: metadata as Address,
     chainId: chain.id,
   }
-
   const auctionContractParams = {
     abi: auctionAbi,
     address: auction as Address,
     chainId: chain.id,
   }
-
   const governorContractParams = {
     abi: governorAbi,
     address: governor as Address,
     chainId: chain.id,
   }
-
   const treasuryContractParams = {
     abi: treasuryAbi,
     address: treasury as Address,
     chainId: chain.id,
   }
-
   const contractData = await readContracts({
     allowFailure: false,
     contracts: [
@@ -103,7 +98,7 @@ export async function prepareMigrationDeploy(
   // L2 MESSAGE RELAYER 0x9f6793140ea606BCeB98761d9bEB1bc87383817e or 0x4200000000000000000000000000000000000007 ?
   const L2DAOAddressZeroFounder = {
     // L2 Message Relayer will
-    wallet: '0x4200000000000000000000000000000000000007' as AddressType,
+    wallet: '0x01e2d618d5752f99047ba611ad35d9f8a9cc85bf' as AddressType, // deployhelper
     ownershipPct: 0n,
     vestExpiry: BigInt(Math.floor(new Date('2040-01-01').getTime() / 1000)),
   }
