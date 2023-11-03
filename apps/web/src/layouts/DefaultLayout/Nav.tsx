@@ -53,6 +53,9 @@ export const Nav = () => {
             <Link href={'/about'}>
               <Label className={navMenuItem}>About</Label>
             </Link>
+            <Link href={'/dashboard'}>
+              <Label className={navMenuItem}>Dashboard</Label>
+            </Link>
             <Link href={'/explore'}>
               <Label className={navMenuItem}>Explore</Label>
             </Link>

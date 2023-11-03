@@ -1855,6 +1855,13 @@ export type AuctionBidFragment = {
   bidder: any
 }
 
+export type CurrentAuctionFragment = {
+  __typename?: 'Auction'
+  endTime: any
+  highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+}
+
 export type DaoFragment = {
   __typename?: 'DAO'
   name: string
@@ -2041,6 +2048,63 @@ export type DaoTokenOwnersQuery = {
   }>
 }
 
+export type DashboardQueryVariables = Exact<{
+  where?: InputMaybe<DaoTokenOwner_Filter>
+  first?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']>
+}>
+
+export type DashboardQuery = {
+  __typename?: 'Query'
+  daotokenOwners: Array<{
+    __typename?: 'DAOTokenOwner'
+    dao: {
+      __typename?: 'DAO'
+      contractImage: string
+      name: string
+      tokenAddress: any
+      auctionAddress: any
+      auctionConfig: {
+        __typename?: 'AuctionConfig'
+        minimumBidIncrement: any
+        reservePrice: any
+      }
+      proposals: Array<{
+        __typename?: 'Proposal'
+        voteEnd: any
+        voteStart: any
+        expiresAt?: any | null
+        abstainVotes: number
+        againstVotes: number
+        calldatas?: string | null
+        description?: string | null
+        descriptionHash: any
+        executableFrom?: any | null
+        forVotes: number
+        proposalId: any
+        proposalNumber: number
+        proposalThreshold: any
+        proposer: any
+        quorumVotes: any
+        targets: Array<any>
+        timeCreated: any
+        title?: string | null
+        values: Array<any>
+        snapshotBlockNumber: any
+        transactionHash: any
+        votes: Array<{ __typename?: 'ProposalVote'; voter: any }>
+        dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
+      }>
+      currentAuction?: {
+        __typename?: 'Auction'
+        endTime: any
+        highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+        token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+      } | null
+    }
+  }>
+}
+
 export type ExploreDaosPageQueryVariables = Exact<{
   orderBy?: InputMaybe<Auction_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
@@ -2209,11 +2273,11 @@ export type ProposalsQuery = {
   }>
 }
 
-export type TokenQueryVariables = Exact<{
+export type TokenWithDaoQueryVariables = Exact<{
   id: Scalars['ID']
 }>
 
-export type TokenQuery = {
+export type TokenWithDaoQuery = {
   __typename?: 'Query'
   token?: {
     __typename?: 'Token'
@@ -2223,19 +2287,24 @@ export type TokenQuery = {
     image: string
     owner: any
     mintedAt: any
-    dao: { __typename?: 'DAO'; description: string }
-  } | null
-}
-
-export type TokenWinnerQueryVariables = Exact<{
-  id: Scalars['ID']
-}>
-
-export type TokenWinnerQuery = {
-  __typename?: 'Query'
-  auction?: {
-    __typename?: 'Auction'
-    winningBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+    auction?: {
+      __typename?: 'Auction'
+      winningBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
+    } | null
+    dao: {
+      __typename?: 'DAO'
+      name: string
+      description: string
+      contractImage: string
+      totalSupply: number
+      ownerCount: number
+      proposalCount: number
+      tokenAddress: any
+      metadataAddress: any
+      auctionAddress: any
+      treasuryAddress: any
+      governorAddress: any
+    }
   } | null
 }
 
@@ -2284,6 +2353,20 @@ export const AuctionBidFragmentDoc = gql`
     id
     amount
     bidder
+  }
+`
+export const CurrentAuctionFragmentDoc = gql`
+  fragment CurrentAuction on Auction {
+    endTime
+    highestBid {
+      amount
+      bidder
+    }
+    token {
+      name
+      image
+      tokenId
+    }
   }
 `
 export const DaoFragmentDoc = gql`
@@ -2363,7 +2446,7 @@ export const TokenFragmentDoc = gql`
 `
 export const ActiveAuctionsDocument = gql`
   query activeAuctions($first: Int!, $where: Auction_filter!) {
-    auctions(orderBy: endTime, orderDirection: asc, first: $first, where: $where) {
+    auctions(orderBy: endTime, orderDirection: desc, first: $first, where: $where) {
       ...Auction
     }
   }
@@ -2470,6 +2553,41 @@ export const DaoTokenOwnersDocument = gql`
   }
   ${DaoFragmentDoc}
 `
+export const DashboardDocument = gql`
+  query dashboard($where: DAOTokenOwner_filter, $first: Int, $skip: Int) {
+    daotokenOwners(where: $where, first: $first, skip: $skip) {
+      dao {
+        ...DAO
+        contractImage
+        auctionConfig {
+          minimumBidIncrement
+          reservePrice
+        }
+        proposals(
+          where: { executed_not: true, canceled_not: true, vetoed_not: true }
+          first: 10
+          skip: 0
+          orderBy: proposalNumber
+          orderDirection: desc
+        ) {
+          ...Proposal
+          voteEnd
+          voteStart
+          expiresAt
+          votes {
+            voter
+          }
+        }
+        currentAuction {
+          ...CurrentAuction
+        }
+      }
+    }
+  }
+  ${DaoFragmentDoc}
+  ${ProposalFragmentDoc}
+  ${CurrentAuctionFragmentDoc}
+`
 export const ExploreDaosPageDocument = gql`
   query exploreDaosPage(
     $orderBy: Auction_orderBy
@@ -2555,23 +2673,32 @@ export const ProposalsDocument = gql`
   ${ProposalFragmentDoc}
   ${ProposalVoteFragmentDoc}
 `
-export const TokenDocument = gql`
-  query token($id: ID!) {
+export const TokenWithDaoDocument = gql`
+  query tokenWithDao($id: ID!) {
     token(id: $id) {
       ...Token
-    }
-  }
-  ${TokenFragmentDoc}
-`
-export const TokenWinnerDocument = gql`
-  query tokenWinner($id: ID!) {
-    auction(id: $id) {
-      winningBid {
-        amount
-        bidder
+      auction {
+        winningBid {
+          amount
+          bidder
+        }
+      }
+      dao {
+        name
+        description
+        contractImage
+        totalSupply
+        ownerCount
+        proposalCount
+        tokenAddress
+        metadataAddress
+        auctionAddress
+        treasuryAddress
+        governorAddress
       }
     }
   }
+  ${TokenFragmentDoc}
 `
 export const TokensDocument = gql`
   query tokens(
@@ -2727,6 +2854,20 @@ export function getSdk(
         'query'
       )
     },
+    dashboard(
+      variables?: DashboardQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DashboardQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DashboardQuery>(DashboardDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'dashboard',
+        'query'
+      )
+    },
     exploreDaosPage(
       variables?: ExploreDaosPageQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
@@ -2797,31 +2938,17 @@ export function getSdk(
         'query'
       )
     },
-    token(
-      variables: TokenQueryVariables,
+    tokenWithDao(
+      variables: TokenWithDaoQueryVariables,
       requestHeaders?: Dom.RequestInit['headers']
-    ): Promise<TokenQuery> {
+    ): Promise<TokenWithDaoQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
-          client.request<TokenQuery>(TokenDocument, variables, {
+          client.request<TokenWithDaoQuery>(TokenWithDaoDocument, variables, {
             ...requestHeaders,
             ...wrappedRequestHeaders,
           }),
-        'token',
-        'query'
-      )
-    },
-    tokenWinner(
-      variables: TokenWinnerQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
-    ): Promise<TokenWinnerQuery> {
-      return withWrapper(
-        (wrappedRequestHeaders) =>
-          client.request<TokenWinnerQuery>(TokenWinnerDocument, variables, {
-            ...requestHeaders,
-            ...wrappedRequestHeaders,
-          }),
-        'tokenWinner',
+        'tokenWithDao',
         'query'
       )
     },

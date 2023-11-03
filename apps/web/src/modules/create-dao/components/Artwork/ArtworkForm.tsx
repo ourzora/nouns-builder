@@ -1,10 +1,10 @@
 import { Button, Flex } from '@zoralabs/zord'
-import { Form, Formik } from 'formik'
+import { Field, FieldProps, Form, Formik } from 'formik'
 import isEmpty from 'lodash/isEmpty'
 import React from 'react'
 
-import TextArea from 'src/components/Fields/TextArea'
 import { Icon } from 'src/components/Icon'
+import { MarkdownEditor } from 'src/components/MarkdownEditor'
 
 import { useFormStore } from '../../stores'
 import { ArtworkFormValues, validationSchemaArtwork } from './ArtworkForm.schema'
@@ -22,6 +22,7 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
     setActiveSection,
     ipfsUpload,
     isUploadingToIPFS,
+    setSetUpArtwork,
   } = useFormStore()
 
   const initialValues = {
@@ -34,9 +35,13 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
     setActiveSection(activeSection - 1)
   }
 
-  const handleSubmit = (_values: ArtworkFormValues) => {
+  const handleSubmit = (values: ArtworkFormValues) => {
     setFulfilledSections(title)
     setActiveSection(activeSection + 1)
+    setSetUpArtwork({
+      ...setUpArtwork,
+      projectDescription: values.projectDescription,
+    })
   }
 
   return (
@@ -51,20 +56,23 @@ export const Artwork: React.FC<ArtworkProps> = ({ title }) => {
     >
       {(formik) => (
         <Form>
-          <TextArea
-            {...formik.getFieldProps('projectDescription')}
-            inputLabel={'Collection Description'}
-            formik={formik}
-            id={'projectDescription'}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            errorMessage={
-              formik.touched?.projectDescription && formik.errors?.projectDescription
-                ? formik.errors?.projectDescription
-                : undefined
-            }
-            placeholder={'Nouns is an experiment which combines...'}
-          />
+          <Field name="projectDescription" id={'projectDescription'}>
+            {({ field }: FieldProps) => {
+              return (
+                <MarkdownEditor
+                  value={field.value}
+                  onChange={(value: string) => formik?.setFieldValue(field.name, value)}
+                  inputLabel={'DAO Description'}
+                  errorMessage={
+                    formik.touched?.projectDescription &&
+                    formik.errors?.projectDescription
+                      ? formik.errors?.projectDescription
+                      : undefined
+                  }
+                />
+              )
+            }}
+          </Field>
 
           <ArtworkUpload
             {...formik.getFieldProps('artwork')}

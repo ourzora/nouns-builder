@@ -37,6 +37,7 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const { data } = useContractReads({
     enabled: !!userAddress,
     allowFailure: false,
+    keepPreviousData: true,
     contracts: [
       {
         abi: governorAbi,

@@ -41,7 +41,11 @@ const DaoFeedContent = ({
   )
 }
 
-export const DaoFeed = () => {
+type DaoFeedProps = {
+  isDashboard?: boolean
+}
+
+export const DaoFeed = ({ isDashboard }: DaoFeedProps) => {
   const chain = useChainStore((x) => x.chain)
   const { data: featuredDaos, error } = useSWR(
     [SWR_KEYS.FEATURED, chain.id],
@@ -59,7 +63,7 @@ export const DaoFeed = () => {
   if (!isLoading && !hasError && !hasThreeDaos) return null
 
   return (
-    <RecentlyCreated>
+    <RecentlyCreated isDashboard={isDashboard}>
       <DaoFeedContent
         loading={isLoading}
         error={hasError}
