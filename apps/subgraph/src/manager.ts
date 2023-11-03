@@ -18,7 +18,8 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   let auctionContract = AuctionContract.bind(event.params.auction)
   let managerContract = ManagerContract.bind(event.address)
 
-  let versions = managerContract.getDAOVersions(event.params.token)
+  let versions = managerContract.try_getDAOVersions(event.params.token)
+  let hasVersions = !versions.reverted
 
   let auctionConfig = new AuctionConfig(event.params.token.toHexString())
 
@@ -27,7 +28,7 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   auctionConfig.timeBuffer = auctionContract.timeBuffer()
   auctionConfig.minimumBidIncrement = auctionContract.minBidIncrement()
 
-  if (versions.auction.startsWith('2')) {
+  if (hasVersions && versions.value.auction.startsWith('2')) {
     let rewards = auctionContract.founderReward()
     auctionConfig.founderRewardBPS = rewards.getPercentBps()
     auctionConfig.founderRewardRecipient = rewards.getRecipient()
@@ -60,7 +61,7 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
   dao.totalAuctionSales = BigInt.fromI32(0)
   dao.auctionConfig = auctionConfig.id
 
-  if (versions.token.startsWith('2')) {
+  if (hasVersions && versions.value.token.startsWith('2')) {
     dao.reservedUntilTokenId = tokenContract.reservedUntilTokenId()
   }
 

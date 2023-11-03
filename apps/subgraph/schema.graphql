@@ -6,7 +6,7 @@ type DAO @entity {
   description: String!
   contractImage: String!
   projectURI: String!
-  reservedUntilTokenId: BigInt!
+  reservedUntilTokenId: BigInt
   tokenAddress: Bytes!
   metadataAddress: Bytes!
   auctionAddress: Bytes!
