@@ -25,7 +25,13 @@ import { prepareProposalTransactions } from '../../utils/prepareTransactions'
 import { Transactions } from './Transactions'
 import { ERROR_CODE, FormValues, validationSchema } from './fields'
 
-const CHAINS_TO_SIMULATE = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI, CHAIN_ID.OPTIMISM_GOERLI]
+const CHAINS_TO_SIMULATE = [
+  CHAIN_ID.ETHEREUM,
+  CHAIN_ID.GOERLI,
+  CHAIN_ID.OPTIMISM_GOERLI,
+  CHAIN_ID.BASE_GOERLI,
+  CHAIN_ID.ZORA,
+]
 
 interface ReviewProposalProps {
   disabled: boolean
