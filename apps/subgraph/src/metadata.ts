@@ -1,11 +1,11 @@
-import { DAO } from '../generated/schema'
+import { DAO, MetadataItem, MetadataProperty } from '../generated/schema'
 import {
   AddPropertiesCall as AddPropertiesFunctionCall,
   ContractImageUpdated as ContractImageUpdatedEvent,
   DescriptionUpdated as DescriptionUpdatedEvent,
   WebsiteURIUpdated as URIUpdatedEvent,
 } from '../generated/templates/MetadataRenderer/MetadataRenderer'
-import { Bytes, dataSource } from '@graphprotocol/graph-ts'
+import { dataSource } from '@graphprotocol/graph-ts'
 
 export function handleContractImageUpdated(event: ContractImageUpdatedEvent): void {
   let context = dataSource.context()
@@ -30,19 +30,33 @@ export function handleDescriptionUpdated(event: DescriptionUpdatedEvent): void {
 
 export function handleAddProperties(event: AddPropertiesFunctionCall): void {
   let context = dataSource.context()
-  let dao = DAO.load(context.getString('tokenAddress'))!
-  let thisHash = event.transaction.hash
-  let pastHashes = dao.metadataUpdateHashes
 
-  let newHashes: Bytes[] = []
-  if (pastHashes == null) {
-    // initialize array if it doesn't exist
-    newHashes = [thisHash]
-  } else {
-    // copy past transaction hashes
-    newHashes = pastHashes
-    newHashes.push(thisHash)
+  let inputs = event.inputs
+  let dao = DAO.load(context.getString('tokenAddress'))!
+  let id = dao.id + inputs._ipfsGroup.baseUri
+
+  let property = new MetadataProperty(id)
+  property.dao = dao.id
+  property.names = inputs._names
+  property.ipfsBaseUri = inputs._ipfsGroup.baseUri
+  property.ipfsExtension = inputs._ipfsGroup.extension
+
+  for (let i = 0; i < inputs._items.length; i++) {
+    let input = inputs._items[i]
+    let item = new MetadataItem(id + '-' + i.toString())
+    item.name = input.name
+    item.property = property.id
+    item.propertyId = input.propertyId
+    item.isNewProperty = input.isNewProperty
+    item.save()
   }
-  dao.metadataUpdateHashes = newHashes
+
+  property.save()
+
+  let properties: string[] =
+    dao.metadataProperties === null ? [] : dao.metadataProperties!
+
+  properties.push(property.id)
+  dao.metadataProperties = properties
   dao.save()
 }

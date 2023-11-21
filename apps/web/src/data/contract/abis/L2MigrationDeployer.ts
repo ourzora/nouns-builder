@@ -67,6 +67,25 @@ export const L2DeployerABI = [
   {
     inputs: [
       {
+        internalType: 'address',
+        name: 'l1Address',
+        type: 'address',
+      },
+    ],
+    name: 'applyL1ToL2Alias',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'pure',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
         internalType: 'bytes',
         name: '_data',
         type: 'bytes',

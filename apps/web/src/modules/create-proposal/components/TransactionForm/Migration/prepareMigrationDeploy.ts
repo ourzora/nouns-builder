@@ -1,15 +1,7 @@
-import {
-  Address,
-  createPublicClient,
-  encodeAbiParameters,
-  http,
-  parseAbiParameters,
-} from 'viem'
+import { encodeAbiParameters, parseAbiParameters } from 'viem'
 import { readContracts } from 'wagmi'
 
-import { L2_DEPLOYMENT_ADDRESSES, NULL_ADDRESS } from 'src/constants/addresses'
-import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
-import { RPC_URL } from 'src/constants/rpc'
+import { NULL_ADDRESS } from 'src/constants/addresses'
 import {
   auctionAbi,
   governorAbi,
@@ -17,88 +9,59 @@ import {
   tokenAbi,
   treasuryAbi,
 } from 'src/data/contract/abis'
-import { SDK } from 'src/data/subgraph/client'
-import { DaoStoreProps } from 'src/modules/dao'
-import { ChainStoreProps } from 'src/stores/useChainStore'
-import { AddressType, CHAIN_ID } from 'src/typings'
+import { DaoContractAddresses } from 'src/modules/dao'
+import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 export async function prepareMigrationDeploy(
-  targetChainId: CHAIN_ID,
-  currentChain: ChainStoreProps,
-  currentDao: DaoStoreProps,
-  merkleRoot: `0x${string}`
+  chainId: CHAIN_ID,
+  addresses: DaoContractAddresses,
+  deployer: AddressType,
+  merkleRoot: BytesType
 ) {
-  const { treasury, auction, token, metadata, governor } = currentDao.addresses
-  const chain = currentChain.chain
-  const tokenContractParams = {
-    abi: tokenAbi,
-    address: token as Address,
-    chainId: chain.id,
-  }
-  const metadataContractParams = {
-    abi: metadataAbi,
-    address: metadata as Address,
-    chainId: chain.id,
-  }
-  const auctionContractParams = {
-    abi: auctionAbi,
-    address: auction as Address,
-    chainId: chain.id,
-  }
-  const governorContractParams = {
-    abi: governorAbi,
-    address: governor as Address,
-    chainId: chain.id,
-  }
-  const treasuryContractParams = {
-    abi: treasuryAbi,
-    address: treasury as Address,
-    chainId: chain.id,
-  }
-  const contractData = await readContracts({
-    allowFailure: false,
-    contracts: [
-      { ...tokenContractParams, functionName: 'name' },
-      { ...tokenContractParams, functionName: 'symbol' },
-      { ...tokenContractParams, functionName: 'getFounders' },
-      { ...tokenContractParams, functionName: 'totalSupply' },
-      { ...metadataContractParams, functionName: 'contractImage' },
-      { ...metadataContractParams, functionName: 'description' },
-      { ...metadataContractParams, functionName: 'contractURI' },
-      { ...auctionContractParams, functionName: 'duration' },
-      { ...auctionContractParams, functionName: 'reservePrice' },
-      { ...governorContractParams, functionName: 'votingDelay' },
-      { ...governorContractParams, functionName: 'votingPeriod' },
-      { ...governorContractParams, functionName: 'proposalThresholdBps' },
-      { ...governorContractParams, functionName: 'quorumThresholdBps' },
-      { ...governorContractParams, functionName: 'vetoer' },
-      { ...treasuryContractParams, functionName: 'delay' },
-    ] as const,
+  const contracts = setupContracts({
+    addresses: addresses as Required<DaoContractAddresses>,
+    chainId,
   })
+  const contractData = await fetchContractData({ contracts })
+  return transformContractData({
+    contractData,
+    merkleRoot,
+    deployer,
+  })
+}
 
+const transformContractData = ({
+  contractData,
+  merkleRoot,
+  deployer,
+}: {
+  contractData: Awaited<ReturnType<typeof fetchContractData>>
+  merkleRoot: BytesType
+  deployer: AddressType
+}) => {
   const [
     name,
     symbol,
     existingFounders,
-    totalSupply,
     daoImage,
     description,
-    contractURI,
+    projectURI,
     duration,
     reservePrice,
+    auction,
     votingDelay,
     votingPeriod,
     proposalThresholdBps,
     quorumThresholdBps,
     vetoer,
     timelockDelay,
-  ] = unpackOptionalArray(contractData, 13)
+  ] = unpackOptionalArray(contractData, 15)
 
-  // L2 MESSAGE RELAYER 0x9f6793140ea606BCeB98761d9bEB1bc87383817e or 0x4200000000000000000000000000000000000007 ?
+  const [tokenId] = unpackOptionalArray(auction, 6)
+
   const L2DAOAddressZeroFounder = {
-    // L2 Message Relayer will
-    wallet: '0x01e2d618d5752f99047ba611ad35d9f8a9cc85bf' as AddressType, // deployhelper
+    wallet: deployer,
     ownershipPct: 0n,
     vestExpiry: BigInt(Math.floor(new Date('2040-01-01').getTime() / 1000)),
   }
@@ -114,33 +77,13 @@ export async function prepareMigrationDeploy(
       ]
     : [L2DAOAddressZeroFounder]
 
-  /// GET SAMPLE METADATA, TO DECODE.
-  /// NEED TO GET TXN HASH
-  const sdkDATA = await SDK.connect(currentChain.chain.id).daoMetadataHashes({
-    tokenAddress: `${token?.toLowerCase()}`,
-  })
-  const metadataUpdateHashes = sdkDATA.dao?.metadataUpdateHashes as Array<`0x${string}`>
-  console.log('sdk data: ', metadataUpdateHashes)
-
-  const client = createPublicClient({
-    chain: PUBLIC_ALL_CHAINS.find((x) => x.id === currentChain.chain.id),
-    transport: http(RPC_URL[currentChain.chain.id]),
-  })
-
-  const metadataTxn = await client.getTransaction({
-    hash: metadataUpdateHashes[0],
-  })
-
-  const encodedMetadata = metadataTxn.input
-
-  const merkleMinterSettingsHex = {
+  const minterParams = {
     mintStart: 0n,
     mintEnd: 18446744073709551615n,
     pricePerToken: 0n,
     merkleRoot: merkleRoot,
   }
 
-  // TOKEN PARAMS
   const tokenInitStrings = encodeAbiParameters(
     parseAbiParameters(
       'string name, string symbol, string description, string daoImage, string daoWebsite, string baseRenderer'
@@ -150,14 +93,14 @@ export async function prepareMigrationDeploy(
       symbol!,
       description!,
       daoImage!,
-      contractURI!,
+      projectURI!,
       'https://api.zora.co/renderer/stack-images',
     ]
   )
 
   const tokenParams = {
     initStrings: tokenInitStrings as AddressType,
-    reservedUntilTokenId: totalSupply!,
+    reservedUntilTokenId: tokenId! + 1n,
     metadataRenderer: NULL_ADDRESS,
   }
 
@@ -177,34 +120,80 @@ export async function prepareMigrationDeploy(
     vetoer: vetoer!,
   }
 
-  const { TOKEN, MEDIA_METADATA_RENDERER, AUCTION, TREASURY, GOVERNOR } =
-    L2_DEPLOYMENT_ADDRESSES[targetChainId]
-
-  const implData = {
+  return {
     token: tokenParams,
     founder: founderParams,
     auction: auctionParams,
     gov: govParams,
+    minter: minterParams,
+  }
+}
+
+const fetchContractData = async ({
+  contracts,
+}: {
+  contracts: ReturnType<typeof setupContracts>
+}) => {
+  return await readContracts({
+    allowFailure: false,
+    contracts: [
+      { ...contracts.token, functionName: 'name' },
+      { ...contracts.token, functionName: 'symbol' },
+      { ...contracts.token, functionName: 'getFounders' },
+      { ...contracts.metadata, functionName: 'contractImage' },
+      { ...contracts.metadata, functionName: 'description' },
+      { ...contracts.metadata, functionName: 'projectURI' },
+      { ...contracts.auction, functionName: 'duration' },
+      { ...contracts.auction, functionName: 'reservePrice' },
+      { ...contracts.auction, functionName: 'auction' },
+      { ...contracts.governor, functionName: 'votingDelay' },
+      { ...contracts.governor, functionName: 'votingPeriod' },
+      { ...contracts.governor, functionName: 'proposalThresholdBps' },
+      { ...contracts.governor, functionName: 'quorumThresholdBps' },
+      { ...contracts.governor, functionName: 'vetoer' },
+      { ...contracts.treasury, functionName: 'delay' },
+    ] as const,
+  })
+}
+
+const setupContracts = ({
+  addresses,
+  chainId,
+}: {
+  addresses: Required<DaoContractAddresses>
+  chainId: CHAIN_ID
+}) => {
+  const token = {
+    abi: tokenAbi,
+    address: addresses.token,
+    chainId,
+  }
+  const metadata = {
+    abi: metadataAbi,
+    address: addresses.metadata,
+    chainId,
+  }
+  const auction = {
+    abi: auctionAbi,
+    address: addresses.auction,
+    chainId,
+  }
+  const governor = {
+    abi: governorAbi,
+    address: addresses.governor,
+    chainId,
+  }
+  const treasury = {
+    abi: treasuryAbi,
+    address: addresses.treasury,
+    chainId,
   }
 
-  const implAddresses: Address[] = [
-    TOKEN,
-    MEDIA_METADATA_RENDERER,
-    AUCTION,
-    TREASURY,
-    GOVERNOR,
-  ]
-
-  /// REQUIRED
-  /// FounderParams[] calldata _founderParams,
-  /// address[] calldata _implAddresses,
-  /// bytes[] calldata _implData [token, metadata, auction, treasury, governor]
-
   return {
-    founderParams,
-    implAddresses,
-    implData,
-    encodedMetadata,
-    merkleMinterSettingsHex,
+    token,
+    metadata,
+    auction,
+    governor,
+    treasury,
   }
 }
