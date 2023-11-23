@@ -26,7 +26,14 @@ export function handleTransfer(event: TransferEvent): void {
     token = new Token(tokenId)
 
     token.name = `${tokenContract.name()} #${event.params.tokenId.toString()}`
-    token.image = `${metadataContract.rendererBase()}${attributes.value1}`
+
+    // Replace zora renderer with our own until a redirect is setup
+    const rendererBase = metadataContract
+      .rendererBase()
+      .replace('https://api.zora.co', 'https://nouns.build/api')
+
+    token.image = `${rendererBase}${attributes.value1}`
+
     token.tokenContract = event.address
     token.tokenId = event.params.tokenId
     token.mintedAt = event.block.timestamp

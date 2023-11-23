@@ -20,6 +20,7 @@ const nextConfig = {
       'zora-dev.mypinata.cloud',
       'ipfs.zora.co',
       'ipfs.decentralized-content.com',
+      'nouns.build',
     ],
   },
   async redirects() {
