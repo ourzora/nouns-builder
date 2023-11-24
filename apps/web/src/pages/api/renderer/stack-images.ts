@@ -16,13 +16,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   // Handle single image
   if (typeof images === 'string') {
     const data = await getImageData(images)
+    const convertedImage = await sharp(data).webp({ quality: 100 }).toBuffer()
 
     res.setHeader(
       'Cache-Control',
       `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
     )
     res.setHeader('Content-Type', 'image/webp')
-    return res.send(data)
+    return res.send(convertedImage)
   }
 
   // Handle multiple images
