@@ -1,20 +1,9 @@
 import axios from 'axios'
+import { getFetchableUrl } from 'ipfs-service'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
 
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
-
-export const IPFS_GATEWAY =
-  process.env.NEXT_PUBLIC_IPFS_GATEWAY || 'https://ipfs.decentralized-content.com'
-
-export function ipfsGatewayUrl(url: string | null | undefined) {
-  if (!url || typeof url !== 'string') return undefined
-  return url.replace('ipfs://', `${IPFS_GATEWAY}/ipfs/`)
-}
-
-export const config = {
-  runtime: 'edge',
-}
 
 const SVG_DEFAULT_SIZE = 1080
 
@@ -62,11 +51,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 }
 
 const getImageData = async (imageUrl: string) => {
-  const fetchableUrl = ipfsGatewayUrl(imageUrl)
+  const fetchableUrl = getFetchableUrl(imageUrl)
   if (!fetchableUrl) throw new Error('Invalid IPFS url: ' + imageUrl)
 
   return axios
-    .get(ipfsGatewayUrl(fetchableUrl)!, { responseType: 'arraybuffer' })
+    .get(getFetchableUrl(fetchableUrl)!, { responseType: 'arraybuffer' })
     .then((x) => Buffer.from(x.data, 'binary'))
 }
 
