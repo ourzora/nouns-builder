@@ -68,7 +68,6 @@ export const DaoCard = ({
           {!!tokenImage ? (
             <Image
               priority
-              unoptimized
               layout="fill"
               src={!imgErr ? getFetchableUrl(tokenImage) || '' : '/ImageError.svg'}
               onError={() => setImgErr(true)}
