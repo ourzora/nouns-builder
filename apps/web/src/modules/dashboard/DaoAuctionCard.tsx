@@ -95,6 +95,7 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
           <Image
             className={daoAvatar}
             src={currentAuction?.token?.image}
+            unoptimized
             layout="fixed"
             alt=""
           />
