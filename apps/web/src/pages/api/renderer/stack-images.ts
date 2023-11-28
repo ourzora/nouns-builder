@@ -5,29 +5,36 @@ import sharp from 'sharp'
 
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 
+export const config = {
+  runtime: 'edge',
+}
+
+const SVG_DEFAULT_SIZE = 1080
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const images = req.query.images
+  let images = req.query.images
 
   if (!images || !images.length)
     return res.status(400).json({ error: 'No images provided' })
 
   const { maxAge, swr } = CACHE_TIMES.DAO_FEED
 
-  // Handle single image
-  if (typeof images === 'string') {
-    const data = await getImageData(images)
-    const convertedImage = await sharp(data).webp({ quality: 100 }).toBuffer()
+  if (typeof images === 'string') images = [images]
 
-    res.setHeader(
-      'Cache-Control',
-      `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
+  let imageData: Buffer[] = await Promise.all(
+    images.map((imageUrl) => getImageData(imageUrl))
+  )
+
+  const isSvg = images[0].includes('.svg')
+
+  // Resize all SVGs to a default size
+  if (isSvg) {
+    imageData = await Promise.all(
+      imageData.map(async (x) =>
+        sharp(x).resize(SVG_DEFAULT_SIZE, SVG_DEFAULT_SIZE, { fit: 'inside' }).toBuffer()
+      )
     )
-    res.setHeader('Content-Type', 'image/webp')
-    return res.send(convertedImage)
   }
-
-  // Handle multiple images
-  const imageData = await Promise.all(images.map((imageUrl) => getImageData(imageUrl)))
 
   const compositeParams = imageData.slice(1).map((x) => ({
     input: x,
@@ -36,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const compositeRes = await sharp(imageData[0])
     .composite(compositeParams)
-    .webp({ quality: 100 })
+    .webp({ quality: 75 })
     .toBuffer()
 
   res.setHeader(
