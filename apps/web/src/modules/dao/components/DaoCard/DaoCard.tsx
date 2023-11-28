@@ -70,7 +70,7 @@ export const DaoCard = ({
               priority
               layout="fill"
               src={
-                !imgErr ? getFetchableUrl(tokenImage) + '&v=2' || '' : '/ImageError.svg'
+                !imgErr ? getFetchableUrl(tokenImage) + '&v=3' || '' : '/ImageError.svg'
               }
               onError={() => setImgErr(true)}
               sizes="100vw"
