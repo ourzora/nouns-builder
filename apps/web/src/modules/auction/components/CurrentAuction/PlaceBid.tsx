@@ -9,7 +9,7 @@ import { ContractButton } from 'src/components/ContractButton'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
-import { SDK } from 'src/data/subgraph/client'
+import { averageWinningBid } from 'src/data/subgraph/requests/averageWinningBid'
 import { getBids } from 'src/data/subgraph/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
 import { AddressType, Chain } from 'src/typings'
@@ -58,30 +58,11 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
     minBidIncrement,
   })
 
-  const { data: averageWinningBid } = useSWR(
-    addresses.token ? [SWR_KEYS.AUCTION, chain.id, addresses.token] : undefined,
-    async (_, chainId, tokenAddress) => {
-      const history = await SDK.connect(chainId).auctionHistory({
-        daoId: tokenAddress.toLowerCase(),
-        startTime: 0,
-        first: 5,
-      })
-
-      const nonZeroAuctions = history.dao?.auctions.filter(
-        (x) => x.winningBid?.amount && BigInt(x.winningBid?.amount) > 0n
-      )
-
-      if (!nonZeroAuctions?.length) return BigInt(0)
-
-      const auctionSum =
-        nonZeroAuctions
-          .map((x) => BigInt(x.winningBid?.amount || 0))
-          .reduce((acc, bid) => {
-            return acc + bid
-          }) || 0n
-
-      return auctionSum / BigInt(nonZeroAuctions.length)
-    }
+  const { data: averageBid } = useSWR(
+    addresses.token
+      ? [SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token]
+      : undefined,
+    () => averageWinningBid(chain.id, addresses.token as Address)
   )
 
   const isMinBid = Number(bidAmount) >= minBidAmount
@@ -89,7 +70,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
   const minBidAmountInWei = parseEther(formattedMinBid)
 
   // Warn users if they are bidding more than 5x the average winning bid or min bid amount
-  const valueToCalculateWarning = averageWinningBid || minBidAmountInWei
+  const valueToCalculateWarning = averageBid || minBidAmountInWei
   const minAmountForWarning = valueToCalculateWarning * 5n
 
   const handleCreateBid = async () => {
@@ -124,6 +105,10 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
       await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.token, tokenId], () =>
         getBids(chain.id, addresses.token!, tokenId)
       )
+
+      await mutate([SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token], () =>
+        averageWinningBid(chain.id, addresses.token as Address)
+      )
     } catch (error) {
       console.error(error)
     } finally {
@@ -151,7 +136,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
             daoName={daoName}
             currentBid={bidAmount}
             isCreatingBid={creatingBid}
-            isAverage={!!averageWinningBid}
+            isAverage={!!averageBid}
             maxReccomendedBid={formatEther(valueToCalculateWarning)}
             onCancel={() => setShowWarning(false)}
             onConfirm={() => createBidTransaction()}
