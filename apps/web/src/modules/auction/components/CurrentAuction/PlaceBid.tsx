@@ -90,8 +90,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
   const minBidAmountInWei = parseEther(formattedMinBid)
 
   // Warn users if they are bidding more than 5x the average winning bid or min bid amount
-  const valueToCalculateWarning =
-    averageWinningBid || minBidAmountInWei || auctionReservePrice || 0n
+  const valueToCalculateWarning = averageWinningBid || minBidAmountInWei
   const minAmountForWarning = valueToCalculateWarning * 5n
 
   const handleCreateBid = async () => {
