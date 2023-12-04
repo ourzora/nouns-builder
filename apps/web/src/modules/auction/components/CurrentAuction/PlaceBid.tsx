@@ -1,7 +1,6 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import React, { Fragment, memo, useEffect, useState } from 'react'
-import { useSWRConfig } from 'swr'
-import useSWRImmutable from 'swr/immutable'
+import useSWR, { useSWRConfig } from 'swr'
 import { formatEther, parseEther } from 'viem'
 import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
@@ -59,7 +58,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
     minBidIncrement,
   })
 
-  const { data: averageWinningBid } = useSWRImmutable(
+  const { data: averageWinningBid } = useSWR(
     addresses.token ? [SWR_KEYS.AUCTION, chain.id, addresses.token] : undefined,
     async (_, chainId, tokenAddress) => {
       const history = await SDK.connect(chainId).auctionHistory({
