@@ -2,6 +2,7 @@ const SWR_KEYS = {
   AUCTION_BIDS: 'auction-bids',
   ARTWORK_PROPERTY_ITEMS_COUNT: 'artwork-property-items-count',
   AUCTION_SETTLED: 'auction-settled',
+  AUCTION_HISTORY: 'auction-history',
   ETH_USD: 'eth-usd-price',
   TREASURY_SALES: 'treasury-sales',
   NFT_COUNT: 'nft-count',

@@ -97,6 +97,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
             chain={chain}
             tokenId={queriedTokenId}
             auctionAddress={auctionAddress}
+            daoName={token.dao.name}
             bid={highestBid}
             owner={highestBidder}
             endTime={endTime}
