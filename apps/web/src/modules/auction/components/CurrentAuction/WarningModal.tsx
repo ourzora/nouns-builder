@@ -4,8 +4,9 @@ import { formatCryptoVal } from 'src/utils/numbers'
 
 export interface WarningModalProps {
   daoName: string
+  isAverage: boolean
   currentBid: string
-  averagePrice: string
+  maxReccomendedBid: string
   isCreatingBid: boolean
   onConfirm: () => void
   onCancel: () => void
@@ -14,7 +15,8 @@ export interface WarningModalProps {
 export const WarningModal: React.FC<WarningModalProps> = ({
   daoName,
   currentBid,
-  averagePrice,
+  isAverage,
+  maxReccomendedBid,
   isCreatingBid,
   onConfirm,
   onCancel,
@@ -25,7 +27,8 @@ export const WarningModal: React.FC<WarningModalProps> = ({
         <Box as="span" mr="x1">
           &#9888;
         </Box>
-        Bid amount is significantly higher than the average auction price for {daoName}
+        Bid amount is significantly higher than the {isAverage ? 'average' : 'minimum'}{' '}
+        auction price for {daoName}
       </Text>
 
       <Flex justify={'space-between'} mt="x8">
@@ -34,8 +37,8 @@ export const WarningModal: React.FC<WarningModalProps> = ({
           <Heading color="text2">{formatCryptoVal(currentBid)} ETH</Heading>
         </Stack>
         <Stack>
-          <Text>Average price</Text>
-          <Heading color="text2">{formatCryptoVal(averagePrice)} ETH</Heading>
+          <Text>{isAverage ? 'Average' : 'Minimum'} price</Text>
+          <Heading color="text2">{formatCryptoVal(maxReccomendedBid)} ETH</Heading>
         </Stack>
       </Flex>
 

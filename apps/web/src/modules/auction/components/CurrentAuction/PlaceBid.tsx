@@ -87,9 +87,12 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
 
   const isMinBid = Number(bidAmount) >= minBidAmount
   const formattedMinBid = formatCryptoVal(minBidAmount)
+  const minBidAmountInWei = parseEther(formattedMinBid)
 
-  // Warn users if they are bidding more than 5x the average winning bid or reserve price
-  const minAmountForWarning = (averageWinningBid || auctionReservePrice || 0n) * 5n
+  // Warn users if they are bidding more than 5x the average winning bid or min bid amount
+  const valueToCalculateWarning =
+    averageWinningBid || minBidAmountInWei || auctionReservePrice || 0n
+  const minAmountForWarning = valueToCalculateWarning * 5n
 
   const handleCreateBid = async () => {
     if (!isMinBid || !bidAmount || creatingBid) return
@@ -127,6 +130,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
       console.error(error)
     } finally {
       setCreatingBid(false)
+      setShowWarning(false)
     }
   }
 
@@ -143,13 +147,14 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
       direction={{ '@initial': 'column', '@768': 'row' }}
       justify={'flex-start'}
     >
-      {bidAmount && averageWinningBid ? (
+      {bidAmount && valueToCalculateWarning ? (
         <AnimatedModal size={'small'} open={showWarning}>
           <WarningModal
             daoName={daoName}
             currentBid={bidAmount}
             isCreatingBid={creatingBid}
-            averagePrice={formatEther(averageWinningBid)}
+            isAverage={!!averageWinningBid}
+            maxReccomendedBid={formatEther(valueToCalculateWarning)}
             onCancel={() => setShowWarning(false)}
             onConfirm={() => createBidTransaction()}
           />
