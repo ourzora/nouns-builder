@@ -18,6 +18,7 @@ import { Settle } from './Settle'
 export const CurrentAuction = ({
   chain,
   tokenId,
+  daoName,
   bid,
   owner,
   endTime,
@@ -26,6 +27,7 @@ export const CurrentAuction = ({
   chain: Chain
   tokenId: string
   auctionAddress: string
+  daoName: string
   bid?: bigint
   owner?: string
   endTime?: number
@@ -71,7 +73,12 @@ export const CurrentAuction = ({
       </AuctionDetails>
 
       <ActionsWrapper>
-        <MemoizedPlaceBid chain={chain} tokenId={tokenId} highestBid={bid} />
+        <MemoizedPlaceBid
+          daoName={daoName}
+          chain={chain}
+          tokenId={tokenId}
+          highestBid={bid}
+        />
       </ActionsWrapper>
 
       <RecentBids bids={bids} />

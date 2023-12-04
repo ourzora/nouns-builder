@@ -1,13 +1,15 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
-import React, { Fragment, memo, useState } from 'react'
-import { useSWRConfig } from 'swr'
-import { parseEther } from 'viem'
+import React, { Fragment, memo, useEffect, useState } from 'react'
+import useSWR, { useSWRConfig } from 'swr'
+import { formatEther, parseEther } from 'viem'
 import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
+import { averageWinningBid } from 'src/data/subgraph/requests/averageWinningBid'
 import { getBids } from 'src/data/subgraph/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
 import { AddressType, Chain } from 'src/typings'
@@ -16,14 +18,16 @@ import { formatCryptoVal } from 'src/utils/numbers'
 
 import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
+import { WarningModal } from './WarningModal'
 
 interface PlaceBidProps {
   chain: Chain
   tokenId: string
+  daoName: string
   highestBid?: bigint
 }
 
-export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
+export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps) => {
   const { address } = useAccount()
   const { chain: wagmiChain } = useNetwork()
   const { data: balance } = useBalance({ address: address, chainId: chain.id })
@@ -31,6 +35,7 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
   const { addresses } = useDaoStore()
 
   const [creatingBid, setCreatingBid] = useState(false)
+  const [showWarning, setShowWarning] = useState(false)
   const [bidAmount, setBidAmount] = React.useState<string | undefined>(undefined)
 
   const auctionContractParams = {
@@ -53,8 +58,36 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
     minBidIncrement,
   })
 
+  const { data: averageBid } = useSWR(
+    addresses.token
+      ? [SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token]
+      : undefined,
+    () => averageWinningBid(chain.id, addresses.token as Address)
+  )
+
+  const isMinBid = Number(bidAmount) >= minBidAmount
+  const formattedMinBid = formatCryptoVal(minBidAmount)
+  const minBidAmountInWei = parseEther(formattedMinBid)
+
+  // Warn users if they are bidding more than 5x the average winning bid or min bid amount
+  const valueToCalculateWarning = averageBid || minBidAmountInWei
+  const minAmountForWarning = valueToCalculateWarning * 5n
+
   const handleCreateBid = async () => {
     if (!isMinBid || !bidAmount || creatingBid) return
+
+    const amountInWei = parseEther(bidAmount)
+
+    if (amountInWei && minAmountForWarning && amountInWei > minAmountForWarning) {
+      setShowWarning(true)
+      return
+    }
+
+    await createBidTransaction()
+  }
+
+  const createBidTransaction = async () => {
+    if (!isMinBid || !bidAmount) return
 
     try {
       setCreatingBid(true)
@@ -72,15 +105,21 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
       await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.token, tokenId], () =>
         getBids(chain.id, addresses.token!, tokenId)
       )
+
+      await mutate([SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token], () =>
+        averageWinningBid(chain.id, addresses.token as Address)
+      )
     } catch (error) {
       console.error(error)
     } finally {
       setCreatingBid(false)
+      setShowWarning(false)
     }
   }
 
-  const isMinBid = Number(bidAmount) >= minBidAmount
-  const formattedMinBid = formatCryptoVal(minBidAmount)
+  useEffect(() => {
+    document.body.style.overflow = !!showWarning ? 'hidden' : 'unset'
+  }, [showWarning])
 
   const isValidBid = bidAmount && isMinBid
   const isValidChain = wagmiChain?.id === chain.id
@@ -91,6 +130,20 @@ export const PlaceBid = ({ chain, highestBid, tokenId }: PlaceBidProps) => {
       direction={{ '@initial': 'column', '@768': 'row' }}
       justify={'flex-start'}
     >
+      {bidAmount && valueToCalculateWarning ? (
+        <AnimatedModal size={'small'} open={showWarning}>
+          <WarningModal
+            daoName={daoName}
+            currentBid={bidAmount}
+            isCreatingBid={creatingBid}
+            isAverage={!!averageBid}
+            maxReccomendedBid={formatEther(valueToCalculateWarning)}
+            onCancel={() => setShowWarning(false)}
+            onConfirm={() => createBidTransaction()}
+          />
+        </AnimatedModal>
+      ) : null}
+
       {!creatingBid ? (
         <Fragment>
           <form className={bidForm}>
