@@ -27,7 +27,7 @@ const getMetadataAttributes = async ({
   chainId: CHAIN_ID
 }) => {
   let lengthRequests = []
-  for (let currentTokenId = 0; currentTokenId < finalTokenId; currentTokenId++) {
+  for (let currentTokenId = 0; currentTokenId <= finalTokenId; currentTokenId++) {
     lengthRequests.push({
       chainId,
       address: metadata,
@@ -43,7 +43,7 @@ const getMetadataAttributes = async ({
   })) as number[]
 
   let attributeRequests = []
-  for (let currentTokenId = 0; currentTokenId < finalTokenId; currentTokenId++) {
+  for (let currentTokenId = 0; currentTokenId <= finalTokenId; currentTokenId++) {
     for (
       let attributeId = 0;
       attributeId <= lengthResult[currentTokenId];

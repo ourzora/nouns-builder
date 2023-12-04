@@ -17,6 +17,7 @@ export async function prepareMigrationDeploy(
   chainId: CHAIN_ID,
   addresses: DaoContractAddresses,
   deployer: AddressType,
+  metadata: AddressType,
   merkleRoot: BytesType
 ) {
   const contracts = setupContracts({
@@ -27,16 +28,19 @@ export async function prepareMigrationDeploy(
   return transformContractData({
     contractData,
     merkleRoot,
+    metadata,
     deployer,
   })
 }
 
 const transformContractData = ({
   contractData,
+  metadata,
   merkleRoot,
   deployer,
 }: {
   contractData: Awaited<ReturnType<typeof fetchContractData>>
+  metadata: AddressType
   merkleRoot: BytesType
   deployer: AddressType
 }) => {
@@ -101,7 +105,7 @@ const transformContractData = ({
   const tokenParams = {
     initStrings: tokenInitStrings as AddressType,
     reservedUntilTokenId: tokenId! + 1n,
-    metadataRenderer: NULL_ADDRESS,
+    metadataRenderer: metadata,
   }
 
   const auctionParams = {
