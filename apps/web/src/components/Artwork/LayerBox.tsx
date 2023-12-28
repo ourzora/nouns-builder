@@ -23,6 +23,8 @@ interface Trait {
 export type OrderedTraits = Array<Trait>
 
 export const getLayerName = (idx: number, layers?: OrderedTraits): string => {
+  const maxIdx = layers ? layers.length - 1 : 0;
+  
   if (idx === 0) {
     return 'Top layer'
   }
@@ -31,7 +33,7 @@ export const getLayerName = (idx: number, layers?: OrderedTraits): string => {
     return 'Base layer'
   }
 
-  return `Layer #${idx}`
+  return `Layer #${maxIdx - idx}`
 }
 
 export interface DragAndDropProps {
