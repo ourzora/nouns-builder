@@ -11,6 +11,7 @@ export enum TransactionType {
   PAUSE_AUCTIONS = 'pause-auctions',
   UPDATE_MINTER = 'update-minter',
   REPLACE_ARTWORK = 'replace-artwork',
+  ADD_ARTWORK = 'add-artwork',
 }
 
 export interface TransactionTypeProps {
@@ -59,6 +60,12 @@ export const TRANSACTION_TYPES = {
   [TransactionType.REPLACE_ARTWORK]: {
     title: 'Replace Artwork',
     subTitle: 'Create a proposal to replace your artwork',
+    icon: 'brush',
+    iconBackdrop: 'rgba(236, 113, 75, 0.1)',
+  },
+  [TransactionType.ADD_ARTWORK]: {
+    title: 'Add Artwork',
+    subTitle: 'Create a proposal to add new artwork',
     icon: 'brush',
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
