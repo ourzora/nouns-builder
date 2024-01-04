@@ -27,6 +27,11 @@ export const L2DeployerABI = [
   },
   {
     inputs: [],
+    name: 'METADATA_CALLS_NOT_EXECUTED',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'METADATA_CALL_FAILED',
     type: 'error',
   },
@@ -62,6 +67,25 @@ export const L2DeployerABI = [
       },
     ],
     name: 'DeployerSet',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'deployer',
+        type: 'address',
+      },
+    ],
+    name: 'OwnershipRenounced',
     type: 'event',
   },
   {
@@ -104,12 +128,22 @@ export const L2DeployerABI = [
         type: 'address',
       },
     ],
-    name: 'crossDomainDeployerToToken',
+    name: 'crossDomainDeployerToMigration',
     outputs: [
       {
         internalType: 'address',
-        name: '',
+        name: 'tokenAddress',
         type: 'address',
+      },
+      {
+        internalType: 'uint256',
+        name: 'minimumMetadataCalls',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'executedMetadataCalls',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -264,6 +298,16 @@ export const L2DeployerABI = [
         internalType: 'struct MerkleReserveMinter.MerkleMinterSettings',
         name: '_minterParams',
         type: 'tuple',
+      },
+      {
+        internalType: 'uint256',
+        name: '_delayedGovernanceAmount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: '_minimumMetadataCalls',
+        type: 'uint256',
       },
     ],
     name: 'deploy',

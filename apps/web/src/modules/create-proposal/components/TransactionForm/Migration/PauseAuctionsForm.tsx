@@ -15,7 +15,7 @@ import { toSeconds } from 'src/utils/helpers'
 
 import { checkboxStyleVariants } from '../ReplaceArtwork/ReplaceArtworkForm.css'
 
-export const MigrationFormC1: React.FC<{}> = ({}) => {
+export const PauseAuctionsForm = () => {
   const { auction, governor } = useDaoStore((state) => state.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const chain = useChainStore((x) => x.chain)
