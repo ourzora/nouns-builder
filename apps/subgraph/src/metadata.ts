@@ -48,7 +48,7 @@ export function handleAddProperties(event: AddPropertiesFunctionCall): void {
     let input = inputs._items[i]
     let item = new MetadataItem(id + '-' + i.toString())
     item.name = input.name
-    item.property = property.id
+    item.propertyInfo = property.id
     item.propertyId = input.propertyId
     item.isNewProperty = input.isNewProperty
     item.save()
@@ -85,7 +85,7 @@ export function handleDeleteAndRecreateProperties(
     let input = inputs._items[i]
     let item = new MetadataItem(id + '-' + i.toString())
     item.name = input.name
-    item.property = property.id
+    item.propertyInfo = property.id
     item.propertyId = input.propertyId
     item.isNewProperty = input.isNewProperty
     item.save()
