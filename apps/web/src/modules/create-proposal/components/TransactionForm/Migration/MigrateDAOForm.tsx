@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text } from '@zoralabs/zord'
+import { Box, Button, Flex, Spinner, Text } from '@zoralabs/zord'
 import { useState } from 'react'
 
 import {
@@ -25,11 +25,12 @@ export const MigrateDAOForm = () => {
   )
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
-  const transactions = usePrepareMigration({
+  const { transactions, error } = usePrepareMigration({
     migratingToChainId,
   })
 
   const handleSubmit = () => {
+    if (!transactions) return
     addTransaction({
       type: TransactionType.MIGRATION,
       summary: 'Migrate to L2',
@@ -40,6 +41,8 @@ export const MigrateDAOForm = () => {
   const handleChainChange = (value: CHAIN_ID) => {
     setMigratingToChainId(value)
   }
+
+  const loading = !transactions && !error
 
   return (
     <Box w={'100%'}>
@@ -69,10 +72,25 @@ export const MigrateDAOForm = () => {
             variant={'outline'}
             borderRadius={'curved'}
             type="button"
+            disabled={!transactions}
             onClick={() => handleSubmit()}
           >
-            Add Transaction to Queue
+            {loading ? (
+              <Flex align={'center'}>
+                <Box mr="x2">Loading Transaction Data</Box>
+                <Spinner size="md" />
+              </Flex>
+            ) : error ? (
+              'Error Loading Data'
+            ) : (
+              'Add Transaction to Queue'
+            )}
           </Button>
+          {error && (
+            <Box mt="x4" color="negative">
+              An unexpected error has occured please try again
+            </Box>
+          )}
         </Flex>
       </Box>
     </Box>

@@ -57,7 +57,7 @@ export const MERKLE_RESERVE_MINTER =
   '0xa2d7e55f87f1913d5da10807cf695dc35bc29b12' as AddressType
 
 export const MERKLE_METADATA_RENDERER =
-  '0xcbe9b735760be192c901896db6e43c7e7bcf4139' as AddressType
+  '0xc422f3f254a86ee369066007bb3c5751cc29c95c' as AddressType
 
 export const L2_MIGRATION_DEPLOYER =
   '0xed98171590dba48f6596f4743c2b7300a7091f9e' as AddressType

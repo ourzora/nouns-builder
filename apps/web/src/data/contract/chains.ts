@@ -7,7 +7,7 @@ import { PUBLIC_IS_TESTNET, base, zora, zoraGoerli } from 'src/constants/default
 import { RPC_URL } from 'src/constants/rpc'
 import { CHAIN_ID } from 'src/typings'
 
-const MAINNET_CHAINS = [mainnet, zora, base, optimism]
+const MAINNET_CHAINS = [mainnet, zora, base, optimism, baseGoerli]
 // Mainnet is required here due to hooks like useEnsData that only pull data from mainnet
 const TESTNET_CHAINS = [mainnet, goerli, optimismGoerli, baseGoerli, zoraGoerli]
 

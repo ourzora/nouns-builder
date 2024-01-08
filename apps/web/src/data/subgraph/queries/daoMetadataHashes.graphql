@@ -1,6 +1,0 @@
-query daoMetadataHashes($tokenAddress: ID!) {
-  dao(id: $tokenAddress) {
-    metadataAddress
-    metadataUpdateHashes
-  }
-}
