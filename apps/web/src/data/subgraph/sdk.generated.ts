@@ -846,8 +846,8 @@ export type MetadataItem = {
   id: Scalars['ID']
   isNewProperty: Scalars['Boolean']
   name: Scalars['String']
-  property: MetadataProperty
   propertyId: Scalars['BigInt']
+  propertyInfo: MetadataProperty
 }
 
 export type MetadataItem_Filter = {
@@ -887,7 +887,6 @@ export type MetadataItem_Filter = {
   name_starts_with?: InputMaybe<Scalars['String']>
   name_starts_with_nocase?: InputMaybe<Scalars['String']>
   or?: InputMaybe<Array<InputMaybe<MetadataItem_Filter>>>
-  property?: InputMaybe<Scalars['String']>
   propertyId?: InputMaybe<Scalars['BigInt']>
   propertyId_gt?: InputMaybe<Scalars['BigInt']>
   propertyId_gte?: InputMaybe<Scalars['BigInt']>
@@ -896,39 +895,40 @@ export type MetadataItem_Filter = {
   propertyId_lte?: InputMaybe<Scalars['BigInt']>
   propertyId_not?: InputMaybe<Scalars['BigInt']>
   propertyId_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  property_?: InputMaybe<MetadataProperty_Filter>
-  property_contains?: InputMaybe<Scalars['String']>
-  property_contains_nocase?: InputMaybe<Scalars['String']>
-  property_ends_with?: InputMaybe<Scalars['String']>
-  property_ends_with_nocase?: InputMaybe<Scalars['String']>
-  property_gt?: InputMaybe<Scalars['String']>
-  property_gte?: InputMaybe<Scalars['String']>
-  property_in?: InputMaybe<Array<Scalars['String']>>
-  property_lt?: InputMaybe<Scalars['String']>
-  property_lte?: InputMaybe<Scalars['String']>
-  property_not?: InputMaybe<Scalars['String']>
-  property_not_contains?: InputMaybe<Scalars['String']>
-  property_not_contains_nocase?: InputMaybe<Scalars['String']>
-  property_not_ends_with?: InputMaybe<Scalars['String']>
-  property_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  property_not_in?: InputMaybe<Array<Scalars['String']>>
-  property_not_starts_with?: InputMaybe<Scalars['String']>
-  property_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  property_starts_with?: InputMaybe<Scalars['String']>
-  property_starts_with_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo?: InputMaybe<Scalars['String']>
+  propertyInfo_?: InputMaybe<MetadataProperty_Filter>
+  propertyInfo_contains?: InputMaybe<Scalars['String']>
+  propertyInfo_contains_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_ends_with?: InputMaybe<Scalars['String']>
+  propertyInfo_ends_with_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_gt?: InputMaybe<Scalars['String']>
+  propertyInfo_gte?: InputMaybe<Scalars['String']>
+  propertyInfo_in?: InputMaybe<Array<Scalars['String']>>
+  propertyInfo_lt?: InputMaybe<Scalars['String']>
+  propertyInfo_lte?: InputMaybe<Scalars['String']>
+  propertyInfo_not?: InputMaybe<Scalars['String']>
+  propertyInfo_not_contains?: InputMaybe<Scalars['String']>
+  propertyInfo_not_contains_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_not_ends_with?: InputMaybe<Scalars['String']>
+  propertyInfo_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_not_in?: InputMaybe<Array<Scalars['String']>>
+  propertyInfo_not_starts_with?: InputMaybe<Scalars['String']>
+  propertyInfo_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_starts_with?: InputMaybe<Scalars['String']>
+  propertyInfo_starts_with_nocase?: InputMaybe<Scalars['String']>
 }
 
 export enum MetadataItem_OrderBy {
   Id = 'id',
   IsNewProperty = 'isNewProperty',
   Name = 'name',
-  Property = 'property',
   PropertyId = 'propertyId',
-  PropertyCreatedAt = 'property__createdAt',
-  PropertyDeleted = 'property__deleted',
-  ChildPropertyId = 'property__id',
-  PropertyIpfsBaseUri = 'property__ipfsBaseUri',
-  PropertyIpfsExtension = 'property__ipfsExtension',
+  PropertyInfo = 'propertyInfo',
+  PropertyInfoCreatedAt = 'propertyInfo__createdAt',
+  PropertyInfoDeleted = 'propertyInfo__deleted',
+  PropertyInfoId = 'propertyInfo__id',
+  PropertyInfoIpfsBaseUri = 'propertyInfo__ipfsBaseUri',
+  PropertyInfoIpfsExtension = 'propertyInfo__ipfsExtension',
 }
 
 export type MetadataProperty = {
