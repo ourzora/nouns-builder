@@ -8,7 +8,7 @@ import { Meta } from 'src/components/Meta'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
-import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
+import { PUBLIC_ALL_CHAINS, PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { CAST_ENABLED } from 'src/constants/farcasterEnabled'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { SDK } from 'src/data/subgraph/client'
@@ -27,14 +27,13 @@ import { DaoTopSection } from 'src/modules/dao/components/DaoTopSection'
 import FeedTab from 'src/modules/dao/components/Feed/Feed'
 import { NextPageWithLayout } from 'src/pages/_app'
 import { DaoOgMetadata } from 'src/pages/api/og/dao'
-import { AddressType, Chain } from 'src/typings'
+import { AddressType, CHAIN_ID, Chain } from 'src/typings'
 import { isPossibleMarkdown } from 'src/utils/helpers'
 
 export type TokenWithDao = NonNullable<TokenWithDaoQuery['token']>
 
 interface TokenPageProps {
   url: string
-  chain: Chain
   collection: AddressType
   token: TokenWithDao
   name: string
@@ -42,23 +41,26 @@ interface TokenPageProps {
   tokenId: string
   addresses: DaoContractAddresses
   ogImageURL: string
+  chainId: CHAIN_ID
 }
 
 const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   url,
-  chain,
   collection,
   token,
   description,
   name,
   addresses,
   ogImageURL,
+  chainId,
 }) => {
   const { query, replace, pathname } = useRouter()
   const { address } = useAccount()
 
+  const chain = PUBLIC_ALL_CHAINS.find((x) => x.id === chainId) as Chain
+
   const { hasThreshold } = useVotes({
-    chainId: chain.id,
+    chainId: chainId,
     signerAddress: address,
     collectionAddress: collection,
     governorAddress: addresses?.governor,
@@ -240,7 +242,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 
     const props: TokenPageProps = {
       url: resolvedUrl,
-      chain,
       collection,
       name,
       token,
@@ -248,6 +249,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       tokenId,
       addresses,
       ogImageURL,
+      chainId: chain.id,
     }
 
     return {
