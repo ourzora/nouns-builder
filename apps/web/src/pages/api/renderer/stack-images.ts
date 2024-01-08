@@ -21,16 +21,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     images.map((imageUrl) => getImageData(imageUrl))
   )
 
-  const isSvg = images[0].includes('.svg')
-
-  // Resize all SVGs to a default size
-  if (isSvg) {
-    imageData = await Promise.all(
-      imageData.map(async (x) =>
-        sharp(x).resize(SVG_DEFAULT_SIZE, SVG_DEFAULT_SIZE, { fit: 'inside' }).toBuffer()
-      )
+  // Resize all images to a default size
+  imageData = await Promise.all(
+    imageData.map(async (x) =>
+      sharp(x).resize(SVG_DEFAULT_SIZE, SVG_DEFAULT_SIZE, { fit: 'inside' }).toBuffer()
     )
-  }
+  )
 
   const compositeParams = imageData.slice(1).map((x) => ({
     input: x,
