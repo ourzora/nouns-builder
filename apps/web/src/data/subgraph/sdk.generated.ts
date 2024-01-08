@@ -926,7 +926,7 @@ export enum MetadataItem_OrderBy {
   PropertyId = 'propertyId',
   PropertyCreatedAt = 'property__createdAt',
   PropertyDeleted = 'property__deleted',
-  PropertyId = 'property__id',
+  ChildPropertyId = 'property__id',
   PropertyIpfsBaseUri = 'property__ipfsBaseUri',
   PropertyIpfsExtension = 'property__ipfsExtension',
 }
