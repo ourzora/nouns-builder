@@ -1,12 +1,28 @@
 import { Box, Stack, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
+import { useContractRead } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
+import { auctionAbi } from 'src/data/contract/abis'
+import { useDaoStore } from 'src/modules/dao'
 import { L2MigratedResponse } from 'src/pages/api/migrated'
+import { useChainStore } from 'src/stores/useChainStore'
 
 export const DaoMigrated = ({ migrated }: { migrated: L2MigratedResponse }) => {
+  const { id: chainId } = useChainStore((x) => x.chain)
   const migratedToChain = PUBLIC_ALL_CHAINS.find((x) => x.id === migrated.chainId)
+
+  const { auction } = useDaoStore((x) => x.addresses)
+
+  const { data: paused } = useContractRead({
+    abi: auctionAbi,
+    address: auction,
+    functionName: 'paused',
+    chainId,
+  })
+
+  if (!paused) return null
 
   return (
     <Stack align={'center'} w="100%" mt="x7">

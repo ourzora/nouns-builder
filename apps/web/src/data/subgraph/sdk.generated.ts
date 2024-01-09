@@ -2356,6 +2356,18 @@ export type DaoMetadataQuery = {
   } | null
 }
 
+export type DaoNextAndPreviousTokensQueryVariables = Exact<{
+  tokenAddress: Scalars['String']
+  tokenId: Scalars['BigInt']
+}>
+
+export type DaoNextAndPreviousTokensQuery = {
+  __typename?: 'Query'
+  prev: Array<{ __typename?: 'Token'; tokenId: any }>
+  next: Array<{ __typename?: 'Token'; tokenId: any }>
+  latest: Array<{ __typename?: 'Token'; tokenId: any }>
+}
+
 export type DaoOgMetadataQueryVariables = Exact<{
   tokenAddress: Scalars['ID']
 }>
@@ -2887,6 +2899,34 @@ export const DaoMetadataDocument = gql`
     }
   }
 `
+export const DaoNextAndPreviousTokensDocument = gql`
+  query daoNextAndPreviousTokens($tokenAddress: String!, $tokenId: BigInt!) {
+    prev: tokens(
+      where: { dao: $tokenAddress, tokenId_lt: $tokenId }
+      orderBy: tokenId
+      orderDirection: desc
+      first: 1
+    ) {
+      tokenId
+    }
+    next: tokens(
+      where: { dao: $tokenAddress, tokenId_gt: $tokenId }
+      orderBy: tokenId
+      orderDirection: asc
+      first: 1
+    ) {
+      tokenId
+    }
+    latest: tokens(
+      where: { dao: $tokenAddress }
+      orderBy: tokenId
+      orderDirection: desc
+      first: 1
+    ) {
+      tokenId
+    }
+  }
+`
 export const DaoOgMetadataDocument = gql`
   query daoOGMetadata($tokenAddress: ID!) {
     dao(id: $tokenAddress) {
@@ -3198,6 +3238,21 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoMetadata',
+        'query'
+      )
+    },
+    daoNextAndPreviousTokens(
+      variables: DaoNextAndPreviousTokensQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoNextAndPreviousTokensQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoNextAndPreviousTokensQuery>(
+            DaoNextAndPreviousTokensDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'daoNextAndPreviousTokens',
         'query'
       )
     },

@@ -25,6 +25,7 @@ const SWR_KEYS = {
   TOKEN_HOLDERS_MERKLE_ROOT: 'token-holders-merkle-root',
   ENCODED_DAO_METADATA: 'encoded-dao-metadata',
   DAO_MIGRATED: 'dao-migrated',
+  DAO_NEXT_AND_PREVIOUS_TOKENS: 'dao-next-and-previous-tokens',
   DYNAMIC: {
     MY_DAOS(str: string) {
       return `my-daos-${str}`

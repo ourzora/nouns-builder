@@ -140,7 +140,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         orderDirection: OrderDirection.Desc,
         first: 1,
       })
-      .then((x) => (x.tokens.length > 0 ? x.tokens[0].tokenId : 0))
+      .then((x) => (x.tokens.length > 0 ? x.tokens[0].tokenId : undefined))
 
     const owner = await readContract({
       abi: auctionAbi,
@@ -149,7 +149,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       chainId: chain.id,
     })
 
-    const initialized: boolean = owner === addresses.treasury && latestTokenId > 0
+    const initialized: boolean =
+      owner === addresses.treasury && latestTokenId !== undefined
 
     if (!initialized) {
       return {

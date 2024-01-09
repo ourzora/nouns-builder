@@ -107,7 +107,6 @@ export const Auction: React.FC<AuctionControllerProps> = ({
           name={name}
           collection={collection}
           tokenId={Number(queriedTokenId)}
-          currentAuction={Number(currentTokenId)}
         />
 
         {isTokenActiveAuction && !!auction && (
