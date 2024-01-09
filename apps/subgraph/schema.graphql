@@ -16,6 +16,7 @@ type DAO @entity {
   totalAuctionSales: BigInt!
   auctionConfig: AuctionConfig!
   currentAuction: Auction
+  metadataProperties: [MetadataProperty!]
   owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
   tokens: [Token!]! @derivedFrom(field: "dao")
   proposals: [Proposal!]! @derivedFrom(field: "dao")
@@ -73,6 +74,7 @@ type Proposal @entity {
   snapshotBlockNumber: BigInt!
   transactionHash: Bytes!
   votes: [ProposalVote!]! @derivedFrom(field: "proposal")
+  executionHash: Bytes
 }
 
 enum ProposalVoteSupport {
@@ -119,4 +121,21 @@ type AuctionBid @entity {
   bidder: Bytes!
   auction: Auction!
   bidTime: BigInt!
+}
+
+type MetadataProperty @entity {
+  id: ID!
+  dao: DAO!
+  names: [String!]!
+  items: [MetadataItem!]! @derivedFrom(field: "property")
+  ipfsBaseUri: String!
+  ipfsExtension: String!
+}
+
+type MetadataItem @entity {
+  id: ID!
+  property: MetadataProperty!
+  propertyId: BigInt!
+  name: String!
+  isNewProperty: Boolean!
 }

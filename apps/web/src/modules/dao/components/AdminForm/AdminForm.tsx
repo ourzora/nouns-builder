@@ -259,6 +259,8 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
       addresses?.auction as Address
     )
 
+    console.log(transactionsWithPauseUnpause)
+
     createProposal({
       disabled: false,
       title: undefined,

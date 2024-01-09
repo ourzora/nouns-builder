@@ -83,6 +83,7 @@ export function handleProposalExecuted(event: ProposalExecutedEvent): void {
   let proposal = new Proposal(event.params.proposalId.toHexString())
   proposal.executed = true
   proposal.queued = false
+  proposal.executionHash = event.transaction.hash
   proposal.save()
 }
 

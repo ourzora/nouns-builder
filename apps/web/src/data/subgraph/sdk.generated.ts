@@ -404,6 +404,7 @@ export type Dao = {
   governorAddress: Scalars['Bytes']
   id: Scalars['ID']
   metadataAddress: Scalars['Bytes']
+  metadataProperties?: Maybe<Array<MetadataProperty>>
   name: Scalars['String']
   ownerCount: Scalars['Int']
   owners: Array<DaoTokenOwner>
@@ -424,6 +425,14 @@ export type DaoAuctionsArgs = {
   orderDirection?: InputMaybe<OrderDirection>
   skip?: InputMaybe<Scalars['Int']>
   where?: InputMaybe<Auction_Filter>
+}
+
+export type DaoMetadataPropertiesArgs = {
+  first?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<MetadataProperty_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  skip?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<MetadataProperty_Filter>
 }
 
 export type DaoOwnersArgs = {
@@ -670,6 +679,13 @@ export type Dao_Filter = {
   metadataAddress_not?: InputMaybe<Scalars['Bytes']>
   metadataAddress_not_contains?: InputMaybe<Scalars['Bytes']>
   metadataAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>
+  metadataProperties?: InputMaybe<Array<Scalars['String']>>
+  metadataProperties_?: InputMaybe<MetadataProperty_Filter>
+  metadataProperties_contains?: InputMaybe<Array<Scalars['String']>>
+  metadataProperties_contains_nocase?: InputMaybe<Array<Scalars['String']>>
+  metadataProperties_not?: InputMaybe<Array<Scalars['String']>>
+  metadataProperties_not_contains?: InputMaybe<Array<Scalars['String']>>
+  metadataProperties_not_contains_nocase?: InputMaybe<Array<Scalars['String']>>
   name?: InputMaybe<Scalars['String']>
   name_contains?: InputMaybe<Scalars['String']>
   name_contains_nocase?: InputMaybe<Scalars['String']>
@@ -810,6 +826,7 @@ export enum Dao_OrderBy {
   GovernorAddress = 'governorAddress',
   Id = 'id',
   MetadataAddress = 'metadataAddress',
+  MetadataProperties = 'metadataProperties',
   Name = 'name',
   OwnerCount = 'ownerCount',
   Owners = 'owners',
@@ -822,6 +839,237 @@ export enum Dao_OrderBy {
   TotalAuctionSales = 'totalAuctionSales',
   TotalSupply = 'totalSupply',
   TreasuryAddress = 'treasuryAddress',
+}
+
+export type MetadataItem = {
+  __typename?: 'MetadataItem'
+  id: Scalars['ID']
+  isNewProperty: Scalars['Boolean']
+  name: Scalars['String']
+  propertyId: Scalars['BigInt']
+  propertyInfo: MetadataProperty
+}
+
+export type MetadataItem_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>
+  and?: InputMaybe<Array<InputMaybe<MetadataItem_Filter>>>
+  id?: InputMaybe<Scalars['ID']>
+  id_gt?: InputMaybe<Scalars['ID']>
+  id_gte?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  id_lt?: InputMaybe<Scalars['ID']>
+  id_lte?: InputMaybe<Scalars['ID']>
+  id_not?: InputMaybe<Scalars['ID']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  isNewProperty?: InputMaybe<Scalars['Boolean']>
+  isNewProperty_in?: InputMaybe<Array<Scalars['Boolean']>>
+  isNewProperty_not?: InputMaybe<Scalars['Boolean']>
+  isNewProperty_not_in?: InputMaybe<Array<Scalars['Boolean']>>
+  name?: InputMaybe<Scalars['String']>
+  name_contains?: InputMaybe<Scalars['String']>
+  name_contains_nocase?: InputMaybe<Scalars['String']>
+  name_ends_with?: InputMaybe<Scalars['String']>
+  name_ends_with_nocase?: InputMaybe<Scalars['String']>
+  name_gt?: InputMaybe<Scalars['String']>
+  name_gte?: InputMaybe<Scalars['String']>
+  name_in?: InputMaybe<Array<Scalars['String']>>
+  name_lt?: InputMaybe<Scalars['String']>
+  name_lte?: InputMaybe<Scalars['String']>
+  name_not?: InputMaybe<Scalars['String']>
+  name_not_contains?: InputMaybe<Scalars['String']>
+  name_not_contains_nocase?: InputMaybe<Scalars['String']>
+  name_not_ends_with?: InputMaybe<Scalars['String']>
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  name_not_in?: InputMaybe<Array<Scalars['String']>>
+  name_not_starts_with?: InputMaybe<Scalars['String']>
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  name_starts_with?: InputMaybe<Scalars['String']>
+  name_starts_with_nocase?: InputMaybe<Scalars['String']>
+  or?: InputMaybe<Array<InputMaybe<MetadataItem_Filter>>>
+  propertyId?: InputMaybe<Scalars['BigInt']>
+  propertyId_gt?: InputMaybe<Scalars['BigInt']>
+  propertyId_gte?: InputMaybe<Scalars['BigInt']>
+  propertyId_in?: InputMaybe<Array<Scalars['BigInt']>>
+  propertyId_lt?: InputMaybe<Scalars['BigInt']>
+  propertyId_lte?: InputMaybe<Scalars['BigInt']>
+  propertyId_not?: InputMaybe<Scalars['BigInt']>
+  propertyId_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  propertyInfo?: InputMaybe<Scalars['String']>
+  propertyInfo_?: InputMaybe<MetadataProperty_Filter>
+  propertyInfo_contains?: InputMaybe<Scalars['String']>
+  propertyInfo_contains_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_ends_with?: InputMaybe<Scalars['String']>
+  propertyInfo_ends_with_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_gt?: InputMaybe<Scalars['String']>
+  propertyInfo_gte?: InputMaybe<Scalars['String']>
+  propertyInfo_in?: InputMaybe<Array<Scalars['String']>>
+  propertyInfo_lt?: InputMaybe<Scalars['String']>
+  propertyInfo_lte?: InputMaybe<Scalars['String']>
+  propertyInfo_not?: InputMaybe<Scalars['String']>
+  propertyInfo_not_contains?: InputMaybe<Scalars['String']>
+  propertyInfo_not_contains_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_not_ends_with?: InputMaybe<Scalars['String']>
+  propertyInfo_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_not_in?: InputMaybe<Array<Scalars['String']>>
+  propertyInfo_not_starts_with?: InputMaybe<Scalars['String']>
+  propertyInfo_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_starts_with?: InputMaybe<Scalars['String']>
+  propertyInfo_starts_with_nocase?: InputMaybe<Scalars['String']>
+}
+
+export enum MetadataItem_OrderBy {
+  Id = 'id',
+  IsNewProperty = 'isNewProperty',
+  Name = 'name',
+  PropertyId = 'propertyId',
+  PropertyInfo = 'propertyInfo',
+  PropertyInfoCreatedAt = 'propertyInfo__createdAt',
+  PropertyInfoDeleted = 'propertyInfo__deleted',
+  PropertyInfoId = 'propertyInfo__id',
+  PropertyInfoIpfsBaseUri = 'propertyInfo__ipfsBaseUri',
+  PropertyInfoIpfsExtension = 'propertyInfo__ipfsExtension',
+}
+
+export type MetadataProperty = {
+  __typename?: 'MetadataProperty'
+  createdAt: Scalars['BigInt']
+  dao: Dao
+  deleted: Scalars['Boolean']
+  id: Scalars['ID']
+  ipfsBaseUri: Scalars['String']
+  ipfsExtension: Scalars['String']
+  items: Array<MetadataItem>
+  names: Array<Scalars['String']>
+}
+
+export type MetadataPropertyItemsArgs = {
+  first?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<MetadataItem_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  skip?: InputMaybe<Scalars['Int']>
+  where?: InputMaybe<MetadataItem_Filter>
+}
+
+export type MetadataProperty_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>
+  and?: InputMaybe<Array<InputMaybe<MetadataProperty_Filter>>>
+  createdAt?: InputMaybe<Scalars['BigInt']>
+  createdAt_gt?: InputMaybe<Scalars['BigInt']>
+  createdAt_gte?: InputMaybe<Scalars['BigInt']>
+  createdAt_in?: InputMaybe<Array<Scalars['BigInt']>>
+  createdAt_lt?: InputMaybe<Scalars['BigInt']>
+  createdAt_lte?: InputMaybe<Scalars['BigInt']>
+  createdAt_not?: InputMaybe<Scalars['BigInt']>
+  createdAt_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  dao?: InputMaybe<Scalars['String']>
+  dao_?: InputMaybe<Dao_Filter>
+  dao_contains?: InputMaybe<Scalars['String']>
+  dao_contains_nocase?: InputMaybe<Scalars['String']>
+  dao_ends_with?: InputMaybe<Scalars['String']>
+  dao_ends_with_nocase?: InputMaybe<Scalars['String']>
+  dao_gt?: InputMaybe<Scalars['String']>
+  dao_gte?: InputMaybe<Scalars['String']>
+  dao_in?: InputMaybe<Array<Scalars['String']>>
+  dao_lt?: InputMaybe<Scalars['String']>
+  dao_lte?: InputMaybe<Scalars['String']>
+  dao_not?: InputMaybe<Scalars['String']>
+  dao_not_contains?: InputMaybe<Scalars['String']>
+  dao_not_contains_nocase?: InputMaybe<Scalars['String']>
+  dao_not_ends_with?: InputMaybe<Scalars['String']>
+  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  dao_not_in?: InputMaybe<Array<Scalars['String']>>
+  dao_not_starts_with?: InputMaybe<Scalars['String']>
+  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  dao_starts_with?: InputMaybe<Scalars['String']>
+  dao_starts_with_nocase?: InputMaybe<Scalars['String']>
+  deleted?: InputMaybe<Scalars['Boolean']>
+  deleted_in?: InputMaybe<Array<Scalars['Boolean']>>
+  deleted_not?: InputMaybe<Scalars['Boolean']>
+  deleted_not_in?: InputMaybe<Array<Scalars['Boolean']>>
+  id?: InputMaybe<Scalars['ID']>
+  id_gt?: InputMaybe<Scalars['ID']>
+  id_gte?: InputMaybe<Scalars['ID']>
+  id_in?: InputMaybe<Array<Scalars['ID']>>
+  id_lt?: InputMaybe<Scalars['ID']>
+  id_lte?: InputMaybe<Scalars['ID']>
+  id_not?: InputMaybe<Scalars['ID']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  ipfsBaseUri?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_contains?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_contains_nocase?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_ends_with?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_ends_with_nocase?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_gt?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_gte?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_in?: InputMaybe<Array<Scalars['String']>>
+  ipfsBaseUri_lt?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_lte?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_not?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_not_contains?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_not_contains_nocase?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_not_ends_with?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_not_in?: InputMaybe<Array<Scalars['String']>>
+  ipfsBaseUri_not_starts_with?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_starts_with?: InputMaybe<Scalars['String']>
+  ipfsBaseUri_starts_with_nocase?: InputMaybe<Scalars['String']>
+  ipfsExtension?: InputMaybe<Scalars['String']>
+  ipfsExtension_contains?: InputMaybe<Scalars['String']>
+  ipfsExtension_contains_nocase?: InputMaybe<Scalars['String']>
+  ipfsExtension_ends_with?: InputMaybe<Scalars['String']>
+  ipfsExtension_ends_with_nocase?: InputMaybe<Scalars['String']>
+  ipfsExtension_gt?: InputMaybe<Scalars['String']>
+  ipfsExtension_gte?: InputMaybe<Scalars['String']>
+  ipfsExtension_in?: InputMaybe<Array<Scalars['String']>>
+  ipfsExtension_lt?: InputMaybe<Scalars['String']>
+  ipfsExtension_lte?: InputMaybe<Scalars['String']>
+  ipfsExtension_not?: InputMaybe<Scalars['String']>
+  ipfsExtension_not_contains?: InputMaybe<Scalars['String']>
+  ipfsExtension_not_contains_nocase?: InputMaybe<Scalars['String']>
+  ipfsExtension_not_ends_with?: InputMaybe<Scalars['String']>
+  ipfsExtension_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  ipfsExtension_not_in?: InputMaybe<Array<Scalars['String']>>
+  ipfsExtension_not_starts_with?: InputMaybe<Scalars['String']>
+  ipfsExtension_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  ipfsExtension_starts_with?: InputMaybe<Scalars['String']>
+  ipfsExtension_starts_with_nocase?: InputMaybe<Scalars['String']>
+  items_?: InputMaybe<MetadataItem_Filter>
+  names?: InputMaybe<Array<Scalars['String']>>
+  names_contains?: InputMaybe<Array<Scalars['String']>>
+  names_contains_nocase?: InputMaybe<Array<Scalars['String']>>
+  names_not?: InputMaybe<Array<Scalars['String']>>
+  names_not_contains?: InputMaybe<Array<Scalars['String']>>
+  names_not_contains_nocase?: InputMaybe<Array<Scalars['String']>>
+  or?: InputMaybe<Array<InputMaybe<MetadataProperty_Filter>>>
+}
+
+export enum MetadataProperty_OrderBy {
+  CreatedAt = 'createdAt',
+  Dao = 'dao',
+  DaoAuctionAddress = 'dao__auctionAddress',
+  DaoContractImage = 'dao__contractImage',
+  DaoDescription = 'dao__description',
+  DaoGovernorAddress = 'dao__governorAddress',
+  DaoId = 'dao__id',
+  DaoMetadataAddress = 'dao__metadataAddress',
+  DaoName = 'dao__name',
+  DaoOwnerCount = 'dao__ownerCount',
+  DaoProjectUri = 'dao__projectURI',
+  DaoProposalCount = 'dao__proposalCount',
+  DaoSymbol = 'dao__symbol',
+  DaoTokenAddress = 'dao__tokenAddress',
+  DaoTotalAuctionSales = 'dao__totalAuctionSales',
+  DaoTotalSupply = 'dao__totalSupply',
+  DaoTreasuryAddress = 'dao__treasuryAddress',
+  Deleted = 'deleted',
+  Id = 'id',
+  IpfsBaseUri = 'ipfsBaseUri',
+  IpfsExtension = 'ipfsExtension',
+  Items = 'items',
+  Names = 'names',
 }
 
 /** Defines the order direction, either ascending or descending */
@@ -1329,6 +1577,10 @@ export type Query = {
   daos: Array<Dao>
   daotokenOwner?: Maybe<DaoTokenOwner>
   daotokenOwners: Array<DaoTokenOwner>
+  metadataItem?: Maybe<MetadataItem>
+  metadataItems: Array<MetadataItem>
+  metadataProperties: Array<MetadataProperty>
+  metadataProperty?: Maybe<MetadataProperty>
   proposal?: Maybe<Proposal>
   proposalVote?: Maybe<ProposalVote>
   proposalVotes: Array<ProposalVote>
@@ -1421,6 +1673,38 @@ export type QueryDaotokenOwnersArgs = {
   where?: InputMaybe<DaoTokenOwner_Filter>
 }
 
+export type QueryMetadataItemArgs = {
+  block?: InputMaybe<Block_Height>
+  id: Scalars['ID']
+  subgraphError?: _SubgraphErrorPolicy_
+}
+
+export type QueryMetadataItemsArgs = {
+  block?: InputMaybe<Block_Height>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<MetadataItem_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  skip?: InputMaybe<Scalars['Int']>
+  subgraphError?: _SubgraphErrorPolicy_
+  where?: InputMaybe<MetadataItem_Filter>
+}
+
+export type QueryMetadataPropertiesArgs = {
+  block?: InputMaybe<Block_Height>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<MetadataProperty_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  skip?: InputMaybe<Scalars['Int']>
+  subgraphError?: _SubgraphErrorPolicy_
+  where?: InputMaybe<MetadataProperty_Filter>
+}
+
+export type QueryMetadataPropertyArgs = {
+  block?: InputMaybe<Block_Height>
+  id: Scalars['ID']
+  subgraphError?: _SubgraphErrorPolicy_
+}
+
 export type QueryProposalArgs = {
   block?: InputMaybe<Block_Height>
   id: Scalars['ID']
@@ -1483,6 +1767,10 @@ export type Subscription = {
   daos: Array<Dao>
   daotokenOwner?: Maybe<DaoTokenOwner>
   daotokenOwners: Array<DaoTokenOwner>
+  metadataItem?: Maybe<MetadataItem>
+  metadataItems: Array<MetadataItem>
+  metadataProperties: Array<MetadataProperty>
+  metadataProperty?: Maybe<MetadataProperty>
   proposal?: Maybe<Proposal>
   proposalVote?: Maybe<ProposalVote>
   proposalVotes: Array<ProposalVote>
@@ -1573,6 +1861,38 @@ export type SubscriptionDaotokenOwnersArgs = {
   skip?: InputMaybe<Scalars['Int']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<DaoTokenOwner_Filter>
+}
+
+export type SubscriptionMetadataItemArgs = {
+  block?: InputMaybe<Block_Height>
+  id: Scalars['ID']
+  subgraphError?: _SubgraphErrorPolicy_
+}
+
+export type SubscriptionMetadataItemsArgs = {
+  block?: InputMaybe<Block_Height>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<MetadataItem_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  skip?: InputMaybe<Scalars['Int']>
+  subgraphError?: _SubgraphErrorPolicy_
+  where?: InputMaybe<MetadataItem_Filter>
+}
+
+export type SubscriptionMetadataPropertiesArgs = {
+  block?: InputMaybe<Block_Height>
+  first?: InputMaybe<Scalars['Int']>
+  orderBy?: InputMaybe<MetadataProperty_OrderBy>
+  orderDirection?: InputMaybe<OrderDirection>
+  skip?: InputMaybe<Scalars['Int']>
+  subgraphError?: _SubgraphErrorPolicy_
+  where?: InputMaybe<MetadataProperty_Filter>
+}
+
+export type SubscriptionMetadataPropertyArgs = {
+  block?: InputMaybe<Block_Height>
+  id: Scalars['ID']
+  subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionProposalArgs = {
@@ -2008,8 +2328,32 @@ export type DaoMembersListQuery = {
     id: string
     owner: any
     daoTokenCount: number
-    daoTokens: Array<{ __typename?: 'Token'; mintedAt: any }>
+    daoTokens: Array<{ __typename?: 'Token'; tokenId: any; mintedAt: any }>
   }>
+}
+
+export type DaoMetadataQueryVariables = Exact<{
+  tokenAddress: Scalars['ID']
+  first: Scalars['Int']
+}>
+
+export type DaoMetadataQuery = {
+  __typename?: 'Query'
+  dao?: {
+    __typename?: 'DAO'
+    metadataProperties?: Array<{
+      __typename?: 'MetadataProperty'
+      ipfsBaseUri: string
+      ipfsExtension: string
+      names: Array<string>
+      items: Array<{
+        __typename?: 'MetadataItem'
+        name: string
+        propertyId: any
+        isNewProperty: boolean
+      }>
+    }> | null
+  } | null
 }
 
 export type DaoOgMetadataQueryVariables = Exact<{
@@ -2521,7 +2865,24 @@ export const DaoMembersListDocument = gql`
       owner
       daoTokenCount
       daoTokens {
+        tokenId
         mintedAt
+      }
+    }
+  }
+`
+export const DaoMetadataDocument = gql`
+  query daoMetadata($tokenAddress: ID!, $first: Int!) {
+    dao(id: $tokenAddress) {
+      metadataProperties(orderBy: createdAt) {
+        ipfsBaseUri
+        ipfsExtension
+        names
+        items(orderBy: propertyId, first: $first) {
+          name
+          propertyId
+          isNewProperty
+        }
       }
     }
   }
@@ -2823,6 +3184,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoMembersList',
+        'query'
+      )
+    },
+    daoMetadata(
+      variables: DaoMetadataQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoMetadataQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoMetadataQuery>(DaoMetadataDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'daoMetadata',
         'query'
       )
     },

@@ -1,4 +1,5 @@
 import { Flex, Grid } from '@zoralabs/zord'
+import axios from 'axios'
 import React, { Fragment, ReactNode } from 'react'
 import useSWR from 'swr'
 import { formatEther } from 'viem'
@@ -7,8 +8,10 @@ import { readContract } from 'wagmi/actions'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import { getBids } from 'src/data/subgraph/requests/getBids'
+import { useDaoStore } from 'src/modules/dao'
+import { L2MigratedResponse } from 'src/pages/api/migrated'
 import { TokenWithDao } from 'src/pages/dao/[network]/[token]/[tokenId]'
-import { AddressType, Chain } from 'src/typings'
+import { AddressType, CHAIN_ID, Chain } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 import { useAuctionEvents } from '../hooks'
@@ -20,6 +23,7 @@ import { AuctionTokenPicker } from './AuctionTokenPicker'
 import { BidAmount } from './BidAmount'
 import { ActionsWrapper, BidHistory } from './BidHistory'
 import { CurrentAuction } from './CurrentAuction'
+import { DaoMigrated } from './DaoMigrated'
 import { WinningBidder } from './WinningBidder'
 
 interface AuctionControllerProps {
@@ -29,6 +33,8 @@ interface AuctionControllerProps {
   token: TokenWithDao
   viewSwitcher?: ReactNode
 }
+
+const L1_CHAINS = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI]
 
 export const Auction: React.FC<AuctionControllerProps> = ({
   chain,
@@ -40,6 +46,18 @@ export const Auction: React.FC<AuctionControllerProps> = ({
   const mintDate = mintedAt * 1000
   const bidAmount = token.auction?.winningBid?.amount
   const tokenPrice = bidAmount ? formatEther(bidAmount) : undefined
+
+  const { treasury } = useDaoStore((x) => x.addresses)
+
+  const { data: migrated } = useSWR(
+    L1_CHAINS.find((x) => x === chain.id) && treasury
+      ? [SWR_KEYS.DAO_MIGRATED, treasury]
+      : null,
+    (_, treasury) =>
+      axios
+        .get<L2MigratedResponse>(`/api/migrated?l1Treasury=${treasury}`)
+        .then((x) => x.data)
+  )
 
   const { data: auction } = useSWR(
     [SWR_KEYS.AUCTION, chain.id, auctionAddress],
@@ -114,7 +132,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
             <ActionsWrapper>
               <BidHistory bids={bids || []} />
             </ActionsWrapper>
-            <AuctionPaused />
+            {migrated ? <DaoMigrated migrated={migrated} /> : <AuctionPaused />}
           </Fragment>
         )}
       </Flex>

@@ -49,7 +49,6 @@ export const Transactions = ({
   const failedIndexes = simulations.map((result) => result.index)
   const matrix = createIndexedMatrix(transactions)
   const mapped = createMap(simulations)
-
   return (
     <Stack mb={'x10'}>
       <label className={defaultInputLabelStyle}>Transactions</label>

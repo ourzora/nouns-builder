@@ -106,7 +106,11 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     ]
   )
 
-  const tokenParams = { initStrings: ethers.utils.hexlify(tokenParamsHex) as AddressType }
+  const tokenParams = {
+    initStrings: ethers.utils.hexlify(tokenParamsHex) as AddressType,
+    metadataRenderer: NULL_ADDRESS,
+    reservedUntilTokenId: 0n,
+  }
 
   const auctionParams = {
     reservePrice: auctionSettings.auctionReservePrice
@@ -115,6 +119,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     duration: auctionSettings?.auctionDuration
       ? BigInt(toSeconds(auctionSettings?.auctionDuration))
       : BigInt('86400'),
+    founderRewardRecipent: NULL_ADDRESS,
+    founderRewardBps: 0,
   }
 
   const govParams = {

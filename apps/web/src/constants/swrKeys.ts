@@ -21,6 +21,10 @@ const SWR_KEYS = {
   MEMBERS: 'members',
   TOKEN_IMAGE: 'token-image',
   DASHBOARD: 'dashboard',
+  METADATA_ATTRIBUTES_MERKLE_ROOT: 'metadata-attributes-merkle-root',
+  TOKEN_HOLDERS_MERKLE_ROOT: 'token-holders-merkle-root',
+  ENCODED_DAO_METADATA: 'encoded-dao-metadata',
+  DAO_MIGRATED: 'dao-migrated',
   DYNAMIC: {
     MY_DAOS(str: string) {
       return `my-daos-${str}`
