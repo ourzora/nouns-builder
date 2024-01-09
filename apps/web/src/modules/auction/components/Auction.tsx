@@ -49,7 +49,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
 
   const { treasury } = useDaoStore((x) => x.addresses)
 
-  const { data: migrated } = useSWR(
+  const { data: migratedRes } = useSWR(
     L1_CHAINS.find((x) => x === chain.id) && treasury
       ? [SWR_KEYS.DAO_MIGRATED, treasury]
       : null,
@@ -131,7 +131,14 @@ export const Auction: React.FC<AuctionControllerProps> = ({
             <ActionsWrapper>
               <BidHistory bids={bids || []} />
             </ActionsWrapper>
-            {migrated ? <DaoMigrated migrated={migrated} /> : <AuctionPaused />}
+            {migratedRes?.migrated ? (
+              <DaoMigrated
+                l2ChainId={migratedRes.migrated.chainId}
+                l2TokenAddress={migratedRes.migrated.l2TokenAddress}
+              />
+            ) : (
+              <AuctionPaused />
+            )}
           </Fragment>
         )}
       </Flex>

@@ -6,12 +6,18 @@ import { Icon } from 'src/components/Icon'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
-import { L2MigratedResponse } from 'src/pages/api/migrated'
 import { useChainStore } from 'src/stores/useChainStore'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
-export const DaoMigrated = ({ migrated }: { migrated: L2MigratedResponse }) => {
+export const DaoMigrated = ({
+  l2ChainId,
+  l2TokenAddress,
+}: {
+  l2ChainId: CHAIN_ID
+  l2TokenAddress: AddressType
+}) => {
   const { id: chainId } = useChainStore((x) => x.chain)
-  const migratedToChain = PUBLIC_ALL_CHAINS.find((x) => x.id === migrated.chainId)
+  const migratedToChain = PUBLIC_ALL_CHAINS.find((x) => x.id === l2ChainId)
 
   const { auction } = useDaoStore((x) => x.addresses)
 
@@ -29,7 +35,7 @@ export const DaoMigrated = ({ migrated }: { migrated: L2MigratedResponse }) => {
       <Box color="text3" fontSize={18}>
         This DAO has been migrated to L2.
       </Box>
-      <Link href={`/dao/${migratedToChain?.slug}/${migrated.l2TokenAddress}`}>
+      <Link href={`/dao/${migratedToChain?.slug}/${l2TokenAddress}`}>
         <Box
           display={'inline-flex'}
           color="text3"
