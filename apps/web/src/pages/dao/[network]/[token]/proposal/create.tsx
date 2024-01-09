@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi'
 
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
+import { L1_CHAINS } from 'src/data/contract/chains'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -17,6 +18,7 @@ import {
   TRANSACTION_TYPES,
   TransactionForm,
   TransactionFormType,
+  TransactionType,
   TransactionTypeIcon,
   TwoColumnLayout,
   useProposalStore,
@@ -58,7 +60,11 @@ const CreateProposalPage: NextPageWithLayout = () => {
     icon: <TransactionTypeIcon transactionType={type} />,
   })
 
-  const options = TRANSACTION_FORM_OPTIONS.map(createSelectOption)
+  const TRANSACTION_FORM_OPTIONS_FILTERED = TRANSACTION_FORM_OPTIONS.filter((x) =>
+    L1_CHAINS.find((x) => x === chain.id) ? true : x !== TransactionType.MIGRATION
+  )
+
+  const options = TRANSACTION_FORM_OPTIONS_FILTERED.map(createSelectOption)
 
   const handleDropdownOnChange = (value: TransactionFormType) => {
     setTransactionType(value)
@@ -100,7 +106,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
         <TwoColumnLayout
           leftColumn={
             <SelectTransactionType
-              transactionTypes={TRANSACTION_FORM_OPTIONS}
+              transactionTypes={TRANSACTION_FORM_OPTIONS_FILTERED}
               onSelect={setTransactionType}
             />
           }

@@ -1,13 +1,13 @@
 import { Flex, Stack, Text } from '@zoralabs/zord'
 import React from 'react'
 
-import { TRANSACTION_FORM_OPTIONS, TransactionFormType } from '../TransactionForm'
+import { TransactionFormType } from '../TransactionForm'
 import AdminNav from './AdminNav'
 import { NounsConnect } from './NounsConnect'
 import TransactionTypeCard from './TransactionTypeCard'
 
 interface SelectTransactionTypeProps {
-  transactionTypes: typeof TRANSACTION_FORM_OPTIONS
+  transactionTypes: TransactionFormType[]
   onSelect: (value: TransactionFormType) => void
 }
 
