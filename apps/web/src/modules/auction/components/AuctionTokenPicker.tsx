@@ -37,7 +37,7 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
       : undefined,
     () =>
       SDK.connect(chainId)
-        .daoNextAndPreviousTokens({ tokenId, tokenAddress: collection })
+        .daoNextAndPreviousTokens({ tokenId, tokenAddress: collection.toLowerCase() })
         .then((x) => ({
           next: x.next.length > 0 ? parseInt(x.next[0].tokenId) : undefined,
           prev: x.prev.length > 0 ? parseInt(x.prev[0].tokenId) : undefined,
