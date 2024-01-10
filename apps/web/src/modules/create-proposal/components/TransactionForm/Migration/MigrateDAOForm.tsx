@@ -1,14 +1,19 @@
-import { Box, Button, Flex, Spinner, Text } from '@zoralabs/zord'
+import { Box, Button, Flex, Paragraph, Spinner, Text } from '@zoralabs/zord'
 import { useState } from 'react'
+import { useContractRead } from 'wagmi'
 
 import {
   defaultHelperTextStyle,
   defaultInputLabelStyle,
 } from 'src/components/Fields/styles.css'
+import { auctionAbi } from 'src/data/contract/abis'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { usePrepareMigration } from 'src/modules/create-proposal/hooks/usePrepareMigration'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
+import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 import { CHAIN_ID } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 
 import { DropdownSelect } from '../../DropdownSelect'
 
@@ -20,6 +25,8 @@ export interface MigrationDAOFormProps {
 }
 
 export const MigrateDAOForm = () => {
+  const { auction: auctionAddress } = useDaoStore((x) => x.addresses)
+  const { id: chainId } = useChainStore((x) => x.chain)
   const [migratingToChainId, setMigratingToChainId] = useState<CHAIN_ID>(
     CHAIN_ID.BASE_GOERLI
   )
@@ -29,8 +36,17 @@ export const MigrateDAOForm = () => {
     migratingToChainId,
   })
 
+  const { data: auction } = useContractRead({
+    abi: auctionAbi,
+    address: auctionAddress,
+    functionName: 'auction',
+    chainId,
+  })
+
+  const [, , , , , settled] = unpackOptionalArray(auction, 6)
+
   const handleSubmit = () => {
-    if (!transactions) return
+    if (!transactions || !settled) return
     addTransaction({
       type: TransactionType.MIGRATION,
       summary: 'Migrate to L2',
@@ -67,12 +83,20 @@ export const MigrateDAOForm = () => {
             onChange={handleChainChange}
           />
 
+          {!settled && (
+            <Box mb={'x8'}>
+              <Paragraph size="md" color="negative">
+                Please settle the final auction before migrating.
+              </Paragraph>
+            </Box>
+          )}
+
           <Button
             mt={'x9'}
             variant={'outline'}
             borderRadius={'curved'}
             type="button"
-            disabled={!transactions}
+            disabled={!transactions || !settled}
             onClick={() => handleSubmit()}
           >
             {loading ? (

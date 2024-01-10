@@ -15,7 +15,7 @@ export const memberSnapshotRequest = async (
 ): Promise<DaoMember[]> => {
   const data = await SDK.connect(chainId).daoMembersList({
     where: {
-      dao: collectionAddress,
+      dao: collectionAddress.toLowerCase(),
     },
     orderBy: DaoTokenOwner_OrderBy.DaoTokenCount,
     orderDirection: OrderDirection.Desc,
