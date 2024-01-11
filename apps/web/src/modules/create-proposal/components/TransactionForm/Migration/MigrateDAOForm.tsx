@@ -32,10 +32,6 @@ export const MigrateDAOForm = () => {
   )
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
-  const { transactions, error } = usePrepareMigration({
-    migratingToChainId,
-  })
-
   const { data: auction } = useContractRead({
     abi: auctionAbi,
     address: auctionAddress,
@@ -44,6 +40,11 @@ export const MigrateDAOForm = () => {
   })
 
   const [, , , , , settled] = unpackOptionalArray(auction, 6)
+
+  const { transactions, error } = usePrepareMigration({
+    enabled: settled || false,
+    migratingToChainId,
+  })
 
   const handleSubmit = () => {
     if (!transactions || !settled) return
@@ -58,7 +59,7 @@ export const MigrateDAOForm = () => {
     setMigratingToChainId(value)
   }
 
-  const loading = !transactions && !error
+  const loading = settled ? !transactions && !error : false
 
   return (
     <Box w={'100%'}>

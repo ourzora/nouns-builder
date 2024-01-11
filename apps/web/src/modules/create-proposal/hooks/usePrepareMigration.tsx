@@ -23,19 +23,23 @@ import { useFetchCurrentDAOConfig } from './useFetchCurrentDAOConfig'
 const UINT_64_MAX = 18446744073709551615n
 
 export const usePrepareMigration = ({
+  enabled,
   migratingToChainId,
 }: {
+  enabled: boolean
   migratingToChainId: CHAIN_ID
 }): { transactions: Transaction[] | undefined; error: Error | undefined } => {
   const { id: currentChainId } = useChainStore((x) => x.chain)
   const { addresses: currentAddresses } = useDaoStore()
 
   const currentDAOConfig = useFetchCurrentDAOConfig({
+    enabled,
     chainId: currentChainId,
     currentAddresses,
   })
 
   const { data } = useContractRead({
+    enabled,
     abi: auctionAbi,
     address: currentAddresses.auction as AddressType,
     functionName: 'auction',
@@ -45,7 +49,7 @@ export const usePrepareMigration = ({
   const [currentTokenId] = unpackOptionalArray(data, 6)
 
   const { data: attributesMerkleRoot, error: attributesError } = useSWRImmutable(
-    currentTokenId && currentAddresses.metadata
+    enabled && currentTokenId && currentAddresses.metadata
       ? [
           SWR_KEYS.METADATA_ATTRIBUTES_MERKLE_ROOT,
           currentAddresses.metadata,
@@ -64,7 +68,7 @@ export const usePrepareMigration = ({
   )
 
   const { data: memberMerkleRoot, error: memberError } = useSWRImmutable(
-    currentAddresses.token
+    enabled && currentAddresses.token
       ? [SWR_KEYS.TOKEN_HOLDERS_MERKLE_ROOT, currentAddresses.token, currentChainId]
       : undefined,
     async () => {
@@ -78,7 +82,7 @@ export const usePrepareMigration = ({
   )
 
   const { data: encodedMetadata, error: metadataError } = useSWRImmutable(
-    currentAddresses.token
+    enabled && currentAddresses.token
       ? [SWR_KEYS.ENCODED_DAO_METADATA, currentAddresses.token, currentChainId]
       : undefined,
     async (_, token, chainId) => encodedDaoMetadataRequest(chainId, token)

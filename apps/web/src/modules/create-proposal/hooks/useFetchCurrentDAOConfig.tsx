@@ -23,7 +23,9 @@ import { applyL1ToL2Alias } from '../utils/applyL1ToL2Alias'
 export const useFetchCurrentDAOConfig = ({
   chainId,
   currentAddresses,
+  enabled,
 }: {
+  enabled?: boolean
   chainId: CHAIN_ID
   currentAddresses: DaoContractAddresses
 }) => {
@@ -34,6 +36,7 @@ export const useFetchCurrentDAOConfig = ({
 
   const { data } = useContractReads({
     allowFailure: false,
+    enabled,
     contracts: [
       { ...contracts.token, functionName: 'name' },
       { ...contracts.token, functionName: 'symbol' },
@@ -74,8 +77,10 @@ export const useFetchCurrentDAOConfig = ({
   const [tokenId] = unpackOptionalArray(auction, 6)
 
   const { data: foundersAliased, error: foundersError } = useSWRImmutable(
-    existingFounders && existingFounders.length > 0 ? [existingFounders] : undefined,
-    (founders) => {
+    existingFounders && existingFounders.length > 0
+      ? ['founder-allias', existingFounders]
+      : undefined,
+    (_, founders) => {
       return Promise.all(
         founders.map(async (x) => {
           return { ...x, wallet: await applyL1ToL2Alias(chainId, x.wallet) }
