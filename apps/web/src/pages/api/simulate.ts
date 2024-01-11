@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { ErrorResult } from 'src/services/errorResult'
 import { InvalidRequestError } from 'src/services/errors'
 import {
-  InsufficientFundsError,
   SimulationResult,
   simulate,
 } from 'src/services/simulationService'
@@ -25,7 +24,7 @@ export default async function handler(
     if (error instanceof InvalidRequestError) {
       return res.status(400).json({ error: error.message })
     }
-    if (error instanceof InsufficientFundsError) {
+    if ((error as Error).message.includes('insufficient funds for')) {
       return res.status(400).json({
         error:
           'Insufficient treasury funds to carry out some or all of these transactions',

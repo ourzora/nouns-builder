@@ -79,7 +79,7 @@ export const BridgeTreasuryForm = ({
           validateOnMount={false}
           validateOnChange={false}
         >
-          {({ errors, touched, isValid, isValidating, dirty }) => (
+          {({ errors, touched, isValid, isValidating, dirty, setFieldValue }) => (
             <Box
               data-testid="airdrop-form"
               as={'fieldset'}
@@ -108,6 +108,20 @@ export const BridgeTreasuryForm = ({
                     error={touched.amount && errors.amount ? errors.amount : undefined}
                   />
                 </Box>
+
+                <Flex align="center" justify="flex-end" w="100%" pr="x2">
+                  <Button
+                    type="button"
+                    onClick={() =>
+                      setFieldValue('amount', treasuryBalance?.formatted, true)
+                    }
+                    variant="unset"
+                    mt="x2"
+                    w="x16"
+                  >
+                    Set max
+                  </Button>
+                </Flex>
 
                 <Button
                   mt={'x9'}
