@@ -2,10 +2,11 @@ import { Flex, Stack } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
 
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
+import { auctionAbi } from 'src/data/contract/abis'
 import { L1_CHAINS } from 'src/data/contract/chains'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
@@ -31,12 +32,20 @@ import { AddressType } from 'src/typings'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
+  const { auction } = useDaoStore((x) => x.addresses)
   const chain = useChainStore((x) => x.chain)
   const { query } = router
   const [transactionType, setTransactionType] = useState<
     TransactionFormType | undefined
   >()
   const transactions = useProposalStore((state) => state.transactions)
+
+  const { data: paused } = useContractRead({
+    abi: auctionAbi,
+    address: auction,
+    functionName: 'paused',
+    chainId: chain.id,
+  })
 
   useEffect(() => {
     if (transactions.length && !transactionType) {
@@ -60,9 +69,14 @@ const CreateProposalPage: NextPageWithLayout = () => {
     icon: <TransactionTypeIcon transactionType={type} />,
   })
 
-  const TRANSACTION_FORM_OPTIONS_FILTERED = TRANSACTION_FORM_OPTIONS.filter((x) =>
-    L1_CHAINS.find((x) => x === chain.id) ? true : x !== TransactionType.MIGRATION
-  )
+  const isL1Chain = L1_CHAINS.find((l1ChainIds) => l1ChainIds === chain.id)
+
+  const TRANSACTION_FORM_OPTIONS_FILTERED = TRANSACTION_FORM_OPTIONS.filter((x) => {
+    if (x === TransactionType.MIGRATION && !isL1Chain) return false
+    if (x === TransactionType.PAUSE_AUCTIONS && paused) return false
+    if (x === TransactionType.RESUME_AUCTIONS && !paused) return false
+    return true
+  })
 
   const options = TRANSACTION_FORM_OPTIONS_FILTERED.map(createSelectOption)
 
