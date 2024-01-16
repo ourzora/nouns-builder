@@ -135,6 +135,7 @@ type MetadataProperty @entity {
 
 type MetadataItem @entity {
   id: ID!
+  index: Int!
   propertyInfo: MetadataProperty!
   propertyId: BigInt!
   name: String!
