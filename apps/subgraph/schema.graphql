@@ -34,7 +34,7 @@ type DAOTokenOwner @entity {
 type Token @entity {
   id: ID!
   name: String!
-  image: String!
+  image: String
   tokenContract: Bytes!
   tokenId: BigInt!
   owner: Bytes!
