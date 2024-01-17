@@ -17,6 +17,7 @@ export const memberSnapshotRequest = async (
     where: {
       dao: collectionAddress.toLowerCase(),
     },
+    first: 1000,
     orderBy: DaoTokenOwner_OrderBy.DaoTokenCount,
     orderDirection: OrderDirection.Desc,
   })

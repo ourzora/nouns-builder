@@ -4,7 +4,7 @@ query daoMetadata($tokenAddress: ID!, $first: Int!) {
       ipfsBaseUri
       ipfsExtension
       names
-      items(orderBy: propertyId, first: $first) {
+      items(orderBy: index, first: $first) {
         name
         propertyId
         isNewProperty

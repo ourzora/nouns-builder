@@ -134,7 +134,7 @@ const prepareTransactions = ({
   const { founderParams, tokenParams, auctionParams, govParams } = currentDAOConfig!
 
   const delayedGovernanceAmount = 0n
-  const minimumMetadataCalls = 0n
+  const minimumMetadataCalls = BigInt(encodedMetadata.length)
 
   const deployerParams = encodeFunctionData({
     abi: L2DeployerABI,

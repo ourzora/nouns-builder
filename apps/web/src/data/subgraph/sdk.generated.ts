@@ -844,6 +844,7 @@ export enum Dao_OrderBy {
 export type MetadataItem = {
   __typename?: 'MetadataItem'
   id: Scalars['ID']
+  index: Scalars['Int']
   isNewProperty: Scalars['Boolean']
   name: Scalars['String']
   propertyId: Scalars['BigInt']
@@ -862,6 +863,14 @@ export type MetadataItem_Filter = {
   id_lte?: InputMaybe<Scalars['ID']>
   id_not?: InputMaybe<Scalars['ID']>
   id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  index?: InputMaybe<Scalars['Int']>
+  index_gt?: InputMaybe<Scalars['Int']>
+  index_gte?: InputMaybe<Scalars['Int']>
+  index_in?: InputMaybe<Array<Scalars['Int']>>
+  index_lt?: InputMaybe<Scalars['Int']>
+  index_lte?: InputMaybe<Scalars['Int']>
+  index_not?: InputMaybe<Scalars['Int']>
+  index_not_in?: InputMaybe<Array<Scalars['Int']>>
   isNewProperty?: InputMaybe<Scalars['Boolean']>
   isNewProperty_in?: InputMaybe<Array<Scalars['Boolean']>>
   isNewProperty_not?: InputMaybe<Scalars['Boolean']>
@@ -920,6 +929,7 @@ export type MetadataItem_Filter = {
 
 export enum MetadataItem_OrderBy {
   Id = 'id',
+  Index = 'index',
   IsNewProperty = 'isNewProperty',
   Name = 'name',
   PropertyId = 'propertyId',
@@ -2890,7 +2900,7 @@ export const DaoMetadataDocument = gql`
         ipfsBaseUri
         ipfsExtension
         names
-        items(orderBy: propertyId, first: $first) {
+        items(orderBy: index, first: $first) {
           name
           propertyId
           isNewProperty
