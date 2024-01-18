@@ -3,7 +3,7 @@ import { ethers } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import React, { useState } from 'react'
 import { getAddress, parseEther } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
 import {
   WriteContractUnpreparedArgs,
   prepareWriteContract,
@@ -17,6 +17,7 @@ import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { managerAbi } from 'src/data/contract/abis'
+import { managerV2Abi } from 'src/data/contract/abis/ManagerV2'
 import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
 import { useChainStore } from 'src/stores/useChainStore'
 import {
@@ -61,6 +62,12 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const [hasConfirmedChain, setHasConfirmedChain] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const chain = useChainStore((x) => x.chain)
+  const { data: version, isLoading: isVersionLoading } = useContractRead({
+    abi: managerAbi,
+    address: PUBLIC_MANAGER_ADDRESS[chain.id],
+    functionName: 'contractVersion',
+    chainId: chain.id,
+  })
   const { address } = useAccount()
 
   const {
@@ -106,7 +113,9 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     ]
   )
 
-  const tokenParams = { initStrings: ethers.utils.hexlify(tokenParamsHex) as AddressType }
+  const tokenParams = {
+    initStrings: ethers.utils.hexlify(tokenParamsHex) as AddressType,
+  }
 
   const auctionParams = {
     reservePrice: auctionSettings.auctionReservePrice
@@ -163,13 +172,34 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     setIsPendingTransaction(true)
     let transaction
     try {
-      const config = await prepareWriteContract({
-        address: PUBLIC_MANAGER_ADDRESS[chain.id],
-        chainId: chain.id,
-        abi: managerAbi,
-        functionName: 'deploy',
-        args: [founderParams, tokenParams, auctionParams, govParams],
-      })
+      let config: any
+      if (version?.startsWith('2')) {
+        config = await prepareWriteContract({
+          address: PUBLIC_MANAGER_ADDRESS[chain.id],
+          chainId: chain.id,
+          abi: managerV2Abi,
+          functionName: 'deploy',
+          args: [
+            founderParams,
+            { ...tokenParams, reservedUntilTokenId: 0n, metadataRenderer: NULL_ADDRESS },
+            {
+              ...auctionParams,
+              founderRewardRecipent: NULL_ADDRESS,
+              founderRewardBps: 0,
+            },
+            govParams,
+          ],
+        })
+      } else {
+        config = await prepareWriteContract({
+          address: PUBLIC_MANAGER_ADDRESS[chain.id],
+          chainId: chain.id,
+          abi: managerAbi,
+          functionName: 'deploy',
+          args: [founderParams, tokenParams, auctionParams, govParams],
+        })
+      }
+
       const tx = await writeContract(config)
       if (tx.hash) transaction = await waitForTransaction({ hash: tx.hash })
     } catch (e) {
@@ -356,7 +386,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   !address ||
                   !hasConfirmedTerms ||
                   !hasConfirmedChain ||
-                  isPendingTransaction
+                  isPendingTransaction ||
+                  isVersionLoading
                 }
                 className={
                   deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']
