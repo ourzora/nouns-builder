@@ -22,11 +22,13 @@ import { applyL1ToL2Alias } from '../utils/applyL1ToL2Alias'
 
 export const useFetchCurrentDAOConfig = ({
   chainId,
+  migratingToChainId,
   currentAddresses,
   enabled,
 }: {
   enabled?: boolean
   chainId: CHAIN_ID
+  migratingToChainId: CHAIN_ID
   currentAddresses: DaoContractAddresses
 }) => {
   const contracts = setupContracts({
@@ -93,7 +95,7 @@ export const useFetchCurrentDAOConfig = ({
 
   // We need to add the migration helper config as a founder so it can handle setting up metadata on L2
   const L2MigrationDeployerFounderConfig = {
-    wallet: L2_MIGRATION_DEPLOYER,
+    wallet: L2_MIGRATION_DEPLOYER[migratingToChainId],
     ownershipPct: 0n,
     vestExpiry: 0n,
   }
@@ -126,7 +128,7 @@ export const useFetchCurrentDAOConfig = ({
   const tokenParams = {
     initStrings: tokenInitStrings as AddressType,
     reservedUntilTokenId: tokenId! + 1n,
-    metadataRenderer: MERKLE_METADATA_RENDERER,
+    metadataRenderer: MERKLE_METADATA_RENDERER[migratingToChainId],
   }
 
   const auctionParams = {

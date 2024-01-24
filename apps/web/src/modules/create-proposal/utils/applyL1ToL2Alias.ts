@@ -14,7 +14,7 @@ export const applyL1ToL2Alias = async (chainId: CHAIN_ID, address: AddressType) 
   if (bytecode) {
     return await readContract({
       abi: L2DeployerABI,
-      address: L2_MIGRATION_DEPLOYER,
+      address: L2_MIGRATION_DEPLOYER[CHAIN_TO_QUERY],
       chainId: CHAIN_TO_QUERY,
       functionName: 'applyL1ToL2Alias',
       args: [address],

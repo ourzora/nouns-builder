@@ -57,7 +57,7 @@ export const BridgeTreasuryForm = ({
           calldata: encodeFunctionData({
             abi: messengerABI,
             functionName: 'sendMessage',
-            args: [L2_MIGRATION_DEPLOYER, depositParams, 0],
+            args: [L2_MIGRATION_DEPLOYER[migratedToChainId], depositParams, 0],
           }),
         },
       ],

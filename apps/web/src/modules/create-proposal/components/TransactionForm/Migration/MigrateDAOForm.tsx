@@ -46,6 +46,8 @@ export const MigrateDAOForm = () => {
     migratingToChainId,
   })
 
+  console.log('err', error)
+
   const handleSubmit = () => {
     if (!transactions || !settled) return
     addTransaction({

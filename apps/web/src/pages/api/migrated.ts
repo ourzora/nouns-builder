@@ -3,6 +3,7 @@ import { readContract } from 'wagmi/actions'
 
 import { L2_MIGRATION_DEPLOYER, NULL_ADDRESS } from 'src/constants/addresses'
 import { L2DeployerABI } from 'src/data/contract/abis/L2MigrationDeployer'
+import { L2_CHAINS } from 'src/data/contract/chains'
 import { AddressType, CHAIN_ID } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
@@ -18,24 +19,39 @@ export interface L2MigratedResponse {
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { l1Treasury } = req.query
 
-  const data = await readContract({
-    address: L2_MIGRATION_DEPLOYER,
-    chainId: CHAIN_ID.BASE_GOERLI,
-    abi: L2DeployerABI,
-    functionName: 'crossDomainDeployerToMigration',
-    args: [l1Treasury as AddressType],
-  })
+  const data = await Promise.all(
+    L2_CHAINS.map((chainId) => {
+      const deployer = L2_MIGRATION_DEPLOYER[chainId]
 
-  const [tokenAddress] = unpackOptionalArray(data, 3)
-  if (tokenAddress === NULL_ADDRESS) {
-    return res.status(200).send({ migrated: undefined })
+      if (deployer === NULL_ADDRESS) return []
+      return readContract({
+        address: deployer,
+        chainId: chainId,
+        abi: L2DeployerABI,
+        functionName: 'crossDomainDeployerToMigration',
+        args: [l1Treasury as AddressType],
+      })
+    })
+  )
+
+  const migrated = data
+    .map((x, i) => {
+      const [token] = unpackOptionalArray(x, 3)
+      return {
+        l2TokenAddress: token,
+        chainId: L2_CHAINS[i],
+      }
+    })
+    .find((x) => {
+      return x.l2TokenAddress !== NULL_ADDRESS && x.l2TokenAddress !== undefined
+    })
+
+  if (!migrated) {
+    return res.status(200).send({ migrated: null })
   }
 
   res.status(200).send({
-    migrated: {
-      l2TokenAddress: tokenAddress,
-      chainId: CHAIN_ID.BASE_GOERLI,
-    },
+    migrated,
   } as L2MigratedResponse)
 }
 

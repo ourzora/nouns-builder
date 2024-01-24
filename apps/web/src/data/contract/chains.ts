@@ -11,16 +11,11 @@ const MAINNET_CHAINS = [mainnet, zora, base, optimism, baseGoerli]
 // Mainnet is required here due to hooks like useEnsData that only pull data from mainnet
 const TESTNET_CHAINS = [mainnet, goerli, optimismGoerli, baseGoerli, zoraGoerli]
 
-export const L1_CHAINS = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI]
+export const L1_CHAINS = PUBLIC_IS_TESTNET ? [CHAIN_ID.GOERLI] : [CHAIN_ID.ETHEREUM]
 
-export const L2_CHAINS = [
-  CHAIN_ID.OPTIMISM,
-  CHAIN_ID.OPTIMISM_GOERLI,
-  CHAIN_ID.BASE,
-  CHAIN_ID.BASE_GOERLI,
-  CHAIN_ID.ZORA,
-  CHAIN_ID.ZORA_GOERLI,
-]
+export const L2_CHAINS = PUBLIC_IS_TESTNET
+  ? [CHAIN_ID.ZORA_GOERLI, CHAIN_ID.BASE_GOERLI, CHAIN_ID.OPTIMISM_GOERLI]
+  : [CHAIN_ID.ZORA, CHAIN_ID.BASE, CHAIN_ID.OPTIMISM]
 
 const AVAILIBLE_CHAINS = PUBLIC_IS_TESTNET ? TESTNET_CHAINS : MAINNET_CHAINS
 

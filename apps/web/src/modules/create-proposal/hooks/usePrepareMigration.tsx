@@ -35,6 +35,7 @@ export const usePrepareMigration = ({
   const currentDAOConfig = useFetchCurrentDAOConfig({
     enabled,
     chainId: currentChainId,
+    migratingToChainId,
     currentAddresses,
   })
 
@@ -108,6 +109,7 @@ export const usePrepareMigration = ({
       attributesMerkleRoot,
       encodedMetadata,
       minterParams,
+      migratingToChainId,
     }),
     error: undefined,
   }
@@ -119,6 +121,7 @@ const prepareTransactions = ({
   attributesMerkleRoot,
   encodedMetadata,
   minterParams,
+  migratingToChainId,
 }: {
   l1CrossDomainMessenger: AddressType
   currentDAOConfig: ReturnType<typeof useFetchCurrentDAOConfig>
@@ -130,11 +133,13 @@ const prepareTransactions = ({
     pricePerToken: bigint
     merkleRoot: BytesType
   }
+  migratingToChainId: CHAIN_ID
 }) => {
   const { founderParams, tokenParams, auctionParams, govParams } = currentDAOConfig!
 
   const delayedGovernanceAmount = 0n
   const minimumMetadataCalls = BigInt(encodedMetadata.length)
+  const l2MigrationDeployer = L2_MIGRATION_DEPLOYER[migratingToChainId]
 
   const deployerParams = encodeFunctionData({
     abi: L2DeployerABI,
@@ -182,7 +187,7 @@ const prepareTransactions = ({
     calldata: encodeFunctionData({
       abi: messengerABI,
       functionName: 'sendMessage',
-      args: [L2_MIGRATION_DEPLOYER, deployerParams, 0],
+      args: [l2MigrationDeployer, deployerParams, 0],
     }),
   }
 
@@ -193,7 +198,7 @@ const prepareTransactions = ({
     calldata: encodeFunctionData({
       abi: messengerABI,
       functionName: 'sendMessage',
-      args: [L2_MIGRATION_DEPLOYER, x, 0],
+      args: [l2MigrationDeployer, x, 0],
     }),
   }))
 
@@ -204,7 +209,7 @@ const prepareTransactions = ({
     calldata: encodeFunctionData({
       abi: messengerABI,
       functionName: 'sendMessage',
-      args: [L2_MIGRATION_DEPLOYER, metadataAttributesParams, 0],
+      args: [l2MigrationDeployer, metadataAttributesParams, 0],
     }),
   }
 
@@ -215,7 +220,7 @@ const prepareTransactions = ({
     calldata: encodeFunctionData({
       abi: messengerABI,
       functionName: 'sendMessage',
-      args: [L2_MIGRATION_DEPLOYER, renounceParams, 0],
+      args: [l2MigrationDeployer, renounceParams, 0],
     }),
   }
 
