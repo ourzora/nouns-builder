@@ -6,7 +6,9 @@ import {
   defaultHelperTextStyle,
   defaultInputLabelStyle,
 } from 'src/components/Fields/styles.css'
+import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { auctionAbi } from 'src/data/contract/abis'
+import { L2_CHAINS } from 'src/data/contract/chains'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { usePrepareMigration } from 'src/modules/create-proposal/hooks/usePrepareMigration'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
@@ -17,7 +19,10 @@ import { unpackOptionalArray } from 'src/utils/helpers'
 
 import { DropdownSelect } from '../../DropdownSelect'
 
-const chainOptions = [{ label: 'BASE_GOERLI', value: CHAIN_ID.BASE_GOERLI }]
+const chainOptions = L2_CHAINS.map((chainId) => {
+  const chain = PUBLIC_ALL_CHAINS.find((x) => x.id === chainId)!
+  return { label: chain?.name, value: chainId }
+})
 
 export interface MigrationDAOFormProps {
   currentTokenId: bigint
