@@ -25,7 +25,7 @@ const nextConfig = {
   },
   async redirects() {
     const network =
-      process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? 'goerli' : 'ethereum'
+      process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? 'sepolia' : 'ethereum'
 
     return [
       {

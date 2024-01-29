@@ -16,7 +16,7 @@ import {
 } from './ContributionAllocationForm'
 import { DaoCopyAddress } from './DaoCopyAddress'
 
-export type ContributionChain = 1 | 5
+export type ContributionChain = 1
 
 export const ContributionAllocation = () => {
   const [open, setOpen] = useState(false)
