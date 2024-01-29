@@ -16,6 +16,7 @@ type DAO @entity {
   totalAuctionSales: BigInt!
   auctionConfig: AuctionConfig!
   currentAuction: Auction
+  metadataProperties: [MetadataProperty!]
   owners: [DAOTokenOwner!]! @derivedFrom(field: "dao")
   tokens: [Token!]! @derivedFrom(field: "dao")
   proposals: [Proposal!]! @derivedFrom(field: "dao")
@@ -33,7 +34,7 @@ type DAOTokenOwner @entity {
 type Token @entity {
   id: ID!
   name: String!
-  image: String!
+  image: String
   tokenContract: Bytes!
   tokenId: BigInt!
   owner: Bytes!
@@ -119,4 +120,24 @@ type AuctionBid @entity {
   bidder: Bytes!
   auction: Auction!
   bidTime: BigInt!
+}
+
+type MetadataProperty @entity {
+  id: ID!
+  dao: DAO!
+  names: [String!]!
+  items: [MetadataItem!]! @derivedFrom(field: "propertyInfo")
+  ipfsBaseUri: String!
+  ipfsExtension: String!
+  createdAt: BigInt!
+  deleted: Boolean!
+}
+
+type MetadataItem @entity {
+  id: ID!
+  index: Int!
+  propertyInfo: MetadataProperty!
+  propertyId: BigInt!
+  name: String!
+  isNewProperty: Boolean!
 }
