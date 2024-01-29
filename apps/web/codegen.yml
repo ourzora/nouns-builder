@@ -1,4 +1,4 @@
-schema: https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli
+schema: https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-sepolia
 documents: 'src/data/subgraph/**/*.graphql'
 generates:
   src/data/subgraph/sdk.generated.ts:

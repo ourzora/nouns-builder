@@ -25,7 +25,7 @@ export async function isValidAddress(
 
     let resolvedName: string | null
 
-    if (chainId === CHAIN_ID.ETHEREUM || chainId === CHAIN_ID.GOERLI) {
+    if (chainId === CHAIN_ID.ETHEREUM || chainId === CHAIN_ID.SEPOLIA) {
       resolvedName = await provider?.resolveName(address)
     } else {
       const [nameResponse, codeResponse] = await Promise.all([

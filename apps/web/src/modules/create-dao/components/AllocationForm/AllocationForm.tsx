@@ -156,9 +156,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
         )}
       </Formik>
 
-      {(chain.id === CHAIN_ID.ETHEREUM || chain.id === CHAIN_ID.GOERLI) && (
-        <ContributionAllocation />
-      )}
+      {chain.id === CHAIN_ID.ETHEREUM && <ContributionAllocation />}
 
       {allocationError && (
         <Flex mt={'x4'} color="negative">
