@@ -38,8 +38,6 @@ export const Queue: React.FC<QueueProps> = ({ setQueueModalOpen }) => {
     removeAllTransactions()
   }
 
-  console.log(transactions)
-
   return (
     <Stack style={{ maxWidth: 500, borderRadius: 16 }}>
       <Flex justify={'space-between'}>

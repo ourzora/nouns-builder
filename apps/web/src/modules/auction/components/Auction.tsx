@@ -7,11 +7,12 @@ import { readContract } from 'wagmi/actions'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
+import { L1_CHAINS } from 'src/data/contract/chains'
 import { getBids } from 'src/data/subgraph/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
 import { L2MigratedResponse } from 'src/pages/api/migrated'
 import { TokenWithDao } from 'src/pages/dao/[network]/[token]/[tokenId]'
-import { AddressType, CHAIN_ID, Chain } from 'src/typings'
+import { AddressType, Chain } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 
 import { useAuctionEvents } from '../hooks'
@@ -33,8 +34,6 @@ interface AuctionControllerProps {
   token: TokenWithDao
   viewSwitcher?: ReactNode
 }
-
-const L1_CHAINS = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI]
 
 export const Auction: React.FC<AuctionControllerProps> = ({
   chain,

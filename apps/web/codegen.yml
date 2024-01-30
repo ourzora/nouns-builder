@@ -1,4 +1,4 @@
-schema: https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-ethereum-mainnet/1.1.0/gn
+schema: https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-sepolia
 documents: 'src/data/subgraph/**/*.graphql'
 generates:
   src/data/subgraph/sdk.generated.ts:

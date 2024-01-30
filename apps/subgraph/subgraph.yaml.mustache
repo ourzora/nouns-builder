@@ -104,9 +104,13 @@ templates:
           handler: handleDescriptionUpdated
         - event: WebsiteURIUpdated(string,string)
           handler: handleWebsiteURIUpdated
+      {{#callHandlers}}
       callHandlers:
         - function: addProperties(string[],(uint256,string,bool)[],(string,string))
           handler: handleAddProperties
+        - function: deleteAndRecreateProperties(string[],(uint256,string,bool)[],(string,string))
+          handler: handleDeleteAndRecreateProperties
+      {{/callHandlers}}
       file: ./src/metadata.ts
   - kind: ethereum
     name: Auction
