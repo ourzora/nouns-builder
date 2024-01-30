@@ -5,7 +5,7 @@ import { L2DeployerABI } from 'src/data/contract/abis/L2MigrationDeployer'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
 // We are calling a pure function. the result will be the same on any chain with an L2 deployer
-const CHAIN_TO_QUERY = CHAIN_ID.BASE_GOERLI
+const CHAIN_TO_QUERY = CHAIN_ID.BASE_SEPOLIA
 
 export const applyL1ToL2Alias = async (chainId: CHAIN_ID, address: AddressType) => {
   const publicClient = getPublicClient({ chainId })

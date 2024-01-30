@@ -25,25 +25,27 @@ import {
   useDaoStore,
 } from 'src/modules/dao'
 import { NextPageWithLayout } from 'src/pages/_app'
-import { AddressType, Chain } from 'src/typings'
+import { useChainStore } from 'src/stores/useChainStore'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 interface DaoPageProps {
-  chain: Chain
+  chainId: CHAIN_ID
   addresses: DaoContractAddresses
   collectionAddress: AddressType
 }
 
-const DaoPage: NextPageWithLayout<DaoPageProps> = ({ chain, collectionAddress }) => {
+const DaoPage: NextPageWithLayout<DaoPageProps> = ({ chainId, collectionAddress }) => {
   const { query } = useRouter()
 
   const { address: signerAddress } = useAccount()
   const { addresses } = useDaoStore()
+  const chain = useChainStore((x) => x.chain)
 
   const { data: owner } = useContractRead({
     abi: auctionAbi,
     address: addresses.auction,
     functionName: 'owner',
-    chainId: chain.id,
+    chainId: chainId,
   })
 
   const sections = [
@@ -155,7 +157,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!initialized) {
       return {
         props: {
-          chain,
+          chainId: chain.id,
           addresses,
           collectionAddress,
         },

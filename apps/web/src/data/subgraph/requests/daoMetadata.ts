@@ -1,17 +1,16 @@
 import { encodeFunctionData } from 'viem'
 
 import { metadataAbi } from 'src/data/contract/abis'
+import { L1_CHAINS } from 'src/data/contract/chains'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { SDK } from '../client'
-
-const allowedChains = [CHAIN_ID.ETHEREUM, CHAIN_ID.GOERLI]
 
 export const encodedDaoMetadataRequest = async (
   chain: CHAIN_ID,
   tokenAddress: AddressType
 ) => {
-  if (!allowedChains.find((x) => x === chain)) throw new Error('Chain not supported')
+  if (!L1_CHAINS.find((x) => x === chain)) throw new Error('Only L1 Chains are supported')
 
   const res = await SDK.connect(chain)
     .daoMetadata({ tokenAddress, first: 1000 })

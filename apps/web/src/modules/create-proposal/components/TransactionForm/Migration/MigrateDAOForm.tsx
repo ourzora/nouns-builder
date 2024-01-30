@@ -33,7 +33,7 @@ export const MigrateDAOForm = () => {
   const { auction: auctionAddress } = useDaoStore((x) => x.addresses)
   const { id: chainId } = useChainStore((x) => x.chain)
   const [migratingToChainId, setMigratingToChainId] = useState<CHAIN_ID>(
-    CHAIN_ID.BASE_GOERLI
+    chainOptions[0].value
   )
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
@@ -50,8 +50,6 @@ export const MigrateDAOForm = () => {
     enabled: settled || false,
     migratingToChainId,
   })
-
-  console.log('err', error)
 
   const handleSubmit = () => {
     if (!transactions || !settled) return

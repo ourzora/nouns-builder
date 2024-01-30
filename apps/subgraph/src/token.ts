@@ -21,7 +21,7 @@ export function handleTransfer(event: TransferEvent): void {
 
     let metadataContract = MetadataContract.bind(Address.fromString(metadataAddress))
 
-    let attributes = metadataContract.getAttributes(event.params.tokenId)
+    let attributes = metadataContract.try_getAttributes(event.params.tokenId)
 
     token = new Token(tokenId)
 
@@ -32,7 +32,7 @@ export function handleTransfer(event: TransferEvent): void {
       .rendererBase()
       .replace('https://api.zora.co', 'https://nouns.build/api')
 
-    token.image = `${rendererBase}${attributes.value1}`
+    if (!attributes.reverted) token.image = `${rendererBase}${attributes.value.value1}`
 
     token.tokenContract = event.address
     token.tokenId = event.params.tokenId
