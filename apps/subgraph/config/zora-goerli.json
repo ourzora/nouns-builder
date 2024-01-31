@@ -3,5 +3,6 @@
   "manager": {
     "address": "0xc521f85613985b7e417fccd5b348f64263d79397",
     "startBlock": 597700
-  }
+  },
+  "callHandlers": false
 }

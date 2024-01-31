@@ -42,7 +42,7 @@ const DaoPage: NextPageWithLayout<DaoPageProps> = ({ chainId, collectionAddress 
     abi: auctionAbi,
     address: addresses.auction,
     functionName: 'owner',
-    chainId,
+    chainId: chainId,
   })
 
   const sections = [
