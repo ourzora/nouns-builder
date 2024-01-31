@@ -18,6 +18,7 @@ import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { managerAbi } from 'src/data/contract/abis'
 import { managerV2Abi } from 'src/data/contract/abis/ManagerV2'
+import { L2_CHAINS } from 'src/data/contract/chains'
 import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
 import { useChainStore } from 'src/stores/useChainStore'
 import {
@@ -60,6 +61,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [hasConfirmedTerms, setHasConfirmedTerms] = useState<boolean>(false)
   const [hasConfirmedChain, setHasConfirmedChain] = useState<boolean>(false)
+  const [hasConfirmedRewards, setHasConfirmedRewards] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const chain = useChainStore((x) => x.chain)
   const { data: version, isLoading: isVersionLoading } = useContractRead({
@@ -360,6 +362,38 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
               </Flex>
             </Flex>
 
+            {L2_CHAINS.includes(chain.id) && (
+              <Flex mt="x4">
+                <Flex align={'center'} justify={'center'} gap={'x4'}>
+                  <Flex
+                    align={'center'}
+                    justify={'center'}
+                    className={
+                      deployCheckboxStyleVariants[
+                        hasConfirmedRewards ? 'confirmed' : 'default'
+                      ]
+                    }
+                    onClick={() => setHasConfirmedRewards((bool) => !bool)}
+                  >
+                    {hasConfirmedRewards && <Icon fill="background1" id="check" />}
+                  </Flex>
+
+                  <Flex className={deployCheckboxHelperText}>
+                    I have read the{' '}
+                    <a
+                      href={'https://docs.zora.co/docs/guides/builder-protocol-rewards'}
+                      target="_blank"
+                      className={atoms({ color: 'accent' })}
+                      rel="noreferrer"
+                    >
+                      Builder Protocol Rewards documentation
+                    </a>{' '}
+                    and understand how Protocol Rewards apply to this DAO.
+                  </Flex>
+                </Flex>
+              </Flex>
+            )}
+
             {deploymentError && (
               <Flex mt={'x4'} color="negative">
                 {deploymentError}
@@ -386,6 +420,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   !address ||
                   !hasConfirmedTerms ||
                   !hasConfirmedChain ||
+                  !hasConfirmedRewards ||
                   isPendingTransaction ||
                   isVersionLoading
                 }
