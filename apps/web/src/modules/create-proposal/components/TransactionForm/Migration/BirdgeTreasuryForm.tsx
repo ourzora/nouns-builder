@@ -5,7 +5,7 @@ import { encodeFunctionData } from 'viem'
 import { useBalance } from 'wagmi'
 
 import Input from 'src/components/Input/Input'
-import { L1_MESSENGERS, L2_MIGRATION_DEPLOYER } from 'src/constants/addresses'
+import { L1_CROSS_DOMAIN_MESSENGER, L2_MIGRATION_DEPLOYER } from 'src/constants/addresses'
 import { messengerABI } from 'src/data/contract/abis/L1CrossDomainMessenger'
 import { L2DeployerABI } from 'src/data/contract/abis/L2MigrationDeployer'
 import { TransactionType, useProposalStore } from 'src/modules/create-proposal'
@@ -52,7 +52,7 @@ export const BridgeTreasuryForm = ({
       transactions: [
         {
           functionSignature: 'depositToTreasury()',
-          target: L1_MESSENGERS[migratedToChainId],
+          target: L1_CROSS_DOMAIN_MESSENGER[migratedToChainId],
           value,
           calldata: encodeFunctionData({
             abi: messengerABI,

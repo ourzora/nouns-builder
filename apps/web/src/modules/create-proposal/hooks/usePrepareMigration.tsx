@@ -3,7 +3,7 @@ import useSWRImmutable from 'swr/immutable'
 import { encodeFunctionData } from 'viem'
 import { useContractRead } from 'wagmi'
 
-import { L1_MESSENGERS, L2_MIGRATION_DEPLOYER } from 'src/constants/addresses'
+import { L1_CROSS_DOMAIN_MESSENGER, L2_MIGRATION_DEPLOYER } from 'src/constants/addresses'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi, merklePropertyMetadataAbi } from 'src/data/contract/abis'
 import { messengerABI } from 'src/data/contract/abis/L1CrossDomainMessenger'
@@ -104,7 +104,7 @@ export const usePrepareMigration = ({
 
   return {
     transactions: prepareTransactions({
-      l1CrossDomainMessenger: L1_MESSENGERS[migratingToChainId],
+      l1CrossDomainMessenger: L1_CROSS_DOMAIN_MESSENGER[migratingToChainId],
       currentDAOConfig,
       attributesMerkleRoot,
       encodedMetadata,
