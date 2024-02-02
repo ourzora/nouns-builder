@@ -49,12 +49,10 @@ export const Migration: React.FC = () => {
   )
 
   const deployed = !!migratedRes?.migrated
-  const treasuryMigrated = treasuryBalance && treasuryBalance.value < 1000000000000000
 
-  let daoProgress = DAOMigrationProgress.FINALIZED
-  if (!paused) daoProgress = DAOMigrationProgress.DEFAULT
+  let daoProgress = DAOMigrationProgress.DEPLOYED
+  if (paused) daoProgress = DAOMigrationProgress.DEFAULT
   else if (!deployed) daoProgress = DAOMigrationProgress.PAUSED
-  else if (!treasuryMigrated) daoProgress = DAOMigrationProgress.DEPLOYED
 
   const formComponents = [
     <PauseAuctionsForm />,

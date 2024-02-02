@@ -2,8 +2,10 @@ import { Flex, Stack } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import { isAddressEqual } from 'viem'
 import { useAccount, useContractRead } from 'wagmi'
 
+import { ALLOWED_MIGRATION_DAOS } from 'src/constants/addresses'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -32,7 +34,7 @@ import { AddressType } from 'src/typings'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
-  const { auction } = useDaoStore((x) => x.addresses)
+  const { auction, token } = useDaoStore((x) => x.addresses)
   const chain = useChainStore((x) => x.chain)
   const { query } = router
   const [transactionType, setTransactionType] = useState<
@@ -70,9 +72,13 @@ const CreateProposalPage: NextPageWithLayout = () => {
   })
 
   const isL1Chain = L1_CHAINS.find((l1ChainIds) => l1ChainIds === chain.id)
+  const isAllowedMigrationDao = token
+    ? !!ALLOWED_MIGRATION_DAOS.find((x) => isAddressEqual(x, token))
+    : false
 
   const TRANSACTION_FORM_OPTIONS_FILTERED = TRANSACTION_FORM_OPTIONS.filter((x) => {
-    if (x === TransactionType.MIGRATION && !isL1Chain) return false
+    if (x === TransactionType.MIGRATION && (!isL1Chain || !isAllowedMigrationDao))
+      return false
     if (x === TransactionType.PAUSE_AUCTIONS && paused) return false
     if (x === TransactionType.RESUME_AUCTIONS && !paused) return false
     return true
