@@ -137,7 +137,9 @@ const prepareTransactions = ({
 }) => {
   const { founderParams, tokenParams, auctionParams, govParams } = currentDAOConfig!
 
-  const delayedGovernanceAmount = 0n
+  const ONE_HOUR_IN_SECONDS = 3600n
+
+  const delayedGovernanceAmount = 24n * ONE_HOUR_IN_SECONDS
   const minimumMetadataCalls = BigInt(encodedMetadata.length)
   const l2MigrationDeployer = L2_MIGRATION_DEPLOYER[migratingToChainId]
 
