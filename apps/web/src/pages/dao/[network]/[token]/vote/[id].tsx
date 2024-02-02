@@ -116,16 +116,16 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
             {warn && (
               <Flex
                 w="100%"
-                backgroundColor="negative"
-                color="onNegative"
+                backgroundColor="warning"
+                color="onWarning"
                 p="x4"
                 borderRadius="curved"
                 align="center"
                 justify="center"
               >
-                <Icon fill="onNegative" id="warning" mr="x2" />
+                <Icon fill="onWarning" id="warning" mr="x2" />
                 <Box fontWeight={'heading'}>
-                  This proposal may be malicious. Please review and vote accordingly.
+                  {`Executing this proposal will transfer more than 90% of ${daoName}'s treasury.`}
                 </Box>
               </Flex>
             )}
