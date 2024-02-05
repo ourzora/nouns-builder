@@ -2,7 +2,7 @@ import { CHAIN_ID } from 'src/typings'
 
 export const PUBLIC_SUBGRAPH_URL = {
   [CHAIN_ID.ETHEREUM]:
-    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-ethereum-mainnet/1.1.0/gn',
+    'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-ethereum-mainnet/stable/gn',
   [CHAIN_ID.OPTIMISM]:
     'https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-optimism-mainnet/stable/gn',
   [CHAIN_ID.SEPOLIA]:

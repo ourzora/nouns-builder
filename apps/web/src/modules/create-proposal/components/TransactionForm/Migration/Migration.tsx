@@ -1,7 +1,7 @@
 import { Stack } from '@zoralabs/zord'
 import axios from 'axios'
 import useSWR from 'swr'
-import { useBalance, useContractRead } from 'wagmi'
+import { useContractRead } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -19,7 +19,6 @@ export enum DAOMigrationProgress {
   DEFAULT = 0,
   PAUSED = 1,
   DEPLOYED = 2,
-  FINALIZED = 3,
 }
 
 export const Migration: React.FC = () => {
@@ -27,11 +26,6 @@ export const Migration: React.FC = () => {
   const {
     addresses: { treasury, auction },
   } = useDaoStore()
-
-  const { data: treasuryBalance } = useBalance({
-    address: treasury as `0x${string}`,
-    chainId: chain.id,
-  })
 
   const { data: paused } = useContractRead({
     abi: auctionAbi,
