@@ -70,8 +70,12 @@ export const MigrateDAOForm = () => {
     <Box w={'100%'}>
       <Text mb="x8" ml="x2" className={defaultHelperTextStyle}>
         This step will deploy a mirror of this DAO on the L2 of your choice, and create a
-        snapshot for members to claim their tokens.{' '}
-        <a target="_blank" rel="noreferrer noopener" href="">
+        snapshot for members to claim their tokens or receive via airdrop.{' '}
+        <a
+          target="_blank"
+          rel="noreferrer noopener"
+          href="https://app.charmverse.io/builderdao/l1-%25E2%2586%2592-l2-dao-migration-faq-24933900064389292"
+        >
           Learn more
         </a>
       </Text>

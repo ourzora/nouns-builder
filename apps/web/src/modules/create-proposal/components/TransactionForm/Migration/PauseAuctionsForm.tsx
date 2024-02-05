@@ -94,7 +94,11 @@ export const PauseAuctionsForm = () => {
           In order to start the migration, you first need to pause auctions. In parallel,
           we also recommend reducing the voting delay and period so you can quickly start
           the bridging transaction after this proposal goes through.{' '}
-          <a target="_blank" rel="noreferrer noopener" href="">
+          <a
+            target="_blank"
+            rel="noreferrer noopener"
+            href="https://app.charmverse.io/builderdao/l1-%25E2%2586%2592-l2-dao-migration-faq-24933900064389292"
+          >
             Learn more
           </a>
         </Text>
