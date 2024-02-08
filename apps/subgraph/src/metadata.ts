@@ -1,12 +1,18 @@
-import { DAO, MetadataItem, MetadataProperty } from '../generated/schema'
+import { DAO, MetadataItem, MetadataProperty, Token } from '../generated/schema'
+import {
+  BatchMetadataUpdate as BatchMetadataUpdateEvent,
+  ContractImageUpdated as ContractImageUpdatedEvent,
+  DescriptionUpdated as DescriptionUpdatedEvent,
+  MetadataUpdate as MetadataUpdateEvent,
+  WebsiteURIUpdated as URIUpdatedEvent,
+} from '../generated/templates/MetadataRendererBase/MetadataRendererBase'
 import {
   AddPropertiesCall as AddPropertiesFunctionCall,
-  ContractImageUpdated as ContractImageUpdatedEvent,
   DeleteAndRecreatePropertiesCall as DeleteAndRecreatePropertiesFunctionCall,
-  DescriptionUpdated as DescriptionUpdatedEvent,
-  WebsiteURIUpdated as URIUpdatedEvent,
-} from '../generated/templates/MetadataRenderer/MetadataRenderer'
-import { dataSource } from '@graphprotocol/graph-ts'
+} from '../generated/templates/MetadataRendererV1/MetadataRendererV1'
+import { Token as TokenContract } from '../generated/templates/Token/Token'
+import { setTokenMetadata } from './utils/setTokenMetadata'
+import { Address, BigInt, dataSource } from '@graphprotocol/graph-ts'
 
 export function handleContractImageUpdated(event: ContractImageUpdatedEvent): void {
   let context = dataSource.context()
@@ -27,6 +33,56 @@ export function handleDescriptionUpdated(event: DescriptionUpdatedEvent): void {
   let dao = DAO.load(context.getString('tokenAddress'))!
   dao.description = event.params.newDescription
   dao.save()
+}
+
+export function handleMetadataUpdate(event: MetadataUpdateEvent): void {
+  let context = dataSource.context()
+
+  let tokenContract = TokenContract.bind(
+    Address.fromString(context.getString('tokenAddress'))
+  )
+
+  let tokenIdToUpdate = event.params._tokenId
+  let token = Token.load(`${event.address.toHexString()}:${tokenIdToUpdate.toString()}`)
+  if (!token) return
+
+  let tokenURI = tokenContract.try_tokenURI(tokenIdToUpdate)
+  if (!tokenURI.reverted) {
+    setTokenMetadata(token, tokenURI.value)
+  } else {
+    token.name = `${tokenContract.name()} #${tokenIdToUpdate.toString()}`
+    token.image = null
+    token.content = null
+  }
+  token.save()
+}
+
+export function handleBatchMetadataUpdate(event: BatchMetadataUpdateEvent): void {
+  let context = dataSource.context()
+
+  let tokenContract = TokenContract.bind(
+    Address.fromString(context.getString('tokenAddress'))
+  )
+
+  for (
+    let i = event.params._toTokenId;
+    i < event.params._toTokenId;
+    i.plus(BigInt.fromI32(1))
+  ) {
+    let tokenId = `${event.address.toHexString()}:${i.toString()}`
+    let token = Token.load(tokenId)
+    if (!token) continue
+
+    let tokenURI = tokenContract.try_tokenURI(i)
+    if (!tokenURI.reverted) {
+      setTokenMetadata(token, tokenURI.value)
+    } else {
+      token.name = `${tokenContract.name()} #${i.toString()}`
+      token.image = null
+      token.content = null
+    }
+    token.save()
+  }
 }
 
 export function handleAddProperties(event: AddPropertiesFunctionCall): void {

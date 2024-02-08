@@ -16,7 +16,7 @@
     "deploy:sepolia": "pnpm clean && pnpm prepare:sepolia && pnpm codegen && graph build && goldsky subgraph deploy nouns-builder-sepolia-testnet/1.1.0",
     "deploy:mainnet": "pnpm clean && pnpm prepare:mainnet && pnpm codegen && graph build && goldsky subgraph deploy nouns-builder-ethereum-mainnet/1.1.0",
     "deploy:base": "pnpm clean && pnpm prepare:base && pnpm codegen && graph build && goldsky subgraph deploy nouns-builder-base-mainnet/1.1.0",
-    "deploy:base-sepolia": "pnpm clean && pnpm prepare:base-sepolia && pnpm codegen && graph build && goldsky subgraph deploy nouns-builder-base-sepolia/1.1.0",
+    "deploy:base-sepolia": "pnpm clean && pnpm prepare:base-sepolia && pnpm codegen && graph build && goldsky subgraph deploy nouns-builder-base-sandbox/1.2.0",
     "deploy:optimism": "pnpm clean && pnpm prepare:optimism && pnpm codegen && graph build && goldsky subgraph deploy nouns-builder-optimism-mainnet/1.1.0",
     "deploy:optimism-sepolia": "pnpm clean && pnpm prepare:optimism-sepolia && pnpm codegen && graph build && goldsky subgraph deploy nouns-builder-optimism-sepolia/1.1.0",
     "deploy:zora": "pnpm clean && pnpm prepare:zora && pnpm codegen && graph build && goldsky subgraph deploy nouns-builder-zora-mainnet/1.1.0",
@@ -27,7 +27,8 @@
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.50.1",
-    "@graphprotocol/graph-ts": "0.30.0"
+    "@graphprotocol/graph-ts": "0.30.0",
+    "as-base64": "^0.2.0"
   },
   "devDependencies": {
     "matchstick-as": "0.5.0",

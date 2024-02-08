@@ -21,12 +21,16 @@ dataSources:
           file: ./abis/Manager.json
         - name: Token
           file: ./abis/Token.json
-        - name: MetadataRenderer
-          file: ./abis/MetadataRenderer.json
+        - name: MetadataRendererV1
+          file: ./abis/MetadataRendererV1.json
+        - name: MetadataRendererBase
+          file: ./abis/MetadataRendererBase.json
         - name: Auction
           file: ./abis/Auction.json
       eventHandlers:
         - event: DAODeployed(address,address,address,address,address)
+          handler: handleDAODeployed
+        - event: MetadataRendererUpdated(address,address)
           handler: handleDAODeployed
       file: ./src/manager.ts
 templates:
@@ -46,8 +50,6 @@ templates:
       abis:
         - name: Token
           file: ./abis/Token.json
-        - name: MetadataRenderer
-          file: ./abis/MetadataRenderer.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
@@ -84,19 +86,23 @@ templates:
           handler: handleVoteCast
       file: ./src/governor.ts
   - kind: ethereum
-    name: MetadataRenderer
+    name: MetadataRendererV1
     network: {{network}}
     source:
-      abi: MetadataRenderer
+      abi: MetadataRendererV1
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Proposal
+        - DAO
+        - MetadataItem
+        - MetadataProperty
       abis:
-        - name: MetadataRenderer
-          file: ./abis/MetadataRenderer.json
+        - name: MetadataRendererV1
+          file: ./abis/MetadataRendererV1.json
+        - name: MetadataRendererBase
+          file: ./abis/MetadataRendererBase.json
       eventHandlers:
         - event: ContractImageUpdated(string,string)
           handler: handleContractImageUpdated
@@ -111,6 +117,36 @@ templates:
         - function: deleteAndRecreateProperties(string[],(uint256,string,bool)[],(string,string))
           handler: handleDeleteAndRecreateProperties
       {{/callHandlers}}
+      file: ./src/metadata.ts
+  - kind: ethereum
+    name: MetadataRendererBase
+    network: {{network}}
+    source:
+      abi: MetadataRendererBase
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DAO
+        - MetadataItem
+        - MetadataProperty
+      abis:
+        - name: MetadataRendererV1
+          file: ./abis/MetadataRendererV1.json
+        - name: MetadataRendererBase
+          file: ./abis/MetadataRendererBase.json
+      eventHandlers:
+        - event: ContractImageUpdated(string,string)
+          handler: handleContractImageUpdated
+        - event: DescriptionUpdated(string,string)
+          handler: handleDescriptionUpdated
+        - event: WebsiteURIUpdated(string,string)
+          handler: handleWebsiteURIUpdated
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
       file: ./src/metadata.ts
   - kind: ethereum
     name: Auction

@@ -32,6 +32,9 @@ importers:
       '@graphprotocol/graph-ts':
         specifier: 0.30.0
         version: 0.30.0
+      as-base64:
+        specifier: ^0.2.0
+        version: 0.2.0
     devDependencies:
       matchstick-as:
         specifier: 0.5.0
@@ -6289,7 +6292,7 @@ packages:
       '@openzeppelin/contracts-upgradeable': 4.8.1
       '@types/node': 18.13.0
       ds-test: github.com/dapphub/ds-test/e282159d5170298eb2455a6c05280ab5a73a4ef0
-      forge-std: github.com/foundry-rs/forge-std/80a8f6ea9362849b2a8f2dc28df40c77a64f9c16
+      forge-std: github.com/foundry-rs/forge-std/17c554b7dd5cc3a63e7fb9db035718e619ee7653
       micro-onchain-metadata-utils: 0.1.1
       sol-uriencode: 0.2.0
     dev: false
@@ -6610,6 +6613,10 @@ packages:
       es-abstract: 1.20.4
       es-shim-unscopables: 1.0.0
       get-intrinsic: 1.2.0
+    dev: false
+
+  /as-base64@0.2.0:
+    resolution: {integrity: sha512-j6JxprAVN4SXUcZiSChuMBf0JJOCdh5OfrHAepluxmFWuDZZm+YjmfNSk8djUHRPEB+Ui5HGvrz46GLvTJf3ig==}
     dev: false
 
   /asap@2.0.6:
@@ -16391,8 +16398,8 @@ packages:
     version: 1.0.0
     dev: false
 
-  github.com/foundry-rs/forge-std/80a8f6ea9362849b2a8f2dc28df40c77a64f9c16:
-    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/80a8f6ea9362849b2a8f2dc28df40c77a64f9c16}
+  github.com/foundry-rs/forge-std/17c554b7dd5cc3a63e7fb9db035718e619ee7653:
+    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/17c554b7dd5cc3a63e7fb9db035718e619ee7653}
     name: forge-std
-    version: 1.7.3
+    version: 1.7.6
     dev: false
