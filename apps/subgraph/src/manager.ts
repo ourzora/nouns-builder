@@ -66,15 +66,15 @@ export function handleDAODeployed(event: DAODeployedEvent): void {
 }
 
 export function handleMetadataRendererUpdated(event: MetadataRendererUpdatedEvent): void {
-  let dao = DAO.load(event.params.sender.toHexString())
-
-  if (!dao) return
-
   let metadataContract = MetadataRendererBaseContract.bind(event.params.renderer)
 
   // If token function reverts this contract does not implement the BaseMetadata interface and cannot be indexed
   let tokenAddress = metadataContract.try_token()
   if (tokenAddress.reverted) return
+
+  let dao = DAO.load(tokenAddress.value.toHexString())
+
+  if (!dao) return
 
   let tokenContract = TokenContract.bind(tokenAddress.value)
 

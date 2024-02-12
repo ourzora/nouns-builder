@@ -13,11 +13,13 @@ export function setTokenMetadata(token: Token, tokenURI: string): void {
   let metadataDecoded = Bytes.fromUint8Array(decode(split[1]))
 
   // Parse the decoded bytes as JSON
-  let metadataBytes = json.fromBytes(metadataDecoded)
+  let metadataBytes = json.try_fromBytes(metadataDecoded)
+
+  if (metadataBytes.isError) return
 
   // Cast to object
-  if (metadataBytes.kind != JSONValueKind.OBJECT) return
-  let metadataObject = metadataBytes.toObject()
+  if (metadataBytes.value.kind != JSONValueKind.OBJECT) return
+  let metadataObject = metadataBytes.value.toObject()
 
   // Set name if present
   let name = metadataObject.get('name')

@@ -38,12 +38,11 @@ export function handleDescriptionUpdated(event: DescriptionUpdatedEvent): void {
 export function handleMetadataUpdate(event: MetadataUpdateEvent): void {
   let context = dataSource.context()
 
-  let tokenContract = TokenContract.bind(
-    Address.fromString(context.getString('tokenAddress'))
-  )
+  let tokenAddress = context.getString('tokenAddress')
+  let tokenContract = TokenContract.bind(Address.fromString(tokenAddress))
 
   let tokenIdToUpdate = event.params._tokenId
-  let token = Token.load(`${event.address.toHexString()}:${tokenIdToUpdate.toString()}`)
+  let token = Token.load(`${tokenAddress}:${tokenIdToUpdate.toString()}`)
   if (!token) return
 
   let tokenURI = tokenContract.try_tokenURI(tokenIdToUpdate)
@@ -60,16 +59,15 @@ export function handleMetadataUpdate(event: MetadataUpdateEvent): void {
 export function handleBatchMetadataUpdate(event: BatchMetadataUpdateEvent): void {
   let context = dataSource.context()
 
-  let tokenContract = TokenContract.bind(
-    Address.fromString(context.getString('tokenAddress'))
-  )
+  let tokenAddress = context.getString('tokenAddress')
+  let tokenContract = TokenContract.bind(Address.fromString(tokenAddress))
 
   for (
     let i = event.params._toTokenId;
     i < event.params._toTokenId;
     i.plus(BigInt.fromI32(1))
   ) {
-    let tokenId = `${event.address.toHexString()}:${i.toString()}`
+    let tokenId = `${tokenAddress}:${i.toString()}`
     let token = Token.load(tokenId)
     if (!token) continue
 

@@ -31,7 +31,7 @@ dataSources:
         - event: DAODeployed(address,address,address,address,address)
           handler: handleDAODeployed
         - event: MetadataRendererUpdated(address,address)
-          handler: handleDAODeployed
+          handler: handleMetadataRendererUpdated
       file: ./src/manager.ts
 templates:
   - kind: ethereum
@@ -103,6 +103,8 @@ templates:
           file: ./abis/MetadataRendererV1.json
         - name: MetadataRendererBase
           file: ./abis/MetadataRendererBase.json
+        - name: Token
+          file: ./abis/Token.json
       eventHandlers:
         - event: ContractImageUpdated(string,string)
           handler: handleContractImageUpdated
@@ -136,6 +138,8 @@ templates:
           file: ./abis/MetadataRendererV1.json
         - name: MetadataRendererBase
           file: ./abis/MetadataRendererBase.json
+        - name: Token
+          file: ./abis/Token.json
       eventHandlers:
         - event: ContractImageUpdated(string,string)
           handler: handleContractImageUpdated
