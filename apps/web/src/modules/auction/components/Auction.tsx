@@ -74,7 +74,9 @@ export const Auction: React.FC<AuctionControllerProps> = ({
     unpackOptionalArray(auction, 6)
 
   const isTokenActiveAuction =
-    !settled && !!currentTokenId && currentTokenId.toString() == queriedTokenId
+    !settled &&
+    currentTokenId !== undefined &&
+    currentTokenId.toString() == queriedTokenId
 
   useAuctionEvents({
     chainId: chain.id,
