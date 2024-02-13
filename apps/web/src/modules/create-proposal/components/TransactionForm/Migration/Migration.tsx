@@ -45,7 +45,7 @@ export const Migration: React.FC = () => {
   const deployed = !!migratedRes?.migrated
 
   let daoProgress = DAOMigrationProgress.DEPLOYED
-  if (paused) daoProgress = DAOMigrationProgress.DEFAULT
+  if (!paused) daoProgress = DAOMigrationProgress.DEFAULT
   else if (!deployed) daoProgress = DAOMigrationProgress.PAUSED
 
   const formComponents = [
