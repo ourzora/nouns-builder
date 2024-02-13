@@ -85,7 +85,10 @@ export const useFetchCurrentDAOConfig = ({
     (_, founders) => {
       return Promise.all(
         founders.map(async (x) => {
-          return { ...x, wallet: await applyL1ToL2Alias(chainId, x.wallet) }
+          return {
+            ...x,
+            wallet: await applyL1ToL2Alias({ l1ChainId: chainId, address: x.wallet }),
+          }
         })
       )
     }

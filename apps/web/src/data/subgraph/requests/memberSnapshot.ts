@@ -26,7 +26,10 @@ export const memberSnapshotRequest = async (
 
   const formattedMembers = await Promise.all(
     data.daotokenOwners.map(async (member) => {
-      let tokenOwner = await applyL1ToL2Alias(chainId, member.owner)
+      let tokenOwner = await applyL1ToL2Alias({
+        l1ChainId: chainId,
+        address: member.owner,
+      })
 
       return {
         address: tokenOwner,
