@@ -24,10 +24,17 @@ interface PlaceBidProps {
   chain: Chain
   tokenId: string
   daoName: string
+  referral?: AddressType
   highestBid?: bigint
 }
 
-export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps) => {
+export const PlaceBid = ({
+  chain,
+  highestBid,
+  referral,
+  tokenId,
+  daoName,
+}: PlaceBidProps) => {
   const { address } = useAccount()
   const { chain: wagmiChain } = useNetwork()
   const { data: balance } = useBalance({ address: address, chainId: chain.id })
@@ -92,13 +99,25 @@ export const PlaceBid = ({ chain, highestBid, tokenId, daoName }: PlaceBidProps)
     try {
       setCreatingBid(true)
 
-      const config = await prepareWriteContract({
-        abi: auctionAbi,
-        address: addresses.auction as Address,
-        functionName: 'createBid',
-        args: [BigInt(tokenId)],
-        value: parseEther(bidAmount),
-      })
+      let config
+      if (referral) {
+        config = await prepareWriteContract({
+          abi: auctionAbi,
+          address: addresses.auction as Address,
+          functionName: 'createBidWithReferral',
+          args: [BigInt(tokenId), referral],
+          value: parseEther(bidAmount),
+        })
+      } else {
+        config = await prepareWriteContract({
+          abi: auctionAbi,
+          address: addresses.auction as Address,
+          functionName: 'createBid',
+          args: [BigInt(tokenId)],
+          value: parseEther(bidAmount),
+        })
+      }
+
       const tx = await writeContract(config)
       if (tx?.hash) await waitForTransaction({ hash: tx.hash })
 

@@ -1,10 +1,13 @@
 import dayjs from 'dayjs'
 import { ethers } from 'ethers'
+import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
+import { useContractRead } from 'wagmi'
 
+import { auctionAbi } from 'src/data/contract/abis'
 import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
 import { useTimeout } from 'src/hooks/useTimeout'
-import { Chain } from 'src/typings'
+import { AddressType, Chain } from 'src/typings'
 
 import { AuctionDetails } from '../AuctionDetails'
 import { BidAmount } from '../BidAmount'
@@ -18,6 +21,7 @@ import { Settle } from './Settle'
 export const CurrentAuction = ({
   chain,
   tokenId,
+  auctionAddress,
   daoName,
   bid,
   owner,
@@ -26,15 +30,22 @@ export const CurrentAuction = ({
 }: {
   chain: Chain
   tokenId: string
-  auctionAddress: string
+  auctionAddress: AddressType
   daoName: string
   bid?: bigint
   owner?: string
   endTime?: number
   bids: AuctionBidFragment[]
 }) => {
+  const { query } = useRouter()
   const [isEnded, setIsEnded] = useState(false)
   const [isEnding, setIsEnding] = useState(false)
+
+  const { data: auctionVersion } = useContractRead({
+    abi: auctionAbi,
+    address: auctionAddress,
+    functionName: 'contractVersion',
+  })
 
   const isEndingTimeout = isEnded ? 4000 : null
 
@@ -49,6 +60,12 @@ export const CurrentAuction = ({
 
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
   const formattedBid = bid ? ethers.utils.formatEther(bid) : ''
+
+  // Set the referral if auction version is != 1 and query.referral is present
+  const referral =
+    !auctionVersion?.startsWith('1') && query.referral
+      ? (query.referral as AddressType)
+      : undefined
 
   if (isEnded || isOver) {
     return (
@@ -78,6 +95,7 @@ export const CurrentAuction = ({
           chain={chain}
           tokenId={tokenId}
           highestBid={bid}
+          referral={referral}
         />
       </ActionsWrapper>
 
