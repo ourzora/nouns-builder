@@ -9,7 +9,6 @@
     "start": "next start",
     "type-check": "tsc --pretty --noEmit",
     "lint": "pnpm type-check && next lint",
-    "postinstall": "pnpm run generate-abis",
     "test": "vitest run",
     "test:watch": "vitest",
     "codegen": "graphql-codegen",

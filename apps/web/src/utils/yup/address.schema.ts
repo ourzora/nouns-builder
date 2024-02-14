@@ -36,3 +36,8 @@ const deboucedValidateAddress = async (
 export const addressValidationSchema = Yup.string()
   .required('*')
   .test(deboucedValidateAddress)
+
+export const addressValidationOptionalSchema = Yup.string().test(
+  (value: string | undefined, ctx: Yup.TestContext<any>) =>
+    value ? deboucedValidateAddress(value, ctx) : true
+)

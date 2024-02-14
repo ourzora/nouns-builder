@@ -8,8 +8,23 @@ export const auctionAbi = [
       },
       {
         internalType: 'address',
+        name: '_rewardsManager',
+        type: 'address',
+      },
+      {
+        internalType: 'address',
         name: '_weth',
         type: 'address',
+      },
+      {
+        internalType: 'uint16',
+        name: '_builderRewardsBPS',
+        type: 'uint16',
+      },
+      {
+        internalType: 'uint16',
+        name: '_referralRewardsBPS',
+        type: 'uint16',
       },
     ],
     stateMutability: 'payable',
@@ -52,6 +67,11 @@ export const auctionAbi = [
   },
   {
     inputs: [],
+    name: 'CANNOT_CREATE_AUCTION',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'DELEGATE_CALL_FAILED',
     type: 'error',
   },
@@ -68,6 +88,21 @@ export const auctionAbi = [
   {
     inputs: [],
     name: 'INSOLVENT',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'INVALID_REWARDS_BPS',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'INVALID_REWARDS_RECIPIENT',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'INVALID_REWARD_TOTAL',
     type: 'error',
   },
   {
@@ -275,6 +310,31 @@ export const auctionAbi = [
     anonymous: false,
     inputs: [
       {
+        components: [
+          {
+            internalType: 'address',
+            name: 'recipient',
+            type: 'address',
+          },
+          {
+            internalType: 'uint16',
+            name: 'percentBps',
+            type: 'uint16',
+          },
+        ],
+        indexed: false,
+        internalType: 'struct AuctionTypesV2.FounderReward',
+        name: 'reward',
+        type: 'tuple',
+      },
+    ],
+    name: 'FounderRewardUpdated',
+    type: 'event',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
         indexed: false,
         internalType: 'uint256',
         name: 'version',
@@ -466,6 +526,19 @@ export const auctionAbi = [
   },
   {
     inputs: [],
+    name: 'builderRewardsBPS',
+    outputs: [
+      {
+        internalType: 'uint16',
+        name: '',
+        type: 'uint16',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'cancelOwnershipTransfer',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -498,6 +571,37 @@ export const auctionAbi = [
     type: 'function',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_tokenId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '_referral',
+        type: 'address',
+      },
+    ],
+    name: 'createBidWithReferral',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'currentBidReferral',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
     inputs: [],
     name: 'duration',
     outputs: [
@@ -505,6 +609,24 @@ export const auctionAbi = [
         internalType: 'uint256',
         name: '',
         type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'founderReward',
+    outputs: [
+      {
+        internalType: 'address',
+        name: 'recipient',
+        type: 'address',
+      },
+      {
+        internalType: 'uint16',
+        name: 'percentBps',
+        type: 'uint16',
       },
     ],
     stateMutability: 'view',
@@ -536,6 +658,16 @@ export const auctionAbi = [
         internalType: 'uint256',
         name: '_reservePrice',
         type: 'uint256',
+      },
+      {
+        internalType: 'address',
+        name: '_founderRewardRecipient',
+        type: 'address',
+      },
+      {
+        internalType: 'uint16',
+        name: '_founderRewardBps',
+        type: 'uint16',
       },
     ],
     name: 'initialize',
@@ -617,6 +749,19 @@ export const auctionAbi = [
   },
   {
     inputs: [],
+    name: 'referralRewardsBPS',
+    outputs: [
+      {
+        internalType: 'uint16',
+        name: '',
+        type: 'uint16',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'reservePrice',
     outputs: [
       {
@@ -650,6 +795,31 @@ export const auctionAbi = [
       },
     ],
     name: 'setDuration',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: 'address',
+            name: 'recipient',
+            type: 'address',
+          },
+          {
+            internalType: 'uint16',
+            name: 'percentBps',
+            type: 'uint16',
+          },
+        ],
+        internalType: 'struct AuctionTypesV2.FounderReward',
+        name: 'reward',
+        type: 'tuple',
+      },
+    ],
+    name: 'setFounderReward',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',

@@ -3,14 +3,15 @@ import { ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
-import { parseEther } from 'viem'
+import { isAddressEqual, parseEther } from 'viem'
 import { useContractReads } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
 import StickySave from 'src/components/Fields/StickySave'
-import { NUMBER } from 'src/components/Fields/types'
+import { NUMBER, TEXT } from 'src/components/Fields/types'
+import { NULL_ADDRESS } from 'src/constants/addresses'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
@@ -40,20 +41,35 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   }
 
   const { data } = useContractReads({
-    allowFailure: false,
+    allowFailure: true,
     contracts: [
       { ...auctionContractParams, functionName: 'duration' },
       { ...auctionContractParams, functionName: 'reservePrice' },
+      { ...auctionContractParams, functionName: 'founderReward' },
     ] as const,
   })
 
-  const [auctionDuration, auctionReservePrice] = unpackOptionalArray(data, 2)
+  const [auctionDuration, auctionReservePrice, founderReward] = unpackOptionalArray(
+    data,
+    3
+  )
+
+  const supportsFounderReward = !founderReward?.error
+
+  const [founderRewardRecipient, founderRewardBPS] = supportsFounderReward
+    ? unpackOptionalArray(founderReward?.result, 2)
+    : []
 
   const initialValues: PreAuctionFormValues = {
-    auctionDuration: fromSeconds(auctionDuration),
-    auctionReservePrice: auctionReservePrice
-      ? parseFloat(ethers.utils.formatUnits(auctionReservePrice))
+    auctionDuration: fromSeconds(auctionDuration?.result),
+    auctionReservePrice: auctionReservePrice?.result
+      ? parseFloat(ethers.utils.formatUnits(auctionReservePrice?.result))
       : 0,
+    auctionRewardRecipient:
+      founderRewardRecipient && !isAddressEqual(founderRewardRecipient, NULL_ADDRESS)
+        ? founderRewardRecipient
+        : '',
+    auctionRewardPercentage: founderRewardBPS ? founderRewardBPS / 100 : 0,
   }
 
   const handleUpdateSettings = async (
@@ -86,6 +102,44 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
         })
         const { hash } = await writeContract(config)
         await waitForTransaction({ hash })
+      }
+
+      if (supportsFounderReward) {
+        const newAuctionRewardRecipient = values.auctionRewardRecipient
+          ? (values.auctionRewardRecipient as AddressType)
+          : NULL_ADDRESS
+
+        const initalAuctionRewardRecipient = initialValues['auctionRewardRecipient']
+          ? (initialValues['auctionRewardRecipient'] as AddressType)
+          : NULL_ADDRESS
+
+        const isRewardRecipientEqual = isAddressEqual(
+          newAuctionRewardRecipient,
+          initalAuctionRewardRecipient
+        )
+
+        const newAuctionRewardPercentage = values.auctionRewardPercentage
+
+        const isRewardPercentageEqual = isEqual(
+          newAuctionRewardPercentage,
+          initialValues['auctionRewardPercentage']
+        )
+
+        if (!isRewardRecipientEqual || !isRewardPercentageEqual) {
+          const config = await prepareWriteContract({
+            ...auctionContractParams,
+            address: auctionContractParams.address,
+            functionName: 'setFounderReward',
+            args: [
+              {
+                recipient: newAuctionRewardRecipient,
+                percentBps: newAuctionRewardPercentage * 100,
+              },
+            ],
+          })
+          const { hash } = await writeContract(config)
+          await waitForTransaction({ hash })
+        }
       }
     } finally {
       formik.setSubmitting(false)
@@ -146,6 +200,44 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
                     }
                     perma={'ETH'}
                   />
+
+                  {supportsFounderReward && (
+                    <>
+                      <SmartInput
+                        {...formik.getFieldProps('auctionRewardRecipient')}
+                        inputLabel="Auction Reward Recipient"
+                        type={TEXT}
+                        id="auctionRewardRecipient"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        errorMessage={formik.errors['auctionRewardRecipient']}
+                        placeholder="0x... or .eth"
+                        isAddress={true}
+                        helperText={'This is the address that receives auction rewards.'}
+                      />
+
+                      <SmartInput
+                        {...formik.getFieldProps('auctionRewardPercentage')}
+                        inputLabel={'Auction Reward Percentage'}
+                        type={NUMBER}
+                        formik={formik}
+                        id={'auctionRewardPercentage'}
+                        onChange={({ target }: BaseSyntheticEvent) => {
+                          formik.setFieldValue(
+                            'auctionRewardPercentage',
+                            parseFloat(target.value)
+                          )
+                        }}
+                        onBlur={formik.handleBlur}
+                        errorMessage={formik.errors['auctionRewardPercentage']}
+                        perma={'%'}
+                        step={0.1}
+                        helperText={
+                          'This is the percentage of final auction bids sent to the Auction Reward Recipient.'
+                        }
+                      />
+                    </>
+                  )}
                 </Stack>
 
                 <StickySave
