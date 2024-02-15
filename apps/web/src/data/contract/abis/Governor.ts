@@ -32,6 +32,11 @@ export const governorAbi = [
   },
   {
     inputs: [],
+    name: 'CANNOT_DELAY_GOVERNANCE',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'DELEGATE_CALL_FAILED',
     type: 'error',
   },
@@ -48,6 +53,11 @@ export const governorAbi = [
   {
     inputs: [],
     name: 'INVALID_CANCEL',
+    type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'INVALID_DELAYED_GOVERNANCE_EXPIRATION',
     type: 'error',
   },
   {
@@ -133,6 +143,11 @@ export const governorAbi = [
   },
   {
     inputs: [],
+    name: 'ONLY_TOKEN_OWNER',
+    type: 'error',
+  },
+  {
+    inputs: [],
     name: 'ONLY_UUPS',
     type: 'error',
   },
@@ -202,6 +217,30 @@ export const governorAbi = [
     inputs: [],
     name: 'VOTING_NOT_STARTED',
     type: 'error',
+  },
+  {
+    inputs: [],
+    name: 'WAITING_FOR_TOKENS_TO_CLAIM_OR_EXPIRATION',
+    type: 'error',
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'prevTimestamp',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newTimestamp',
+        type: 'uint256',
+      },
+    ],
+    name: 'DelayedGovernanceExpirationTimestampUpdated',
+    type: 'event',
   },
   {
     anonymous: false,
@@ -602,6 +641,19 @@ export const governorAbi = [
   },
   {
     inputs: [],
+    name: 'MAX_DELAYED_GOVERNANCE_EXPIRATION',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
     name: 'MAX_PROPOSAL_THRESHOLD_BPS',
     outputs: [
       {
@@ -864,6 +916,19 @@ export const governorAbi = [
       },
     ],
     stateMutability: 'pure',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'delayedGovernanceExpirationTimestamp',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -1410,6 +1475,19 @@ export const governorAbi = [
       },
     ],
     stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: '_newDelayedTimestamp',
+        type: 'uint256',
+      },
+    ],
+    name: 'updateDelayedGovernanceExpirationTimestamp',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {

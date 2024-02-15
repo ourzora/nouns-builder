@@ -127,6 +127,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     duration: auctionSettings?.auctionDuration
       ? BigInt(toSeconds(auctionSettings?.auctionDuration))
       : BigInt('86400'),
+    founderRewardRecipent: NULL_ADDRESS,
+    founderRewardBps: 0,
   }
 
   const govParams = {
