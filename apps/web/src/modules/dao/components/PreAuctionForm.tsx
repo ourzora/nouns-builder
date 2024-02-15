@@ -1,4 +1,4 @@
-import { Flex, Stack } from '@zoralabs/zord'
+import { Box, Flex, Stack } from '@zoralabs/zord'
 import { ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
@@ -24,6 +24,7 @@ import {
 } from 'src/utils/helpers'
 
 import { useDaoStore } from '../stores'
+import { Section } from './AdminForm/Section'
 import { PreAuctionFormValues, preAuctionValidationSchema } from './PreAuctionForm.schema'
 
 interface PreAuctionFormSettingsProps {
@@ -162,47 +163,63 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
             return (
               <Flex direction={'column'} w={'100%'}>
                 <Stack>
-                  <DaysHoursMinsSecs
-                    {...formik.getFieldProps('auctionDuration')}
-                    inputLabel={'Auction Duration'}
-                    formik={formik}
-                    id={'auctionDuration'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    errorMessage={
-                      formik.touched['auctionDuration'] &&
-                      formik.errors['auctionDuration']
-                        ? formik.errors['auctionDuration']
-                        : undefined
-                    }
-                    placeholder={['1', '0', '0', '0']}
-                  />
+                  <Section title="Auction Settings">
+                    <DaysHoursMinsSecs
+                      {...formik.getFieldProps('auctionDuration')}
+                      inputLabel={'Auction Duration'}
+                      formik={formik}
+                      id={'auctionDuration'}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      errorMessage={
+                        formik.touched['auctionDuration'] &&
+                        formik.errors['auctionDuration']
+                          ? formik.errors['auctionDuration']
+                          : undefined
+                      }
+                      placeholder={['1', '0', '0', '0']}
+                    />
 
-                  <SmartInput
-                    {...formik.getFieldProps('auctionReservePrice')}
-                    inputLabel={'Auction Reserve Price'}
-                    type={NUMBER}
-                    formik={formik}
-                    id={'auctionReservePrice'}
-                    onChange={({ target }: BaseSyntheticEvent) => {
-                      formik.setFieldValue(
-                        'auctionReservePrice',
-                        parseFloat(target.value)
-                      )
-                    }}
-                    onBlur={formik.handleBlur}
-                    helperText={'The starting price of an auction.'}
-                    errorMessage={
-                      formik.touched['auctionReservePrice'] &&
-                      formik.errors['auctionReservePrice']
-                        ? formik.errors['auctionReservePrice']
-                        : undefined
-                    }
-                    perma={'ETH'}
-                  />
+                    <SmartInput
+                      {...formik.getFieldProps('auctionReservePrice')}
+                      inputLabel={'Auction Reserve Price'}
+                      type={NUMBER}
+                      formik={formik}
+                      id={'auctionReservePrice'}
+                      onChange={({ target }: BaseSyntheticEvent) => {
+                        formik.setFieldValue(
+                          'auctionReservePrice',
+                          parseFloat(target.value)
+                        )
+                      }}
+                      onBlur={formik.handleBlur}
+                      helperText={'The starting price of an auction.'}
+                      errorMessage={
+                        formik.touched['auctionReservePrice'] &&
+                        formik.errors['auctionReservePrice']
+                          ? formik.errors['auctionReservePrice']
+                          : undefined
+                      }
+                      perma={'ETH'}
+                    />
+                  </Section>
 
                   {supportsFounderReward && (
-                    <>
+                    <Section
+                      title="Auction Rewards"
+                      subtitle={
+                        <Box color="text3">
+                          DAOs can optionally assign Auction Rewards to an address.{' '}
+                          <a
+                            href="https://docs.zora.co/docs/guides/builder-protocol-rewards"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            learn more
+                          </a>
+                        </Box>
+                      }
+                    >
                       <SmartInput
                         {...formik.getFieldProps('auctionRewardRecipient')}
                         inputLabel="Auction Reward Recipient"
@@ -236,7 +253,7 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
                           'This is the percentage of final auction bids sent to the Auction Reward Recipient.'
                         }
                       />
-                    </>
+                    </Section>
                   )}
                 </Stack>
 
