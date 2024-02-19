@@ -108,4 +108,5 @@ export const L1_CROSS_DOMAIN_MESSENGER = {
 
 export const ALLOWED_MIGRATION_DAOS: AddressType[] = [
   '0xf3b8f2ef0933f601c2cceada242fc3948a6ba757',
+  '0xc0a2527d25ad9c7dee3f47e3497ca0093def26bc',
 ]
