@@ -21,7 +21,6 @@ export function handleTransfer(event: TransferEvent): void {
     let tokenURI = tokenContract.try_tokenURI(event.params.tokenId)
 
     token.name = `${tokenContract.name()} #${event.params.tokenId.toString()}`
-    token.image = 'https://nouns.build/_next/image?url=ImageError.svg&w=1200&q=75'
     if (!tokenURI.reverted) setTokenMetadata(token, tokenURI.value)
 
     token.tokenContract = event.address

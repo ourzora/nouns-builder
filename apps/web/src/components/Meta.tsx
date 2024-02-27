@@ -14,7 +14,7 @@ interface MetaProps {
     name: string
     contractAddress: AddressType
     chain: Chain
-    image: string
+    image?: string
   }
 }
 
@@ -70,7 +70,10 @@ export const Meta: React.FC<MetaProps> = ({
           <meta property="eth:nft:creator_address" content={farcaster.contractAddress} />
           <meta property="eth:nft:schema" content="erc721" />
           <meta property="eth:nft:chain" content={farcaster.chain.slug} />
-          <meta property="eth:nft:media_url" content={farcaster.image} />
+          <meta
+            property="eth:nft:media_url"
+            content={farcaster.image || 'https://nouns.build/social-preview.jpg'}
+          />
         </>
       )}
     </Head>

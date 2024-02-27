@@ -54,7 +54,7 @@ export const AuctionPaused = ({
           <Paused
             height={'24px'}
             width={'24px'}
-            style={{ transform: `scale(2)`, position: 'absolute' }}
+            style={{ position: 'absolute' }}
             fill="grey"
           />
         </Flex>
