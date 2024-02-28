@@ -64,6 +64,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const [hasConfirmedRewards, setHasConfirmedRewards] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const chain = useChainStore((x) => x.chain)
+  const isL2 = L2_CHAINS.includes(chain.id)
   const { data: version, isLoading: isVersionLoading } = useContractRead({
     abi: managerAbi,
     address: PUBLIC_MANAGER_ADDRESS[chain.id],
@@ -126,6 +127,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     duration: auctionSettings?.auctionDuration
       ? BigInt(toSeconds(auctionSettings?.auctionDuration))
       : BigInt('86400'),
+    founderRewardRecipent: NULL_ADDRESS,
+    founderRewardBps: 0,
   }
 
   const govParams = {
@@ -362,7 +365,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
               </Flex>
             </Flex>
 
-            {L2_CHAINS.includes(chain.id) && (
+            {isL2 && (
               <Flex mt="x4">
                 <Flex align={'center'} justify={'center'} gap={'x4'}>
                   <Flex
@@ -420,7 +423,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   !address ||
                   !hasConfirmedTerms ||
                   !hasConfirmedChain ||
-                  !hasConfirmedRewards ||
+                  (isL2 && !hasConfirmedRewards) ||
                   isPendingTransaction ||
                   isVersionLoading
                 }

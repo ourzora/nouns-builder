@@ -131,11 +131,11 @@ export const useAvailableUpgrade = ({
   }
 
   const daoVersions = {
-    governor: versions?.governor,
-    token: versions?.token,
-    treasury: versions?.treasury,
-    auction: versions?.auction,
-    metadata: versions?.metadata,
+    governor: versions?.governor || '1.0.0',
+    token: versions?.token || '1.0.0',
+    treasury: versions?.treasury || '1.0.0',
+    auction: versions?.auction || '1.0.0',
+    metadata: versions?.metadata || '1.0.0',
   }
 
   const managerImplementationAddresses: Record<ContractType, AddressType> = {

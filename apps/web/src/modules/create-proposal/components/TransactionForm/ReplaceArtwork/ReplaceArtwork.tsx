@@ -65,7 +65,6 @@ export const ReplaceArtwork = () => {
   const invalidPropertyIndex = useMemo(() => {
     if (!propertyItemsCount || propertyItemsCount.length < 1) return -1
     return contractOrderedLayers.findIndex((x, i) => {
-      console.log(x.properties.length, propertyItemsCount[i])
       return x.properties.length < propertyItemsCount[i]
     })
   }, [orderedLayers, propertyItemsCount])

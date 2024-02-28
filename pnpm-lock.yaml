@@ -138,6 +138,9 @@ importers:
       ipfs-service:
         specifier: workspace:*
         version: link:../../packages/ipfs-service
+      lanyard:
+        specifier: ^1.1.2
+        version: 1.1.2
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -6292,7 +6295,7 @@ packages:
       '@openzeppelin/contracts-upgradeable': 4.8.1
       '@types/node': 18.13.0
       ds-test: github.com/dapphub/ds-test/e282159d5170298eb2455a6c05280ab5a73a4ef0
-      forge-std: github.com/foundry-rs/forge-std/17c554b7dd5cc3a63e7fb9db035718e619ee7653
+      forge-std: github.com/foundry-rs/forge-std/1d0766bc5d814f117c7b1e643828f7d85024fb51
       micro-onchain-metadata-utils: 0.1.1
       sol-uriencode: 0.2.0
     dev: false
@@ -10889,7 +10892,6 @@ packages:
       whatwg-fetch: 3.6.2
     transitivePeerDependencies:
       - encoding
-    dev: true
 
   /isomorphic-ws@4.0.1(ws@7.5.9):
     resolution: {integrity: sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==}
@@ -11347,6 +11349,14 @@ packages:
     resolution: {integrity: sha512-qJhlO9cGXi6hBGKoxEG/sKZDAHD5Hnu9Hs4WbOY3pCWXDhw0N8x1NenNzm2EnNLkLkk7J2SdxAkDSbb6ftT+UQ==}
     dependencies:
       language-subtag-registry: 0.3.22
+    dev: false
+
+  /lanyard@1.1.2:
+    resolution: {integrity: sha512-nuo7gkPl2hatMKHfVwtY+o1zJlUmforLREmzA7jT45/gvH59kwo7xpAMyRNUzeOgfjZRGhm5cAZ/z4YlVNKqUw==}
+    dependencies:
+      isomorphic-fetch: 3.0.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /levn@0.3.0:
@@ -16066,7 +16076,6 @@ packages:
 
   /whatwg-fetch@3.6.2:
     resolution: {integrity: sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==}
-    dev: true
 
   /whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
@@ -16398,8 +16407,8 @@ packages:
     version: 1.0.0
     dev: false
 
-  github.com/foundry-rs/forge-std/17c554b7dd5cc3a63e7fb9db035718e619ee7653:
-    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/17c554b7dd5cc3a63e7fb9db035718e619ee7653}
+  github.com/foundry-rs/forge-std/1d0766bc5d814f117c7b1e643828f7d85024fb51:
+    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/1d0766bc5d814f117c7b1e643828f7d85024fb51}
     name: forge-std
     version: 1.7.6
     dev: false

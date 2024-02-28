@@ -9,8 +9,10 @@ export enum TransactionType {
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
   PAUSE_AUCTIONS = 'pause-auctions',
+  RESUME_AUCTIONS = 'resume-auctions',
   UPDATE_MINTER = 'update-minter',
   REPLACE_ARTWORK = 'replace-artwork',
+  MIGRATION = 'migration',
 }
 
 export interface TransactionTypeProps {
@@ -56,6 +58,12 @@ export const TRANSACTION_TYPES = {
     icon: 'pauseTemplate',
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
+  [TransactionType.RESUME_AUCTIONS]: {
+    title: 'Resume Auctions',
+    subTitle: 'Create a proposal to resume auctions',
+    icon: 'resumeTemplate',
+    iconBackdrop: 'rgba(236, 113, 75, 0.1)',
+  },
   [TransactionType.REPLACE_ARTWORK]: {
     title: 'Replace Artwork',
     subTitle: 'Create a proposal to replace your artwork',
@@ -67,5 +75,11 @@ export const TRANSACTION_TYPES = {
     subTitle: 'Create any other kind of transaction',
     icon: 'plus',
     iconBackdrop: color.ghostHover,
+  },
+  [TransactionType.MIGRATION]: {
+    title: 'Migration',
+    subTitle: 'Migrate from L1 to L2',
+    icon: 'migrate',
+    iconBackdrop: 'rgba(350,100,0,.1)',
   },
 } as TransactionTypesPropsMap

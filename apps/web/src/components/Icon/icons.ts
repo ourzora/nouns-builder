@@ -25,6 +25,7 @@ import Github from './assets/github.svg'
 import Globe from './assets/globe.svg'
 import HandlebarCircle from './assets/handlebar-circle.svg'
 import Info16 from './assets/info-16.svg'
+import Migrate from './assets/migrate.svg'
 import Move from './assets/move.svg'
 import NewWindow from './assets/new-window.svg'
 import NounsConnect from './assets/nouns-connect.svg'
@@ -33,6 +34,7 @@ import Pause from './assets/pause.svg'
 import Play from './assets/play.svg'
 import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
+import ResumeTemplate from './assets/resume-template.svg'
 import Trash from './assets/trash.svg'
 import Twitter from './assets/twitter.svg'
 import Warning16 from './assets/warning-16.svg'
@@ -66,6 +68,7 @@ export const icons = {
   handlebarCircle: HandlebarCircle,
   'info-16': Info16,
   globe: Globe,
+  migrate: Migrate,
   move: Move,
   newWindow: NewWindow,
   nounsConnect: NounsConnect,
@@ -74,6 +77,7 @@ export const icons = {
   play: Play,
   plus: Plus,
   refresh: Refresh,
+  resumeTemplate: ResumeTemplate,
   trash: Trash,
   twitter: Twitter,
   warning: Warning,

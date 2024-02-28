@@ -2361,8 +2361,44 @@ export type DaoMembersListQuery = {
     id: string
     owner: any
     daoTokenCount: number
-    daoTokens: Array<{ __typename?: 'Token'; mintedAt: any }>
+    daoTokens: Array<{ __typename?: 'Token'; tokenId: any; mintedAt: any }>
   }>
+}
+
+export type DaoMetadataQueryVariables = Exact<{
+  tokenAddress: Scalars['ID']
+  first: Scalars['Int']
+}>
+
+export type DaoMetadataQuery = {
+  __typename?: 'Query'
+  dao?: {
+    __typename?: 'DAO'
+    metadataProperties?: Array<{
+      __typename?: 'MetadataProperty'
+      ipfsBaseUri: string
+      ipfsExtension: string
+      names: Array<string>
+      items: Array<{
+        __typename?: 'MetadataItem'
+        name: string
+        propertyId: any
+        isNewProperty: boolean
+      }>
+    }> | null
+  } | null
+}
+
+export type DaoNextAndPreviousTokensQueryVariables = Exact<{
+  tokenAddress: Scalars['String']
+  tokenId: Scalars['BigInt']
+}>
+
+export type DaoNextAndPreviousTokensQuery = {
+  __typename?: 'Query'
+  prev: Array<{ __typename?: 'Token'; tokenId: any }>
+  next: Array<{ __typename?: 'Token'; tokenId: any }>
+  latest: Array<{ __typename?: 'Token'; tokenId: any }>
 }
 
 export type DaoOgMetadataQueryVariables = Exact<{
@@ -2874,8 +2910,53 @@ export const DaoMembersListDocument = gql`
       owner
       daoTokenCount
       daoTokens {
+        tokenId
         mintedAt
       }
+    }
+  }
+`
+export const DaoMetadataDocument = gql`
+  query daoMetadata($tokenAddress: ID!, $first: Int!) {
+    dao(id: $tokenAddress) {
+      metadataProperties(orderBy: createdAt) {
+        ipfsBaseUri
+        ipfsExtension
+        names
+        items(orderBy: index, first: $first) {
+          name
+          propertyId
+          isNewProperty
+        }
+      }
+    }
+  }
+`
+export const DaoNextAndPreviousTokensDocument = gql`
+  query daoNextAndPreviousTokens($tokenAddress: String!, $tokenId: BigInt!) {
+    prev: tokens(
+      where: { dao: $tokenAddress, tokenId_lt: $tokenId }
+      orderBy: tokenId
+      orderDirection: desc
+      first: 1
+    ) {
+      tokenId
+    }
+    next: tokens(
+      where: { dao: $tokenAddress, tokenId_gt: $tokenId }
+      orderBy: tokenId
+      orderDirection: asc
+      first: 1
+    ) {
+      tokenId
+    }
+    latest: tokens(
+      where: { dao: $tokenAddress }
+      orderBy: tokenId
+      orderDirection: desc
+      first: 1
+    ) {
+      tokenId
     }
   }
 `
@@ -3176,6 +3257,35 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoMembersList',
+        'query'
+      )
+    },
+    daoMetadata(
+      variables: DaoMetadataQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoMetadataQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoMetadataQuery>(DaoMetadataDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'daoMetadata',
+        'query'
+      )
+    },
+    daoNextAndPreviousTokens(
+      variables: DaoNextAndPreviousTokensQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<DaoNextAndPreviousTokensQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<DaoNextAndPreviousTokensQuery>(
+            DaoNextAndPreviousTokensDocument,
+            variables,
+            { ...requestHeaders, ...wrappedRequestHeaders }
+          ),
+        'daoNextAndPreviousTokens',
         'query'
       )
     },

@@ -15,7 +15,8 @@ query daoMembersList(
     id
     owner
     daoTokenCount
-    daoTokens {
+    daoTokens(first: $first) {
+      tokenId
       mintedAt
     }
   }
