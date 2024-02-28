@@ -27,7 +27,12 @@ export function setTokenMetadata(token: Token, tokenURI: string): void {
 
   // Set image if present
   let image = metadataObject.get('image')
-  if (image && image.kind == JSONValueKind.STRING) token.image = image.toString()
+  if (image && image.kind == JSONValueKind.STRING) {
+    let imageString = image.toString()
+    if (imageString.startsWith('https://api.zora.co'))
+      imageString = imageString.replace('https://api.zora.co', 'https://nouns.build/api')
+    token.image = imageString
+  }
 
   // Set content if present
   let content = metadataObject.get('animation_url')
