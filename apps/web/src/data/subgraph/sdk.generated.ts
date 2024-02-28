@@ -369,6 +369,7 @@ export enum Auction_OrderBy {
   Settled = 'settled',
   StartTime = 'startTime',
   Token = 'token',
+  TokenContent = 'token__content',
   TokenId = 'token__id',
   TokenImage = 'token__image',
   TokenMintedAt = 'token__mintedAt',
@@ -1956,9 +1957,10 @@ export type SubscriptionTokensArgs = {
 export type Token = {
   __typename?: 'Token'
   auction?: Maybe<Auction>
+  content?: Maybe<Scalars['String']>
   dao: Dao
   id: Scalars['ID']
-  image: Scalars['String']
+  image?: Maybe<Scalars['String']>
   mintedAt: Scalars['BigInt']
   name: Scalars['String']
   owner: Scalars['Bytes']
@@ -1972,6 +1974,26 @@ export type Token_Filter = {
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<Token_Filter>>>
   auction_?: InputMaybe<Auction_Filter>
+  content?: InputMaybe<Scalars['String']>
+  content_contains?: InputMaybe<Scalars['String']>
+  content_contains_nocase?: InputMaybe<Scalars['String']>
+  content_ends_with?: InputMaybe<Scalars['String']>
+  content_ends_with_nocase?: InputMaybe<Scalars['String']>
+  content_gt?: InputMaybe<Scalars['String']>
+  content_gte?: InputMaybe<Scalars['String']>
+  content_in?: InputMaybe<Array<Scalars['String']>>
+  content_lt?: InputMaybe<Scalars['String']>
+  content_lte?: InputMaybe<Scalars['String']>
+  content_not?: InputMaybe<Scalars['String']>
+  content_not_contains?: InputMaybe<Scalars['String']>
+  content_not_contains_nocase?: InputMaybe<Scalars['String']>
+  content_not_ends_with?: InputMaybe<Scalars['String']>
+  content_not_ends_with_nocase?: InputMaybe<Scalars['String']>
+  content_not_in?: InputMaybe<Array<Scalars['String']>>
+  content_not_starts_with?: InputMaybe<Scalars['String']>
+  content_not_starts_with_nocase?: InputMaybe<Scalars['String']>
+  content_starts_with?: InputMaybe<Scalars['String']>
+  content_starts_with_nocase?: InputMaybe<Scalars['String']>
   dao?: InputMaybe<Scalars['String']>
   dao_?: InputMaybe<Dao_Filter>
   dao_contains?: InputMaybe<Scalars['String']>
@@ -2110,6 +2132,7 @@ export enum Token_OrderBy {
   AuctionId = 'auction__id',
   AuctionSettled = 'auction__settled',
   AuctionStartTime = 'auction__startTime',
+  Content = 'content',
   Dao = 'dao',
   DaoAuctionAddress = 'dao__auctionAddress',
   DaoContractImage = 'dao__contractImage',
@@ -2189,7 +2212,7 @@ export type CurrentAuctionFragment = {
   __typename?: 'Auction'
   endTime: any
   highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+  token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
 }
 
 export type DaoFragment = {
@@ -2204,7 +2227,7 @@ export type ExploreDaoFragment = {
   endTime: any
   dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
   highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-  token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+  token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
 }
 
 export type ProposalFragment = {
@@ -2246,7 +2269,7 @@ export type TokenFragment = {
   tokenId: any
   tokenContract: any
   name: string
-  image: string
+  image?: string | null
   owner: any
   mintedAt: any
   dao: { __typename?: 'DAO'; description: string }
@@ -2465,7 +2488,7 @@ export type DashboardQuery = {
         __typename?: 'Auction'
         endTime: any
         highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-        token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+        token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
       } | null
     }
   }>
@@ -2486,7 +2509,7 @@ export type ExploreDaosPageQuery = {
     endTime: any
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
     highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+    token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
   }>
 }
 
@@ -2503,7 +2526,7 @@ export type MyDaosPageQuery = {
     endTime: any
     dao: { __typename?: 'DAO'; name: string; tokenAddress: any }
     highestBid?: { __typename?: 'AuctionBid'; amount: any; bidder: any } | null
-    token: { __typename?: 'Token'; name: string; image: string; tokenId: any }
+    token: { __typename?: 'Token'; name: string; image?: string | null; tokenId: any }
   }>
 }
 
@@ -2650,7 +2673,7 @@ export type TokenWithDaoQuery = {
     tokenId: any
     tokenContract: any
     name: string
-    image: string
+    image?: string | null
     owner: any
     mintedAt: any
     auction?: {
@@ -2689,7 +2712,7 @@ export type TokensQuery = {
     tokenId: any
     tokenContract: any
     name: string
-    image: string
+    image?: string | null
     owner: any
     mintedAt: any
     dao: { __typename?: 'DAO'; description: string }

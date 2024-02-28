@@ -94,7 +94,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
     <Grid className={auctionGrid}>
       <AuctionImage
         key={`auction-${collection}-image-${queriedTokenId}`}
-        image={image}
+        image={image || ''}
         isLoading={!auction}
       />
       <Flex
