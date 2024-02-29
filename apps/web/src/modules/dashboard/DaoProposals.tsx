@@ -7,6 +7,7 @@ import React from 'react'
 
 import { Avatar } from 'src/components/Avatar'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
+import { useDelayedGovernance } from 'src/hooks/useDelayedGovernance'
 import { AddressType } from 'src/typings'
 
 import { DaoProposalCard } from './DaoProposalCard'
@@ -16,6 +17,7 @@ import { daoName } from './dashboard.css'
 export const DaoProposals = ({
   daoImage,
   tokenAddress,
+  governorAddress,
   name,
   proposals,
   chainId,
@@ -24,6 +26,11 @@ export const DaoProposals = ({
   const daoImageSrc = React.useMemo(() => {
     return daoImage ? getFetchableUrl(daoImage) : null
   }, [daoImage])
+
+  const { isGovernanceDelayed } = useDelayedGovernance({
+    governorAddress: governorAddress,
+    chainId,
+  })
 
   const router = useRouter()
 
@@ -61,6 +68,7 @@ export const DaoProposals = ({
           variant="outline"
           borderRadius="curved"
           size={'sm'}
+          disabled={isGovernanceDelayed}
           onClick={() =>
             router.push(`/dao/${currentChainSlug}/${tokenAddress}/proposal/create`)
           }
