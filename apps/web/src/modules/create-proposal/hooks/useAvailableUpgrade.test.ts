@@ -48,6 +48,13 @@ describe('Use available upgrade hook', () => {
         false,
         '1.1.0',
         {
+          governor: '1.1.0',
+          treasury: '1.1.0',
+          metadata: '1.1.0',
+          auction: '1.1.0',
+          token: '1.1.0',
+        },
+        {
           governor: '1.0.0',
           treasury: '1.1.0',
           metadata: '1.1.0',
@@ -183,6 +190,13 @@ describe('Use available upgrade hook', () => {
           auction: '1.1.0',
           token: '1.1.0',
         },
+        {
+          governor: '1.1.0',
+          treasury: '1.1.0',
+          metadata: '1.1.0',
+          auction: '1.1.0',
+          token: '1.1.0',
+        },
         '0xe6322201ced0a4d6595968411285a39ccf9d5989',
         '0x9eefef0891b1895af967fe48c5d7d96e984b96a3',
         '0x0b6d2473f54de3f1d80b27c92b22d13050da289a',
@@ -236,6 +250,13 @@ describe('Use available upgrade hook', () => {
           auction: '1.1.0',
           token: '1.1.0',
         },
+        {
+          governor: '1.1.0',
+          treasury: '1.1.0',
+          metadata: '1.1.0',
+          auction: '1.1.0',
+          token: '1.1.0',
+        },
         '0xe6322201ced0a4d6595968411285a39ccf9d5989',
         '0x9eefef0891b1895af967fe48c5d7d96e984b96a3',
         '0x0b6d2473f54de3f1d80b27c92b22d13050da289a',
@@ -278,6 +299,13 @@ describe('Use available upgrade hook', () => {
       data: [
         false,
         '1.1.0',
+        {
+          governor: '1.1.0',
+          treasury: '1.1.0',
+          metadata: '1.1.0',
+          auction: '1.1.0',
+          token: '1.1.0',
+        },
         {
           governor: '1.0.0',
           treasury: '1.1.0',
@@ -340,6 +368,13 @@ describe('Use available upgrade hook', () => {
       data: [
         true,
         '1.1.0',
+        {
+          governor: '1.1.0',
+          treasury: '1.1.0',
+          metadata: '1.1.0',
+          auction: '1.1.0',
+          token: '1.1.0',
+        },
         {
           governor: '1.0.0',
           treasury: '1.1.0',
@@ -404,6 +439,13 @@ describe('Use available upgrade hook', () => {
       data: [
         false,
         '1.1.0',
+        {
+          governor: '1.1.0',
+          treasury: '1.1.0',
+          metadata: '1.1.0',
+          auction: '1.1.0',
+          token: '1.1.0',
+        },
         {
           governor: '1.0.0',
           treasury: '1.0.0',
@@ -488,6 +530,13 @@ describe('Use available upgrade hook', () => {
           auction: '1.1.0',
           token: '1.1.0',
         },
+        {
+          governor: '1.1.0',
+          treasury: '1.1.0',
+          metadata: '1.1.0',
+          auction: '1.1.0',
+          token: '1.1.0',
+        },
         '0xe6322201ced0a4d6595968411285a39ccf9d5989',
         '0x9eefef0891b1895af967fe48c5d7d96e984b96a3',
         '0x0b6d2473f54de3f1d80b27c92b22d13050da289a',
@@ -524,6 +573,13 @@ describe('Use available upgrade hook', () => {
       data: [
         false,
         '1.2.0',
+        {
+          governor: '1.2.0',
+          treasury: '1.2.0',
+          metadata: '1.2.0',
+          auction: '1.2.0',
+          token: '1.2.0',
+        },
         {
           governor: '1.0.0',
           treasury: '1.1.0',

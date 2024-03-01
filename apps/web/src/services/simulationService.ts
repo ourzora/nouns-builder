@@ -34,8 +34,6 @@ const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
 const TENDERLY_FORK_API = `https://api.tenderly.co/api/v1/account/${TENDERLY_USER}/project/${TENDERLY_PROJECT}/fork`
 const TENDERLY_FORK_V2_BASE_URL = `https://api.tenderly.co/api/v2/project/${TENDERLY_PROJECT}/forks`
 
-export class InsufficientFundsError extends Error {}
-
 export async function simulate({
   treasuryAddress,
   chainId,
@@ -66,8 +64,7 @@ export async function simulate({
 
   const simulations: Simulation[] = []
 
-  // Add a buffer of 699126 to ensure calculations are correct
-  let totalGasUsed: BigNumber = BigNumber.from(699126)
+  let totalGasUsed: BigNumber = BigNumber.from(0)
 
   // Loop through the transactions and simulate them against the fork
   for (let i = 0; i < targets.length; i++) {
