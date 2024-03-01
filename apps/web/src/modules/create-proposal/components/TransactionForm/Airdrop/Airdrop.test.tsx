@@ -42,7 +42,7 @@ describe('Airdrop', () => {
 
     await waitFor(
       () => expect(screen.queryByTestId('upgrade-card')).toBeInTheDocument(),
-      { timeout: 10000 }
+      { timeout: 5000 }
     )
     expect(screen.queryByTestId('upgrade-in-progress')).not.toBeInTheDocument()
     expect(screen.getByTestId('airdrop-form')).toBeDisabled()
