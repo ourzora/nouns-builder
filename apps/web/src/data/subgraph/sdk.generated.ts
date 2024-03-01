@@ -2220,6 +2220,7 @@ export type DaoFragment = {
   name: string
   tokenAddress: any
   auctionAddress: any
+  governorAddress: any
 }
 
 export type ExploreDaoFragment = {
@@ -2433,7 +2434,13 @@ export type DaoTokenOwnersQuery = {
   __typename?: 'Query'
   daotokenOwners: Array<{
     __typename?: 'DAOTokenOwner'
-    dao: { __typename?: 'DAO'; name: string; tokenAddress: any; auctionAddress: any }
+    dao: {
+      __typename?: 'DAO'
+      name: string
+      tokenAddress: any
+      auctionAddress: any
+      governorAddress: any
+    }
   }>
 }
 
@@ -2453,6 +2460,7 @@ export type DashboardQuery = {
       name: string
       tokenAddress: any
       auctionAddress: any
+      governorAddress: any
       auctionConfig: {
         __typename?: 'AuctionConfig'
         minimumBidIncrement: any
@@ -2763,6 +2771,7 @@ export const DaoFragmentDoc = gql`
     name
     tokenAddress
     auctionAddress
+    governorAddress
   }
 `
 export const ExploreDaoFragmentDoc = gql`
@@ -2909,7 +2918,7 @@ export const DaoMembersListDocument = gql`
       id
       owner
       daoTokenCount
-      daoTokens {
+      daoTokens(first: $first) {
         tokenId
         mintedAt
       }

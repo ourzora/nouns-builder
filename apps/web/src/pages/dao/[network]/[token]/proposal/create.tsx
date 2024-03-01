@@ -12,6 +12,7 @@ import { auctionAbi } from 'src/data/contract/abis'
 import { L1_CHAINS } from 'src/data/contract/chains'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
+import { useDelayedGovernance } from 'src/hooks/useDelayedGovernance'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   CreateProposalHeading,
@@ -65,6 +66,11 @@ const CreateProposalPage: NextPageWithLayout = () => {
     collectionAddress: query?.token as AddressType,
   })
 
+  const { isGovernanceDelayed } = useDelayedGovernance({
+    chainId: chain.id,
+    governorAddress: addresses?.governor,
+  })
+
   const createSelectOption = (type: TransactionFormType) => ({
     value: type,
     label: TRANSACTION_TYPES[type].title,
@@ -92,7 +98,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
 
   if (isLoading) return null
 
-  if (!hasThreshold) {
+  if (!hasThreshold || isGovernanceDelayed) {
     return <Flex className={notFoundWrap}>403 - Access Denied</Flex>
   }
 

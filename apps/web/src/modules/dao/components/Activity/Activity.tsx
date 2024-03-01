@@ -6,6 +6,7 @@ import useSWR from 'swr'
 import { useAccount } from 'wagmi'
 
 import { ContractButton } from 'src/components/ContractButton'
+import { Countdown } from 'src/components/Countdown'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import Pagination from 'src/components/Pagination'
@@ -15,6 +16,7 @@ import {
   getProposals,
 } from 'src/data/subgraph/requests/proposalsQuery'
 import { useVotes } from 'src/hooks'
+import { useDelayedGovernance } from 'src/hooks/useDelayedGovernance'
 import { usePagination } from 'src/hooks/usePagination'
 import { Upgrade, useProposalStore } from 'src/modules/create-proposal'
 import { ProposalCard } from 'src/modules/proposal'
@@ -60,6 +62,11 @@ export const Activity: React.FC = () => {
     governorAddress: addresses?.governor,
     signerAddress: address,
     collectionAddress: query?.token as AddressType,
+  })
+
+  const { isGovernanceDelayed, delayedUntilTimestamp } = useDelayedGovernance({
+    governorAddress: addresses?.governor,
+    chainId: chain.id,
   })
 
   const [
@@ -150,7 +157,7 @@ export const Activity: React.FC = () => {
               <Button
                 className={submitProposalBtn}
                 onClick={address ? handleProposalCreation : openConnectModal}
-                disabled={address ? !hasThreshold : false}
+                disabled={isGovernanceDelayed ? true : address ? !hasThreshold : false}
                 color={'tertiary'}
               >
                 Submit {!isMobile ? 'proposal' : null}
@@ -166,7 +173,51 @@ export const Activity: React.FC = () => {
           />
         )}
         <Flex direction={'column'} mt={'x6'}>
-          {data?.proposals?.length ? (
+          {isGovernanceDelayed ? (
+            <Flex
+              width={'100%'}
+              mt={'x4'}
+              p={'x4'}
+              justify={'center'}
+              align={'center'}
+              borderColor={'border'}
+              borderStyle={'solid'}
+              borderRadius={'curved'}
+              borderWidth={'normal'}
+            >
+              <Flex textAlign={'center'} align={'center'}>
+                <Text
+                  color={'text3'}
+                  variant={'paragraph-md'}
+                  ml={{ '@initial': 'x0', '@768': 'x3' }}
+                >
+                  Time remaining before proposals can be submitted:
+                </Text>
+              </Flex>
+              <Flex
+                w={{ '@initial': '100%', '@768': 'auto' }}
+                justify={'center'}
+                align={'center'}
+                px={'x2'}
+                py={'x4'}
+              >
+                <Text
+                  fontWeight={'display'}
+                  ml="x1"
+                  style={{
+                    fontVariantNumeric: 'tabular-nums',
+                    fontFeatureSettings: 'tnum',
+                  }}
+                >
+                  <Countdown
+                    end={Number(delayedUntilTimestamp)}
+                    onEnd={() => {}}
+                    style={{ fontWeight: 'bold' }}
+                  />
+                </Text>
+              </Flex>
+            </Flex>
+          ) : data?.proposals?.length ? (
             data?.proposals?.map((proposal, index: number) => (
               <ProposalCard
                 key={index}
