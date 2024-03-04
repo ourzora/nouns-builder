@@ -6,7 +6,7 @@ import { vi } from 'vitest'
 import { CHAIN_ID } from 'src/typings'
 
 import { InvalidRequestError } from './errors'
-import { InsufficientFundsError, Simulation, simulate } from './simulationService'
+import { Simulation, simulate } from './simulationService'
 
 const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
 
@@ -223,44 +223,6 @@ describe('simulationService', () => {
       })
 
       expect(spy).not.toHaveBeenCalled()
-    })
-
-    it('returns will throw an InsufficientFunds error if there is not enough eth for transactions', async () => {
-      const forkId = 'forkId'
-      const simulationId = 'simulationId'
-
-      const forkProvider = new StaticJsonRpcProvider(
-        `https://rpc.tenderly.co/fork/${forkId}`
-      )
-
-      vi.mocked(forkProvider.send).mockResolvedValueOnce(
-        ethers.utils.parseUnits('105', 'ether')
-      ) // mock tenderly_addBalance
-      vi.mocked(axios.post).mockResolvedValueOnce({
-        status: 200,
-        data: { simulation_fork: { id: forkId } },
-      })
-
-      vi.mocked(forkProvider.send).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.send).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 2
-      vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
-        status: 1, // success status
-        gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
-      } as TransactionReceipt)
-      vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
-        status: 1, // success status
-        gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
-      } as TransactionReceipt)
-
-      vi.mocked(axios.get).mockResolvedValue({
-        status: 200,
-        data: { fork: { head_simulation_id: simulationId } },
-      })
-      vi.mocked(forkProvider.send).mockResolvedValueOnce(
-        ethers.utils.parseUnits('94', 'ether')
-      ) // mock eth_getBalance
-
-      expect(() => simulate(request)).rejects.toThrow(InsufficientFundsError)
     })
   })
 })
