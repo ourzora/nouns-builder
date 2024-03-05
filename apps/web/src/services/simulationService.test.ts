@@ -23,8 +23,6 @@ vi.mock('axios', () => {
 vi.mock('./createClient', async () => {
   return {
     createClient: vi.fn().mockReturnValue({
-      getBalance: vi.fn(),
-      sendTransaction: vi.fn(),
       getTransactionReceipt: vi.fn(),
       request: vi.fn(),
     }),
@@ -138,7 +136,6 @@ describe('simulationService', () => {
         status: 200,
         data: { fork: { head_simulation_id: simulationId } },
       })
-      vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('104')) // mock eth_getBalance
 
       const spy = vi.spyOn(axios, 'delete')
 
@@ -202,7 +199,6 @@ describe('simulationService', () => {
         status: 200,
         data: { fork: { head_simulation_id: simulationId } },
       })
-      vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('104')) // mock eth_getBalance
 
       const spy = vi.spyOn(axios, 'delete')
 
