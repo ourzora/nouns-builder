@@ -67,10 +67,12 @@ export const Airdrop: React.FC = () => {
         args: [[{ minter: addresses.treasury, allowed: true }]],
       }),
     }
+    const chainToQuery =
+      chain.id === CHAIN_ID.FOUNDRY ? CHAIN_ID.FOUNDRY : CHAIN_ID.ETHEREUM
 
     const resolvedRecipientAddress = await getEnsAddress(
       recipient || '',
-      getProvider(CHAIN_ID.ETHEREUM)
+      getProvider(chainToQuery)
     )
 
     const airdropTransaction = {

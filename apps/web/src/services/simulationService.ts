@@ -1,9 +1,9 @@
 import axios from 'axios'
-import { Address, createPublicClient, http, isAddress, parseEther, toHex } from 'viem'
+import { Address, isAddress, toHex } from 'viem'
 
-import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { CHAIN_ID } from 'src/typings'
 
+import { createClient } from './createClient'
 import { InvalidRequestError } from './errors'
 
 export interface SimulationRequestBody {
@@ -31,12 +31,7 @@ export interface SimulationResult {
 const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
 
 const TENDERLY_FORK_API = `https://api.tenderly.co/api/v1/account/${TENDERLY_USER}/project/${TENDERLY_PROJECT}/fork`
-const TENDERLY_FORK_V2_BASE_URL =
-  'https://api.tenderly.co/api/v2/project/nouns-builder-public/forks'
-
-const MOCK_BALANCE = parseEther('100')
-
-export class InsufficientFundsError extends Error {}
+const TENDERLY_FORK_V2_BASE_URL = `https://api.tenderly.co/api/v2/project/${TENDERLY_PROJECT}/forks`
 
 export async function simulate({
   treasuryAddress,
@@ -64,19 +59,9 @@ export async function simulate({
 
   const forkResponse = await axios.post(TENDERLY_FORK_API, body, opts)
   const forkId = forkResponse.data.simulation_fork.id
-  const forkProvider = createPublicClient({
-    chain: PUBLIC_ALL_CHAINS.find((x) => x.id === chainId),
-    transport: http(`https://rpc.tenderly.co/fork/${forkId}`),
-  })
+  const forkProvider = createClient(forkId, chainId)
 
   const simulations: Simulation[] = []
-
-  // Mock balance of treasury to ensure gas costs are covered as this will be covered by proposal
-  // executor in reality
-  await forkProvider.request({
-    method: 'tenderly_addBalance' as any,
-    arguments: [[treasuryAddress], toHex(MOCK_BALANCE)],
-  })
 
   let totalGasUsed = 0n
 
@@ -85,8 +70,8 @@ export async function simulate({
     const txParams = {
       from: treasuryAddress.toLowerCase(),
       to: targets[i].toLowerCase(),
-      gas: '0x163CCD40',
-      gasPrice: '0x3',
+      gasLimit: '0x163CCD40',
+      gasPrice: '0x0',
       // We have to wrap this in a hexValue() call because .toHexString() adds a 0x0 padding to the front of the value.
       value: toHex(BigInt(values[i]).toString(16)),
       data: calldatas[i],
@@ -109,19 +94,6 @@ export async function simulate({
       gasUsed: receipt.gasUsed,
     })
     totalGasUsed += receipt.gasUsed
-  }
-
-  // Check final balance is greater than zero
-  const balanceResponse = await forkProvider.getBalance({
-    address: treasuryAddress,
-    blockTag: 'latest',
-  })
-
-  // True final balance is balance + totalGas - MOCK_BALANCE
-  const finalBalance = balanceResponse + totalGasUsed - MOCK_BALANCE
-
-  if (finalBalance < 0) {
-    throw new InsufficientFundsError()
   }
 
   const simulationSucceeded = simulations.every((s) => s.success)

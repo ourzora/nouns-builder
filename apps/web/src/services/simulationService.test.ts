@@ -40,7 +40,7 @@ describe('simulationService', () => {
     const treasuryAddress: Address = '0xbcdfd67cce7bf4f49c0631ddd14eadff4d5ca15d'
     const request = {
       treasuryAddress,
-      chainId: CHAIN_ID.FOUNDRY,
+      chainId: CHAIN_ID.ETHEREUM,
       targets: [
         '0x7d8ba3e0745079b292f68e421d292c05da2d0721',
         '0xa7c8f84ec8cbed6e8fb793904cd1ec9ddfc9c35d',
@@ -70,7 +70,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
-          chainId: CHAIN_ID.FOUNDRY,
+          chainId: CHAIN_ID.ETHEREUM,
           targets: ['t1', 't2', 't3'],
           calldatas: ['c1', 'c2'],
           values: ['v1, v2'],
@@ -80,7 +80,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
-          chainId: CHAIN_ID.FOUNDRY,
+          chainId: CHAIN_ID.ETHEREUM,
           targets: ['t1'],
           calldatas: ['c1'],
           values: ['v1, v2'],
@@ -90,7 +90,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           treasuryAddress,
-          chainId: CHAIN_ID.FOUNDRY,
+          chainId: CHAIN_ID.ETHEREUM,
           targets: ['t1'],
           calldatas: ['c1', 'c2'],
           values: ['v1, v2'],
@@ -120,15 +120,14 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createClient(forkId)
+      const forkProvider = createClient(forkId, CHAIN_ID.ETHEREUM)
 
-      vi.mocked(forkProvider.request).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
         data: { simulation_fork: { id: forkId } },
       })
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.request).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.request).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValue({
         ...receipt,
         status: 'success', // success status
@@ -165,7 +164,7 @@ describe('simulationService', () => {
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: true,
-        totalGasUsed: parseEther('1').toString(),
+        totalGasUsed: parseEther('1'),
       })
 
       expect(spy).toHaveBeenCalledOnce()
@@ -179,16 +178,15 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createClient(forkId)
+      const forkProvider = createClient(forkId, CHAIN_ID.ETHEREUM)
 
-      vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
         data: { simulation_fork: { id: forkId } },
       })
 
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.request).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.request).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
         ...receipt,
         status: 'success', // success status
@@ -230,7 +228,7 @@ describe('simulationService', () => {
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: false,
-        totalGasUsed: parseEther('1').toString(),
+        totalGasUsed: parseEther('1'),
       })
 
       expect(spy).not.toHaveBeenCalled()
