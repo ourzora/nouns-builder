@@ -7,6 +7,11 @@ const tabBase = style({
   width: 'fit-content',
   borderBottomLeftRadius: '0px',
   borderBottomRightRadius: '0px',
+  selectors: {
+    '&:not([disabled]):hover': {
+      backgroundColor: 'transparent ',
+    },
+  },
 })
 const selected = style({
   borderBottom: '2px solid black',
@@ -76,12 +81,4 @@ export const cursorText = style({
       fontSize: '12px',
     },
   },
-})
-export const newTag = style({
-  color: 'white',
-  position: 'absolute',
-  top: '0',
-  right: '-30px',
-  zIndex: 30,
-  padding: '2px 5px',
 })

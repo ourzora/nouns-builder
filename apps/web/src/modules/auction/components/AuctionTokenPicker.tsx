@@ -2,19 +2,22 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import dayjs from 'dayjs'
 import { useRouter } from 'next/router'
 import React from 'react'
+import useSWR from 'swr'
 
 import { Icon } from 'src/components/Icon'
 import { OptionalLink } from 'src/components/OptionalLink'
+import SWR_KEYS from 'src/constants/swrKeys'
+import { SDK } from 'src/data/subgraph/client'
 import { useLayoutStore } from 'src/stores'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import { auctionDateNavButton, auctionTextVariants } from './Auction.css'
 
 interface AuctionTokenPickerProps {
   collection: string
   tokenId: number
-  mintDate?: string
+  mintDate?: number
   name?: string
-  currentAuction?: number
 }
 
 export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
@@ -22,21 +25,35 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
   tokenId,
   mintDate,
   name,
-  currentAuction,
 }: AuctionTokenPickerProps) => {
-  const { isReady, query } = useRouter()
+  const { id: chainId } = useChainStore((x) => x.chain)
+  const { query, isReady } = useRouter()
   const { isMobile } = useLayoutStore()
   const disabledStyle = { opacity: 0.2 }
 
-  const hasPreviousToken = tokenId !== 0
-  const hasNextToken = isReady && tokenId < (currentAuction || 0)
+  const { data } = useSWR(
+    isReady
+      ? [SWR_KEYS.DAO_NEXT_AND_PREVIOUS_TOKENS, chainId, collection, tokenId]
+      : undefined,
+    () =>
+      SDK.connect(chainId)
+        .daoNextAndPreviousTokens({ tokenId, tokenAddress: collection.toLowerCase() })
+        .then((x) => ({
+          next: x.next.length > 0 ? parseInt(x.next[0].tokenId) : undefined,
+          prev: x.prev.length > 0 ? parseInt(x.prev[0].tokenId) : undefined,
+          latest: x.latest.length > 0 ? parseInt(x.latest[0].tokenId) : undefined,
+        }))
+  )
+
+  const hasPreviousToken = data?.prev !== undefined
+  const hasNextToken = data?.next !== undefined
 
   return (
     <Flex direction={'column'}>
       <Flex align="center" direction={'row'} gap={'x2'}>
         <OptionalLink
           enabled={hasPreviousToken}
-          href={`/dao/${query.network}/${collection}/${tokenId - 1}`}
+          href={`/dao/${query.network}/${collection}/${data?.prev}`}
           passHref
           legacyBehavior
         >
@@ -52,7 +69,7 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
 
         <OptionalLink
           enabled={hasNextToken}
-          href={`/dao/${query.network}/${collection}/${tokenId + 1}`}
+          href={`/dao/${query.network}/${collection}/${data?.next}`}
           passHref
           legacyBehavior
         >
@@ -68,7 +85,7 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
 
         <OptionalLink
           enabled={hasNextToken}
-          href={`/dao/${query.network}/${collection}/${currentAuction}`}
+          href={`/dao/${query.network}/${collection}/${data?.latest}`}
           passHref
           legacyBehavior
         >

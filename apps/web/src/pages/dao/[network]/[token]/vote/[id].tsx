@@ -3,8 +3,10 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 import useSWR, { unstable_serialize } from 'swr'
-import { getAddress, isAddress } from 'viem'
+import { getAddress, isAddress, isAddressEqual } from 'viem'
+import { useBalance } from 'wagmi'
 
+import { Icon } from 'src/components/Icon'
 import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
@@ -16,7 +18,7 @@ import {
 } from 'src/data/subgraph/requests/proposalQuery'
 import { Proposal_Filter } from 'src/data/subgraph/sdk.generated'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { DaoContractAddresses, SectionHandler } from 'src/modules/dao'
+import { DaoContractAddresses, SectionHandler, useDaoStore } from 'src/modules/dao'
 import {
   ProposalActions,
   ProposalDescription,
@@ -37,6 +39,18 @@ export interface VotePageProps {
   ogImageURL: string
 }
 
+const BAD_ACTORS = [
+  '0xfd637806e0D22Ca8158AB8bb5826e6fEDa82c15f',
+  '0xb8fa1f523976008e9db686fcfdb5e57f1ca43f50',
+]
+
+const checkDrain = (values: string[], treasuryBalance: bigint) => {
+  const proposalValue = values.reduce((acc, numStr) => acc + BigInt(numStr), BigInt(0))
+  const thresholdAmt = (treasuryBalance * BigInt(90)) / BigInt(100)
+
+  return proposalValue >= thresholdAmt
+}
+
 const VotePage: NextPageWithLayout<VotePageProps> = ({
   proposalId,
   daoName,
@@ -44,6 +58,12 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
 }) => {
   const { query } = useRouter()
   const chain = useChainStore((x) => x.chain)
+  const { addresses } = useDaoStore()
+
+  const { data: balance } = useBalance({
+    address: addresses?.treasury as `0x${string}`,
+    chainId: chain.id,
+  })
 
   const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], (_, id) =>
     getProposal(chain.id, proposalId)
@@ -70,6 +90,13 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   }
 
   const displayActions = isProposalOpen(proposal.state)
+  const isBadActor = BAD_ACTORS.some((baddie) =>
+    isAddressEqual(proposal.proposer, baddie as AddressType)
+  )
+  const isPossibleDrain = balance?.value
+    ? checkDrain(proposal.values, balance?.value)
+    : false
+  const warn = displayActions && (isBadActor || isPossibleDrain)
 
   return (
     <Fragment>
@@ -83,8 +110,26 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
       <Flex position="relative" direction="column">
         <Flex className={propPageWrapper} gap={{ '@initial': 'x2', '@768': 'x4' }}>
           <ProposalHeader proposal={proposal} />
+          <>
+            {warn && (
+              <Flex
+                w="100%"
+                backgroundColor="warning"
+                color="onWarning"
+                p="x4"
+                borderRadius="curved"
+                align="center"
+                justify="center"
+              >
+                <Icon fill="onWarning" id="warning" mr="x2" />
+                <Box fontWeight={'heading'}>
+                  {`Executing this proposal will transfer more than 90% of ${daoName}'s treasury.`}
+                </Box>
+              </Flex>
+            )}
 
-          {displayActions && <ProposalActions daoName={daoName} proposal={proposal} />}
+            {displayActions && <ProposalActions daoName={daoName} proposal={proposal} />}
+          </>
 
           <ProposalDetailsGrid proposal={proposal} />
         </Flex>

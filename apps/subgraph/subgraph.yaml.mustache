@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: Manager
-    network: goerli
+    network: {{network}}
     source:
       abi: Manager
-      address: '0x0E9F3382Cf2508E3bc83248B5b4707FbA86D7Ee0'
-      startBlock: 7810600
+      address: '{{manager.address}}'
+      startBlock: {{manager.startBlock}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -21,18 +21,22 @@ dataSources:
           file: ./abis/Manager.json
         - name: Token
           file: ./abis/Token.json
-        - name: MetadataRenderer
-          file: ./abis/MetadataRenderer.json
+        - name: MetadataRendererV1
+          file: ./abis/MetadataRendererV1.json
+        - name: MetadataRendererBase
+          file: ./abis/MetadataRendererBase.json
         - name: Auction
           file: ./abis/Auction.json
       eventHandlers:
         - event: DAODeployed(address,address,address,address,address)
           handler: handleDAODeployed
+        - event: MetadataRendererUpdated(address,address)
+          handler: handleMetadataRendererUpdated
       file: ./src/manager.ts
 templates:
   - kind: ethereum
     name: Token
-    network: goerli
+    network: {{network}}
     source:
       abi: Token
     mapping:
@@ -46,15 +50,13 @@ templates:
       abis:
         - name: Token
           file: ./abis/Token.json
-        - name: MetadataRenderer
-          file: ./abis/MetadataRenderer.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/token.ts
   - kind: ethereum
     name: Governor
-    network: goerli
+    network: {{network}}
     source:
       abi: Governor
     mapping:
@@ -84,19 +86,25 @@ templates:
           handler: handleVoteCast
       file: ./src/governor.ts
   - kind: ethereum
-    name: MetadataRenderer
-    network: goerli
+    name: MetadataRendererV1
+    network: {{network}}
     source:
-      abi: MetadataRenderer
+      abi: MetadataRendererV1
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - Proposal
+        - DAO
+        - MetadataItem
+        - MetadataProperty
       abis:
-        - name: MetadataRenderer
-          file: ./abis/MetadataRenderer.json
+        - name: MetadataRendererV1
+          file: ./abis/MetadataRendererV1.json
+        - name: MetadataRendererBase
+          file: ./abis/MetadataRendererBase.json
+        - name: Token
+          file: ./abis/Token.json
       eventHandlers:
         - event: ContractImageUpdated(string,string)
           handler: handleContractImageUpdated
@@ -104,10 +112,49 @@ templates:
           handler: handleDescriptionUpdated
         - event: WebsiteURIUpdated(string,string)
           handler: handleWebsiteURIUpdated
+      {{#callHandlers}}
+      callHandlers:
+        - function: addProperties(string[],(uint256,string,bool)[],(string,string))
+          handler: handleAddProperties
+        - function: deleteAndRecreateProperties(string[],(uint256,string,bool)[],(string,string))
+          handler: handleDeleteAndRecreateProperties
+      {{/callHandlers}}
+      file: ./src/metadata.ts
+  - kind: ethereum
+    name: MetadataRendererBase
+    network: {{network}}
+    source:
+      abi: MetadataRendererBase
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DAO
+        - MetadataItem
+        - MetadataProperty
+      abis:
+        - name: MetadataRendererV1
+          file: ./abis/MetadataRendererV1.json
+        - name: MetadataRendererBase
+          file: ./abis/MetadataRendererBase.json
+        - name: Token
+          file: ./abis/Token.json
+      eventHandlers:
+        - event: ContractImageUpdated(string,string)
+          handler: handleContractImageUpdated
+        - event: DescriptionUpdated(string,string)
+          handler: handleDescriptionUpdated
+        - event: WebsiteURIUpdated(string,string)
+          handler: handleWebsiteURIUpdated
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
       file: ./src/metadata.ts
   - kind: ethereum
     name: Auction
-    network: goerli
+    network: {{network}}
     source:
       abi: Auction
     mapping:

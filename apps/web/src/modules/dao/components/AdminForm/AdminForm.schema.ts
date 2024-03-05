@@ -1,7 +1,6 @@
 import * as Yup from 'yup'
 
 import { TokenAllocation, auctionSettingsValidationSchema } from 'src/modules/create-dao'
-import { allocationSchema } from 'src/modules/create-dao/components/AllocationForm/AllocationForm.schema'
 import { Duration } from 'src/typings'
 import {
   addressValidationSchema,
@@ -27,6 +26,36 @@ export interface AdminFormValues {
 
 const twentyFourWeeks = 60 * 60 * 24 * 7 * 24
 const tenMinutes = 60 * 10
+
+const allocationSchema = Yup.object().shape({
+  founderAddress: addressValidationSchema,
+  allocationPercentage: Yup.number()
+    .transform((value) => (isNaN(value) ? undefined : value))
+    .required('*')
+    .integer('Must be whole number')
+    .max(100, '< 100')
+    .when('admin', (admin, schema) => {
+      if (!admin) return schema.min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
+      return schema
+    }),
+  endDate: Yup.string()
+    .required('*')
+    .test(
+      'isDateInFuture',
+      'Must be in future',
+      (value: string | undefined, fieldData) => {
+        if (!value) return false
+        // override validation if parent endDate is the same as this endDate
+        // This prevents the form from locking up if the founder allocation end data
+        // has already passed.
+        if (value === fieldData?.parent?.endDate) return true
+        const date = new Date(value)
+        const now = new Date()
+        return date > now
+      }
+    ),
+  admin: Yup.boolean(),
+})
 
 export const adminValidationSchema = () =>
   Yup.object()

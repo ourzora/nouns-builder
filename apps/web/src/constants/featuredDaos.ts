@@ -1,74 +1,78 @@
 import { CHAIN_ID } from 'src/typings'
 
-export type TestnetChain = CHAIN_ID.GOERLI | CHAIN_ID.OPTIMISM_GOERLI
+export type TestnetChain =
+  | CHAIN_ID.SEPOLIA
+  | CHAIN_ID.OPTIMISM_SEPOLIA
+  | CHAIN_ID.BASE_SEPOLIA
+  | CHAIN_ID.ZORA_SEPOLIA
 
 export const PUBLIC_FEATURED_DAOS = {
-  [CHAIN_ID.GOERLI]: [
+  [CHAIN_ID.SEPOLIA]: [
     {
-      auctionAddress: '0x8F1B054500ED7a2B06619CD2E5D70415Bc9d6b8a',
-      tokenAddress: '0x6e13ED8472fBBd384C260538323906fc1eCb0d7B',
-      name: 'MuseumDAO',
+      auctionAddress: '0x1fd8ab3d28589b7af58b0224c70ceb3e955c9882',
+      tokenAddress: '0x42D7665F431fceFC95a6fB550Bc2842beeDF3b37',
+      name: 'test',
     },
     {
-      auctionAddress: '0x736EaF8C02dc093E392131068B7F17f34C4f7791',
-      tokenAddress: '0x7F29a9dfBFf0e6DB6c8a449Fee282F9B5f5fc99f',
-      name: 'RecordLabelDAO',
+      auctionAddress: '0x1fd8ab3d28589b7af58b0224c70ceb3e955c9882',
+      tokenAddress: '0x42D7665F431fceFC95a6fB550Bc2842beeDF3b37',
+      name: 'test',
     },
     {
-      auctionAddress: '0xC4E181443EE3696cF19EB21578A6310BB75aA117',
-      tokenAddress: '0x579B2fF0F4bd719ad7628208606688a8Ac871644',
-      name: 'StartupDAO',
-    },
-  ],
-  [CHAIN_ID.OPTIMISM_GOERLI]: [
-    {
-      auctionAddress: '0x0Ba1D0999C4EeBd55671dfB0daE2aaE5C6652Da4',
-      tokenAddress: '0x29372170f43b13ca85eb0c17764f99e468739053',
-      name: 'Another Test',
-    },
-    {
-      auctionAddress: '0x0Ba1D0999C4EeBd55671dfB0daE2aaE5C6652Da4',
-      tokenAddress: '0x29372170f43b13ca85eb0c17764f99e468739053',
-      name: 'Another Test',
-    },
-    {
-      auctionAddress: '0xD471e841e0EA469c315fE237a83C5952fA078138',
-      tokenAddress: '0xc2047245f065ba2d4cc8276862723a159dd9d83b',
-      name: 'Test',
+      auctionAddress: '0x1fd8ab3d28589b7af58b0224c70ceb3e955c9882',
+      tokenAddress: '0x42D7665F431fceFC95a6fB550Bc2842beeDF3b37',
+      name: 'test',
     },
   ],
-  [CHAIN_ID.BASE_GOERLI]: [
+  [CHAIN_ID.OPTIMISM_SEPOLIA]: [
     {
-      auctionAddress: '0x03855976Fcb91bF23110E2C425dCfb1BA0635b79',
-      tokenAddress: '0x3b7626182aab7a70d4b2b254c4f19f5f48a7e6d8',
-      name: 'Test base DAO',
+      auctionAddress: '0x4657444b584ad3a88c5f9daa446c6689b252793a',
+      tokenAddress: '0x33756a2B2F69B4B5D80E6474B35Bf3d65aA6C8Ab',
+      name: 'test',
     },
     {
-      auctionAddress: '0x03855976Fcb91bF23110E2C425dCfb1BA0635b79',
-      tokenAddress: '0x3b7626182aab7a70d4b2b254c4f19f5f48a7e6d8',
-      name: 'Test base DAO',
+      auctionAddress: '0x4657444b584ad3a88c5f9daa446c6689b252793a',
+      tokenAddress: '0x33756a2B2F69B4B5D80E6474B35Bf3d65aA6C8Ab',
+      name: 'test',
     },
     {
-      auctionAddress: '0x03855976Fcb91bF23110E2C425dCfb1BA0635b79',
-      tokenAddress: '0x3b7626182aab7a70d4b2b254c4f19f5f48a7e6d8',
-      name: 'Test base DAO',
+      auctionAddress: '0x4657444b584ad3a88c5f9daa446c6689b252793a',
+      tokenAddress: '0x33756a2B2F69B4B5D80E6474B35Bf3d65aA6C8Ab',
+      name: 'test',
     },
   ],
-  [CHAIN_ID.ZORA_GOERLI]: [
+  [CHAIN_ID.BASE_SEPOLIA]: [
     {
-      auctionAddress: '0x8741AE7F44DFDEFaFC33b10D9FED9bd97ac8E972',
-      tokenAddress: '0x65737024daf0ed2e2d86d67cdc3bc92fb903bd93',
-      name: 'Test Zora',
+      auctionAddress: '0x03855976fcb91bf23110e2c425dcfb1ba0635b79',
+      tokenAddress: '0x3b7626182aAB7a70D4B2B254C4F19f5f48A7E6D8',
+      name: 'test',
     },
     {
-      auctionAddress: '0x8741AE7F44DFDEFaFC33b10D9FED9bd97ac8E972',
-      tokenAddress: '0x65737024daf0ed2e2d86d67cdc3bc92fb903bd93',
-      name: 'Test Zora',
+      auctionAddress: '0x03855976fcb91bf23110e2c425dcfb1ba0635b79',
+      tokenAddress: '0x3b7626182aAB7a70D4B2B254C4F19f5f48A7E6D8',
+      name: 'test',
     },
     {
-      auctionAddress: '0x8741AE7F44DFDEFaFC33b10D9FED9bd97ac8E972',
-      tokenAddress: '0x65737024daf0ed2e2d86d67cdc3bc92fb903bd93',
-      name: 'Test Zora',
+      auctionAddress: '0x03855976fcb91bf23110e2c425dcfb1ba0635b79',
+      tokenAddress: '0x3b7626182aAB7a70D4B2B254C4F19f5f48A7E6D8',
+      name: 'test',
+    },
+  ],
+  [CHAIN_ID.ZORA_SEPOLIA]: [
+    {
+      auctionAddress: '0x03855976fcb91bf23110e2c425dcfb1ba0635b79',
+      tokenAddress: '0x3b7626182aAB7a70D4B2B254C4F19f5f48A7E6D8',
+      name: 'test',
+    },
+    {
+      auctionAddress: '0x03855976fcb91bf23110e2c425dcfb1ba0635b79',
+      tokenAddress: '0x3b7626182aAB7a70D4B2B254C4F19f5f48A7E6D8',
+      name: 'test',
+    },
+    {
+      auctionAddress: '0x03855976fcb91bf23110e2c425dcfb1ba0635b79',
+      tokenAddress: '0x3b7626182aAB7a70D4B2B254C4F19f5f48A7E6D8',
+      name: 'test',
     },
   ],
 }

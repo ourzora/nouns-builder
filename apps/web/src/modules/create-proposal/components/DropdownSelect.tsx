@@ -40,7 +40,7 @@ export function DropdownSelect<T extends React.Key>({
   const selectedOption = options.find((option) => option.value === value)
 
   return (
-    <Box as="fieldset" mb={'x8'} p={'x0'} className={defaultFieldsetStyle}>
+    <Box as="fieldset" mb={'x4'} p={'x0'} className={defaultFieldsetStyle}>
       {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
       <Flex
         direction={'column'}

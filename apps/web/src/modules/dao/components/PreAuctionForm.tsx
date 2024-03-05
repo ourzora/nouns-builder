@@ -1,15 +1,16 @@
-import { Flex, Stack } from '@zoralabs/zord'
+import { Box, Flex, Stack } from '@zoralabs/zord'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
-import { formatEther, parseEther } from 'viem'
+import { formatEther, isAddressEqual, parseEther } from 'viem'
 import { useContractReads } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
 import StickySave from 'src/components/Fields/StickySave'
-import { NUMBER } from 'src/components/Fields/types'
+import { NUMBER, TEXT } from 'src/components/Fields/types'
+import { NULL_ADDRESS } from 'src/constants/addresses'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
@@ -22,6 +23,7 @@ import {
 } from 'src/utils/helpers'
 
 import { useDaoStore } from '../stores'
+import { Section } from './AdminForm/Section'
 import { PreAuctionFormValues, preAuctionValidationSchema } from './PreAuctionForm.schema'
 
 interface PreAuctionFormSettingsProps {
@@ -39,20 +41,35 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   }
 
   const { data } = useContractReads({
-    allowFailure: false,
+    allowFailure: true,
     contracts: [
       { ...auctionContractParams, functionName: 'duration' },
       { ...auctionContractParams, functionName: 'reservePrice' },
+      { ...auctionContractParams, functionName: 'founderReward' },
     ] as const,
   })
 
-  const [auctionDuration, auctionReservePrice] = unpackOptionalArray(data, 2)
+  const [auctionDuration, auctionReservePrice, founderReward] = unpackOptionalArray(
+    data,
+    3
+  )
+
+  const supportsFounderReward = !founderReward?.error
+
+  const [founderRewardRecipient, founderRewardBPS] = supportsFounderReward
+    ? unpackOptionalArray(founderReward?.result, 2)
+    : []
 
   const initialValues: PreAuctionFormValues = {
-    auctionDuration: fromSeconds(auctionDuration),
-    auctionReservePrice: auctionReservePrice
-      ? parseFloat(formatEther(auctionReservePrice))
+    auctionDuration: fromSeconds(auctionDuration?.result),
+    auctionReservePrice: auctionReservePrice?.result
+      ? parseFloat(formatEther(auctionReservePrice?.result))
       : 0,
+    auctionRewardRecipient:
+      founderRewardRecipient && !isAddressEqual(founderRewardRecipient, NULL_ADDRESS)
+        ? founderRewardRecipient
+        : '',
+    auctionRewardPercentage: founderRewardBPS ? founderRewardBPS / 100 : 0,
   }
 
   const handleUpdateSettings = async (
@@ -86,6 +103,44 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
         const { hash } = await writeContract(config)
         await waitForTransaction({ hash })
       }
+
+      if (supportsFounderReward) {
+        const newAuctionRewardRecipient = values.auctionRewardRecipient
+          ? (values.auctionRewardRecipient as AddressType)
+          : NULL_ADDRESS
+
+        const initalAuctionRewardRecipient = initialValues['auctionRewardRecipient']
+          ? (initialValues['auctionRewardRecipient'] as AddressType)
+          : NULL_ADDRESS
+
+        const isRewardRecipientEqual = isAddressEqual(
+          newAuctionRewardRecipient,
+          initalAuctionRewardRecipient
+        )
+
+        const newAuctionRewardPercentage = values.auctionRewardPercentage
+
+        const isRewardPercentageEqual = isEqual(
+          newAuctionRewardPercentage,
+          initialValues['auctionRewardPercentage']
+        )
+
+        if (!isRewardRecipientEqual || !isRewardPercentageEqual) {
+          const config = await prepareWriteContract({
+            ...auctionContractParams,
+            address: auctionContractParams.address,
+            functionName: 'setFounderReward',
+            args: [
+              {
+                recipient: newAuctionRewardRecipient,
+                percentBps: newAuctionRewardPercentage * 100,
+              },
+            ],
+          })
+          const { hash } = await writeContract(config)
+          await waitForTransaction({ hash })
+        }
+      }
     } finally {
       formik.setSubmitting(false)
     }
@@ -107,44 +162,98 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
             return (
               <Flex direction={'column'} w={'100%'}>
                 <Stack>
-                  <DaysHoursMinsSecs
-                    {...formik.getFieldProps('auctionDuration')}
-                    inputLabel={'Auction Duration'}
-                    formik={formik}
-                    id={'auctionDuration'}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    errorMessage={
-                      formik.touched['auctionDuration'] &&
-                      formik.errors['auctionDuration']
-                        ? formik.errors['auctionDuration']
-                        : undefined
-                    }
-                    placeholder={['1', '0', '0', '0']}
-                  />
+                  <Section title="Auction Settings">
+                    <DaysHoursMinsSecs
+                      {...formik.getFieldProps('auctionDuration')}
+                      inputLabel={'Auction Duration'}
+                      formik={formik}
+                      id={'auctionDuration'}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      errorMessage={
+                        formik.touched['auctionDuration'] &&
+                        formik.errors['auctionDuration']
+                          ? formik.errors['auctionDuration']
+                          : undefined
+                      }
+                      placeholder={['1', '0', '0', '0']}
+                    />
 
-                  <SmartInput
-                    {...formik.getFieldProps('auctionReservePrice')}
-                    inputLabel={'Auction Reserve Price'}
-                    type={NUMBER}
-                    formik={formik}
-                    id={'auctionReservePrice'}
-                    onChange={({ target }: BaseSyntheticEvent) => {
-                      formik.setFieldValue(
-                        'auctionReservePrice',
-                        parseFloat(target.value)
-                      )
-                    }}
-                    onBlur={formik.handleBlur}
-                    helperText={'The starting price of an auction.'}
-                    errorMessage={
-                      formik.touched['auctionReservePrice'] &&
-                      formik.errors['auctionReservePrice']
-                        ? formik.errors['auctionReservePrice']
-                        : undefined
-                    }
-                    perma={'ETH'}
-                  />
+                    <SmartInput
+                      {...formik.getFieldProps('auctionReservePrice')}
+                      inputLabel={'Auction Reserve Price'}
+                      type={NUMBER}
+                      formik={formik}
+                      id={'auctionReservePrice'}
+                      onChange={({ target }: BaseSyntheticEvent) => {
+                        formik.setFieldValue(
+                          'auctionReservePrice',
+                          parseFloat(target.value)
+                        )
+                      }}
+                      onBlur={formik.handleBlur}
+                      helperText={'The starting price of an auction.'}
+                      errorMessage={
+                        formik.touched['auctionReservePrice'] &&
+                        formik.errors['auctionReservePrice']
+                          ? formik.errors['auctionReservePrice']
+                          : undefined
+                      }
+                      perma={'ETH'}
+                    />
+                  </Section>
+
+                  {supportsFounderReward && (
+                    <Section
+                      title="Auction Rewards"
+                      subtitle={
+                        <Box color="text3">
+                          DAOs can optionally assign Auction Rewards to an address.{' '}
+                          <a
+                            href="https://docs.zora.co/docs/guides/builder-protocol-rewards"
+                            target="_blank"
+                            rel="noreferrer noopener"
+                          >
+                            learn more
+                          </a>
+                        </Box>
+                      }
+                    >
+                      <SmartInput
+                        {...formik.getFieldProps('auctionRewardRecipient')}
+                        inputLabel="Auction Reward Recipient"
+                        type={TEXT}
+                        id="auctionRewardRecipient"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        errorMessage={formik.errors['auctionRewardRecipient']}
+                        placeholder="0x... or .eth"
+                        isAddress={true}
+                        helperText={'This is the address that receives auction rewards.'}
+                      />
+
+                      <SmartInput
+                        {...formik.getFieldProps('auctionRewardPercentage')}
+                        inputLabel={'Auction Reward Percentage'}
+                        type={NUMBER}
+                        formik={formik}
+                        id={'auctionRewardPercentage'}
+                        onChange={({ target }: BaseSyntheticEvent) => {
+                          formik.setFieldValue(
+                            'auctionRewardPercentage',
+                            parseFloat(target.value)
+                          )
+                        }}
+                        onBlur={formik.handleBlur}
+                        errorMessage={formik.errors['auctionRewardPercentage']}
+                        perma={'%'}
+                        step={0.1}
+                        helperText={
+                          'This is the percentage of final auction bids sent to the Auction Reward Recipient.'
+                        }
+                      />
+                    </Section>
+                  )}
                 </Stack>
 
                 <StickySave

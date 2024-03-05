@@ -2,6 +2,8 @@ import { UserDataType } from '@farcaster/hub-nodejs'
 
 import { farcasterClient } from '../client'
 
+const { FNAME, PFP, DISPLAY } = UserDataType as any
+
 const logFetchError = (dataType: string, fid: number, errorMsg: string) => {
   console.error(
     `${dataType} Not Found 
@@ -14,7 +16,7 @@ const logFetchError = (dataType: string, fid: number, errorMsg: string) => {
 export const getfName = async (fid: number) => {
   const client = farcasterClient()
 
-  const fName = await client.getUserData({ fid, userDataType: UserDataType.FNAME })
+  const fName = await client.getUserData({ fid, userDataType: FNAME })
   client.close()
   if (fName.isErr()) logFetchError('Farcaster Name', fid, fName.error.message)
   return {
@@ -26,9 +28,9 @@ export const getFarcasterProfile = async (fid: number) => {
   const client = farcasterClient()
 
   const [pfpRes, nameRes, fName] = await Promise.all([
-    client.getUserData({ fid, userDataType: UserDataType.PFP }),
-    client.getUserData({ fid, userDataType: UserDataType.DISPLAY }),
-    client.getUserData({ fid, userDataType: UserDataType.FNAME }),
+    client.getUserData({ fid, userDataType: PFP }),
+    client.getUserData({ fid, userDataType: DISPLAY }),
+    client.getUserData({ fid, userDataType: FNAME }),
   ])
 
   client.close()

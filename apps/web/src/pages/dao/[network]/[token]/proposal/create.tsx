@@ -2,12 +2,17 @@ import { Flex, Stack } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { useAccount } from 'wagmi'
+import { isAddressEqual } from 'viem'
+import { useAccount, useContractRead } from 'wagmi'
 
+import { ALLOWED_MIGRATION_DAOS } from 'src/constants/addresses'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
+import { auctionAbi } from 'src/data/contract/abis'
+import { L1_CHAINS } from 'src/data/contract/chains'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
+import { useDelayedGovernance } from 'src/hooks/useDelayedGovernance'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   CreateProposalHeading,
@@ -17,6 +22,7 @@ import {
   TRANSACTION_TYPES,
   TransactionForm,
   TransactionFormType,
+  TransactionType,
   TransactionTypeIcon,
   TwoColumnLayout,
   useProposalStore,
@@ -29,12 +35,20 @@ import { AddressType } from 'src/typings'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
+  const { auction, token } = useDaoStore((x) => x.addresses)
   const chain = useChainStore((x) => x.chain)
   const { query } = router
   const [transactionType, setTransactionType] = useState<
     TransactionFormType | undefined
   >()
   const transactions = useProposalStore((state) => state.transactions)
+
+  const { data: paused } = useContractRead({
+    abi: auctionAbi,
+    address: auction,
+    functionName: 'paused',
+    chainId: chain.id,
+  })
 
   useEffect(() => {
     if (transactions.length && !transactionType) {
@@ -52,13 +66,31 @@ const CreateProposalPage: NextPageWithLayout = () => {
     collectionAddress: query?.token as AddressType,
   })
 
+  const { isGovernanceDelayed } = useDelayedGovernance({
+    chainId: chain.id,
+    governorAddress: addresses?.governor,
+  })
+
   const createSelectOption = (type: TransactionFormType) => ({
     value: type,
     label: TRANSACTION_TYPES[type].title,
     icon: <TransactionTypeIcon transactionType={type} />,
   })
 
-  const options = TRANSACTION_FORM_OPTIONS.map(createSelectOption)
+  const isL1Chain = L1_CHAINS.find((l1ChainIds) => l1ChainIds === chain.id)
+  const isAllowedMigrationDao = token
+    ? !!ALLOWED_MIGRATION_DAOS.find((x) => isAddressEqual(x, token))
+    : false
+
+  const TRANSACTION_FORM_OPTIONS_FILTERED = TRANSACTION_FORM_OPTIONS.filter((x) => {
+    if (x === TransactionType.MIGRATION && (!isL1Chain || !isAllowedMigrationDao))
+      return false
+    if (x === TransactionType.PAUSE_AUCTIONS && paused) return false
+    if (x === TransactionType.RESUME_AUCTIONS && !paused) return false
+    return true
+  })
+
+  const options = TRANSACTION_FORM_OPTIONS_FILTERED.map(createSelectOption)
 
   const handleDropdownOnChange = (value: TransactionFormType) => {
     setTransactionType(value)
@@ -66,7 +98,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
 
   if (isLoading) return null
 
-  if (!hasThreshold) {
+  if (!hasThreshold || isGovernanceDelayed) {
     return <Flex className={notFoundWrap}>403 - Access Denied</Flex>
   }
 
@@ -100,7 +132,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
         <TwoColumnLayout
           leftColumn={
             <SelectTransactionType
-              transactionTypes={TRANSACTION_FORM_OPTIONS}
+              transactionTypes={TRANSACTION_FORM_OPTIONS_FILTERED}
               onSelect={setTransactionType}
             />
           }

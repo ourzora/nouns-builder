@@ -9,7 +9,7 @@ import {
   parseEther,
   toHex,
 } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useContractRead } from 'wagmi'
 import {
   WriteContractUnpreparedArgs,
   prepareWriteContract,
@@ -23,6 +23,8 @@ import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
 import { managerAbi } from 'src/data/contract/abis'
+import { managerV2Abi } from 'src/data/contract/abis/ManagerV2'
+import { L2_CHAINS } from 'src/data/contract/chains'
 import { formatAuctionDuration, formatFounderAllocation } from 'src/modules/create-dao'
 import { useChainStore } from 'src/stores/useChainStore'
 import {
@@ -65,8 +67,16 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const [isPendingTransaction, setIsPendingTransaction] = useState<boolean>(false)
   const [hasConfirmedTerms, setHasConfirmedTerms] = useState<boolean>(false)
   const [hasConfirmedChain, setHasConfirmedChain] = useState<boolean>(false)
+  const [hasConfirmedRewards, setHasConfirmedRewards] = useState<boolean>(false)
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const chain = useChainStore((x) => x.chain)
+  const isL2 = L2_CHAINS.includes(chain.id)
+  const { data: version, isLoading: isVersionLoading } = useContractRead({
+    abi: managerAbi,
+    address: PUBLIC_MANAGER_ADDRESS[chain.id],
+    functionName: 'contractVersion',
+    chainId: chain.id,
+  })
   const { address } = useAccount()
 
   const {
@@ -122,6 +132,8 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     duration: auctionSettings?.auctionDuration
       ? BigInt(toSeconds(auctionSettings?.auctionDuration))
       : BigInt('86400'),
+    founderRewardRecipent: NULL_ADDRESS,
+    founderRewardBps: 0,
   }
 
   const govParams = {
@@ -170,13 +182,34 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     setIsPendingTransaction(true)
     let transaction
     try {
-      const config = await prepareWriteContract({
-        address: PUBLIC_MANAGER_ADDRESS[chain.id],
-        chainId: chain.id,
-        abi: managerAbi,
-        functionName: 'deploy',
-        args: [founderParams, tokenParams, auctionParams, govParams],
-      })
+      let config: any
+      if (version?.startsWith('2')) {
+        config = await prepareWriteContract({
+          address: PUBLIC_MANAGER_ADDRESS[chain.id],
+          chainId: chain.id,
+          abi: managerV2Abi,
+          functionName: 'deploy',
+          args: [
+            founderParams,
+            { ...tokenParams, reservedUntilTokenId: 0n, metadataRenderer: NULL_ADDRESS },
+            {
+              ...auctionParams,
+              founderRewardRecipent: NULL_ADDRESS,
+              founderRewardBps: 0,
+            },
+            govParams,
+          ],
+        })
+      } else {
+        config = await prepareWriteContract({
+          address: PUBLIC_MANAGER_ADDRESS[chain.id],
+          chainId: chain.id,
+          abi: managerAbi,
+          functionName: 'deploy',
+          args: [founderParams, tokenParams, auctionParams, govParams],
+        })
+      }
+
       const tx = await writeContract(config)
       if (tx.hash) transaction = await waitForTransaction({ hash: tx.hash })
     } catch (e) {
@@ -331,6 +364,38 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
               </Flex>
             </Flex>
 
+            {isL2 && (
+              <Flex mt="x4">
+                <Flex align={'center'} justify={'center'} gap={'x4'}>
+                  <Flex
+                    align={'center'}
+                    justify={'center'}
+                    className={
+                      deployCheckboxStyleVariants[
+                        hasConfirmedRewards ? 'confirmed' : 'default'
+                      ]
+                    }
+                    onClick={() => setHasConfirmedRewards((bool) => !bool)}
+                  >
+                    {hasConfirmedRewards && <Icon fill="background1" id="check" />}
+                  </Flex>
+
+                  <Flex className={deployCheckboxHelperText}>
+                    I have read the{' '}
+                    <a
+                      href={'https://docs.zora.co/docs/guides/builder-protocol-rewards'}
+                      target="_blank"
+                      className={atoms({ color: 'accent' })}
+                      rel="noreferrer"
+                    >
+                      Builder Protocol Rewards documentation
+                    </a>{' '}
+                    and understand how Protocol Rewards apply to this DAO.
+                  </Flex>
+                </Flex>
+              </Flex>
+            )}
+
             {deploymentError && (
               <Flex mt={'x4'} color="negative">
                 {deploymentError}
@@ -357,7 +422,9 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   !address ||
                   !hasConfirmedTerms ||
                   !hasConfirmedChain ||
-                  isPendingTransaction
+                  (isL2 && !hasConfirmedRewards) ||
+                  isPendingTransaction ||
+                  isVersionLoading
                 }
                 className={
                   deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']

@@ -11,11 +11,6 @@ export type MyDaosResponse = Array<{
   chainId: CHAIN_ID
 }>
 
-const DAOS_TO_EXCLUDE = [
-  '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
-  '0x4b10701bfd7bfedc47d50562b76b436fbb5bdb3b',
-]
-
 export const myDaosRequest = async (
   memberAddress: string
 ): Promise<MyDaosResponse | undefined> => {
@@ -39,17 +34,12 @@ export const myDaosRequest = async (
 
     return data
       .map((queries) =>
-        queries.daotokenOwners
-          .map((x) => {
-            return x.dao
-          })
-          .filter((dao) => !DAOS_TO_EXCLUDE.includes(dao.tokenAddress))
-          .map((dao) => ({
-            name: dao.name || '',
-            collectionAddress: dao.tokenAddress,
-            auctionAddress: dao?.auctionAddress || '',
-            chainId: queries.chainId,
-          }))
+        queries.daotokenOwners.map(({ dao }) => ({
+          name: dao.name || '',
+          collectionAddress: dao.tokenAddress,
+          auctionAddress: dao?.auctionAddress || '',
+          chainId: queries.chainId,
+        }))
       )
       .flat()
       .sort((a, b) => a.name.localeCompare(b.name))

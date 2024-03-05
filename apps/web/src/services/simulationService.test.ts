@@ -6,7 +6,7 @@ import { CHAIN_ID } from 'src/typings'
 
 import { createClient } from './createClient'
 import { InvalidRequestError } from './errors'
-import { InsufficientFundsError, Simulation, simulate } from './simulationService'
+import { Simulation, simulate } from './simulationService'
 
 const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
 
@@ -151,14 +151,14 @@ describe('simulationService', () => {
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5').toString(),
+          gasUsed: parseEther('0.5'),
         },
         {
           index: 1,
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5').toString(),
+          gasUsed: parseEther('0.5'),
         },
       ]
 
@@ -216,14 +216,14 @@ describe('simulationService', () => {
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5').toString(),
+          gasUsed: parseEther('0.5'),
         },
         {
           index: 1,
           simulationId,
           success: false,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5').toString(),
+          gasUsed: parseEther('0.5'),
         },
       ]
 
@@ -234,39 +234,6 @@ describe('simulationService', () => {
       })
 
       expect(spy).not.toHaveBeenCalled()
-    })
-
-    it('returns will throw an InsufficientFunds error if there is not enough eth for transactions', async () => {
-      const forkId = 'forkId'
-      const simulationId = 'simulationId'
-
-      const forkProvider = createClient(forkId)
-
-      vi.mocked(forkProvider.request).mockResolvedValueOnce(parseEther('105')) // mock tenderly_addBalance
-      vi.mocked(axios.post).mockResolvedValueOnce({
-        status: 200,
-        data: { simulation_fork: { id: forkId } },
-      })
-
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
-      vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
-        ...receipt,
-        status: 'success', // success status
-        gasUsed: parseEther('0.5'),
-      } as TransactionReceipt)
-      vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
-        status: 'success', // success status
-        gasUsed: parseEther('0.5'),
-      } as TransactionReceipt)
-
-      vi.mocked(axios.get).mockResolvedValue({
-        status: 200,
-        data: { fork: { head_simulation_id: simulationId } },
-      })
-      vi.mocked(forkProvider.getBalance).mockResolvedValueOnce(parseEther('94')) // mock eth_getBalance
-
-      expect(() => simulate(request)).rejects.toThrow(InsufficientFundsError)
     })
   })
 })

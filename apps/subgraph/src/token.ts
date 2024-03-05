@@ -1,8 +1,8 @@
 import { DAO, DAOTokenOwner, Token } from '../generated/schema'
-import { MetadataRenderer as MetadataContract } from '../generated/templates/MetadataRenderer/MetadataRenderer'
 import { Transfer as TransferEvent } from '../generated/templates/Token/Token'
 import { Token as TokenContract } from '../generated/templates/Token/Token'
-import { Address, Bytes, dataSource } from '@graphprotocol/graph-ts'
+import { setTokenMetadata } from './utils/setTokenMetadata'
+import { Bytes } from '@graphprotocol/graph-ts'
 import { store } from '@graphprotocol/graph-ts'
 
 let ADDRESS_ZERO = Bytes.fromHexString('0x0000000000000000000000000000000000000000')
@@ -14,19 +14,15 @@ export function handleTransfer(event: TransferEvent): void {
 
   // Handle loading token data on first transfer
   if (!token) {
-    let context = dataSource.context()
-    let metadataAddress = context.getString('metadataAddress')
-
     let tokenContract = TokenContract.bind(event.address)
-
-    let metadataContract = MetadataContract.bind(Address.fromString(metadataAddress))
-
-    let attributes = metadataContract.getAttributes(event.params.tokenId)
 
     token = new Token(tokenId)
 
+    let tokenURI = tokenContract.try_tokenURI(event.params.tokenId)
+
     token.name = `${tokenContract.name()} #${event.params.tokenId.toString()}`
-    token.image = `${metadataContract.rendererBase()}${attributes.value1}`
+    if (!tokenURI.reverted) setTokenMetadata(token, tokenURI.value)
+
     token.tokenContract = event.address
     token.tokenId = event.params.tokenId
     token.mintedAt = event.block.timestamp

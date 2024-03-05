@@ -20,7 +20,7 @@ export const useChainStore = create(
     {
       name: CHAIN_STORE_IDENTIFIER,
       storage: createJSONStorage(() => localStorage),
-      version: 0,
+      version: 1,
     }
   )
 )

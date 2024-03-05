@@ -6,6 +6,7 @@ import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propDataGrid } from 'src/styles/Proposals.css'
+import { handleGMTOffset } from 'src/utils/helpers'
 
 import { Tile } from './Tile'
 import { voteProgress, voteProgressVariants } from './Tile.css'
@@ -93,7 +94,7 @@ export const ProposalDetailsGrid: React.FC<ProposalDetailsGridProps> = ({ propos
         <Tile
           title={((Date.now() / 1000) | 0) >= voteEnd ? 'Ended' : 'Ending'}
           subtitle={dayjs(dayjs.unix(voteEnd)).format('MMM, D, YYYY')}
-          subtext={`${dayjs.unix(voteEnd).format('h:mm:ss A')} GMT+2`}
+          subtext={`${dayjs.unix(voteEnd).format('h:mm:ss A')} ${handleGMTOffset()}`}
         />
         <a
           href={`${ETHERSCAN_BASE_URL[chain.id]}/tx/${transactionHash}`}

@@ -12,6 +12,7 @@ export const daoImage = style({
     width: '100%',
     borderTopRightRadius: 12,
     borderTopLeftRadius: 12,
+    pointerEvents: 'none',
   },
 })
 

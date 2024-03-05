@@ -46,6 +46,11 @@ export const CONTRACT_VERSION_ADDRESSES = {
 }
 
 export const CONTRACT_VERSION_DETAILS: ContractVersion = {
+  '2.0.0': {
+    description:
+      'This optional release upgrades the DAO to V2 to add custom metadata renderers, protocol rewards and more.',
+    date: '2024-01-17',
+  },
   '1.2.0': {
     description:
       'This release upgrades the DAO to V1.2 to add several features, improvements and bug fixes.',

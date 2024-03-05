@@ -18,6 +18,7 @@ export const useVotes = ({
   const { data, isLoading } = useContractReads({
     enabled: !!collectionAddress && !!governorAddress && !!signerAddress,
     allowFailure: false,
+    keepPreviousData: true,
     contracts: [
       {
         address: collectionAddress as AddressType,

@@ -5,8 +5,10 @@ import { TransactionType } from 'src/modules/create-proposal/constants'
 import { Airdrop } from './Airdrop'
 import { CustomTransaction } from './CustomTransaction'
 import { Droposal } from './Droposal'
+import { Migration } from './Migration'
 import { PauseAuctions } from './PauseAuctions'
 import { ReplaceArtwork } from './ReplaceArtwork'
+import { ResumeAuctions } from './ResumeAuctions/ResumeAuctions'
 import { SendEth } from './SendEth'
 
 interface TransactionFormProps {
@@ -19,8 +21,10 @@ export const TRANSACTION_FORM_OPTIONS = [
   TransactionType.SEND_ETH,
   TransactionType.AIRDROP,
   TransactionType.PAUSE_AUCTIONS,
+  TransactionType.RESUME_AUCTIONS,
   TransactionType.REPLACE_ARTWORK,
   TransactionType.DROPOSAL,
+  TransactionType.MIGRATION,
   TransactionType.CUSTOM,
 ] as const
 
@@ -31,7 +35,9 @@ export const TransactionForm = ({ type }: TransactionFormProps) => {
     [TransactionType.DROPOSAL]: <Droposal />,
     [TransactionType.SEND_ETH]: <SendEth />,
     [TransactionType.PAUSE_AUCTIONS]: <PauseAuctions />,
+    [TransactionType.RESUME_AUCTIONS]: <ResumeAuctions />,
     [TransactionType.REPLACE_ARTWORK]: <ReplaceArtwork />,
+    [TransactionType.MIGRATION]: <Migration />,
   }
 
   return <>{FORMS[type]}</>

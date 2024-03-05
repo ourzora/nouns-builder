@@ -38,6 +38,7 @@ const animation = {
 const VOTING_DELAY_AND_PERIOD_AUTHORIZED_USERS = [
   '0x7498e6e471f31e869f038D8DBffbDFdf650c3F95',
   '0x2767500a75D90D711b2Ac27b3a032a0dAa40e4B2',
+  '0x3B60e31CFC48a9074CD5bEbb26C9EAa77650a43F',
 ]
 
 export const AuctionSettingsForm: React.FC<AuctionSettingsFormProps> = ({ title }) => {

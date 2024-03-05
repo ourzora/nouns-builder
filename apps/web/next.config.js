@@ -20,11 +20,12 @@ const nextConfig = {
       'zora-dev.mypinata.cloud',
       'ipfs.zora.co',
       'ipfs.decentralized-content.com',
+      'nouns.build',
     ],
   },
   async redirects() {
     const network =
-      process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? 'goerli' : 'ethereum'
+      process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet' ? 'sepolia' : 'ethereum'
 
     return [
       {

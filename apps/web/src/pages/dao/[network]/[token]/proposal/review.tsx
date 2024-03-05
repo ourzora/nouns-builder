@@ -9,6 +9,7 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
+import { useDelayedGovernance } from 'src/hooks/useDelayedGovernance'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import {
   CreateProposalHeading,
@@ -38,6 +39,11 @@ const ReviewProposalPage: NextPageWithLayout = () => {
     collectionAddress: query?.token as AddressType,
   })
 
+  const { isGovernanceDelayed } = useDelayedGovernance({
+    chainId: chain.id,
+    governorAddress: addresses?.governor,
+  })
+
   const transactions = useProposalStore((state) => state.transactions)
   const disabled = useProposalStore((state) => state.disabled)
   const title = useProposalStore((state) => state.title)
@@ -45,7 +51,7 @@ const ReviewProposalPage: NextPageWithLayout = () => {
 
   if (isLoading) return null
 
-  if (!hasThreshold) {
+  if (!hasThreshold || isGovernanceDelayed) {
     return <Flex className={notFoundWrap}>403 - Access Denied</Flex>
   }
 

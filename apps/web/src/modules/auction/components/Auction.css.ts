@@ -168,6 +168,7 @@ export const auctionActionButtonVariants = styleVariants({
     auctionActionButton,
     { width: '100%', background: '#F1F1F1', color: '#808080' },
   ],
+  dashSettle: { borderRadius: '12px', width: '100%' },
 })
 
 export const bidForm = style({
@@ -275,6 +276,16 @@ export const tokenImage = style({
     top: 0,
     width: '100%',
     borderRadius: 12,
+    pointerEvents: 'none',
   },
 })
 export const switcherBox = style({ width: '100%', maxWidth: '912px' })
+export const overflowEllipsis = style([
+  {
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  atoms({
+    overflow: 'hidden',
+  }),
+])

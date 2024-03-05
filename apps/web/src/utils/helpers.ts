@@ -244,6 +244,14 @@ export const yearsAhead = (years: number) => {
   return formatDate(new Date(year + years, month, day), false)
 }
 
+export const handleGMTOffset = () => {
+  const now = new Date()
+  const timezoneOffset = now.getTimezoneOffset()
+  const offsetHours = -timezoneOffset / 60
+
+  return `GMT ${offsetHours >= 0 ? '+' : ''}${offsetHours}:00`
+}
+
 /**
  * Takes a possibly undefined array and returns either the array, or an array of undefined of
  * length expectedLength
@@ -260,4 +268,17 @@ export function unpackOptionalArray<T = []>(
     return Array(expectedLength).fill(undefined)
   }
   return array
+}
+
+// Markdown is impossible to detect in all cases, but this should cover most of the cases we'll run into
+export const isPossibleMarkdown = (text: string) => {
+  const markdownRegex =
+    /(?:\*\*[^\*]+\*\*)|(?:__[^\_]+__)|(?:\*[^\*]+\*)|(?:_[^\_]+_)|(?:\#[^\#]+\#)|(?:\!\[[^\]]*\]\([^\)]+\))|(?:\[[^\]]+\]\([^\)]+\))/g
+  return markdownRegex.test(text)
+}
+export function maxChar(str: string, maxLength: number) {
+  if (str.length <= maxLength) {
+    return str
+  }
+  return str.slice(0, maxLength) + '...'
 }

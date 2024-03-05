@@ -24,6 +24,7 @@ export const AuctionImage = ({ image, name }: AucitonImageProps) => {
     >
       <Image
         priority
+        unoptimized
         layout="fill"
         src={imgErr ? '/ImageError.svg' : image || ''}
         onError={() => setImgErr(true)}
