@@ -79,7 +79,7 @@ describe('List of transactions', () => {
               success: false,
               simulationId: 'id-1',
               simulationUrl: 'url-1',
-              gasUsed: parseEther('0.1'),
+              gasUsed: parseEther('0.1').toString(),
             },
           ]}
         />
@@ -136,21 +136,21 @@ describe('List of transactions', () => {
               success: false,
               simulationId: 'id-0',
               simulationUrl: 'url-0',
-              gasUsed: parseEther('0.1'),
+              gasUsed: parseEther('0.1').toString(),
             },
             {
               index: 1,
               success: false,
               simulationId: 'id-1',
               simulationUrl: 'url-1',
-              gasUsed: parseEther('0.1'),
+              gasUsed: parseEther('0.1').toString(),
             },
             {
               index: 2,
               success: false,
               simulationId: 'id-2',
               simulationUrl: 'url-3',
-              gasUsed: parseEther('0.1'),
+              gasUsed: parseEther('0.1').toString(),
             },
           ]}
         />
