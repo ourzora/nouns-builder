@@ -24,7 +24,7 @@ vi.mock('./createClient', async () => {
   return {
     createClient: vi.fn().mockReturnValue({
       getTransactionReceipt: vi.fn(),
-      request: vi.fn(),
+      sendTransaction: vi.fn(),
     }),
   }
 })
@@ -124,8 +124,8 @@ describe('simulationService', () => {
         status: 200,
         data: { simulation_fork: { id: forkId } },
       })
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValue({
         ...receipt,
         status: 'success', // success status
@@ -147,21 +147,21 @@ describe('simulationService', () => {
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5'),
+          gasUsed: parseEther('0.5').toString(),
         },
         {
           index: 1,
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5'),
+          gasUsed: parseEther('0.5').toString(),
         },
       ]
 
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: true,
-        totalGasUsed: parseEther('1'),
+        totalGasUsed: parseEther('1').toString(),
       })
 
       expect(spy).toHaveBeenCalledOnce()
@@ -182,8 +182,8 @@ describe('simulationService', () => {
         data: { simulation_fork: { id: forkId } },
       })
 
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.request).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
         ...receipt,
         status: 'success', // success status
@@ -210,21 +210,21 @@ describe('simulationService', () => {
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5'),
+          gasUsed: parseEther('0.5').toString(),
         },
         {
           index: 1,
           simulationId,
           success: false,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5'),
+          gasUsed: parseEther('0.5').toString(),
         },
       ]
 
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: false,
-        totalGasUsed: parseEther('1'),
+        totalGasUsed: parseEther('1').toString(),
       })
 
       expect(spy).not.toHaveBeenCalled()

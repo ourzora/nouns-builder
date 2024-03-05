@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { Address, isAddress, toHex } from 'viem'
+import { Address, isAddress } from 'viem'
 
-import { CHAIN_ID } from 'src/typings'
+import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
 
 import { createClient } from './createClient'
 import { InvalidRequestError } from './errors'
@@ -19,13 +19,13 @@ export interface Simulation {
   simulationId: string
   success: boolean
   simulationUrl: string
-  gasUsed: bigint
+  gasUsed: string
 }
 
 export interface SimulationResult {
   simulations: Simulation[]
   success: boolean
-  totalGasUsed: bigint
+  totalGasUsed: string
 }
 
 const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
@@ -67,18 +67,12 @@ export async function simulate({
 
   // Loop through the transactions and simulate them against the fork
   for (let i = 0; i < targets.length; i++) {
-    const txParams = {
-      from: treasuryAddress.toLowerCase(),
-      to: targets[i].toLowerCase(),
-      gasLimit: '0x163CCD40',
-      gasPrice: '0x0',
-      // We have to wrap this in a hexValue() call because .toHexString() adds a 0x0 padding to the front of the value.
-      value: toHex(BigInt(values[i]).toString(16)),
-      data: calldatas[i],
-    }
-    const txHash: `0x${string}` = await forkProvider.request({
-      method: 'eth_sendTransaction' as any,
-      arguments: [txParams],
+    const txHash: `0x${string}` = await forkProvider.sendTransaction({
+      account: treasuryAddress,
+      to: targets[i].toLowerCase() as AddressType,
+      gasPrice: 0n,
+      value: BigInt(values[i]),
+      data: calldatas[i] as BytesType,
     })
 
     const receipt = await forkProvider.getTransactionReceipt({ hash: txHash })
@@ -91,7 +85,7 @@ export async function simulate({
       simulationId,
       success: receipt.status !== 'reverted',
       simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-      gasUsed: receipt.gasUsed,
+      gasUsed: receipt.gasUsed.toString(),
     })
     totalGasUsed += receipt.gasUsed
   }
@@ -108,5 +102,9 @@ export async function simulate({
     }
   }
 
-  return { simulations, success: simulationSucceeded, totalGasUsed }
+  return {
+    simulations,
+    success: simulationSucceeded,
+    totalGasUsed: totalGasUsed.toString(),
+  }
 }
