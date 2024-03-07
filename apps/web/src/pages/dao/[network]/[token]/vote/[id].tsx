@@ -1,11 +1,9 @@
 import { Box, Flex } from '@zoralabs/zord'
-import { ethers } from 'ethers'
-import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 import useSWR, { unstable_serialize } from 'swr'
-import { isAddressEqual } from 'viem'
+import { getAddress, isAddress, isAddressEqual } from 'viem'
 import { useBalance } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
@@ -197,10 +195,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     }
   }
 
-  if (
-    ethers.utils.getAddress(proposal.dao.tokenAddress) !==
-    ethers.utils.getAddress(collection)
-  ) {
+  if (getAddress(proposal.dao.tokenAddress) !== getAddress(collection)) {
     return {
       notFound: true,
     }

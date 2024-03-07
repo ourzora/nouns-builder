@@ -1,7 +1,7 @@
 import { Stack, Text } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import React, { useEffect, useMemo } from 'react'
 import useSWR from 'swr'
+import { encodeFunctionData } from 'viem'
 
 import { getLayerName } from 'src/components/Artwork/LayerBox'
 import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
@@ -83,22 +83,19 @@ export const ReplaceArtwork = () => {
 
   const handleReplaceArtworkTransaction = () => {
     if (!transactions || !isValid) return
-    const metadataInterface = new ethers.utils.Interface(metadataAbi)
 
     const formattedTransactions = transactions.map((transaction, i) => {
-      const functionSignature = `${
-        i > 1 ? 'addProperties' : 'deleteAndRecreateProperties'
-      }(string[], (uint256,string,bool)[], (string,string))`
+      const functionSignature = i > 1 ? 'addProperties' : 'deleteAndRecreateProperties'
 
       return {
         functionSignature,
         target: addresses?.metadata as AddressType,
         value: '',
-        calldata: metadataInterface.encodeFunctionData(functionSignature, [
-          transaction.names,
-          transaction.items,
-          transaction.data,
-        ]),
+        calldata: encodeFunctionData({
+          abi: metadataAbi,
+          functionName: functionSignature,
+          args: [transaction.names, transaction.items, transaction.data],
+        }),
       }
     })
 

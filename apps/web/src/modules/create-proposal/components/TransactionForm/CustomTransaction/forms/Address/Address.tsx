@@ -1,7 +1,7 @@
 import { Flex } from '@zoralabs/zord'
 import axios from 'axios'
-import { isAddress } from 'ethers/lib/utils'
 import React, { useEffect } from 'react'
+import { isAddress } from 'viem'
 
 import {
   initCustomTransaction,

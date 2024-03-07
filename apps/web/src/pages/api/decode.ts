@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
-import { ethers } from 'ethers'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { decodeFunctionData, getAbiItem } from 'viem'
 
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { getContractABIByAddress } from 'src/services/abiService'
@@ -18,16 +18,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const { abi } = await getContractABIByAddress(chainInt as CHAIN_ID, contract)
-    const contractInterface = new ethers.utils.Interface(abi)
-    const decodeResult = contractInterface.parseTransaction({ data: calldata })
+    const decodeResult = decodeFunctionData({ abi: JSON.parse(abi), data: calldata })
+    const functionInfo = getAbiItem({
+      abi: JSON.parse(abi),
+      name: decodeResult.functionName,
+    })
 
-    const args = decodeResult.args.map((item) => item.toString())
-    const argMapping = decodeResult.functionFragment.inputs.reduce(
+    const argMapping = functionInfo.inputs.reduce(
       (last: any, input: any, index: number) => {
         last[input.name] = {
           name: input.name,
           type: input.type,
-          value: args[index],
+          value: decodeResult.args[index]?.toString(),
         }
         return last
       },
@@ -43,10 +45,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(200).json({
       args: argMapping,
-      functionName: decodeResult.functionFragment.name,
-      decoded: args,
+      functionName: decodeResult.functionName,
+      decoded: decodeResult.args.map((x: any) => x.toString()),
     })
   } catch (error) {
+    console.error(error)
+
     if (error instanceof NotFoundError) {
       return res.status(404).json({ error: 'abi not found' })
     }

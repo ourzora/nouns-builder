@@ -1,13 +1,11 @@
-import { Provider } from '@ethersproject/abstract-provider'
-import { ethers } from 'ethers'
+import { Address, PublicClient, isAddress } from 'viem'
 
-import { RPC_URL } from 'src/constants/rpc'
 import { CHAIN_ID } from 'src/typings'
 import { getChainFromLocalStorage } from 'src/utils/getChainFromLocalStorage'
 
-const defaultProvider: Provider = new ethers.providers.JsonRpcProvider(
-  RPC_URL[CHAIN_ID.ETHEREUM]
-)
+import { getProvider } from './provider'
+
+const defaultProvider = getProvider(CHAIN_ID.ETHEREUM)
 
 export type IsValidAddressResult = {
   data: boolean
@@ -15,22 +13,22 @@ export type IsValidAddressResult = {
 }
 
 export async function isValidAddress(
-  address: string,
-  provider: Provider | undefined = defaultProvider
+  address: Address,
+  provider: PublicClient | undefined = defaultProvider
 ): Promise<IsValidAddressResult> {
   try {
-    if (ethers.utils.isAddress(address)) return { data: true }
+    if (isAddress(address)) return { data: true }
 
     const { id: chainId } = getChainFromLocalStorage()
 
     let resolvedName: string | null
 
     if (chainId === CHAIN_ID.ETHEREUM || chainId === CHAIN_ID.SEPOLIA) {
-      resolvedName = await provider?.resolveName(address)
+      resolvedName = await provider?.getEnsName({ address })
     } else {
       const [nameResponse, codeResponse] = await Promise.all([
-        provider?.resolveName(address),
-        provider?.getCode(address),
+        provider?.getEnsName(address),
+        provider?.getBytecode(address),
       ])
 
       if (codeResponse !== '0x')
@@ -49,22 +47,22 @@ export async function isValidAddress(
 }
 
 export async function getEnsAddress(
-  address: string,
-  provider: Provider | undefined = defaultProvider
+  nameOrAddress: string,
+  provider: PublicClient | undefined = defaultProvider
 ) {
   let resolvedName
   try {
-    resolvedName = await provider?.resolveName(address)
+    resolvedName = await provider?.getEnsAddress({ name: nameOrAddress })
   } catch (e) {
     console.log(e)
   }
 
-  return resolvedName ?? address
+  return resolvedName ?? nameOrAddress
 }
 
 export async function getEnsName(
-  address: string,
-  provider: Provider | undefined = defaultProvider
+  address: Address,
+  provider: PublicClient | undefined = defaultProvider
 ) {
-  return await provider?.lookupAddress(address)
+  return await provider?.getEnsName({ address })
 }

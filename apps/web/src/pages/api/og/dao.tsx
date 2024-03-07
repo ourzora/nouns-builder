@@ -1,8 +1,7 @@
 import { ImageResponse } from '@vercel/og'
-import BigNumber from 'bignumber.js'
-import { formatEther } from 'ethers/lib/utils.js'
 import { getFetchableUrl } from 'ipfs-service/src/gateway'
 import { NextRequest } from 'next/server'
+import { formatEther } from 'viem'
 
 import { RPC_URL } from 'src/constants/rpc'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
@@ -48,7 +47,7 @@ const getTreasuryBalance = async (chainId: CHAIN_ID, address: string) => {
   }).then((x) => x.json())
 
   //covert to eth value
-  const eth = BigNumber(formatEther(result))
+  const eth = BigInt(formatEther(result))
   const data = formatCryptoVal(eth)
 
   return data

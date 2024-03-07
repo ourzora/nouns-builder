@@ -1,10 +1,10 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
-import { constants } from 'ethers'
 import React from 'react'
 import { useAccount, useContractRead } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
+import { NULL_ADDRESS } from 'src/constants/addresses'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { tokenAbi } from 'src/data/contract/abis'
 import { useEnsData } from 'src/hooks/useEnsData'
@@ -28,7 +28,7 @@ export const CurrentDelegate = ({ toggleIsEditing }: CurrentDelegateProps) => {
     address: addresses.token,
     chainId: chain.id,
     functionName: 'delegates',
-    args: [signerAddress || constants.AddressZero],
+    args: [signerAddress || NULL_ADDRESS],
     enabled: !!signerAddress,
   })
 

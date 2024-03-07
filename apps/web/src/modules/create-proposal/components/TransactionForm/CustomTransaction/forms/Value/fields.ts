@@ -9,6 +9,7 @@ export const transactionValueFields = [
     type: NUMBER,
     perma: 'ETH',
     helperText: 'Optional',
+    step: 'any',
   },
 ]
 

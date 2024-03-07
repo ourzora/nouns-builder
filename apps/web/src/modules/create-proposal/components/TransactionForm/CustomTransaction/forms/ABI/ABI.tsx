@@ -1,5 +1,4 @@
 import { Flex } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import React from 'react'
 
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
@@ -18,19 +17,13 @@ export const ABI = () => {
     (values: { transactionCustomABI: string }) => {
       try {
         if (customTransaction.address && values.transactionCustomABI) {
-          const contract = new ethers.Contract(
-            customTransaction.address,
-            values.transactionCustomABI || '[]'
-          )
           composeCustomTransaction({
             ...customTransaction,
             address: customTransaction.address,
             customABI: values?.transactionCustomABI,
             contract: {
-              address: contract.address as AddressType,
-              abi: customTransaction.customABI!,
-              fragments: contract.interface.fragments,
-              functions: contract.interface.functions,
+              address: customTransaction.address as AddressType,
+              abi: JSON.parse(customTransaction.customABI!),
             },
           })
         } else {

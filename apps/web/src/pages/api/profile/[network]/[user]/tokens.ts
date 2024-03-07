@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { getAddress } from 'ethers/lib/utils.js'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getAddress } from 'viem'
 
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { MyDaosResponse } from 'src/data/subgraph/requests/daoQuery'

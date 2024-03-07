@@ -1,7 +1,7 @@
 import { Grid, Text } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
+import { formatEther } from 'viem'
 
 import Pagination from 'src/components/Pagination'
 import { ExploreDaosResponse } from 'src/data/subgraph/requests/exploreQueries'
@@ -87,7 +87,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
           <Grid className={exploreGrid}>
             {daos?.map((dao) => {
               const bid = dao.highestBid?.amount ?? undefined
-              const bidInEth = bid ? ethers.utils.formatEther(bid) : undefined
+              const bidInEth = bid ? formatEther(bid) : undefined
 
               return (
                 <DaoCard
