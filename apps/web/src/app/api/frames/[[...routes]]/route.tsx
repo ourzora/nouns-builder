@@ -1,7 +1,7 @@
 /** @jsxImportSource frog/jsx */
 import { Button, Frog, TextInput } from 'frog'
 import { handle } from 'frog/next'
-import { isAddress } from 'viem'
+import { isAddress, parseEther } from 'viem'
 
 import { auctionAbi, governorAbi } from 'src/data/contract/abis'
 import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
@@ -41,18 +41,17 @@ app.transaction('/bid', async (c) => {
     )
       return new Response('Invalid chain id', { status: 400 })
 
-    const bidAmount = amount ? amount : inputText
+    const bidAmount = parseEther(amount ? amount : inputText)
 
     const contract = {
       abi: auctionAbi,
       chainId: `eip155:${chainIdParsed}`,
       to: auctionContract as AddressType,
-    }
+    } as const
 
     if (referral) {
       if (!isAddress(referral)) return new Response('Invalid referral', { status: 400 })
 
-      //@ts-ignore
       return c.contract({
         ...contract,
         functionName: 'createBidWithReferral',
@@ -60,7 +59,6 @@ app.transaction('/bid', async (c) => {
       })
     }
 
-    //@ts-ignore
     return c.contract({
       ...contract,
       functionName: 'createBid',
@@ -93,10 +91,9 @@ app.transaction('/vote', async (c) => {
       abi: governorAbi,
       chainId: `eip155:${chainIdParsed}`,
       to: governorContract as AddressType,
-    }
+    } as const
 
     if (inputText) {
-      //@ts-ignore
       return c.contract({
         ...contract,
         functionName: 'castVoteWithReason',
@@ -104,7 +101,6 @@ app.transaction('/vote', async (c) => {
       })
     }
 
-    //@ts-ignore
     return c.contract({
       ...contract,
       functionName: 'castVote',

@@ -118,8 +118,8 @@ importers:
         specifier: ^6.3.3
         version: 6.5.1(react-dom@18.2.0)(react@18.2.0)
       frog:
-        specifier: ^0.4.7
-        version: 0.4.7(@types/node@18.13.0)(hono@4.0.9)(typescript@5.3.3)
+        specifier: ^0.5.5
+        version: 0.5.5(@types/node@18.13.0)(hono@4.0.9)(typescript@5.3.3)
       graphql:
         specifier: ^16.6.0
         version: 16.6.0
@@ -6914,8 +6914,8 @@ packages:
       '@xtuc/long': 4.2.2
     dev: false
 
-  /@wevm/vercel-og@0.6.11:
-    resolution: {integrity: sha512-TMiWcnKruntlFKE1G1MYZYitNKBbUdJB5U0btf0vjWrBcakQMtBCTRRnD5b1soBeRAUR/n0voVge+CrJbSmbOA==}
+  /@wevm/vercel-og@0.6.12:
+    resolution: {integrity: sha512-gaFbJR7fV7oFega1/8omhpp/cTHWpZkFpuiIaevDil6HroQYhX1RBFNse3uYeSbnhb3pHnAm85tjYuOi/wB6EQ==}
     engines: {node: '>=16'}
     dependencies:
       '@resvg/resvg-wasm': 2.4.0
@@ -10387,8 +10387,8 @@ packages:
       tslib: 2.5.0
     dev: false
 
-  /frog@0.4.7(@types/node@18.13.0)(hono@4.0.9)(typescript@5.3.3):
-    resolution: {integrity: sha512-npsn+b/etKHMWfA+EdO34TR580+fAFTMAQwyFEiISQKcX5TtomxkRBv14vb1lmyORk1q8/TFwBq3111dFcbUvw==}
+  /frog@0.5.5(@types/node@18.13.0)(hono@4.0.9)(typescript@5.3.3):
+    resolution: {integrity: sha512-GTbqbf3vcftFxG/kcjJv0568n46JWuwRU67Rkl/4ggtRvxu8SFfKlM0oalMpJDHriwpEgLbb0vVscezJva+Xrg==}
     hasBin: true
     peerDependencies:
       hono: ^4
@@ -10409,8 +10409,9 @@ packages:
       fs-extra: 11.2.0
       happy-dom: 13.6.2
       hono: 4.0.9
-      hono-og: 0.0.21(hono@4.0.9)
+      hono-og: 0.0.22(hono@4.0.9)
       jose: 5.2.2
+      lz-string: 1.5.0
       path-browserify: 1.0.1
       qrcode: 1.5.3
       typescript: 5.3.3
@@ -11077,13 +11078,13 @@ packages:
       react-is: 16.13.1
     dev: false
 
-  /hono-og@0.0.21(hono@4.0.9):
-    resolution: {integrity: sha512-DWU58MIoDAPznvqiZ3DPuk4VzQBBFiCF4QTNGG7Z9gUwqGQUnIVnYoWlswPk5laPJpFJbVjJ9Whllw2NTCE+OA==}
+  /hono-og@0.0.22(hono@4.0.9):
+    resolution: {integrity: sha512-fq04Nhhbtyto4WL8r9+ozUB9e0PKUD/G+bdI7+NkU7+H4ZqkiTjTSAg94FDq1Kdz9Bql4ZaqyOkGo7cmVFo84g==}
     peerDependencies:
       hono: '>=3'
     dependencies:
       '@vercel/og': 0.6.2
-      '@wevm/vercel-og': 0.6.11
+      '@wevm/vercel-og': 0.6.12
       hono: 4.0.9
       workers-og: 0.0.23
     dev: false
@@ -12717,6 +12718,11 @@ packages:
     resolution: {integrity: sha512-0ckx7ZHRPqb0oUm8zNr+90mtf9DQB60H1wMCjBtfi62Kl3a7JbHob6gA2bC+xRvZoOL+1hzUK8jeuEIQE8svEQ==}
     hasBin: true
     dev: true
+
+  /lz-string@1.5.0:
+    resolution: {integrity: sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==}
+    hasBin: true
+    dev: false
 
   /magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
