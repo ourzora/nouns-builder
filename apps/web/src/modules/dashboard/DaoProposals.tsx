@@ -28,6 +28,7 @@ export const DaoProposals = ({
   }, [daoImage])
 
   const { isGovernanceDelayed } = useDelayedGovernance({
+    tokenAddress: tokenAddress,
     governorAddress: governorAddress,
     chainId,
   })

@@ -65,6 +65,7 @@ export const Activity: React.FC = () => {
   })
 
   const { isGovernanceDelayed, delayedUntilTimestamp } = useDelayedGovernance({
+    tokenAddress: addresses?.token,
     governorAddress: addresses?.governor,
     chainId: chain.id,
   })

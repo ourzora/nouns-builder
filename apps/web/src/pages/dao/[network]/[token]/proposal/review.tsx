@@ -41,6 +41,7 @@ const ReviewProposalPage: NextPageWithLayout = () => {
 
   const { isGovernanceDelayed } = useDelayedGovernance({
     chainId: chain.id,
+    tokenAddress: addresses?.token,
     governorAddress: addresses?.governor,
   })
 
