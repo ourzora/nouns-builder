@@ -32,7 +32,8 @@ app.transaction('/bid', async (c) => {
     const { chainId, auctionContract, amount, referral } = req.query()
     const chainIdParsed = parseInt(chainId)
 
-    let bidAmount
+    let bidAmount: bigint | undefined
+
     if (amount) bidAmount = parseEther(amount)
     if (inputText) bidAmount = parseEther(inputText)
 
@@ -57,14 +58,16 @@ app.transaction('/bid', async (c) => {
       return c.contract({
         ...contract,
         functionName: 'createBidWithReferral',
-        args: [BigInt(bidAmount), referral as AddressType],
+        value: bidAmount,
+        args: [bidAmount, referral as AddressType],
       })
     }
 
     return c.contract({
       ...contract,
       functionName: 'createBid',
-      args: [BigInt(bidAmount)],
+      value: bidAmount,
+      args: [bidAmount],
     })
   } catch (err) {
     return new Response((err as Error).message, { status: 500 })
