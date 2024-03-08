@@ -1,5 +1,5 @@
 /** @jsxImportSource frog/jsx */
-import { Button, Frog, TextInput } from 'frog'
+import { Frog } from 'frog'
 import { handle } from 'frog/next'
 import { isAddress, parseEther } from 'viem'
 
@@ -8,21 +8,6 @@ import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
 
 const app = new Frog({
   basePath: '/api/frames',
-})
-
-app.frame('/place-bid', async (c) => {
-  return c.res({
-    image: (
-      <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>Place a bid</div>
-    ),
-    intents: [
-      <TextInput placeholder="Enter your bid..." />,
-      //@ts-ignore
-      <Button.Transaction target="/bid?chainId=8453&auctionContract=0x8d133f423da7514c0cb5e27ef04afccd85115626&tokenId=9">
-        Bid
-      </Button.Transaction>,
-    ],
-  })
 })
 
 app.transaction('/bid', async (c) => {
@@ -38,7 +23,7 @@ app.transaction('/bid', async (c) => {
     let bidAmount: bigint | undefined
 
     if (amount) bidAmount = parseEther(amount)
-    if (inputText) bidAmount = parseEther(inputText)
+    else if (inputText) bidAmount = parseEther(inputText)
 
     if (!bidAmount) return new Response('Invalid bid amount', { status: 400 })
 
@@ -80,12 +65,17 @@ app.transaction('/bid', async (c) => {
 app.transaction('/vote', async (c) => {
   try {
     const { inputText, req } = c
-    const { chainId, governorContract, support, proposalId } = req.query()
+    const { chainId, governorContract, support, proposalId, reason } = req.query()
     const chainIdParsed = parseInt(chainId)
+
+    let reasonText
+    if (reason) reasonText = reason
+    else if (inputText) reasonText = inputText
 
     const supportParsed = BigInt(support)
 
-    if (supportParsed !== 1n && supportParsed !== 2n && supportParsed !== 3n)
+    // 0 = Against, 1 = For, 2 = Abstain
+    if (supportParsed !== 0n && supportParsed !== 1n && supportParsed !== 2n)
       return new Response('Invalid support value', { status: 400 })
 
     if (
@@ -101,11 +91,11 @@ app.transaction('/vote', async (c) => {
       to: governorContract as AddressType,
     } as const
 
-    if (inputText) {
+    if (reasonText) {
       return c.contract({
         ...contract,
         functionName: 'castVoteWithReason',
-        args: [proposalId as BytesType, supportParsed, inputText],
+        args: [proposalId as BytesType, supportParsed, reasonText],
       })
     }
 
