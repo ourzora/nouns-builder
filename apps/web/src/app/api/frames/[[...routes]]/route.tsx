@@ -1,5 +1,5 @@
 /** @jsxImportSource frog/jsx */
-import { Button, Frog } from 'frog'
+import { Button, Frog, TextInput } from 'frog'
 import { handle } from 'frog/next'
 import { isAddress } from 'viem'
 
@@ -16,6 +16,7 @@ app.frame('/place-bid', async (c) => {
       <div style={{ color: 'white', display: 'flex', fontSize: 60 }}>Place a bid</div>
     ),
     intents: [
+      <TextInput placeholder="Enter your bid..." />,
       //@ts-ignore
       <Button.Transaction target="/bid?chainId=6453&auctionContract=0x8d133f423da7514c0cb5e27ef04afccd85115626">
         Bid
