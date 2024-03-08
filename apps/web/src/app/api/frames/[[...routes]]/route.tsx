@@ -18,7 +18,7 @@ app.frame('/place-bid', async (c) => {
     intents: [
       <TextInput placeholder="Enter your bid..." />,
       //@ts-ignore
-      <Button.Transaction target="/bid?chainId=6453&auctionContract=0x8d133f423da7514c0cb5e27ef04afccd85115626">
+      <Button.Transaction target="/bid?chainId=8453&auctionContract=0x8d133f423da7514c0cb5e27ef04afccd85115626">
         Bid
       </Button.Transaction>,
     ],
@@ -32,7 +32,11 @@ app.transaction('/bid', async (c) => {
     const { chainId, auctionContract, amount, referral } = req.query()
     const chainIdParsed = parseInt(chainId)
 
-    if (!amount || !inputText) return new Response('Invalid bid amount', { status: 400 })
+    let bidAmount
+    if (amount) bidAmount = parseEther(amount)
+    if (inputText) bidAmount = parseEther(inputText)
+
+    if (!bidAmount) return new Response('Invalid bid amount', { status: 400 })
 
     if (
       chainIdParsed !== CHAIN_ID.OPTIMISM &&
@@ -40,8 +44,6 @@ app.transaction('/bid', async (c) => {
       chainIdParsed !== CHAIN_ID.BASE
     )
       return new Response('Invalid chain id', { status: 400 })
-
-    const bidAmount = parseEther(amount ? amount : inputText)
 
     const contract = {
       abi: auctionAbi,
