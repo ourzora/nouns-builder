@@ -18,7 +18,7 @@ app.frame('/place-bid', async (c) => {
     intents: [
       <TextInput placeholder="Enter your bid..." />,
       //@ts-ignore
-      <Button.Transaction target="/bid?chainId=8453&auctionContract=0x8d133f423da7514c0cb5e27ef04afccd85115626">
+      <Button.Transaction target="/bid?chainId=8453&auctionContract=0x8d133f423da7514c0cb5e27ef04afccd85115626&tokenId=9">
         Bid
       </Button.Transaction>,
     ],
@@ -27,9 +27,12 @@ app.frame('/place-bid', async (c) => {
 
 app.transaction('/bid', async (c) => {
   try {
-    console.log('here')
     const { inputText, req } = c
-    const { chainId, auctionContract, amount, referral } = req.query()
+    const { chainId, auctionContract, tokenId, amount, referral } = req.query()
+
+    if (!tokenId) return new Response('Invalid tokenId', { status: 400 })
+
+    const tokenIdParsed = BigInt(tokenId)
     const chainIdParsed = parseInt(chainId)
 
     let bidAmount: bigint | undefined
@@ -59,7 +62,7 @@ app.transaction('/bid', async (c) => {
         ...contract,
         functionName: 'createBidWithReferral',
         value: bidAmount,
-        args: [bidAmount, referral as AddressType],
+        args: [tokenIdParsed, referral as AddressType],
       })
     }
 
@@ -67,7 +70,7 @@ app.transaction('/bid', async (c) => {
       ...contract,
       functionName: 'createBid',
       value: bidAmount,
-      args: [bidAmount],
+      args: [tokenIdParsed],
     })
   } catch (err) {
     return new Response((err as Error).message, { status: 500 })
