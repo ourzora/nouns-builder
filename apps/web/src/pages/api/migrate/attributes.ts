@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { Address } from 'viem'
 
 import { getMetadataAttributes } from 'src/data/contract/requests/getMetadataAttributes'
+import 'src/data/contract/server.config'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
