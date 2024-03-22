@@ -96,7 +96,7 @@ Add the following variables to `apps/web/.env.local`:
 
 ```
 #alchemy
-NEXT_PUBLIC_ALCHEMY_ID=<ALCHEMY_API_KEY>
+NEXT_PUBLIC_TENDERLY_RPC_KEY=<ALCHEMY_API_KEY>
 
 
 #tenderly
