@@ -36,12 +36,11 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
       return rawData[1]
     }
 
-    if (!customTransaction?.contract?.abi) return
+    const abi = customTransaction?.contract?.abi || customTransaction?.customABI
 
-    const contract = new ethers.Contract(
-      customTransaction?.address,
-      customTransaction?.contract?.abi
-    )
+    if (!abi) return
+
+    const contract = new ethers.Contract(customTransaction?.address, abi)
 
     const args: [string, string][] = customTransaction.arguments
 
