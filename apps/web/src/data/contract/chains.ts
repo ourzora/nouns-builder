@@ -9,7 +9,6 @@ import {
   zora,
   zoraSepolia,
 } from 'wagmi/chains'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 
 import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
@@ -29,9 +28,6 @@ export const L2_CHAINS = PUBLIC_IS_TESTNET
 const { chains, publicClient } = configureChains(
   [...TESTNET_CHAINS, ...MAINNET_CHAINS],
   [
-    alchemyProvider({
-      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID as string,
-    }),
     jsonRpcProvider({
       rpc: (chain) => ({
         http: RPC_URL[chain.id as CHAIN_ID],
