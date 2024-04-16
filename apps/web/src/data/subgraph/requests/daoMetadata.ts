@@ -13,7 +13,7 @@ export const encodedDaoMetadataRequest = async (
   if (!L1_CHAINS.find((x) => x === chain)) throw new Error('Only L1 Chains are supported')
 
   const res = await SDK.connect(chain)
-    .daoMetadata({ tokenAddress, first: 1000 })
+    .daoMetadata({ tokenAddress: tokenAddress.toLowerCase(), first: 1000 })
     .then((x) => x.dao?.metadataProperties)
 
   if (!res) throw new Error('No metadata found')

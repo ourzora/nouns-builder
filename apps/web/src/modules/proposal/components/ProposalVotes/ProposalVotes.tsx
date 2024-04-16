@@ -38,7 +38,7 @@ export const ProposalVotes: React.FC<ProposalVotesProps> = ({ proposal }) => {
             tokenContract: addresses.token?.toLowerCase(),
             mintedAt_lt: proposal.timeCreated,
           },
-          orderBy: Token_OrderBy.MintedAt,
+          orderBy: Token_OrderBy.TokenId,
           orderDirection: OrderDirection.Desc,
           first: 1,
         })

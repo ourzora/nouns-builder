@@ -2,7 +2,6 @@ import { Box, Flex, Text } from '@zoralabs/zord'
 import Link from 'next/link'
 import React from 'react'
 
-import { MadeWithZoraFooter } from './MadeWithZoraFooter'
 import { footerContent, footerLink, footerWrapper } from './Nav.styles.css'
 
 export const Footer = () => {
@@ -79,8 +78,6 @@ export const Footer = () => {
               </Flex>
             </Flex>
           </Box>
-
-          <MadeWithZoraFooter backgroundColor="background1" color="text3" mb={'x0'} />
         </Box>
       </Box>
     </Box>
