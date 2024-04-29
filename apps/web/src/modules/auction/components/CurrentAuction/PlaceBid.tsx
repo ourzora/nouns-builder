@@ -6,6 +6,7 @@ import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'w
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
+import { Icon } from 'src/components/Icon/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -69,7 +70,7 @@ export const PlaceBid = ({
     addresses.token
       ? [SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token]
       : undefined,
-    () => averageWinningBid(chain.id, addresses.token as Address)
+    () => averageWinningBid(chain.id, addresses.token as Address),
   )
 
   const isMinBid = Number(bidAmount) >= minBidAmount
@@ -122,11 +123,11 @@ export const PlaceBid = ({
       if (tx?.hash) await waitForTransaction({ hash: tx.hash })
 
       await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.token, tokenId], () =>
-        getBids(chain.id, addresses.token!, tokenId)
+        getBids(chain.id, addresses.token!, tokenId),
       )
 
       await mutate([SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token], () =>
-        averageWinningBid(chain.id, addresses.token as Address)
+        averageWinningBid(chain.id, addresses.token as Address),
       )
     } catch (error) {
       console.error(error)
@@ -191,6 +192,25 @@ export const PlaceBid = ({
           >
             Place bid
           </ContractButton>
+          {chain.id !== 1 ? (
+            <Button
+              ml="x2"
+              onClick={async () => {
+                const baseUrl = `https://nouns.build/dao/${chain.name.toLowerCase()}/${addresses.token}`
+                if (address === undefined) {
+                  return
+                }
+                const params = new URLSearchParams({
+                  referral: address.toString(),
+                }).toString()
+                const fullUrl = `${baseUrl}?${params}`
+
+                await navigator.clipboard.writeText(fullUrl)
+              }}
+            >
+              <Icon size="sm" fill="neutral" id="external-16" />
+            </Button>
+          ) : null}
         </Fragment>
       ) : (
         <Button className={auctionActionButtonVariants['bidding']} disabled>
