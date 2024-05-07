@@ -1,5 +1,5 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
-import React, { Fragment, memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import { formatEther, parseEther } from 'viem'
 import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
