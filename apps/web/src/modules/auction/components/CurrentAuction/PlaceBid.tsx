@@ -165,7 +165,7 @@ export const PlaceBid = ({
       ) : null}
 
       {!creatingBid ? (
-        <Fragment>
+        <Flex wrap="wrap">
           <form className={bidForm}>
             <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
               <input
@@ -183,35 +183,38 @@ export const PlaceBid = ({
               </Box>
             </Box>
           </form>
-
-          <ContractButton
-            className={auctionActionButtonVariants['bid']}
-            handleClick={handleCreateBid}
-            disabled={address && isValidChain ? !isValidBid : false}
-            mt={{ '@initial': 'x2', '@768': 'x0' }}
-          >
-            Place bid
-          </ContractButton>
-          {chain.id !== 1 ? (
-            <Button
-              ml="x2"
-              onClick={async () => {
-                const baseUrl = `https://nouns.build/dao/${chain.name.toLowerCase()}/${addresses.token}`
-                if (address === undefined) {
-                  return
-                }
-                const params = new URLSearchParams({
-                  referral: address.toString(),
-                }).toString()
-                const fullUrl = `${baseUrl}?${params}`
-
-                await navigator.clipboard.writeText(fullUrl)
-              }}
+          <Flex mt="x2">
+            <ContractButton
+              className={auctionActionButtonVariants['bid']}
+              handleClick={handleCreateBid}
+              disabled={address && isValidChain ? !isValidBid : false}
+              mt={{ '@initial': 'x2', '@768': 'x0' }}
             >
-              <Icon size="sm" fill="neutral" id="external-16" />
-            </Button>
-          ) : null}
-        </Fragment>
+              Place bid
+            </ContractButton>
+            {chain.id !== 1 ? (
+              <Button
+                ml="x2"
+                mt={{ '@initial': 'x2', '@768': 'x0' }}
+                onClick={async () => {
+                  const baseUrl = `https://nouns.build/dao/${chain.name.toLowerCase()}/${addresses.token}`
+                  if (address === undefined) {
+                    return
+                  }
+                  const params = new URLSearchParams({
+                    referral: address.toString(),
+                  }).toString()
+                  const fullUrl = `${baseUrl}?${params}`
+
+                  await navigator.clipboard.writeText(fullUrl)
+                }}
+              >
+                Refer
+                <Icon size="md" fill="neutral" id="copy" />
+              </Button>
+            ) : null}
+          </Flex>
+        </Flex>
       ) : (
         <Button className={auctionActionButtonVariants['bidding']} disabled>
           placing {bidAmount} ETH bid
