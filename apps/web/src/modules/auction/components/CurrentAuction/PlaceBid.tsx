@@ -1,9 +1,10 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
-import React, { memo, useEffect, useState } from 'react'
+import React, { Fragment, memo, useEffect, useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import { formatEther, parseEther } from 'viem'
 import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { PopUp } from '@zoralabs/zord'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { Icon } from 'src/components/Icon/Icon'
@@ -165,7 +166,7 @@ export const PlaceBid = ({
       ) : null}
 
       {!creatingBid ? (
-        <Flex wrap="wrap">
+        <Fragment>
           <form className={bidForm}>
             <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
               <input
@@ -183,38 +184,37 @@ export const PlaceBid = ({
               </Box>
             </Box>
           </form>
-          <Flex mt="x2">
+          <ContractButton
+            className={auctionActionButtonVariants['bid']}
+            handleClick={handleCreateBid}
+            disabled={address && isValidChain ? !isValidBid : false}
+            mt={{ '@initial': 'x2', '@768': 'x0' }}
+          >
+            Place bid
+          </ContractButton>
+          {chain.id !== 1 ? (
             <ContractButton
-              className={auctionActionButtonVariants['bid']}
-              handleClick={handleCreateBid}
-              disabled={address && isValidChain ? !isValidBid : false}
+            className={auctionActionButtonVariants["bid"]}
+              ml="x2"
               mt={{ '@initial': 'x2', '@768': 'x0' }}
-            >
-              Place bid
-            </ContractButton>
-            {chain.id !== 1 ? (
-              <Button
-                ml="x2"
-                mt={{ '@initial': 'x2', '@768': 'x0' }}
-                onClick={async () => {
-                  const baseUrl = `https://nouns.build/dao/${chain.name.toLowerCase()}/${addresses.token}`
-                  if (address === undefined) {
-                    return
-                  }
-                  const params = new URLSearchParams({
-                    referral: address.toString(),
-                  }).toString()
-                  const fullUrl = `${baseUrl}?${params}`
+              handleClick={async () => {
+                const baseUrl = `https://nouns.build/dao/${chain.name.toLowerCase()}/${addresses.token}`
+                if (address === undefined) {
+                  await navigator.clipboard.writeText(baseUrl)
+                  return
+                }
+                const params = new URLSearchParams({
+                  referral: address.toString(),
+                })
+                const fullUrl = `${baseUrl}?${params}`
 
-                  await navigator.clipboard.writeText(fullUrl)
-                }}
-              >
-                Refer
-                <Icon size="md" fill="neutral" id="copy" />
-              </Button>
-            ) : null}
-          </Flex>
-        </Flex>
+                await navigator.clipboard.writeText(fullUrl)
+              }}
+            >
+              <Icon size="md" id="share" />
+            </ContractButton>
+          ) : null}
+        </Fragment>
       ) : (
         <Button className={auctionActionButtonVariants['bidding']} disabled>
           placing {bidAmount} ETH bid
@@ -225,3 +225,4 @@ export const PlaceBid = ({
 }
 
 export const MemoizedPlaceBid = memo(PlaceBid)
+
