@@ -1,10 +1,9 @@
-import { Box, Button, Flex } from '@zoralabs/zord'
+import { Box, Button, Flex, PopUp, Text } from '@zoralabs/zord'
 import React, { Fragment, memo, useEffect, useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import { formatEther, parseEther } from 'viem'
 import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
-import { PopUp } from '@zoralabs/zord'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { Icon } from 'src/components/Icon/Icon'
@@ -22,6 +21,7 @@ import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 import { WarningModal } from './WarningModal'
 import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
+import Link from 'next/link'
 
 interface PlaceBidProps {
   chain: Chain
@@ -145,6 +145,8 @@ export const PlaceBid = ({
 
   const isValidBid = bidAmount && isMinBid
   const isValidChain = wagmiChain?.id === chain.id
+  const [showTooltip, setShowTooltip] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   return (
     <Flex
@@ -194,13 +196,23 @@ export const PlaceBid = ({
             Place bid
           </ContractButton>
           {chain.id !== 1 ? (
-            <ContractButton
-            className={auctionActionButtonVariants["bid"]}
+        <Fragment>
+        <Box
+        cursor="pointer"
+        style={{ zIndex: 102 }}
+        onMouseOver={() => setShowTooltip(true)}
+        onMouseLeave={() => {
+          setShowTooltip(false)
+          setTimeout(() => {
+            setCopied(false)
+          }, 500);
+        }}
+      >
+        <ContractButton
+              className={auctionActionButtonVariants["bid"]}
               ml="x2"
               mt={{ '@initial': 'x2', '@768': 'x0' }}
-              
               handleClick={async () => {
-                console.log(PUBLIC_IS_TESTNET)
                 const network = PUBLIC_IS_TESTNET ? 'https://testnet.nouns.build' : "https://nouns.build"
                 const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${addresses.token}`
                 if (address === undefined) {
@@ -213,10 +225,22 @@ export const PlaceBid = ({
                 const fullUrl = `${baseUrl}?${params}`
 
                 await navigator.clipboard.writeText(fullUrl)
+                setCopied(true)
+                
               }}
             >
               <Icon size="md" id="share" />
+    
             </ContractButton>
+      </Box>
+      <PopUp open={showTooltip} trigger={<></>} placement='top'>
+       <Text align="center">{copied ? "Copied" : "Copy Referral Link"}</Text>
+      </PopUp>
+      
+        </Fragment>
+          
+            
+            
           ) : null}
         </Fragment>
       ) : (
