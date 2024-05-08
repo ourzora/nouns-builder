@@ -21,6 +21,7 @@ import { formatCryptoVal } from 'src/utils/numbers'
 import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 import { WarningModal } from './WarningModal'
+import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
 
 interface PlaceBidProps {
   chain: Chain
@@ -197,8 +198,11 @@ export const PlaceBid = ({
             className={auctionActionButtonVariants["bid"]}
               ml="x2"
               mt={{ '@initial': 'x2', '@768': 'x0' }}
+              
               handleClick={async () => {
-                const baseUrl = `https://nouns.build/dao/${chain.name.toLowerCase()}/${addresses.token}`
+                console.log(PUBLIC_IS_TESTNET)
+                const network = PUBLIC_IS_TESTNET ? 'https://testnet.nouns.build' : "https://nouns.build"
+                const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${addresses.token}`
                 if (address === undefined) {
                   await navigator.clipboard.writeText(baseUrl)
                   return
