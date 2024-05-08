@@ -4,7 +4,6 @@ import useSWR, { useSWRConfig } from 'swr'
 import { formatEther, parseEther } from 'viem'
 import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
-
 import { ContractButton } from 'src/components/ContractButton'
 import { Icon } from 'src/components/Icon/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
@@ -21,7 +20,6 @@ import { useMinBidIncrement } from '../../hooks'
 import { auctionActionButtonVariants, bidForm, bidInput } from '../Auction.css'
 import { WarningModal } from './WarningModal'
 import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
-import Link from 'next/link'
 
 interface PlaceBidProps {
   chain: Chain
@@ -232,14 +230,11 @@ export const PlaceBid = ({
               <Icon size="md" id="share" />
     
             </ContractButton>
-      </Box>
-      <PopUp open={showTooltip} trigger={<></>} placement='top'>
-       <Text align="center">{copied ? "Copied" : "Copy Referral Link"}</Text>
-      </PopUp>
-      
-        </Fragment>
-          
-            
+          </Box>
+          <PopUp open={showTooltip} trigger={<></>} placement='top'>
+            <Text align="center">{copied ? "Copied" : "Copy Referral Link"}</Text>
+          </PopUp>
+          </Fragment> 
             
           ) : null}
         </Fragment>
