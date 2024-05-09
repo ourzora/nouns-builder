@@ -35,6 +35,7 @@ import Play from './assets/play.svg'
 import Plus from './assets/plus.svg'
 import Refresh from './assets/refresh.svg'
 import ResumeTemplate from './assets/resume-template.svg'
+import Share from './assets/share.svg'
 import Trash from './assets/trash.svg'
 import Twitter from './assets/twitter.svg'
 import Warning16 from './assets/warning-16.svg'
@@ -80,6 +81,7 @@ export const icons = {
   resumeTemplate: ResumeTemplate,
   trash: Trash,
   twitter: Twitter,
+  share: Share,
   warning: Warning,
   'warning-16': Warning16,
 }
