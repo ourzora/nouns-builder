@@ -116,6 +116,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const collectionAddress = context?.params?.token as AddressType
   const network = context?.params?.network
   const tab = context?.query?.tab as string
+  const referral = context?.query?.referral as string
 
   const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
 
@@ -164,11 +165,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       }
     }
 
+    if (!tab && !referral) {
+      return {
+        redirect: {
+          destination: `/dao/${network}/${collectionAddress}/${latestTokenId}`,
+          permanent: false,
+        },
+      }
+    }
+
+    const params = new URLSearchParams()
+    if (tab) params.set('tab', tab)
+    if (referral) params.set('referral', referral)
+
     return {
       redirect: {
-        destination: `/dao/${network}/${collectionAddress}/${latestTokenId}${
-          tab ? `?tab=${tab}` : ''
-        }`,
+        destination: `/dao/${network}/${collectionAddress}/${latestTokenId}?${params.toString()}`,
         permanent: false,
       },
     }

@@ -36,7 +36,12 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
       return rawData[1]
     }
 
-    if (!customTransaction?.contract?.abi) return
+    const abi =
+      customTransaction?.contract?.abi || customTransaction?.customABI
+        ? JSON.parse(customTransaction?.customABI!)
+        : undefined
+
+    if (!abi) return
 
     const args: [string, string][] = customTransaction.arguments
 
@@ -72,7 +77,7 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
 
     try {
       return encodeFunctionData({
-        abi: customTransaction?.contract?.abi,
+        abi: abi,
         functionName: customTransaction?.function.name,
         args: values,
       })

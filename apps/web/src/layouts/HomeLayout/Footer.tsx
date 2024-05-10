@@ -4,7 +4,6 @@ import React from 'react'
 
 import { Icon } from 'src/components/Icon'
 
-import { MadeWithZoraFooter } from '../DefaultLayout/MadeWithZoraFooter'
 import {
   footerHeading,
   footerLeftWrapper,
@@ -105,11 +104,6 @@ export const Footer = () => {
           </Grid>
         </Stack>
       </Flex>
-      <MadeWithZoraFooter
-        backgroundColor={'primary'}
-        color={'onAccent'}
-        mb={{ '@initial': 'x4', '@768': 'x8' }}
-      />
     </Stack>
   )
 }

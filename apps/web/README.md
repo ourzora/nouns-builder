@@ -48,13 +48,13 @@ Nouns Builder currently only supports two networks: `mainnet` and `goerli testne
 You can swap out the environment variables as defined below to run against mainnnet or testnet locally.
 
 ```
-# the default chain id defined in .env, to run against testnet
-NEXT_PUBLIC_ALCHEMY_ID=<TESTNET_ALCHEMY_API_KEY>
-NEXT_PUBLIC_CHAIN_ID=5
+# the default network type is defined in .env, to run against testnet
+NEXT_PUBLIC_TENDERLY_RPC_KEY=<TENDERLY_RPC_API_KEY>
+NEXT_PUBLIC_NETWORK_TYPE="testnet"
 
 # to run against mainnet locally
-NEXT_PUBLIC_ALCHEMY_ID=<MAINNET_ALCHEMY_API_KEY>
-NEXT_PUBLIC_CHAIN_ID=1
+NEXT_PUBLIC_TENDERLY_RPC_KEY=<TENDERLY_RPC_API_KEY>
+NEXT_PUBLIC_NETWORK_TYPE="mainnet"
 ```
 
 ### Writing Tests

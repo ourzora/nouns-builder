@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from '@zoralabs/zord'
+import { Box, Button, Flex, PopUp, Text } from '@zoralabs/zord'
 import React, { Fragment, memo, useEffect, useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
 import { formatEther, parseEther } from 'viem'
@@ -6,7 +6,9 @@ import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'w
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
+import { Icon } from 'src/components/Icon/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { PUBLIC_IS_TESTNET } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import { averageWinningBid } from 'src/data/subgraph/requests/averageWinningBid'
@@ -142,6 +144,8 @@ export const PlaceBid = ({
 
   const isValidBid = bidAmount && isMinBid
   const isValidChain = wagmiChain?.id === chain.id
+  const [showTooltip, setShowTooltip] = useState(false)
+  const [copied, setCopied] = useState(false)
 
   return (
     <Flex
@@ -164,7 +168,7 @@ export const PlaceBid = ({
       ) : null}
 
       {!creatingBid ? (
-        <Fragment>
+        <Flex wrap="wrap">
           <form className={bidForm}>
             <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
               <input
@@ -182,16 +186,62 @@ export const PlaceBid = ({
               </Box>
             </Box>
           </form>
+          <Flex w="100%" wrap="wrap" mt="x2">
+            <ContractButton
+              className={auctionActionButtonVariants['bid']}
+              handleClick={handleCreateBid}
+              disabled={address && isValidChain ? !isValidBid : false}
+              mt={{ '@initial': 'x2', '@768': 'x0' }}
+            >
+              Place bid
+            </ContractButton>
+            {chain.id !== 1 ? (
+              <Fragment>
+                <Box
+                  cursor="pointer"
+                  style={{ zIndex: 102 }}
+                  onMouseOver={() => setShowTooltip(true)}
+                  onMouseLeave={() => {
+                    setShowTooltip(false)
+                    setTimeout(() => {
+                      setCopied(false)
+                    }, 500)
+                  }}
+                >
+                  <ContractButton
+                    className={auctionActionButtonVariants['bid']}
+                    ml="x2"
+                    mt={{ '@initial': 'x2', '@768': 'x0' }}
+                    handleClick={async () => {
+                      const network = PUBLIC_IS_TESTNET
+                        ? 'https://testnet.nouns.build'
+                        : 'https://nouns.build'
+                      const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${
+                        addresses.token
+                      }`
+                      if (address === undefined) {
+                        await navigator.clipboard.writeText(baseUrl)
+                        return
+                      }
+                      const params = new URLSearchParams({
+                        referral: address.toString(),
+                      })
+                      const fullUrl = `${baseUrl}?${params}`
 
-          <ContractButton
-            className={auctionActionButtonVariants['bid']}
-            handleClick={handleCreateBid}
-            disabled={address && isValidChain ? !isValidBid : false}
-            mt={{ '@initial': 'x2', '@768': 'x0' }}
-          >
-            Place bid
-          </ContractButton>
-        </Fragment>
+                      await navigator.clipboard.writeText(fullUrl)
+                      setCopied(true)
+                    }}
+                  >
+                    <Icon size="md" id="share" />
+                  </ContractButton>
+                </Box>
+                <PopUp open={showTooltip} trigger={<></>} placement="top">
+                  <Text align="center">{copied ? 'Copied' : 'Copy Referral Link'}</Text>
+                </PopUp>
+              </Fragment>
+            ) : null}
+          </Flex>
+        </Flex>
       ) : (
         <Button className={auctionActionButtonVariants['bidding']} disabled>
           placing {bidAmount} ETH bid

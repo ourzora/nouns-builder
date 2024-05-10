@@ -4,6 +4,7 @@ import { readContract } from 'wagmi/actions'
 import { L2_MIGRATION_DEPLOYER, NULL_ADDRESS } from 'src/constants/addresses'
 import { L2DeployerABI } from 'src/data/contract/abis/L2MigrationDeployer'
 import { L2_CHAINS } from 'src/data/contract/chains'
+import 'src/data/contract/server.config'
 import { AddressType, CHAIN_ID } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
 

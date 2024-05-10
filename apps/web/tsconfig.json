@@ -1,5 +1,7 @@
 {
-  "exclude": ["node_modules"],
+  "exclude": [
+    "node_modules"
+  ],
   "extends": "tsconfig/nextjs.json",
   "compilerOptions": {
     "strict": true,
@@ -8,13 +10,21 @@
     "noUnusedLocals": false,
     "skipLibCheck": true,
     "noUnusedParameters": false,
-    "types": ["vitest/globals"]
+    "types": [
+      "vitest/globals"
+    ],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "typings",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "node_modules/eslint-plugin-react/lib/types.d.ts"
+    "node_modules/eslint-plugin-react/lib/types.d.ts",
+    ".next/types/**/*.ts"
   ]
 }
