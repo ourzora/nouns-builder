@@ -1,8 +1,14 @@
 import { Box, Flex, atoms } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import { getFetchableUrl } from 'ipfs-service'
 import React, { useState } from 'react'
-import { getAddress, parseEther } from 'viem'
+import {
+  decodeEventLog,
+  encodeAbiParameters,
+  getAddress,
+  parseAbiParameters,
+  parseEther,
+  toHex,
+} from 'viem'
 import { useAccount, useContractRead } from 'wagmi'
 import {
   WriteContractUnpreparedArgs,
@@ -103,22 +109,21 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     vestExpiry: BigInt(Math.floor(new Date(endDate).getTime() / 1000)),
   }))
 
-  const abiCoder = new ethers.utils.AbiCoder()
-  const tokenParamsHex = abiCoder.encode(
-    ['string', 'string', 'string', 'string', 'string', 'string'],
+  const tokenParamsHex = encodeAbiParameters(
+    parseAbiParameters(
+      'string name, string symbol, string description, string daoImage, string daoWebsite, string baseRenderer'
+    ),
     [
       sanitizeStringForJSON(general?.daoName),
       general?.daoSymbol.replace('$', ''),
       sanitizeStringForJSON(setUpArtwork?.projectDescription),
-      general?.daoAvatar,
+      general?.daoAvatar || '',
       sanitizeStringForJSON(general?.daoWebsite || ''),
       'https://api.zora.co/renderer/stack-images',
     ]
   )
 
-  const tokenParams = {
-    initStrings: ethers.utils.hexlify(tokenParamsHex) as AddressType,
-  }
+  const tokenParams = { initStrings: toHex(tokenParamsHex) as AddressType }
 
   const auctionParams = {
     reservePrice: auctionSettings.auctionReservePrice
@@ -213,8 +218,6 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       return
     }
 
-    const managerInterface = new ethers.utils.Interface(managerAbi)
-
     //keccak256 hashed value of DAODeployed(address,address,address,address,address)
     const deployEvent = transaction?.logs.find(
       (log) =>
@@ -224,9 +227,11 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
 
     let parsedEvent
     try {
-      parsedEvent = managerInterface.parseLog({
+      parsedEvent = decodeEventLog({
+        abi: managerAbi,
+        eventName: 'DAODeployed',
         topics: deployEvent?.topics || [],
-        data: deployEvent?.data || '',
+        data: deployEvent?.data || '0x',
       })
     } catch {}
 
@@ -238,13 +243,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       return
     }
 
-    setDeployedDao({
-      token: deployedAddresses[0],
-      metadata: deployedAddresses[1],
-      auction: deployedAddresses[2],
-      treasury: deployedAddresses[3],
-      governor: deployedAddresses[4],
-    })
+    setDeployedDao(deployedAddresses)
     setIsPendingTransaction(false)
     setFulfilledSections(title)
   }

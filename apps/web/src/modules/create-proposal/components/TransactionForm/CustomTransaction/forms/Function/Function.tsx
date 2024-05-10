@@ -26,16 +26,25 @@ export const Function = () => {
   const options = React.useMemo(() => {
     if (!customTransaction?.contract) return []
 
-    const fns: [string, any][] = Object.entries(customTransaction?.contract?.functions)
+    const fns = Object.entries(customTransaction?.contract?.abi)
+
     return [
       {
         name: 'transactionFunction',
         options: fns
-          .filter(([_, fragment]) =>
-            // finds all nonpayable and payable action functions skipping views
-            fragment.stateMutability?.includes('payable')
+          .filter(
+            ([_, fragment]) =>
+              // finds all nonpayable and payable action functions skipping views
+              fragment.type === 'function' &&
+              fragment.stateMutability?.includes('payable')
           )
-          .map(([signature, fragment]) => ({ name: signature, inputs: fragment.inputs })),
+          .map(([_, fragment]) => {
+            if (fragment.type !== 'function') return undefined
+            return {
+              name: fragment.name,
+              inputs: fragment.inputs,
+            }
+          }),
       },
     ]
   }, [customTransaction.contract])

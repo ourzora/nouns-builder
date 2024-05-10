@@ -62,6 +62,8 @@ const nextConfig = {
       sideEffects: false,
     })
 
+    config.resolve.fallback = { fs: false, net: false, tls: false }
+
     return {
       ...config,
       // Hot-fix for $RefreshReg issues: https://github.com/vanilla-extract-css/vanilla-extract/issues/679#issuecomment-1402839249

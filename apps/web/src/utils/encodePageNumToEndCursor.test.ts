@@ -1,4 +1,3 @@
-import { base64 } from 'ethers/lib/utils'
 import { assert } from 'vitest'
 import { describe } from 'vitest'
 
@@ -6,7 +5,7 @@ import { encodePageNumToEndCursor } from './encodePageNumToEndCursor'
 
 const decode = (cursor: string) => {
   let decoded = ''
-  for (const char of base64.decode(cursor)) {
+  for (const char of Buffer.from(cursor, 'base64')) {
     decoded += String.fromCharCode(char)
   }
   return decoded

@@ -180,7 +180,11 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
         {
           functionSignature: 'unpause()',
           target: auctionAddress,
-          calldata: encodeFunctionData({ abi: auctionAbi, functionName: 'unpause' }),
+          calldata:
+            encodeFunctionData({
+              abi: auctionAbi,
+              functionName: 'unpause',
+            }) || '',
           value: '',
         },
       ],
@@ -213,8 +217,10 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
         value = (value as TokenAllocation[]).map(
           ({ founderAddress, allocationPercentage, endDate }) => ({
             founderAddress: founderAddress as AddressType,
-            allocationPercentage: allocationPercentage ? allocationPercentage : 0,
-            endDate: Math.floor(new Date(endDate).getTime() / 1000),
+            allocationPercentage: allocationPercentage
+              ? BigInt(allocationPercentage)
+              : 0n,
+            endDate: BigInt(Math.floor(new Date(endDate).getTime() / 1000)),
           })
         )
       }

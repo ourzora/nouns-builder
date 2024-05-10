@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react'
-import { ethers } from 'ethers'
 import { Formik } from 'formik'
+import { parseEther } from 'viem'
 import { vi } from 'vitest'
 
 import { TransactionType } from '../../constants/transactionType'
@@ -79,7 +79,7 @@ describe('List of transactions', () => {
               success: false,
               simulationId: 'id-1',
               simulationUrl: 'url-1',
-              gasUsed: ethers.utils.parseUnits('0.1', 'ether'),
+              gasUsed: parseEther('0.1').toString(),
             },
           ]}
         />
@@ -136,21 +136,21 @@ describe('List of transactions', () => {
               success: false,
               simulationId: 'id-0',
               simulationUrl: 'url-0',
-              gasUsed: ethers.utils.parseUnits('0.1', 'ether'),
+              gasUsed: parseEther('0.1').toString(),
             },
             {
               index: 1,
               success: false,
               simulationId: 'id-1',
               simulationUrl: 'url-1',
-              gasUsed: ethers.utils.parseUnits('0.1', 'ether'),
+              gasUsed: parseEther('0.1').toString(),
             },
             {
               index: 2,
               success: false,
               simulationId: 'id-2',
               simulationUrl: 'url-3',
-              gasUsed: ethers.utils.parseUnits('0.1', 'ether'),
+              gasUsed: parseEther('0.1').toString(),
             },
           ]}
         />

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Redis from 'ioredis'
+import { Hex } from 'viem'
 import { describe, expect, it, vi } from 'vitest'
 
 import { CHAIN_ID } from 'src/typings'
@@ -50,7 +51,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex
       )
 
       // We know the contract call will fail but we want to validate the slot call
@@ -62,17 +64,18 @@ describe('abiService', () => {
       } catch (err) {}
 
       expect(spy).toHaveBeenCalledOnce()
-      expect(spy).toHaveBeenCalledWith(
-        '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D',
-        '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc'
-      )
+      expect(spy).toHaveBeenCalledWith({
+        address: '0x9444390c01Dd5b7249E53FAc31290F7dFF53450D',
+        slot: '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc',
+      })
     })
 
     it('skips redis check and checks original contract with etherscan', async () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex
       )
 
       vi.mocked(axios.get).mockResolvedValueOnce({
@@ -97,7 +100,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex
       )
 
       vi.mocked(axios.get).mockResolvedValueOnce({
@@ -116,7 +120,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000000'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000000' as Hex
       )
 
       vi.mocked(axios.get).mockResolvedValueOnce({
@@ -142,7 +147,8 @@ describe('abiService', () => {
       const spy = vi.spyOn(getProvider(CHAIN_ID.ETHEREUM), 'getStorageAt')
 
       spy.mockImplementationOnce(
-        async () => '0x0000000000000000000000000000000000000000000000000000000000000123'
+        async () =>
+          '0x0000000000000000000000000000000000000000000000000000000000000123' as Hex
       )
 
       const response = await getContractABIByAddress(

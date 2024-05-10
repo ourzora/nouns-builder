@@ -71,7 +71,7 @@ export const PlaceBid = ({
     addresses.token
       ? [SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token]
       : undefined,
-    () => averageWinningBid(chain.id, addresses.token as Address),
+    () => averageWinningBid(chain.id, addresses.token as Address)
   )
 
   const isMinBid = Number(bidAmount) >= minBidAmount
@@ -124,11 +124,11 @@ export const PlaceBid = ({
       if (tx?.hash) await waitForTransaction({ hash: tx.hash })
 
       await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.token, tokenId], () =>
-        getBids(chain.id, addresses.token!, tokenId),
+        getBids(chain.id, addresses.token!, tokenId)
       )
 
       await mutate([SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token], () =>
-        averageWinningBid(chain.id, addresses.token as Address),
+        averageWinningBid(chain.id, addresses.token as Address)
       )
     } catch (error) {
       console.error(error)
@@ -216,7 +216,9 @@ export const PlaceBid = ({
                       const network = PUBLIC_IS_TESTNET
                         ? 'https://testnet.nouns.build'
                         : 'https://nouns.build'
-                      const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${addresses.token}`
+                      const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${
+                        addresses.token
+                      }`
                       if (address === undefined) {
                         await navigator.clipboard.writeText(baseUrl)
                         return

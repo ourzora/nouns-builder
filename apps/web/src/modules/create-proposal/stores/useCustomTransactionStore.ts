@@ -1,12 +1,10 @@
-import { ContractInterface } from 'ethers'
+import { Abi } from 'viem'
 import { create } from 'zustand'
 
 interface CustomTransactionProps {
   contract?: {
     address: string
-    abi: ContractInterface
-    fragments: readonly any[]
-    functions: {}
+    abi: Abi
   }
   address: string
   arguments?: any

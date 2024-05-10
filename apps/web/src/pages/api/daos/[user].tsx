@@ -1,5 +1,5 @@
-import { getAddress } from 'ethers/lib/utils.js'
 import { NextApiRequest, NextApiResponse } from 'next'
+import { getAddress } from 'viem'
 
 import { myDaosRequest } from 'src/data/subgraph/requests/daoQuery'
 import { NotFoundError } from 'src/services/errors'

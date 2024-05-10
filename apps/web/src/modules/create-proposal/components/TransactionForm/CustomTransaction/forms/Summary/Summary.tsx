@@ -1,6 +1,6 @@
 import { Button, Flex, Stack } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import React from 'react'
+import { encodeFunctionData } from 'viem'
 
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { useCustomTransactionStore } from 'src/modules/create-proposal'
@@ -36,11 +36,12 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
       return rawData[1]
     }
 
-    const abi = customTransaction?.contract?.abi || customTransaction?.customABI
+    const abi =
+      customTransaction?.contract?.abi || customTransaction?.customABI
+        ? JSON.parse(customTransaction?.customABI!)
+        : undefined
 
     if (!abi) return
-
-    const contract = new ethers.Contract(customTransaction?.address, abi)
 
     const args: [string, string][] = customTransaction.arguments
 
@@ -75,10 +76,11 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
     const values = insertValues(inputData)
 
     try {
-      return contract.interface.encodeFunctionData(
-        customTransaction.function.name,
-        values
-      )
+      return encodeFunctionData({
+        abi: abi,
+        functionName: customTransaction?.function.name,
+        args: values,
+      })
     } catch (err) {
       console.error(err)
       return

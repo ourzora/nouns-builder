@@ -1,7 +1,7 @@
 import sdnlistDev from '../sdnlist.dev.json'
 import sdnlist from '../sdnlist.json'
-import { ethers } from 'ethers'
 import { useMemo } from 'react'
+import { getAddress } from 'viem'
 
 const environment = process.env.NODE_ENV || 'development'
 
@@ -12,7 +12,7 @@ function parseAddress(address: InputAddress): Address | undefined {
   if (!address) return
 
   try {
-    return ethers.utils.getAddress(address) as Address
+    return getAddress(address)
   } catch (e) {
     return
   }

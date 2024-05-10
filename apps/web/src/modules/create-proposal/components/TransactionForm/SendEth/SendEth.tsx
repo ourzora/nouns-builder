@@ -35,10 +35,10 @@ export const SendEth = () => {
   ) => {
     if (!values.amount || !values.recipientAddress) return
 
-    const target = await getEnsAddress(
-      values.recipientAddress,
-      getProvider(CHAIN_ID.ETHEREUM)
-    )
+    const chainToQuery =
+      chain.id === CHAIN_ID.FOUNDRY ? CHAIN_ID.FOUNDRY : CHAIN_ID.ETHEREUM
+
+    const target = await getEnsAddress(values.recipientAddress, getProvider(chainToQuery))
     const value = values.amount.toString()
 
     addTransaction({

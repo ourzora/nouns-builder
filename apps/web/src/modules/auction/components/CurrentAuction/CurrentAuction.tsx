@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
-import { ethers } from 'ethers'
 import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
+import { formatEther } from 'viem'
 import { useContractRead } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
@@ -59,7 +59,7 @@ export const CurrentAuction = ({
   }
 
   const isOver = !!endTime ? dayjs.unix(Date.now() / 1000) >= dayjs.unix(endTime) : true
-  const formattedBid = bid ? ethers.utils.formatEther(bid) : ''
+  const formattedBid = bid ? formatEther(bid) : ''
 
   // Set the referral if auction version is != 1 and query.referral is present
   const referral =

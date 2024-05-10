@@ -1,9 +1,8 @@
 import { Box, Flex, Stack } from '@zoralabs/zord'
-import { ethers } from 'ethers'
 import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
-import { isAddressEqual, parseEther } from 'viem'
+import { formatEther, isAddressEqual, parseEther } from 'viem'
 import { useContractReads } from 'wagmi'
 import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
 
@@ -64,7 +63,7 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const initialValues: PreAuctionFormValues = {
     auctionDuration: fromSeconds(auctionDuration?.result),
     auctionReservePrice: auctionReservePrice?.result
-      ? parseFloat(ethers.utils.formatUnits(auctionReservePrice?.result))
+      ? parseFloat(formatEther(auctionReservePrice?.result))
       : 0,
     auctionRewardRecipient:
       founderRewardRecipient && !isAddressEqual(founderRewardRecipient, NULL_ADDRESS)

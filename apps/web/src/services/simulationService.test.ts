@@ -1,10 +1,10 @@
-import { StaticJsonRpcProvider, TransactionReceipt } from '@ethersproject/providers'
 import axios from 'axios'
-import { ethers } from 'ethers'
+import { Address, TransactionReceipt, parseEther } from 'viem'
 import { vi } from 'vitest'
 
 import { CHAIN_ID } from 'src/typings'
 
+import { createClient } from './createClient'
 import { InvalidRequestError } from './errors'
 import { Simulation, simulate } from './simulationService'
 
@@ -20,13 +20,13 @@ vi.mock('axios', () => {
   }
 })
 
-vi.mock('@ethersproject/providers', () => {
-  const StaticJsonRpcProvider = vi.fn()
-
-  StaticJsonRpcProvider.prototype.send = vi.fn()
-  StaticJsonRpcProvider.prototype.getTransactionReceipt = vi.fn()
-
-  return { StaticJsonRpcProvider }
+vi.mock('./createClient', async () => {
+  return {
+    createClient: vi.fn().mockReturnValue({
+      getTransactionReceipt: vi.fn(),
+      sendTransaction: vi.fn(),
+    }),
+  }
 })
 
 describe('simulationService', () => {
@@ -35,7 +35,7 @@ describe('simulationService', () => {
   })
 
   describe('simulate', () => {
-    const treasuryAddress = '0xbcdfd67cce7bf4f49c0631ddd14eadff4d5ca15d'
+    const treasuryAddress: Address = '0xbcdfd67cce7bf4f49c0631ddd14eadff4d5ca15d'
     const request = {
       treasuryAddress,
       chainId: CHAIN_ID.ETHEREUM,
@@ -46,6 +46,23 @@ describe('simulationService', () => {
       calldatas: ['sendEth()', 'sendEth()'],
       values: ['1', '2'],
     }
+
+    const receipt = {
+      status: 'success', // success status
+      gasUsed: parseEther('0.5'),
+      blockHash: '0x123',
+      blockNumber: 0n,
+      cumulativeGasUsed: 0n,
+      effectiveGasPrice: 0n,
+      from: '0x123',
+      logs: [],
+      logsBloom: '0x123',
+      to: '0x123',
+      transactionHash: '0x123',
+      transactionIndex: 0,
+      type: 'eip1559',
+      contractAddress: '0x123',
+    } as TransactionReceipt
 
     it('fails with mismatched input array lengths', async () => {
       expect(() =>
@@ -83,7 +100,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           ...request,
-          treasuryAddress: 'nonsense',
+          treasuryAddress: '0xnonsense',
         })
       ).rejects.toThrow(InvalidRequestError)
     })
@@ -101,30 +118,24 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = new StaticJsonRpcProvider(
-        `https://rpc.tenderly.co/fork/${forkId}`
-      )
-      vi.mocked(forkProvider.send).mockResolvedValueOnce(
-        ethers.utils.parseUnits('105', 'ether')
-      ) // mock tenderly_addBalance
+      const forkProvider = createClient(forkId, CHAIN_ID.ETHEREUM)
+
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
         data: { simulation_fork: { id: forkId } },
       })
-      vi.mocked(forkProvider.send).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.send).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValue({
-        status: 1, // success status
-        gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
-      } as TransactionReceipt)
+        ...receipt,
+        status: 'success', // success status
+        gasUsed: parseEther('0.5'),
+      })
 
       vi.mocked(axios.get).mockResolvedValue({
         status: 200,
         data: { fork: { head_simulation_id: simulationId } },
       })
-      vi.mocked(forkProvider.send).mockResolvedValueOnce(
-        ethers.utils.parseUnits('104', 'ether')
-      ) // mock eth_getBalance
 
       const spy = vi.spyOn(axios, 'delete')
 
@@ -136,21 +147,21 @@ describe('simulationService', () => {
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
+          gasUsed: parseEther('0.5').toString(),
         },
         {
           index: 1,
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
+          gasUsed: parseEther('0.5').toString(),
         },
       ]
 
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: true,
-        totalGasUsed: ethers.utils.parseUnits('1', 'ether'),
+        totalGasUsed: parseEther('1').toString(),
       })
 
       expect(spy).toHaveBeenCalledOnce()
@@ -164,36 +175,30 @@ describe('simulationService', () => {
       const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = new StaticJsonRpcProvider(
-        `https://rpc.tenderly.co/fork/${forkId}`
-      )
+      const forkProvider = createClient(forkId, CHAIN_ID.ETHEREUM)
 
-      vi.mocked(forkProvider.send).mockResolvedValueOnce(
-        ethers.utils.parseUnits('105', 'ether')
-      ) // mock tenderly_addBalance
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
         data: { simulation_fork: { id: forkId } },
       })
 
-      vi.mocked(forkProvider.send).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.send).mockResolvedValueOnce('txHash') // mock eth_sendTransaction 2
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
+      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
-        status: 1, // success status
-        gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
-      } as TransactionReceipt)
+        ...receipt,
+        status: 'success', // success status
+        gasUsed: parseEther('0.5'),
+      })
       vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
-        status: 0, // failed status
-        gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
-      } as TransactionReceipt)
+        ...receipt,
+        status: 'reverted', // failed status
+        gasUsed: parseEther('0.5'),
+      })
 
       vi.mocked(axios.get).mockResolvedValue({
         status: 200,
         data: { fork: { head_simulation_id: simulationId } },
       })
-      vi.mocked(forkProvider.send).mockResolvedValueOnce(
-        ethers.utils.parseUnits('104', 'ether')
-      ) // mock eth_getBalance
 
       const spy = vi.spyOn(axios, 'delete')
 
@@ -205,21 +210,21 @@ describe('simulationService', () => {
           simulationId,
           success: true,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
+          gasUsed: parseEther('0.5').toString(),
         },
         {
           index: 1,
           simulationId,
           success: false,
           simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: ethers.utils.parseUnits('0.5', 'ether'),
+          gasUsed: parseEther('0.5').toString(),
         },
       ]
 
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: false,
-        totalGasUsed: ethers.utils.parseUnits('1', 'ether'),
+        totalGasUsed: parseEther('1').toString(),
       })
 
       expect(spy).not.toHaveBeenCalled()

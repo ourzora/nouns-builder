@@ -1,8 +1,8 @@
 import { Flex, Text, atoms, theme } from '@zoralabs/zord'
-import { isAddress } from 'ethers/lib/utils.js'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { isAddress } from 'viem'
 import { useAccount, useContractRead } from 'wagmi'
 import { readContract } from 'wagmi/actions'
 
