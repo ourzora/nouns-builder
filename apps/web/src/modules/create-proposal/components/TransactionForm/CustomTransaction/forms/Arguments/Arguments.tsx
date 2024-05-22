@@ -113,10 +113,17 @@ export const Arguments = () => {
           return {
             [cv.name]: Yup.string()
               .required('*')
-              .test('is valid abi type', 'valid abi type', (value) => {
+              .test('is valid abi type', 'invalid abi type', (value) => {
                 const list = value?.replace(/\s/g, '').split(',')
                 try {
-                  encodeAbiParameters([type], [list])
+                  encodeAbiParameters(
+                    [
+                      {
+                        type,
+                      },
+                    ],
+                    [list]
+                  )
                   return true
                 } catch (e) {
                   return false
