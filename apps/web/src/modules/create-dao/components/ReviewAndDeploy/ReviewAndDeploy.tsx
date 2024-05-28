@@ -7,7 +7,6 @@ import {
   getAddress,
   parseAbiParameters,
   parseEther,
-  toHex,
 } from 'viem'
 import { useAccount, useContractRead } from 'wagmi'
 import {
@@ -123,7 +122,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     ]
   )
 
-  const tokenParams = { initStrings: toHex(tokenParamsHex) as AddressType }
+  const tokenParams = { initStrings: tokenParamsHex as AddressType }
 
   const auctionParams = {
     reservePrice: auctionSettings.auctionReservePrice
