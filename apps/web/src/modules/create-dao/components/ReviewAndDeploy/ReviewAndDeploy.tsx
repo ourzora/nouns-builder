@@ -154,8 +154,6 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const handleDeploy = async () => {
     setDeploymentError(undefined)
 
-    console.log('params', tokenParamsHex)
-
     if (
       [...founderAllocation, ...contributionAllocation].find(
         (founder) => typeof founder.allocationPercentage === 'undefined'
