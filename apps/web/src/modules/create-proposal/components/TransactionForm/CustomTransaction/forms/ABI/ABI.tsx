@@ -23,7 +23,7 @@ export const ABI = () => {
             customABI: values?.transactionCustomABI,
             contract: {
               address: customTransaction.address as AddressType,
-              abi: JSON.parse(customTransaction.customABI!),
+              abi: JSON.parse(values?.transactionCustomABI),
             },
           })
         } else {
