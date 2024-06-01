@@ -1,5 +1,5 @@
 /** @jsxImportSource frog/jsx */
-import { Button, Frog } from 'frog'
+import { Button, Frog, TextInput } from 'frog'
 import { handle } from 'frog/next'
 import { isAddress, parseEther } from 'viem'
 import { SDK } from 'src/data/subgraph/client'
@@ -190,12 +190,13 @@ app.frame("/auction", async (c) => {
 
   //})
   //console.log({ tokenImg })
+  //  const { chainId, auctionContract, tokenId, amount, referral } = req.query()
+  console.log(token.auction)
   return c.res({
     image: token.image,
     intents: [
-      <Button value="apple">Apple</Button>,
-      <Button value="banana">Banana</Button>,
-      <Button value="mango">Mango</Button>
+      <TextInput placeholder="Value (ETH)" />,
+      <Button.Transaction target={`/bid?chainId=${chainId}&auctionContract=${token.auction}&tokenId=${latestTokenId}`}>Bid</Button.Transaction>,
     ]
   })
 })
