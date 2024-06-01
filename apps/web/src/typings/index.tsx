@@ -28,3 +28,14 @@ export interface Chain extends WagmiChain {
 export type AddressType = `0x${string}`
 
 export type BytesType = `0x${string}`
+export const CHAIN_NAME_TO_ID: { [key: string]: CHAIN_ID } = {
+  ethereum: CHAIN_ID.ETHEREUM,
+  sepolia: CHAIN_ID.SEPOLIA,
+  optimism: CHAIN_ID.OPTIMISM,
+  optimism_sepolia: CHAIN_ID.OPTIMISM_SEPOLIA,
+  base: CHAIN_ID.BASE,
+  base_sepolia: CHAIN_ID.BASE_SEPOLIA,
+  zora: CHAIN_ID.ZORA,
+  zora_sepolia: CHAIN_ID.ZORA_SEPOLIA,
+  foundry: CHAIN_ID.FOUNDRY,
+};

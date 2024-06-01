@@ -2,9 +2,11 @@
 import { Frog } from 'frog'
 import { handle } from 'frog/next'
 import { isAddress, parseEther } from 'viem'
-
+import { SDK } from 'src/data/subgraph/client'
 import { auctionAbi, governorAbi } from 'src/data/contract/abis'
-import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
+import { AddressType, BytesType, CHAIN_ID, CHAIN_NAME_TO_ID } from 'src/typings'
+
+import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 
 const app = new Frog({
   basePath: '/api/frames',
@@ -107,6 +109,36 @@ app.transaction('/vote', async (c) => {
   } catch (err) {
     return new Response((err as Error).message, { status: 500 })
   }
+})
+
+app.get("/auction", async (c) => {
+
+
+  const chain = c.req.query('chain')
+
+  const collectionAddress = c.req.query('collectionAddress');
+  if (typeof chain !== "string" || typeof collectionAddress !== "string") {
+    return new Response("chain or collection address missing", { status: 400 })
+  }
+
+  console.log({ chain })
+  console.log({ collectionAddress })
+
+  const chainId = CHAIN_NAME_TO_ID[chain]
+
+
+  const latestTokenId = await SDK.connect(chainId)
+    .tokens({
+      where: {
+        dao: collectionAddress.toLowerCase(),
+      },
+      orderBy: Token_OrderBy.TokenId,
+      orderDirection: OrderDirection.Desc,
+      first: 1,
+    })
+    .then((x) => (x.tokens.length > 0 ? x.tokens[0].tokenId : undefined))
+  console.log(latestTokenId)
+  return new Response("change me")
 })
 
 export const GET = handle(app)
