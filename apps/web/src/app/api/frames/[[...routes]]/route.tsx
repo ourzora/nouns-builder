@@ -1,12 +1,45 @@
 /** @jsxImportSource frog/jsx */
-import { Frog } from 'frog'
+import { Button, Frog } from 'frog'
 import { handle } from 'frog/next'
 import { isAddress, parseEther } from 'viem'
 import { SDK } from 'src/data/subgraph/client'
-import { auctionAbi, governorAbi } from 'src/data/contract/abis'
-import { AddressType, BytesType, CHAIN_ID, CHAIN_NAME_TO_ID } from 'src/typings'
+import { auctionAbi, governorAbi, metadataAbi } from 'src/data/contract/abis'
+import type { AddressType, BytesType } from 'src/typings'
 
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
+
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+const enum CHAIN_ID {
+  ETHEREUM = 1,
+  SEPOLIA = 11155111,
+  OPTIMISM = 10,
+  OPTIMISM_SEPOLIA = 11155420,
+  BASE = 8453,
+  BASE_SEPOLIA = 84532,
+  ZORA = 7777777,
+  ZORA_SEPOLIA = 999999999,
+  FOUNDRY = 31337,
+}
+
+export const CHAIN_NAME_TO_ID: { [key: string]: CHAIN_ID } = {
+  ethereum: CHAIN_ID.ETHEREUM,
+  sepolia: CHAIN_ID.SEPOLIA,
+  optimism: CHAIN_ID.OPTIMISM,
+  optimism_sepolia: CHAIN_ID.OPTIMISM_SEPOLIA,
+  base: CHAIN_ID.BASE,
+  base_sepolia: CHAIN_ID.BASE_SEPOLIA,
+  zora: CHAIN_ID.ZORA,
+  zora_sepolia: CHAIN_ID.ZORA_SEPOLIA,
+  foundry: CHAIN_ID.FOUNDRY,
+};
+
+const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http()
+})
+
+
 
 const app = new Frog({
   basePath: '/api/frames',
@@ -111,7 +144,7 @@ app.transaction('/vote', async (c) => {
   }
 })
 
-app.get("/auction", async (c) => {
+app.frame("/auction", async (c) => {
 
 
   const chain = c.req.query('chain')
@@ -124,8 +157,8 @@ app.get("/auction", async (c) => {
   console.log({ chain })
   console.log({ collectionAddress })
 
-  const chainId = CHAIN_NAME_TO_ID[chain]
-
+  const chainId = CHAIN_NAME_TO_ID[chain.toLowerCase()]
+  console.log({ chainId })
 
   const latestTokenId = await SDK.connect(chainId)
     .tokens({
@@ -137,8 +170,34 @@ app.get("/auction", async (c) => {
       first: 1,
     })
     .then((x) => (x.tokens.length > 0 ? x.tokens[0].tokenId : undefined))
-  console.log(latestTokenId)
-  return new Response("change me")
+
+
+  const token = await SDK.connect(chainId)
+    .tokenWithDao({
+      id: `${collectionAddress.toLowerCase()}:${latestTokenId}`,
+    })
+    .then((x) => x.token)
+  console.log(token?.image)
+
+  if (typeof token?.image !== "string") {
+    return new Response("could not get token image", { status: 400 })
+  }
+  //  const baseParams = { address: token?.dao.metadataAddress, abi: metadataAbi, chainId: chainId }
+  // const tokenImg = await publicClient.readContract({
+  // ...baseParams,
+  //functionName: 'tokenURI',
+  //args: [latestTokenId]
+
+  //})
+  //console.log({ tokenImg })
+  return c.res({
+    image: token.image,
+    intents: [
+      <Button value="apple">Apple</Button>,
+      <Button value="banana">Banana</Button>,
+      <Button value="mango">Mango</Button>
+    ]
+  })
 })
 
 export const GET = handle(app)
