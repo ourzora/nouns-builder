@@ -1,15 +1,13 @@
 /** @jsxImportSource frog/jsx */
 import { Button, Frog, TextInput } from 'frog'
 import { handle } from 'frog/next'
-import { isAddress, parseEther } from 'viem'
+import { http, isAddress, parseEther } from 'viem'
+import { optimism, base, zora, mainnet, } from 'viem/chains'
 import { SDK } from 'src/data/subgraph/client'
 import { auctionAbi, governorAbi } from 'src/data/contract/abis'
 import { CHAIN_ID, CHAIN_NAME_TO_ID, type AddressType, type BytesType } from 'src/typings'
-
+import { createPublicClient } from 'viem';
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
-
-
-
 
 const app = new Frog({
   basePath: '/api/frames',
@@ -123,12 +121,7 @@ app.frame("/auction", async (c) => {
   if (typeof chain !== "string" || typeof collectionAddress !== "string") {
     return new Response("chain or collection address missing", { status: 400 })
   }
-
-  console.log({ chain })
-  console.log({ collectionAddress })
-
   const chainId = CHAIN_NAME_TO_ID[chain.toLowerCase()]
-  console.log({ chainId })
 
   const latestTokenId = await SDK.connect(chainId)
     .tokens({
@@ -153,6 +146,43 @@ app.frame("/auction", async (c) => {
     return new Response("could not get token image", { status: 400 })
   }
 
+  /*
+    *
+    *
+    * ETHEREUM = 1,
+  SEPOLIA = 11155111,
+  OPTIMISM = 10,
+  OPTIMISM_SEPOLIA = 11155420,
+  BASE = 8453,
+  BASE_SEPOLIA = 84532,
+  ZORA = 7777777,
+    *
+    */
+
+  function getChain(chain: number) {
+    switch (chain) {
+      case 1: {
+        return mainnet
+      }
+      case 8453: {
+        return base
+      }
+      case 10: {
+        return optimism
+      }
+      case 7777777: {
+        return zora
+      }
+    }
+  }
+
+  const curChain = getChain(chainId)
+  console.log("get the switch", curChain?.id)
+  const pubClient = createPublicClient({
+    chain: curChain,
+    transport: http()
+  })
+  console.log(await pubClient.getBlockNumber(), "pubclient block num");
   console.log(token.dao.auctionAddress)
   return c.res({
     image: token.image,
