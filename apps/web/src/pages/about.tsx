@@ -1,6 +1,5 @@
-import { Box, Flex, Stack } from '@zoralabs/zord'
+import { Box, Stack } from '@zoralabs/zord'
 import Head from 'next/head'
-import Image from 'next/legacy/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
