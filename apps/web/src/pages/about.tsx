@@ -29,7 +29,7 @@ const AboutPage: NextPageWithLayout = () => {
           width={'100%'}
           px={'x4'}
         >
-          <img src={'/why.svg'} alt="" width={500} />
+          <img src={'/why.svg'} style={{ alignSelf: 'center' }} width={500} />
 
           <Box>
             Nouns Builder makes it easy for communities and collectives to create Nounish
