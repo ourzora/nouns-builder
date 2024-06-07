@@ -1,6 +1,6 @@
-import { Box, Flex, Stack } from '@zoralabs/zord'
+import { Box, Stack } from '@zoralabs/zord'
 import Head from 'next/head'
-import Image from 'next/legacy/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 
@@ -19,73 +19,42 @@ const AboutPage: NextPageWithLayout = () => {
         <title>Nouns Builder | About</title>
       </Head>
 
-      <Stack align={'center'} pt={'x64'}>
-        <Flex width={'x64'}>
-          <Image src="/noggles.png" alt="Nouns" width={256} height={95} />
-        </Flex>
+      <Stack align={'center'}>
         <Stack
+          pt={'x12'}
           fontSize={35}
-          pt={'x64'}
           className={whyTextStyle}
           textAlign={'center'}
           gap={'x12'}
           width={'100%'}
           px={'x4'}
         >
-          <Box>What do these glasses symbolize?</Box>
+          <img src={'/why.svg'} style={{ alignSelf: 'center' }} width={500} />
 
           <Box>
-            To us, they symbolize a powerful new model <br /> for collective creation.
+            Nouns Builder makes it easy for communities and collectives to create Nounish
+            DAOs, fully equipped with onchain governance and membership auctions starting
+            day one.
           </Box>
-
           <Box>
-            A shared vision. <br /> And a shared realization of that vision. <br /> The
-            seed of one idea. <br />
-            And the infinite ideas that can grow from it. <br /> From coming up together.{' '}
-            <br /> To taking over together.
+            This public good DAO tooling and the Nouns Builder Protocol are maintained and
+            governed by &nbsp;
+            <Link
+              href="https://nouns.build/dao/base/0xe8af882f2f5c79580230710ac0e2344070099432"
+              style={{ textDecoration: 'underline' }}
+            >
+              BuilderDAO
+            </Link>
+            . Learn more about the DAO's vision and mission &nbsp;
+            <Link
+              style={{ textDecoration: 'underline' }}
+              href="https://nouns.build/dao/ethereum/0xdf9b7d26c8fc806b1ae6273684556761ff02d422/vote/66"
+            >
+              here
+            </Link>
+            .
           </Box>
 
-          <img src={'/why.svg'} alt="" />
-
-          <Box>
-            We built Nouns Builder to proliferate this new model so anyone can build with
-            it. <br /> Why? <br /> Because the old ways of doing great things together
-            aren’t so great anymore.
-          </Box>
-
-          <Box>
-            What if… <br /> Instead of relying on corporations, <br /> we created together
-            and relied on each other? <br />
-            Instead of just creating short-term revenue,
-            <br /> we created lasting resonance?
-            <br /> Instead of trusting hidden systems, <br /> we did everything openly
-            onchain? <br />
-            Instead of working together feeling like work, <br /> it could feel like an
-            endless jam session?
-          </Box>
-
-          <Box>
-            We built Nouns Builder <br />
-            to make all of this more possible. <br /> For any idea to become an
-            invitation. <br /> To create together.
-          </Box>
-
-          <Box>Is Nouns Builder made by Nouns or by ZORA? Yes.</Box>
-
-          <Box>
-            Nouns Builder exists in the spirit of co-creation. <br /> We are part of Nouns
-            and Nouns are a part of us.
-          </Box>
-
-          <Box>
-            Is Nouns Builder its own Nouns style DAO? Yes. <br /> It’s called Builder DAO.{' '}
-            <br />
-            Our intention is to open more doors for <br />
-            more people to help realize this vision together. <br /> And it was important
-            we actually use this tool to do it.
-          </Box>
-
-          <Box mb={'x8'}>What will you do with it?</Box>
           <ContractButton
             alignSelf={'center'}
             align={'center'}
@@ -103,17 +72,6 @@ const AboutPage: NextPageWithLayout = () => {
           >
             Create a DAO
           </ContractButton>
-
-          <Box mb="x16">
-            <Image
-              src={'/builder.png'}
-              alt="Builder"
-              height={500}
-              width={300}
-              objectFit="contain"
-              layout="responsive"
-            />
-          </Box>
         </Stack>
       </Stack>
     </>
