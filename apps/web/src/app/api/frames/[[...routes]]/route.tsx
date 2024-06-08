@@ -139,22 +139,6 @@ app.transaction('/vote', async (c) => {
 })
 
 
-app.frame("/landing", async (c) => {
-  return c.res({
-    image: (<div style={{ display: "flex", padding: "20px", color: "white" }}>Landing Page</div>),
-    imageOptions: { width: 600, height: 600 },
-    imageAspectRatio: "1:1",
-    intents: [
-      <Button
-        action="/apples"
-        value="red lady"
-      >
-        Apple
-      </Button>,
-    ]
-  })
-})
-
 app.frame("/auction", async (c) => {
 
   const chain = c.req.query('chain')
