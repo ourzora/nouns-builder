@@ -65,6 +65,32 @@ app.transaction('/bid', async (c) => {
   }
 })
 
+
+app.transaction('/start', async (c) => {
+  const { req } = c
+  const { chainId, auctionContract, tokenId, amount, referral } = req.query()
+
+  if (!tokenId) return new Response('Invalid tokenId', { status: 400 })
+
+  const chainIdParsed = parseInt(chainId)
+
+  if (
+    chainIdParsed !== CHAIN_ID.OPTIMISM &&
+    chainIdParsed !== CHAIN_ID.ZORA &&
+    chainIdParsed !== CHAIN_ID.BASE
+  )
+    return new Response('Invalid chain id', { status: 400 })
+
+  const contract = {
+    abi: auctionAbi,
+    chainId: `eip155:${chainIdParsed}`,
+    to: auctionContract as AddressType,
+  } as const
+
+
+  return c.contract({ ...contract, functionName: "settleCurrentAndCreateNewAuction" })
+})
+
 app.transaction('/vote', async (c) => {
   try {
     const { inputText, req } = c
@@ -112,8 +138,24 @@ app.transaction('/vote', async (c) => {
   }
 })
 
-app.frame("/auction", async (c) => {
 
+app.frame("/landing", async (c) => {
+  return c.res({
+    image: (<div style={{ display: "flex", padding: "20px", color: "white" }}>Landing Page</div>),
+    imageOptions: { width: 600, height: 600 },
+    imageAspectRatio: "1:1",
+    intents: [
+      <Button
+        action="/apples"
+        value="red lady"
+      >
+        Apple
+      </Button>,
+    ]
+  })
+})
+
+app.frame("/auction", async (c) => {
 
   const chain = c.req.query('chain')
 
@@ -146,18 +188,6 @@ app.frame("/auction", async (c) => {
     return new Response("could not get token image", { status: 400 })
   }
 
-  /*
-    *
-    *
-    * ETHEREUM = 1,
-  SEPOLIA = 11155111,
-  OPTIMISM = 10,
-  OPTIMISM_SEPOLIA = 11155420,
-  BASE = 8453,
-  BASE_SEPOLIA = 84532,
-  ZORA = 7777777,
-    *
-    */
 
   function getChain(chain: number) {
     switch (chain) {
@@ -177,16 +207,39 @@ app.frame("/auction", async (c) => {
   }
 
   const curChain = getChain(chainId)
-  console.log("get the switch", curChain?.id)
   const pubClient = createPublicClient({
     chain: curChain,
     transport: http()
   })
-  console.log(await pubClient.getBlockNumber(), "pubclient block num");
-  console.log(token.dao.auctionAddress)
+  const auctionAddress = token.dao.auctionAddress as `0x${string}`
+  const auctionInfo = await pubClient.readContract({
+    address: auctionAddress,
+    abi: auctionAbi,
+    functionName: "auction"
+  })
+
+
+  const currentTime = Math.floor(Date.now() / 1000);
+  const endTime = auctionInfo[4]
+
+  console.log(currentTime, "current time", endTime, "end time");
+
+  if (currentTime > endTime) {
+    return c.res({
+      image: (
+        <div style={{ height: "100%", width: "100%", backgroundColor: "blue", padding: "30px" }}>Start Auction</div>
+      ),
+      imageOptions: { width: 600, height: 600 },
+      imageAspectRatio: '1:1',
+      intents: [
+        <Button.Transaction target={`/start?chainId=${chainId}&auctionContract=${token.dao.auctionAddress}&tokenId=${latestTokenId}`}>Start Auction</Button.Transaction>
+      ]
+    })
+  }
   return c.res({
     image: token.image,
-
+    imageOptions: { width: 600, height: 600 },
+    imageAspectRatio: '1:1',
     intents: [
       <TextInput placeholder="Value (ETH)" />,
       <Button.Transaction target={`/bid?chainId=${chainId}&auctionContract=${token.dao.auctionAddress}&tokenId=${latestTokenId}`}>Bid</Button.Transaction>,
