@@ -1,17 +1,4 @@
 import { hashFiles } from './hash'
-import { create as createIpfsClient } from 'ipfs-http-client'
-import last from 'it-last'
-
-const IPFS_API_BASE =
-  process.env.NEXT_PUBLIC_IPFS_UPLOAD_API || 'https://upload.ipfs.zora.co'
-
-const defaultIpfsOptions = {
-  cidVersion: 1,
-} as const
-
-const ipfs = createIpfsClient({
-  url: `${IPFS_API_BASE}/api/v0`,
-})
 
 const defaultOptions = {
   onProgress: undefined,
@@ -24,6 +11,56 @@ export type IPFSUploadResponse = {
 }
 
 type ProgressCallback = (progress: number) => void
+
+function uploadFileWithProgress(
+  data: FormData,
+  onProgress: (progress: number) => void
+): Promise<void> {
+  return new Promise(async (resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+
+    const uploadKey = await fetch('/api/upload-key', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+      },
+    })
+
+    if (!uploadKey.ok) {
+      reject('No KEY')
+    }
+    const { JWT: jwt } = await uploadKey.json()
+
+    xhr.open('POST', 'https://api.pinata.cloud/pinning/pinFileToIPFS', true)
+    xhr.setRequestHeader('Authorization', `Bearer ${jwt}`)
+
+    // Add event listener to track upload progress
+    xhr.upload.onprogress = (event: ProgressEvent) => {
+      if (event.lengthComputable) {
+        const progress = (event.loaded / event.total) * 100
+        onProgress(progress) // Call the progress callback
+      }
+    }
+
+    // Handle successful upload
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        const jsonResponse = JSON.parse(xhr.responseText)
+        resolve(jsonResponse)
+      } else {
+        reject(new Error(`Upload failed with status: ${xhr.status}`))
+      }
+    }
+
+    // Handle errors
+    xhr.onerror = () => {
+      reject(new Error('An error occurred during the upload.'))
+    }
+
+    // Send the FormData
+    xhr.send(data)
+  })
+}
 
 const uploadCache = {
   prefix: 'ZORA/IPFSUploadCache',
@@ -62,14 +99,20 @@ export async function uploadFile(
     if (cached) return cached
   }
 
-  const root = await ipfs.add(file, {
-    ...defaultIpfsOptions,
-    progress: (bytes: number) => {
-      if (typeof onProgress === 'function') onProgress((bytes / file.size) * 100)
-    },
-  })
+  const data = new FormData()
+  data.append('file', file)
 
-  const cid = root.cid.toString()
+  const response = (await uploadFileWithProgress(data, (progress) => {
+    console.log(`Upload progress: ${progress}%`)
+    // You can also update the UI with the progress here
+    if (typeof onProgress === 'function') {
+      onProgress(progress)
+    }
+  })) as any
+
+  console.log({ response })
+
+  const cid = response.IpfsHash.toString()
   const uri = `ipfs://${cid}`
 
   console.info('ipfs-service/upload', { cid, uri })
@@ -119,25 +162,35 @@ export async function uploadDirectory(
     if (cached) return cached
   }
 
-  const totalBytes = entries.reduce((total, entry) => total + entry.content.size, 0)
-  let completeBytes = 0
-
-  const root = await last(
-    ipfs.addAll(entries, {
-      ...defaultIpfsOptions,
-      wrapWithDirectory: true,
-      progress: (bytes: number) => {
-        completeBytes += bytes
-        if (typeof onProgress === 'function') {
-          onProgress((completeBytes / totalBytes) * 100)
-        }
-      },
+  const data = new FormData()
+  entries.forEach((file) => {
+    console.log({ file })
+    data.append('file', file.content, `builder/${file.path}`)
+  })
+  data.append(
+    'pinataOptions',
+    JSON.stringify({
+      cidVersion: 1,
+    })
+  )
+  data.append(
+    'pinataMetadata',
+    JSON.stringify({
+      name: 'builder',
     })
   )
 
-  if (!root) throw new Error('Directory upload failed')
+  const response = (await uploadFileWithProgress(data, (progress) => {
+    console.log(`Upload progress: ${progress}%`)
+    // You can also update the UI with the progress here
+    if (typeof onProgress === 'function') {
+      onProgress(progress)
+    }
+  })) as any
 
-  const cid = root.cid.toString()
+  console.log({ response })
+
+  const cid = response.IpfsHash.toString()
   const uri = `ipfs://${cid}`
 
   console.info('ipfs-service/uploadDirectory', { cid })
