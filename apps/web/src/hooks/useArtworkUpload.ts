@@ -279,6 +279,7 @@ export const useArtworkUpload = ({
       try {
         onUploadStart()
         const ipfs = await uploadToIPFS(files)
+        console.log({ ipfs })
         onUploadSuccess(ipfs)
       } catch (err) {
         setIpfsUploadError(true)

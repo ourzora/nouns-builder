@@ -27,6 +27,7 @@
     }
   },
   "globalEnv": [
+    "PINATA_API_KEY",
     "PRIVATE_ALCHEMY_ID",
     "PRIVATE_REDIS_CONNECTION_URI",
     "ETHERSCAN_API_KEY",
