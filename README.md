@@ -79,7 +79,7 @@ This app has several third party api keys that you need in order to run Builder:
 
 - [alchemy](https://www.alchemy.com/) as the main rpc node provider in addition to mainnet forks for testing
 - [tenderly](https://docs.tenderly.co/simulations-and-forks/simulation-api) in order to simulate transactions
-- [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dyanamically fetch abis
+- [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dynamically fetch abis
 
 We ask that you supply your own secrets locally for running in development environment. Non-secret environment variables are already included in the `.env` files in this repo.
 
