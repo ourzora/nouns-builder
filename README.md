@@ -113,7 +113,7 @@ NEXT_PUBLIC_ZORA_API_KEY=
 
 ## Running tests
 
-> Note: to run tests you need to [install anvil](https://github.com/foundry-rs/foundry/blob/master/README.md#installation).
+> Note: to run tests you need to [install anvil](https://github.com/foundry-rs/foundry/tree/master/crates/anvil).
 
 Once anvil is installed, you can now locally run anvil (from the root directory in the monorepo) in a separate terminal session to start a local ethereum node:
 `pnpm run anvil`
@@ -149,4 +149,4 @@ Please refer to our [contributions guideline](/.github/contributing.md) on how b
 
 ## Questions?
 
-Feel free to reach out to us via [twitter](https://twitter.com/nounsbuilder), [discord](https://discord.gg/JpMKps2W), or via email at <opensource@zora.co>
+Feel free to reach out to us via [x (twitter)](https://x.com/nounsbuilder), [discord](https://discord.gg/JpMKps2W), or via email at <opensource@zora.co>
