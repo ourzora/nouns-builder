@@ -149,4 +149,4 @@ Please refer to our [contributions guideline](/.github/contributing.md) on how b
 
 ## Questions?
 
-Feel free to reach out to us via [x (twitter)](https://x.com/nounsbuilder), [discord](https://discord.gg/JpMKps2W), or via email at <opensource@zora.co>
+Feel free to reach out to us via [x (formerly twitter)](https://x.com/nounsbuilder), [discord](https://discord.gg/JpMKps2W), or via email at <opensource@zora.co>
