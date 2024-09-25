@@ -16,6 +16,7 @@ export interface DaoContractAddresses {
   auction?: AddressType
   treasury?: AddressType
   governor?: AddressType
+  escrowDelegate?: AddressType
 }
 
 export interface DaoContracts {
@@ -38,6 +39,7 @@ export const useDaoStore = create<DaoStoreProps>((set) => ({
     auction: undefined,
     treasury: undefined,
     governor: undefined,
+    escrowDelegate: undefined,
   },
   setAddresses: (addresses: DaoContractAddresses) => set({ addresses }),
 }))
