@@ -378,3 +378,11 @@ globalStyle('h1,h2,h3,h4,h5,h6,p', {
   padding: 0,
   margin: 0,
 })
+
+globalStyle('.profile-dao-links', {
+  marginRight: '0 !important',
+})
+
+globalStyle('.profile-dao-links::after', {
+  content: 'none !important',
+})

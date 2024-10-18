@@ -18,7 +18,7 @@ import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import { artworkSkeleton } from 'src/styles/Artwork.css'
 import { getEnsAddress } from 'src/utils/ens'
-import { walletSnippet } from 'src/utils/helpers'
+import { chainIdToSlug, walletSnippet } from 'src/utils/helpers'
 
 import { NextPageWithLayout } from '../_app'
 import { UserTokensResponse } from '../api/profile/[network]/[user]/tokens'
@@ -51,8 +51,6 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
   const hasDaos = !!daos && daos.length > 0
 
   const { handlePageBack, handlePageForward } = usePagination(tokens?.hasNextPage)
-
-  const daosString = daos?.map((x) => x.name).join(', ')
 
   return (
     <Flex
@@ -118,17 +116,36 @@ const ProfilePage: NextPageWithLayout<ProfileProps> = ({ userAddress }) => {
             <Text mr="x4" fontWeight={'display'}>
               DAOs
             </Text>
-            {isLoading ? (
-              <Box
-                backgroundColor="background2"
-                h="x6"
-                w="100%"
-                className={artworkSkeleton}
-                borderRadius="normal"
-              />
-            ) : (
-              <Text color="text3">{daosString || 'No DAO tokens owned.'}</Text>
-            )}
+            {
+              isLoading ? (
+                  <Box
+                      backgroundColor="background2"
+                      h="x6"
+                      w="100%"
+                      className={artworkSkeleton}
+                      borderRadius="normal"
+                  />
+              ) : (
+                  daos && daos?.length > 0 ? (
+                      <Text color="text3">
+                        {daos.map((dao, index) => (
+                            <>
+                              <Link
+                                  href={`https://nouns.build/dao/${chainIdToSlug(dao.chainId)}/${dao.collectionAddress}`}
+                                  style={{ textDecoration: 'none', color: 'inherit' }}
+                                  className='profile-dao-links'
+                              >
+                                {dao.name}
+                              </Link>
+                              {index < daos.length - 1 && ', '}
+                            </>
+                        ))}
+                      </Text>
+                  ) : (
+                      <Text>No DAO tokens owned.</Text>
+                  )
+              )
+            }
           </Flex>
         </Box>
         {!isMobile && (
