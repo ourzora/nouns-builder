@@ -13,6 +13,7 @@ import { auctionAbi } from 'src/data/contract/abis'
 import { useCountdown, useIsMounted } from 'src/hooks'
 import { AddressType } from 'src/typings'
 
+import { chainIdToSlug } from '../../utils/helpers'
 import { overflowEllipsis } from '../auction/components/Auction.css'
 import { AuctionPaused } from './AuctionPaused'
 import { BidActionButton } from './BidActionButton'
@@ -75,7 +76,7 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
   const handleSelectAuction = () => {
     router.push(`/dao/${currentChainSlug}/${tokenAddress}`)
   }
-  const currentChainSlug = PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug
+  const currentChainSlug = chainIdToSlug(chainId)
 
   if (!currentAuction) {
     return (

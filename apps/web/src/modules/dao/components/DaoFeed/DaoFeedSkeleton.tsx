@@ -3,14 +3,13 @@ import { Box } from '@zoralabs/zord'
 import { exploreSkeleton } from '../Explore/Explore.css'
 import { GridContainer } from './DaoFeed'
 
-export const DaoFeedCardSkeleton = ({ key }: { key?: any }) => {
+export const DaoFeedCardSkeleton = () => {
   return (
     <Box
-      key={key}
       borderRadius="curved"
       backgroundColor="background2"
       width={'100%'}
-      aspectRatio={1 / 1}
+      aspectRatio={1}
       position="relative"
       className={exploreSkeleton}
     />
