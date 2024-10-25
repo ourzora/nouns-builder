@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
+import Link from 'next/link'
 import React from 'react'
 
 import { Avatar } from 'src/components/Avatar'
@@ -19,7 +20,9 @@ export const Bidder: React.FC<BidderProps> = ({ address }) => {
         <Avatar address={address} src={ensAvatar} size="32" />
       </Box>
       <Text className={recentBidder} variant="paragraph-md">
-        {displayName}
+        <Link href={`/profile/${address}`} passHref>
+          <a>{displayName}</a>
+        </Link>
       </Text>
     </Flex>
   )
