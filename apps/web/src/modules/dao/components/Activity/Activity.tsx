@@ -25,7 +25,7 @@ import { useChainStore } from 'src/stores/useChainStore'
 import {
   delegateBtn,
   selectDelegateBtn,
-  submitProposalBtn,
+  createProposalBtn,
 } from 'src/styles/Proposals.css'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType } from 'src/typings'
@@ -148,20 +148,20 @@ export const Activity: React.FC = () => {
             ) : null}
             {!address ? (
               <Button
-                className={submitProposalBtn}
+                className={createProposalBtn}
                 onClick={openConnectModal}
                 color={'tertiary'}
               >
-                Submit {!isMobile ? 'proposal' : null}
+                Create {!isMobile ? 'proposal' : null}
               </Button>
             ) : (
               <Button
-                className={submitProposalBtn}
+                className={createProposalBtn}
                 onClick={address ? handleProposalCreation : openConnectModal}
                 disabled={isGovernanceDelayed ? true : address ? !hasThreshold : false}
                 color={'tertiary'}
               >
-                Submit {!isMobile ? 'proposal' : null}
+                Create {!isMobile ? 'proposal' : null}
               </Button>
             )}
           </Flex>
