@@ -1,12 +1,12 @@
 # This workflow runs the CI command defined in package.json
 name: CI
-
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
-#  pull_request:
-#    types: [opened, reopened, synchronize, ready_for_review]
   push:
-    branches: [main]
-
+    branches:
+      - main
 jobs:
   ci:
     name: CI
@@ -81,18 +81,7 @@ jobs:
         run: pkill -2 anvil
 
 # TODO @0xMillz for production: (https://vercel.com/guides/how-can-i-use-github-actions-with-vercel)
-#name: Vercel Production Deployment
-#env:
-#  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-#  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-#on:
-#  push:
-#    branches:
-#      - main
-#jobs:
-#  Deploy-Production:
-#    runs-on: ubuntu-latest
-#    steps:
+
 #      - uses: actions/checkout@v2
 #      - name: Install Vercel CLI
 #        run: npm install --global vercel@latest
