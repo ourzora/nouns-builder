@@ -9,6 +9,7 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +28,8 @@ jobs:
       - name: Install pnpm and Vercel CLI
         run: |
           npm install -g pnpm vercel@canary
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --token=${{ secrets.VERCEL_TOKEN }}
       - name: Build Project Artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
