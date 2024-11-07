@@ -39,7 +39,7 @@ export const delegateBtn = style({
   },
 })
 
-export const submitProposalBtn = style({
+export const createProposalBtn = style({
   fontSize: '1rem',
   fontFamily: 'ptRoot!important',
   borderRadius: '12px',
