@@ -9,7 +9,6 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
