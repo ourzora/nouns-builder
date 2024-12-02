@@ -45,7 +45,7 @@ The app is mostly organised by function and for the larger areas of concern ther
 
 Nouns Builder currently only supports two networks: `mainnet` and `goerli testnet`. The environment variables indicated below dictate the network that the app interacts with.
 
-You can swap out the environment variables as defined below to run against mainnnet or testnet locally.
+You can swap out the environment variables as defined below to run against mainnet or testnet locally.
 
 ```
 # the default network type is defined in .env, to run against testnet
@@ -118,7 +118,7 @@ sdk.daosByMember({ addresses: ['0x123'], chain: Chain.GOERLI })
 
 > Note: `sdk.generated.ts` is auto-generated and should not be touched
 
-> Note: If you use vscode, it might also be helfpul to install the vscode plugin for graphql to pick up syntax highlighting for `.graphql` files.
+> Note: If you use vscode, it might also be helpful to install the vscode plugin for graphql to pick up syntax highlighting for `.graphql` files.
 
 ### Styling
 
