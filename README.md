@@ -21,7 +21,7 @@ For an introduction to Nouns Builder and its concept, you can find further [docu
 - `zoralabs-zord`: Shareable ui components
 - `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
-- `ipfs-service`: api to for image uploads to ipfs
+- `ipfs-service`: api to for image uploads ipfs
 
 ## Quickstart
 
@@ -79,7 +79,7 @@ This app has several third party api keys that you need in order to run Builder:
 
 - [alchemy](https://www.alchemy.com/) as the main rpc node provider in addition to mainnet forks for testing
 - [tenderly](https://docs.tenderly.co/simulations-and-forks/simulation-api) in order to simulate transactions
-- [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dyanamically fetch abis
+- [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dynamically fetch abis
 
 We ask that you supply your own secrets locally for running in development environment. Non-secret environment variables are already included in the `.env` files in this repo.
 
