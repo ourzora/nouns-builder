@@ -1,8 +1,0 @@
-{
-  "network": "optimism-goerli",
-  "manager": {
-    "address": "0x5f9c1e7E31875beAa6ba6B0AB573a4AbEcC95d67",
-    "startBlock": 11032400
-  },
-  "callHandlers": false
-}
