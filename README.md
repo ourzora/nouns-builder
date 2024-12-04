@@ -1,152 +1,105 @@
-# Nouns Builder monorepo
+# Nouns Builder Subgraph
 
-This is Nouns Builder front-end mono-repo. You can find Nouns Builder deployed on:
+## Index
+- [Getting Started](#getting-started)
+- [Step 1 - Install Dependencies](#step-1---install-dependencies)
+- [Step 2 - Set Up a Personal Goldsky API Key](#step-2---set-up-a-personal-goldsky-api-key)
+- [Step 3 - Log in with the API Key](#step-3---log-in-with-the-api-key)
+- [Step 4 - Build the Subgraph from Source](#step-4---build-the-subgraph-from-source)
+- [Step 5 - Deploy the Subgraph to Production](#step-5---deploy-the-subgraph-to-production)
+- [Step 6 - Query the Subgraph](#step-6---query-the-subgraph)
+- [Production Endpoints](#production-endpoints)
+- [(DEPRECATED) Local Development with Docker Compose (TODO: fix - pnpm create:local step not working)](#local-development-with-docker-compose)
 
-- [Mainnet](//nouns.build)
-- [Goerli testnet](//testnet.nouns.build)
+## Getting Started
+👉 [Read the Goldsky docs](https://docs.goldsky.com/subgraphs/deploying-subgraphs)
 
-For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://docs.zora.co/docs/smart-contracts/nouns-builder/intro). You can also find [Nouns Protocol here](https://github.com/ourzora/nouns-protocol).
+The Nouns Builder subgraph supports eight networks:
+- `ethereum`
+- `ethereum-sepolia`
+- `base`
+- `base-sepolia`
+- `optimism`
+- `optimism-sepolia`
+- `zora`
+- `zora-sepolia`
 
-### Apps and packages in this repository include:
-
-`apps`
-
-- `web`: Nouns Builder front-end
-- `subgraph`: Nouns Builder subgraph
-
-`packages`
-
-- `blocklist`: Package to check for sanctioned wallet addresses
-- `analytics`: Shareable analytics package
-- `zoralabs-zord`: Shareable ui components
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-- `ipfs-service`: api to for image uploads to ipfs
-
-## Quickstart
-
-#### Get up and running
-
-1. Clone this repo locally
-2. [Install pnpm](https://pnpm.io/installation#using-corepack)
-
-3. Add the required [environment variables](#environment-variables)
-
-4. Install dependencies across all apps and packages
-
-```
-pnpm i
+### Step 1 - Install Dependencies
+Navigate to the subgraph directory and run:
+```bash
+# FROM: ./apps/subgraph
+pnpm install
 ```
 
-5. Once environment variables are defined, you can run the app in dev mode
+### Step 2 - Set Up a Personal Goldsky API Key
+1. Request to join the team account at [goldsky.com](https://goldsky.com).
+2. Create an API key on your Settings page.
+3. Install the Goldsky CLI:
+    ```bash
+    curl https://goldsky.com | sh  
+    ```  
 
-```
-pnpm dev
-```
-
-#### Linting and formatting
-
-> Note: linting and prettier formatting are automatically run on pre-push hooks
-
-To lint:
-
-```
-pnpm run lint
-```
-
-To format:
-
-```
-pnpm run format
+### Step 3 - Log in with the API Key
+Use the API key you created:
+```bash
+# FROM: ./apps/subgraph
+goldsky login
 ```
 
-To run type checks:
+### Step 4 - Build the Subgraph from Source
+Run the following commands (these scripts are defined in `package.json`):
+```bash
+# FROM: ./apps/subgraph
+pnpm prepare:<desired network>
+pnpm codegen
+pnpm build
+```  
 
-```
-pnpm run type-check
-```
+This will generate types, build the subgraph, and create a local `subgraph.yaml` file.
 
-#### To create and run a production build
+### Step 5 - Deploy the Subgraph to Production
 
-```
-> pnpm run build
-> pnpm run start
-```
+#### IMPORTANT:
+**To avoid downtime during upgrades, maintain a backup subgraph. If issues arise, you can redirect traffic to the backup rather than waiting for redeployment or rollback, which can take hours.**
 
-## Environment variables
+- The subgraph name follows the pattern `nouns-builder-<network>` regardless of version, don't clients do not need to be notified for non-breaking changes.
+- Increase the `specVersion` at the top of `subgraph.yaml.mustache` for each new version.
+- Use the **--tag** flag to alias `latest` with the current `specVersion`.
+- If you are making breaking changes, make sure to notify clients first and provide a migration path.
 
-This app has several third party api keys that you need in order to run Builder:
+**Always remember to tag!**
 
-- [alchemy](https://www.alchemy.com/) as the main rpc node provider in addition to mainnet forks for testing
-- [tenderly](https://docs.tenderly.co/simulations-and-forks/simulation-api) in order to simulate transactions
-- [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dyanamically fetch abis
+```bash
+# FROM: ./apps/subgraph
+# Example with specVersion 0.0.6
 
-We ask that you supply your own secrets locally for running in development environment. Non-secret environment variables are already included in the `.env` files in this repo.
-
-Add the following variables to `.env.local` within this root directory (needed to run tests against a local anvil node):
-
-```
-#alchemy
-PRIVATE_ALCHEMY_ID=<ALCHEMY_API_KEY>
-ANVIL_FORK_URL=https://eth-mainnet.alchemyapi.io/v2/$PRIVATE_ALCHEMY_ID
-ANVIL_BLOCK_NUMBER=8305745
-```
-
-Add the following variables to `apps/web/.env.local`:
-
-```
-#alchemy
-NEXT_PUBLIC_TENDERLY_RPC_KEY=<ALCHEMY_API_KEY>
-
-
-#tenderly
-TENDERLY_ACCESS_KEY=<API_KEY>
-TENDERLY_PROJECT=<PROJECT_NAME>
-TENDERLY_USER=<ACCOUNT_NAME>
-
-#etherscan (optional to run locally, this is for dynamically fetching abis in the custom transaction builder)
-ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
-
-#optional zora api key
-NEXT_PUBLIC_ZORA_API_KEY=
+goldsky subgraph deploy nouns-builder-<network>/0.0.6 --path .        
+goldsky subgraph tag create nouns-builder-<network>/0.0.6 --tag latest
+# API endpoint format will be: api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-ethereum-sepolia/latest/gn
 ```
 
-## Running tests
+### Step 6 - Query the Subgraph
 
-> Note: to run tests you need to [install anvil](https://github.com/foundry-rs/foundry/blob/master/README.md#installation).
+You can now query the subgraph in the Goldsky GraphQL playground to test your changes. **Note: Full indexing may take several hours.**
 
-Once anvil is installed, you can now locally run anvil (from the root directory in the monorepo) in a separate terminal session to start a local ethereum node:
-`pnpm run anvil`
+## Production Endpoints
 
-Now you can run the tests in a separate terminal session:
-`pnpm run test`
+The subgraph is currently deployed to the following networks:
 
-You can also run the tests in watchmode, which will react to any source code or test files changing. To do that, run:
-`pnpm run test:watch`
+- [Ethereum](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-ethereum/latest/gn)
+- [Ethereum Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-ethereum-sepolia/latest/gn)
+- [Optimism](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-optimism/latest/gn)
+- TODO: [Optimism Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-optimism-sepolia/latest/gn)
+- TODO: [Zora](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-zora/latest/gn)
+- TODO: [Zora Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-zora-sepolia/latest/gn)
+- TODO: [Base](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base/latest/gn)
+- TODO: [Base Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base-sepolia/latest/gn)
 
-## Deployments
-
-### Client
-
-The Nouns Builder client is deployed on [Vercel](https://vercel.com/). Any pull requests will trigger a new preview deployment providing you with an environment to test out and preview changes.
-
-### Subgraph
-
-The Nouns Builder subgraph is deployed for the following networks:
-
-- [Ethereum Mainnet](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-mainnet)
-- [Ethereum Goerli](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli)
-- [Optimism Mainnet](https://api.thegraph.com/subgraphs/name/neokry/noun-builder-optimism-mainnet)
-- [Optimism Goerli](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-optimism-goerli)
-- [Zora Mainnet](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-mainnet/stable/gn)
-- [Zora Goerli](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-testnet/stable/gn)
-- [Base Mainnet](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-base-mainnet/stable/g)
-- [Base Goerli](https://api.studio.thegraph.com/query/49279/nouns-builder-base-goerli/version/latest)
-
-## Contributions
-
-Please refer to our [contributions guideline](/.github/contributing.md) on how best to contribute.
-
-## Questions?
-
-Feel free to reach out to us via [twitter](https://twitter.com/nounsbuilder), [discord](https://discord.gg/JpMKps2W), or via email at <opensource@zora.co>
+## (DEPRECATED) Local Development with Docker Compose (TODO: fix - pnpm create:local step not working)
+- Generate the subgraph.yml file with `pnpm prepare:<desired network>`
+- Generate types with `pnpm codegen`
+- Build the subgraph with `pnpm build`
+- Run the local graph node with `pnpm local:node`
+- For Mac users on Apple Silicon, use a local image of `graphprotocol/graph-node` (see [instructions here](https://github.com/graphprotocol/graph-node/tree/master/docker)).
+- Create the local subgraph with `pnpm create:local`
+- Deploy changes to the local subgraph with `pnpm deploy-local`
