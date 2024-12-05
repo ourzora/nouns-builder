@@ -17,12 +17,9 @@ export interface ArtworkPreviewProps {
   images: ImageProps[] | undefined
 }
 
-export const ArtworkPreview: React.FC<ArtworkPreviewProps> = ({
-  canvas,
-  generatedImages,
-  generateStackedImage,
-  images,
-}) => {
+export const ArtworkPreview: React.FC<ArtworkPreviewProps> = (
+  { canvas, generatedImages, generateStackedImage, images }
+) => {
   return (
     <Flex align={'center'} justify={'center'} direction={'column'}>
       <Flex className={artworkPreviewImageWrapper} mb={'x8'}>

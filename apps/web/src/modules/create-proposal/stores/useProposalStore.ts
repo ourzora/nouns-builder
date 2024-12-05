@@ -29,12 +29,14 @@ interface Actions {
   addTransactions: (builderTransactions: BuilderTransaction[]) => void
   removeTransaction: (index: number) => void
   removeAllTransactions: () => void
-  createProposal: ({
-    title,
-    summary,
-    disabled,
-    transactions,
-  }: Pick<State, 'title' | 'summary' | 'transactions' | 'disabled'>) => void
+  createProposal: (
+    {
+      title,
+      summary,
+      disabled,
+      transactions,
+    }: Pick<State, 'title' | 'summary' | 'transactions' | 'disabled'>
+  ) => void
   clearProposal: () => void
 }
 

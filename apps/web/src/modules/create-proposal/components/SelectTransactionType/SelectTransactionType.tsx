@@ -11,10 +11,9 @@ interface SelectTransactionTypeProps {
   onSelect: (value: TransactionFormType) => void
 }
 
-export const SelectTransactionType: React.FC<SelectTransactionTypeProps> = ({
-  transactionTypes,
-  onSelect,
-}) => {
+export const SelectTransactionType: React.FC<SelectTransactionTypeProps> = (
+  { transactionTypes, onSelect }
+) => {
   return (
     <Stack style={{ maxWidth: 680, minHeight: '80vh' }} mx={'auto'}>
       <Text variant={'heading-xs'} mb={'x5'}>

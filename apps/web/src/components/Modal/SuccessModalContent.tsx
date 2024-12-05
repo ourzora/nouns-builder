@@ -17,14 +17,9 @@ type SuccessModalContentProps = {
   pending?: boolean
 }
 
-const SuccessModalContent: React.FC<SuccessModalContentProps> = ({
-  title,
-  subtitle,
-  content,
-  actions,
-  success,
-  pending,
-}) => {
+const SuccessModalContent: React.FC<SuccessModalContentProps> = (
+  { title, subtitle, content, actions, success, pending }
+) => {
   return (
     <Flex direction={'column'} align={'center'}>
       {success && (

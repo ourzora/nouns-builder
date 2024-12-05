@@ -21,15 +21,9 @@ interface TextInputProps {
   disabled?: boolean
 }
 
-const TextInput: React.FC<TextInputProps> = ({
-  id,
-  value,
-  inputLabel,
-  onChange,
-  errorMessage,
-  placeholder,
-  disabled = false,
-}) => {
+const TextInput: React.FC<TextInputProps> = (
+  { id, value, inputLabel, onChange, errorMessage, placeholder, disabled = false }
+) => {
   return (
     <Box as="fieldset" mb={'x8'} p={'x0'} className={defaultFieldsetStyle}>
       {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
