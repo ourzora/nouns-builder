@@ -10,13 +10,9 @@ interface FormHandlerProps extends CreateFormSection {
   sectionIndex: number
 }
 
-export const FormHandler = ({
-  form,
-  title,
-  heading,
-  subHeading,
-  sectionIndex,
-}: FormHandlerProps) => {
+export const FormHandler = (
+  { form, title, heading, subHeading, sectionIndex }: FormHandlerProps
+) => {
   return (
     <Box>
       <Flex align={'center'} justify={'space-between'}>

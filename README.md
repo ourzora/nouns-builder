@@ -1,6 +1,7 @@
 # Nouns Builder Subgraph
 
 ## Index
+
 - [Getting Started](#getting-started)
 - [Step 1 - Install Dependencies](#step-1---install-dependencies)
 - [Step 2 - Set Up a Personal Goldsky API Key](#step-2---set-up-a-personal-goldsky-api-key)
@@ -12,9 +13,11 @@
 - [(DEPRECATED) Local Development with Docker Compose (TODO: fix - pnpm create:local step not working)](#local-development-with-docker-compose)
 
 ## Getting Started
+
 👉 [Read the Goldsky docs](https://docs.goldsky.com/subgraphs/deploying-subgraphs)
 
 The Nouns Builder subgraph supports eight networks:
+
 - `ethereum`
 - `ethereum-sepolia`
 - `base`
@@ -25,41 +28,49 @@ The Nouns Builder subgraph supports eight networks:
 - `zora-sepolia`
 
 ### Step 1 - Install Dependencies
+
 Navigate to the subgraph directory and run:
+
 ```bash
 # FROM: ./apps/subgraph
 pnpm install
 ```
 
 ### Step 2 - Set Up a Personal Goldsky API Key
+
 1. Request to join the team account at [goldsky.com](https://goldsky.com).
 2. Create an API key on your Settings page.
 3. Install the Goldsky CLI:
-    ```bash
-    curl https://goldsky.com | sh  
-    ```  
+   ```bash
+   curl https://goldsky.com | sh
+   ```
 
 ### Step 3 - Log in with the API Key
+
 Use the API key you created:
+
 ```bash
 # FROM: ./apps/subgraph
 goldsky login
 ```
 
 ### Step 4 - Build the Subgraph from Source
+
 Run the following commands (these scripts are defined in `package.json`):
+
 ```bash
 # FROM: ./apps/subgraph
 pnpm prepare:<desired network>
 pnpm codegen
 pnpm build
-```  
+```
 
 This will generate types, build the subgraph, and create a local `subgraph.yaml` file.
 
 ### Step 5 - Deploy the Subgraph to Production
 
 #### IMPORTANT:
+
 **To avoid downtime during upgrades, maintain a backup subgraph. If issues arise, you can redirect traffic to the backup rather than waiting for redeployment or rollback, which can take hours.**
 
 - The subgraph name follows the pattern `nouns-builder-<network>` regardless of version, don't clients do not need to be notified for non-breaking changes.
@@ -73,7 +84,7 @@ This will generate types, build the subgraph, and create a local `subgraph.yaml`
 # FROM: ./apps/subgraph
 # Example with specVersion 0.0.6
 
-goldsky subgraph deploy nouns-builder-<network>/0.0.6 --path .        
+goldsky subgraph deploy nouns-builder-<network>/0.0.6 --path .
 goldsky subgraph tag create nouns-builder-<network>/0.0.6 --tag latest
 # API endpoint format will be: api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-ethereum-sepolia/latest/gn
 ```
@@ -96,6 +107,7 @@ The subgraph is currently deployed to the following networks:
 - TODO: [Base Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base-sepolia/latest/gn)
 
 ## (DEPRECATED) Local Development with Docker Compose (TODO: fix - pnpm create:local step not working)
+
 - Generate the subgraph.yml file with `pnpm prepare:<desired network>`
 - Generate types with `pnpm codegen`
 - Build the subgraph with `pnpm build`

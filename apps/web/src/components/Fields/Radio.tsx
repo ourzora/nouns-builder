@@ -13,14 +13,16 @@ interface RadioProps<T> {
   flexDirection?: Atoms['flexDirection']
 }
 
-export function Radio<T extends React.Key | boolean>({
-  formik,
-  id,
-  options,
-  value,
-  inputLabel,
-  flexDirection = 'column',
-}: React.PropsWithChildren<RadioProps<T>>) {
+export function Radio<T extends React.Key | boolean>(
+  {
+    formik,
+    id,
+    options,
+    value,
+    inputLabel,
+    flexDirection = 'column',
+  }: React.PropsWithChildren<RadioProps<T>>
+) {
   const handleSelection = (val: T) => {
     formik.setFieldValue(id, val)
   }

@@ -22,14 +22,11 @@ Then you can use the provided React hook to check an address against the block l
 
 ```ts
 import { useBlocklist } from 'blocklist'
-
 const { address } = useAccount()
-
 const isBlocked = useBlocklist(address)
-
 useEffect(() => {
   if (isBlocked) {
-    // do something
+     do something
   }
 }, [isBlocked])
 ```
@@ -38,8 +35,8 @@ There is also a simple imperative function to perform this check synchronously.
 
 ```ts
 import { isBlocked } from 'blocklist'
-
 if (isBlocked('0x...')) {
-  // do something
+   do something
+}
 }
 ```
