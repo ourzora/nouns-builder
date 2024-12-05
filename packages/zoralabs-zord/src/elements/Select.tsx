@@ -17,14 +17,16 @@ export interface SelectProps extends FlexComponentProps<'select'> {
   value?: string | number
 }
 
-export const Select = ({
-  className,
-  containerClassName,
-  variant = 'sm',
-  children,
-  disabled,
-  ...props
-}: SelectProps) => {
+export const Select = (
+  {
+    className,
+    containerClassName,
+    variant = 'sm',
+    children,
+    disabled,
+    ...props
+  }: SelectProps
+) => {
   const large = variant === 'lg'
 
   return (

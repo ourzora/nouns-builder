@@ -5,7 +5,7 @@
     "clean": "rm -rf ./generated ./build subgraph.yaml",
     "build:subgraph": "graph build",
     "codegen": "graph codegen",
-    "prepare:ethereum-sepolia": "mustache config/ethereum-sepolia.json subgraph.yaml.mustache > subgraph.yaml",
+    "prepare:ethereum-sepolia": "mustache config/sepolia.json subgraph.yaml.mustache > subgraph.yaml",
     "prepare:ethereum": "mustache config/ethereum.json subgraph.yaml.mustache > subgraph.yaml",
     "prepare:base": "mustache config/base.json subgraph.yaml.mustache > subgraph.yaml",
     "prepare:base-sepolia": "mustache config/base-sepolia.json subgraph.yaml.mustache > subgraph.yaml",

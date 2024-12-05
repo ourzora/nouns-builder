@@ -12,14 +12,9 @@ export interface AvatarProps extends Omit<BoxProps, 'size'> {
   src?: string | null
 }
 
-export function Avatar({
-  address,
-  className,
-  size,
-  variant,
-  src,
-  ...props
-}: AvatarProps) {
+export function Avatar(
+  { address, className, size, variant, src, ...props }: AvatarProps
+) {
   const background = useMemo(() => {
     if (address && !src) {
       const gradient = gradientForAddress(address)

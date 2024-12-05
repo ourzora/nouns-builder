@@ -5,17 +5,19 @@ import React from 'react'
 import CopyButton from 'src/components/CopyButton/CopyButton'
 import { AddressType } from 'src/typings'
 
-export const DaoCopyAddress = ({
-  image,
-  name,
-  ens,
-  address,
-}: {
-  image: string
-  name?: string
-  ens: string
-  address: AddressType
-}) => (
+export const DaoCopyAddress = (
+  {
+    image,
+    name,
+    ens,
+    address,
+  }: {
+    image: string
+    name?: string
+    ens: string
+    address: AddressType
+  }
+) => (
   <Flex gap={'x3'} style={{ width: '50%' }} align={'center'}>
     <Box width={'x13'} height={'x13'}>
       <Image
