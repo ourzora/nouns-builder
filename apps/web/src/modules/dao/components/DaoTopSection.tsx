@@ -19,12 +19,9 @@ export enum TopSectionView {
   Chart = 'chart',
 }
 
-export const DaoTopSection = ({
-  chain,
-  auctionAddress,
-  collection,
-  token,
-}: TopSectionProps) => {
+export const DaoTopSection = (
+  { chain, auctionAddress, collection, token }: TopSectionProps
+) => {
   const [topSectionView, setTopSectionView] = React.useState<TopSectionView>(
     TopSectionView.Auction
   )
@@ -47,13 +44,9 @@ export const DaoTopSection = ({
   )
 }
 
-const TabSwitchAnimation = ({
-  children,
-  topSectionView,
-}: {
-  children: ReactElement
-  topSectionView: string
-}) => {
+const TabSwitchAnimation = (
+  { children, topSectionView }: { children: ReactElement; topSectionView: string }
+) => {
   return (
     <AnimatePresence exitBeforeEnter={true}>
       <motion.div

@@ -17,15 +17,17 @@ interface NumberInputProps extends InputHTMLAttributes<HTMLInputElement> {
   disableWheelEvent?: boolean
 }
 
-const NumberInput = ({
-  label,
-  className,
-  errorMessage,
-  hasError,
-  value,
-  disableWheelEvent = true,
-  ...rest
-}: NumberInputProps) => {
+const NumberInput = (
+  {
+    label,
+    className,
+    errorMessage,
+    hasError,
+    value,
+    disableWheelEvent = true,
+    ...rest
+  }: NumberInputProps
+) => {
   return (
     <Box as="fieldset" className={defaultFieldsetStyle}>
       {errorMessage && (

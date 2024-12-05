@@ -78,10 +78,9 @@ const VetoModal: React.FC<{
   )
 }
 
-export const VetoAction: React.FC<OwnerActionsProps> = ({
-  proposalId,
-  proposalNumber,
-}) => {
+export const VetoAction: React.FC<OwnerActionsProps> = (
+  { proposalId, proposalNumber }
+) => {
   const [open, setOpen] = useState(false)
   const {
     addresses: { token },

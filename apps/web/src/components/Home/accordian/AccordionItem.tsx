@@ -6,10 +6,9 @@ import { Icon } from 'src/components/Icon'
 
 import { accordionItem, accordionName } from '../../../styles/home.css'
 
-const AccordionItem: React.FC<{ title: string; description: ReactElement }> = ({
-  title,
-  description,
-}) => {
+const AccordionItem: React.FC<{ title: string; description: ReactElement }> = (
+  { title, description }
+) => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false)
   const variants = {
     initial: {
