@@ -81,11 +81,11 @@ You can now query the subgraph in the Goldsky GraphQL playground to test your ch
 
 The subgraph is currently deployed to the following networks:
 
-- [Ethereum](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-ethereum/latest/gn)
-- [Base](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-base/latest/gn)
-- [Optimism](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-optimism/latest/gn)
-- TODO: [Zora](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-zora/latest/gn)
-- TODO?: [Ethereum Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-ethereum-sepolia/latest/gn)
+- [Ethereum](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-ethereum-mainnet/latest/gn)
+- [Base](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-base-mainnet/latest/gn)
+- [Optimism](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-optimism-mainnet/latest/gn)
+- [Zora](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-zora-mainnet/latest/gn)
+- [Ethereum Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-ethereum-sepolia/latest/gn)
 - TODO?: [Optimism Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-optimism-sepolia/latest/gn)
 - TODO?: [Zora Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-zora-sepolia/latest/gn)
 - TODO?: [Base Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-base-sepolia/latest/gn)

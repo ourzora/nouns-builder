@@ -7,7 +7,7 @@ export interface Duration {
   minutes?: number
 }
 
-export const enum CHAIN_ID {
+export enum CHAIN_ID {
   ETHEREUM = 1,
   SEPOLIA = 11155111,
   OPTIMISM = 10,
