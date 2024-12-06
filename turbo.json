@@ -1,31 +1,8 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
-  "pipeline": {
-    "build": {
-      "outputs": ["dist/**", ".next/**", "public/robots.txt", "public/sitemap.xml"],
-      "dependsOn": ["^build"]
-    },
-    "test": {
-      "outputs": ["coverage/**"],
-      "dependsOn": ["^build"]
-    },
-    "type-check": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
-    "lint": {
-      "dependsOn": ["^build"],
-      "outputs": []
-    },
-    "dev": {
-      "cache": false,
-      "dependsOn": ["^build"]
-    },
-    "clean": {
-      "cache": false
-    }
-  },
+  "globalDependencies": [
+    "**/.env.*local"
+  ],
   "globalEnv": [
     "PINATA_API_KEY",
     "PRIVATE_ALCHEMY_ID",
@@ -50,5 +27,48 @@
     "TENDERLY_PROJECT",
     "TENDERLY_ACCESS_KEY",
     "NODE_ENV"
-  ]
+  ],
+  "tasks": {
+    "build": {
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        "public/robots.txt",
+        "public/sitemap.xml"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "test": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "type-check": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": []
+    },
+    "lint": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "clean": {
+      "cache": false
+    }
+  }
 }
