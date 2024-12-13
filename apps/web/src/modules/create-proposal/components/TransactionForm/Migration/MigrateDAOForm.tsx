@@ -117,7 +117,7 @@ export const MigrateDAOForm = () => {
           </Button>
           {error && (
             <Box mt="x4" color="negative">
-              An unexpected error has occured please try again
+              An unexpected error has occurred please try again
             </Box>
           )}
         </Flex>
