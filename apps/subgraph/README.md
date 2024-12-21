@@ -1,10 +1,21 @@
 # Nouns Builder Subgraph
 
+## Index
+
+- [Getting Started](#getting-started)
+- [Step 1 - Install Dependencies](#step-1---install-dependencies)
+- [Step 2 - Set Up a Personal Goldsky API Key](#step-2---set-up-a-personal-goldsky-api-key)
+- [Step 3 - Log in with the API Key](#step-3---log-in-with-the-api-key)
+- [Step 4 - Build the Subgraph from Source](#step-4---build-the-subgraph-from-source)
+- [Step 5 - Deploy the Subgraph to Production](#step-5---deploy-the-subgraph-to-production)
+- [Step 6 - Query the Subgraph](#step-6---query-the-subgraph)
+- [Production Endpoints](#production-endpoints)
+
 ## Getting Started
 
 👉 [Read the Goldsky docs](https://docs.goldsky.com/subgraphs/deploying-subgraphs)
 
-The Nouns Builder subgraph supports four networks:
+The Nouns Builder subgraph supports five networks:
 
 - `ethereum`
 - `ethereum-sepolia`
@@ -62,6 +73,8 @@ This will generate types, build the subgraph, and create a local `subgraph.yaml`
 - Increase the `specVersion` at the top of `subgraph.yaml.mustache` for each new version.
 - Use the **--tag** flag to alias `latest` with the current `specVersion`.
 
+*If you are making breaking changes, make sure to notify clients first and provide a migration path.
+
 **Always remember to tag!**
 
 ```bash
@@ -81,20 +94,21 @@ You can now query the subgraph in the Goldsky GraphQL playground to test your ch
 
 The subgraph is currently deployed to the following networks:
 
-- [Ethereum](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-ethereum-mainnet/latest/gn)
-- [Base](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-base-mainnet/latest/gn)
-- [Optimism](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-optimism-mainnet/latest/gn)
-- [Zora](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-zora-mainnet/latest/gn)
-- [Ethereum Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-ethereum-sepolia/latest/gn)
-- TODO?: [Optimism Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-optimism-sepolia/latest/gn)
-- TODO?: [Zora Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-zora-sepolia/latest/gn)
-- TODO?: [Base Sepolia](https://api.goldsky.com/api/public/<project name>/subgraphs/nouns-builder-base-sepolia/latest/gn)
+- [Ethereum](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-ethereum-mainnet/latest/gn)
+- [Ethereum Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-ethereum-sepolia/latest/gn)
+- [Base](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base-mainnet/latest/gn)
+- [Optimism](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-optimism-mainnet/latest/gn)
+- [Zora](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-zora-mainnet/latest/gn)
+- TODO?: [Optimism Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-optimism-sepolia/latest/gn)
+- TODO?: [Zora Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-zora-sepolia/latest/gn)
+- TODO?: [Base Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base-sepolia/latest/gn)
 
-## Local Development with Docker Compose
+## (DEPRECATED) Local Development with Docker Compose (TODO: fix - pnpm create:local step not working)
 
+- Generate the subgraph.yml file with `pnpm prepare:<desired network>`
 - Generate types with `pnpm codegen`
-- Build the subgraph with `pnpm build:subgraph`
-- Run the local graph node with `pnpm local-node`
+- Build the subgraph with `pnpm build`
+- Run the local graph node with `pnpm local:node`
 - For Mac users on Apple Silicon, use a local image of `graphprotocol/graph-node` (see [instructions here](https://github.com/graphprotocol/graph-node/tree/master/docker)).
-- Create the local subgraph with `pnpm create-local`
+- Create the local subgraph with `pnpm create:local`
 - Deploy changes to the local subgraph with `pnpm deploy-local`
