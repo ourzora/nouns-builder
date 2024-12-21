@@ -49,11 +49,9 @@ You can swap out the environment variables as defined below to run against mainn
 
 ```
 # the default network type is defined in .env, to run against testnet
-NEXT_PUBLIC_TENDERLY_RPC_KEY=<TENDERLY_RPC_API_KEY>
 NEXT_PUBLIC_NETWORK_TYPE="testnet"
 
 # to run against mainnet locally
-NEXT_PUBLIC_TENDERLY_RPC_KEY=<TENDERLY_RPC_API_KEY>
 NEXT_PUBLIC_NETWORK_TYPE="mainnet"
 ```
 
