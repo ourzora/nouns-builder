@@ -14,6 +14,7 @@ export enum TransactionType {
   RESUME_AUCTIONS = 'resume-auctions',
   UPDATE_MINTER = 'update-minter',
   REPLACE_ARTWORK = 'replace-artwork',
+  RELEASE_ESCROW_MILESTONE = 'release-escrow-milestone',
   MIGRATION = 'migration',
 }
 
