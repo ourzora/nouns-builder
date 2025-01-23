@@ -109,3 +109,21 @@ export const EscrowFormSchema = yup
       return values.clientAddress !== values.recipientAddress
     }
   )
+
+type Document = Partial<{
+  id: string
+  src: string
+  type: string
+  mimeType: string // image/png, application/pdf, etc.
+  createdAt: number
+}>
+
+export type MilestoneMetadata = Partial<{
+  id: string
+  title: string
+  description: string
+  image: Document
+  documents: Document[]
+  createdAt: number
+  endDate: number
+}>
