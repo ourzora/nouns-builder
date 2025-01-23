@@ -21,8 +21,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const decodeResult = decodeFunctionData({ abi: JSON.parse(abi), data: calldata })
     const functionInfo = getAbiItem({
       abi: JSON.parse(abi),
-      name: decodeResult.functionName,
+      name:
+        decodeResult.functionName !== 'release'
+          ? decodeResult.functionName
+          : '0x37bdc99b', // manually set function signature for release(_milestone) instead of release()
     })
+
 
     const argMapping = functionInfo.inputs.reduce(
       (last: any, input: any, index: number) => {
