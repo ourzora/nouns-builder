@@ -23,6 +23,7 @@ import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { BuilderTransaction, useProposalStore } from '../../stores'
 import { prepareProposalTransactions } from '../../utils/prepareTransactions'
+import { useEscrowFormStore } from '../TransactionForm/Escrow/EscrowUtils'
 import { Transactions } from './Transactions'
 import { ERROR_CODE, FormValues, validationSchema } from './fields'
 
@@ -69,6 +70,7 @@ export const ReviewProposalForm = ({
   const [simulating, setSimulating] = useState<boolean>(false)
   const [simulations, setSimulations] = useState<Array<Simulation>>([])
   const [proposing, setProposing] = useState<boolean>(false)
+  const { clear: clearEscrowForm } = useEscrowFormStore()
 
   const { data: votes, isLoading } = useContractRead({
     address: addresses?.token as AddressType,
@@ -178,6 +180,7 @@ export const ReviewProposalForm = ({
           .then(() => {
             setProposing(false)
             clearProposal()
+            clearEscrowForm()
           })
       } catch (err: any) {
         setProposing(false)
