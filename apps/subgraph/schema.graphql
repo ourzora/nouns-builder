@@ -69,6 +69,7 @@ type Proposal @entity {
   quorumVotes: BigInt!
   queued: Boolean!
   executed: Boolean!
+  executionTransactionHash: Bytes
   canceled: Boolean!
   vetoed: Boolean!
   voteCount: Int!
