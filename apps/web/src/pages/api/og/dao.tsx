@@ -35,20 +35,24 @@ const ptRootBold = fetch(
 ).then((res) => res.arrayBuffer())
 
 const getTreasuryBalance = async (chainId: CHAIN_ID, address: string) => {
-  // query balance directly from the rpc (edge runtime compatible)
+  // Generate a random request ID
+  const requestId = Math.floor(Math.random() * 1_000_000)
+
+  // Query balance directly from the RPC (edge runtime compatible)
   const { result } = await fetch(RPC_URL[chainId], {
     method: 'POST',
     body: JSON.stringify({
       jsonrpc: '2.0',
       method: 'eth_getBalance',
       params: [address, 'latest'],
-      id: 1,
+      id: requestId,
     }),
   }).then((x) => x.json())
 
-  //covert to eth value
-  const eth = BigInt(formatEther(result))
-  const data = formatCryptoVal(eth)
+  // Convert to ETH value
+  const balanceInWei = BigInt(result)
+  const balanceInEth = formatEther(balanceInWei)
+  const data = formatCryptoVal(balanceInEth)
 
   return data
 }
