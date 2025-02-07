@@ -34,11 +34,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       body: JSON.stringify(keyRestrictions),
     }
 
-    const jwtRepsonse = await fetch(
+    const jwtResponse = await fetch(
       'https://api.pinata.cloud/users/generateApiKey',
       options
     )
-    const json = await jwtRepsonse.json()
+    const json = await jwtResponse.json()
     const { JWT } = json
     return NextResponse.json({ JWT }, { status: 200 })
   } catch (e) {
