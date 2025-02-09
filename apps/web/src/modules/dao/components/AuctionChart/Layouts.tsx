@@ -13,18 +13,20 @@ import {
   viewBox,
 } from './AuctionChart.css'
 
-export const AuctionGraphLayout = ({
-  chart,
-  startTime,
-  setStartTime,
-  chartData,
-}: {
-  chart?: ReactNode
-  viewSwitcher?: ReactNode
-  startTime: StartTimes
-  setStartTime: (startTime: StartTimes) => void
-  chartData?: AuctionHistory[]
-}) => {
+export const AuctionGraphLayout = (
+  {
+    chart,
+    startTime,
+    setStartTime,
+    chartData,
+  }: {
+    chart?: ReactNode
+    viewSwitcher?: ReactNode
+    startTime: StartTimes
+    setStartTime: (startTime: StartTimes) => void
+    chartData?: AuctionHistory[]
+  }
+) => {
   const startTimeText = useMemo(() => {
     if (!chartData || !chartData.length) return '--'
 
@@ -87,13 +89,9 @@ export const AuctionGraphLayout = ({
   )
 }
 
-export const DisplayPanel = ({
-  title,
-  description,
-}: {
-  title: string
-  description: string
-}) => (
+export const DisplayPanel = (
+  { title, description }: { title: string; description: string }
+) => (
   <Flex
     direction="column"
     alignSelf="center"

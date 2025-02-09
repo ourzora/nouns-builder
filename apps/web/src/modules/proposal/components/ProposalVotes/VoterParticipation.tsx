@@ -11,10 +11,9 @@ export interface VoterParticipationProps {
 
 const POSITIVE_VOTER_PARTICIPATION_RATE = 20
 
-export const VoterParticipation: React.FC<VoterParticipationProps> = ({
-  totalVotes,
-  maxVotes,
-}) => {
+export const VoterParticipation: React.FC<VoterParticipationProps> = (
+  { totalVotes, maxVotes }
+) => {
   const { isMobile } = useLayoutStore()
   const participation = (totalVotes / maxVotes) * 100
 

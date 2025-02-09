@@ -3,9 +3,9 @@ import React from 'react'
 
 import { imageGridWrapperStyle, previewGeneratedImageStyle } from 'src/styles/Artwork.css'
 
-export const ImageGrid: React.FC<{ generatedImages: string[] }> = ({
-  generatedImages,
-}) => {
+export const ImageGrid: React.FC<{ generatedImages: string[] }> = (
+  { generatedImages }
+) => {
   return (
     <Grid gap="x4" className={imageGridWrapperStyle}>
       {generatedImages &&

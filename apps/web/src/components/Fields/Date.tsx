@@ -5,6 +5,7 @@ import React, { ReactElement } from 'react'
 
 import {
   defaultFieldsetStyle,
+  defaultHelperTextStyle,
   defaultInputErrorMessageStyle,
   defaultInputErrorStyle,
   defaultInputLabelStyle,
@@ -18,6 +19,7 @@ interface DateProps {
   formik: FormikProps<any>
   id: string
   errorMessage: string | FormikErrors<any> | string[] | undefined | FormikErrors<any>[]
+  helperText?: string
   value: any
   altFormat?: string
   dateFormat?: string
@@ -28,19 +30,22 @@ interface DateProps {
   disabled?: boolean
 }
 
-const Date: React.FC<DateProps> = ({
-  inputLabel,
-  formik,
-  id,
-  errorMessage,
-  autoSubmit,
-  value,
-  placeholder,
-  altFormat,
-  enableTime = false,
-  dateFormat = 'Y-m-d',
-  disabled = false,
-}) => {
+const Date: React.FC<DateProps> = (
+  {
+    inputLabel,
+    formik,
+    id,
+    errorMessage,
+    helperText,
+    autoSubmit,
+    value,
+    placeholder,
+    altFormat,
+    enableTime = false,
+    dateFormat = 'Y-m-d',
+    disabled = false,
+  }
+) => {
   const ref = React.useRef(null)
 
   React.useEffect(() => {
@@ -68,10 +73,10 @@ const Date: React.FC<DateProps> = ({
       {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
       {errorMessage && (
         <Box
-          position={'absolute'}
           right={'x2'}
-          top={'x8'}
-          fontSize={12}
+          top={'x15'}
+          pt={'x4'}
+          fontSize={14}
           className={defaultInputErrorMessageStyle}
         >
           {errorMessage as string}
@@ -87,6 +92,17 @@ const Date: React.FC<DateProps> = ({
         readOnly={true}
         disabled={disabled}
       />
+      {helperText && (
+        <Box
+          right={'x2'}
+          top={'x15'}
+          pt={'x4'}
+          fontSize={14}
+          className={defaultHelperTextStyle}
+        >
+          {helperText}
+        </Box>
+      )}
     </Box>
   )
 }

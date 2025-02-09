@@ -9,15 +9,17 @@ import { useEnsData } from 'src/hooks'
 
 import { firstRowItem, lastRowItem, rowItem } from './MembersList.css'
 
-export const MemberCard = ({
-  member,
-  totalSupply,
-  isMobile,
-}: {
-  member: DaoMember
-  totalSupply?: number
-  isMobile: boolean
-}) => {
+export const MemberCard = (
+  {
+    member,
+    totalSupply,
+    isMobile,
+  }: {
+    member: DaoMember
+    totalSupply?: number
+    isMobile: boolean
+  }
+) => {
   const { displayName, ensAvatar } = useEnsData(member.address)
 
   const timeJoined = useMemo(

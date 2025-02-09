@@ -33,13 +33,9 @@ const confirmAnimation = {
   },
 }
 
-const StickySave: React.FC<StickySaveProps> = ({
-  confirmText,
-  saveButtonText,
-  disabled,
-  isSubmitting,
-  onSave,
-}) => {
+const StickySave: React.FC<StickySaveProps> = (
+  { confirmText, saveButtonText, disabled, isSubmitting, onSave }
+) => {
   const [hasConfirmed, setHasConfirmed] = React.useState<boolean>(false)
   const [showConfirmBanner, setShowConfirmBanner] = React.useState<boolean>(false)
   const previousSubmitting = usePrevious(isSubmitting)

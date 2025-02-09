@@ -17,7 +17,6 @@ import '@fontsource/inter/600.css'
 import { ThemeProvider, lightTheme } from '@zoralabs/zord'
 import '@zoralabs/zord/index.css'
 import type { AppProps } from 'next/app'
-
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={lightTheme}>
@@ -249,7 +248,6 @@ Each theme maps 1-1 with the ThemeContract:
 
 ```ts
 import { border, colorTheme, ease, radii, size, space, typography } from './tokens'
-
 export const lightTheme = createTheme(theme, {
   fonts: {
     heading: typography.fonts.body,

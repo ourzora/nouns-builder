@@ -67,11 +67,9 @@ export interface ParagraphProps extends Omit<TextProps, 'variant'> {
 export type ParagraphComponentProps<E extends ElementType = typeof BoxDefaultElement> =
   PolymorphicPropsWithRef<ParagraphProps, E>
 
-export function Paragraph<E extends ElementType = typeof BoxDefaultElement>({
-  size = 'md',
-  variant,
-  ...props
-}: ParagraphComponentProps<E>) {
+export function Paragraph<E extends ElementType = typeof BoxDefaultElement>(
+  { size = 'md', variant, ...props }: ParagraphComponentProps<E>
+) {
   return <Text variant={`paragraph-${size}`} {...props} />
 }
 
@@ -82,11 +80,9 @@ export interface HeadingProps extends Omit<TextProps, 'variant'> {
 export type HeadingComponentProps<E extends ElementType = typeof BoxDefaultElement> =
   PolymorphicPropsWithRef<HeadingProps, E>
 
-export function Heading<E extends ElementType = typeof BoxDefaultElement>({
-  size = 'md',
-  variant,
-  ...props
-}: HeadingComponentProps<E>) {
+export function Heading<E extends ElementType = typeof BoxDefaultElement>(
+  { size = 'md', variant, ...props }: HeadingComponentProps<E>
+) {
   return <Text variant={`heading-${size}`} {...props} />
 }
 
@@ -97,11 +93,9 @@ export interface DisplayProps extends Omit<TextProps, 'variant'> {
 export type DisplayComponentProps<E extends ElementType = typeof BoxDefaultElement> =
   PolymorphicPropsWithRef<DisplayProps, E>
 
-export function Display<E extends ElementType = typeof BoxDefaultElement>({
-  size = 'md',
-  variant,
-  ...props
-}: DisplayComponentProps<E>) {
+export function Display<E extends ElementType = typeof BoxDefaultElement>(
+  { size = 'md', variant, ...props }: DisplayComponentProps<E>
+) {
   return <Text variant={`display-${size}`} {...props} />
 }
 
@@ -110,10 +104,9 @@ export interface EyebrowProps extends Omit<TextProps, 'variant'> {}
 export type EyebrowComponentProps<E extends ElementType = typeof BoxDefaultElement> =
   PolymorphicPropsWithRef<EyebrowProps, E>
 
-export function Eyebrow<E extends ElementType = typeof BoxDefaultElement>({
-  variant,
-  ...props
-}: EyebrowComponentProps<E>) {
+export function Eyebrow<E extends ElementType = typeof BoxDefaultElement>(
+  { variant, ...props }: EyebrowComponentProps<E>
+) {
   return <Text variant="eyebrow" {...props} />
 }
 
@@ -124,10 +117,9 @@ export interface LabelProps extends Omit<TextProps, 'variant'> {
 export type LabelComponentProps<E extends ElementType = typeof BoxDefaultElement> =
   PolymorphicPropsWithRef<LabelProps, E>
 
-export function Label<E extends ElementType = typeof BoxDefaultElement>({
-  size = 'md',
-  ...props
-}: LabelComponentProps<E>) {
+export function Label<E extends ElementType = typeof BoxDefaultElement>(
+  { size = 'md', ...props }: LabelComponentProps<E>
+) {
   return <Text variant={`label-${size}`} {...props} />
 }
 
@@ -136,8 +128,8 @@ export interface MenuProps extends TextProps {}
 export type MenuTextComponentProps<E extends ElementType = typeof BoxDefaultElement> =
   PolymorphicPropsWithRef<MenuProps, E>
 
-export function MenuText<E extends ElementType = typeof BoxDefaultElement>({
-  ...props
-}: MenuTextComponentProps<E>) {
+export function MenuText<E extends ElementType = typeof BoxDefaultElement>(
+  { ...props }: MenuTextComponentProps<E>
+) {
   return <Text variant="menu-lg" {...props} />
 }

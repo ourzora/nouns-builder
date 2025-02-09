@@ -9,17 +9,19 @@ import { getBids } from 'src/data/subgraph/requests/getBids'
 import { useDaoStore } from 'src/modules/dao'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
-export const useAuctionEvents = ({
-  chainId,
-  collection,
-  tokenId,
-  isTokenActiveAuction,
-}: {
-  chainId: CHAIN_ID
-  collection: string
-  tokenId: string
-  isTokenActiveAuction: boolean
-}) => {
+export const useAuctionEvents = (
+  {
+    chainId,
+    collection,
+    tokenId,
+    isTokenActiveAuction,
+  }: {
+    chainId: CHAIN_ID
+    collection: string
+    tokenId: string
+    isTokenActiveAuction: boolean
+  }
+) => {
   const router = useRouter()
   const { mutate } = useSWRConfig()
   const { auction } = useDaoStore((state) => state.addresses)

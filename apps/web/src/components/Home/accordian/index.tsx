@@ -3,9 +3,9 @@ import React, { ReactElement } from 'react'
 
 import AccordionItem from './AccordionItem'
 
-const Accordion: React.FC<{ items: { title: string; description: ReactElement }[] }> = ({
-  items,
-}) => {
+const Accordion: React.FC<{
+  items: { title: string | ReactElement; description: ReactElement }[]
+}> = ({ items }) => {
   return (
     <Stack>
       {items?.map((item, key) => (

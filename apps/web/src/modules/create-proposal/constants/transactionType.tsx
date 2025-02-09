@@ -8,10 +8,12 @@ export enum TransactionType {
   DROPOSAL = 'droposal',
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
+  ESCROW = 'escrow',
   PAUSE_AUCTIONS = 'pause-auctions',
   RESUME_AUCTIONS = 'resume-auctions',
   UPDATE_MINTER = 'update-minter',
   REPLACE_ARTWORK = 'replace-artwork',
+  RELEASE_ESCROW_MILESTONE = 'release-escrow-milestone',
   MIGRATION = 'migration',
 }
 
@@ -39,6 +41,12 @@ export const TRANSACTION_TYPES = {
     subTitle: 'Create a free Airdrop for selected addresses',
     icon: 'airdrop',
     iconBackdrop: 'rgba(28, 182, 135, 0.1)',
+  },
+  [TransactionType.ESCROW]: {
+    title: 'Escrow Milestones',
+    subTitle: 'Create a proposal and escrow milestones ',
+    icon: 'escrow',
+    iconBackdrop: 'rgba(255, 155, 155, 0.102)',
   },
   [TransactionType.DROPOSAL]: {
     title: 'Droposal: Single edition',

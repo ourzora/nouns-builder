@@ -1,8 +1,0 @@
-{
-  "network": "base-goerli",
-  "manager": {
-    "address": "0x550c326d688fD51ae65AC6A2d48749E631023A03",
-    "startBlock": 6585050
-  },
-  "callHandlers": false
-}

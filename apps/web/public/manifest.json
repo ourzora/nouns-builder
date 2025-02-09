@@ -1,0 +1,22 @@
+{
+  "name": "Nouns Builder",
+  "short_name": "Nouns Builder",
+  "description": "Nouns builder allows anyone to easily deploy a DAO in minutes. Inspired by NounsDAO, Nouns builder uses a factory contract called the Manager to create custom Nouns-styled DAOs.",
+  "iconPath": "favicon.ico",
+  "providedBy": { "name": "BuilderDAO", "url": "https://nouns.build" },
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#000000",
+  "background_color": "#FFFFFF",
+  "display": "standalone"
+}

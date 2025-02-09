@@ -74,7 +74,7 @@ export const DaoProposals = ({
             router.push(`/dao/${currentChainSlug}/${tokenAddress}/proposal/create`)
           }
         >
-          Submit Proposal
+          Create Proposal
         </Button>
       </Flex>
       <Box>

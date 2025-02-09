@@ -10,20 +10,16 @@ interface FormHandlerProps extends CreateFormSection {
   sectionIndex: number
 }
 
-export const FormHandler = ({
-  form,
-  title,
-  heading,
-  subHeading,
-  sectionIndex,
-}: FormHandlerProps) => {
+export const FormHandler = (
+  { form, title, heading, subHeading, sectionIndex }: FormHandlerProps
+) => {
   return (
     <Box>
       <Flex align={'center'} justify={'space-between'}>
         <Text variant={'eyebrow'}>Create A dao</Text>
         {sectionIndex === 0 ? (
           <a
-            href="https://docs.zora.co/docs/guides/builder-deployment"
+            href="https://nouns-builder-docs.vercel.app/guides/builder-deployment"
             target="_blank"
             rel="noreferrer noopener"
           >

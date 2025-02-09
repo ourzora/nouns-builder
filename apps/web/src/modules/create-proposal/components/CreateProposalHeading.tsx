@@ -11,11 +11,9 @@ interface CreateProposalHeadingProps {
   align?: 'center' | 'left'
 }
 
-export const CreateProposalHeading: React.FC<CreateProposalHeadingProps> = ({
-  title,
-  transactionType,
-  align = 'left',
-}) => {
+export const CreateProposalHeading: React.FC<CreateProposalHeadingProps> = (
+  { title, transactionType, align = 'left' }
+) => {
   return (
     <Stack mx={'auto'} pb={'x3'} w={'100%'}>
       <ProposalNavigation transactionType={transactionType} />
