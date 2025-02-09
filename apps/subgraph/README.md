@@ -13,7 +13,7 @@ The Nouns Builder Subgraph is built on the Graph Protocol and includes the follo
 
 Nouns Builder subgraph currently supports two networks: `mainnet` and `goerli`. The environment variables indicated below dictate the network that the app interacts with.
 
-You can swap out the environment variables as defined below to run the subgraph locally against mainnnet or testnet locally.
+You can swap out the environment variables as defined below to run the subgraph locally against mainnet or testnet locally.
 
 ```
 # the default chain id defined in .env, to run against testnet

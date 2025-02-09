@@ -77,7 +77,7 @@ export const BridgeForm = () => {
   const getButtonText = (isAmountInvalid: boolean) => {
     if (isContractWallet) return 'Contract wallets are not supported'
     if (loading) return 'Bridging...'
-    if (isAmountInvalid) return 'Insufficent ETH balance'
+    if (isAmountInvalid) return 'Insufficient ETH balance'
     return 'Bridge'
   }
 
