@@ -19,17 +19,6 @@ export type ContractABIResult = {
   source: 'fetched' | 'cache'
 }
 
-const CHAIN_API_LOOKUP: Record<CHAIN_ID, string> = {
-  [CHAIN_ID.ETHEREUM]: 'api.etherscan.io',
-  [CHAIN_ID.OPTIMISM]: 'api-optimistic.etherscan.io',
-  [CHAIN_ID.SEPOLIA]: 'api-sepolia.etherscan.io',
-  [CHAIN_ID.OPTIMISM_SEPOLIA]: 'api-sepolia-optimistic.etherscan.io',
-  [CHAIN_ID.BASE]: 'api.basescan.org',
-  [CHAIN_ID.BASE_SEPOLIA]: 'api-sepolia.basescan.org',
-  [CHAIN_ID.ZORA]: 'explorer.zora.energy',
-  [CHAIN_ID.ZORA_SEPOLIA]: 'sepolia.explorer.zora.energy',
-  [CHAIN_ID.FOUNDRY]: '',
-}
 
 const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
@@ -80,14 +69,18 @@ export const getContractABIByAddress = async (
       source: 'cache',
     }
   } else {
+
     const etherscan = await axios.get(
-      `https://${CHAIN_API_LOOKUP[chainId]}/api?module=contract&action=getabi&address=${fetchedAddress}&apikey=${process.env.ETHERSCAN_API_KEY}`
+      `https://api.etherscan.io/v2/api?chainid=${chainId}&module=contract&action=getabi&address=${fetchedAddress}&tag=latest&apikey=${process.env.ETHERSCAN_API_KEY}`
     )
+
 
     if (etherscan.status !== 200) {
       throw new BackendFailedError('Remote request failed')
     }
     const abi = etherscan.data
+
+
 
     if (abi.status === '1') {
       redisConnection?.set(getRedisKey(chainIdStr, fetchedAddress), JSON.stringify(abi))
