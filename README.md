@@ -32,13 +32,13 @@ For an introduction to Nouns Builder and its concept, you can find further [docu
 
 3. Add the required [environment variables](#environment-variables)
 
-4. Install dependencies across all apps and packages
+4. Install dependencies across all apps and packages:
 
 ```
 pnpm i
 ```
 
-5. Once environment variables are defined, you can run the app in dev mode
+5. Once environment variables are defined, you can run the app in dev mode:
 
 ```
 pnpm dev
@@ -66,7 +66,7 @@ To run type checks:
 pnpm run type-check
 ```
 
-#### To create and run a production build
+#### To create and run a production build:
 
 ```
 > pnpm run build
