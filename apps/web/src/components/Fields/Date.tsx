@@ -5,6 +5,7 @@ import React, { ReactElement } from 'react'
 
 import {
   defaultFieldsetStyle,
+  defaultHelperTextStyle,
   defaultInputErrorMessageStyle,
   defaultInputErrorStyle,
   defaultInputLabelStyle,
@@ -18,6 +19,7 @@ interface DateProps {
   formik: FormikProps<any>
   id: string
   errorMessage: string | FormikErrors<any> | string[] | undefined | FormikErrors<any>[]
+  helperText?: string
   value: any
   altFormat?: string
   dateFormat?: string
@@ -34,6 +36,7 @@ const Date: React.FC<DateProps> = (
     formik,
     id,
     errorMessage,
+    helperText,
     autoSubmit,
     value,
     placeholder,
@@ -70,10 +73,10 @@ const Date: React.FC<DateProps> = (
       {inputLabel && <label className={defaultInputLabelStyle}>{inputLabel}</label>}
       {errorMessage && (
         <Box
-          position={'absolute'}
           right={'x2'}
-          top={'x8'}
-          fontSize={12}
+          top={'x15'}
+          pt={'x4'}
+          fontSize={14}
           className={defaultInputErrorMessageStyle}
         >
           {errorMessage as string}
@@ -89,6 +92,17 @@ const Date: React.FC<DateProps> = (
         readOnly={true}
         disabled={disabled}
       />
+      {helperText && (
+        <Box
+          right={'x2'}
+          top={'x15'}
+          pt={'x4'}
+          fontSize={14}
+          className={defaultHelperTextStyle}
+        >
+          {helperText}
+        </Box>
+      )}
     </Box>
   )
 }
