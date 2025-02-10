@@ -19,6 +19,7 @@ import Dash from './assets/dash.svg'
 import Discord from './assets/discord.svg'
 import Dots from './assets/dots.svg'
 import Download from './assets/download.svg'
+import Escrow from './assets/escrow.svg'
 import Eth from './assets/eth.svg'
 import External from './assets/external-16.svg'
 import Github from './assets/github.svg'
@@ -86,6 +87,7 @@ export const icons = {
   spanner: Spanner,
   warning: Warning,
   'warning-16': Warning16,
+  escrow: Escrow,
 }
 
 export type IconType = keyof typeof icons
