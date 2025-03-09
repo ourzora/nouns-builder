@@ -12,6 +12,8 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { getEscrowDelegate } from 'src/data/contract/requests/getEscrowDelegate'
+import { getPropDates, PropDate } from 'src/data/contract/requests/getPropDates'
+
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
@@ -33,11 +35,13 @@ import { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import { AddressType } from 'src/typings'
+import { PropDates } from 'src/modules/proposal/components/PropDates'
 
 export interface VotePageProps {
   proposalId: string
   daoName: string
   ogImageURL: string
+  propDates: PropDate[]
 }
 
 const BAD_ACTORS = [
@@ -56,6 +60,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   proposalId,
   daoName,
   ogImageURL,
+  propDates,
 }) => {
   const { query } = useRouter()
   const chain = useChainStore((x) => x.chain)
@@ -83,6 +88,10 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
         title: 'Votes',
         component: [<ProposalVotes proposal={proposal} />],
       },
+      {
+        title: 'Propdates',
+        component: [<PropDates propDates={propDates} chainId={chain.id} />],
+      }
     ]
   }, [proposal])
 
@@ -171,8 +180,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
 
   where = proposalIdOrNumber.startsWith('0x')
     ? {
-        proposalId: proposalIdOrNumber,
-      }
+      proposalId: proposalIdOrNumber,
+    }
     : { proposalNumber: parseInt(proposalIdOrNumber), dao: collection.toLowerCase() }
 
   const data = await SDK.connect(chain.id)
@@ -230,6 +239,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     daoImage: contractImage,
   }
 
+  const propDates = (await getPropDates(
+    treasuryAddress,
+    chain.id,
+    params?.id as string,
+    proposal.timeCreated
+  )) as PropDate[]
+
   const addresses: DaoContractAddresses = {
     token: tokenAddress,
     metadata: metadataAddress,
@@ -239,9 +255,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     escrowDelegate: escrowDelegateAddress,
   }
 
-  const ogImageURL = `${protocol}://${
-    req.headers.host
-  }/api/og/proposal?data=${encodeURIComponent(JSON.stringify(ogMetadata))}`
+  const ogImageURL = `${protocol}://${req.headers.host
+    }/api/og/proposal?data=${encodeURIComponent(JSON.stringify(ogMetadata))}`
 
   const { maxAge, swr } = isProposalOpen(proposal.state)
     ? CACHE_TIMES.IN_PROGRESS_PROPOSAL
@@ -262,6 +277,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       ogImageURL,
       proposalId: proposal.proposalId,
       addresses,
+      propDates,
+      chainId: chain.id,
     },
   }
 }
