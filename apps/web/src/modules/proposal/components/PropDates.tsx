@@ -12,6 +12,7 @@ import { useLayoutStore } from "src/stores/useLayoutStore"
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import { walletSnippet } from "src/utils/helpers"
 import { useAccount } from "wagmi"
+import { checksumAddress } from "viem"
 
 const useDaoMembers = (chainId: number, token: string) => {
   const [members, setMembers] = useState<DaoMember[]>([]);
@@ -27,7 +28,7 @@ const useDaoMembers = (chainId: number, token: string) => {
   }, [chainId, token]);
 
 
-  return members.map((member) => member.address);
+  return members.map((member) => checksumAddress(member.address as `0x${string}`));
 };
 
 
@@ -156,7 +157,7 @@ export const PropDates = ({ propDates, chainId }: PropDatesProps) => {
   const daoMembers = useDaoMembers(chainId, token!)
 
   const filteredPropDates = showOnlyDaoMembers
-    ? propDates.filter(propDate => daoMembers.includes(propDate.attester!))
+    ? propDates.filter(propDate => daoMembers.includes(checksumAddress(propDate.attester as `0x${string}`)))
     : propDates
 
   return (
