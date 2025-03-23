@@ -51,6 +51,35 @@ interface PropDateFormValues {
   milestoneId: number;
 }
 
+// Create a reusable component for displaying replies
+const ReplyDisplay = ({ replyTo, ensName }: {
+  replyTo?: PropDate,
+  ensName?: string
+}) => {
+  if (!replyTo) return null;
+
+  return (
+    <Text
+      variant="paragraph-sm"
+      color="text2"
+      backgroundColor="background2"
+      px="x2"
+      py="x1"
+      borderRadius="curved"
+      mt="x2"
+    >
+      <span style={{ fontWeight: 'bold' }}>
+        {ensName ? `${ensName} said:` : `${walletSnippet(replyTo.attester)} said:
+        `}
+      </span>
+      <span>
+        {replyTo.response}
+      </span>
+    </Text >
+
+  );
+};
+
 // PropDate form component
 const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, daoTreasury }: {
   closeForm: () => void,
@@ -73,7 +102,7 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
     milestoneId: 0,
   };
 
-
+  const { ensName: replyToEnsName } = useEnsData(replyTo?.attester);
 
   const handleSubmit = async (values: PropDateFormValues) => {
     try {
@@ -134,9 +163,6 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
     >
       <Flex justify="space-between" mb="x4" align="center">
         <Text fontSize={18} fontWeight="label">Create Propdate</Text>
-        <Button variant="ghost" onClick={closeForm}>
-          Cancel
-        </Button>
       </Flex>
 
       <Formik<PropDateFormValues>
@@ -148,6 +174,13 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
         {(formik) => (
           <Form>
             <Flex direction={'column'} w={'100%'} gap="x4">
+              {replyTo && (
+                <Box mb="x2">
+                  <Text variant="label-md" mb="x1">Replying to:</Text>
+                  <ReplyDisplay replyTo={replyTo} ensName={replyToEnsName as string} />
+                </Box>
+              )}
+
               <SmartInput
                 {...formik.getFieldProps('response')}
                 type={'textarea'}
@@ -186,11 +219,14 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
                 </Text>
               )}
 
-              <Flex justify="flex-end" mt="x2">
+              <Flex justify="flex-end" mt="x2" gap="x2">
+                <Button variant="ghost" onClick={closeForm}>
+                  Reset
+                </Button>
                 <Button
-                  h={'x15'}
                   variant="primary"
                   type={'submit'}
+
                   disabled={!formik.isValid || isSubmitting}
                   loading={isSubmitting}
                 >
@@ -208,11 +244,12 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
 
 
 
-const PropDateCard = ({ propDate, index, replyTo, setReplyingTo }: { propDate: PropDate, index: number, replyTo: PropDate | undefined, setReplyingTo: (replyTo: PropDate | undefined) => void }) => {
+const PropDateCard = ({ propDate, index, replyTo, setReplyingTo, showForm, setShowForm, replyingTo }: { propDate: PropDate, index: number, replyTo: PropDate | undefined, setReplyingTo: (replyTo: PropDate | undefined) => void, showForm: boolean, setShowForm: (showForm: boolean) => void, replyingTo: PropDate | undefined }) => {
   const [open, setOpen] = useState(true)
   const isMobile = useLayoutStore((x) => x.isMobile)
   const { ensName, ensAvatar } = useEnsData(propDate.attester)
   const { ensName: replyToEnsName } = useEnsData(replyTo?.attester)
+
   return (
     <Grid
       as="button"
@@ -230,6 +267,8 @@ const PropDateCard = ({ propDate, index, replyTo, setReplyingTo }: { propDate: P
       borderRadius="curved"
       w="100%"
     >
+
+
       <Text
         style={{ width: 'max-content', fontWeight: 600 }}
         className={{
@@ -246,9 +285,7 @@ const PropDateCard = ({ propDate, index, replyTo, setReplyingTo }: { propDate: P
         Update #{index + 1}
       </Text>
 
-      <Button variant="ghost" size="sm" onClick={() => setReplyingTo(propDate)}>
-        Reply
-      </Button>
+
       <Flex align={'center'} style={{ gridColumn: 'span 4 / span 4' }}>
         {
           <Text variant={isMobile ? 'label-sm' : 'label-md'}>
@@ -300,24 +337,19 @@ const PropDateCard = ({ propDate, index, replyTo, setReplyingTo }: { propDate: P
                 {propDate.response}
               </Text>
               {propDate.replyTo && (
-                <Text
-                  variant="paragraph-sm"
-                  color="text2"
-                  backgroundColor="background2"
-                  px="x2"
-                  py="x1"
-                  borderRadius="curved"
-                  mt="x2"
-                >
-                  {
-                    (replyToEnsName ?? walletSnippet(replyTo?.attester)) + " said: " + replyTo?.response
-                  }
-                </Text>
+                <ReplyDisplay replyTo={propDate} ensName={replyToEnsName as string} />
               )}
             </Text>
+            <Flex justify="flex-end" mt="x2" gap="x2">
+              <Button variant="outline" size="xs" onClick={() => { setReplyingTo(propDate); setShowForm(replyingTo?.txid === propDate.txid ? !showForm : true) }}>
+                Reply
+              </Button>
+            </Flex>
           </motion.div>
         )}
+
       </AnimatePresence>
+
     </Grid>
   )
 }
@@ -354,7 +386,7 @@ export const PropDates = ({ propDates, chainId }: PropDatesProps) => {
 
             <Button variant={!showForm ? "primary" : "destructive"} size="sm" onClick={() => setShowForm(!showForm)}>
               {
-                showForm ? <Icon id="trash" fill="onAccent" /> : <Icon id="plus" fill="primary" />
+                showForm && <Icon id="trash" fill="onAccent" />
               }
               {
                 showForm ? "Cancel" : "Create Propdate"
@@ -394,7 +426,10 @@ export const PropDates = ({ propDates, chainId }: PropDatesProps) => {
                 propDate={propDate}
                 index={i}
                 replyTo={propDate.replyTo ? propDates.find(p => p.txid === propDate.replyTo) : undefined}
+                replyingTo={replyingTo}
                 setReplyingTo={() => setReplyingTo(propDate)}
+                showForm={showForm}
+                setShowForm={setShowForm}
               />
             ))
           ) : (
