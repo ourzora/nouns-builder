@@ -119,7 +119,7 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
       const schemaUID = "0x9ee9a1bfbf4f8f9b977c6b30600d6131d2a56d0be8100e2238a057ea8b18be7e";
 
       const eas = new EAS(easContractAddress);
-      await eas.connect(signer as unknown as TransactionSigner);
+      eas.connect(signer as unknown as TransactionSigner);
 
       const schemaEncoder = new SchemaEncoder("uint16 propId,string replyTo,string response,uint8 milestoneId");
       const encodedData = schemaEncoder.encodeData([
@@ -133,7 +133,8 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
         schema: schemaUID,
         data: {
           recipient: daoTreasury,
-          revocable: true,
+          expirationTime: 0n,
+          revocable: false,
           data: encodedData,
         },
       });
