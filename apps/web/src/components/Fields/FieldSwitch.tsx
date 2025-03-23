@@ -37,7 +37,7 @@ interface FieldSwitchProps {
   formik: FormikProps<any>
   autoSubmit?: boolean
   children?: ReactNode
-  options?: any[] | {}
+  options?: any[] | { label: string, value: string }[]
   submitCallback?: (values: any) => void
   parentValues?: any
 }
