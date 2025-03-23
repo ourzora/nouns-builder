@@ -17,6 +17,7 @@ import { useEthersSigner } from "src/hooks/useEthersSigner"
 import { Form, Formik } from "formik"
 import SmartInput from "src/components/Fields/SmartInput"
 import * as Yup from "yup";
+import { useChainId } from "wagmi"
 
 const useDaoMembers = (chainId: number, token: string) => {
   const [members, setMembers] = useState<DaoMember[]>([]);
@@ -90,7 +91,8 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
   daoTreasury: string
 }) => {
 
-  const signer = useEthersSigner();
+  const chainId = useChainId()
+  const signer = useEthersSigner({ chainId });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
