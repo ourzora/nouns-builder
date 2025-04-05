@@ -385,7 +385,7 @@ export const PropDates = ({ propDates, chainId }: PropDatesProps) => {
             Propdates
           </Text>
 
-          <Flex align="center" gap="x2" onClick={() => setShowOnlyDaoMembers(!showOnlyDaoMembers)}>
+          <Flex align="center" gap="x2">
 
             <Button variant={!showForm ? "primary" : "destructive"} size="sm" onClick={() => setShowForm(!showForm)}>
               {
@@ -396,11 +396,12 @@ export const PropDates = ({ propDates, chainId }: PropDatesProps) => {
               }
             </Button>
 
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" size="sm" onClick={() => setShowOnlyDaoMembers(!showOnlyDaoMembers)}>
               {
                 showOnlyDaoMembers && <Icon id={
                   "check"
-                } />}
+                } />
+              }
               {
                 showOnlyDaoMembers
                   ? "DAO Members Only"
