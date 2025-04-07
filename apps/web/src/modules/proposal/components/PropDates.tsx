@@ -1,7 +1,7 @@
 // PropDates displays updates on proposals
 import { Box, Button, Flex, Grid, Text } from "@zoralabs/zord"
 import { AnimatePresence, motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { Avatar } from "src/components/Avatar"
 import { Icon } from 'src/components/Icon'
 import type { PropDate } from "src/data/contract/requests/getPropDates"
@@ -11,13 +11,13 @@ import { useDaoStore } from "src/modules/dao/stores"
 import { useLayoutStore } from "src/stores/useLayoutStore"
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import { walletSnippet } from "src/utils/helpers"
-import { checksumAddress, type Hex } from "viem"
-import { EAS, SchemaEncoder, type TransactionSigner } from "@ethereum-attestation-service/eas-sdk";
-import { useEthersSigner } from "src/hooks/useEthersSigner"
-import { Form, Formik } from "formik"
+import { checksumAddress, type Hex, zeroHash } from "viem"
+import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
+import { Form, Formik, useFormikContext, FormikProps } from "formik"
 import SmartInput from "src/components/Fields/SmartInput"
 import * as Yup from "yup";
-import { useChainId } from "wagmi"
+import { useChainId, usePrepareContractWrite, useContractWrite } from "wagmi"
+import { easAbi } from "./easAbi"
 
 const useDaoMembers = (chainId: number, token: string) => {
   const [members, setMembers] = useState<DaoMember[]>([]);
@@ -81,6 +81,180 @@ const ReplyDisplay = ({ replyTo, ensName }: {
   );
 };
 
+///// @notice A struct representing the arguments of the attestation request.
+//struct AttestationRequestData {
+//    address recipient; // The recipient of the attestation.
+//    uint64 expirationTime; // The time when the attestation expires (Unix timestamp).
+//    bool revocable; // Whether the attestation is revocable.
+//    bytes32 refUID; // The UID of the related attestation.
+//    bytes data; // Custom attestation data.
+//    uint256 value; // An explicit ETH amount to send to the resolver. This is important to prevent accidental user errors.
+//}
+//
+///// @notice A struct representing the full arguments of the attestation request.
+//struct AttestationRequest {
+//    bytes32 schema; // The unique identifier of the schema.
+//    AttestationRequestData data; // The arguments of the attestation request.
+//}
+//
+type AttestationRequest = {
+  schema: Hex,
+  data: {
+    recipient: Hex,
+    expirationTime: bigint,
+    revocable: boolean,
+    refUID: Hex,
+    data: Hex,
+    value: bigint
+  }
+}
+
+const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyTo, daoTreasury, formik }: {
+  closeForm: () => void,
+  onSuccess?: () => void,
+  proposalId: number,
+  propDates: PropDate[],
+  replyTo?: PropDate,
+  daoTreasury: string,
+  formik: FormikProps<PropDateFormValues>
+}) => {
+
+  const chainId = useChainId()
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const data = useFormikContext<PropDateFormValues>();
+
+  const currentValues = data?.values;
+
+  const request: AttestationRequest | undefined = useMemo(() => {
+    if (!currentValues?.response) return undefined;
+    const schemaUID = "0x9ee9a1bfbf4f8f9b977c6b30600d6131d2a56d0be8100e2238a057ea8b18be7e";
+
+    const schemaEncoder = new SchemaEncoder("uint16 propId,string replyTo,string response,uint8 milestoneId");
+    const encodedData = schemaEncoder.encodeData([
+      { name: "propId", value: proposalId.toString(), type: "uint16" },
+      { name: "replyTo", value: replyTo?.txid.toString() ?? "", type: "string" },
+      { name: "response", value: currentValues.response.toString(), type: "string" },
+      { name: "milestoneId", value: currentValues.milestoneId.toString(), type: "uint8" }
+    ]);
+
+    const request: AttestationRequest = {
+      schema: schemaUID,
+      data: {
+        recipient: daoTreasury as Hex,
+        expirationTime: 0n,
+        revocable: false,
+        refUID: zeroHash,
+        data: encodedData as Hex,
+        value: 0n
+      }
+    }
+    return request
+  }, [daoTreasury, proposalId, replyTo, currentValues?.response, currentValues?.milestoneId])
+
+  const easContractAddress = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
+
+  const { config, isError } = usePrepareContractWrite({
+    enabled: !!request,
+    address: easContractAddress,
+    abi: easAbi,
+    functionName: "attest",
+    chainId: chainId,
+    args: [request],
+  });
+
+  const { writeAsync } = useContractWrite(config)
+
+  const { ensName: replyToEnsName } = useEnsData(replyTo?.attester);
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmitting(true);
+      setError(null);
+
+      await writeAsync?.();
+
+      if (onSuccess) onSuccess();
+      closeForm();
+    } catch (err) {
+      console.error("Error submitting propdate:", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+
+  return (
+    <Form>
+      <Flex direction={'column'} w={'100%'} gap="x4">
+        {replyTo && (
+          <Box mb="x2">
+            <Text variant="label-md" mb="x1">Replying to:</Text>
+            <ReplyDisplay replyTo={replyTo} ensName={replyToEnsName as string} />
+          </Box>
+        )}
+
+        <SmartInput
+          {...formik.getFieldProps('response')}
+          type={'textarea'}
+          inputLabel={'Response'}
+          formik={formik}
+          id={'response'}
+          helperText={'Your propdate'}
+          errorMessage={
+            formik.touched.response && formik.errors.response
+              ? formik.errors.response
+              : undefined
+          }
+          placeholder={'Enter your propdate here...'}
+          disabled={isSubmitting}
+        />
+
+        <SmartInput
+          {...formik.getFieldProps('milestoneId')}
+          type={'number'}
+          inputLabel={'Milestone ID'}
+          formik={formik}
+          id={'milestoneId'}
+          helperText={'Which milestone is this update for?'}
+          errorMessage={
+            formik.touched.milestoneId && formik.errors.milestoneId
+              ? formik.errors.milestoneId
+              : undefined
+          }
+          placeholder={'0'}
+          disabled={isSubmitting}
+        />
+
+        {error && (
+          <Text color="negative" mt="x2">
+            {error}
+          </Text>
+        )}
+
+        <Flex justify="flex-end" mt="x2" gap="x2">
+          <Button variant="ghost" onClick={closeForm}>
+            Reset
+          </Button>
+          <Button
+            variant="primary"
+            type={'submit'}
+            onClick={handleSubmit}
+            disabled={!formik.isValid || isSubmitting || isError}
+            loading={isSubmitting}
+          >
+            Submit Propdate
+          </Button>
+        </Flex>
+      </Flex>
+    </Form>
+  );
+};
+
+
 // PropDate form component
 const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, daoTreasury }: {
   closeForm: () => void,
@@ -91,66 +265,11 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
   daoTreasury: string
 }) => {
 
-  const chainId = useChainId()
-  const signer = useEthersSigner({ chainId });
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const initialValues: PropDateFormValues = {
     propId: Number(proposalId),
     replyTo: replyTo?.txid ?? "",
     response: '',
     milestoneId: 0,
-  };
-
-  const { ensName: replyToEnsName } = useEnsData(replyTo?.attester);
-
-  const handleSubmit = async (values: PropDateFormValues) => {
-    try {
-      setIsSubmitting(true);
-      setError(null);
-
-      if (!signer) {
-        throw new Error("Wallet client not available");
-      }
-
-      const easContractAddress = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e";
-      const schemaUID = "0x9ee9a1bfbf4f8f9b977c6b30600d6131d2a56d0be8100e2238a057ea8b18be7e";
-
-      const eas = new EAS(easContractAddress);
-      eas.connect(signer as unknown as TransactionSigner);
-
-      const schemaEncoder = new SchemaEncoder("uint16 propId,string replyTo,string response,uint8 milestoneId");
-      const encodedData = schemaEncoder.encodeData([
-        { name: "propId", value: proposalId.toString(), type: "uint16" },
-        { name: "replyTo", value: replyTo?.txid.toString() ?? "", type: "string" },
-        { name: "response", value: values.response.toString(), type: "string" },
-        { name: "milestoneId", value: values.milestoneId.toString(), type: "uint8" }
-      ]);
-
-      const tx = await eas.attest({
-        schema: schemaUID,
-        data: {
-          recipient: daoTreasury,
-          expirationTime: 0n,
-          revocable: false,
-          data: encodedData,
-        },
-      });
-
-      const newAttestationUID = await tx.wait();
-
-      console.log({ newAttestationUID })
-
-      if (onSuccess) onSuccess();
-      closeForm();
-    } catch (err) {
-      console.error("Error submitting propdate:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
 
@@ -171,73 +290,19 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
       <Formik<PropDateFormValues>
         initialValues={initialValues}
         validationSchema={propDateValidationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={() => { }}
         validateOnMount={true}
       >
         {(formik) => (
-          <Form>
-            <Flex direction={'column'} w={'100%'} gap="x4">
-              {replyTo && (
-                <Box mb="x2">
-                  <Text variant="label-md" mb="x1">Replying to:</Text>
-                  <ReplyDisplay replyTo={replyTo} ensName={replyToEnsName as string} />
-                </Box>
-              )}
-
-              <SmartInput
-                {...formik.getFieldProps('response')}
-                type={'textarea'}
-                inputLabel={'Response'}
-                formik={formik}
-                id={'response'}
-                helperText={'Your propdate'}
-                errorMessage={
-                  formik.touched.response && formik.errors.response
-                    ? formik.errors.response
-                    : undefined
-                }
-                placeholder={'Enter your propdate here...'}
-                disabled={isSubmitting}
-              />
-
-              <SmartInput
-                {...formik.getFieldProps('milestoneId')}
-                type={'number'}
-                inputLabel={'Milestone ID'}
-                formik={formik}
-                id={'milestoneId'}
-                helperText={'Which milestone is this update for?'}
-                errorMessage={
-                  formik.touched.milestoneId && formik.errors.milestoneId
-                    ? formik.errors.milestoneId
-                    : undefined
-                }
-                placeholder={'0'}
-                disabled={isSubmitting}
-              />
-
-              {error && (
-                <Text color="negative" mt="x2">
-                  {error}
-                </Text>
-              )}
-
-              <Flex justify="flex-end" mt="x2" gap="x2">
-                <Button variant="ghost" onClick={closeForm}>
-                  Reset
-                </Button>
-                <Button
-                  variant="primary"
-                  type={'submit'}
-
-                  disabled={!formik.isValid || isSubmitting}
-                  loading={isSubmitting}
-                >
-                  Submit Propdate
-                </Button>
-              </Flex>
-            </Flex>
-          </Form>
+          <PropDateFormInner
+            closeForm={closeForm}
+            onSuccess={onSuccess}
+            proposalId={proposalId}
+            propDates={propDates}
+            replyTo={replyTo}
+            daoTreasury={daoTreasury}
+            formik={formik}
+          />
         )}
       </Formik>
     </Box>
