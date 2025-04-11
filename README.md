@@ -77,26 +77,23 @@ pnpm run type-check
 
 This app has several third party api keys that you need in order to run Builder:
 
-- [alchemy](https://www.alchemy.com/) as the main rpc node provider in addition to mainnet forks for testing
+- **rpc api** any rpc api for ethereum will do
 - [tenderly](https://docs.tenderly.co/simulations-and-forks/simulation-api) in order to simulate transactions
-- [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dyanamically fetch abis
+- [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dynamically fetch abis
 
 We ask that you supply your own secrets locally for running in development environment. Non-secret environment variables are already included in the `.env` files in this repo.
 
 Add the following variables to `.env.local` within this root directory (needed to run tests against a local anvil node):
 
 ```
-#alchemy
-PRIVATE_ALCHEMY_ID=<ALCHEMY_API_KEY>
-ANVIL_FORK_URL=https://eth-mainnet.alchemyapi.io/v2/$PRIVATE_ALCHEMY_ID
+ANVIL_FORK_URL=$RPC_URL
 ANVIL_BLOCK_NUMBER=8305745
 ```
 
 Add the following variables to `apps/web/.env.local`:
 
 ```
-#alchemy
-NEXT_PUBLIC_TENDERLY_RPC_KEY=<ALCHEMY_API_KEY>
+NEXT_PUBLIC_TENDERLY_RPC_KEY=<TENDERLY_API_KEY>
 
 
 #tenderly
@@ -106,9 +103,6 @@ TENDERLY_USER=<ACCOUNT_NAME>
 
 #etherscan (optional to run locally, this is for dynamically fetching abis in the custom transaction builder)
 ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
-
-#optional zora api key
-NEXT_PUBLIC_ZORA_API_KEY=
 ```
 
 ## Running tests
