@@ -52,31 +52,43 @@ interface PropDateFormValues {
 }
 
 // Create a reusable component for displaying replies
-const ReplyDisplay = ({ replyTo, ensName }: {
+const ReplyDisplay = ({ replyTo, ensName, ensAvatar }: {
   replyTo?: PropDate,
-  ensName?: string
+  ensName?: string,
+  ensAvatar?: string | null
 }) => {
   if (!replyTo) return null;
 
   return (
-    <Text
-      variant="paragraph-sm"
-      color="text2"
+    <Flex
+      direction="column"
       backgroundColor="background2"
-      px="x2"
-      py="x1"
+      px="x3"
+      py="x2"
       borderRadius="curved"
       mt="x2"
+      style={{
+        borderLeft: 'var(--space-x2) solid var(--colors-text4)'
+      }}
+      gap="x1"
     >
-      <span style={{ fontWeight: 'bold' }}>
-        {ensName ? `${ensName} said:` : `${walletSnippet(replyTo.attester)} said:
-        `}
-      </span>
-      <span>
+      <Flex align="center" gap="x1">
+        <Avatar address={replyTo.attester} src={ensAvatar || undefined} size="16" />
+        <Text variant={"label-sm"} fontWeight="label">
+          {ensName || walletSnippet(replyTo.attester)}
+        </Text>
+      </Flex>
+      <Text
+        variant="paragraph-sm"
+        color="text2"
+        style={{
+          wordBreak: 'break-word',
+          paddingLeft: 'var(--space-x1)'
+        }}
+      >
         {replyTo.message}
-      </span>
-    </Text >
-
+      </Text>
+    </Flex>
   );
 };
 
@@ -213,6 +225,7 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
   console.log({ config, isError })
 
   const { ensName: replyToEnsName } = useEnsData(replyTo?.attester);
+  const { ensAvatar: replyToEnsAvatar } = useEnsData(replyTo?.attester);
 
   // Effect to handle prepare contract write errors
   useEffect(() => {
@@ -322,7 +335,11 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
         {replyTo && (
           <Box mb="x2">
             <Text variant="label-md" mb="x1">Replying to:</Text>
-            <ReplyDisplay replyTo={replyTo} ensName={replyToEnsName as string} />
+            <ReplyDisplay
+              replyTo={replyTo}
+              ensName={replyToEnsName || undefined}
+              ensAvatar={replyToEnsAvatar ? replyToEnsAvatar : undefined}
+            />
           </Box>
         )}
 
@@ -434,7 +451,11 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
 }) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
   const { ensName, ensAvatar } = useEnsData(propDate?.attester)
-  const { ensName: originalMessageEnsName } = useEnsData(originalMessage?.attester)
+
+  // Use separate destructuring to avoid redeclaration
+  const originalEnsData = useEnsData(originalMessage?.attester);
+  const originalMessageEnsName = originalEnsData.ensName;
+  const originalMessageEnsAvatar = originalEnsData.ensAvatar;
 
   return (
     <Flex
@@ -479,7 +500,11 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
         <Box>
           {originalMessage && (
             <Box ml="x2" pl="x2" mb="x2">
-              <ReplyDisplay replyTo={originalMessage} ensName={originalMessageEnsName as string} />
+              <ReplyDisplay
+                replyTo={originalMessage}
+                ensName={originalMessageEnsName || undefined}
+                ensAvatar={originalMessageEnsAvatar ? originalMessageEnsAvatar : undefined}
+              />
             </Box>
           )}
           <Box
