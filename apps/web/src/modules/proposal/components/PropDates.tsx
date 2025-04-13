@@ -80,7 +80,9 @@ const ReplyDisplay = ({ replyTo, ensName }: {
   );
 };
 
-type AttestationRequest = {
+
+// Define a type for the attestation parameters that matches the EAS contract expectations
+type AttestationParams = {
   schema: Hex,
   data: {
     recipient: Hex,
@@ -89,19 +91,6 @@ type AttestationRequest = {
     refUID: Hex,
     data: Hex,
     value: bigint
-  }
-}
-
-// Define a type for the attestation parameters that matches the EAS contract expectations
-type AttestationParams = {
-  schema: Hex,
-  data: {
-    recipient: Hex,
-    expirationTime: string,
-    revocable: boolean,
-    refUID: Hex,
-    data: Hex,
-    value: string
   }
 };
 
@@ -178,11 +167,11 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
         schema: schemaUID,
         data: {
           recipient: daoToken as `0x${string}`,
-          expirationTime: "0",
+          expirationTime: 0n,
           revocable: true,
           refUID: zeroHash,
           data: encodedData,
-          value: "0"
+          value: 0n
         }
       };
 
@@ -245,7 +234,7 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
     const executeWrite = async () => {
       if (isPrepareSuccess && isSubmitting && writeAsync) {
         try {
-          const result = await writeAsync();
+          const result = await writeAsync?.();
           if (result?.hash) {
             setTxHash(result.hash);
           } else {
