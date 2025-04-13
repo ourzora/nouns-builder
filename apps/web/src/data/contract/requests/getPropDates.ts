@@ -2,15 +2,19 @@ import axios from 'axios';
 import { checksumAddress, isAddress } from 'viem';
 import { CHAIN_ID } from 'src/typings';
 
+interface Attestation {
+  attester: string;
+  recipient: string;
+  schemaId: string;
+  refUID: string;
+  decodedDataJson: string;
+  timeCreated: number;
+  txid: string;
+}
+
 interface AttestationResponse {
   data: {
-    attestations: Array<{
-      attester: string;
-      recipient: string;
-      decodedDataJson: string;
-      timeCreated: number;
-      txid: string;
-    }>;
+    attestations: Attestation[];
   };
 }
 
@@ -26,14 +30,16 @@ interface DecodedData {
 export interface PropDate {
   txid: string;
   attester: string | undefined;
-  propId: number;
-  replyTo: string | undefined;
-  response: string | undefined;
-  milestoneId: number;
+  schemaId: string;
+  refUID: string;
+  proposalId: string | undefined;
+  originalMessageId: string | undefined;
+  messageType: number;
+  message: string | undefined;
   timeCreated: number;
 }
 
-const ATTESTATION_SCHEMA_UID = '0x9ee9a1bfbf4f8f9b977c6b30600d6131d2a56d0be8100e2238a057ea8b18be7e';
+export const ATTESTATION_SCHEMA_UID = '0x8bd0d42901ce3cd9898dbea6ae2fbf1e796ef0923e7cbb0a1cecac2e42d47cb3';
 
 const ATTESTATION_URL: Record<CHAIN_ID, string> = {
   [CHAIN_ID.ETHEREUM]: 'https://easscan.org/graphql',
@@ -78,6 +84,8 @@ export async function getPropDates(
         }
       ) {
         attester
+        schemaId
+        refUID
         recipient
         decodedDataJson
         timeCreated
@@ -96,19 +104,21 @@ export async function getPropDates(
       return [];
     }
 
-    return attestations.map(attestation => {
+    return attestations.map((attestation: Attestation): PropDate => {
       const decodedData = JSON.parse(attestation.decodedDataJson) as DecodedData[];
       return {
         attester: attestation.attester,
-        propId: Number(getDecodedValue(decodedData, 'propId') ?? 0),
-        replyTo: getDecodedValue(decodedData, 'replyTo'),
-        response: getDecodedValue(decodedData, 'response'),
-        milestoneId: Number(getDecodedValue(decodedData, 'milestoneId') ?? 0),
+        schemaId: attestation.schemaId,
+        refUID: attestation.refUID,
+        proposalId: getDecodedValue(decodedData, 'proposalId'),
+        originalMessageId: getDecodedValue(decodedData, 'originalMessageId'),
+        messageType: Number(getDecodedValue(decodedData, 'messageType') ?? 0),
+        message: getDecodedValue(decodedData, 'message'),
         timeCreated: attestation.timeCreated,
         txid: attestation.txid,
       };
-    }).filter(date => date.propId === Number(propId))
-    .sort((a, b) => a.timeCreated - b.timeCreated);
+    }).filter((date: PropDate) => date.proposalId === propId)
+      .sort((a: PropDate, b: PropDate) => a.timeCreated - b.timeCreated);
   } catch (error) {
     console.error('Error fetching attestations:', error instanceof Error ? error.message : String(error));
     return [];

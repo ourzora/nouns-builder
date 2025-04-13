@@ -1,5 +1,5 @@
 import { Box, Flex } from '@zoralabs/zord'
-import { GetServerSideProps } from 'next'
+import type { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 import useSWR, { unstable_serialize } from 'swr'
@@ -12,16 +12,16 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { getEscrowDelegate } from 'src/data/contract/requests/getEscrowDelegate'
-import { getPropDates, PropDate } from 'src/data/contract/requests/getPropDates'
+import { getPropDates, type PropDate } from 'src/data/contract/requests/getPropDates'
 
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
   getProposal,
 } from 'src/data/subgraph/requests/proposalQuery'
-import { Proposal_Filter } from 'src/data/subgraph/sdk.generated'
+import type { Proposal_Filter } from 'src/data/subgraph/sdk.generated'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { DaoContractAddresses, SectionHandler, useDaoStore } from 'src/modules/dao'
+import { type DaoContractAddresses, SectionHandler, useDaoStore } from 'src/modules/dao'
 import {
   ProposalActions,
   ProposalDescription,
@@ -30,11 +30,11 @@ import {
   isProposalOpen,
 } from 'src/modules/proposal'
 import { ProposalVotes } from 'src/modules/proposal/components/ProposalVotes'
-import { NextPageWithLayout } from 'src/pages/_app'
-import { ProposalOgMetadata } from 'src/pages/api/og/proposal'
+import type { NextPageWithLayout } from 'src/pages/_app'
+import type { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
-import { AddressType } from 'src/typings'
+import type { AddressType } from 'src/typings'
 import { PropDates } from 'src/modules/proposal/components/PropDates'
 
 export interface VotePageProps {
@@ -81,19 +81,22 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
       {
         title: 'Details',
         component: [
-          <ProposalDescription proposal={proposal} collection={query?.token as string} />,
+          <ProposalDescription key="description" proposal={proposal} collection={query?.token as string} />,
         ],
       },
       {
         title: 'Votes',
-        component: [<ProposalVotes proposal={proposal} />],
+        component: [<ProposalVotes key="votes" proposal={proposal} />],
       },
       {
         title: 'Propdates',
-        component: [<PropDates propDates={propDates} chainId={chain.id} />],
+        component: [<PropDates key="propdates" propDates={propDates} proposalId={proposalId} chainId={chain.id} />],
       }
     ]
-  }, [proposal])
+  }, [proposal, propDates, chain.id, query?.token])
+
+
+  console.log({ propDates })
 
   if (!proposal) {
     return null
@@ -182,7 +185,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     ? {
       proposalId: proposalIdOrNumber,
     }
-    : { proposalNumber: parseInt(proposalIdOrNumber), dao: collection.toLowerCase() }
+    : { proposalNumber: Number.parseInt(proposalIdOrNumber), dao: collection.toLowerCase() }
 
   const data = await SDK.connect(chain.id)
     .proposalOGMetadata({
@@ -240,9 +243,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   }
 
   const propDates = (await getPropDates(
-    treasuryAddress,
+    tokenAddress,
     chain.id,
-    params?.id as string,
+    proposal.proposalId,
     proposal.timeCreated
   )) as PropDate[]
 
