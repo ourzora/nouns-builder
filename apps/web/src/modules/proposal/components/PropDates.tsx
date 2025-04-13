@@ -62,7 +62,7 @@ const ReplyDisplay = ({ replyTo, ensName, ensAvatar }: {
   return (
     <Flex
       direction="column"
-      backgroundColor="background2"
+      backgroundColor="neutralActive"
       px="x3"
       py="x2"
       borderRadius="curved"
@@ -457,6 +457,9 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
   const originalMessageEnsName = originalEnsData.ensName;
   const originalMessageEnsAvatar = originalEnsData.ensAvatar;
 
+  // Determine if this is a reply to highlight it
+  const isReply = !!originalMessage;
+
   return (
     <Flex
       direction="column"
@@ -480,6 +483,11 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
           <Text variant="label-sm" color="text3">
             • {new Date(propDate.timeCreated * 1000).toLocaleDateString()}
           </Text>
+          {isReply && (
+            <Text variant="label-sm" color="accent">
+              • Reply
+            </Text>
+          )}
         </Flex>
         <Box
           borderStyle="solid"
@@ -497,9 +505,16 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
       </Flex>
 
       {propDate.message && (
-        <Box>
+        <Box
+          backgroundColor={isReply ? "background2" : undefined}
+          borderRadius={isReply ? "curved" : undefined}
+          p={isReply ? "x4" : undefined}
+          style={isReply ? {
+            borderLeft: 'var(--space-x2) solid var(--colors-text4)'
+          } : undefined}
+        >
           {originalMessage && (
-            <Box ml="x2" pl="x2" mb="x2">
+            <Box mb="x2" >
               <ReplyDisplay
                 replyTo={originalMessage}
                 ensName={originalMessageEnsName || undefined}
@@ -596,7 +611,7 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
                 {
                   showOnlyDaoMembers
                     ? "DAO Members Only"
-                    : "All Members"
+                    : "All Propdates"
                 }
               </Button>
             </Flex>
