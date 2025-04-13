@@ -96,7 +96,6 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   }, [proposal, propDates, chain.id, query?.token])
 
 
-  console.log({ propDates })
 
   if (!proposal) {
     return null

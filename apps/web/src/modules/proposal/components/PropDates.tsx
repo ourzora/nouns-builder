@@ -2,7 +2,7 @@ import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
 import { Box, Button, Flex, Grid, Text } from "@zoralabs/zord";
 import { Form, Formik, type FormikProps, useFormikContext } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, Fragment, useEffect } from "react";
+import { useState, Fragment, useEffect, useMemo, useRef } from "react";
 import { Avatar } from "src/components/Avatar";
 import SmartInput from "src/components/Fields/SmartInput";
 import { Icon } from 'src/components/Icon';
@@ -14,7 +14,7 @@ import { useLayoutStore } from "src/stores/useLayoutStore";
 import { propPageWrapper } from 'src/styles/Proposals.css';
 import { walletSnippet } from "src/utils/helpers";
 import { type Hex, checksumAddress, zeroHash } from "viem";
-import { useChainId, useContractWrite, usePrepareContractWrite, useQuery } from "wagmi";
+import { useChainId, useContractWrite, usePrepareContractWrite, useQuery, useWaitForTransaction } from "wagmi";
 import * as Yup from "yup";
 import { easAbi } from "./easAbi";
 import ErrorBoundary from "src/components/ErrorBoundary";
@@ -92,6 +92,36 @@ type AttestationRequest = {
   }
 }
 
+// Define a type for the attestation parameters that matches the EAS contract expectations
+type AttestationParams = {
+  schema: Hex,
+  data: {
+    recipient: Hex,
+    expirationTime: string,
+    revocable: boolean,
+    refUID: Hex,
+    data: Hex,
+    value: string
+  }
+};
+
+// Debounce utility function
+const useDebounce = <T,>(value: T, delay: number): T => {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyTo, daoToken, formik }: {
   closeForm: () => void,
   onSuccess?: () => void,
@@ -104,86 +134,197 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
 
   const chainId = useChainId()
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [txHash, setTxHash] = useState<Hex | undefined>();
   const [error, setError] = useState<string | null>(null);
+  const [attestParams, setAttestParams] = useState<AttestationParams | undefined>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const data = useFormikContext<PropDateFormValues>();
-
   const currentValues = data?.values;
 
-  // Use useState for the request object
-  const [request, setRequest] = useState<AttestationRequest | undefined>(undefined);
-
-  // Use useEffect to calculate and update the request when dependencies change
-  useEffect(() => {
-    if (!currentValues?.message || typeof currentValues.proposalId === 'undefined') {
-      setRequest(undefined); // Reset if conditions aren't met
-      return; // Explicitly return void
-    }
-
-    const schemaUID = ATTESTATION_SCHEMA_UID;
-    const schemaEncoder = new SchemaEncoder("bytes32 proposalId, bytes32 originalMessageId, uint8 messageType, string message");
-    const encodedData = schemaEncoder.encodeData([
-      { name: "proposalId", value: currentValues.proposalId as Hex, type: "bytes32" },
-      { name: "originalMessageId", value: currentValues.replyTo as Hex ?? zeroHash, type: "bytes32" },
-      { name: "messageType", value: 0, type: "uint8" },
-      { name: "message", value: currentValues.message, type: "string" }
-    ]);
-
-    const newRequest: AttestationRequest = {
-      schema: schemaUID,
-      data: {
-        recipient: daoToken as Hex,
-        expirationTime: 0n,
-        revocable: false,
-        refUID: zeroHash,
-        data: encodedData as Hex,
-        value: 0n
-      }
-    };
-    setRequest(newRequest);
-
-
-    console.log({ newRequest })
-
-  }, [daoToken, currentValues]);
-
-
-  console.log({ currentValues })
+  // Debounce form values to prevent constant recalculation during typing
+  const debouncedValues = useDebounce(currentValues, 500);
 
   const easContractAddress = "0x4200000000000000000000000000000000000021";
 
-  const { config, isError } = usePrepareContractWrite({
-    enabled: !!request,
+  // Memoize the schema encoder to avoid recreating it on every render
+  const schemaEncoder = useMemo(() =>
+    new SchemaEncoder("bytes32 proposalId, bytes32 originalMessageId, uint8 messageType, string message"),
+    []
+  );
+
+  // Memoize the encoded data based on debounced form values
+  const encodedData = useMemo(() => {
+    if (!debouncedValues) return null;
+
+    const originalMessageId = debouncedValues.replyTo ? (debouncedValues.replyTo as Hex) : zeroHash;
+
+    return schemaEncoder.encodeData([
+      { name: "proposalId", value: debouncedValues.proposalId as Hex, type: "bytes32" },
+      { name: "originalMessageId", value: originalMessageId, type: "bytes32" },
+      { name: "messageType", value: "0", type: "uint8" },
+      { name: "message", value: debouncedValues.message, type: "string" }
+    ]) as Hex;
+  }, [schemaEncoder, debouncedValues]);
+
+  // Pre-calculate attestation parameters when values change (but after debounce)
+  useEffect(() => {
+    if (!debouncedValues || !encodedData || isSubmitting) return;
+
+    try {
+      const schemaUID = checksumAddress(ATTESTATION_SCHEMA_UID as `0x${string}`);
+
+      const params: AttestationParams = {
+        schema: schemaUID,
+        data: {
+          recipient: daoToken as `0x${string}`,
+          expirationTime: "0",
+          revocable: true,
+          refUID: zeroHash,
+          data: encodedData,
+          value: "0"
+        }
+      };
+
+      setAttestParams(params);
+    } catch (err) {
+      console.error("Error pre-calculating attestation params:", err);
+      // Don't set error state here to avoid UI disruption during typing
+    }
+  }, [debouncedValues, encodedData, daoToken, isSubmitting]);
+
+  const { config, isError, isSuccess: isPrepareSuccess, error: prepareError } = usePrepareContractWrite({
+    enabled: !!attestParams,
     address: easContractAddress,
     abi: easAbi,
     functionName: "attest",
     chainId: chainId,
-    args: [request],
+    args: [attestParams], // Pass as a single parameter
   });
 
-  const { writeAsync } = useContractWrite(config)
+  const { writeAsync, isLoading: isSigningLoading, error: writeError } = useContractWrite(config)
+
+  console.log({ writeError })
+  // Hook to wait for transaction confirmation
+  const {
+    data: txReceipt,
+    isLoading: isWaitingTx,
+    isSuccess: isTxSuccess,
+    isError: isTxError,
+    error: txError
+  } = useWaitForTransaction({
+    hash: txHash,
+    enabled: !!txHash,
+    chainId: chainId,
+  });
+
+  // Combined loading state
+  const isLoading = isSubmitting || isSigningLoading || isWaitingTx;
 
   console.log({ config, isError })
 
   const { ensName: replyToEnsName } = useEnsData(replyTo?.attester);
 
-  const handleSubmit = async () => {
-    try {
-      setIsSubmitting(true);
-      setError(null);
-
-      await writeAsync?.();
-
-      if (onSuccess) onSuccess();
-      closeForm();
-    } catch (err) {
-      console.error("Error submitting propdate:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
-    } finally {
+  // Effect to handle prepare contract write errors
+  useEffect(() => {
+    if (isError && isSubmitting && prepareError) {
+      let message = "Failed to prepare transaction.";
+      if (prepareError && typeof prepareError === 'object' && 'shortMessage' in prepareError) {
+        message = String(prepareError.shortMessage);
+      } else if (prepareError instanceof Error) {
+        message = prepareError.message;
+      }
+      setError(message);
+      setAttestParams(undefined);
       setIsSubmitting(false);
     }
+  }, [isError, isSubmitting, prepareError]);
+
+  // Effect to execute write when prepare succeeds
+  useEffect(() => {
+    const executeWrite = async () => {
+      if (isPrepareSuccess && isSubmitting && writeAsync) {
+        try {
+          const result = await writeAsync();
+          if (result?.hash) {
+            setTxHash(result.hash);
+          } else {
+            setError("Failed to get transaction hash.");
+          }
+        } catch (err: unknown) {
+          console.error("Error submitting propdate (signing):", err);
+          let message = "Failed to submit transaction.";
+          if (err && typeof err === 'object' && 'shortMessage' in err) {
+            message = String(err.shortMessage);
+          } else if (err instanceof Error) {
+            message = err.message;
+          }
+          setError(message);
+          setTxHash(undefined);
+          setIsSubmitting(false);
+        }
+      }
+    };
+
+    executeWrite();
+  }, [isPrepareSuccess, isSubmitting, writeAsync]);
+
+  const handleSubmit = async () => {
+    setError(null);
+    setIsSubmitting(true);
+
+    // We now use the pre-calculated attestation parameters
+    if (!attestParams || !encodedData) {
+      setError("Failed to prepare transaction data. Please try again.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // The attestParams are already set up from the useEffect
+    console.log({ attestParams });
   };
+
+  // Effect to handle transaction success or failure
+  useEffect(() => {
+    if (isTxSuccess) {
+      console.log("Transaction successful:", txReceipt);
+      if (onSuccess) onSuccess();
+      closeForm();
+      setTxHash(undefined);
+      setError(null);
+      setAttestParams(undefined); // Reset params on success
+      setIsSubmitting(false);
+    }
+    if (isTxError) {
+      console.error("Transaction failed:", txError);
+      let message = "Transaction failed.";
+      if (txError && typeof txError === 'object' && 'shortMessage' in txError) {
+        message = String(txError.shortMessage);
+      } else if (txError instanceof Error) {
+        message = txError.message;
+      }
+      setError(message);
+      setTxHash(undefined);
+      setAttestParams(undefined); // Reset params on error
+      setIsSubmitting(false);
+    }
+  }, [isTxSuccess, isTxError, txReceipt, txError, onSuccess, closeForm]);
+
+  // Effect to handle potential signing errors from useContractWrite
+  useEffect(() => {
+    if (writeError) {
+      let message = "Failed to initiate transaction.";
+      if (writeError && typeof writeError === 'object' && 'shortMessage' in writeError) {
+        message = String(writeError.shortMessage);
+      } else if (writeError instanceof Error) {
+        message = writeError.message;
+      }
+      setError(message);
+      setTxHash(undefined);
+      setAttestParams(undefined); // Reset params on error
+      setIsSubmitting(false);
+    }
+  }, [writeError]);
 
 
   return (
@@ -209,7 +350,7 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
               : undefined
           }
           placeholder={'Enter your message here...'}
-          disabled={isSubmitting}
+          disabled={isLoading}
         />
 
         {error && (
@@ -226,8 +367,8 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
             variant="primary"
             type={'submit'}
             onClick={handleSubmit}
-            disabled={!formik.isValid || isSubmitting}
-            loading={isSubmitting}
+            disabled={!formik.isValid || isLoading}
+            loading={isLoading}
           >
             Submit Propdate
           </Button>
@@ -248,11 +389,11 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
   daoToken: string
 }) => {
 
-  const initialValues: PropDateFormValues = {
+  const initialValues = useMemo(() => ({
     proposalId: proposalId,
     replyTo: replyTo?.txid ?? zeroHash,
     message: '',
-  };
+  } as PropDateFormValues), [proposalId, replyTo?.txid]);
 
 
   return (
