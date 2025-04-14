@@ -167,7 +167,7 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
           }
 
           if (isInit) {
-            imagesToDraw[0].onload = function () {
+            imagesToDraw[0].onload = function() {
               generate()
               setIsInit(false)
             }
@@ -177,7 +177,7 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
         } else {
           if (!imageLayerStack) return
 
-          const url = new URL('https://api.zora.co/renderer/stack-images')
+          const url = new URL('https://nouns.build/api/renderer/stack-images')
           for (const image of imageLayerStack) {
             url.searchParams.append('images', encodeURI(image))
           }

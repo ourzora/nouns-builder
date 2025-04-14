@@ -118,7 +118,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       sanitizeStringForJSON(setUpArtwork?.projectDescription),
       general?.daoAvatar || '',
       sanitizeStringForJSON(general?.daoWebsite || ''),
-      'https://api.zora.co/renderer/stack-images',
+      'https://nouns.build/api/renderer/stack-images',
     ]
   )
 
@@ -232,7 +232,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
         topics: deployEvent?.topics || [],
         data: deployEvent?.data || '0x',
       })
-    } catch {}
+    } catch { }
 
     const deployedAddresses = parsedEvent?.args
 
@@ -319,7 +319,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   justify={'center'}
                   className={
                     deployCheckboxStyleVariants[
-                      hasConfirmedTerms ? 'confirmed' : 'default'
+                    hasConfirmedTerms ? 'confirmed' : 'default'
                     ]
                   }
                   onClick={() => setHasConfirmedTerms((bool) => !bool)}
@@ -349,7 +349,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   justify={'center'}
                   className={
                     deployCheckboxStyleVariants[
-                      hasConfirmedChain ? 'confirmed' : 'default'
+                    hasConfirmedChain ? 'confirmed' : 'default'
                     ]
                   }
                   onClick={() => setHasConfirmedChain((bool) => !bool)}
@@ -371,7 +371,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                     justify={'center'}
                     className={
                       deployCheckboxStyleVariants[
-                        hasConfirmedRewards ? 'confirmed' : 'default'
+                      hasConfirmedRewards ? 'confirmed' : 'default'
                       ]
                     }
                     onClick={() => setHasConfirmedRewards((bool) => !bool)}

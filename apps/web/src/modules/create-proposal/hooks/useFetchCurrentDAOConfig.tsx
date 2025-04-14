@@ -105,13 +105,13 @@ export const useFetchCurrentDAOConfig = ({
 
   const founderParams = foundersAliased
     ? [
-        L2MigrationDeployerFounderConfig,
-        ...foundersAliased.map((x) => ({
-          wallet: x.wallet,
-          ownershipPct: BigInt(x.ownershipPct),
-          vestExpiry: BigInt(x.vestExpiry),
-        })),
-      ]
+      L2MigrationDeployerFounderConfig,
+      ...foundersAliased.map((x) => ({
+        wallet: x.wallet,
+        ownershipPct: BigInt(x.ownershipPct),
+        vestExpiry: BigInt(x.vestExpiry),
+      })),
+    ]
     : [L2MigrationDeployerFounderConfig]
 
   const tokenInitStrings = encodeAbiParameters(
@@ -124,7 +124,7 @@ export const useFetchCurrentDAOConfig = ({
       description!,
       daoImage!,
       projectURI!,
-      'https://api.zora.co/renderer/stack-images',
+      'https://nouns.build/api/renderer/stack-images',
     ]
   )
 
