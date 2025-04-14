@@ -2,6 +2,8 @@ import React, { BaseSyntheticEvent } from 'react'
 
 import { OrderedTraits } from 'src/components/Artwork/LayerBox'
 
+import { RENDERER_BASE } from 'src/constants/rendererBase'
+
 import { ImageProps } from './useArtworkUpload'
 
 export interface UseArtworkPreviewProps {
@@ -177,7 +179,7 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
         } else {
           if (!imageLayerStack) return
 
-          const url = new URL('https://nouns.build/api/renderer/stack-images')
+          const url = new URL(RENDERER_BASE)
           for (const image of imageLayerStack) {
             url.searchParams.append('images', encodeURI(image))
           }

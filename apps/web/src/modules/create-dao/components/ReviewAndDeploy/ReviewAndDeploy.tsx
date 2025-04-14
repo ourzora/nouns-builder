@@ -35,6 +35,7 @@ import {
 import type { AddressType } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
+import { RENDERER_BASE } from 'src/constants/rendererBase'
 
 import { useFormStore } from '../../stores'
 import { PreviewArtwork } from './PreviewArtwork'
@@ -118,7 +119,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       sanitizeStringForJSON(setUpArtwork?.projectDescription),
       general?.daoAvatar || '',
       sanitizeStringForJSON(general?.daoWebsite || ''),
-      'https://nouns.build/api/renderer/stack-images',
+      RENDERER_BASE,
     ]
   )
 

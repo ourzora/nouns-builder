@@ -7,6 +7,7 @@ import {
   MERKLE_METADATA_RENDERER,
   NULL_ADDRESS,
 } from 'src/constants/addresses'
+import { RENDERER_BASE } from 'src/constants/rendererBase'
 import {
   auctionAbi,
   governorAbi,
@@ -124,7 +125,7 @@ export const useFetchCurrentDAOConfig = ({
       description!,
       daoImage!,
       projectURI!,
-      'https://nouns.build/api/renderer/stack-images',
+      RENDERER_BASE
     ]
   )
 
