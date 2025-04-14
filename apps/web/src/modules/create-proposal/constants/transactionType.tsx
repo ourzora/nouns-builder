@@ -9,6 +9,7 @@ export enum TransactionType {
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
   PAUSE_AUCTIONS = 'pause-auctions',
+  FIX_RENDERER_BASE = 'fix-renderer-base',
   RESUME_AUCTIONS = 'resume-auctions',
   UPDATE_MINTER = 'update-minter',
   REPLACE_ARTWORK = 'replace-artwork',
@@ -57,6 +58,12 @@ export const TRANSACTION_TYPES = {
     subTitle: 'Create a proposal to pause auctions',
     icon: 'pauseTemplate',
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
+  },
+  [TransactionType.FIX_RENDERER_BASE]: {
+    title: 'Fix Renderer Base',
+    subTitle: 'Create a proposal to fix the metadata renderer base',
+    icon: 'spanner',
+    iconBackdrop: color.ghostHover,
   },
   [TransactionType.RESUME_AUCTIONS]: {
     title: 'Resume Auctions',
