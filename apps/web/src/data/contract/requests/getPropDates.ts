@@ -41,6 +41,19 @@ export interface PropDate {
 
 export const ATTESTATION_SCHEMA_UID = '0x8bd0d42901ce3cd9898dbea6ae2fbf1e796ef0923e7cbb0a1cecac2e42d47cb3';
 
+// Add the canonical EAS contract address
+export const EAS_CONTRACT_ADDRESS: Record<CHAIN_ID, `0x${string}` | ''> = {
+  [CHAIN_ID.ETHEREUM]: '0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce583',
+  [CHAIN_ID.OPTIMISM]: '0x4200000000000000000000000000000000000021',
+  [CHAIN_ID.BASE]: '0x4200000000000000000000000000000000000021',
+  [CHAIN_ID.SEPOLIA]: '0x4200000000000000000000000000000000000021',
+  [CHAIN_ID.OPTIMISM_SEPOLIA]: '0x4200000000000000000000000000000000000021',
+  [CHAIN_ID.BASE_SEPOLIA]: '0x4200000000000000000000000000000000000021',
+  [CHAIN_ID.ZORA]: '', // Zora doesn't have a canonical EAS deployment yet
+  [CHAIN_ID.ZORA_SEPOLIA]: '',
+  [CHAIN_ID.FOUNDRY]: '' // Assuming no specific address for Foundry
+};
+
 const ATTESTATION_URL: Record<CHAIN_ID, string> = {
   [CHAIN_ID.ETHEREUM]: 'https://easscan.org/graphql',
   [CHAIN_ID.OPTIMISM]: 'https://optimism.easscan.org/graphql',
