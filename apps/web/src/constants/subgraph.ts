@@ -10,6 +10,10 @@ export const PUBLIC_SUBGRAPH_URL: Map<CHAIN_ID, string> = new Map([
     'https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-optimism-mainnet/latest/gn',
   ],
   [
+    CHAIN_ID.OPTIMISM_SEPOLIA,
+    'https://api.goldsky.com/api/public/project_cm39qflfrtz7e01xibgnuczby/subgraphs/nouns-builder-optimism-sepolia/latest/gn',
+  ],
+  [
     CHAIN_ID.SEPOLIA,
     'https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-ethereum-sepolia/latest/gn',
   ],
@@ -18,8 +22,16 @@ export const PUBLIC_SUBGRAPH_URL: Map<CHAIN_ID, string> = new Map([
     'https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base-mainnet/latest/gn',
   ],
   [
+    CHAIN_ID.BASE_SEPOLIA,
+    'https://api.goldsky.com/api/public/project_cm39qflfrtz7e01xibgnuczby/subgraphs/nouns-builder-base-sepolia/latest/gn',
+  ],
+  [
     CHAIN_ID.ZORA,
     'https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-zora-mainnet/latest/gn',
+  ],
+  [
+    CHAIN_ID.ZORA_SEPOLIA,
+    'https://api.goldsky.com/api/public/project_cm3av581k8wdo01vu6fgo4cmq/subgraphs/nouns-builder-zora-sepolia/latest/gn',
   ],
   [
     CHAIN_ID.FOUNDRY,
