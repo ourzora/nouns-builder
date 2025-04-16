@@ -119,7 +119,7 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
 
   const { formValues, setFormValues } = useEscrowFormStore()
   const {
-    addresses: { treasury },
+    addresses: { escrowDelegate, treasury },
   } = useDaoStore()
 
   const handleSubmit = useCallback(
@@ -156,7 +156,7 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
       <Formik
         initialValues={{
           ...formValues,
-          clientAddress: treasury || '',
+          clientAddress: escrowDelegate || treasury || '',
         }}
         validationSchema={EscrowFormSchema}
         onSubmit={handleSubmit}
@@ -191,23 +191,25 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
                     'The wallet address to which funds will be released on milestone completions.'
                   }
                 />
-                <SmartInput
-                  type={TEXT}
-                  formik={formik}
-                  {...formik.getFieldProps('clientAddress')}
-                  id="clientAddress"
-                  inputLabel={'Client'}
-                  placeholder={'0x... or .eth'}
-                  isAddress={true}
-                  errorMessage={
-                    formik.touched.clientAddress && formik.errors.clientAddress
-                      ? formik.errors.clientAddress
-                      : undefined
-                  }
-                  helperText={
-                    'This is the wallet address that will control the escrow for releasing funds. This can be DAO Governer Address or multisig of working group within the DAO.'
-                  }
-                />
+                {!escrowDelegate && (
+                  <SmartInput
+                    type={TEXT}
+                    formik={formik}
+                    {...formik.getFieldProps('clientAddress')}
+                    id="clientAddress"
+                    inputLabel={'Client'}
+                    placeholder={'0x... or .eth'}
+                    isAddress={true}
+                    errorMessage={
+                      formik.touched.clientAddress && formik.errors.clientAddress
+                        ? formik.errors.clientAddress
+                        : undefined
+                    }
+                    helperText={
+                      'This is the wallet address that will control the escrow for releasing funds. This can be DAO Governer Address or multisig of working group within the DAO.'
+                    }
+                  />
+                )}
 
                 <DatePicker
                   {...formik.getFieldProps('safetyValveDate')}
