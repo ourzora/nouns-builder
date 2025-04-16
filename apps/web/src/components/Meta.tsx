@@ -18,9 +18,14 @@ interface MetaProps {
   }
 }
 
-export const Meta: React.FC<MetaProps> = (
-  { title, type, slug, image, description, farcaster }
-) => {
+export const Meta: React.FC<MetaProps> = ({
+  title,
+  type,
+  slug,
+  image,
+  description,
+  farcaster,
+}) => {
   return (
     <Head>
       <title>{`Nouns Builder | ${title}`}</title>

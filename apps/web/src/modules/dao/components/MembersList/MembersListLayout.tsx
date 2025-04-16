@@ -3,17 +3,15 @@ import React, { ReactNode } from 'react'
 
 import { cardSkeleton, firstRowItem, lastRowItem, row, rowItem } from './MembersList.css'
 
-export const MembersPanel = (
-  {
-    children,
-    isMobile,
-    tableRuler = true,
-  }: {
-    children: ReactNode
-    isMobile: boolean
-    tableRuler?: boolean
-  }
-) => {
+export const MembersPanel = ({
+  children,
+  isMobile,
+  tableRuler = true,
+}: {
+  children: ReactNode
+  isMobile: boolean
+  tableRuler?: boolean
+}) => {
   return (
     <>
       <Text

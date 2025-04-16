@@ -12,9 +12,13 @@ type PaginationProps = {
   onPrev: () => {}
 }
 
-const Pagination: React.FC<PaginationProps> = (
-  { onNext, onPrev, isFirst, isLast, scroll = false }
-) => {
+const Pagination: React.FC<PaginationProps> = ({
+  onNext,
+  onPrev,
+  isFirst,
+  isLast,
+  scroll = false,
+}) => {
   return (
     <Flex direction={'row'} w={'100%'} justify={'center'} my={'x16'}>
       <Link

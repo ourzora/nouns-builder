@@ -56,9 +56,9 @@ const Execute: React.FC<{
   )
 }
 
-export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps> = (
-  { proposal }
-) => {
+export const SuccessfulProposalActions: React.FC<SuccessfulProposalActionsProps> = ({
+  proposal,
+}) => {
   const { mutate } = useSWRConfig()
   const chain = useChainStore((x) => x.chain)
 

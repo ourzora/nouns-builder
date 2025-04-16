@@ -3,17 +3,15 @@ import { useContractRead } from 'wagmi'
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
-export const useDelayedGovernance = (
-  {
-    tokenAddress,
-    governorAddress,
-    chainId,
-  }: {
-    tokenAddress?: AddressType
-    governorAddress?: AddressType
-    chainId: CHAIN_ID
-  }
-) => {
+export const useDelayedGovernance = ({
+  tokenAddress,
+  governorAddress,
+  chainId,
+}: {
+  tokenAddress?: AddressType
+  governorAddress?: AddressType
+  chainId: CHAIN_ID
+}) => {
   const { data: delayedUntilTimestamp } = useContractRead({
     abi: governorAbi,
     address: governorAddress,

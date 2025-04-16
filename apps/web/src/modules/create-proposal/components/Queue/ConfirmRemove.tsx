@@ -13,9 +13,10 @@ interface ConfrimRemoveProps {
   setOpenConfirm: (boolean: boolean) => void
 }
 
-export const ConfirmRemove: React.FC<ConfrimRemoveProps> = (
-  { handleRemoveTransaction, setOpenConfirm }
-) => {
+export const ConfirmRemove: React.FC<ConfrimRemoveProps> = ({
+  handleRemoveTransaction,
+  setOpenConfirm,
+}) => {
   return (
     <Flex direction={'column'} align={'center'}>
       <Flex className={confirmRemoveHeadingStyle}>Are you sure?</Flex>

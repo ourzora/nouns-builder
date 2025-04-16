@@ -3,7 +3,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "clean": "rm -rf ./generated ./build subgraph.yaml",
-    "build:subgraph": "graph build",
+    "build": "graph build",
     "codegen": "graph codegen",
     "prepare:ethereum-sepolia": "mustache config/sepolia.json subgraph.yaml.mustache > subgraph.yaml",
     "prepare:ethereum": "mustache config/ethereum.json subgraph.yaml.mustache > subgraph.yaml",

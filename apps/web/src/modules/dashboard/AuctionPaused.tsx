@@ -24,9 +24,13 @@ type PausedType = DashboardDaoProps & {
   tokenAddress: string
 }
 
-export const AuctionPaused = (
-  { currentChainSlug, tokenAddress, chainName, name, chainIcon }: PausedType
-) => {
+export const AuctionPaused = ({
+  currentChainSlug,
+  tokenAddress,
+  chainName,
+  name,
+  chainIcon,
+}: PausedType) => {
   const router = useRouter()
   const Paused = icons.pause
 

@@ -6,17 +6,15 @@ import { TopSectionView } from 'src/modules/dao/components/DaoTopSection'
 
 import { auctionWrapVariants, switcherBox } from './Auction.css'
 
-export const ViewSwitcher = (
-  {
-    topSectionView,
-    setTopSectionView,
-    children,
-  }: {
-    topSectionView: TopSectionView
-    setTopSectionView: (view: TopSectionView) => void
-    children: ReactNode
-  }
-) => (
+export const ViewSwitcher = ({
+  topSectionView,
+  setTopSectionView,
+  children,
+}: {
+  topSectionView: TopSectionView
+  setTopSectionView: (view: TopSectionView) => void
+  children: ReactNode
+}) => (
   <Flex className={auctionWrapVariants['post']}>
     <Flex w={'100%'} justify={'center'} mb={'x3'}>
       <Flex className={switcherBox}>

@@ -31,16 +31,14 @@ return (
 
 */
 
-export function colorThemeVars(
-  {
-    foreground = '#000000',
-    background = '#ffffff',
-    accent = '#000000',
-    positive = '#1CB687',
-    negative = '#F03232',
-    warning = '#F5A623',
-  }
-) {
+export function colorThemeVars({
+  foreground = '#000000',
+  background = '#ffffff',
+  accent = '#000000',
+  positive = '#1CB687',
+  negative = '#F03232',
+  warning = '#F5A623',
+}) {
   return {
     background1: background,
     background2: mix(0.1, background, foreground),
