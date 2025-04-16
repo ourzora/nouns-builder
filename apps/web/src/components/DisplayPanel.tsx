@@ -1,9 +1,13 @@
 import { Flex, Text } from '@zoralabs/zord'
 import React from 'react'
 
-export const DisplayPanel = (
-  { title, description }: { title: string; description: string }
-) => {
+export const DisplayPanel = ({
+  title,
+  description,
+}: {
+  title: string
+  description: string
+}) => {
   return (
     <Flex
       borderRadius={'phat'}

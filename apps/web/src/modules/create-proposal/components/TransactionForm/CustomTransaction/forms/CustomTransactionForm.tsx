@@ -25,16 +25,14 @@ interface CustomTransactionFormProps<Values> {
   validateOnBlur?: boolean
 }
 
-export function CustomTransactionForm<Values extends FormikValues>(
-  {
-    fields,
-    initialValues,
-    validationSchema,
-    submitCallback,
-    options,
-    validateOnBlur = false,
-  }: React.PropsWithChildren<CustomTransactionFormProps<Values>>
-) {
+export function CustomTransactionForm<Values extends FormikValues>({
+  fields,
+  initialValues,
+  validationSchema,
+  submitCallback,
+  options,
+  validateOnBlur = false,
+}: React.PropsWithChildren<CustomTransactionFormProps<Values>>) {
   const {
     active: activeCustomTransactionSection,
     next: nextCustomTransactionForm,

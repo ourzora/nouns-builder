@@ -7,7 +7,7 @@ import type {
 } from 'react-polymorphic-types'
 
 export interface InputProps extends BoxProps {
-  size?: keyof (typeof inputVariants)['sizeVariant']
+  size?: keyof typeof inputVariants['sizeVariant']
 }
 
 export type InputComponentProps<E extends ElementType> = PolymorphicPropsWithRef<
@@ -17,7 +17,7 @@ export type InputComponentProps<E extends ElementType> = PolymorphicPropsWithRef
 
 function InnerInput<E extends ElementType = 'input'>(
   { className, sizeVariant, ...props }: InputComponentProps<E>,
-  ref: React.ForwardedRef<HTMLInputElement>,
+  ref: React.ForwardedRef<HTMLInputElement>
 ) {
   return (
     <Box

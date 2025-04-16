@@ -36,7 +36,7 @@ function InnerFlex<E extends React.ElementType = typeof BoxDefaultElement>(
     flexChildren: flexChildrenProp,
     ...props
   }: PolymorphicPropsWithoutRef<FlexProps, E>,
-  ref?: React.ForwardedRef<E>,
+  ref?: React.ForwardedRef<E>
 ) {
   const flexWrap = wrap === true ? 'wrap' : wrap === false ? 'nowrap' : wrap
   return (
@@ -54,7 +54,7 @@ function InnerFlex<E extends React.ElementType = typeof BoxDefaultElement>(
           placeItems,
         }),
         flexChildrenProp && flexChildren,
-        className,
+        className
       )}
       {...props}
     />

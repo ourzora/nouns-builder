@@ -13,9 +13,13 @@ interface AnimatedModalProps {
   trigger?: ReactElement
 }
 
-const AnimatedModal: React.FC<AnimatedModalProps> = (
-  { children, open, close, size = 'small', trigger }
-) => {
+const AnimatedModal: React.FC<AnimatedModalProps> = ({
+  children,
+  open,
+  close,
+  size = 'small',
+  trigger,
+}) => {
   const contentVariants = {
     initial: {
       y: 50,

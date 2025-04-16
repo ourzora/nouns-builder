@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['next', 'turbo', 'prettier'],
+  extends: ['next', 'turbo', 'prettier', 'plugin:prettier/recommended'],
   plugins: ['@typescript-eslint', 'unused-imports'],
   parser: '@typescript-eslint/parser',
   rules: {
@@ -8,7 +8,8 @@ module.exports = {
     'react/display-name': 'off',
     '@next/next/no-img-element': 'off',
     'react/no-unescaped-entities': 0,
-    'unused-imports/no-unused-imports-ts': 2
+    'unused-imports/no-unused-imports-ts': 2,
+    'prettier/prettier': 'warn',
   },
   parserOptions: {
     babelOptions: {

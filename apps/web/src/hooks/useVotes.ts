@@ -4,19 +4,17 @@ import { useContractReads } from 'wagmi'
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
-export const useVotes = (
-  {
-    chainId,
-    collectionAddress,
-    governorAddress,
-    signerAddress,
-  }: {
-    chainId: CHAIN_ID
-    collectionAddress?: AddressType
-    governorAddress?: AddressType
-    signerAddress?: AddressType
-  }
-) => {
+export const useVotes = ({
+  chainId,
+  collectionAddress,
+  governorAddress,
+  signerAddress,
+}: {
+  chainId: CHAIN_ID
+  collectionAddress?: AddressType
+  governorAddress?: AddressType
+  signerAddress?: AddressType
+}) => {
   const { data, isLoading } = useContractReads({
     enabled: !!collectionAddress && !!governorAddress && !!signerAddress,
     allowFailure: false,

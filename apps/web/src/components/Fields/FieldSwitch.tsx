@@ -42,9 +42,14 @@ interface FieldSwitchProps {
   parentValues?: any
 }
 
-const FieldSwitch: React.FC<FieldSwitchProps> = (
-  { field, formik, autoSubmit, submitCallback, options, parentValues }
-) => {
+const FieldSwitch: React.FC<FieldSwitchProps> = ({
+  field,
+  formik,
+  autoSubmit,
+  submitCallback,
+  options,
+  parentValues,
+}) => {
   /*
 
         handle smartInput onChange

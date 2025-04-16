@@ -16,9 +16,15 @@ type StatusProps = {
   showTime?: Boolean
 }
 
-export const ProposalStatus: React.FC<StatusProps> = (
-  { state, voteEnd, voteStart, expiresAt, className, flipped, showTime }
-) => {
+export const ProposalStatus: React.FC<StatusProps> = ({
+  state,
+  voteEnd,
+  voteStart,
+  expiresAt,
+  className,
+  flipped,
+  showTime,
+}) => {
   const now = dayjs.unix(Date.now() / 1000)
 
   const diffEnd = dayjs.unix(voteEnd).diff(now, 'second')

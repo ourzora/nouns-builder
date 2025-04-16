@@ -33,9 +33,15 @@ interface VoteStatusProps {
   signerVote?: ProposalVote
 }
 
-export const VoteStatus: React.FC<VoteStatusProps> = (
-  { signerVote, votesAvailable, proposalId, voteStart, state, daoName, title }
-) => {
+export const VoteStatus: React.FC<VoteStatusProps> = ({
+  signerVote,
+  votesAvailable,
+  proposalId,
+  voteStart,
+  state,
+  daoName,
+  title,
+}) => {
   const { address: userAddress } = useAccount()
   const { governor } = useDaoStore((state) => state.addresses)
   const [showVoteModal, setShowVoteModal] = useState<boolean>(false)

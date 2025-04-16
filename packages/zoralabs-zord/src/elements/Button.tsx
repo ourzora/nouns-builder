@@ -33,7 +33,7 @@ export interface ButtonProps extends FlexProps {
   icon?: IconProps['id']
   iconAlign?: 'left' | 'right'
   type?: 'submit' | 'reset' | 'button'
-  iconSize?: keyof (typeof iconVariants)['size']
+  iconSize?: keyof typeof iconVariants['size']
   loading?: boolean
   pill?: boolean
 }
@@ -63,7 +63,7 @@ export function InnerButton<E extends ElementType = typeof ButtonDefaultElement>
     type = 'button',
     ...props
   }: PolymorphicPropsWithoutRef<ButtonProps, E>,
-  ref: ForwardedRef<E>,
+  ref: ForwardedRef<E>
 ) {
   const Element: ElementType = as || ButtonDefaultElement
 
