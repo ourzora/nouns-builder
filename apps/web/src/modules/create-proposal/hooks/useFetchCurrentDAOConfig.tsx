@@ -7,6 +7,7 @@ import {
   MERKLE_METADATA_RENDERER,
   NULL_ADDRESS,
 } from 'src/constants/addresses'
+import { RENDERER_BASE } from 'src/constants/rendererBase'
 import {
   auctionAbi,
   governorAbi,
@@ -107,13 +108,13 @@ export const useFetchCurrentDAOConfig = (
 
   const founderParams = foundersAliased
     ? [
-        L2MigrationDeployerFounderConfig,
-        ...foundersAliased.map((x) => ({
-          wallet: x.wallet,
-          ownershipPct: BigInt(x.ownershipPct),
-          vestExpiry: BigInt(x.vestExpiry),
-        })),
-      ]
+      L2MigrationDeployerFounderConfig,
+      ...foundersAliased.map((x) => ({
+        wallet: x.wallet,
+        ownershipPct: BigInt(x.ownershipPct),
+        vestExpiry: BigInt(x.vestExpiry),
+      })),
+    ]
     : [L2MigrationDeployerFounderConfig]
 
   const tokenInitStrings = encodeAbiParameters(
@@ -126,7 +127,7 @@ export const useFetchCurrentDAOConfig = (
       description!,
       daoImage!,
       projectURI!,
-      'https://api.zora.co/renderer/stack-images',
+      RENDERER_BASE
     ]
   )
 

@@ -8,6 +8,7 @@ import { Droposal } from './Droposal'
 import { Escrow } from './Escrow'
 import { Migration } from './Migration'
 import { PauseAuctions } from './PauseAuctions'
+import { FixRendererBase } from './FixRendererBase'
 import { ReplaceArtwork } from './ReplaceArtwork'
 import { ResumeAuctions } from './ResumeAuctions/ResumeAuctions'
 import { SendEth } from './SendEth'
@@ -23,6 +24,7 @@ export const TRANSACTION_FORM_OPTIONS = [
   TransactionType.AIRDROP,
   TransactionType.ESCROW,
   TransactionType.PAUSE_AUCTIONS,
+  TransactionType.FIX_RENDERER_BASE,
   TransactionType.RESUME_AUCTIONS,
   TransactionType.REPLACE_ARTWORK,
   TransactionType.DROPOSAL,
@@ -38,6 +40,7 @@ export const TransactionForm = ({ type }: TransactionFormProps) => {
     [TransactionType.DROPOSAL]: <Droposal />,
     [TransactionType.SEND_ETH]: <SendEth />,
     [TransactionType.PAUSE_AUCTIONS]: <PauseAuctions />,
+    [TransactionType.FIX_RENDERER_BASE]: <FixRendererBase />,
     [TransactionType.RESUME_AUCTIONS]: <ResumeAuctions />,
     [TransactionType.REPLACE_ARTWORK]: <ReplaceArtwork />,
     [TransactionType.MIGRATION]: <Migration />,

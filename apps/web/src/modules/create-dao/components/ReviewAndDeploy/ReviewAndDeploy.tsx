@@ -35,6 +35,7 @@ import {
 import type { AddressType } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
+import { RENDERER_BASE } from 'src/constants/rendererBase'
 
 import { useFormStore } from '../../stores'
 import { PreviewArtwork } from './PreviewArtwork'
@@ -118,7 +119,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       sanitizeStringForJSON(setUpArtwork?.projectDescription),
       general?.daoAvatar || '',
       sanitizeStringForJSON(general?.daoWebsite || ''),
-      'https://api.zora.co/renderer/stack-images',
+      RENDERER_BASE,
     ]
   )
 
@@ -232,7 +233,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
         topics: deployEvent?.topics || [],
         data: deployEvent?.data || '0x',
       })
-    } catch {}
+    } catch { }
 
     const deployedAddresses = parsedEvent?.args
 
@@ -319,7 +320,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   justify={'center'}
                   className={
                     deployCheckboxStyleVariants[
-                      hasConfirmedTerms ? 'confirmed' : 'default'
+                    hasConfirmedTerms ? 'confirmed' : 'default'
                     ]
                   }
                   onClick={() => setHasConfirmedTerms((bool) => !bool)}
@@ -349,7 +350,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   justify={'center'}
                   className={
                     deployCheckboxStyleVariants[
-                      hasConfirmedChain ? 'confirmed' : 'default'
+                    hasConfirmedChain ? 'confirmed' : 'default'
                     ]
                   }
                   onClick={() => setHasConfirmedChain((bool) => !bool)}
@@ -371,7 +372,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                     justify={'center'}
                     className={
                       deployCheckboxStyleVariants[
-                        hasConfirmedRewards ? 'confirmed' : 'default'
+                      hasConfirmedRewards ? 'confirmed' : 'default'
                       ]
                     }
                     onClick={() => setHasConfirmedRewards((bool) => !bool)}

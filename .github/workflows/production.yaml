@@ -12,9 +12,8 @@ jobs:
     name: CI
     runs-on: ubuntu-latest
     env:
-      PRIVATE_ALCHEMY_ID: ${{ secrets.PRIVATE_ALCHEMY_ID }}
       ANVIL_BLOCK_NUMBER: 16522514
-      ANVIL_FORK_URL: https://eth-mainnet.alchemyapi.io/v2/${{ secrets.PRIVATE_ALCHEMY_ID }}
+      ANVIL_FORK_URL: ${{ secrets.MAINNET_RPC_URL }}
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3

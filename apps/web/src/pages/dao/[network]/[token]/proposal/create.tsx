@@ -7,8 +7,9 @@ import { useAccount, useContractRead } from 'wagmi'
 
 import { ALLOWED_MIGRATION_DAOS } from 'src/constants/addresses'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
+import { RENDERER_BASE } from 'src/constants/rendererBase'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
-import { auctionAbi } from 'src/data/contract/abis'
+import { auctionAbi, metadataAbi } from 'src/data/contract/abis'
 import { L1_CHAINS } from 'src/data/contract/chains'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { useVotes } from 'src/hooks'
@@ -35,7 +36,7 @@ import { AddressType } from 'src/typings'
 
 const CreateProposalPage: NextPageWithLayout = () => {
   const router = useRouter()
-  const { auction, token } = useDaoStore((x) => x.addresses)
+  const { auction, token, metadata } = useDaoStore((x) => x.addresses)
   const chain = useChainStore((x) => x.chain)
   const { query } = router
   const [transactionType, setTransactionType] = useState<
@@ -49,6 +50,15 @@ const CreateProposalPage: NextPageWithLayout = () => {
     functionName: 'paused',
     chainId: chain.id,
   })
+
+  const { data: rendererBase } = useContractRead({
+    abi: metadataAbi,
+    address: metadata,
+    chainId: chain.id,
+    functionName: 'rendererBase',
+  })
+
+  const isRendererBaseFixed = rendererBase === RENDERER_BASE
 
   useEffect(() => {
     if (transactions.length && !transactionType) {
@@ -88,6 +98,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
       return false
     if (x === TransactionType.PAUSE_AUCTIONS && paused) return false
     if (x === TransactionType.RESUME_AUCTIONS && !paused) return false
+    if (x === TransactionType.FIX_RENDERER_BASE && isRendererBaseFixed) return false
     return true
   })
 
