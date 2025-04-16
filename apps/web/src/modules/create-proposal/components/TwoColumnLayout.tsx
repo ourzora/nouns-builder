@@ -8,10 +8,9 @@ interface CustomTransactionLayoutProps {
   rightColumn?: ReactNode
 }
 
-export const TwoColumnLayout: FC<CustomTransactionLayoutProps> = ({
-  leftColumn,
-  rightColumn,
-}) => {
+export const TwoColumnLayout: FC<CustomTransactionLayoutProps> = (
+  { leftColumn, rightColumn }
+) => {
   return (
     <Box w={'100%'} mx={'auto'} position={'relative'}>
       <Box>

@@ -382,7 +382,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   <Flex className={deployCheckboxHelperText}>
                     I have read the{' '}
                     <a
-                      href={'https://docs.zora.co/docs/guides/builder-protocol-rewards'}
+                      href={'https://nouns-builder-docs.vercel.app/guides/builder-protocol-rewards/'}
                       target="_blank"
                       className={atoms({ color: 'accent' })}
                       rel="noreferrer"

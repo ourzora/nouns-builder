@@ -391,7 +391,7 @@ export const NavMenu = () => {
                 </Flex>
               </Link>
               <a
-                href="https://docs.zora.co/docs/smart-contracts/nouns-builder/intro"
+                href="https://nouns-builder-docs.vercel.app/reference/intro"
                 target="_blank"
                 rel="noreferrer noopener"
               >

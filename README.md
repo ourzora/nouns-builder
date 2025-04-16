@@ -1,11 +1,12 @@
-# Nouns Builder monorepo
+# ![Builder Avatar](apps/web/public/builder-avatar-circle60x60.png) Nouns Builder Monorepo
 
-This is Nouns Builder front-end mono-repo. You can find Nouns Builder deployed on:
+This is Nouns Builder front-end website and subgraph mono-repo. You can find Nouns Builder deployed on:
 
 - [Mainnet](//nouns.build)
-- [Goerli testnet](//testnet.nouns.build)
+- [Sepolia testnet](//testnet.nouns.build)
 
-For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://docs.zora.co/docs/smart-contracts/nouns-builder/intro). You can also find [Nouns Protocol here](https://github.com/ourzora/nouns-protocol).
+For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://nouns-builder-docs.vercel.app/).  
+You can also find the [Builder Protocol code here](https://github.com/BuilderOSS/builder-protocol).
 
 ### Apps and packages in this repository include:
 
@@ -77,29 +78,31 @@ pnpm run type-check
 
 This app has several third party api keys that you need in order to run Builder:
 
-- [alchemy](https://www.alchemy.com/) as the main rpc node provider in addition to mainnet forks for testing
-- [tenderly](https://docs.tenderly.co/simulations-and-forks/simulation-api) in order to simulate transactions
-- [etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dynamically fetch abis
+- [Tenderly](https://docs.tenderly.co/simulations-and-forks/simulation-api) as the main rpc node provider and transaction simulator
+- [Etherscan](https://docs.etherscan.io/api-endpoints/contracts) to dynamically fetch abis
 
 We ask that you supply your own secrets locally for running in development environment. Non-secret environment variables are already included in the `.env` files in this repo.
 
 Add the following variables to `.env.local` within this root directory (needed to run tests against a local anvil node):
 
 ```
-#alchemy
-PRIVATE_ALCHEMY_ID=<ALCHEMY_API_KEY>
-ANVIL_FORK_URL=https://eth-mainnet.alchemyapi.io/v2/$PRIVATE_ALCHEMY_ID
+ANVIL_FORK_URL=https://eth-mainnet.alchemyapi.io/v2/$TENDERLY_RPC_KEY
 ANVIL_BLOCK_NUMBER=8305745
 ```
 
 Add the following variables to `apps/web/.env.local`:
 
 ```
-#alchemy
-NEXT_PUBLIC_TENDERLY_RPC_KEY=<ALCHEMY_API_KEY>
+# tenderly RPCs
+NEXT_PUBLIC_TENDERLY_MAINNET_RPC_KEY
+NEXT_PUBLIC_TENDERLY_BASE_RPC_KEY
+NEXT_PUBLIC_TENDERLY_OPTIMISM_RPC_KEY
+NEXT_PUBLIC_TENDERLY_SEPOLIA_RPC_KEY
 
+# conduit RPC for Zora
+NEXT_PUBLIC_ZORA_CONDUIT_RPC_KEY
 
-#tenderly
+# tenderly simulator env variables
 TENDERLY_ACCESS_KEY=<API_KEY>
 TENDERLY_PROJECT=<PROJECT_NAME>
 TENDERLY_USER=<ACCOUNT_NAME>
@@ -107,7 +110,7 @@ TENDERLY_USER=<ACCOUNT_NAME>
 #etherscan (optional to run locally, this is for dynamically fetching abis in the custom transaction builder)
 ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
 
-#optional zora api key
+# optional zora api key
 NEXT_PUBLIC_ZORA_API_KEY=
 ```
 
@@ -134,14 +137,11 @@ The Nouns Builder client is deployed on [Vercel](https://vercel.com/). Any pull 
 
 The Nouns Builder subgraph is deployed for the following networks:
 
-- [Ethereum Mainnet](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-mainnet)
-- [Ethereum Goerli](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-goerli)
-- [Optimism Mainnet](https://api.thegraph.com/subgraphs/name/neokry/noun-builder-optimism-mainnet)
-- [Optimism Goerli](https://api.thegraph.com/subgraphs/name/neokry/nouns-builder-optimism-goerli)
-- [Zora Mainnet](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-mainnet/stable/gn)
-- [Zora Goerli](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-zora-testnet/stable/gn)
-- [Base Mainnet](https://api.goldsky.com/api/public/project_clkk1ucdyf6ak38svcatie9tf/subgraphs/nouns-builder-base-mainnet/stable/g)
-- [Base Goerli](https://api.studio.thegraph.com/query/49279/nouns-builder-base-goerli/version/latest)
+- [Ethereum](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-ethereum-mainnet/latest/gn)
+- [Ethereum Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-ethereum-sepolia/latest/gn)
+- [Base](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base-mainnet/latest/gn)
+- [Optimism](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-optimism-mainnet/latest/gn)
+- [Zora](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-zora-mainnet/latest/gn)
 
 ## Contributions
 
@@ -149,4 +149,4 @@ Please refer to our [contributions guideline](/.github/contributing.md) on how b
 
 ## Questions?
 
-Feel free to reach out to us via [twitter](https://twitter.com/nounsbuilder), [discord](https://discord.gg/JpMKps2W), or via email at <opensource@zora.co>
+Feel free to reach out to us via [Discord](https://discord.gg/rSswr2wC)

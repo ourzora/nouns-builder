@@ -2,6 +2,7 @@ import isEqual from 'lodash/isEqual'
 import { isAddress } from 'viem'
 
 import { Duration } from 'src/typings'
+import { PUBLIC_ALL_CHAINS } from '../constants/defaultChains'
 
 /**
  *
@@ -276,9 +277,13 @@ export const isPossibleMarkdown = (text: string) => {
     /(?:\*\*[^\*]+\*\*)|(?:__[^\_]+__)|(?:\*[^\*]+\*)|(?:_[^\_]+_)|(?:\#[^\#]+\#)|(?:\!\[[^\]]*\]\([^\)]+\))|(?:\[[^\]]+\]\([^\)]+\))/g
   return markdownRegex.test(text)
 }
+
 export function maxChar(str: string, maxLength: number) {
   if (str.length <= maxLength) {
     return str
   }
   return str.slice(0, maxLength) + '...'
 }
+
+export const chainIdToSlug = (chainId: number) =>
+  PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId)?.slug

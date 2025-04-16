@@ -16,16 +16,9 @@ interface CustomInputProps extends InputComponentProps<typeof ZordInput> {
   error?: string
 }
 
-const Input: FC<CustomInputProps> = ({
-  name,
-  label,
-  secondaryLabel,
-  type,
-  placeholder,
-  autoComplete,
-  error,
-  ...props
-}) => {
+const Input: FC<CustomInputProps> = (
+  { name, label, secondaryLabel, type, placeholder, autoComplete, error, ...props }
+) => {
   return (
     <>
       <Box as="label" htmlFor={name}>

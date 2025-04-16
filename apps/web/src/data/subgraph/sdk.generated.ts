@@ -1099,6 +1099,7 @@ export type Proposal = {
   description?: Maybe<Scalars['String']>
   descriptionHash: Scalars['Bytes']
   executableFrom?: Maybe<Scalars['BigInt']>
+  executionTransactionHash?: Maybe<Scalars['String']>
   executed: Scalars['Boolean']
   expiresAt?: Maybe<Scalars['BigInt']>
   forVotes: Scalars['Int']
@@ -2239,6 +2240,7 @@ export type ProposalFragment = {
   description?: string | null
   descriptionHash: any
   executableFrom?: any | null
+  executionTransactionHash?: any | null
   expiresAt?: any | null
   forVotes: number
   proposalId: any
@@ -2552,6 +2554,7 @@ export type ProposalQuery = {
     description?: string | null
     descriptionHash: any
     executableFrom?: any | null
+    executionTransactionHash?: any | null
     expiresAt?: any | null
     forVotes: number
     proposalId: any
@@ -2644,6 +2647,7 @@ export type ProposalsQuery = {
     description?: string | null
     descriptionHash: any
     executableFrom?: any | null
+    executionTransactionHash?: any | null
     expiresAt?: any | null
     forVotes: number
     proposalId: any
@@ -2800,6 +2804,7 @@ export const ProposalFragmentDoc = gql`
     description
     descriptionHash
     executableFrom
+    executionTransactionHash
     expiresAt
     forVotes
     proposalId

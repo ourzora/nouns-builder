@@ -22,13 +22,9 @@ import { useFetchCurrentDAOConfig } from './useFetchCurrentDAOConfig'
 
 const UINT_64_MAX = 18446744073709551615n
 
-export const usePrepareMigration = ({
-  enabled,
-  migratingToChainId,
-}: {
-  enabled: boolean
-  migratingToChainId: CHAIN_ID
-}): { transactions: Transaction[] | undefined; error: Error | undefined } => {
+export const usePrepareMigration = (
+  { enabled, migratingToChainId }: { enabled: boolean; migratingToChainId: CHAIN_ID }
+): { transactions: Transaction[] | undefined; error: Error | undefined } => {
   const { id: currentChainId } = useChainStore((x) => x.chain)
   const { addresses: currentAddresses } = useDaoStore()
 
@@ -115,26 +111,28 @@ export const usePrepareMigration = ({
   }
 }
 
-const prepareTransactions = ({
-  l1CrossDomainMessenger,
-  currentDAOConfig,
-  attributesMerkleRoot,
-  encodedMetadata,
-  minterParams,
-  migratingToChainId,
-}: {
-  l1CrossDomainMessenger: AddressType
-  currentDAOConfig: ReturnType<typeof useFetchCurrentDAOConfig>
-  attributesMerkleRoot: BytesType
-  encodedMetadata: BytesType[]
-  minterParams: {
-    mintStart: bigint
-    mintEnd: bigint
-    pricePerToken: bigint
-    merkleRoot: BytesType
+const prepareTransactions = (
+  {
+    l1CrossDomainMessenger,
+    currentDAOConfig,
+    attributesMerkleRoot,
+    encodedMetadata,
+    minterParams,
+    migratingToChainId,
+  }: {
+    l1CrossDomainMessenger: AddressType
+    currentDAOConfig: ReturnType<typeof useFetchCurrentDAOConfig>
+    attributesMerkleRoot: BytesType
+    encodedMetadata: BytesType[]
+    minterParams: {
+      mintStart: bigint
+      mintEnd: bigint
+      pricePerToken: bigint
+      merkleRoot: BytesType
+    }
+    migratingToChainId: CHAIN_ID
   }
-  migratingToChainId: CHAIN_ID
-}) => {
+) => {
   const { founderParams, tokenParams, auctionParams, govParams } = currentDAOConfig!
 
   const ONE_HOUR_IN_SECONDS = 3600n

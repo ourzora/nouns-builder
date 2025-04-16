@@ -12,15 +12,17 @@ export interface WarningModalProps {
   onCancel: () => void
 }
 
-export const WarningModal: React.FC<WarningModalProps> = ({
-  daoName,
-  currentBid,
-  isAverage,
-  maxReccomendedBid,
-  isCreatingBid,
-  onConfirm,
-  onCancel,
-}) => {
+export const WarningModal: React.FC<WarningModalProps> = (
+  {
+    daoName,
+    currentBid,
+    isAverage,
+    maxReccomendedBid,
+    isCreatingBid,
+    onConfirm,
+    onCancel,
+  }
+) => {
   return (
     <Stack>
       <Text color="text1" fontSize={18} fontWeight={'display'}>
