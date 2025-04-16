@@ -21,19 +21,17 @@ import { unpackOptionalArray } from 'src/utils/helpers'
 
 import { applyL1ToL2Alias } from '../utils/applyL1ToL2Alias'
 
-export const useFetchCurrentDAOConfig = (
-  {
-    chainId,
-    migratingToChainId,
-    currentAddresses,
-    enabled,
-  }: {
-    enabled?: boolean
-    chainId: CHAIN_ID
-    migratingToChainId: CHAIN_ID
-    currentAddresses: DaoContractAddresses
-  }
-) => {
+export const useFetchCurrentDAOConfig = ({
+  chainId,
+  migratingToChainId,
+  currentAddresses,
+  enabled,
+}: {
+  enabled?: boolean
+  chainId: CHAIN_ID
+  migratingToChainId: CHAIN_ID
+  currentAddresses: DaoContractAddresses
+}) => {
   const contracts = setupContracts({
     addresses: currentAddresses as Required<DaoContractAddresses>,
     chainId,
@@ -161,9 +159,13 @@ export const useFetchCurrentDAOConfig = (
   }
 }
 
-const setupContracts = (
-  { addresses, chainId }: { addresses: Required<DaoContractAddresses>; chainId: CHAIN_ID }
-) => {
+const setupContracts = ({
+  addresses,
+  chainId,
+}: {
+  addresses: Required<DaoContractAddresses>
+  chainId: CHAIN_ID
+}) => {
   const token = {
     abi: tokenAbi,
     address: addresses.token,

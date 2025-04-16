@@ -19,9 +19,13 @@ interface MarkdownEditorProps {
   disabled?: boolean
 }
 
-export const MarkdownEditor: React.FC<MarkdownEditorProps> = (
-  { onChange, value, inputLabel, errorMessage, disabled }
-) => {
+export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
+  onChange,
+  value,
+  inputLabel,
+  errorMessage,
+  disabled,
+}) => {
   const [selectedTab, setSelectedTab] = React.useState<'write' | 'preview'>(
     disabled ? 'preview' : 'write'
   )

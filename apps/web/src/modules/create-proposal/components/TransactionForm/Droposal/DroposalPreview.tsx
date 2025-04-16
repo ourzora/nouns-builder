@@ -12,9 +12,10 @@ interface DroposalPreviewProps {
   editionType: EditionType
 }
 
-export const DroposalPreview: React.FC<DroposalPreviewProps> = (
-  { formik, editionType }
-) => {
+export const DroposalPreview: React.FC<DroposalPreviewProps> = ({
+  formik,
+  editionType,
+}) => {
   const {
     mediaUrl,
     coverUrl,

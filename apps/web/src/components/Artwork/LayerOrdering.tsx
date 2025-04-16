@@ -19,9 +19,13 @@ interface LayerOrderingProps {
   setOrderedLayers: (orderedLayers: OrderedTraits) => void
 }
 
-export const LayerOrdering: React.FC<LayerOrderingProps> = (
-  { title, images, artwork, orderedLayers, setOrderedLayers }
-) => {
+export const LayerOrdering: React.FC<LayerOrderingProps> = ({
+  title,
+  images,
+  artwork,
+  orderedLayers,
+  setOrderedLayers,
+}) => {
   /*  init layers and drag and drop  */
   const [dragAndDrop, setDragAndDrop] = React.useState<DragAndDropProps | null>(null)
   React.useEffect(() => {

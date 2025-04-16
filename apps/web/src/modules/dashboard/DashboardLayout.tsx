@@ -3,9 +3,13 @@ import React, { ReactNode } from 'react'
 
 import { Meta } from 'src/components/Meta'
 
-export const DashboardLayout = (
-  { auctionCards, daoProposals }: { auctionCards: ReactNode; daoProposals?: ReactNode }
-) => {
+export const DashboardLayout = ({
+  auctionCards,
+  daoProposals,
+}: {
+  auctionCards: ReactNode
+  daoProposals?: ReactNode
+}) => {
   return (
     <DashPage>
       <Box mb={'x12'}>

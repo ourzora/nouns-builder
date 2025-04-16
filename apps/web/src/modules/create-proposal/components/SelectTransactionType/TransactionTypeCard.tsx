@@ -9,9 +9,10 @@ interface TransactionTypeCardProps {
   onClick: () => void
 }
 
-const TransactionTypeCard: React.FC<TransactionTypeCardProps> = (
-  { transactionType, onClick }
-) => {
+const TransactionTypeCard: React.FC<TransactionTypeCardProps> = ({
+  transactionType,
+  onClick,
+}) => {
   return (
     <Flex gap={'x4'} align={'center'} onClick={onClick} cursor={'pointer'}>
       <TransactionTypeIcon transactionType={transactionType} large />

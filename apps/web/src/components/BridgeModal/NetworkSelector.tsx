@@ -13,9 +13,10 @@ export interface NetworkSelectorProps {
   setSelectedChain: (value: Chain) => void
 }
 
-export const NetworkSelector: React.FC<NetworkSelectorProps> = (
-  { selectedChain, setSelectedChain }
-) => {
+export const NetworkSelector: React.FC<NetworkSelectorProps> = ({
+  selectedChain,
+  setSelectedChain,
+}) => {
   const [isOpenChainMenu, setIsOpenChainMenu] = React.useState(false)
 
   const onChainChange = (chainId: number) => {

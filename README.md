@@ -5,7 +5,7 @@ This is Nouns Builder front-end website and subgraph mono-repo. You can find Nou
 - [Mainnet](//nouns.build)
 - [Sepolia testnet](//testnet.nouns.build)
 
-For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://nouns-builder-docs.vercel.app/).  
+For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://builder-docs.vercel.app/).
 You can also find the [Builder Protocol code here](https://github.com/BuilderOSS/builder-protocol).
 
 ### Apps and packages in this repository include:
@@ -86,28 +86,22 @@ We ask that you supply your own secrets locally for running in development envir
 Add the following variables to `.env.local` within this root directory (needed to run tests against a local anvil node):
 
 ```
-ANVIL_FORK_URL=https://eth-mainnet.alchemyapi.io/v2/$TENDERLY_RPC_KEY
+ANVIL_FORK_URL=$RPC_URL
 ANVIL_BLOCK_NUMBER=8305745
 ```
 
 Add the following variables to `apps/web/.env.local`:
 
 ```
-# tenderly RPCs
-NEXT_PUBLIC_TENDERLY_MAINNET_RPC_KEY
-NEXT_PUBLIC_TENDERLY_BASE_RPC_KEY
-NEXT_PUBLIC_TENDERLY_OPTIMISM_RPC_KEY
-NEXT_PUBLIC_TENDERLY_SEPOLIA_RPC_KEY
-
-# conduit RPC for Zora
-NEXT_PUBLIC_ZORA_CONDUIT_RPC_KEY
+# tenderly RPC
+NEXT_PUBLIC_TENDERLY_RPC_KEY=<TENDERLY_API_KEY>
 
 # tenderly simulator env variables
 TENDERLY_ACCESS_KEY=<API_KEY>
 TENDERLY_PROJECT=<PROJECT_NAME>
 TENDERLY_USER=<ACCOUNT_NAME>
 
-#etherscan (optional to run locally, this is for dynamically fetching abis in the custom transaction builder)
+# etherscan 
 ETHERSCAN_API_KEY=<ETHERSCAN_API_KEY>
 
 # optional zora api key
@@ -149,4 +143,4 @@ Please refer to our [contributions guideline](/.github/contributing.md) on how b
 
 ## Questions?
 
-Feel free to reach out to us via [Discord](https://discord.gg/rSswr2wC)
+Feel free to reach out to us via [Discord](https://discord.gg/bTygNksyRb)
