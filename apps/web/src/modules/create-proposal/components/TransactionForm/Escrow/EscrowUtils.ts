@@ -1,5 +1,5 @@
-import { decode, } from 'bs58'
-import { Address, encodeAbiParameters, toBytes, toHex } from 'viem'
+import { decode, encode } from 'bs58'
+import { Address, encodeAbiParameters, Hex, toBytes, toHex } from 'viem'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
@@ -15,6 +15,14 @@ const ESCROW_TYPE = toHex(toBytes('updatable', { size: 32 }))
 
 export function convertIpfsCidV0ToByte32(cid: string) {
   return `0x${Buffer.from(decode(cid).slice(2)).toString('hex')}`
+}
+
+export function convertByte32ToIpfsCidV0(str: Hex) {
+  let newStr: string = str
+  if (str.indexOf('0x') === 0) {
+    newStr = str.slice(2)
+  }
+  return encode(Buffer.from(`1220${newStr}`, 'hex'))
 }
 
 function getWrappedTokenAddress(chainId: number | string): Address {

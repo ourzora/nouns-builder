@@ -1,5 +1,7 @@
-import { Box, Flex, Paragraph, atoms } from '@zoralabs/zord'
+import { Box, Flex, Paragraph, Text, atoms } from '@zoralabs/zord'
+import { toLower } from 'lodash'
 import Image from 'next/image'
+import { Suspense } from 'react'
 import React, { ReactNode } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
@@ -12,11 +14,14 @@ import { SDK } from 'src/data/subgraph/client'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
+import { getEscrowBundler } from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 
 import { DecodedTransactions } from './DecodedTransactions'
+import { MilestoneDetails } from './MilestoneDetails'
 import { proposalDescription } from './ProposalDescription.css'
+import { useDecodedTransactions } from './useDecodedTransactions';
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>
@@ -36,9 +41,21 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   proposal,
   collection,
 }) => {
-  const { description, proposer, calldatas, values, targets } = proposal
+  const { description, proposer, calldatas, values, targets, executionTransactionHash } =
+    proposal
+
   const { displayName } = useEnsData(proposer)
   const chain = useChainStore((x) => x.chain)
+
+  const decodedTransactions = useDecodedTransactions(
+    targets,
+    calldatas,
+    values);
+
+  const escrowIndex = targets.findIndex(t => t === toLower(getEscrowBundler(chain.id)))
+  const decodedEscrowTransaction = escrowIndex !== -1 && decodedTransactions ? decodedTransactions[escrowIndex] : undefined
+  const decodedEscrowData = !!decodedEscrowTransaction && !decodedEscrowTransaction.isNotDecoded ? decodedEscrowTransaction.transaction : undefined
+  const decodedTxnArgs = !!decodedEscrowData ? decodedEscrowData.args : undefined
 
   const { data: tokenImage, error } = useSWR(
     !!collection && !!proposer
@@ -59,6 +76,23 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   return (
     <Flex className={propPageWrapper}>
       <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
+        {!!decodedEscrowData && (
+          <Section title="Escrow Milestones">
+            <Suspense fallback={<Text variant="code">Loading escrow milestones...</Text>}>
+              {decodedTxnArgs?._escrowData?.value ? (
+                <MilestoneDetails
+                  decodedTxnArgs={decodedTxnArgs}
+                  executionTransactionHash={executionTransactionHash}
+                />
+              ) : (
+                <Text variant="code" color="negative">
+                  Error Decoding Escrow Milestones
+                </Text>
+              )}
+            </Suspense>
+          </Section>
+        )}
+
         <Section title="Description">
           <Paragraph overflow={'auto'}>
             {description && (
@@ -100,7 +134,9 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
         </Section>
 
         <Section title="Proposed Transactions">
-          <DecodedTransactions targets={targets} calldatas={calldatas} values={values} />
+          <DecodedTransactions
+            decodedTransactions={decodedTransactions}
+          />
         </Section>
       </Flex>
     </Flex>
