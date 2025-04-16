@@ -15,13 +15,16 @@
 
 👉 [Read the Goldsky docs](https://docs.goldsky.com/subgraphs/deploying-subgraphs)
 
-The Nouns Builder subgraph supports five networks:
+The Nouns Builder subgraph supports the following networks:
 
 - `ethereum`
 - `ethereum-sepolia`
 - `base`
 - `optimism`
 - `zora`
+- `base-sepolia`
+- `optimism-sepolia`
+- `zora-sepolia`
 
 ### Step 1 - Install Dependencies
 
@@ -99,9 +102,9 @@ The subgraph is currently deployed to the following networks:
 - [Base](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base-mainnet/latest/gn)
 - [Optimism](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-optimism-mainnet/latest/gn)
 - [Zora](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-zora-mainnet/latest/gn)
-- TODO?: [Optimism Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-optimism-sepolia/latest/gn)
-- TODO?: [Zora Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-zora-sepolia/latest/gn)
-- TODO?: [Base Sepolia](https://api.goldsky.com/api/public/project_cm33ek8kjx6pz010i2c3w8z25/subgraphs/nouns-builder-base-sepolia/latest/gn)
+- [Base Sepolia](https://api.goldsky.com/api/public/project_cm39qflfrtz7e01xibgnuczby/subgraphs/nouns-builder-base-sepolia/latest/gn)
+- [Optimism Sepolia](https://api.goldsky.com/api/public/project_cm39qflfrtz7e01xibgnuczby/subgraphs/nouns-builder-optimism-sepolia/latest/gn)
+- [Zora Sepolia](https://api.goldsky.com/api/public/project_cm3av581k8wdo01vu6fgo4cmq/subgraphs/nouns-builder-zora-sepolia/latest/gn)
 
 ## (DEPRECATED) Local Development with Docker Compose (TODO: fix - pnpm create:local step not working)
 
