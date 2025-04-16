@@ -14,11 +14,11 @@
     "ci": "turbo run lint test"
   },
   "devDependencies": {
-    "eslint": "^8.16.0",
+    "eslint": "8.57.1",
     "eslint-config-custom": "workspace:*",
     "husky": "^8.0.3",
-    "prettier": "^2.5.1",
+    "prettier": "2.5.1",
     "turbo": "1.13.4"
   },
-  "packageManager": "pnpm@7.15.0"
+  "packageManager": "pnpm@10.8.1"
 }

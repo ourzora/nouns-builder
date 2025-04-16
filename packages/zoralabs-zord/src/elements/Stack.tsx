@@ -15,7 +15,7 @@ export type StackComponentProps<E extends ElementType> = PolymorphicPropsWithRef
 
 export function InnerStack<E extends ElementType = typeof BoxDefaultElement>(
   props: StackComponentProps<E>,
-  ref?: React.ForwardedRef<E>
+  ref?: React.ForwardedRef<E>,
 ) {
   return (
     <Flex

@@ -9,7 +9,7 @@ export const icons = Object.keys(iconComponents) as IconType[]
 export interface IconProps extends FlexProps {
   id?: IconType
   flip?: boolean
-  size?: keyof typeof iconVariants['size']
+  size?: keyof (typeof iconVariants)['size']
 }
 
 export function Icon({ id, size, flip, ...props }: IconProps) {

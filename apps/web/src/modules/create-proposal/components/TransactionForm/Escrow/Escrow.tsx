@@ -15,7 +15,6 @@ import { getChainFromLocalStorage } from 'src/utils/getChainFromLocalStorage'
 
 import EscrowForm from './EscrowForm'
 import { EscrowFormValues } from './EscrowForm.schema'
-import { useEscrowFormStore } from './EscrowUtils'
 import {
   createEscrowData,
   deployEscrowAbi,
@@ -38,8 +37,6 @@ export const Escrow: React.FC = () => {
   )
 
   const lastProposalId = data?.proposals?.[0]?.proposalNumber ?? 0
-
-  const { formValues } = useEscrowFormStore()
 
   const handleEscrowTransaction = useCallback(
     async (values: EscrowFormValues) => {
@@ -144,7 +141,7 @@ export const Escrow: React.FC = () => {
       }
       setIsSubmitting(false)
     },
-    [formValues, addTransaction, chainId, lastProposalId]
+    [addTransaction, chainId, lastProposalId]
   )
 
   return (

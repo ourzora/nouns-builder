@@ -9,10 +9,10 @@ import type {
 
 function gridShorthand(
   template?: GridProps['columns'] | GridProps['rows'],
-  auto?: GridProps['autoColumns'] | GridProps['autoRows']
+  auto?: GridProps['autoColumns'] | GridProps['autoRows'],
 ): [
   React.CSSProperties['gridTemplateColumns'] | React.CSSProperties['gridTemplateRows'],
-  Atoms['gridAutoColumns'] | Atoms['gridAutoRows']
+  Atoms['gridAutoColumns'] | Atoms['gridAutoRows'],
 ] {
   let gridTemplate
   if (typeof template === 'number') {
@@ -56,7 +56,7 @@ export function InnerGrid<E extends ElementType>(
     style = {},
     ...props
   }: PolymorphicPropsWithoutRef<GridProps, E>,
-  ref?: ForwardedRef<E>
+  ref?: ForwardedRef<E>,
 ) {
   const [gridTemplateColumns, gridAutoColumns] = gridShorthand(columns, autoColumns)
   const [gridTemplateRows, gridAutoRows] = gridShorthand(rows, autoRows)

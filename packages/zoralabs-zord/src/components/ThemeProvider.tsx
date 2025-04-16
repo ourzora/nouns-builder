@@ -24,7 +24,7 @@ export function themeClass(
     baseTheme = defaultBaseTheme,
     root = defaultRoot,
   }: { theme: ClassValue; baseTheme?: ClassValue; root?: ClassValue },
-  className?: ClassValue
+  className?: ClassValue,
 ) {
   return clsx(root, baseTheme, theme, className)
 }
@@ -37,7 +37,7 @@ function InnerThemeProvider<E extends ElementType = typeof BoxDefaultElement>(
     className,
     ...props
   }: PolymorphicPropsWithoutRef<ThemeProviderProps, E>,
-  ref: React.ForwardedRef<E>
+  ref: React.ForwardedRef<E>,
 ) {
   return (
     <Box

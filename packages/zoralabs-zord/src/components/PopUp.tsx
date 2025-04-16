@@ -19,21 +19,19 @@ export interface PopUpProps {
   onOpenChange?: (state: boolean) => void
 }
 
-export function PopUp(
-  {
-    trigger,
-    children,
-    open = false,
-    close = false,
-    placement = 'bottom-start',
-    padding = 'x4',
-    offsetX = 0,
-    offsetY = 8,
-    triggerClassName,
-    onOpenChange,
-    wrapperClassName,
-  }: PopUpProps
-) {
+export function PopUp({
+  trigger,
+  children,
+  open = false,
+  close = false,
+  placement = 'bottom-start',
+  padding = 'x4',
+  offsetX = 0,
+  offsetY = 8,
+  triggerClassName,
+  onOpenChange,
+  wrapperClassName,
+}: PopUpProps) {
   const [triggerElement, setTriggerElement] = useState<HTMLDivElement | null>(null)
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
   const [openState, setOpenState] = useState(open)

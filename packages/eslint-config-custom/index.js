@@ -8,7 +8,7 @@ module.exports = {
     'react/display-name': 'off',
     '@next/next/no-img-element': 'off',
     'react/no-unescaped-entities': 0,
-    'unused-imports/no-unused-imports-ts': 2,
+    'unused-imports/no-unused-imports-ts': 2
   },
   parserOptions: {
     babelOptions: {
