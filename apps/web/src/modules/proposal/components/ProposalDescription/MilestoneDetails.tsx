@@ -7,11 +7,9 @@ import { useCallback, useMemo } from 'react'
 import useSWR from 'swr'
 import {
   Hex,
-  decodeAbiParameters,
   encodeFunctionData,
   formatEther,
   isAddressEqual,
-  parseAbiParameters,
 } from 'viem'
 import { useContractRead } from 'wagmi'
 import { NETWORK_CONFIG } from '@smartinvoicexyz/constants'
@@ -22,7 +20,7 @@ import { OptionalLink } from 'src/components/OptionalLink'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TransactionType } from 'src/modules/create-proposal'
 import { Milestone as MilestoneMetadata } from '@smartinvoicexyz/types';
-import { convertByte32ToIpfsCidV0 } from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
+import { decodeEscrowData } from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
@@ -96,27 +94,16 @@ export const MilestoneDetails = ({
     }
   )
 
-  const { invoiceCid, clientAddress, milestoneAmount } = useMemo(() => {
-    const decodedAbiData = decodeAbiParameters(
-      parseAbiParameters([
-        'address client',
-        'address resolver',
-        'uint8 resolverType',
-        'address token',
-        'uint256 terminationTime',
-        'bytes32 details',
-        'address provider',
-        'address providerReceiver',
-        'bool requireVerification',
-        'bytes32 escrowType',
-      ]),
+  const { invoiceCid, clientAddress, milestoneAmounts } = useMemo(() => {
+    if (!decodedTxnArgs?._escrowData?.value) return {}
+    const { ipfsCid, clientAddress } = decodeEscrowData(
       decodedTxnArgs?._escrowData?.value as Hex
     )
 
     return {
-      invoiceCid: convertByte32ToIpfsCidV0((decodedAbiData as never)?.[5]),
-      clientAddress: (decodedAbiData as never)?.[0],
-      milestoneAmount: decodedTxnArgs['_milestoneAmounts']['value']
+      invoiceCid: ipfsCid,
+      clientAddress,
+      milestoneAmounts: decodedTxnArgs['_milestoneAmounts']['value']
         .split(',')
         .map((x: string) => formatEther(BigInt(x))),
     }
@@ -245,7 +232,7 @@ export const MilestoneDetails = ({
           <Stack gap="x5">
             <Stack direction="row" align="center" justify="space-between">
               <Text variant="label-xs" color="tertiary">
-                {`Amount: ${milestoneAmount[index]} ETH`}
+                {`Amount: ${milestoneAmounts?.[index]} ETH`}
               </Text>
               <Text variant="label-xs" color="tertiary">
                 {`Due by: ${new Date(
@@ -267,7 +254,7 @@ export const MilestoneDetails = ({
   }, [
     invoiceData?.milestones,
     numOfMilestonesReleased,
-    milestoneAmount,
+    milestoneAmounts,
     executionTransactionHash,
     renderMilestoneButton,
     renderDocumentLink,

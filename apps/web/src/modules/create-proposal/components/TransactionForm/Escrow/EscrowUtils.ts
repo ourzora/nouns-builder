@@ -1,5 +1,12 @@
 import { decode, encode } from 'bs58'
-import { Address, Hex, encodeAbiParameters, toBytes, toHex } from 'viem'
+import {
+  Address,
+  Hex,
+  decodeAbiParameters,
+  encodeAbiParameters,
+  toBytes,
+  toHex,
+} from 'viem'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
@@ -97,7 +104,7 @@ function getEscrowBundler(chainId: number | string): Address {
   }
 }
 
-function createEscrowData(
+function encodeEscrowData(
   values: EscrowFormValues,
   treasuryAddress: Address,
   ipfsCID: string,
@@ -122,7 +129,7 @@ function createEscrowData(
       'address',
       'address',
       'address',
-    ].map(v => ({ type: v })),
+    ].map((v) => ({ type: v })),
     [
       values.clientAddress,
       ESCROW_RESOLVER_TYPE,
@@ -135,10 +142,62 @@ function createEscrowData(
       factory,
       values.recipientAddress,
       treasuryAddress,
-    ],
-  );
+    ]
+  )
 
   return encodedParams
+}
+
+type DecodedEscrowData = Partial<{
+  clientAddress: Address
+  resolverType: number
+  resolverAddress: Address
+  tokenAddress: Address
+  terminationTime: number
+  ipfsCid: string
+  wrappedTokenAddress: Address
+  requiresVerification: boolean
+  factoryAddress: Address
+  providerRecipientAddress: Address
+  clientRecipientAddress: Address
+}>
+
+const decodeEscrowData = (data: Hex): DecodedEscrowData => {
+  try {
+    const decodedAbiData = decodeAbiParameters(
+      [
+        'address',
+        'uint8',
+        'address',
+        'address',
+        'uint256',
+        'bytes32',
+        'address',
+        'bool',
+        'address',
+        'address',
+        'address',
+      ].map((v) => ({ type: v })),
+      data
+    )
+
+    return {
+      clientAddress: decodedAbiData[0],
+      resolverType: decodedAbiData[1],
+      resolverAddress: decodedAbiData[2],
+      tokenAddress: decodedAbiData[3],
+      terminationTime: decodedAbiData[4],
+      ipfsCid: convertByte32ToIpfsCidV0(decodedAbiData[5] as Hex),
+      wrappedTokenAddress: decodedAbiData[6],
+      requiresVerification: decodedAbiData[7],
+      factoryAddress: decodedAbiData[8],
+      providerRecipientAddress: decodedAbiData[9],
+      clientRecipientAddress: decodedAbiData[10],
+    } as DecodedEscrowData
+  } catch (e) {
+    console.log('error decoding escrow data', e)
+    return {} as DecodedEscrowData
+  }
 }
 
 const deployEscrowAbi = [
@@ -222,4 +281,10 @@ const useEscrowFormStore = create(
   )
 )
 
-export { createEscrowData, getEscrowBundler, deployEscrowAbi, useEscrowFormStore }
+export {
+  encodeEscrowData,
+  decodeEscrowData,
+  getEscrowBundler,
+  deployEscrowAbi,
+  useEscrowFormStore,
+}

@@ -18,7 +18,7 @@ import { InvoiceMetadata, Milestone as MilestoneMetadata } from '@smartinvoicexy
 import EscrowForm from './EscrowForm'
 import { EscrowFormValues } from './EscrowForm.schema'
 import {
-  createEscrowData,
+  encodeEscrowData,
   deployEscrowAbi,
   getEscrowBundler,
   ESCROW_TYPE,
@@ -118,7 +118,7 @@ export const Escrow: React.FC = () => {
       }
 
       // create bundler transaction data
-      const escrowData = createEscrowData(values, treasury, cid, chainId)
+      const escrowData = encodeEscrowData(values, treasury, cid, chainId)
       const milestoneAmounts = values.milestones.map((x) => x.amount * 10 ** 18)
       const fundAmount = milestoneAmounts.reduce((acc, x) => acc + x, 0)
 
