@@ -1,8 +1,7 @@
 import { Box, Flex, Paragraph, Text, atoms } from '@zoralabs/zord'
 import { toLower } from 'lodash'
 import Image from 'next/image'
-import { Suspense } from 'react'
-import React, { ReactNode } from 'react'
+import React, { Suspense, ReactNode, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
@@ -52,10 +51,13 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
     calldatas,
     values);
 
-  const escrowIndex = targets.findIndex(t => t === toLower(getEscrowBundler(chain.id)))
-  const decodedEscrowTransaction = escrowIndex !== -1 && decodedTransactions ? decodedTransactions[escrowIndex] : undefined
-  const decodedEscrowData = !!decodedEscrowTransaction && !decodedEscrowTransaction.isNotDecoded ? decodedEscrowTransaction.transaction : undefined
-  const decodedTxnArgs = !!decodedEscrowData ? decodedEscrowData.args : undefined
+  const decodedEscrowTxnArgs = useMemo(() => {
+    const escrowIndex = targets.findIndex(t => t === toLower(getEscrowBundler(chain.id)))
+    const decodedEscrowTransaction = escrowIndex !== -1 && decodedTransactions ? decodedTransactions[escrowIndex] : undefined
+    const decodedEscrowData = !!decodedEscrowTransaction && !decodedEscrowTransaction.isNotDecoded ? decodedEscrowTransaction.transaction : undefined
+    const decodedTxnArgs = !!decodedEscrowData ? decodedEscrowData.args : undefined
+    return decodedTxnArgs
+  }, [chain, decodedTransactions, targets])
 
   const { data: tokenImage, error } = useSWR(
     !!collection && !!proposer
@@ -76,12 +78,12 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   return (
     <Flex className={propPageWrapper}>
       <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
-        {!!decodedEscrowData && (
+        {!!decodedEscrowTxnArgs && (
           <Section title="Escrow Milestones">
             <Suspense fallback={<Text variant="code">Loading escrow milestones...</Text>}>
-              {decodedTxnArgs?._escrowData?.value ? (
+              {decodedEscrowTxnArgs?._escrowData?.value ? (
                 <MilestoneDetails
-                  decodedTxnArgs={decodedTxnArgs}
+                  decodedTxnArgs={decodedEscrowTxnArgs}
                   executionTransactionHash={executionTransactionHash}
                 />
               ) : (
