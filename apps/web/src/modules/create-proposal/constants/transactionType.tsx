@@ -60,8 +60,8 @@ export const TRANSACTION_TYPES = {
     iconBackdrop: 'rgba(236, 113, 75, 0.1)',
   },
   [TransactionType.FIX_RENDERER_BASE]: {
-    title: 'Fix Renderer Base',
-    subTitle: 'Create a proposal to fix the metadata renderer base',
+    title: 'Fix Metadata Renderer Base',
+    subTitle: 'Create a proposal to restore NFT image visibility on external marketplaces.',
     icon: 'spanner',
     iconBackdrop: color.ghostHover,
   },

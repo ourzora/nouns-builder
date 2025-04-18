@@ -1,5 +1,4 @@
 import { Flex, Text } from '@zoralabs/zord'
-import dayjs from 'dayjs'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -7,19 +6,12 @@ import React from 'react'
 import { useChainStore } from 'src/stores/useChainStore'
 
 import { DaoContractAddresses } from '../../../dao'
-import { useAvailableUpgrade } from '../../hooks'
+import { useRendererBaseFix } from '../../hooks'
 import { useProposalStore } from '../../stores'
 import { UpgradeCard } from '../UpgradeCard'
-import { v1_1_0, v1_2_0, v2_0_0 } from './versions'
-import { FixRendererBase } from '../FixRendererBase'
+import { default as summary } from './summary.md'
 
-export const VERSION_PROPOSAL_SUMMARY: { [key: string]: string } = {
-  '2.0.0': v2_0_0,
-  '1.2.0': v1_2_0,
-  '1.1.0': v1_1_0,
-}
-
-export const Upgrade = ({
+export const FixRendererBase = ({
   hasThreshold,
   collection,
   addresses,
@@ -33,25 +25,22 @@ export const Upgrade = ({
   const chain = useChainStore((x) => x.chain)
 
   const {
-    latest,
-    date,
     description,
-    transaction: upgradeTransaction,
-    totalContractUpgrades,
-    shouldUpgrade,
-  } = useAvailableUpgrade({
+    transaction,
+    shouldFix,
+  } = useRendererBaseFix({
     chainId: chain.id,
     addresses,
   })
 
-  if (!shouldUpgrade) return <FixRendererBase {...{ hasThreshold, collection, addresses }} />
+  if (!shouldFix) return null
 
   const handleUpgrade = (): void => {
     createProposal({
-      transactions: [upgradeTransaction!],
+      transactions: [transaction!],
       disabled: true,
-      title: `Nouns Builder Upgrade v${latest} ${dayjs().format('YYYY-MM-DD')}`,
-      summary: VERSION_PROPOSAL_SUMMARY?.[latest as string] || '',
+      title: `Fix Metadata Renderer Base`,
+      summary,
     })
 
     router.push({
@@ -86,12 +75,10 @@ export const Upgrade = ({
             Upgrade Available
           </Text>
           <UpgradeCard
+            version="- Fix Metadata Renderer Base"
             onUpgrade={handleUpgrade}
             hasThreshold={hasThreshold}
-            version={latest}
-            date={date}
             description={description}
-            totalContractUpgrades={totalContractUpgrades}
           />
         </Flex>
       </motion.div>
