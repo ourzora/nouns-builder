@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import useSWR from 'swr'
 import { encodeFunctionData, formatEther } from 'viem'
+import { useDaoStore } from 'src/modules/dao'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { ProposalsResponse } from 'src/data/subgraph/requests/proposalsQuery'
@@ -12,13 +13,15 @@ import { getProposals } from 'src/data/subgraph/requests/proposalsQuery'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { getChainFromLocalStorage } from 'src/utils/getChainFromLocalStorage'
+import { InvoiceMetadata, Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
 
 import EscrowForm from './EscrowForm'
 import { EscrowFormValues } from './EscrowForm.schema'
 import {
-  createEscrowData,
+  encodeEscrowData,
   deployEscrowAbi,
   getEscrowBundler,
+  ESCROW_TYPE,
 } from './EscrowUtils'
 
 export const Escrow: React.FC = () => {
@@ -31,6 +34,10 @@ export const Escrow: React.FC = () => {
 
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
+  const {
+    addresses: { treasury },
+  } = useDaoStore()
+
   const { data } = useSWR<ProposalsResponse>(
     isReady ? [SWR_KEYS.PROPOSALS, chainId, query.token, '0'] : null,
     (_, chainId, token, _page) => getProposals(chainId, token, 1, Number(0))
@@ -40,7 +47,10 @@ export const Escrow: React.FC = () => {
 
   const handleEscrowTransaction = useCallback(
     async (values: EscrowFormValues) => {
-      const ipfsDataToUpload = {
+      if (!treasury) {
+        return;
+      }
+      const ipfsDataToUpload: InvoiceMetadata = {
         title: 'Proposal #' + (lastProposalId + 1),
         description: window?.location.href.replace(
           '/proposal/create',
@@ -72,7 +82,7 @@ export const Escrow: React.FC = () => {
               ],
             }
             : {}),
-        })),
+        } as MilestoneMetadata)),
       }
 
       const jsonDataToUpload = JSON.stringify(ipfsDataToUpload, null, 2)
@@ -108,7 +118,7 @@ export const Escrow: React.FC = () => {
       }
 
       // create bundler transaction data
-      const escrowData = createEscrowData(values, cid, chainId)
+      const escrowData = encodeEscrowData(values, treasury, cid, chainId)
       const milestoneAmounts = values.milestones.map((x) => x.amount * 10 ** 18)
       const fundAmount = milestoneAmounts.reduce((acc, x) => acc + x, 0)
 
@@ -118,30 +128,25 @@ export const Escrow: React.FC = () => {
         calldata: encodeFunctionData({
           abi: deployEscrowAbi,
           functionName: 'deployEscrow',
-          args: [milestoneAmounts, escrowData, fundAmount],
+          args: [values.recipientAddress, milestoneAmounts, escrowData, ESCROW_TYPE, fundAmount],
         }),
         value: formatEther(BigInt(fundAmount)),
       }
 
       try {
-        // add 2.5s delay here before adding to queue
-        setTimeout(
-          () =>
-            addTransaction({
-              type: TransactionType.ESCROW,
-              summary: `Create and fund new Escrow with ${formatEther(
-                BigInt(fundAmount)
-              )} ETH`,
-              transactions: [escrow],
-            }),
-          2500
-        )
+        addTransaction({
+          type: TransactionType.ESCROW,
+          summary: `Create and fund new Escrow with ${formatEther(
+            BigInt(fundAmount)
+          )} ETH`,
+          transactions: [escrow],
+        })
       } catch (err) {
-        console.log('Error', err)
+        console.log('Error Adding Transaction', err)
       }
       setIsSubmitting(false)
     },
-    [addTransaction, chainId, lastProposalId]
+    [addTransaction, chainId, lastProposalId, treasury]
   )
 
   return (
