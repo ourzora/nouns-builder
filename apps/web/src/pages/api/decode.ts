@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/nextjs'
 import { NextApiRequest, NextApiResponse } from 'next'
-import { decodeFunctionData, getAbiItem } from 'viem'
+import { decodeFunctionData, getAbiItem, isHex } from 'viem'
 
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { getContractABIByAddress } from 'src/services/abiService'
@@ -14,19 +14,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!calldata) return res.status(404).json({ error: 'no calldata request' })
   if (!chain) return res.status(404).json({ error: 'no chain request' })
 
+  if (!isHex(calldata, { strict: true }))
+    return res.status(400).json({ error: 'bad calldata input' })
+
   const chainInt = parseInt(chain)
 
   try {
-    const { abi } = await getContractABIByAddress(chainInt as CHAIN_ID, contract)
-    const decodeResult = decodeFunctionData({ abi: JSON.parse(abi), data: calldata })
+    const { abi: abiJsonString } = await getContractABIByAddress(
+      chainInt as CHAIN_ID,
+      contract
+    )
+    const abi = JSON.parse(abiJsonString)
+    const decodeResult = decodeFunctionData({ abi, data: calldata })
+    const functionSig = calldata.slice(0, 10)
     const functionInfo = getAbiItem({
-      abi: JSON.parse(abi),
-      name:
-        decodeResult.functionName !== 'release'
-          ? decodeResult.functionName
-          : '0x37bdc99b', // manually set function signature for release(_milestone) instead of release()
+      abi,
+      name: functionSig,
     })
-
 
     const argMapping = functionInfo.inputs.reduce(
       (last: any, input: any, index: number) => {
@@ -50,6 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json({
       args: argMapping,
       functionName: decodeResult.functionName,
+      functionSig: functionSig,
       decoded: decodeResult.args.map((x: any) => x.toString()),
     })
   } catch (error) {
