@@ -188,28 +188,26 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
                       : undefined
                   }
                   helperText={
-                    'The wallet address to which funds will be released on milestone completions.'
+                    `The wallet address that will receive funds when milestones are completed.`
                   }
                 />
-                {!escrowDelegate && (
-                  <SmartInput
-                    type={TEXT}
-                    formik={formik}
-                    {...formik.getFieldProps('clientAddress')}
-                    id="clientAddress"
-                    inputLabel={'Client'}
-                    placeholder={'0x... or .eth'}
-                    isAddress={true}
-                    errorMessage={
-                      formik.touched.clientAddress && formik.errors.clientAddress
-                        ? formik.errors.clientAddress
-                        : undefined
-                    }
-                    helperText={
-                      'This is the wallet address that will control the escrow for releasing funds. This can be DAO Governer Address or multisig of working group within the DAO.'
-                    }
-                  />
-                )}
+                <SmartInput
+                  type={TEXT}
+                  formik={formik}
+                  {...formik.getFieldProps('clientAddress')}
+                  id="clientAddress"
+                  inputLabel={'Controller'}
+                  placeholder={'0x... or .eth'}
+                  isAddress={true}
+                  errorMessage={
+                    formik.touched.clientAddress && formik.errors.clientAddress
+                      ? formik.errors.clientAddress
+                      : undefined
+                  }
+                  helperText={
+                    `This wallet will control the escrow and release funds. It can be your DAO’s treasury or a working group’s multisig`
+                  }
+                />
 
                 <DatePicker
                   {...formik.getFieldProps('safetyValveDate')}
@@ -223,7 +221,8 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
                       ? formik.errors.safetyValveDate
                       : undefined
                   }
-                  helperText="This is the date funds can be pulled back from the escrow after by dao / multisig."
+                  helperText=
+                  {`The date after which the DAO or multisig can reclaim funds from escrow.`}
                 />
                 <Box mt={'x5'}>
                   <FieldArray name="milestones">
