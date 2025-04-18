@@ -46,7 +46,7 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
 
       return (
         <Stack gap={'x1'} key={arg.name}>
-          <Flex>_controller: {clientAddress}</Flex>
+          <Flex>_client: {clientAddress}</Flex>
           <Flex>_resolver: {resolverAddress}</Flex>
           <Flex>_providerRecipient: {providerRecipientAddress}</Flex>
           <Flex>_clientRecipient: {clientRecipientAddress}</Flex>
