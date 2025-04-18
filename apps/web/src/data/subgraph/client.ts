@@ -15,7 +15,7 @@ export class SDK {
 
     const client = globalForClient.subgraphClient.has(chainId)
       ? globalForClient.subgraphClient.get(chainId)!
-      : new GraphQLClient(PUBLIC_SUBGRAPH_URL[chainId], {
+      : new GraphQLClient(PUBLIC_SUBGRAPH_URL.get(chainId) as string, {
           headers: {
             'Content-Type': 'application/json',
           },

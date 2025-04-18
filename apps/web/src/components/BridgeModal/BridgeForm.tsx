@@ -77,7 +77,7 @@ export const BridgeForm = () => {
   const getButtonText = (isAmountInvalid: boolean) => {
     if (isContractWallet) return 'Contract wallets are not supported'
     if (loading) return 'Bridging...'
-    if (isAmountInvalid) return 'Insufficent ETH balance'
+    if (isAmountInvalid) return 'Insufficient ETH balance'
     return 'Bridge'
   }
 
@@ -221,7 +221,7 @@ export const BridgeForm = () => {
                   rel="noopener noreferrer"
                   target="_blank"
                   style={{ textDecoration: 'underline' }}
-                  href="https://docs.zora.co/docs/guides/builder-bridging"
+                  href="https://builder-docs.vercel.app/guides/builder-bridging/"
                 >
                   bridging
                 </Box>

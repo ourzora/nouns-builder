@@ -42,7 +42,7 @@
     "@types/uuid": "^8.3.4",
     "@vanilla-extract/esbuild-plugin": "^2.2.0",
     "tsconfig": "workspace:*",
-    "eslint": "^8.27.0",
+    "eslint": "8.57.1",
     "eslint-config-custom": "workspace:*",
     "lodash-es": "^4.17.21",
     "react": "^18.2.0",

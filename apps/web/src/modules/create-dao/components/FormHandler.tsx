@@ -23,7 +23,7 @@ export const FormHandler = ({
         <Text variant={'eyebrow'}>Create A dao</Text>
         {sectionIndex === 0 ? (
           <a
-            href="https://docs.zora.co/docs/guides/builder-deployment"
+            href="https://builder-docs.vercel.app/guides/builder-deployment"
             target="_blank"
             rel="noreferrer noopener"
           >
