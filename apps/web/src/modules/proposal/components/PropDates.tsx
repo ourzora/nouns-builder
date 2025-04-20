@@ -39,7 +39,6 @@ const useDaoMembers = (chainId: number, token: string) => {
   return members.map((member: DaoMember) => checksumAddress(member.address as `0x${string}`));
 };
 
-// PropDate form validation schema
 const propDateValidationSchema = Yup.object().shape({
   proposalId: Yup.string()
     .required('Proposal ID (bytes32) is required')
@@ -48,14 +47,12 @@ const propDateValidationSchema = Yup.object().shape({
   message: Yup.string().required('Message is required'),
 });
 
-// PropDate form interface
 interface PropDateFormValues {
   proposalId: string;
   replyTo: string;
   message: string;
 }
 
-// Helper to extract error messages safely
 const getErrorMessage = (error: unknown): string => {
   if (!error) return "An unknown error occurred.";
   if (typeof error === 'string') return error;
@@ -72,7 +69,6 @@ const getErrorMessage = (error: unknown): string => {
   return "An unknown error occurred.";
 };
 
-// Utility function to get EAS contract address for a given chain
 const getEasContractAddressForChain = (chainId: number): `0x${string}` | undefined => {
   const address = EAS_CONTRACT_ADDRESS[chainId as CHAIN_ID];
 
@@ -83,7 +79,6 @@ const getEasContractAddressForChain = (chainId: number): `0x${string}` | undefin
   return undefined;
 };
 
-// PropDate form component
 const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, daoToken }: {
   closeForm: () => void,
   onSuccess?: () => void,
@@ -134,7 +129,6 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
   );
 };
 
-// Create a reusable component for displaying replies
 const ReplyDisplay = ({ replyTo, ensName, ensAvatar }: {
   replyTo?: PropDate,
   ensName?: string,
@@ -175,7 +169,6 @@ const ReplyDisplay = ({ replyTo, ensName, ensAvatar }: {
   );
 };
 
-// Define a type for the attestation parameters that matches the EAS contract expectations
 type AttestationParams = {
   schema: Hex,
   data: {
@@ -188,7 +181,6 @@ type AttestationParams = {
   }
 };
 
-// Debounce utility function
 const useDebounce = <T,>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
@@ -630,7 +622,7 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
   const { addresses: { token } } = useDaoStore()
   const daoMembers = useDaoMembers(chainId, token ? token : "")
   const [showForm, setShowForm] = useState(false)
-  const [isLoading, setIsLoading] = useState(false) // Add loading state to use Spinner
+  const [isLoading, setIsLoading] = useState(false)
 
   // Use CHAIN_ID as a value to fix linter warning
   useEffect(() => {
