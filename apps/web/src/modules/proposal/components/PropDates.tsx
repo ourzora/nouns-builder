@@ -488,13 +488,14 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
   );
 };
 
-const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReplying, onReplyClick }: {
+const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReplying, onReplyClick, replies = [] }: {
   propDate: PropDate,
   index: number,
   originalMessage: PropDate | undefined,
   setReplyingTo: (replyTo: PropDate | undefined) => void,
   isReplying: boolean,
-  onReplyClick: (propDate: PropDate) => void
+  onReplyClick: (propDate: PropDate) => void,
+  replies?: PropDate[]
 }) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
   const { ensName, ensAvatar } = useEnsData(propDate?.attester)
@@ -553,42 +554,61 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
 
       {propDate.message && (
         <Box
-          backgroundColor={isReply ? "background2" : undefined}
-          borderRadius={isReply ? "curved" : undefined}
-          p={isReply ? "x4" : undefined}
-          style={isReply ? {
-            borderLeft: 'var(--space-x2) solid var(--colors-text4)'
-          } : undefined}
+          borderRadius={"curved"}
+          p={"x4"}
+          backgroundColor={"background2"}
         >
-          {originalMessage && (
-            <Box mb="x2" >
-              <ReplyDisplay
-                replyTo={originalMessage}
-                ensName={originalMessageEnsName || undefined}
-                ensAvatar={originalMessageEnsAvatar ? originalMessageEnsAvatar : undefined}
-              />
-            </Box>
-          )}
-          <Box
-            borderRadius="curved"
-            p="x4"
-            backgroundColor="background2"
+          <Text
+            variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
+            textAlign={'left'}
+            style={{
+              fontWeight: 400,
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+            }}
           >
-            <Text
-              variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
-              textAlign={'left'}
-              style={{
-                fontWeight: 400,
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
-              }}
-            >
-              {propDate.message}
-            </Text>
-          </Box>
+            {propDate.message}
+          </Text>
         </Box>
       )}
-
+      {/* Render replies if any */}
+      {replies && replies.length > 0 && (
+        <Box mt="x4" ml="x4" style={{ borderLeft: '4px solid var(--colors-border)' }}>
+          {replies.map((reply: PropDate, idx: number) => {
+            const { ensName, ensAvatar } = useEnsData(reply.attester);
+            return (
+              <Flex key={reply.txid} direction="row" gap="x2" align="flex-start" mb="x3">
+                <Avatar address={reply.attester} src={ensAvatar} size={isMobile ? '20' : '28'} />
+                <Box
+                  backgroundColor="background2"
+                  borderRadius="curved"
+                  borderColor="border"
+                  borderWidth="normal"
+                  borderStyle="solid"
+                  p="x4"
+                  style={{ width: 'fit-content', minWidth: 0 }}
+                >
+                  <Flex align="center" gap="x2" mb="x1">
+                    <Text variant={isMobile ? 'label-sm' : 'label-md'} fontWeight="display">
+                      {ensName || walletSnippet(reply.attester)}
+                    </Text>
+                    <Text variant="label-sm" color="text3">
+                      • {new Date(reply.timeCreated * 1000).toLocaleDateString()}
+                    </Text>
+                  </Flex>
+                  <Text
+                    variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
+                    textAlign={'left'}
+                    style={{ fontWeight: 400, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                  >
+                    {reply.message}
+                  </Text>
+                </Box>
+              </Flex>
+            );
+          })}
+        </Box>
+      )}
       <Flex justify="flex-end">
         <Button variant={isReplying ? "secondary" : "outline"} size="sm" onClick={() => onReplyClick(propDate)}>
           {isReplying ? "Cancel Reply" : "Reply"}
@@ -688,35 +708,55 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
                 return <PropDateForm {...formProps} />;
               })()
             }
-            {filteredPropDates.length > 0 ? (
-              filteredPropDates.map((propDate, i) => (
-                <PropDateCard
-                  key={`${propDate.txid}-${i}`}
-                  propDate={propDate}
-                  index={i}
-                  originalMessage={propDate.originalMessageId && propDate.originalMessageId !== zeroHash
-                    ? propDates.find(p => p.txid === propDate.originalMessageId)
-                    : undefined}
-                  setReplyingTo={setReplyingTo}
-                  isReplying={replyingTo?.txid === propDate.txid}
-                  onReplyClick={handleReplyClick}
-                />
-              ))
-            ) : (
-              <Flex
-                justify="center"
-                p="x6"
-                borderColor="border"
-                borderStyle="solid"
-                borderRadius="curved"
-                borderWidth="normal"
-                backgroundColor="background2"
-              >
-                <Text color="text3">
-                  No Updates on this proposal yet!
-                </Text>
-              </Flex>
-            )}
+            {/* Group propdates into threads: top-level and their replies */}
+            {(() => {
+              // Move topLevelPropDates outside for use below
+              return null;
+            })()}
+            {(() => {
+              const topLevelPropDates = filteredPropDates.filter(pd => !pd.originalMessageId || pd.originalMessageId === zeroHash);
+              return topLevelPropDates
+                .sort((a, b) => a.timeCreated - b.timeCreated)
+                .map((propDate, i) => {
+                  const replies = filteredPropDates
+                    .filter(pd => pd.originalMessageId === propDate.txid)
+                    .sort((a, b) => a.timeCreated - b.timeCreated);
+                  return (
+                    <PropDateCard
+                      key={`${propDate.txid}-${i}`}
+                      propDate={propDate}
+                      index={i}
+                      originalMessage={undefined}
+                      setReplyingTo={setReplyingTo}
+                      isReplying={replyingTo?.txid === propDate.txid}
+                      onReplyClick={handleReplyClick}
+                      replies={replies}
+                    />
+                  );
+                });
+            })()}
+            {/* Empty state if no top-level propdates */}
+            {(() => {
+              const topLevelPropDates = filteredPropDates.filter(pd => !pd.originalMessageId || pd.originalMessageId === zeroHash);
+              if (topLevelPropDates.length === 0) {
+                return (
+                  <Flex
+                    justify="center"
+                    p="x6"
+                    borderColor="border"
+                    borderStyle="solid"
+                    borderRadius="curved"
+                    borderWidth="normal"
+                    backgroundColor="background2"
+                  >
+                    <Text color="text3">
+                      No Updates on this proposal yet!
+                    </Text>
+                  </Flex>
+                );
+              }
+              return null;
+            })()}
           </Box>
         </Box>
       </ErrorBoundary>
