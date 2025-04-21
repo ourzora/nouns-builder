@@ -2,6 +2,7 @@ import isEqual from 'lodash/isEqual'
 import { isAddress } from 'viem'
 
 import { Duration } from 'src/typings'
+
 import { PUBLIC_ALL_CHAINS } from '../constants/defaultChains'
 
 /**

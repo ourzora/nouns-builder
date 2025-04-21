@@ -1,3 +1,4 @@
+import { InvoiceMetadata, Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
 import { Stack } from '@zoralabs/zord'
 import { useCallback } from 'hono/jsx'
 import { uploadFile } from 'ipfs-service'
@@ -5,23 +6,22 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import useSWR from 'swr'
 import { encodeFunctionData, formatEther } from 'viem'
-import { useDaoStore } from 'src/modules/dao'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { ProposalsResponse } from 'src/data/subgraph/requests/proposalsQuery'
 import { getProposals } from 'src/data/subgraph/requests/proposalsQuery'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
+import { useDaoStore } from 'src/modules/dao'
 import { getChainFromLocalStorage } from 'src/utils/getChainFromLocalStorage'
-import { InvoiceMetadata, Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
 
 import EscrowForm from './EscrowForm'
 import { EscrowFormValues } from './EscrowForm.schema'
 import {
-  encodeEscrowData,
-  deployEscrowAbi,
-  getEscrowBundler,
   ESCROW_TYPE,
+  deployEscrowAbi,
+  encodeEscrowData,
+  getEscrowBundler,
 } from './EscrowUtils'
 
 export const Escrow: React.FC = () => {
@@ -48,7 +48,7 @@ export const Escrow: React.FC = () => {
   const handleEscrowTransaction = useCallback(
     async (values: EscrowFormValues) => {
       if (!treasury) {
-        return;
+        return
       }
       const ipfsDataToUpload: InvoiceMetadata = {
         title: 'Proposal #' + (lastProposalId + 1),
@@ -59,30 +59,36 @@ export const Escrow: React.FC = () => {
         endDate: new Date(
           values.milestones[values.milestones.length - 1].endDate
         ).getTime(),
-        milestones: values.milestones.map((x, index) => ({
-          id: 'milestone-00' + index,
-          title: x.title,
-          description: x.description,
-          endDate: new Date(x.endDate).getTime() / 1000, // in seconds
-          createdAt: Date.now() / 1000, // in seconds
-          // set start date 7 days from submission in seconds
-          startDate: index === 0 ? (Date.now() / 1000) + 7 * 24 * 60 * 60 : new Date(values.milestones[index - 1].endDate).getTime() / 1000,
-          resolverType: 'kleros',
-          klerosCourt: 1,
-          ...(x.mediaType && x.mediaUrl
-            ? {
-              documents: [
-                {
-                  id: 'doc-001',
-                  type: 'ipfs',
-                  src: x.mediaUrl,
-                  mimeType: x.mediaType,
-                  createdAt: new Date().getTime() / 1000,
-                },
-              ],
-            }
-            : {}),
-        } as MilestoneMetadata)),
+        milestones: values.milestones.map(
+          (x, index) =>
+            ({
+              id: 'milestone-00' + index,
+              title: x.title,
+              description: x.description,
+              endDate: new Date(x.endDate).getTime() / 1000, // in seconds
+              createdAt: Date.now() / 1000, // in seconds
+              // set start date 7 days from submission in seconds
+              startDate:
+                index === 0
+                  ? Date.now() / 1000 + 7 * 24 * 60 * 60
+                  : new Date(values.milestones[index - 1].endDate).getTime() / 1000,
+              resolverType: 'kleros',
+              klerosCourt: 1,
+              ...(x.mediaType && x.mediaUrl
+                ? {
+                    documents: [
+                      {
+                        id: 'doc-001',
+                        type: 'ipfs',
+                        src: x.mediaUrl,
+                        mimeType: x.mediaType,
+                        createdAt: new Date().getTime() / 1000,
+                      },
+                    ],
+                  }
+                : {}),
+            }) as MilestoneMetadata
+        ),
       }
 
       const jsonDataToUpload = JSON.stringify(ipfsDataToUpload, null, 2)
@@ -90,7 +96,7 @@ export const Escrow: React.FC = () => {
         type: 'application/json',
       })
 
-      let cid: string, uri: string;
+      let cid: string, uri: string
 
       try {
         console.log('Uploading to IPFS...')
@@ -128,7 +134,13 @@ export const Escrow: React.FC = () => {
         calldata: encodeFunctionData({
           abi: deployEscrowAbi,
           functionName: 'deployEscrow',
-          args: [values.recipientAddress, milestoneAmounts, escrowData, ESCROW_TYPE, fundAmount],
+          args: [
+            values.recipientAddress,
+            milestoneAmounts,
+            escrowData,
+            ESCROW_TYPE,
+            fundAmount,
+          ],
         }),
         value: formatEther(BigInt(fundAmount)),
       }
@@ -151,10 +163,7 @@ export const Escrow: React.FC = () => {
 
   return (
     <Stack>
-      <EscrowForm
-        onSubmit={handleEscrowTransaction}
-        isSubmitting={isSubmitting}
-      />
+      <EscrowForm onSubmit={handleEscrowTransaction} isSubmitting={isSubmitting} />
       {ipfsUploadError?.message && <div>Error: {ipfsUploadError.message}</div>}
     </Stack>
   )

@@ -1,6 +1,6 @@
 export const versions = ['1.1.0', '1.2.0'] as const
 
-export type VersionType = typeof versions[number]
+export type VersionType = (typeof versions)[number]
 
 type ContractVersion = {
   [key: string]: {

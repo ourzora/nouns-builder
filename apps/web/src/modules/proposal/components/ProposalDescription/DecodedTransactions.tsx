@@ -101,8 +101,9 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
                         className={atoms({ textDecoration: 'underline' })}
                       >
                         <a
-                          href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${decoded?.target
-                            }`}
+                          href={`${ETHERSCAN_BASE_URL[chain.id]}/address/${
+                            decoded?.target
+                          }`}
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -115,8 +116,9 @@ export const DecodedTransactions: React.FC<DecodedTransactionProps> = ({
                         </a>
                       </Box>
                       <Flex pl={'x2'}>
-                        {`.${!isEscrow ? decoded?.transaction?.functionName : 'deployEscrow'
-                          }(`}
+                        {`.${
+                          !isEscrow ? decoded?.transaction?.functionName : 'deployEscrow'
+                        }(`}
                         {!decoded?.transaction?.args &&
                           !decoded.transaction?.decoded?.length &&
                           `)`}

@@ -7,8 +7,8 @@ import { avatar, avatarVariants } from './Avatar.css'
 
 export interface AvatarProps extends Omit<BoxProps, 'size'> {
   address?: string
-  size?: keyof typeof avatarVariants['size']
-  variant?: keyof typeof avatarVariants['variant']
+  size?: keyof (typeof avatarVariants)['size']
+  variant?: keyof (typeof avatarVariants)['variant']
   src?: string | null
 }
 

@@ -15,7 +15,7 @@ export interface TextProps extends BoxProps {
   inline?: boolean
   italic?: boolean
   textTransform?: Atoms['textTransform']
-  variant?: keyof typeof textVariants['variant']
+  variant?: keyof (typeof textVariants)['variant']
 }
 
 export type TextComponentProps<E extends ElementType = typeof BoxDefaultElement> =
@@ -31,7 +31,7 @@ export function InnerText<E extends ElementType = typeof BoxDefaultElement>(
     variant,
     ...props
   }: PolymorphicPropsWithoutRef<TextProps, E>,
-  ref?: ForwardedRef<E>
+  ref?: ForwardedRef<E>,
 ) {
   return (
     <Box

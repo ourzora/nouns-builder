@@ -29,8 +29,8 @@ const GetStarted = () => {
         !address
           ? openConnectModal
           : wagmiChain?.id != chain.id
-          ? handleSwitchNetwork
-          : handleClick
+            ? handleSwitchNetwork
+            : handleClick
       }
       h="x16"
       fontWeight={'display'}

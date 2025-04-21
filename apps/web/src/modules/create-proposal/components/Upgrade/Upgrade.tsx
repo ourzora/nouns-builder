@@ -9,9 +9,9 @@ import { useChainStore } from 'src/stores/useChainStore'
 import { DaoContractAddresses } from '../../../dao'
 import { useAvailableUpgrade } from '../../hooks'
 import { useProposalStore } from '../../stores'
+import { FixRendererBase } from '../FixRendererBase'
 import { UpgradeCard } from '../UpgradeCard'
 import { v1_1_0, v1_2_0, v2_0_0 } from './versions'
-import { FixRendererBase } from '../FixRendererBase'
 
 export const VERSION_PROPOSAL_SUMMARY: { [key: string]: string } = {
   '2.0.0': v2_0_0,
@@ -44,7 +44,8 @@ export const Upgrade = ({
     addresses,
   })
 
-  if (!shouldUpgrade) return <FixRendererBase {...{ hasThreshold, collection, addresses }} />
+  if (!shouldUpgrade)
+    return <FixRendererBase {...{ hasThreshold, collection, addresses }} />
 
   const handleUpgrade = (): void => {
     createProposal({

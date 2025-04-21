@@ -106,27 +106,20 @@ export const useFetchCurrentDAOConfig = ({
 
   const founderParams = foundersAliased
     ? [
-      L2MigrationDeployerFounderConfig,
-      ...foundersAliased.map((x) => ({
-        wallet: x.wallet,
-        ownershipPct: BigInt(x.ownershipPct),
-        vestExpiry: BigInt(x.vestExpiry),
-      })),
-    ]
+        L2MigrationDeployerFounderConfig,
+        ...foundersAliased.map((x) => ({
+          wallet: x.wallet,
+          ownershipPct: BigInt(x.ownershipPct),
+          vestExpiry: BigInt(x.vestExpiry),
+        })),
+      ]
     : [L2MigrationDeployerFounderConfig]
 
   const tokenInitStrings = encodeAbiParameters(
     parseAbiParameters(
       'string name, string symbol, string description, string daoImage, string daoWebsite, string baseRenderer'
     ),
-    [
-      name!,
-      symbol!,
-      description!,
-      daoImage!,
-      projectURI!,
-      RENDERER_BASE
-    ]
+    [name!, symbol!, description!, daoImage!, projectURI!, RENDERER_BASE]
   )
 
   const tokenParams = {

@@ -46,9 +46,9 @@ export const AuctionChart = () => {
     isReady ? [token, chain.id, startSeconds] : undefined,
     () =>
       axios
-        .get<{ auctionHistory: AuctionHistoryQuery }>(
-          `/api/auctionHistory/${token}?chainId=${chain.id}&startTime=${startSeconds}`
-        )
+        .get<{
+          auctionHistory: AuctionHistoryQuery
+        }>(`/api/auctionHistory/${token}?chainId=${chain.id}&startTime=${startSeconds}`)
         .then((x) =>
           x.data.auctionHistory.dao?.auctions.map((auction) => ({
             id: auction.id,

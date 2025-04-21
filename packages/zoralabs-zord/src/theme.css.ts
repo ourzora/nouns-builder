@@ -345,7 +345,7 @@ globalStyle(
     // Selector excludes hash-only links, and excludes relative but not double-slash-only links
     textDecoration: 'none',
     color: 'currentColor',
-  }
+  },
 )
 
 globalStyle(
@@ -359,7 +359,7 @@ globalStyle(
     position: 'absolute',
     right: '-0.9em',
     bottom: '-0.3em',
-  }
+  },
 )
 
 globalStyle('input, textarea, select', {
@@ -371,7 +371,7 @@ globalStyle(
   {
     WebkitAppearance: 'none',
     margin: 0,
-  }
+  },
 )
 
 globalStyle('h1,h2,h3,h4,h5,h6,p', {
