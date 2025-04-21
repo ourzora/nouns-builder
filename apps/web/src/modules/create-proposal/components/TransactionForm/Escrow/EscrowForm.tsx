@@ -52,7 +52,7 @@ const MilestoneForm: React.FC<{
         placeholder={'1.0 ETH'}
         errorMessage={
           (formik.touched?.milestones as any)?.[index]?.amount &&
-            (formik.errors?.milestones as any)?.[index]?.amount
+          (formik.errors?.milestones as any)?.[index]?.amount
             ? (formik.errors?.milestones as any)?.[index]?.amount
             : undefined
         }
@@ -111,10 +111,7 @@ const MilestoneForm: React.FC<{
   )
 }
 
-const EscrowForm: React.FC<EscrowFormProps> = ({
-  onSubmit,
-  isSubmitting,
-}) => {
+const EscrowForm: React.FC<EscrowFormProps> = ({ onSubmit, isSubmitting }) => {
   const [isMediaUploading, setIsMediaUploading] = useState(false)
 
   const { formValues, setFormValues } = useEscrowFormStore()
@@ -187,9 +184,7 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
                       ? formik.errors.recipientAddress
                       : undefined
                   }
-                  helperText={
-                    `The wallet address that will receive funds when milestones are completed.`
-                  }
+                  helperText={`The wallet address that will receive funds when milestones are completed.`}
                 />
                 <SmartInput
                   type={TEXT}
@@ -204,9 +199,7 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
                       ? formik.errors.clientAddress
                       : undefined
                   }
-                  helperText={
-                    `This wallet will control the escrow and release funds. It can be your DAO’s treasury or a working group’s multisig`
-                  }
+                  helperText={`This wallet will control the escrow and release funds. It can be your DAO’s treasury or a working group’s multisig`}
                 />
 
                 <DatePicker
@@ -221,8 +214,7 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
                       ? formik.errors.safetyValveDate
                       : undefined
                   }
-                  helperText=
-                  {`The date after which the DAO or multisig can reclaim funds from escrow.`}
+                  helperText={`The date after which the DAO or multisig can reclaim funds from escrow.`}
                 />
                 <Box mt={'x5'}>
                   <FieldArray name="milestones">
@@ -254,7 +246,7 @@ const EscrowForm: React.FC<EscrowFormProps> = ({
                               handleAddMilestone(
                                 push,
                                 formik.values?.milestones[
-                                formik.values?.milestones.length - 1
+                                  formik.values?.milestones.length - 1
                                 ],
                                 formik.values?.milestones.length + 1
                               )

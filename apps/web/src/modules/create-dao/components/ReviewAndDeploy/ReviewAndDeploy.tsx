@@ -21,6 +21,7 @@ import { defaultBackButton } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import { NULL_ADDRESS } from 'src/constants/addresses'
+import { RENDERER_BASE } from 'src/constants/rendererBase'
 import { managerAbi } from 'src/data/contract/abis'
 import { managerV2Abi } from 'src/data/contract/abis/ManagerV2'
 import { L2_CHAINS } from 'src/data/contract/chains'
@@ -35,7 +36,6 @@ import {
 import type { AddressType } from 'src/typings'
 import { toSeconds } from 'src/utils/helpers'
 import { sanitizeStringForJSON } from 'src/utils/sanitize'
-import { RENDERER_BASE } from 'src/constants/rendererBase'
 
 import { useFormStore } from '../../stores'
 import { PreviewArtwork } from './PreviewArtwork'
@@ -233,7 +233,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
         topics: deployEvent?.topics || [],
         data: deployEvent?.data || '0x',
       })
-    } catch { }
+    } catch {}
 
     const deployedAddresses = parsedEvent?.args
 
@@ -320,7 +320,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   justify={'center'}
                   className={
                     deployCheckboxStyleVariants[
-                    hasConfirmedTerms ? 'confirmed' : 'default'
+                      hasConfirmedTerms ? 'confirmed' : 'default'
                     ]
                   }
                   onClick={() => setHasConfirmedTerms((bool) => !bool)}
@@ -350,7 +350,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   justify={'center'}
                   className={
                     deployCheckboxStyleVariants[
-                    hasConfirmedChain ? 'confirmed' : 'default'
+                      hasConfirmedChain ? 'confirmed' : 'default'
                     ]
                   }
                   onClick={() => setHasConfirmedChain((bool) => !bool)}
@@ -372,7 +372,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                     justify={'center'}
                     className={
                       deployCheckboxStyleVariants[
-                      hasConfirmedRewards ? 'confirmed' : 'default'
+                        hasConfirmedRewards ? 'confirmed' : 'default'
                       ]
                     }
                     onClick={() => setHasConfirmedRewards((bool) => !bool)}
@@ -383,7 +383,9 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   <Flex className={deployCheckboxHelperText}>
                     I have read the{' '}
                     <a
-                      href={'https://builder-docs.vercel.app/guides/builder-protocol-rewards/'}
+                      href={
+                        'https://builder-docs.vercel.app/guides/builder-protocol-rewards/'
+                      }
                       target="_blank"
                       className={atoms({ color: 'accent' })}
                       rel="noreferrer"

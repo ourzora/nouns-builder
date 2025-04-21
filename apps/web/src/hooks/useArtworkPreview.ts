@@ -1,7 +1,6 @@
 import React, { BaseSyntheticEvent } from 'react'
 
 import { OrderedTraits } from 'src/components/Artwork/LayerBox'
-
 import { RENDERER_BASE } from 'src/constants/rendererBase'
 
 import { ImageProps } from './useArtworkUpload'
@@ -169,7 +168,7 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
           }
 
           if (isInit) {
-            imagesToDraw[0].onload = function() {
+            imagesToDraw[0].onload = function () {
               generate()
               setIsInit(false)
             }

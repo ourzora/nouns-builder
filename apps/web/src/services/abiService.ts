@@ -19,7 +19,6 @@ export type ContractABIResult = {
   source: 'fetched' | 'cache'
 }
 
-
 const ZERO_BYTES32 = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 export const getContractABIByAddress = async (
@@ -69,18 +68,14 @@ export const getContractABIByAddress = async (
       source: 'cache',
     }
   } else {
-
     const etherscan = await axios.get(
       `https://api.etherscan.io/v2/api?chainid=${chainId}&module=contract&action=getabi&address=${fetchedAddress}&tag=latest&apikey=${process.env.ETHERSCAN_API_KEY}`
     )
-
 
     if (etherscan.status !== 200) {
       throw new BackendFailedError('Remote request failed')
     }
     const abi = etherscan.data
-
-
 
     if (abi.status === '1') {
       redisConnection?.set(getRedisKey(chainIdStr, fetchedAddress), JSON.stringify(abi))

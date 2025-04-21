@@ -69,7 +69,8 @@ export const TRANSACTION_TYPES = {
   },
   [TransactionType.FIX_RENDERER_BASE]: {
     title: 'Fix Metadata Renderer Base',
-    subTitle: 'Create a proposal to restore NFT image visibility on external marketplaces.',
+    subTitle:
+      'Create a proposal to restore NFT image visibility on external marketplaces.',
     icon: 'spanner',
     iconBackdrop: color.ghostHover,
   },

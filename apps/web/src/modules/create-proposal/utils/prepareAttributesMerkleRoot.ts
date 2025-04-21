@@ -17,7 +17,7 @@ type TupleOf16Numbers = [
   number,
   number,
   number,
-  number
+  number,
 ]
 
 export const prepareAttributesMerkleRoot = async (

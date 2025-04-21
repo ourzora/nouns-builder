@@ -30,22 +30,20 @@ interface DateProps {
   disabled?: boolean
 }
 
-const Date: React.FC<DateProps> = (
-  {
-    inputLabel,
-    formik,
-    id,
-    errorMessage,
-    helperText,
-    autoSubmit,
-    value,
-    placeholder,
-    altFormat,
-    enableTime = false,
-    dateFormat = 'Y-m-d',
-    disabled = false,
-  }
-) => {
+const Date: React.FC<DateProps> = ({
+  inputLabel,
+  formik,
+  id,
+  errorMessage,
+  helperText,
+  autoSubmit,
+  value,
+  placeholder,
+  altFormat,
+  enableTime = false,
+  dateFormat = 'Y-m-d',
+  disabled = false,
+}) => {
   const ref = React.useRef(null)
 
   React.useEffect(() => {

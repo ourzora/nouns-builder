@@ -15,7 +15,7 @@ import { uploadingSpinnerWhite } from './GovernorContractButton.css'
 
 type GovernorContractButtonProps<
   TFunctionName extends string = string,
-  TChainId extends number = number
+  TChainId extends number = number,
 > = Omit<
   PrepareWriteContractConfig<typeof governorAbi, TFunctionName, TChainId>,
   'address' | 'abi'
@@ -28,7 +28,7 @@ type GovernorContractButtonProps<
 
 export function GovernorContractButton<
   TFunctionName extends string = string,
-  TChainId extends number = number
+  TChainId extends number = number,
 >({
   functionName,
   args,

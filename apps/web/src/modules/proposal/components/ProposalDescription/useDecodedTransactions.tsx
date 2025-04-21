@@ -6,7 +6,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { useChainStore } from 'src/stores/useChainStore'
 import { CHAIN_ID } from 'src/typings'
 
-type Argument = { name: string; value: string, type: string }
+type Argument = { name: string; value: string; type: string }
 
 export type DecodedTransactionData = {
   functionName: string
@@ -94,7 +94,12 @@ export const useDecodedTransactions = (
             values[i]
           )
 
-          if (typeof transaction === 'string') return { target, transaction, isNotDecoded: true } as DecodedTransactionFailure
+          if (typeof transaction === 'string')
+            return {
+              target,
+              transaction,
+              isNotDecoded: true,
+            } as DecodedTransactionFailure
           return { target, transaction, isNotDecoded: false } as DecodedTransactionSuccess
         })
       )

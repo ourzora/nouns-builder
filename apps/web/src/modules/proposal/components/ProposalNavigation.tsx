@@ -11,10 +11,10 @@ import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { OptionalLink } from 'src/components/OptionalLink'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { Queue, TransactionType, useProposalStore } from 'src/modules/create-proposal'
-import { unpackOptionalArray } from 'src/utils/helpers'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
+import { unpackOptionalArray } from 'src/utils/helpers'
 
 interface ProposalNavigationProps {
   transactionType?: TransactionType
@@ -53,8 +53,7 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
     ] as const,
   })
 
-  const [name, daoImage] =
-    unpackOptionalArray(contractData, 2)
+  const [name, daoImage] = unpackOptionalArray(contractData, 2)
 
   const daoImageSrc = React.useMemo(() => {
     return daoImage ? getFetchableUrl(daoImage) : null
@@ -72,8 +71,7 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
             <Icon id="arrowLeft" />
 
             {daoImageSrc ? (
-              <Box mr="x2"
-              >
+              <Box mr="x2">
                 <Image
                   src={daoImageSrc}
                   layout="fixed"

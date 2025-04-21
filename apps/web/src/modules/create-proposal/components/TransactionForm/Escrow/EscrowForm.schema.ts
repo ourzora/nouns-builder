@@ -65,7 +65,7 @@ export const EscrowFormSchema = yup
     recipientAddress: addressValidationSchema.test(
       'not-same-as-client',
       'Recipient address must be different from client address',
-      function(value) {
+      function (value) {
         return value?.toLowerCase() !== this?.parent.clientAddress.toLowerCase()
       }
     ),
@@ -79,7 +79,7 @@ export const EscrowFormSchema = yup
       .test(
         'after-last-milestone',
         'Safety valve date must be at least 30 days after the last milestone date.',
-        function(value) {
+        function (value) {
           const milestones = (this.parent.milestones || []) as MilestoneFormValues[]
           if (milestones.length === 0) return true
 
@@ -105,7 +105,7 @@ export const EscrowFormSchema = yup
   .test(
     'addresses-not-same',
     'Client address and recipient address must be different',
-    function(values) {
+    function (values) {
       return values.clientAddress !== values.recipientAddress
     }
   )
