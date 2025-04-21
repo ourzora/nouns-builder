@@ -1,45 +1,47 @@
-import axios from 'axios';
-import { checksumAddress, isAddress } from 'viem';
-import { CHAIN_ID } from 'src/typings';
+import axios from 'axios'
+import { checksumAddress, isAddress } from 'viem'
+
+import { CHAIN_ID } from 'src/typings'
 
 interface Attestation {
-  attester: string;
-  recipient: string;
-  schemaId: string;
-  refUID: string;
-  decodedDataJson: string;
-  timeCreated: number;
-  txid: string;
+  attester: string
+  recipient: string
+  schemaId: string
+  refUID: string
+  decodedDataJson: string
+  timeCreated: number
+  txid: string
 }
 
 interface AttestationResponse {
   data: {
-    attestations: Attestation[];
-  };
+    attestations: Attestation[]
+  }
 }
 
 interface DecodedData {
-  name: string;
-  type: string;
+  name: string
+  type: string
   value: {
-    type: string;
-    value: string;
-  };
+    type: string
+    value: string
+  }
 }
 
 export interface PropDate {
-  txid: string;
-  attester: string | undefined;
-  schemaId: string;
-  refUID: string;
-  proposalId: string | undefined;
-  originalMessageId: string | undefined;
-  messageType: number;
-  message: string | undefined;
-  timeCreated: number;
+  txid: string
+  attester: string | undefined
+  schemaId: string
+  refUID: string
+  proposalId: string | undefined
+  originalMessageId: string | undefined
+  messageType: number
+  message: string | undefined
+  timeCreated: number
 }
 
-export const ATTESTATION_SCHEMA_UID = '0x8bd0d42901ce3cd9898dbea6ae2fbf1e796ef0923e7cbb0a1cecac2e42d47cb3';
+export const ATTESTATION_SCHEMA_UID =
+  '0x8bd0d42901ce3cd9898dbea6ae2fbf1e796ef0923e7cbb0a1cecac2e42d47cb3'
 
 // Add the canonical EAS contract address
 export const EAS_CONTRACT_ADDRESS: Record<CHAIN_ID, `0x${string}` | ''> = {
@@ -51,8 +53,8 @@ export const EAS_CONTRACT_ADDRESS: Record<CHAIN_ID, `0x${string}` | ''> = {
   [CHAIN_ID.BASE_SEPOLIA]: '0x4200000000000000000000000000000000000021',
   [CHAIN_ID.ZORA]: '', // Zora doesn't have a canonical EAS deployment yet
   [CHAIN_ID.ZORA_SEPOLIA]: '',
-  [CHAIN_ID.FOUNDRY]: '' // Assuming no specific address for Foundry
-};
+  [CHAIN_ID.FOUNDRY]: '', // Assuming no specific address for Foundry
+}
 
 const ATTESTATION_URL: Record<CHAIN_ID, string> = {
   [CHAIN_ID.ETHEREUM]: 'https://easscan.org/graphql',
@@ -64,11 +66,11 @@ const ATTESTATION_URL: Record<CHAIN_ID, string> = {
   [CHAIN_ID.ZORA]: '',
   [CHAIN_ID.ZORA_SEPOLIA]: '',
   [CHAIN_ID.FOUNDRY]: '',
-};
+}
 
 const getDecodedValue = (decoded: DecodedData[], name: string): string | undefined => {
-  return decoded.find(d => d.name === name)?.value.value;
-};
+  return decoded.find((d) => d.name === name)?.value.value
+}
 
 export async function getPropDates(
   daoTreasuryAddress: string,
@@ -78,14 +80,14 @@ export async function getPropDates(
 ): Promise<PropDate[]> {
   // Input validation
   if (!isAddress(daoTreasuryAddress)) {
-    console.error('Invalid DAO treasury address');
-    return [];
+    console.error('Invalid DAO treasury address')
+    return []
   }
 
-  const attestationUrl = ATTESTATION_URL[chainId];
+  const attestationUrl = ATTESTATION_URL[chainId]
   if (!attestationUrl) {
-    console.error('Invalid chain ID or no URL found');
-    return [];
+    console.error('Invalid chain ID or no URL found')
+    return []
   }
 
   const query = `
@@ -105,35 +107,48 @@ export async function getPropDates(
         txid
       }
     }
-  `;
+  `
 
   try {
-    const { data: { data: { attestations } } } = await axios.post<AttestationResponse>(attestationUrl, { query }, {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const {
+      data: {
+        data: { attestations },
+      },
+    } = await axios.post<AttestationResponse>(
+      attestationUrl,
+      { query },
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
 
     if (!attestations || attestations.length === 0) {
-      console.warn('No attestations found');
-      return [];
+      console.warn('No attestations found')
+      return []
     }
 
-    return attestations.map((attestation: Attestation): PropDate => {
-      const decodedData = JSON.parse(attestation.decodedDataJson) as DecodedData[];
-      return {
-        attester: attestation.attester,
-        schemaId: attestation.schemaId,
-        refUID: attestation.refUID,
-        proposalId: getDecodedValue(decodedData, 'proposalId'),
-        originalMessageId: getDecodedValue(decodedData, 'originalMessageId'),
-        messageType: Number(getDecodedValue(decodedData, 'messageType') ?? 0),
-        message: getDecodedValue(decodedData, 'message'),
-        timeCreated: attestation.timeCreated,
-        txid: attestation.txid,
-      };
-    }).filter((date: PropDate) => date.proposalId === propId)
-      .sort((a: PropDate, b: PropDate) => a.timeCreated - b.timeCreated);
+    return attestations
+      .map((attestation: Attestation): PropDate => {
+        const decodedData = JSON.parse(attestation.decodedDataJson) as DecodedData[]
+        return {
+          attester: attestation.attester,
+          schemaId: attestation.schemaId,
+          refUID: attestation.refUID,
+          proposalId: getDecodedValue(decodedData, 'proposalId'),
+          originalMessageId: getDecodedValue(decodedData, 'originalMessageId'),
+          messageType: Number(getDecodedValue(decodedData, 'messageType') ?? 0),
+          message: getDecodedValue(decodedData, 'message'),
+          timeCreated: attestation.timeCreated,
+          txid: attestation.txid,
+        }
+      })
+      .filter((date: PropDate) => date.proposalId === propId)
+      .sort((a: PropDate, b: PropDate) => a.timeCreated - b.timeCreated)
   } catch (error) {
-    console.error('Error fetching attestations:', error instanceof Error ? error.message : String(error));
-    return [];
+    console.error(
+      'Error fetching attestations:',
+      error instanceof Error ? error.message : String(error)
+    )
+    return []
   }
 }

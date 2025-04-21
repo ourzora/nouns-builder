@@ -1,97 +1,127 @@
-import { SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { Box, Button, Flex, Grid, Text } from "@zoralabs/zord";
-import { Form, Formik, type FormikProps, useFormikContext } from "formik";
-import { AnimatePresence, motion } from "framer-motion";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Avatar } from "src/components/Avatar";
-import ErrorBoundary from "src/components/ErrorBoundary";
-import SmartInput from "src/components/Fields/SmartInput";
-import { Icon } from 'src/components/Icon';
-import AnimatedModal from "src/components/Modal/AnimatedModal";
-import { SuccessModalContent } from "src/components/Modal/SuccessModalContent";
-import { ATTESTATION_SCHEMA_UID, EAS_CONTRACT_ADDRESS, type PropDate } from "src/data/contract/requests/getPropDates";
-import { type DaoMember, memberSnapshotRequest } from "src/data/subgraph/requests/memberSnapshot";
-import { useEnsData } from "src/hooks";
-import { useDaoStore } from "src/modules/dao/stores";
-import { useLayoutStore } from "src/stores/useLayoutStore";
-import { propPageWrapper } from 'src/styles/Proposals.css';
-import { walletSnippet } from "src/utils/helpers";
-import { type Hex, checksumAddress, zeroHash } from "viem";
-import { useChainId, useContractWrite, usePrepareContractWrite, useQuery, useWaitForTransaction } from "wagmi";
-import * as Yup from "yup";
-import { easAbi } from "./easAbi";
-import { Spinner } from "src/components/Spinner";
-import { CHAIN_ID } from "src/typings";
+import { SchemaEncoder } from '@ethereum-attestation-service/eas-sdk'
+import { Box, Button, Flex, Text } from '@zoralabs/zord'
+import { Form, Formik, type FormikProps, useFormikContext } from 'formik'
+import { Fragment, useEffect, useMemo, useState } from 'react'
+import { type Hex, checksumAddress, zeroHash } from 'viem'
+import {
+  useChainId,
+  useContractWrite,
+  usePrepareContractWrite,
+  useQuery,
+  useWaitForTransaction,
+} from 'wagmi'
+import * as Yup from 'yup'
+
+import { Avatar } from 'src/components/Avatar'
+import ErrorBoundary from 'src/components/ErrorBoundary'
+import SmartInput from 'src/components/Fields/SmartInput'
+import { Icon } from 'src/components/Icon'
+import AnimatedModal from 'src/components/Modal/AnimatedModal'
+import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
+import { Spinner } from 'src/components/Spinner'
+import {
+  ATTESTATION_SCHEMA_UID,
+  EAS_CONTRACT_ADDRESS,
+  type PropDate,
+} from 'src/data/contract/requests/getPropDates'
+import {
+  type DaoMember,
+  memberSnapshotRequest,
+} from 'src/data/subgraph/requests/memberSnapshot'
+import { useEnsData } from 'src/hooks'
+import { useDaoStore } from 'src/modules/dao/stores'
+import { useLayoutStore } from 'src/stores/useLayoutStore'
+import { propPageWrapper } from 'src/styles/Proposals.css'
+import { CHAIN_ID } from 'src/typings'
+import { walletSnippet } from 'src/utils/helpers'
+
+import { easAbi } from './easAbi'
 
 const useDaoMembers = (chainId: number, token: string) => {
   const { data: members } = useQuery<DaoMember[], Error>(
-    ["members", chainId, token],
+    ['members', chainId, token],
     () => memberSnapshotRequest(chainId, token),
     {
       enabled: !!token,
     }
-  );
+  )
 
   if (!members) {
-    return [];
+    return []
   }
 
-  return members.map((member: DaoMember) => checksumAddress(member.address as `0x${string}`));
-};
+  return members.map((member: DaoMember) =>
+    checksumAddress(member.address as `0x${string}`)
+  )
+}
 
 const propDateValidationSchema = Yup.object().shape({
   proposalId: Yup.string()
     .required('Proposal ID (bytes32) is required')
-    .matches(/^0x[a-fA-F0-9]{64}$/, 'Proposal ID must be a valid bytes32 hex string (e.g., 0x...)'),
+    .matches(
+      /^0x[a-fA-F0-9]{64}$/,
+      'Proposal ID must be a valid bytes32 hex string (e.g., 0x...)'
+    ),
   replyTo: Yup.string().optional(),
   message: Yup.string().required('Message is required'),
-});
+})
 
 interface PropDateFormValues {
-  proposalId: string;
-  replyTo: string;
-  message: string;
+  proposalId: string
+  replyTo: string
+  message: string
 }
 
 const getErrorMessage = (error: unknown): string => {
-  if (!error) return "An unknown error occurred.";
-  if (typeof error === 'string') return error;
+  if (!error) return 'An unknown error occurred.'
+  if (typeof error === 'string') return error
   if (typeof error === 'object' && error !== null) {
     // Type assertion with Record to handle potential properties
-    const errorObj = error as Record<string, unknown>;
+    const errorObj = error as Record<string, unknown>
     if ('shortMessage' in errorObj && typeof errorObj.shortMessage === 'string') {
-      return errorObj.shortMessage;
+      return errorObj.shortMessage
     }
     if ('message' in errorObj && typeof errorObj.message === 'string') {
-      return errorObj.message;
+      return errorObj.message
     }
   }
-  return "An unknown error occurred.";
-};
+  return 'An unknown error occurred.'
+}
 
 const getEasContractAddressForChain = (chainId: number): `0x${string}` | undefined => {
-  const address = EAS_CONTRACT_ADDRESS[chainId as CHAIN_ID];
+  const address = EAS_CONTRACT_ADDRESS[chainId as CHAIN_ID]
 
   if (address?.startsWith('0x') && address.length > 2) {
-    return address as `0x${string}`;
+    return address as `0x${string}`
   }
 
-  return undefined;
-};
+  return undefined
+}
 
-const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, daoToken }: {
-  closeForm: () => void,
-  onSuccess?: () => void,
-  proposalId: string,
-  propDates: PropDate[],
-  replyTo?: PropDate,
+const PropDateForm = ({
+  closeForm,
+  onSuccess,
+  proposalId,
+  propDates,
+  replyTo,
+  daoToken,
+}: {
+  closeForm: () => void
+  onSuccess?: () => void
+  proposalId: string
+  propDates: PropDate[]
+  replyTo?: PropDate
   daoToken: string
 }) => {
-  const initialValues = useMemo(() => ({
-    proposalId: proposalId,
-    replyTo: replyTo?.txid ?? zeroHash,
-    message: '',
-  } as PropDateFormValues), [proposalId, replyTo?.txid]);
+  const initialValues = useMemo(
+    () =>
+      ({
+        proposalId: proposalId,
+        replyTo: replyTo?.txid ?? zeroHash,
+        message: '',
+      }) as PropDateFormValues,
+    [proposalId, replyTo?.txid]
+  )
 
   return (
     <Box
@@ -104,13 +134,15 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
       mb="x6"
     >
       <Flex justify="space-between" mb="x4" align="center">
-        <Text fontSize={18} fontWeight="label">Create Propdate</Text>
+        <Text fontSize={18} fontWeight="label">
+          Create Propdate
+        </Text>
       </Flex>
 
       <Formik<PropDateFormValues>
         initialValues={initialValues}
         validationSchema={propDateValidationSchema}
-        onSubmit={() => { }}
+        onSubmit={() => {}}
         validateOnMount={true}
       >
         {(formik) => (
@@ -126,15 +158,19 @@ const PropDateForm = ({ closeForm, onSuccess, proposalId, propDates, replyTo, da
         )}
       </Formik>
     </Box>
-  );
-};
+  )
+}
 
-const ReplyDisplay = ({ replyTo, ensName, ensAvatar }: {
-  replyTo?: PropDate,
-  ensName?: string,
+const ReplyDisplay = ({
+  replyTo,
+  ensName,
+  ensAvatar,
+}: {
+  replyTo?: PropDate
+  ensName?: string
   ensAvatar?: string | null
 }) => {
-  if (!replyTo) return null;
+  if (!replyTo) return null
 
   return (
     <Flex
@@ -145,13 +181,13 @@ const ReplyDisplay = ({ replyTo, ensName, ensAvatar }: {
       borderRadius="curved"
       mt="x2"
       style={{
-        borderLeft: 'var(--space-x2) solid var(--colors-text4)'
+        borderLeft: 'var(--space-x2) solid var(--colors-text4)',
       }}
       gap="x1"
     >
       <Flex align="center" gap="x1">
         <Avatar address={replyTo.attester} src={ensAvatar || undefined} size="16" />
-        <Text variant={"label-sm"} fontWeight="label">
+        <Text variant={'label-sm'} fontWeight="label">
           {ensName || walletSnippet(replyTo.attester)}
         </Text>
       </Flex>
@@ -160,104 +196,117 @@ const ReplyDisplay = ({ replyTo, ensName, ensAvatar }: {
         color="text2"
         style={{
           wordBreak: 'break-word',
-          paddingLeft: 'var(--space-x1)'
+          paddingLeft: 'var(--space-x1)',
         }}
       >
         {replyTo.message}
       </Text>
     </Flex>
-  );
-};
+  )
+}
 
 type AttestationParams = {
-  schema: Hex,
+  schema: Hex
   data: {
-    recipient: Hex,
-    expirationTime: bigint,
-    revocable: boolean,
-    refUID: Hex,
-    data: Hex,
+    recipient: Hex
+    expirationTime: bigint
+    revocable: boolean
+    refUID: Hex
+    data: Hex
     value: bigint
   }
-};
+}
 
 const useDebounce = <T,>(value: T, delay: number): T => {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+      setDebouncedValue(value)
+    }, delay)
 
     return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
+      clearTimeout(timer)
+    }
+  }, [value, delay])
 
-  return debouncedValue;
-};
+  return debouncedValue
+}
 
 // PropDateFormInner component
-const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyTo, daoToken, formik }: {
-  closeForm: () => void,
-  onSuccess?: () => void,
-  proposalId: string,
-  propDates: PropDate[],
-  replyTo?: PropDate,
-  daoToken: string,
+const PropDateFormInner = ({
+  closeForm,
+  onSuccess,
+  proposalId,
+  propDates,
+  replyTo,
+  daoToken,
+  formik,
+}: {
+  closeForm: () => void
+  onSuccess?: () => void
+  proposalId: string
+  propDates: PropDate[]
+  replyTo?: PropDate
+  daoToken: string
   formik: FormikProps<PropDateFormValues>
 }) => {
-  const chainId = useChainId();
+  const chainId = useChainId()
 
-  const [txHash, setTxHash] = useState<Hex | undefined>();
-  const [error, setError] = useState<string | null>(null);
-  const [attestParams, setAttestParams] = useState<AttestationParams | undefined>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showStatusModal, setShowStatusModal] = useState(false);
+  const [txHash, setTxHash] = useState<Hex | undefined>()
+  const [error, setError] = useState<string | null>(null)
+  const [attestParams, setAttestParams] = useState<AttestationParams | undefined>()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showStatusModal, setShowStatusModal] = useState(false)
 
-  const data = useFormikContext<PropDateFormValues>();
-  const currentValues = data?.values;
+  const data = useFormikContext<PropDateFormValues>()
+  const currentValues = data?.values
 
   // Debounce form values to prevent constant recalculation during typing
-  const debouncedValues = useDebounce(currentValues, 500);
+  const debouncedValues = useDebounce(currentValues, 500)
 
   // Get EAS contract address for current chain
   const easContractAddress = useMemo(() => {
-    const address = EAS_CONTRACT_ADDRESS[chainId as CHAIN_ID];
+    const address = EAS_CONTRACT_ADDRESS[chainId as CHAIN_ID]
 
     if (address?.startsWith('0x') && address.length > 2) {
-      return address as `0x${string}`;
+      return address as `0x${string}`
     }
 
-    return undefined;
-  }, [chainId]);
+    return undefined
+  }, [chainId])
 
   // Memoize the schema encoder to avoid recreating it on every render
-  const schemaEncoder = useMemo(() =>
-    new SchemaEncoder("bytes32 proposalId, bytes32 originalMessageId, uint8 messageType, string message"),
+  const schemaEncoder = useMemo(
+    () =>
+      new SchemaEncoder(
+        'bytes32 proposalId, bytes32 originalMessageId, uint8 messageType, string message'
+      ),
     []
-  );
+  )
 
   // Memoize the encoded data based on debounced form values
   const encodedData = useMemo(() => {
-    if (!debouncedValues) return null;
+    if (!debouncedValues) return null
 
-    const originalMessageId = debouncedValues.replyTo ? (debouncedValues.replyTo as Hex) : zeroHash;
+    const originalMessageId = debouncedValues.replyTo
+      ? (debouncedValues.replyTo as Hex)
+      : zeroHash
 
     return schemaEncoder.encodeData([
-      { name: "proposalId", value: debouncedValues.proposalId as Hex, type: "bytes32" },
-      { name: "originalMessageId", value: originalMessageId, type: "bytes32" },
-      { name: "messageType", value: "0", type: "uint8" },
-      { name: "message", value: debouncedValues.message, type: "string" }
-    ]) as Hex;
-  }, [schemaEncoder, debouncedValues]);
+      { name: 'proposalId', value: debouncedValues.proposalId as Hex, type: 'bytes32' },
+      { name: 'originalMessageId', value: originalMessageId, type: 'bytes32' },
+      { name: 'messageType', value: '0', type: 'uint8' },
+      { name: 'message', value: debouncedValues.message, type: 'string' },
+    ]) as Hex
+  }, [schemaEncoder, debouncedValues])
 
   // Pre-calculate attestation parameters when values change (but after debounce)
   useEffect(() => {
-    if (!debouncedValues || !encodedData || isSubmitting || !easContractAddress) return;
+    if (!debouncedValues || !encodedData || isSubmitting || !easContractAddress) return
 
     try {
-      const schemaUID = checksumAddress(ATTESTATION_SCHEMA_UID as `0x${string}`);
+      const schemaUID = checksumAddress(ATTESTATION_SCHEMA_UID as `0x${string}`)
 
       const params: AttestationParams = {
         schema: schemaUID,
@@ -267,127 +316,136 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
           revocable: true,
           refUID: zeroHash,
           data: encodedData,
-          value: 0n
-        }
-      };
+          value: 0n,
+        },
+      }
 
-      setAttestParams(params);
+      setAttestParams(params)
     } catch (err) {
-      console.error("Error pre-calculating attestation params:", err);
+      console.error('Error pre-calculating attestation params:', err)
       // Don't set error state here to avoid UI disruption during typing
     }
-  }, [debouncedValues, encodedData, daoToken, isSubmitting, easContractAddress]);
+  }, [debouncedValues, encodedData, daoToken, isSubmitting, easContractAddress])
 
-  const { config, isError, isSuccess: isPrepareSuccess, error: prepareError } = usePrepareContractWrite({
+  const {
+    config,
+    isError,
+    isSuccess: isPrepareSuccess,
+    error: prepareError,
+  } = usePrepareContractWrite({
     enabled: !!attestParams && !!easContractAddress,
     address: easContractAddress, // Now properly typed as `0x${string}` | undefined
     abi: easAbi,
-    functionName: "attest",
+    functionName: 'attest',
     chainId: chainId,
     args: [attestParams],
-  });
+  })
 
-  const { writeAsync, isLoading: isSigningLoading, error: writeError } = useContractWrite(config);
+  const {
+    writeAsync,
+    isLoading: isSigningLoading,
+    error: writeError,
+  } = useContractWrite(config)
 
   const {
     data: txReceipt,
     isLoading: isWaitingTx,
     isSuccess: isTxSuccess,
     isError: isTxError,
-    error: txError
+    error: txError,
   } = useWaitForTransaction({
     hash: txHash,
     enabled: !!txHash,
     chainId: chainId,
-  });
+  })
 
-  const isPending = isSigningLoading || isWaitingTx;
-  const isLoading = isSubmitting || isPending;
+  const isPending = isSigningLoading || isWaitingTx
+  const isLoading = isSubmitting || isPending
 
-  const { ensName: replyToEnsName } = useEnsData(replyTo?.attester);
-  const { ensAvatar: replyToEnsAvatar } = useEnsData(replyTo?.attester);
+  const { ensName: replyToEnsName } = useEnsData(replyTo?.attester)
+  const { ensAvatar: replyToEnsAvatar } = useEnsData(replyTo?.attester)
 
   useEffect(() => {
     if (isError && isSubmitting && prepareError) {
-      const message = getErrorMessage(prepareError);
-      setError(message);
-      setAttestParams(undefined);
+      const message = getErrorMessage(prepareError)
+      setError(message)
+      setAttestParams(undefined)
     }
-  }, [isError, isSubmitting, prepareError]);
+  }, [isError, isSubmitting, prepareError])
 
   useEffect(() => {
     const executeWrite = async () => {
       if (isPrepareSuccess && isSubmitting && writeAsync) {
         try {
-          const result = await writeAsync?.();
+          const result = await writeAsync?.()
           if (result?.hash) {
-            setTxHash(result.hash);
+            setTxHash(result.hash)
           } else {
-            setError("Failed to get transaction hash.");
+            setError('Failed to get transaction hash.')
           }
         } catch (err: unknown) {
-          console.error("Error submitting propdate (signing):", err);
-          const message = getErrorMessage(err);
-          setError(message);
-          setTxHash(undefined);
+          console.error('Error submitting propdate (signing):', err)
+          const message = getErrorMessage(err)
+          setError(message)
+          setTxHash(undefined)
         }
       }
-    };
+    }
 
-    executeWrite();
-  }, [isPrepareSuccess, isSubmitting, writeAsync]);
+    executeWrite()
+  }, [isPrepareSuccess, isSubmitting, writeAsync])
 
   useEffect(() => {
     if (isTxSuccess) {
-      if (onSuccess) onSuccess();
+      if (onSuccess) onSuccess()
     }
     if (isTxError) {
-      const message = getErrorMessage(txError);
-      setError(message);
-      setTxHash(undefined);
-      setAttestParams(undefined);
+      const message = getErrorMessage(txError)
+      setError(message)
+      setTxHash(undefined)
+      setAttestParams(undefined)
     }
-  }, [isTxSuccess, isTxError, txError, onSuccess]);
+  }, [isTxSuccess, isTxError, txError, onSuccess])
 
   // Effect to handle potential signing errors from useContractWrite
   useEffect(() => {
     if (writeError) {
-      const message = getErrorMessage(writeError);
-      setError(message);
-      setTxHash(undefined);
-      setAttestParams(undefined);
+      const message = getErrorMessage(writeError)
+      setError(message)
+      setTxHash(undefined)
+      setAttestParams(undefined)
     }
-  }, [writeError]);
+  }, [writeError])
 
   const handleSubmit = async () => {
-    setError(null);
-    setIsSubmitting(true);
+    setError(null)
+    setIsSubmitting(true)
 
     if (!easContractAddress) {
-      setError("Propdates are not supported on this network.");
-      setIsSubmitting(false);
-      return;
+      setError('Propdates are not supported on this network.')
+      setIsSubmitting(false)
+      return
     }
 
     if (!attestParams || !encodedData) {
-      setError("Failed to prepare transaction data. Please try again.");
-      setIsSubmitting(false);
-      return;
+      setError('Failed to prepare transaction data. Please try again.')
+      setIsSubmitting(false)
+      return
     }
-    setShowStatusModal(true);
-  };
+    setShowStatusModal(true)
+  }
 
   const handleCloseModal = () => {
-    setShowStatusModal(false);
-    setIsSubmitting(false);
-    setTxHash(undefined);
-    setError(null); // Clear error on modal close
-    setAttestParams(undefined);
+    setShowStatusModal(false)
+    setIsSubmitting(false)
+    setTxHash(undefined)
+    setError(null) // Clear error on modal close
+    setAttestParams(undefined)
     if (isTxSuccess) {
       // Only close the main form if the transaction was successful
-      closeForm();
+      closeForm()
     }
-  };
+  }
 
   return (
     <>
@@ -395,7 +453,9 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
         <Flex direction={'column'} w={'100%'} gap="x4">
           {replyTo && (
             <Box mb="x2">
-              <Text variant="label-md" mb="x1">Replying to:</Text>
+              <Text variant="label-md" mb="x1">
+                Replying to:
+              </Text>
               <ReplyDisplay
                 replyTo={replyTo}
                 ensName={replyToEnsName || undefined}
@@ -455,17 +515,17 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
           pending={isPending && !isTxError && !error && !writeError}
           title={
             isTxSuccess
-              ? "Propdate Submitted"
+              ? 'Propdate Submitted'
               : error || isTxError || writeError
-                ? "Transaction Failed"
-                : "Submitting Propdate..."
+                ? 'Transaction Failed'
+                : 'Submitting Propdate...'
           }
           subtitle={
             isTxSuccess
-              ? "Your propdate has been successfully submitted."
+              ? 'Your propdate has been successfully submitted.'
               : error || isTxError || writeError
-                ? error ?? "An unknown error occurred."
-                : "Please confirm the transaction in your wallet and wait for confirmation."
+                ? (error ?? 'An unknown error occurred.')
+                : 'Please confirm the transaction in your wallet and wait for confirmation.'
           }
           actions={
             (isTxSuccess || error || isTxError || writeError) && (
@@ -477,28 +537,36 @@ const PropDateFormInner = ({ closeForm, onSuccess, proposalId, propDates, replyT
         />
       </AnimatedModal>
     </>
-  );
-};
+  )
+}
 
-const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReplying, onReplyClick, replies = [] }: {
-  propDate: PropDate,
-  index: number,
-  originalMessage: PropDate | undefined,
-  setReplyingTo: (replyTo: PropDate | undefined) => void,
-  isReplying: boolean,
-  onReplyClick: (propDate: PropDate) => void,
+const PropDateCard = ({
+  propDate,
+  index,
+  originalMessage,
+  setReplyingTo,
+  isReplying,
+  onReplyClick,
+  replies = [],
+}: {
+  propDate: PropDate
+  index: number
+  originalMessage: PropDate | undefined
+  setReplyingTo: (replyTo: PropDate | undefined) => void
+  isReplying: boolean
+  onReplyClick: (propDate: PropDate) => void
   replies?: PropDate[]
 }) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
   const { ensName, ensAvatar } = useEnsData(propDate?.attester)
 
   // Use separate destructuring to avoid redeclaration
-  const originalEnsData = useEnsData(originalMessage?.attester);
-  const originalMessageEnsName = originalEnsData.ensName;
-  const originalMessageEnsAvatar = originalEnsData.ensAvatar;
+  const originalEnsData = useEnsData(originalMessage?.attester)
+  const originalMessageEnsName = originalEnsData.ensName
+  const originalMessageEnsAvatar = originalEnsData.ensAvatar
 
   // Determine if this is a reply to highlight it
-  const isReply = !!originalMessage;
+  const isReply = !!originalMessage
 
   return (
     <Flex
@@ -516,7 +584,11 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
     >
       <Flex justify="space-between" align="center" wrap="wrap" gap="x2">
         <Flex align="center" gap="x2">
-          <Avatar address={propDate.attester} src={ensAvatar} size={isMobile ? '24' : '32'} />
+          <Avatar
+            address={propDate.attester}
+            src={ensAvatar}
+            size={isMobile ? '24' : '32'}
+          />
           <Text variant={isMobile ? 'label-sm' : 'label-md'} fontWeight="display">
             {ensName || walletSnippet(propDate.attester)}
           </Text>
@@ -545,11 +617,7 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
       </Flex>
 
       {propDate.message && (
-        <Box
-          borderRadius={"curved"}
-          p={"x4"}
-          backgroundColor={"background2"}
-        >
+        <Box borderRadius={'curved'} p={'x4'} backgroundColor={'background2'}>
           <Text
             variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
             textAlign={'left'}
@@ -567,10 +635,14 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
       {replies && replies.length > 0 && (
         <Box mt="x4" ml="x4" style={{ borderLeft: '4px solid var(--colors-border)' }}>
           {replies.map((reply: PropDate, idx: number) => {
-            const { ensName, ensAvatar } = useEnsData(reply.attester);
+            const { ensName, ensAvatar } = useEnsData(reply.attester)
             return (
               <Flex key={reply.txid} direction="row" gap="x2" align="flex-start" mb="x3">
-                <Avatar address={reply.attester} src={ensAvatar} size={isMobile ? '20' : '28'} />
+                <Avatar
+                  address={reply.attester}
+                  src={ensAvatar}
+                  size={isMobile ? '20' : '28'}
+                />
                 <Box
                   backgroundColor="background2"
                   borderRadius="curved"
@@ -581,7 +653,10 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
                   style={{ width: 'fit-content', minWidth: 0 }}
                 >
                   <Flex align="center" gap="x2" mb="x1">
-                    <Text variant={isMobile ? 'label-sm' : 'label-md'} fontWeight="display">
+                    <Text
+                      variant={isMobile ? 'label-sm' : 'label-md'}
+                      fontWeight="display"
+                    >
                       {ensName || walletSnippet(reply.attester)}
                     </Text>
                     <Text variant="label-sm" color="text3">
@@ -591,19 +666,27 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
                   <Text
                     variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
                     textAlign={'left'}
-                    style={{ fontWeight: 400, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                    style={{
+                      fontWeight: 400,
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word',
+                    }}
                   >
                     {reply.message}
                   </Text>
                 </Box>
               </Flex>
-            );
+            )
           })}
         </Box>
       )}
       <Flex justify="flex-end">
-        <Button variant={isReplying ? "secondary" : "outline"} size="sm" onClick={() => onReplyClick(propDate)}>
-          {isReplying ? "Cancel Reply" : "Reply"}
+        <Button
+          variant={isReplying ? 'secondary' : 'outline'}
+          size="sm"
+          onClick={() => onReplyClick(propDate)}
+        >
+          {isReplying ? 'Cancel Reply' : 'Reply'}
         </Button>
       </Flex>
     </Flex>
@@ -611,16 +694,18 @@ const PropDateCard = ({ propDate, index, originalMessage, setReplyingTo, isReply
 }
 
 interface PropDatesProps {
-  propDates: PropDate[];
-  chainId: number;
-  proposalId: string;
+  propDates: PropDate[]
+  chainId: number
+  proposalId: string
 }
 
 export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) => {
   const [showOnlyDaoMembers, setShowOnlyDaoMembers] = useState(false)
   const [replyingTo, setReplyingTo] = useState<PropDate | undefined>(undefined)
-  const { addresses: { token } } = useDaoStore()
-  const daoMembers = useDaoMembers(chainId, token ? token : "")
+  const {
+    addresses: { token },
+  } = useDaoStore()
+  const daoMembers = useDaoMembers(chainId, token ? token : '')
   const [showForm, setShowForm] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -633,18 +718,20 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
   }, [chainId])
 
   const filteredPropDates = showOnlyDaoMembers
-    ? propDates.filter(propDate => daoMembers.includes(checksumAddress(propDate.attester as `0x${string}`)))
+    ? propDates.filter((propDate) =>
+        daoMembers.includes(checksumAddress(propDate.attester as `0x${string}`))
+      )
     : propDates
 
   const handleReplyClick = (propDateToReply: PropDate) => {
     if (replyingTo?.txid === propDateToReply.txid) {
-      setShowForm(false);
-      setReplyingTo(undefined);
+      setShowForm(false)
+      setReplyingTo(undefined)
     } else {
-      setReplyingTo(propDateToReply);
-      setShowForm(true);
+      setReplyingTo(propDateToReply)
+      setShowForm(true)
     }
-  };
+  }
 
   return (
     <Flex className={propPageWrapper}>
@@ -656,24 +743,25 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
             </Text>
 
             <Flex align="center" gap="x2">
-              <Button variant={!showForm || replyingTo ? "primary" : "destructive"} size="sm" onClick={() => { setShowForm(!showForm); setReplyingTo(undefined); }}>
-                {
-                  showForm && !replyingTo && <Icon id="cross" fill="onAccent" />
-                }
-                {
-                  showForm ? "Cancel" : "Create Propdate"
-                }
+              <Button
+                variant={!showForm || replyingTo ? 'primary' : 'destructive'}
+                size="sm"
+                onClick={() => {
+                  setShowForm(!showForm)
+                  setReplyingTo(undefined)
+                }}
+              >
+                {showForm && !replyingTo && <Icon id="cross" fill="onAccent" />}
+                {showForm ? 'Cancel' : 'Create Propdate'}
               </Button>
 
-              <Button variant="secondary" size="sm" onClick={() => setShowOnlyDaoMembers(!showOnlyDaoMembers)}>
-                {
-                  showOnlyDaoMembers && <Icon id="check" />
-                }
-                {
-                  showOnlyDaoMembers
-                    ? "DAO Members Only"
-                    : "All Propdates"
-                }
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setShowOnlyDaoMembers(!showOnlyDaoMembers)}
+              >
+                {showOnlyDaoMembers && <Icon id="check" />}
+                {showOnlyDaoMembers ? 'DAO Members Only' : 'All Propdates'}
               </Button>
             </Flex>
           </Flex>
@@ -685,34 +773,41 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
               </Flex>
             )}
 
-            {
-              showForm && token &&
+            {showForm &&
+              token &&
               (() => {
                 // Explicitly define props object to potentially help type inference
                 const formProps = {
                   daoToken: token,
-                  closeForm: () => { setShowForm(false); setReplyingTo(undefined); },
-                  onSuccess: () => { setShowForm(false); setReplyingTo(undefined); /* TODO: Add optimistic update or refetch */ },
+                  closeForm: () => {
+                    setShowForm(false)
+                    setReplyingTo(undefined)
+                  },
+                  onSuccess: () => {
+                    setShowForm(false)
+                    setReplyingTo(undefined) /* TODO: Add optimistic update or refetch */
+                  },
                   proposalId: proposalId,
                   propDates: propDates,
                   replyTo: replyingTo,
-                };
-                return <PropDateForm {...formProps} />;
-              })()
-            }
+                }
+                return <PropDateForm {...formProps} />
+              })()}
             {/* Group propdates into threads: top-level and their replies */}
             {(() => {
               // Move topLevelPropDates outside for use below
-              return null;
+              return null
             })()}
             {(() => {
-              const topLevelPropDates = filteredPropDates.filter(pd => !pd.originalMessageId || pd.originalMessageId === zeroHash);
+              const topLevelPropDates = filteredPropDates.filter(
+                (pd) => !pd.originalMessageId || pd.originalMessageId === zeroHash
+              )
               return topLevelPropDates
                 .sort((a, b) => a.timeCreated - b.timeCreated)
                 .map((propDate, i) => {
                   const replies = filteredPropDates
-                    .filter(pd => pd.originalMessageId === propDate.txid)
-                    .sort((a, b) => a.timeCreated - b.timeCreated);
+                    .filter((pd) => pd.originalMessageId === propDate.txid)
+                    .sort((a, b) => a.timeCreated - b.timeCreated)
                   return (
                     <PropDateCard
                       key={`${propDate.txid}-${i}`}
@@ -724,12 +819,14 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
                       onReplyClick={handleReplyClick}
                       replies={replies}
                     />
-                  );
-                });
+                  )
+                })
             })()}
             {/* Empty state if no top-level propdates */}
             {(() => {
-              const topLevelPropDates = filteredPropDates.filter(pd => !pd.originalMessageId || pd.originalMessageId === zeroHash);
+              const topLevelPropDates = filteredPropDates.filter(
+                (pd) => !pd.originalMessageId || pd.originalMessageId === zeroHash
+              )
               if (topLevelPropDates.length === 0) {
                 return (
                   <Flex
@@ -741,13 +838,11 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
                     borderWidth="normal"
                     backgroundColor="background2"
                   >
-                    <Text color="text3">
-                      No Updates on this proposal yet!
-                    </Text>
+                    <Text color="text3">No Updates on this proposal yet!</Text>
                   </Flex>
-                );
+                )
               }
-              return null;
+              return null
             })()}
           </Box>
         </Box>

@@ -12,8 +12,7 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { getEscrowDelegate } from 'src/data/contract/requests/getEscrowDelegate'
-import { getPropDates, type PropDate } from 'src/data/contract/requests/getPropDates'
-
+import { type PropDate, getPropDates } from 'src/data/contract/requests/getPropDates'
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
@@ -29,13 +28,13 @@ import {
   ProposalHeader,
   isProposalOpen,
 } from 'src/modules/proposal'
+import { PropDates } from 'src/modules/proposal/components/PropDates'
 import { ProposalVotes } from 'src/modules/proposal/components/ProposalVotes'
 import type { NextPageWithLayout } from 'src/pages/_app'
 import type { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import type { AddressType } from 'src/typings'
-import { PropDates } from 'src/modules/proposal/components/PropDates'
 
 export interface VotePageProps {
   proposalId: string
@@ -81,7 +80,11 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
       {
         title: 'Details',
         component: [
-          <ProposalDescription key="description" proposal={proposal} collection={query?.token as string} />,
+          <ProposalDescription
+            key="description"
+            proposal={proposal}
+            collection={query?.token as string}
+          />,
         ],
       },
       {
@@ -90,12 +93,17 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
       },
       {
         title: 'Propdates',
-        component: [<PropDates key="propdates" propDates={propDates} proposalId={proposalId} chainId={chain.id} />],
-      }
+        component: [
+          <PropDates
+            key="propdates"
+            propDates={propDates}
+            proposalId={proposalId}
+            chainId={chain.id}
+          />,
+        ],
+      },
     ]
   }, [proposal, propDates, chain.id, query?.token])
-
-
 
   if (!proposal) {
     return null
@@ -182,9 +190,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
 
   where = proposalIdOrNumber.startsWith('0x')
     ? {
-      proposalId: proposalIdOrNumber,
-    }
-    : { proposalNumber: Number.parseInt(proposalIdOrNumber), dao: collection.toLowerCase() }
+        proposalId: proposalIdOrNumber,
+      }
+    : {
+        proposalNumber: Number.parseInt(proposalIdOrNumber),
+        dao: collection.toLowerCase(),
+      }
 
   const data = await SDK.connect(chain.id)
     .proposalOGMetadata({
@@ -257,8 +268,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     escrowDelegate: escrowDelegateAddress,
   }
 
-  const ogImageURL = `${protocol}://${req.headers.host
-    }/api/og/proposal?data=${encodeURIComponent(JSON.stringify(ogMetadata))}`
+  const ogImageURL = `${protocol}://${
+    req.headers.host
+  }/api/og/proposal?data=${encodeURIComponent(JSON.stringify(ogMetadata))}`
 
   const { maxAge, swr } = isProposalOpen(proposal.state)
     ? CACHE_TIMES.IN_PROGRESS_PROPOSAL
