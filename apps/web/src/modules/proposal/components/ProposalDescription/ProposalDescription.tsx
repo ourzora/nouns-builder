@@ -1,7 +1,7 @@
 import { Box, Flex, Paragraph, Text, atoms } from '@zoralabs/zord'
 import { toLower } from 'lodash'
 import Image from 'next/image'
-import React, { Suspense, ReactNode, useMemo } from 'react'
+import React, { ReactNode, Suspense, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
@@ -20,7 +20,7 @@ import { propPageWrapper } from 'src/styles/Proposals.css'
 import { DecodedTransactions } from './DecodedTransactions'
 import { MilestoneDetails } from './MilestoneDetails'
 import { proposalDescription } from './ProposalDescription.css'
-import { useDecodedTransactions } from './useDecodedTransactions';
+import { useDecodedTransactions } from './useDecodedTransactions'
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>
@@ -46,15 +46,20 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   const { displayName } = useEnsData(proposer)
   const chain = useChainStore((x) => x.chain)
 
-  const decodedTransactions = useDecodedTransactions(
-    targets,
-    calldatas,
-    values);
+  const decodedTransactions = useDecodedTransactions(targets, calldatas, values)
 
   const decodedEscrowTxnArgs = useMemo(() => {
-    const escrowIndex = targets.findIndex(t => t === toLower(getEscrowBundler(chain.id)))
-    const decodedEscrowTransaction = escrowIndex !== -1 && decodedTransactions ? decodedTransactions[escrowIndex] : undefined
-    const decodedEscrowData = !!decodedEscrowTransaction && !decodedEscrowTransaction.isNotDecoded ? decodedEscrowTransaction.transaction : undefined
+    const escrowIndex = targets.findIndex(
+      (t) => t === toLower(getEscrowBundler(chain.id))
+    )
+    const decodedEscrowTransaction =
+      escrowIndex !== -1 && decodedTransactions
+        ? decodedTransactions[escrowIndex]
+        : undefined
+    const decodedEscrowData =
+      !!decodedEscrowTransaction && !decodedEscrowTransaction.isNotDecoded
+        ? decodedEscrowTransaction.transaction
+        : undefined
     const decodedTxnArgs = !!decodedEscrowData ? decodedEscrowData.args : undefined
     return decodedTxnArgs
   }, [chain, decodedTransactions, targets])
@@ -136,9 +141,7 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
         </Section>
 
         <Section title="Proposed Transactions">
-          <DecodedTransactions
-            decodedTransactions={decodedTransactions}
-          />
+          <DecodedTransactions decodedTransactions={decodedTransactions} />
         </Section>
       </Flex>
     </Flex>

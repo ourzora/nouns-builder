@@ -23,9 +23,9 @@ import { ProposalCard } from 'src/modules/proposal'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import {
+  createProposalBtn,
   delegateBtn,
   selectDelegateBtn,
-  createProposalBtn,
 } from 'src/styles/Proposals.css'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType } from 'src/typings'

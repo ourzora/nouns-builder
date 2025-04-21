@@ -1,3 +1,5 @@
+import { NETWORK_CONFIG } from '@smartinvoicexyz/constants'
+import { Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
 import { Button, Stack, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import { IPFS_GATEWAY } from 'ipfs-service/src/gateway'
@@ -5,21 +7,14 @@ import _ from 'lodash'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import useSWR from 'swr'
-import {
-  Hex,
-  encodeFunctionData,
-  formatEther,
-  isAddressEqual,
-} from 'viem'
+import { Hex, encodeFunctionData, formatEther, isAddressEqual } from 'viem'
 import { useContractRead } from 'wagmi'
-import { NETWORK_CONFIG } from '@smartinvoicexyz/constants'
 
 import Accordion from 'src/components/Home/accordian'
 import { Icon } from 'src/components/Icon'
 import { OptionalLink } from 'src/components/OptionalLink'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TransactionType } from 'src/modules/create-proposal'
-import { Milestone as MilestoneMetadata } from '@smartinvoicexyz/types';
 import { decodeEscrowData } from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'

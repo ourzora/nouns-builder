@@ -12,8 +12,8 @@ export interface DaoAvatarProps extends Omit<BoxProps, 'size'> {
   collectionAddress: string
   auctionAddress: string
   chainId: CHAIN_ID
-  size?: keyof typeof avatarVariants['size']
-  variant?: keyof typeof avatarVariants['variant']
+  size?: keyof (typeof avatarVariants)['size']
+  variant?: keyof (typeof avatarVariants)['variant']
   src?: string | null
 }
 

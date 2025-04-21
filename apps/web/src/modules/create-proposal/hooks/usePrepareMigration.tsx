@@ -60,9 +60,9 @@ export const usePrepareMigration = ({
       : undefined,
     async (_, metadata, tokenId, chainId) => {
       const attributes = await axios
-        .get<number[][]>(
-          `/api/migrate/attributes?metadata=${metadata}&chainId=${chainId}&finalTokenId=${tokenId}`
-        )
+        .get<
+          number[][]
+        >(`/api/migrate/attributes?metadata=${metadata}&chainId=${chainId}&finalTokenId=${tokenId}`)
         .then((x) => x.data)
       return prepareAttributesMerkleRoot(attributes)
     }
@@ -74,9 +74,9 @@ export const usePrepareMigration = ({
       : undefined,
     async () => {
       const snapshot = await axios
-        .get<DaoMember[]>(
-          `/api/migrate/snapshot?token=${currentAddresses.token}&chainId=${currentChainId}`
-        )
+        .get<
+          DaoMember[]
+        >(`/api/migrate/snapshot?token=${currentAddresses.token}&chainId=${currentChainId}`)
         .then((x) => x.data)
       return prepareMemberMerkleRoot(snapshot)
     }

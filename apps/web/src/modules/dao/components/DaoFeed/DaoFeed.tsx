@@ -34,9 +34,7 @@ const DaoFeedContent = ({
   if (error) return <DaoErrorFeed />
   return (
     <GridContainer>
-      {featuredDaos?.map((dao, index) => (
-        <DaoFeedCard key={index} dao={dao} />
-      ))}
+      {featuredDaos?.map((dao, index) => <DaoFeedCard key={index} dao={dao} />)}
     </GridContainer>
   )
 }

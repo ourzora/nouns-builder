@@ -24,11 +24,7 @@ export const FixRendererBase = ({
   const createProposal = useProposalStore((state) => state.createProposal)
   const chain = useChainStore((x) => x.chain)
 
-  const {
-    description,
-    transaction,
-    shouldFix,
-  } = useRendererBaseFix({
+  const { description, transaction, shouldFix } = useRendererBaseFix({
     chainId: chain.id,
     addresses,
   })

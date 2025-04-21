@@ -2,8 +2,11 @@ import isUndefined from 'lodash/isUndefined'
 import pickBy from 'lodash/pickBy'
 import useSWR from 'swr'
 import { encodeFunctionData } from 'viem'
+import { useContractRead } from 'wagmi'
 
+import { RENDERER_BASE } from 'src/constants/rendererBase'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { metadataAbi } from 'src/data/contract/abis'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { getProposals } from 'src/data/subgraph/requests/proposalsQuery'
@@ -14,9 +17,6 @@ import {
 } from 'src/modules/create-proposal'
 import { DaoContractAddresses } from 'src/modules/dao'
 import { AddressType, CHAIN_ID } from 'src/typings'
-import { metadataAbi } from 'src/data/contract/abis'
-import { RENDERER_BASE } from 'src/constants/rendererBase'
-import { useContractRead } from 'wagmi'
 
 interface RendererBaseFix {
   shouldFix: boolean
@@ -32,7 +32,7 @@ interface RendererBaseFixProps {
 
 const findActiveProposal = (
   proposals: Proposal[],
-  tx: Transaction,
+  tx: Transaction
 ): Proposal | undefined => {
   const activeProposals = proposals?.filter(
     (proposal) =>
@@ -42,8 +42,8 @@ const findActiveProposal = (
       proposal.state === ProposalState.Succeeded
   )
 
-  const propInProgress = activeProposals.find(
-    (proposal) => proposal.calldatas.includes(tx.calldata)
+  const propInProgress = activeProposals.find((proposal) =>
+    proposal.calldatas.includes(tx.calldata)
   )
 
   return propInProgress
@@ -53,9 +53,12 @@ export const useRendererBaseFix = ({
   chainId,
   addresses,
 }: RendererBaseFixProps): RendererBaseFix => {
-
   const { metadata } = addresses
-  const { data: rendererBase, isLoading, isError } = useContractRead({
+  const {
+    data: rendererBase,
+    isLoading,
+    isError,
+  } = useContractRead({
     abi: metadataAbi,
     address: metadata,
     chainId: chainId,
@@ -96,10 +99,7 @@ export const useRendererBaseFix = ({
     transactions: [updateRendererBase],
   }
 
-  const activeProposal = findActiveProposal(
-    proposals?.proposals,
-    updateRendererBase
-  )
+  const activeProposal = findActiveProposal(proposals?.proposals, updateRendererBase)
 
   const noActiveProposal = isUndefined(activeProposal)
 

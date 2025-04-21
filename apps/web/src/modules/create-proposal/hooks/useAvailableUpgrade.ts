@@ -41,7 +41,7 @@ interface AvailableUpgradeProps {
 }
 
 const contracts = ['governor', 'treasury', 'token', 'auction', 'metadata'] as const
-type ContractType = typeof contracts[number]
+type ContractType = (typeof contracts)[number]
 type DaoVersions = Record<ContractType, string>
 
 export const useAvailableUpgrade = ({

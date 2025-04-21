@@ -39,18 +39,18 @@ export const NavSection: React.FC<{
         !!setUpArtwork.artwork.length
         ? 'previewActive'
         : activeSection === 4 && !!setUpArtwork.artwork.length
-        ? 'preview'
-        : sections[activeSection]?.title === section?.title
-        ? sections.indexOf(section) + 1 === sections.length
-          ? 'flowCircleActiveLast'
-          : 'flowCircleActive'
-        : fulfilledSections.includes(section?.title)
-        ? sections.indexOf(section) + 1 === sections.length
-          ? 'flowFulfilledCircleLast'
-          : 'flowFulfilledCircle'
-        : sections.indexOf(section) + 1 === sections.length
-        ? 'flowCircleLast'
-        : 'flowCircle'
+          ? 'preview'
+          : sections[activeSection]?.title === section?.title
+            ? sections.indexOf(section) + 1 === sections.length
+              ? 'flowCircleActiveLast'
+              : 'flowCircleActive'
+            : fulfilledSections.includes(section?.title)
+              ? sections.indexOf(section) + 1 === sections.length
+                ? 'flowFulfilledCircleLast'
+                : 'flowFulfilledCircle'
+              : sections.indexOf(section) + 1 === sections.length
+                ? 'flowCircleLast'
+                : 'flowCircle'
     )
 
     setTitleType(
@@ -59,12 +59,12 @@ export const NavSection: React.FC<{
         !!setUpArtwork.artwork.length
         ? 'previewActive'
         : activeSection === 4 && !!setUpArtwork.artwork.length
-        ? 'preview'
-        : fulfilledSections.includes(section?.title)
-        ? 'fulfilled'
-        : sections[activeSection]?.title === section?.title
-        ? 'active'
-        : 'default'
+          ? 'preview'
+          : fulfilledSections.includes(section?.title)
+            ? 'fulfilled'
+            : sections[activeSection]?.title === section?.title
+              ? 'active'
+              : 'default'
     )
   }, [section, sections, fulfilledSections, activeSection, setUpArtwork])
 

@@ -6,9 +6,9 @@ import { Airdrop } from './Airdrop'
 import { CustomTransaction } from './CustomTransaction'
 import { Droposal } from './Droposal'
 import { Escrow } from './Escrow'
+import { FixRendererBase } from './FixRendererBase'
 import { Migration } from './Migration'
 import { PauseAuctions } from './PauseAuctions'
-import { FixRendererBase } from './FixRendererBase'
 import { ReplaceArtwork } from './ReplaceArtwork'
 import { ResumeAuctions } from './ResumeAuctions/ResumeAuctions'
 import { SendEth } from './SendEth'
@@ -17,7 +17,7 @@ interface TransactionFormProps {
   type: TransactionFormType
 }
 
-export type TransactionFormType = typeof TRANSACTION_FORM_OPTIONS[number]
+export type TransactionFormType = (typeof TRANSACTION_FORM_OPTIONS)[number]
 
 export const TRANSACTION_FORM_OPTIONS = [
   TransactionType.SEND_ETH,
