@@ -69,6 +69,8 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
         <Box onClick={handleNavigation} aria-label="Back" cursor={'pointer'}>
           <Flex direction={'row'} align={'center'} gap={'x2'}>
             <Icon id="arrowLeft" />
+            {name}
+            {daoImageSrc}
 
             {daoImageSrc ? (
               <Box mr="x2">
