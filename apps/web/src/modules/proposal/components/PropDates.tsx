@@ -1,7 +1,7 @@
 import { SchemaEncoder } from '@ethereum-attestation-service/eas-sdk'
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import { Form, Formik, type FormikProps, useFormikContext } from 'formik'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { type Hex, checksumAddress, zeroHash } from 'viem'
 import {
   useChainId,
@@ -88,28 +88,16 @@ const getErrorMessage = (error: unknown): string => {
   return 'An unknown error occurred.'
 }
 
-const getEasContractAddressForChain = (chainId: number): `0x${string}` | undefined => {
-  const address = EAS_CONTRACT_ADDRESS[chainId as CHAIN_ID]
-
-  if (address?.startsWith('0x') && address.length > 2) {
-    return address as `0x${string}`
-  }
-
-  return undefined
-}
-
 const PropDateForm = ({
   closeForm,
   onSuccess,
   proposalId,
-  propDates,
   replyTo,
   daoToken,
 }: {
   closeForm: () => void
   onSuccess?: () => void
   proposalId: string
-  propDates: PropDate[]
   replyTo?: PropDate
   daoToken: string
 }) => {
@@ -149,8 +137,6 @@ const PropDateForm = ({
           <PropDateFormInner
             closeForm={closeForm}
             onSuccess={onSuccess}
-            proposalId={proposalId}
-            propDates={propDates}
             replyTo={replyTo}
             daoToken={daoToken}
             formik={formik}
@@ -237,16 +223,12 @@ const useDebounce = <T,>(value: T, delay: number): T => {
 const PropDateFormInner = ({
   closeForm,
   onSuccess,
-  proposalId,
-  propDates,
   replyTo,
   daoToken,
   formik,
 }: {
   closeForm: () => void
   onSuccess?: () => void
-  proposalId: string
-  propDates: PropDate[]
   replyTo?: PropDate
   daoToken: string
   formik: FormikProps<PropDateFormValues>
@@ -348,7 +330,6 @@ const PropDateFormInner = ({
   } = useContractWrite(config)
 
   const {
-    data: txReceipt,
     isLoading: isWaitingTx,
     isSuccess: isTxSuccess,
     isError: isTxError,
@@ -358,6 +339,9 @@ const PropDateFormInner = ({
     enabled: !!txHash,
     chainId: chainId,
   })
+
+  console.log({ isError, isTxError, isTxSuccess, isWaitingTx })
+  console.log({ prepareError, writeError, txError })
 
   const isPending = isSigningLoading || isWaitingTx
   const isLoading = isSubmitting || isPending
@@ -544,7 +528,6 @@ const PropDateCard = ({
   propDate,
   index,
   originalMessage,
-  setReplyingTo,
   isReplying,
   onReplyClick,
   replies = [],
@@ -552,18 +535,12 @@ const PropDateCard = ({
   propDate: PropDate
   index: number
   originalMessage: PropDate | undefined
-  setReplyingTo: (replyTo: PropDate | undefined) => void
   isReplying: boolean
   onReplyClick: (propDate: PropDate) => void
   replies?: PropDate[]
 }) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
   const { ensName, ensAvatar } = useEnsData(propDate?.attester)
-
-  // Use separate destructuring to avoid redeclaration
-  const originalEnsData = useEnsData(originalMessage?.attester)
-  const originalMessageEnsName = originalEnsData.ensName
-  const originalMessageEnsAvatar = originalEnsData.ensAvatar
 
   // Determine if this is a reply to highlight it
   const isReply = !!originalMessage
@@ -634,50 +611,9 @@ const PropDateCard = ({
       {/* Render replies if any */}
       {replies && replies.length > 0 && (
         <Box mt="x4" ml="x4" style={{ borderLeft: '4px solid var(--colors-border)' }}>
-          {replies.map((reply: PropDate, idx: number) => {
-            const { ensName, ensAvatar } = useEnsData(reply.attester)
-            return (
-              <Flex key={reply.txid} direction="row" gap="x2" align="flex-start" mb="x3">
-                <Avatar
-                  address={reply.attester}
-                  src={ensAvatar}
-                  size={isMobile ? '20' : '28'}
-                />
-                <Box
-                  backgroundColor="background2"
-                  borderRadius="curved"
-                  borderColor="border"
-                  borderWidth="normal"
-                  borderStyle="solid"
-                  p="x4"
-                  style={{ width: 'fit-content', minWidth: 0 }}
-                >
-                  <Flex align="center" gap="x2" mb="x1">
-                    <Text
-                      variant={isMobile ? 'label-sm' : 'label-md'}
-                      fontWeight="display"
-                    >
-                      {ensName || walletSnippet(reply.attester)}
-                    </Text>
-                    <Text variant="label-sm" color="text3">
-                      • {new Date(reply.timeCreated * 1000).toLocaleDateString()}
-                    </Text>
-                  </Flex>
-                  <Text
-                    variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
-                    textAlign={'left'}
-                    style={{
-                      fontWeight: 400,
-                      whiteSpace: 'pre-wrap',
-                      wordBreak: 'break-word',
-                    }}
-                  >
-                    {reply.message}
-                  </Text>
-                </Box>
-              </Flex>
-            )
-          })}
+          {replies.map((reply: PropDate) => (
+            <Reply key={reply.txid} reply={reply} />
+          ))}
         </Box>
       )}
       <Flex justify="flex-end">
@@ -689,6 +625,45 @@ const PropDateCard = ({
           {isReplying ? 'Cancel Reply' : 'Reply'}
         </Button>
       </Flex>
+    </Flex>
+  )
+}
+
+const Reply = ({ reply }: { reply: PropDate }) => {
+  const { ensName, ensAvatar } = useEnsData(reply.attester)
+  const isMobile = useLayoutStore((x) => x.isMobile)
+  return (
+    <Flex key={reply.txid} direction="row" gap="x2" align="flex-start" mb="x3">
+      <Avatar address={reply.attester} src={ensAvatar} size={isMobile ? '20' : '28'} />
+      <Box
+        backgroundColor="background2"
+        borderRadius="curved"
+        borderColor="border"
+        borderWidth="normal"
+        borderStyle="solid"
+        p="x4"
+        style={{ width: 'fit-content', minWidth: 0 }}
+      >
+        <Flex align="center" gap="x2" mb="x1">
+          <Text variant={isMobile ? 'label-sm' : 'label-md'} fontWeight="display">
+            {ensName || walletSnippet(reply.attester)}
+          </Text>
+          <Text variant="label-sm" color="text3">
+            • {new Date(reply.timeCreated * 1000).toLocaleDateString()}
+          </Text>
+        </Flex>
+        <Text
+          variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
+          textAlign={'left'}
+          style={{
+            fontWeight: 400,
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+          }}
+        >
+          {reply.message}
+        </Text>
+      </Box>
     </Flex>
   )
 }
@@ -814,7 +789,6 @@ export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) =>
                       propDate={propDate}
                       index={i}
                       originalMessage={undefined}
-                      setReplyingTo={setReplyingTo}
                       isReplying={replyingTo?.txid === propDate.txid}
                       onReplyClick={handleReplyClick}
                       replies={replies}
