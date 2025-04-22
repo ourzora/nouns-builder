@@ -6,6 +6,7 @@ on:
     types: [opened, reopened, synchronize, ready_for_review]
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   ci:
@@ -16,18 +17,16 @@ jobs:
       ANVIL_FORK_URL: ${{ secrets.MAINNET_RPC_URL }}
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 📦 Install pnpm
-        uses: pnpm/action-setup@v2.4.0
-        with:
-          version: 8.15
+        uses: pnpm/action-setup@v4
 
-      - name: 📦 Setup Node 18
-        uses: actions/setup-node@v3
+      - name: 📦 Setup Node 22
+        uses: actions/setup-node@v4
         with:
           cache: 'pnpm'
-          node-version: 18
+          node-version: 22
 
       - name: 💾 Cache node_modules
         uses: actions/cache@v3
@@ -45,7 +44,7 @@ jobs:
         run: pnpm i
 
       - name: 💾 Cache Anvil
-        uses: 'actions/cache@v3'
+        uses: 'actions/cache@v4'
         with:
           path: ~/.foundry/cache/rpc/**/${{ env.ANVIL_BLOCK_NUMBER }}
           key: foundry-anvil-${{ env.ANVIL_BLOCK_NUMBER }}
