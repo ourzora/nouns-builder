@@ -7,15 +7,12 @@ import {
   useChainId,
   useContractWrite,
   usePrepareContractWrite,
-  useQuery,
   useWaitForTransaction,
 } from 'wagmi'
 import * as Yup from 'yup'
 
 import { Avatar } from 'src/components/Avatar'
-import ErrorBoundary from 'src/components/ErrorBoundary'
 import SmartInput from 'src/components/Fields/SmartInput'
-import { Icon } from 'src/components/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import {
@@ -24,34 +21,12 @@ import {
   PROPDATE_SCHEMA_UID,
 } from 'src/constants/eas'
 import { type PropDate } from 'src/data/eas/requests/getPropDates'
-import {
-  type DaoMember,
-  memberSnapshotRequest,
-} from 'src/data/subgraph/requests/memberSnapshot'
 import { useEnsData } from 'src/hooks'
 import { useDaoStore } from 'src/modules/dao/stores'
-import { useLayoutStore } from 'src/stores/useLayoutStore'
-import { propPageWrapper } from 'src/styles/Proposals.css'
 import { CHAIN_ID } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 
 import { easAbi } from './easAbi'
-
-const useDaoMembers = (chainId: number, token: string) => {
-  const { data: members } = useQuery<DaoMember[], Error>(
-    ['members', chainId, token],
-    () => memberSnapshotRequest(chainId, token),
-    {
-      enabled: !!token,
-    }
-  )
-
-  if (!members) {
-    return []
-  }
-
-  return members.map(({ address }) => getAddress(address))
-}
 
 const propDateValidationSchema = Yup.object().shape({
   proposalId: Yup.string()
@@ -86,18 +61,16 @@ const getErrorMessage = (error: unknown): string => {
   return 'An unknown error occurred.'
 }
 
-const PropDateForm = ({
+export const PropDateForm = ({
   closeForm,
   onSuccess,
   proposalId,
   replyTo,
-  daoToken,
 }: {
   closeForm: () => void
-  onSuccess?: () => void
+  onSuccess: () => void
   proposalId: string
   replyTo?: PropDate
-  daoToken: string
 }) => {
   const initialValues = useMemo(
     () =>
@@ -136,7 +109,6 @@ const PropDateForm = ({
             closeForm={closeForm}
             onSuccess={onSuccess}
             replyTo={replyTo}
-            daoToken={daoToken}
             formik={formik}
           />
         )}
@@ -145,17 +117,15 @@ const PropDateForm = ({
   )
 }
 
-const ReplyDisplay = ({
+const ReplyTo = ({
   replyTo,
   ensName,
   ensAvatar,
 }: {
-  replyTo?: PropDate
-  ensName?: string
+  replyTo: PropDate
+  ensName?: string | null
   ensAvatar?: string | null
 }) => {
-  if (!replyTo) return null
-
   return (
     <Flex
       direction="column"
@@ -224,16 +194,17 @@ const PropDateFormInner = ({
   closeForm,
   onSuccess,
   replyTo,
-  daoToken,
   formik,
 }: {
   closeForm: () => void
-  onSuccess?: () => void
+  onSuccess: () => void
   replyTo?: PropDate
-  daoToken: string
   formik: FormikProps<PropDateFormValues>
 }) => {
   const chainId = useChainId()
+  const {
+    addresses: { token },
+  } = useDaoStore()
 
   const [txHash, setTxHash] = useState<Hex | undefined>()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -264,12 +235,12 @@ const PropDateFormInner = ({
 
   // Pre-calculate attestation parameters when values change (but after debounce)
   const attestParams: AttestationParams | undefined = useMemo(() => {
-    if (!encodedData || !isAddress(daoToken)) return undefined
+    if (!encodedData || !token || !isAddress(token)) return undefined
 
     const params: AttestationParams = {
       schema: PROPDATE_SCHEMA_UID,
       data: {
-        recipient: getAddress(daoToken),
+        recipient: getAddress(token),
         expirationTime: 0n,
         revocable: true,
         refUID: zeroHash,
@@ -279,7 +250,7 @@ const PropDateFormInner = ({
     }
 
     return params
-  }, [encodedData, daoToken])
+  }, [encodedData, token])
 
   const easContractAddress = EAS_CONTRACT_ADDRESS[chainId as CHAIN_ID]
 
@@ -350,15 +321,12 @@ const PropDateFormInner = ({
   }, [isPrepareSuccess, isSubmitting, writeAsync])
 
   useEffect(() => {
-    if (isTxSuccess) {
-      if (onSuccess) onSuccess()
-    }
     if (isTxError) {
       const message = getErrorMessage(txError)
       setErrorMessage(message)
       setTxHash(undefined)
     }
-  }, [isTxSuccess, isTxError, txError, onSuccess])
+  }, [isTxSuccess, isTxError, txError])
 
   // Effect to handle potential signing errors from useContractWrite
   useEffect(() => {
@@ -394,7 +362,7 @@ const PropDateFormInner = ({
     setErrorMessage(null) // Clear error on modal close
     if (isTxSuccess) {
       // Only close the main form if the transaction was successful
-      closeForm()
+      onSuccess()
     }
   }
 
@@ -407,10 +375,10 @@ const PropDateFormInner = ({
               <Text variant="label-md" mb="x1">
                 Replying to:
               </Text>
-              <ReplyDisplay
+              <ReplyTo
                 replyTo={replyTo}
-                ensName={replyToEnsName || undefined}
-                ensAvatar={replyToEnsAvatar ? replyToEnsAvatar : undefined}
+                ensName={replyToEnsName}
+                ensAvatar={replyToEnsAvatar}
               />
             </Box>
           )}
@@ -488,270 +456,5 @@ const PropDateFormInner = ({
         />
       </AnimatedModal>
     </>
-  )
-}
-
-const PropDateCard = ({
-  propDate,
-  index,
-  originalMessage,
-  isReplying,
-  onReplyClick,
-  replies = [],
-}: {
-  propDate: PropDate
-  index: number
-  originalMessage: PropDate | undefined
-  isReplying: boolean
-  onReplyClick: (propDate: PropDate) => void
-  replies?: PropDate[]
-}) => {
-  const isMobile = useLayoutStore((x) => x.isMobile)
-  const { ensName, ensAvatar } = useEnsData(propDate?.attester)
-
-  // Determine if this is a reply to highlight it
-  const isReply = !!originalMessage
-
-  return (
-    <Flex
-      direction="column"
-      borderStyle="solid"
-      borderWidth="normal"
-      borderColor="border"
-      borderRadius="curved"
-      backgroundColor="background1"
-      mb="x2"
-      px={isMobile ? 'x2' : 'x6'}
-      py="x6"
-      mt="x4"
-      gap="x4"
-    >
-      <Flex justify="space-between" align="center" wrap="wrap" gap="x2">
-        <Flex align="center" gap="x2">
-          <Avatar
-            address={propDate.attester}
-            src={ensAvatar}
-            size={isMobile ? '24' : '32'}
-          />
-          <Text variant={isMobile ? 'label-sm' : 'label-md'} fontWeight="display">
-            {ensName || walletSnippet(propDate.attester)}
-          </Text>
-          <Text variant="label-sm" color="text3">
-            • {new Date(propDate.timeCreated * 1000).toLocaleDateString()}
-          </Text>
-          {isReply && (
-            <Text variant="label-sm" color="accent">
-              • Reply
-            </Text>
-          )}
-        </Flex>
-        <Box
-          borderStyle="solid"
-          borderRadius="phat"
-          borderWidth="thin"
-          py="x1"
-          px="x3"
-          color="text3"
-          borderColor="border"
-        >
-          <Text variant="label-sm" style={{ fontWeight: 600 }}>
-            Update #{index + 1}
-          </Text>
-        </Box>
-      </Flex>
-
-      {propDate.message && (
-        <Box borderRadius={'curved'} p={'x4'} backgroundColor={'background2'}>
-          <Text
-            variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
-            textAlign={'left'}
-            style={{
-              fontWeight: 400,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
-            }}
-          >
-            {propDate.message}
-          </Text>
-        </Box>
-      )}
-      {/* Render replies if any */}
-      {replies && replies.length > 0 && (
-        <Box mt="x4" ml="x4" style={{ borderLeft: '4px solid var(--colors-border)' }}>
-          {replies.map((reply: PropDate) => (
-            <Reply key={reply.txid} reply={reply} />
-          ))}
-        </Box>
-      )}
-      <Flex justify="flex-end">
-        <Button
-          variant={isReplying ? 'secondary' : 'outline'}
-          size="sm"
-          onClick={() => onReplyClick(propDate)}
-        >
-          {isReplying ? 'Cancel Reply' : 'Reply'}
-        </Button>
-      </Flex>
-    </Flex>
-  )
-}
-
-const Reply = ({ reply }: { reply: PropDate }) => {
-  const { ensName, ensAvatar } = useEnsData(reply.attester)
-  const isMobile = useLayoutStore((x) => x.isMobile)
-  return (
-    <Flex key={reply.txid} direction="row" gap="x2" align="flex-start" mb="x3">
-      <Avatar address={reply.attester} src={ensAvatar} size={isMobile ? '20' : '28'} />
-      <Box
-        backgroundColor="background2"
-        borderRadius="curved"
-        borderColor="border"
-        borderWidth="normal"
-        borderStyle="solid"
-        p="x4"
-        style={{ width: 'fit-content', minWidth: 0 }}
-      >
-        <Flex align="center" gap="x2" mb="x1">
-          <Text variant={isMobile ? 'label-sm' : 'label-md'} fontWeight="display">
-            {ensName || walletSnippet(reply.attester)}
-          </Text>
-          <Text variant="label-sm" color="text3">
-            • {new Date(reply.timeCreated * 1000).toLocaleDateString()}
-          </Text>
-        </Flex>
-        <Text
-          variant={isMobile ? 'paragraph-sm' : 'paragraph-md'}
-          textAlign={'left'}
-          style={{
-            fontWeight: 400,
-            whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word',
-          }}
-        >
-          {reply.message}
-        </Text>
-      </Box>
-    </Flex>
-  )
-}
-
-interface PropDatesProps {
-  propDates: PropDate[]
-  chainId: number
-  proposalId: string
-}
-
-export const PropDates = ({ propDates, chainId, proposalId }: PropDatesProps) => {
-  const [showOnlyDaoMembers, setShowOnlyDaoMembers] = useState(false)
-  const [replyingTo, setReplyingTo] = useState<PropDate | undefined>(undefined)
-  const {
-    addresses: { token },
-  } = useDaoStore()
-  const daoMembers = useDaoMembers(chainId, token ? token : '')
-  const [showForm, setShowForm] = useState(false)
-
-  const filteredPropDates = showOnlyDaoMembers
-    ? propDates.filter((propDate) => daoMembers.includes(getAddress(propDate.attester)))
-    : propDates
-
-  const handleReplyClick = (propDateToReply: PropDate) => {
-    if (replyingTo?.txid === propDateToReply.txid) {
-      setShowForm(false)
-      setReplyingTo(undefined)
-    } else {
-      setReplyingTo(propDateToReply)
-      setShowForm(true)
-    }
-  }
-
-  const topLevelPropDates = filteredPropDates
-    .filter((pd) => !pd.originalMessageId || pd.originalMessageId === zeroHash)
-    .sort((a, b) => a.timeCreated - b.timeCreated)
-
-  return (
-    <Flex className={propPageWrapper}>
-      <ErrorBoundary fallback={<Text color="negative">Failed to load Propdates.</Text>}>
-        <Box w="100%">
-          <Flex justify="space-between" mb="x6" align="center">
-            <Text fontSize={20} fontWeight="label">
-              Propdates
-            </Text>
-
-            <Flex align="center" gap="x2">
-              <Button
-                variant={!showForm || replyingTo ? 'primary' : 'destructive'}
-                size="sm"
-                onClick={() => {
-                  setShowForm(!showForm)
-                  setReplyingTo(undefined)
-                }}
-              >
-                {showForm && !replyingTo && <Icon id="cross" fill="onAccent" />}
-                {showForm ? 'Cancel' : 'Create Propdate'}
-              </Button>
-
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => setShowOnlyDaoMembers(!showOnlyDaoMembers)}
-              >
-                {showOnlyDaoMembers && <Icon id="check" />}
-                {showOnlyDaoMembers ? 'DAO Members Only' : 'All Propdates'}
-              </Button>
-            </Flex>
-          </Flex>
-
-          <Box>
-            {showForm && token && (
-              <PropDateForm
-                {...{
-                  daoToken: token,
-                  closeForm: () => {
-                    setShowForm(false)
-                    setReplyingTo(undefined)
-                  },
-                  onSuccess: () => {
-                    setShowForm(false)
-                    setReplyingTo(undefined) /* TODO: Add optimistic update or refetch */
-                  },
-                  proposalId: proposalId,
-                  propDates: propDates,
-                  replyTo: replyingTo,
-                }}
-              />
-            )}
-            {topLevelPropDates.map((propDate, i) => {
-              const replies = filteredPropDates
-                .filter((pd) => pd.originalMessageId === propDate.txid)
-                .sort((a, b) => a.timeCreated - b.timeCreated)
-              return (
-                <PropDateCard
-                  key={`${propDate.txid}-${i}`}
-                  propDate={propDate}
-                  index={i}
-                  originalMessage={undefined}
-                  isReplying={replyingTo?.txid === propDate.txid}
-                  onReplyClick={handleReplyClick}
-                  replies={replies}
-                />
-              )
-            })}
-            {topLevelPropDates.length === 0 && (
-              <Flex
-                justify="center"
-                p="x6"
-                borderColor="border"
-                borderStyle="solid"
-                borderRadius="curved"
-                borderWidth="normal"
-                backgroundColor="background2"
-              >
-                <Text color="text3">No Updates on this proposal yet!</Text>
-              </Flex>
-            )}
-          </Box>
-        </Box>
-      </ErrorBoundary>
-    </Flex>
   )
 }

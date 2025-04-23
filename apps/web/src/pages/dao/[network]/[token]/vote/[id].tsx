@@ -13,7 +13,7 @@ import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { isChainIdSupportedByEAS } from 'src/data/eas/helpers'
 import { getEscrowDelegate } from 'src/data/eas/requests/getEscrowDelegate'
-import { type PropDate, getPropDates } from 'src/data/eas/requests/getPropDates'
+import { getPropDates } from 'src/data/eas/requests/getPropDates'
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
@@ -41,7 +41,6 @@ export interface VotePageProps {
   proposalId: string
   daoName: string
   ogImageURL: string
-  propDates: PropDate[]
 }
 
 const BAD_ACTORS = [
@@ -60,7 +59,6 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
   proposalId,
   daoName,
   ogImageURL,
-  propDates,
 }) => {
   const { query } = useRouter()
   const chain = useChainStore((x) => x.chain)
@@ -97,18 +95,11 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
     if (isChainIdSupportedByEAS(chain.id)) {
       sections.push({
         title: 'Propdates',
-        component: [
-          <PropDates
-            key="propdates"
-            propDates={propDates}
-            proposalId={proposal.proposalId}
-            chainId={chain.id}
-          />,
-        ],
+        component: [<PropDates key="propdates" proposalId={proposal.proposalId} />],
       })
     }
     return sections
-  }, [proposal, propDates, chain.id, query?.token])
+  }, [proposal, chain.id, query?.token])
 
   if (!proposal) {
     return null
@@ -258,11 +249,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     daoImage: contractImage,
   }
 
-  const propDates = (await getPropDates(
-    tokenAddress,
-    chain.id,
-    proposal.proposalId
-  )) as PropDate[]
+  const propDates = await getPropDates(tokenAddress, chain.id, proposal.proposalId)
 
   const addresses: DaoContractAddresses = {
     token: tokenAddress,
@@ -291,12 +278,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       fallback: {
         [unstable_serialize([SWR_KEYS.PROPOSAL, chain.id, proposal.proposalId])]:
           proposal,
+
+        [unstable_serialize([SWR_KEYS.PROPDATES, chain.id, proposal.proposalId])]:
+          propDates,
       },
       daoName: name,
       ogImageURL,
       proposalId: proposal.proposalId,
       addresses,
-      propDates,
       chainId: chain.id,
     },
   }
