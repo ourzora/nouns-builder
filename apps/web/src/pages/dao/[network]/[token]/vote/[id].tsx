@@ -11,12 +11,9 @@ import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getEscrowDelegate } from 'src/data/contract/requests/getEscrowDelegate'
-import {
-  type PropDate,
-  getPropDates,
-  isChainIdSupportedForPropDates,
-} from 'src/data/contract/requests/getPropDates'
+import { isChainIdSupportedByEAS } from 'src/data/eas/helpers'
+import { getEscrowDelegate } from 'src/data/eas/requests/getEscrowDelegate'
+import { type PropDate, getPropDates } from 'src/data/eas/requests/getPropDates'
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
@@ -97,7 +94,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
       },
     ]
 
-    if (isChainIdSupportedForPropDates(chain.id)) {
+    if (isChainIdSupportedByEAS(chain.id)) {
       sections.push({
         title: 'Propdates',
         component: [
@@ -198,7 +195,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
 
   where = proposalIdOrNumber.startsWith('0x')
     ? {
-        proposalId: proposalIdOrNumber,
+        proposalId: proposalIdOrNumber.toLowerCase(),
       }
     : {
         proposalNumber: Number.parseInt(proposalIdOrNumber),
@@ -243,6 +240,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   } = data.dao
 
   const escrowDelegateAddress = (await getEscrowDelegate(
+    tokenAddress,
     treasuryAddress,
     chain.id
   )) as AddressType

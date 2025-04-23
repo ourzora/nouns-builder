@@ -1,32 +1,15 @@
-import { GraphQLClient, gql } from 'graphql-request'
 import { getFetchableUrl } from 'ipfs-service'
 import { Hex, getAddress, isAddress, isHex } from 'viem'
 
+import { PROPDATE_SCHEMA_UID } from 'src/constants/eas'
+import { SDK } from 'src/data/eas/client'
+import {
+  DecodedData,
+  getDecodedValue,
+  isChainIdSupportedByEAS,
+} from 'src/data/eas/helpers'
+import { AttestationFragment } from 'src/data/eas/sdk.generated'
 import { CHAIN_ID } from 'src/typings'
-
-interface Attestation {
-  id: String
-  attester: string
-  recipient: string
-  schemaId: string
-  refUID: string
-  decodedDataJson: string
-  timeCreated: number
-  txid: string
-}
-
-interface AttestationResponse {
-  attestations: Attestation[]
-}
-
-interface DecodedData {
-  name: string
-  type: string
-  value: {
-    type: string
-    value: string
-  }
-}
 
 export interface PropdateMessage {
   content: string
@@ -49,43 +32,6 @@ export interface PropDate {
   message: string
   txid: Hex
   timeCreated: number
-}
-
-export const ATTESTATION_SCHEMA_UID =
-  '0x8bd0d42901ce3cd9898dbea6ae2fbf1e796ef0923e7cbb0a1cecac2e42d47cb3'
-
-// Add the canonical EAS contract address
-export const EAS_CONTRACT_ADDRESS: Record<CHAIN_ID, `0x${string}` | ''> = {
-  [CHAIN_ID.ETHEREUM]: '0xA1207F3BBa224E2c9c3c6D5aF63D0eb1582Ce587',
-  [CHAIN_ID.OPTIMISM]: '0x4200000000000000000000000000000000000021',
-  [CHAIN_ID.BASE]: '0x4200000000000000000000000000000000000021',
-  [CHAIN_ID.SEPOLIA]: '0xC2679fBD37d54388Ce493F1DB75320D236e1815e',
-  [CHAIN_ID.OPTIMISM_SEPOLIA]: '0x4200000000000000000000000000000000000021',
-  [CHAIN_ID.BASE_SEPOLIA]: '0x4200000000000000000000000000000000000021',
-  [CHAIN_ID.ZORA]: '', // Zora doesn't have a canonical EAS deployment yet
-  [CHAIN_ID.ZORA_SEPOLIA]: '',
-  [CHAIN_ID.FOUNDRY]: '', // Assuming no specific address for Foundry
-}
-
-const EAS_GRAPHQL_URL: Record<CHAIN_ID, string> = {
-  [CHAIN_ID.ETHEREUM]: 'https://easscan.org/graphql',
-  [CHAIN_ID.OPTIMISM]: 'https://optimism.easscan.org/graphql',
-  [CHAIN_ID.SEPOLIA]: 'https://sepolia.easscan.org/graphql',
-  [CHAIN_ID.OPTIMISM_SEPOLIA]: 'https://optimism-sepolia.easscan.org/graphql',
-  [CHAIN_ID.BASE]: 'https://base.easscan.org/graphql',
-  [CHAIN_ID.BASE_SEPOLIA]: 'https://base-sepolia.easscan.org/graphql',
-  [CHAIN_ID.ZORA]: '',
-  [CHAIN_ID.ZORA_SEPOLIA]: '',
-  [CHAIN_ID.FOUNDRY]: '',
-}
-
-const getDecodedValue = (decoded: DecodedData[], name: string): string | undefined => {
-  return decoded.find((d) => d.name === name)?.value.value
-}
-
-// NOTE: Zora is not supported by EAS yet
-export const isChainIdSupportedForPropDates = (chainId: CHAIN_ID): boolean => {
-  return !!EAS_GRAPHQL_URL[chainId]
 }
 
 const REQUEST_TIMEOUT = 10000 // 10s
@@ -151,18 +97,18 @@ const getPropdateMessage = async (
 }
 
 export async function getPropDates(
-  daoTreasuryAddress: string,
+  tokenAddress: string,
   chainId: CHAIN_ID,
   propId: string
 ): Promise<PropDate[]> {
   // Input validation
-  if (!isAddress(daoTreasuryAddress)) {
-    console.error('Invalid DAO treasury address')
+  if (!isAddress(tokenAddress)) {
+    console.error('Invalid DAO token address')
     return []
   }
 
-  if (!isChainIdSupportedForPropDates(chainId)) {
-    console.error('Chain ID not supported')
+  if (!isChainIdSupportedByEAS(chainId)) {
+    console.error('Chain ID not supported by EAS')
     return []
   }
 
@@ -171,44 +117,21 @@ export async function getPropDates(
     return []
   }
 
-  const easGraphqlUrl = EAS_GRAPHQL_URL[chainId]
-  if (!easGraphqlUrl) {
-    console.error('Attestation URL not found')
-    return []
-  }
-
-  const query = gql`
-    query Attestations($schemaId: String!, $recipient: String!) {
-      attestations(
-        where: { schemaId: { equals: $schemaId }, recipient: { equals: $recipient } }
-      ) {
-        id
-        attester
-        refUID
-        recipient
-        decodedDataJson
-        timeCreated
-        txid
-      }
-    }
-  `
-
   try {
-    const client = new GraphQLClient(easGraphqlUrl)
     const variables = {
-      schemaId: ATTESTATION_SCHEMA_UID,
-      recipient: getAddress(daoTreasuryAddress),
+      schemaId: PROPDATE_SCHEMA_UID,
+      recipient: getAddress(tokenAddress),
     }
 
-    const { attestations } = await client.request<AttestationResponse>(query, variables)
+    const { attestations } = await SDK.connect(chainId).propdates(variables)
 
     if (!attestations || attestations.length === 0) {
-      console.warn('No attestations found')
+      console.warn('No propdate attestations found')
       return []
     }
 
     const propdatePromises = attestations.map(
-      async (attestation: Attestation): Promise<PropDate> => {
+      async (attestation: AttestationFragment): Promise<PropDate> => {
         const decodedData = JSON.parse(attestation.decodedDataJson) as DecodedData[]
         const messageType = Number(
           getDecodedValue(decodedData, 'messageType') ?? 0

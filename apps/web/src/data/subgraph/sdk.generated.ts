@@ -22,6 +22,12 @@ export type Scalars = {
   BigInt: any
   Bytes: any
   Int8: any
+  Timestamp: any
+}
+
+export enum Aggregation_Interval {
+  Day = 'day',
+  Hour = 'hour',
 }
 
 export type Auction = {
@@ -1099,8 +1105,8 @@ export type Proposal = {
   description?: Maybe<Scalars['String']>
   descriptionHash: Scalars['Bytes']
   executableFrom?: Maybe<Scalars['BigInt']>
-  executionTransactionHash?: Maybe<Scalars['String']>
   executed: Scalars['Boolean']
+  executionTransactionHash?: Maybe<Scalars['Bytes']>
   expiresAt?: Maybe<Scalars['BigInt']>
   forVotes: Scalars['Int']
   id: Scalars['ID']
@@ -1236,6 +1242,7 @@ export enum ProposalVote_OrderBy {
   ProposalDescriptionHash = 'proposal__descriptionHash',
   ProposalExecutableFrom = 'proposal__executableFrom',
   ProposalExecuted = 'proposal__executed',
+  ProposalExecutionTransactionHash = 'proposal__executionTransactionHash',
   ProposalExpiresAt = 'proposal__expiresAt',
   ProposalForVotes = 'proposal__forVotes',
   ProposalId = 'proposal__id',
@@ -1366,6 +1373,16 @@ export type Proposal_Filter = {
   executed_in?: InputMaybe<Array<Scalars['Boolean']>>
   executed_not?: InputMaybe<Scalars['Boolean']>
   executed_not_in?: InputMaybe<Array<Scalars['Boolean']>>
+  executionTransactionHash?: InputMaybe<Scalars['Bytes']>
+  executionTransactionHash_contains?: InputMaybe<Scalars['Bytes']>
+  executionTransactionHash_gt?: InputMaybe<Scalars['Bytes']>
+  executionTransactionHash_gte?: InputMaybe<Scalars['Bytes']>
+  executionTransactionHash_in?: InputMaybe<Array<Scalars['Bytes']>>
+  executionTransactionHash_lt?: InputMaybe<Scalars['Bytes']>
+  executionTransactionHash_lte?: InputMaybe<Scalars['Bytes']>
+  executionTransactionHash_not?: InputMaybe<Scalars['Bytes']>
+  executionTransactionHash_not_contains?: InputMaybe<Scalars['Bytes']>
+  executionTransactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']>>
   expiresAt?: InputMaybe<Scalars['BigInt']>
   expiresAt_gt?: InputMaybe<Scalars['BigInt']>
   expiresAt_gte?: InputMaybe<Scalars['BigInt']>
@@ -1553,6 +1570,7 @@ export enum Proposal_OrderBy {
   DescriptionHash = 'descriptionHash',
   ExecutableFrom = 'executableFrom',
   Executed = 'executed',
+  ExecutionTransactionHash = 'executionTransactionHash',
   ExpiresAt = 'expiresAt',
   ForVotes = 'forVotes',
   Id = 'id',
@@ -2169,6 +2187,8 @@ export type _Block_ = {
   hash?: Maybe<Scalars['Bytes']>
   /** The block number */
   number: Scalars['Int']
+  /** The hash of the parent block */
+  parentHash?: Maybe<Scalars['Bytes']>
   /** Integer representation of the timestamp stored in blocks for the chain */
   timestamp?: Maybe<Scalars['Int']>
 }
@@ -2240,7 +2260,6 @@ export type ProposalFragment = {
   description?: string | null
   descriptionHash: any
   executableFrom?: any | null
-  executionTransactionHash?: any | null
   expiresAt?: any | null
   forVotes: number
   proposalId: any
@@ -2256,6 +2275,7 @@ export type ProposalFragment = {
   voteStart: any
   snapshotBlockNumber: any
   transactionHash: any
+  executionTransactionHash?: any | null
   dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
 }
 
@@ -2491,6 +2511,7 @@ export type DashboardQuery = {
         values: Array<any>
         snapshotBlockNumber: any
         transactionHash: any
+        executionTransactionHash?: any | null
         votes: Array<{ __typename?: 'ProposalVote'; voter: any }>
         dao: { __typename?: 'DAO'; governorAddress: any; tokenAddress: any }
       }>
@@ -2554,7 +2575,6 @@ export type ProposalQuery = {
     description?: string | null
     descriptionHash: any
     executableFrom?: any | null
-    executionTransactionHash?: any | null
     expiresAt?: any | null
     forVotes: number
     proposalId: any
@@ -2570,6 +2590,7 @@ export type ProposalQuery = {
     voteStart: any
     snapshotBlockNumber: any
     transactionHash: any
+    executionTransactionHash?: any | null
     votes: Array<{
       __typename?: 'ProposalVote'
       voter: any
@@ -2611,6 +2632,7 @@ export type ProposalOgMetadataQuery = {
     voteStart: any
     snapshotBlockNumber: any
     transactionHash: any
+    executionTransactionHash?: any | null
     votes: Array<{
       __typename?: 'ProposalVote'
       voter: any
@@ -2647,7 +2669,6 @@ export type ProposalsQuery = {
     description?: string | null
     descriptionHash: any
     executableFrom?: any | null
-    executionTransactionHash?: any | null
     expiresAt?: any | null
     forVotes: number
     proposalId: any
@@ -2663,6 +2684,7 @@ export type ProposalsQuery = {
     voteStart: any
     snapshotBlockNumber: any
     transactionHash: any
+    executionTransactionHash?: any | null
     votes: Array<{
       __typename?: 'ProposalVote'
       voter: any
@@ -2804,7 +2826,6 @@ export const ProposalFragmentDoc = gql`
     description
     descriptionHash
     executableFrom
-    executionTransactionHash
     expiresAt
     forVotes
     proposalId
@@ -2820,6 +2841,7 @@ export const ProposalFragmentDoc = gql`
     voteStart
     snapshotBlockNumber
     transactionHash
+    executionTransactionHash
     dao {
       governorAddress
       tokenAddress

@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request'
 
-import { PUBLIC_SUBGRAPH_URL } from 'src/constants/subgraph'
+import { EAS_GRAPHQL_URL } from 'src/constants/eas'
 import { CHAIN_ID } from 'src/typings'
 
 import { getSdk } from './sdk.generated'
@@ -13,13 +13,13 @@ export class SDK {
   static connect(chainId: CHAIN_ID) {
     if (!globalForClient.subgraphClient) globalForClient.subgraphClient = new Map()
 
-    const subgraphUrl = PUBLIC_SUBGRAPH_URL.get(chainId)
+    const graphqlUrl = EAS_GRAPHQL_URL[chainId]
 
-    if (!subgraphUrl) throw new Error('No subgraph url for chain id')
+    if (!graphqlUrl) throw new Error(`No eas graphql url for chain ${chainId}`)
 
     const client = globalForClient.subgraphClient.has(chainId)
       ? globalForClient.subgraphClient.get(chainId)!
-      : new GraphQLClient(subgraphUrl, {
+      : new GraphQLClient(graphqlUrl, {
           headers: {
             'Content-Type': 'application/json',
           },
