@@ -1,5 +1,5 @@
 import { Box, Flex } from '@zoralabs/zord'
-import { GetServerSideProps } from 'next'
+import type { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { Fragment } from 'react'
 import useSWR, { unstable_serialize } from 'swr'
@@ -11,15 +11,17 @@ import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
-import { getEscrowDelegate } from 'src/data/contract/requests/getEscrowDelegate'
+import { isChainIdSupportedByEAS } from 'src/data/eas/helpers'
+import { getEscrowDelegate } from 'src/data/eas/requests/getEscrowDelegate'
+import { getPropDates } from 'src/data/eas/requests/getPropDates'
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
   getProposal,
 } from 'src/data/subgraph/requests/proposalQuery'
-import { Proposal_Filter } from 'src/data/subgraph/sdk.generated'
+import type { Proposal_Filter } from 'src/data/subgraph/sdk.generated'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
-import { DaoContractAddresses, SectionHandler, useDaoStore } from 'src/modules/dao'
+import { type DaoContractAddresses, SectionHandler, useDaoStore } from 'src/modules/dao'
 import {
   ProposalActions,
   ProposalDescription,
@@ -27,12 +29,13 @@ import {
   ProposalHeader,
   isProposalOpen,
 } from 'src/modules/proposal'
+import { PropDates } from 'src/modules/proposal/components/PropDates'
 import { ProposalVotes } from 'src/modules/proposal/components/ProposalVotes'
-import { NextPageWithLayout } from 'src/pages/_app'
-import { ProposalOgMetadata } from 'src/pages/api/og/proposal'
+import type { NextPageWithLayout } from 'src/pages/_app'
+import type { ProposalOgMetadata } from 'src/pages/api/og/proposal'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
-import { AddressType } from 'src/typings'
+import type { AddressType } from 'src/typings'
 
 export interface VotePageProps {
   proposalId: string
@@ -66,25 +69,37 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
     chainId: chain.id,
   })
 
-  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], (_, id) =>
+  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], () =>
     getProposal(chain.id, proposalId)
   )
 
   const sections = React.useMemo(() => {
     if (!proposal) return []
-    return [
+    const sections = [
       {
         title: 'Details',
         component: [
-          <ProposalDescription proposal={proposal} collection={query?.token as string} />,
+          <ProposalDescription
+            key="description"
+            proposal={proposal}
+            collection={query?.token as string}
+          />,
         ],
       },
       {
         title: 'Votes',
-        component: [<ProposalVotes proposal={proposal} />],
+        component: [<ProposalVotes key="votes" proposal={proposal} />],
       },
     ]
-  }, [proposal])
+
+    if (isChainIdSupportedByEAS(chain.id)) {
+      sections.push({
+        title: 'Propdates',
+        component: [<PropDates key="propdates" proposalId={proposal.proposalId} />],
+      })
+    }
+    return sections
+  }, [proposal, chain.id, query?.token])
 
   if (!proposal) {
     return null
@@ -171,9 +186,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
 
   where = proposalIdOrNumber.startsWith('0x')
     ? {
-        proposalId: proposalIdOrNumber,
+        proposalId: proposalIdOrNumber.toLowerCase(),
       }
-    : { proposalNumber: parseInt(proposalIdOrNumber), dao: collection.toLowerCase() }
+    : {
+        proposalNumber: Number.parseInt(proposalIdOrNumber),
+        dao: collection.toLowerCase(),
+      }
 
   const data = await SDK.connect(chain.id)
     .proposalOGMetadata({
@@ -213,6 +231,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   } = data.dao
 
   const escrowDelegateAddress = (await getEscrowDelegate(
+    tokenAddress,
     treasuryAddress,
     chain.id
   )) as AddressType
@@ -229,6 +248,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     daoName: name,
     daoImage: contractImage,
   }
+
+  const propDates = await getPropDates(tokenAddress, chain.id, proposal.proposalId)
 
   const addresses: DaoContractAddresses = {
     token: tokenAddress,
@@ -257,11 +278,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       fallback: {
         [unstable_serialize([SWR_KEYS.PROPOSAL, chain.id, proposal.proposalId])]:
           proposal,
+
+        [unstable_serialize([SWR_KEYS.PROPDATES, chain.id, proposal.proposalId])]:
+          propDates,
       },
       daoName: name,
       ogImageURL,
       proposalId: proposal.proposalId,
       addresses,
+      chainId: chain.id,
     },
   }
 }
