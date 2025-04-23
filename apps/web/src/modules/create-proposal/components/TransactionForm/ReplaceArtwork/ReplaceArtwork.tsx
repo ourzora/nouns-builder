@@ -29,9 +29,11 @@ export const ReplaceArtwork = () => {
   const currentTransactions = useProposalStore((state) => state.transactions)
   const chain = useChainStore((x) => x.chain)
 
-  const { currentVersions, shouldUpgrade, activeUpgradeProposalId } = useAvailableUpgrade(
-    { chainId: chain.id, addresses, contractVersion: REPLACE_ARTWORK_CONTRACT_VERSION }
-  )
+  const { shouldUpgrade, activeUpgradeProposalId } = useAvailableUpgrade({
+    chainId: chain.id,
+    addresses,
+    contractVersion: REPLACE_ARTWORK_CONTRACT_VERSION,
+  })
 
   const contractOrderedLayers = [...orderedLayers].reverse() // traits in the contract are reversed
 
@@ -53,7 +55,7 @@ export const ReplaceArtwork = () => {
 
   useEffect(() => {
     resetForm()
-  }, [])
+  }, [resetForm])
 
   const { propertiesCount, propertyItemsCount } = data || {}
 
@@ -67,7 +69,7 @@ export const ReplaceArtwork = () => {
     return contractOrderedLayers.findIndex((x, i) => {
       return x.properties.length < propertyItemsCount[i]
     })
-  }, [orderedLayers, propertyItemsCount])
+  }, [propertyItemsCount, contractOrderedLayers])
 
   const isValid =
     isPropertyCountValid &&

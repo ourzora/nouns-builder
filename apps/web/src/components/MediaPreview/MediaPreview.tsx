@@ -21,7 +21,7 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({
   const fetchableCoverURL = useMemo(() => getFetchableUrl(coverUrl) || '', [coverUrl])
 
   if (fetchableMediaURL && mediaType?.startsWith('image')) {
-    return <Image src={fetchableMediaURL} />
+    return <Image src={fetchableMediaURL} alt="Preview" />
   }
 
   if (fetchableMediaURL && mediaType?.startsWith('video')) {

@@ -99,21 +99,24 @@ export const Escrow: React.FC = () => {
       let cid: string, uri: string
 
       try {
-        console.log('Uploading to IPFS...')
+        // eslint-disable-next-line no-console
+        console.debug('Uploading to IPFS...')
         setIsSubmitting(true)
         const response = await uploadFile(fileToUpload, {
           cache: true,
           onProgress: (progress) => {
-            console.log(`Upload progress: ${progress}%`)
+            // eslint-disable-next-line no-console
+            console.debug(`Upload progress: ${progress}%`)
           },
         })
         cid = response.cid
         uri = response.uri
         setIsSubmitting(false)
         setIpfsUploadError(null)
-        console.log('IPFS upload successful. CID:', cid, 'URI:', uri)
+        // eslint-disable-next-line no-console
+        console.debug('IPFS upload successful. CID:', cid, 'URI:', uri)
       } catch (err: any) {
-        console.log('IPFS upload error:', err)
+        console.error('IPFS upload error:', err)
         setIsSubmitting(false)
         setIpfsUploadError(
           new Error(
@@ -154,7 +157,7 @@ export const Escrow: React.FC = () => {
           transactions: [escrow],
         })
       } catch (err) {
-        console.log('Error Adding Transaction', err)
+        console.error('Error Adding Transaction', err)
       }
       setIsSubmitting(false)
     },

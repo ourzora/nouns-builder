@@ -42,7 +42,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const { JWT } = json
     return NextResponse.json({ JWT }, { status: 200 })
   } catch (e) {
-    console.log(e)
+    console.error('Error generating JWT', e)
     return NextResponse.json({ error: 'Server Error' }, { status: 500 })
   }
 }

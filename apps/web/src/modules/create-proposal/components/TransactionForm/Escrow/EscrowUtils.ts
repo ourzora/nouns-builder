@@ -195,7 +195,7 @@ const decodeEscrowData = (data: Hex): DecodedEscrowData => {
       clientRecipientAddress: decodedAbiData[10],
     } as DecodedEscrowData
   } catch (e) {
-    console.log('error decoding escrow data', e)
+    console.error('error decoding escrow data', e)
     return {} as DecodedEscrowData
   }
 }

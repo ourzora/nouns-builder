@@ -279,18 +279,19 @@ export const useArtworkUpload = ({
       try {
         onUploadStart()
         const ipfs = await uploadToIPFS(files)
-        console.log({ ipfs })
+        // eslint-disable-next-line no-console
+        console.debug('Uploaded to IPFS', ipfs)
         onUploadSuccess(ipfs)
       } catch (err) {
         setIpfsUploadError(true)
-        console.log('err', err)
+        console.error('Error uploading to IPFS', err)
         onUploadError(err as Error)
         return
       }
     }
 
     handleUpload(filesArray)
-  }, [filesArray, uploadArtworkError])
+  }, [filesArray, uploadArtworkError, onUploadError, onUploadSuccess, onUploadStart])
 
   return {
     images,

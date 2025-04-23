@@ -104,7 +104,7 @@ export const CustomTransaction: React.FC = () => {
 
     addTransaction(currentTransaction)
     reset()
-  }, [currentTransaction, customTransaction])
+  }, [currentTransaction, addTransaction, reset])
 
   return (
     <Flex

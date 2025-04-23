@@ -20,7 +20,7 @@ export const Function = () => {
         function: values.transactionFunction,
       })
     },
-    [customTransaction]
+    [customTransaction, composeCustomTransaction]
   )
 
   const options = React.useMemo(() => {

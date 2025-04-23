@@ -61,7 +61,7 @@ export const getProposal = async (
 
     return await formatAndFetchState(chainId, data.proposal!)
   } catch (e) {
-    console.log('err', e)
+    console.error('Error fetching proposal', e)
     Sentry.captureException(e)
     await Sentry.flush(2000)
     return

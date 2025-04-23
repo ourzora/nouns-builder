@@ -70,7 +70,7 @@ export const useDecodedTransactions = (
 
       return decoded.data
     } catch (err) {
-      console.log('err', err)
+      console.error('Error decoding transaction:', err)
 
       // if this tx has value display it as a send eth tx
       if (value.length && parseInt(value)) return formatSendEth(value)

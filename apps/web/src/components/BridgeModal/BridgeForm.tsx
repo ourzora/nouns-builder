@@ -65,7 +65,7 @@ export const BridgeForm = () => {
       })
       await waitForTransaction({ hash })
     } catch (err) {
-      console.log('err', err)
+      console.error('Error sending bridge transaction', err)
     } finally {
       setLoading(false)
     }
