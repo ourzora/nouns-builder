@@ -12,7 +12,11 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { getEscrowDelegate } from 'src/data/contract/requests/getEscrowDelegate'
-import { type PropDate, getPropDates } from 'src/data/contract/requests/getPropDates'
+import {
+  type PropDate,
+  getPropDates,
+  isChainIdSupportedForPropDates,
+} from 'src/data/contract/requests/getPropDates'
 import { SDK } from 'src/data/subgraph/client'
 import {
   formatAndFetchState,
@@ -70,13 +74,13 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
     chainId: chain.id,
   })
 
-  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], (_, id) =>
+  const { data: proposal } = useSWR([SWR_KEYS.PROPOSAL, chain.id, proposalId], () =>
     getProposal(chain.id, proposalId)
   )
 
   const sections = React.useMemo(() => {
     if (!proposal) return []
-    return [
+    const sections = [
       {
         title: 'Details',
         component: [
@@ -91,18 +95,22 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
         title: 'Votes',
         component: [<ProposalVotes key="votes" proposal={proposal} />],
       },
-      {
+    ]
+
+    if (isChainIdSupportedForPropDates(chain.id)) {
+      sections.push({
         title: 'Propdates',
         component: [
           <PropDates
             key="propdates"
             propDates={propDates}
-            proposalId={proposalId}
+            proposalId={proposal.proposalId}
             chainId={chain.id}
           />,
         ],
-      },
-    ]
+      })
+    }
+    return sections
   }, [proposal, propDates, chain.id, query?.token])
 
   if (!proposal) {
@@ -255,8 +263,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
   const propDates = (await getPropDates(
     tokenAddress,
     chain.id,
-    proposal.proposalId,
-    proposal.timeCreated
+    proposal.proposalId
   )) as PropDate[]
 
   const addresses: DaoContractAddresses = {

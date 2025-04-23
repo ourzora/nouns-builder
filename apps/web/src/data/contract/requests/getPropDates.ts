@@ -1,9 +1,11 @@
-import axios from 'axios'
-import { checksumAddress, isAddress } from 'viem'
+import { GraphQLClient, gql } from 'graphql-request'
+import { getFetchableUrl } from 'ipfs-service'
+import { Hex, getAddress, isAddress, isHex } from 'viem'
 
 import { CHAIN_ID } from 'src/typings'
 
 interface Attestation {
+  id: String
   attester: string
   recipient: string
   schemaId: string
@@ -14,9 +16,7 @@ interface Attestation {
 }
 
 interface AttestationResponse {
-  data: {
-    attestations: Attestation[]
-  }
+  attestations: Attestation[]
 }
 
 interface DecodedData {
@@ -28,15 +28,26 @@ interface DecodedData {
   }
 }
 
+export interface PropdateMessage {
+  content: string
+  labels?: string[]
+  attachments?: string[]
+}
+
+export enum MessageType {
+  INLINE_TEXT = 0,
+  INLINE_JSON,
+  URL_TEXT,
+  URL_JSON,
+}
+
 export interface PropDate {
-  txid: string
-  attester: string | undefined
-  schemaId: string
-  refUID: string
-  proposalId: string | undefined
-  originalMessageId: string | undefined
-  messageType: number
-  message: string | undefined
+  id: Hex
+  attester: Hex
+  proposalId: Hex
+  originalMessageId: Hex
+  message: string
+  txid: Hex
   timeCreated: number
 }
 
@@ -56,7 +67,7 @@ export const EAS_CONTRACT_ADDRESS: Record<CHAIN_ID, `0x${string}` | ''> = {
   [CHAIN_ID.FOUNDRY]: '', // Assuming no specific address for Foundry
 }
 
-const ATTESTATION_URL: Record<CHAIN_ID, string> = {
+const EAS_GRAPHQL_URL: Record<CHAIN_ID, string> = {
   [CHAIN_ID.ETHEREUM]: 'https://easscan.org/graphql',
   [CHAIN_ID.OPTIMISM]: 'https://optimism.easscan.org/graphql',
   [CHAIN_ID.SEPOLIA]: 'https://sepolia.easscan.org/graphql',
@@ -72,11 +83,77 @@ const getDecodedValue = (decoded: DecodedData[], name: string): string | undefin
   return decoded.find((d) => d.name === name)?.value.value
 }
 
+// NOTE: Zora is not supported by EAS yet
+export const isChainIdSupportedForPropDates = (chainId: CHAIN_ID): boolean => {
+  return !!EAS_GRAPHQL_URL[chainId]
+}
+
+const REQUEST_TIMEOUT = 10000 // 10s
+
+const fetchWithTimeout = async (url: string) => {
+  try {
+    const controller = new AbortController()
+    const { signal } = controller
+
+    // Set a 10s timeout for the request
+    const timeoutId = setTimeout(function () {
+      controller.abort()
+    }, REQUEST_TIMEOUT)
+
+    const res = await fetch(url, { signal })
+    clearTimeout(timeoutId)
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status.toString()}`)
+    }
+
+    return await res.text()
+  } catch (error) {
+    console.error(`Failed to fetch from URL: ${url}`, error)
+    throw new Error(`Failed to fetch from URL: ${url}`)
+  }
+}
+
+const fetchFromURI = async (uri: string): Promise<string> => {
+  const url = getFetchableUrl(uri)
+  if (!url) {
+    throw new Error('Invalid URI')
+  }
+  return fetchWithTimeout(url)
+}
+
+const getPropdateMessage = async (
+  messageType: number,
+  message: string
+): Promise<PropdateMessage> => {
+  try {
+    switch (messageType) {
+      case MessageType.INLINE_JSON:
+        return JSON.parse(message) as PropdateMessage
+      case MessageType.URL_JSON: {
+        const response = await fetchFromURI(message)
+        return JSON.parse(response) as PropdateMessage
+      }
+      case MessageType.URL_TEXT: {
+        const response = await fetchFromURI(message)
+        return { content: response } as PropdateMessage
+      }
+      default:
+        return { content: message } as PropdateMessage
+    }
+  } catch (error) {
+    console.error(
+      'Error parsing propdate message:',
+      error instanceof Error ? error.message : String(error)
+    )
+    return { content: message } as PropdateMessage
+  }
+}
+
 export async function getPropDates(
   daoTreasuryAddress: string,
   chainId: CHAIN_ID,
-  propId: string,
-  timeCreated: number
+  propId: string
 ): Promise<PropDate[]> {
   // Input validation
   if (!isAddress(daoTreasuryAddress)) {
@@ -84,22 +161,29 @@ export async function getPropDates(
     return []
   }
 
-  const attestationUrl = ATTESTATION_URL[chainId]
-  if (!attestationUrl) {
-    console.error('Invalid chain ID or no URL found')
+  if (!isChainIdSupportedForPropDates(chainId)) {
+    console.error('Chain ID not supported')
     return []
   }
 
-  const query = `
-    query Attestations {
+  if (!propId || !isHex(propId)) {
+    console.error('Invalid proposal ID')
+    return []
+  }
+
+  const easGraphqlUrl = EAS_GRAPHQL_URL[chainId]
+  if (!easGraphqlUrl) {
+    console.error('Attestation URL not found')
+    return []
+  }
+
+  const query = gql`
+    query Attestations($schemaId: String!, $recipient: String!) {
       attestations(
-        where: {
-          schemaId: { equals: "${ATTESTATION_SCHEMA_UID}" }
-          recipient: { equals: "${checksumAddress(daoTreasuryAddress)}" }
-        }
+        where: { schemaId: { equals: $schemaId }, recipient: { equals: $recipient } }
       ) {
+        id
         attester
-        schemaId
         refUID
         recipient
         decodedDataJson
@@ -110,39 +194,44 @@ export async function getPropDates(
   `
 
   try {
-    const {
-      data: {
-        data: { attestations },
-      },
-    } = await axios.post<AttestationResponse>(
-      attestationUrl,
-      { query },
-      {
-        headers: { 'Content-Type': 'application/json' },
-      }
-    )
+    const client = new GraphQLClient(easGraphqlUrl)
+    const variables = {
+      schemaId: ATTESTATION_SCHEMA_UID,
+      recipient: getAddress(daoTreasuryAddress),
+    }
+
+    const { attestations } = await client.request<AttestationResponse>(query, variables)
 
     if (!attestations || attestations.length === 0) {
       console.warn('No attestations found')
       return []
     }
 
-    return attestations
-      .map((attestation: Attestation): PropDate => {
+    const propdatePromises = attestations.map(
+      async (attestation: Attestation): Promise<PropDate> => {
         const decodedData = JSON.parse(attestation.decodedDataJson) as DecodedData[]
-        return {
-          attester: attestation.attester,
-          schemaId: attestation.schemaId,
-          refUID: attestation.refUID,
-          proposalId: getDecodedValue(decodedData, 'proposalId'),
-          originalMessageId: getDecodedValue(decodedData, 'originalMessageId'),
-          messageType: Number(getDecodedValue(decodedData, 'messageType') ?? 0),
-          message: getDecodedValue(decodedData, 'message'),
+        const messageType = Number(
+          getDecodedValue(decodedData, 'messageType') ?? 0
+        ) as MessageType
+        const message = getDecodedValue(decodedData, 'message') as string
+        const parsedMessage = await getPropdateMessage(messageType, message)
+        const propdate: PropDate = {
+          id: attestation.id as Hex,
+          attester: attestation.attester as Hex,
+          proposalId: getDecodedValue(decodedData, 'proposalId') as Hex,
+          originalMessageId: getDecodedValue(decodedData, 'originalMessageId') as Hex,
+          message: parsedMessage.content,
           timeCreated: attestation.timeCreated,
-          txid: attestation.txid,
+          txid: attestation.txid as Hex,
         }
-      })
-      .filter((date: PropDate) => date.proposalId === propId)
+        return propdate
+      }
+    )
+
+    const propdates = await Promise.all(propdatePromises)
+
+    return propdates
+      .filter((p: PropDate) => p.proposalId.toLowerCase() === propId.toLowerCase())
       .sort((a: PropDate, b: PropDate) => a.timeCreated - b.timeCreated)
   } catch (error) {
     console.error(
