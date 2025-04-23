@@ -21,7 +21,7 @@ interface CustomTransactionFormProps<Values> {
   validationSchema?: {}
   enableReinitialize?: boolean
   submitCallback: (updates: Values) => void
-  options?: any[] | object
+  options?: any[] | undefined
   validateOnBlur?: boolean
 }
 
