@@ -77,7 +77,7 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
                   layout="fixed"
                   objectFit="contain"
                   style={{ borderRadius: '100%' }}
-                  alt=""
+                  alt={`${name} avatar`}
                   height={32}
                   width={32}
                 />
