@@ -22,6 +22,7 @@ export default function EscrowDetailsDisplay() {
   const totalEscrowAmount = values?.milestones
     .map((x) => x.amount)
     .reduce((acc, x) => acc + x, 0)
+
   return (
     <Box
       position={isMobile ? 'relative' : 'absolute'}
@@ -35,7 +36,7 @@ export default function EscrowDetailsDisplay() {
       <Stack position={'sticky'} top={'x20'} right={'x0'} gap={'x5'} align="flex-end">
         {Number(totalEscrowAmount) > Number(treasuryBalance?.formatted) && (
           <Text variant="paragraph-sm" color="negative">
-            Escrow amount exceeding treasury balance
+            Escrow amount exceeding treasury balance.
           </Text>
         )}
         <Box>
