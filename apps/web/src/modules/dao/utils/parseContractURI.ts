@@ -16,7 +16,7 @@ export function parseContractURI(uri: string | undefined): ParsedContractURI | u
     const bufferString = Buffer.from(parsedUri, 'base64').toString()
     return JSON.parse(bufferString)
   } catch (e) {
-    console.log(e)
+    console.error('Error parsing contract URI:', e)
     return
   }
 }

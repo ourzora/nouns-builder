@@ -54,7 +54,7 @@ export async function getEnsAddress(
   try {
     resolvedName = await provider?.getEnsAddress({ name: nameOrAddress })
   } catch (e) {
-    console.log(e)
+    console.error('Error getting ENS address:', e)
   }
 
   return resolvedName ?? nameOrAddress

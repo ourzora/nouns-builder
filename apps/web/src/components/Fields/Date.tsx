@@ -64,7 +64,7 @@ const Date: React.FC<DateProps> = ({
         }
       },
     })
-  }, [autoSubmit, formik, id])
+  }, [autoSubmit, formik, id, altFormat, dateFormat, enableTime])
 
   return (
     <Box as="fieldset" mb={'x8'} p={'x0'} className={defaultFieldsetStyle}>

@@ -47,7 +47,7 @@ export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
       }
       return acc
     }, [])
-  }, [images])
+  }, [images, orderedLayers])
 
   const layers = React.useMemo(() => {
     if (!imagesByTrait) return
@@ -114,7 +114,7 @@ export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
     })
 
     return arr.reverse()
-  }, [selectedTraits, layers, generatedImages])
+  }, [selectedTraits, layers])
 
   /*
 
@@ -154,7 +154,7 @@ export const Playground: React.FC<PlaygroundProps> = ({ images }) => {
 
       canvasToBlob(_canvas, imageLayerStack)
     } catch (err) {
-      console.log('err', err)
+      console.error('error generating stacked image', err)
     }
   }
 

@@ -126,7 +126,7 @@ export const Summary: React.FC<SummaryProps> = ({ setIsOpen }) => {
     }
 
     setIsOpen && setIsOpen(false)
-  }, [calldata])
+  }, [calldata, composeCustomTransaction, customTransaction, setIsOpen])
 
   const argumentsList = customTransaction.arguments?.filter(
     ([_, value]: [string, string]) => !!value

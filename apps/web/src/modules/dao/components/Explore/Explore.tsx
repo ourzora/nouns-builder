@@ -47,7 +47,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
       : {
           pathname,
         }
-  }, [router, pathname])
+  }, [router, pathname, page])
 
   const handlePageForward = React.useCallback(() => {
     // there are no more results to be fetched
@@ -77,7 +77,7 @@ export const Explore: React.FC<ExploreProps> = ({ daos, hasNextPage, isLoading }
         page: Number(page) + 1,
       },
     }
-  }, [router, daos?.length, pathname])
+  }, [router, pathname, page, hasNextPage])
 
   return (
     <Fragment>

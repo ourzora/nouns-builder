@@ -10,6 +10,12 @@ module.exports = {
     'react/no-unescaped-entities': 0,
     'unused-imports/no-unused-imports-ts': 2,
     'prettier/prettier': 'warn',
+    'no-console': [
+      'warn',
+      {
+        allow: ['error', 'warn'],
+      },
+    ],
   },
   parserOptions: {
     babelOptions: {
