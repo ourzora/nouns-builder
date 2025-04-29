@@ -1,7 +1,7 @@
-import { Box, Flex, Paragraph, Text, atoms } from '@zoralabs/zord'
+import { Box, Flex, Paragraph, atoms } from '@zoralabs/zord'
 import { toLower } from 'lodash'
 import Image from 'next/image'
-import React, { ReactNode, Suspense, useMemo } from 'react'
+import React, { ReactNode, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
@@ -13,7 +13,10 @@ import { SDK } from 'src/data/subgraph/client'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 import { useEnsData } from 'src/hooks/useEnsData'
-import { getEscrowBundler } from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
+import {
+  getEscrowBundler,
+  getEscrowBundlerV1,
+} from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 
@@ -48,21 +51,15 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
 
   const decodedTransactions = useDecodedTransactions(targets, calldatas, values)
 
-  const decodedEscrowTxnArgs = useMemo(() => {
-    const escrowIndex = targets.findIndex(
-      (t) => t === toLower(getEscrowBundler(chain.id))
-    )
-    const decodedEscrowTransaction =
-      escrowIndex !== -1 && decodedTransactions
-        ? decodedTransactions[escrowIndex]
-        : undefined
-    const decodedEscrowData =
-      !!decodedEscrowTransaction && !decodedEscrowTransaction.isNotDecoded
-        ? decodedEscrowTransaction.transaction
-        : undefined
-    const decodedTxnArgs = !!decodedEscrowData ? decodedEscrowData.args : undefined
-    return decodedTxnArgs
-  }, [chain, decodedTransactions, targets])
+  const decodedEscrowTxn = useMemo(
+    () =>
+      decodedTransactions?.find(
+        (t) =>
+          toLower(t.target) === toLower(getEscrowBundler(chain.id)) ||
+          toLower(t.target) === toLower(getEscrowBundlerV1(chain.id))
+      ),
+    [chain.id, decodedTransactions]
+  )
 
   const { data: tokenImage, error } = useSWR(
     !!collection && !!proposer
@@ -83,20 +80,12 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   return (
     <Flex className={propPageWrapper}>
       <Flex direction={'column'} mt={{ '@initial': 'x6', '@768': 'x13' }}>
-        {!!decodedEscrowTxnArgs && (
+        {!!decodedEscrowTxn && (
           <Section title="Escrow Milestones">
-            <Suspense fallback={<Text variant="code">Loading escrow milestones...</Text>}>
-              {decodedEscrowTxnArgs?._escrowData?.value ? (
-                <MilestoneDetails
-                  decodedTxnArgs={decodedEscrowTxnArgs}
-                  executionTransactionHash={executionTransactionHash}
-                />
-              ) : (
-                <Text variant="code" color="negative">
-                  Error Decoding Escrow Milestones
-                </Text>
-              )}
-            </Suspense>
+            <MilestoneDetails
+              decodedTransaction={decodedEscrowTxn}
+              executionTransactionHash={executionTransactionHash}
+            />
           </Section>
         )}
 
