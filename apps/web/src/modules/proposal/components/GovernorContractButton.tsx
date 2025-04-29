@@ -70,7 +70,7 @@ export function GovernorContractButton<
       onSuccess()
     } catch (err) {
       setIsPending(false)
-      console.log('err', err)
+      console.error('Error interacting with governor contract:', err)
     }
   }
 

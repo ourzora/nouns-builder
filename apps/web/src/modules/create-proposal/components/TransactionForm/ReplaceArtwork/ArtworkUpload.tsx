@@ -114,7 +114,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
       artwork: fileInfo.traits,
       filesLength: fileInfo.filesLength,
     })
-  }, [filesArray || fileInfo, uploadArtworkError])
+  }, [filesArray, fileInfo, uploadArtworkError, formik, setSetUpArtwork])
 
   /*
 
@@ -130,7 +130,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
     if (isReady && !isUploadingToIPFS) {
       generateStackedImage()
     }
-  }, [isReady, isUploadingToIPFS])
+  }, [isReady, isUploadingToIPFS, generateStackedImage])
 
   const showPreview = setUpArtwork.artwork.length > 0
 

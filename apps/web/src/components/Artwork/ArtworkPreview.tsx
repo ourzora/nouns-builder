@@ -26,7 +26,7 @@ export const ArtworkPreview: React.FC<ArtworkPreviewProps> = ({
   return (
     <Flex align={'center'} justify={'center'} direction={'column'}>
       <Flex className={artworkPreviewImageWrapper} mb={'x8'}>
-        <img height={'100%'} width={'100%'} src={generatedImages[0]} />
+        <img height={'100%'} width={'100%'} src={generatedImages[0]} alt="preview" />
         <canvas ref={canvas} style={{ display: 'none' }} />
       </Flex>
       <Flex

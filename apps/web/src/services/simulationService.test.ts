@@ -166,7 +166,7 @@ describe('simulationService', () => {
 
       expect(spy).toHaveBeenCalledOnce()
       expect(spy).toHaveBeenCalledWith(
-        `https://api.tenderly.co/api/v2/project/nouns-builder-public/forks/${forkId}`,
+        `https://api.tenderly.co/api/v2/project/nouns-builder/forks/${forkId}`,
         { headers: { 'X-Access-Key': TENDERLY_ACCESS_KEY as string } }
       )
     })
