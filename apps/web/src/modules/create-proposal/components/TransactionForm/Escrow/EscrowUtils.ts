@@ -19,6 +19,7 @@ const SMART_INVOICE_ARBITRATION_PROVIDER =
 const ESCROW_RESOLVER_TYPE = 0
 const ESCROW_REQUIRE_VERIFICATION = true
 export const ESCROW_TYPE = toHex(toBytes('updatable-v2', { size: 32 }))
+export const ESCROW_TYPE_V1 = toHex(toBytes('updatable', { size: 32 }))
 
 export function convertIpfsCidV0ToByte32(cid: string) {
   return `0x${Buffer.from(decode(cid).slice(2)).toString('hex')}`
@@ -104,6 +105,30 @@ function getEscrowBundler(chainId: number | string): Address {
   }
 }
 
+function getEscrowBundlerV1(chainId: number | string): Address {
+  chainId = Number(chainId)
+  switch (chainId) {
+    case CHAIN_ID.ETHEREUM:
+      return '0xb4cdef4aa610c046864467592fae456a58d3443a' as Address
+    case CHAIN_ID.OPTIMISM:
+      return '0xdafeb89f713e25a02e4ec21a18e3757d7a76d19e' as Address
+    case CHAIN_ID.BASE:
+      return '0xf4640751e7363a0572d4ba93a9b049b956b33c17' as Address
+    case CHAIN_ID.ZORA:
+      return '0x0325e1b676c4cf59e0b690a05e0181be862193d4' as Address
+    case CHAIN_ID.SEPOLIA:
+      return '0x9c1E057B37605B7f6ed6f4c8E2826C3d84ddC08D' as Address
+    case CHAIN_ID.OPTIMISM_SEPOLIA:
+      return '0xe0986c3bdab537fbeb7c94d0c5ef961d6d8bf63a' as Address
+    case CHAIN_ID.BASE_SEPOLIA:
+      return '0x3add1d027116a5406ced10411945cf2d4d9ed68e' as Address
+    case CHAIN_ID.ZORA_SEPOLIA:
+      return '0x851e59a39571e599954702f0e4996bf838d9c863' as Address
+    default:
+      throw new Error(`Unsupported chain ID: ${chainId}`)
+  }
+}
+
 function encodeEscrowData(
   values: EscrowFormValues,
   treasuryAddress: Address,
@@ -155,13 +180,12 @@ type DecodedEscrowData = Partial<{
   tokenAddress: Address
   terminationTime: number
   ipfsCid: string
-  wrappedTokenAddress: Address
   requiresVerification: boolean
-  factoryAddress: Address
   providerRecipientAddress: Address
-  clientRecipientAddress: Address
+  providerAddress?: Address
+  clientRecipientAddress?: Address
+  escrowType?: Hex
 }>
-
 const decodeEscrowData = (data: Hex): DecodedEscrowData => {
   try {
     const decodedAbiData = decodeAbiParameters(
@@ -188,14 +212,48 @@ const decodeEscrowData = (data: Hex): DecodedEscrowData => {
       tokenAddress: decodedAbiData[3],
       terminationTime: decodedAbiData[4],
       ipfsCid: convertByte32ToIpfsCidV0(decodedAbiData[5] as Hex),
-      wrappedTokenAddress: decodedAbiData[6],
       requiresVerification: decodedAbiData[7],
-      factoryAddress: decodedAbiData[8],
       providerRecipientAddress: decodedAbiData[9],
       clientRecipientAddress: decodedAbiData[10],
     } as DecodedEscrowData
   } catch (e) {
-    console.error('error decoding escrow data', e)
+    console.error('error decoding escrow data v2', e)
+    return {} as DecodedEscrowData
+  }
+}
+
+const decodeEscrowDataV1 = (data: Hex): DecodedEscrowData => {
+  try {
+    const decodedAbiData = decodeAbiParameters(
+      [
+        'address',
+        'address',
+        'uint8',
+        'address',
+        'uint256',
+        'bytes32',
+        'address',
+        'address',
+        'bool',
+        'bytes32',
+      ].map((type) => ({ type })),
+      data
+    )
+
+    return {
+      clientAddress: decodedAbiData[0],
+      providerAddress: decodedAbiData[6],
+      resolverType: decodedAbiData[2],
+      resolverAddress: decodedAbiData[1],
+      tokenAddress: decodedAbiData[3],
+      terminationTime: decodedAbiData[4],
+      ipfsCid: convertByte32ToIpfsCidV0(decodedAbiData[5] as Hex),
+      requiresVerification: decodedAbiData[8],
+      providerRecipientAddress: decodedAbiData[7],
+      escrowType: decodedAbiData[9],
+    } as DecodedEscrowData
+  } catch (e) {
+    console.error('error decoding escrow data v1', e)
     return {} as DecodedEscrowData
   }
 }
@@ -285,6 +343,8 @@ export {
   encodeEscrowData,
   decodeEscrowData,
   getEscrowBundler,
+  getEscrowBundlerV1,
+  decodeEscrowDataV1,
   deployEscrowAbi,
   useEscrowFormStore,
 }
