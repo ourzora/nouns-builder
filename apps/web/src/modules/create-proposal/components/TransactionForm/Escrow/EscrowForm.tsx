@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Stack } from '@zoralabs/zord'
+import { Box, Button, Flex, Stack, Text } from '@zoralabs/zord'
 import { FieldArray, Form, Formik } from 'formik'
 import type { FormikHelpers } from 'formik'
 import { useFormikContext } from 'formik'
@@ -52,7 +52,7 @@ const MilestoneForm: React.FC<{
         placeholder={'1.0 ETH'}
         errorMessage={
           (formik.touched?.milestones as any)?.[index]?.amount &&
-          (formik.errors?.milestones as any)?.[index]?.amount
+            (formik.errors?.milestones as any)?.[index]?.amount
             ? (formik.errors?.milestones as any)?.[index]?.amount
             : undefined
         }
@@ -246,7 +246,7 @@ const EscrowForm: React.FC<EscrowFormProps> = ({ onSubmit, isSubmitting }) => {
                               handleAddMilestone(
                                 push,
                                 formik.values?.milestones[
-                                  formik.values?.milestones.length - 1
+                                formik.values?.milestones.length - 1
                                 ],
                                 formik.values?.milestones.length + 1
                               )
@@ -275,6 +275,35 @@ const EscrowForm: React.FC<EscrowFormProps> = ({ onSubmit, isSubmitting }) => {
                     ? 'Adding Transaction to Queue'
                     : 'Add Transaction to Queue'}
                 </Button>
+                {Object.keys(formik.errors).length > 0 && (
+                  <Stack mt="x2" gap="x1">
+                    {Object.entries(formik.errors).flatMap(([key, error]) => {
+                      if (typeof error === 'string') {
+                        return [
+                          <Text key={key} color="negative" textAlign="left">
+                            - {error}
+                          </Text>,
+                        ]
+                      } else if (key === 'milestones' && Array.isArray(error)) {
+                        return error.flatMap((milestoneError, index) => {
+                          if (typeof milestoneError === 'object' && milestoneError !== null) {
+                            return Object.entries(milestoneError).map(([field, msg]) => (
+                              <Text
+                                key={`milestone-${index}-${field}`}
+                                color="negative"
+                                textAlign="left"
+                              >
+                                - Milestone {index + 1} {field}: {msg}
+                              </Text>
+                            ))
+                          }
+                          return []
+                        })
+                      }
+                      return []
+                    })}
+                  </Stack>
+                )}
               </Stack>
             </Form>
           </Box>
