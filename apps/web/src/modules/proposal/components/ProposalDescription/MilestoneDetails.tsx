@@ -1,6 +1,6 @@
 import { NETWORK_CONFIG } from '@smartinvoicexyz/constants'
 import { Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
-import { Button, Stack, Text } from '@zoralabs/zord'
+import { Button, Spinner, Stack, Text } from '@zoralabs/zord'
 import axios from 'axios'
 import { IPFS_GATEWAY } from 'ipfs-service/src/gateway'
 import _ from 'lodash'
@@ -15,15 +15,17 @@ import { Icon } from 'src/components/Icon'
 import { OptionalLink } from 'src/components/OptionalLink'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TransactionType } from 'src/modules/create-proposal'
-import { decodeEscrowData } from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
+import {
+  decodeEscrowData,
+  decodeEscrowDataV1,
+  getEscrowBundlerV1,
+} from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
 
-import { DecodedTransactionData } from './useDecodedTransactions'
-
-type DecodedTransactionArgs = DecodedTransactionData['args']
+import { DecodedTransaction } from './useDecodedTransactions'
 
 const RELEASE_FUNCTION_ABI = [
   {
@@ -53,7 +55,7 @@ const INVOICE_QUERY = `
 `
 
 interface MilestoneDetailsProps {
-  decodedTxnArgs: DecodedTransactionArgs
+  decodedTransaction: DecodedTransaction
   executionTransactionHash?: string
 }
 
@@ -63,7 +65,7 @@ interface Document {
 }
 
 export const MilestoneDetails = ({
-  decodedTxnArgs,
+  decodedTransaction,
   executionTransactionHash,
 }: MilestoneDetailsProps) => {
   const router = useRouter()
@@ -75,7 +77,7 @@ export const MilestoneDetails = ({
     return NETWORK_CONFIG[invoiceChain.id]?.SUBGRAPH
   }, [invoiceChain.id])
 
-  const { data: invoiceAddress } = useSWR(
+  const { data: invoiceAddress, isValidating: isLoadingInvoice } = useSWR(
     [subgraphURL, executionTransactionHash],
     async () => {
       const response = await axios.post(subgraphURL, {
@@ -90,10 +92,17 @@ export const MilestoneDetails = ({
   )
 
   const { invoiceCid, clientAddress, milestoneAmounts } = useMemo(() => {
-    if (!decodedTxnArgs?._escrowData?.value) return {}
-    const { ipfsCid, clientAddress } = decodeEscrowData(
-      decodedTxnArgs?._escrowData?.value as Hex
-    )
+    if (decodedTransaction.isNotDecoded) return {}
+
+    const isEscrowV1 =
+      _.toLower(decodedTransaction.target) ===
+      _.toLower(getEscrowBundlerV1(invoiceChain.id))
+
+    const decodedTxnArgs = decodedTransaction.transaction?.args
+
+    const { ipfsCid, clientAddress } = isEscrowV1
+      ? decodeEscrowDataV1(decodedTxnArgs?._escrowData?.value as Hex)
+      : decodeEscrowData(decodedTxnArgs?._escrowData?.value as Hex)
 
     return {
       invoiceCid: ipfsCid,
@@ -102,9 +111,9 @@ export const MilestoneDetails = ({
         .split(',')
         .map((x: string) => formatEther(BigInt(x))),
     }
-  }, [decodedTxnArgs])
+  }, [decodedTransaction, invoiceChain.id])
 
-  const { data: invoiceData } = useSWR(
+  const { data: invoiceData, isValidating: isLoadingInvoiceData } = useSWR(
     invoiceCid ? [SWR_KEYS.IPFS, invoiceCid] : undefined,
     async () => {
       try {
@@ -117,33 +126,31 @@ export const MilestoneDetails = ({
     }
   )
 
-  const { data: numOfMilestonesReleased } = useContractRead({
-    address: invoiceAddress,
-    abi: [
-      {
-        inputs: [],
-        name: 'released',
-        outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-        stateMutability: 'view',
-        type: 'function',
-      },
-    ],
-    functionName: 'released',
-    chainId: invoiceChain.id,
-  })
+  const { data: numOfMilestonesReleased, isLoading: isLoadingReleased } = useContractRead(
+    {
+      address: invoiceAddress,
+      abi: [
+        {
+          inputs: [],
+          name: 'released',
+          outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+          stateMutability: 'view',
+          type: 'function',
+        },
+      ],
+      functionName: 'released',
+      chainId: invoiceChain.id,
+    }
+  )
 
   const handleReleaseMilestone = useCallback(
     async (index: number) => {
-      const isClientGoverner = isAddressEqual(
-        clientAddress as AddressType,
-        addresses.governor as AddressType
-      )
       const isClientTreasury = isAddressEqual(
         clientAddress as AddressType,
         addresses.treasury as AddressType
       )
 
-      if (!isClientGoverner && !isClientTreasury) {
+      if (!isClientTreasury) {
         router.replace(SAFE_APP_URL)
         return
       }
@@ -254,6 +261,10 @@ export const MilestoneDetails = ({
     renderMilestoneButton,
     renderDocumentLink,
   ])
+
+  const isLoading = isLoadingInvoice || isLoadingInvoiceData || isLoadingReleased
+
+  if (isLoading) return <Spinner size="md" />
 
   return <Accordion items={milestonesDetails || []} />
 }
