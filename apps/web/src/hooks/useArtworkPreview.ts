@@ -65,24 +65,17 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
     })
   }, [imagesByTrait])
 
-  const [selectedTraits, setSelectedTraits] = React.useState<SelectedTraitsProps[]>([])
-  React.useEffect(() => {
-    if (selectedTraits.length || !layers) {
-      return
-    }
-
-    setSelectedTraits(
-      layers.map((layer: any) => {
-        const random = Math.floor(Math.random() * layer.images.length)
-
-        return {
-          picker: 'random',
-          trait: layer.trait,
-          uri: layer.images[random].uri,
-          content: layer.images[random].content,
-        }
-      })
-    )
+  const selectedTraits: SelectedTraitsProps[] = React.useMemo(() => {
+    if (!layers) return []
+    return layers.map((layer: any) => {
+      const random = Math.floor(Math.random() * layer.images.length)
+      return {
+        picker: 'random',
+        trait: layer.trait,
+        uri: layer.images[random].uri,
+        content: layer.images[random].content,
+      }
+    })
   }, [layers])
 
   /*
@@ -122,7 +115,7 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
     })
 
     return arr.reverse()
-  }, [selectedTraits, layers, generatedImages])
+  }, [selectedTraits, layers])
 
   /*
 
@@ -140,6 +133,26 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
       return acc
     }, [])
   }, [imageLayerStack])
+
+  /*
+
+    save blob of stacked image to store
+    memory cleanup for saved image
+
+ */
+  const canvasToBlob = React.useCallback(
+    (canvas: HTMLCanvasElement, stack: string[] | undefined = []) => {
+      if (canvas.height > 0) {
+        const data = canvas.toDataURL()
+
+        setGeneratedImages([data, ...generatedImages])
+        for (const blob of stack) {
+          URL.revokeObjectURL(blob)
+        }
+      }
+    },
+    [generatedImages]
+  )
 
   /*
 
@@ -195,30 +208,10 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
           setGeneratedImages([data])
         }
       } catch (err) {
-        console.log('err', err)
+        console.error('Error generating image', err)
       }
     },
-    [imageLayerStack, imagesToDraw, canvas, isInit, hasLocalFile]
-  )
-
-  /*
-
-    save blob of stacked image to store
-    memory cleanup for saved image
-
- */
-  const canvasToBlob = React.useCallback(
-    (canvas: HTMLCanvasElement, stack: string[] | undefined = []) => {
-      if (canvas.height > 0) {
-        const data = canvas.toDataURL()
-
-        setGeneratedImages([data, ...generatedImages])
-        for (const blob of stack) {
-          URL.revokeObjectURL(blob)
-        }
-      }
-    },
-    [generatedImages]
+    [imageLayerStack, imagesToDraw, canvas, isInit, hasLocalFile, canvasToBlob]
   )
 
   return { generateStackedImage, imagesToDraw, generatedImages, canvas }

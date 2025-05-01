@@ -11,7 +11,7 @@ import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_ALL_CHAINS, PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { CAST_ENABLED } from 'src/constants/farcasterEnabled'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
-import { getEscrowDelegate } from 'src/data/contract/requests/getEscrowDelegate'
+import { getEscrowDelegate } from 'src/data/eas/requests/getEscrowDelegate'
 import { SDK } from 'src/data/subgraph/client'
 import { TokenWithDaoQuery } from 'src/data/subgraph/sdk.generated'
 import { useVotes } from 'src/hooks'
@@ -207,6 +207,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       totalSupply,
       ownerCount,
       proposalCount,
+      tokenAddress,
       metadataAddress,
       treasuryAddress,
       governorAddress,
@@ -214,6 +215,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     } = token.dao
 
     const escrowDelegateAddress = (await getEscrowDelegate(
+      tokenAddress,
       treasuryAddress,
       chain.id
     )) as AddressType

@@ -213,7 +213,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
       const tx = await writeContract(config)
       if (tx.hash) transaction = await waitForTransaction({ hash: tx.hash })
     } catch (e) {
-      console.log('e', e)
+      console.error('Error deploying DAO:', e)
       setIsPendingTransaction(false)
       return
     }

@@ -192,7 +192,15 @@ export const ReviewProposalForm = ({
         setError(err.message)
       }
     },
-    [router, addresses, proposalThreshold, votes, clearProposal]
+    [
+      router,
+      addresses,
+      proposalThreshold,
+      votes,
+      clearProposal,
+      clearEscrowForm,
+      chain.id,
+    ]
   )
 
   if (isLoading || thresholdIsLoading) return null

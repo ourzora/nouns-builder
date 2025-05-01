@@ -8,6 +8,7 @@ const SWR_KEYS = {
   NFT_COUNT: 'nft-count',
   PROFILE_TOKENS: 'profile-tokens',
   PROPOSAL: 'proposal',
+  PROPDATES: 'propdates',
   PROPOSALS: 'proposals',
   PROPOSALS_CALLDATAS: 'proposals-calldatas',
   PROPOSALS_TRANSACTIONS: 'proposal-transaction-data',

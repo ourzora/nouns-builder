@@ -13,9 +13,13 @@ export class SDK {
   static connect(chainId: CHAIN_ID) {
     if (!globalForClient.subgraphClient) globalForClient.subgraphClient = new Map()
 
+    const subgraphUrl = PUBLIC_SUBGRAPH_URL.get(chainId)
+
+    if (!subgraphUrl) throw new Error('No subgraph url for chain id')
+
     const client = globalForClient.subgraphClient.has(chainId)
       ? globalForClient.subgraphClient.get(chainId)!
-      : new GraphQLClient(PUBLIC_SUBGRAPH_URL.get(chainId) as string, {
+      : new GraphQLClient(subgraphUrl, {
           headers: {
             'Content-Type': 'application/json',
           },

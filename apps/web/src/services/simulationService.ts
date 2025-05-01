@@ -96,7 +96,6 @@ export async function simulate({
   if (simulationSucceeded) {
     try {
       await axios.delete(`${TENDERLY_FORK_V2_BASE_URL}/${forkId}`, opts)
-      console.log(`successfully deleted fork with id ${forkId}`)
     } catch (e) {
       console.error('error deleting fork', e)
     }

@@ -65,7 +65,7 @@ export const AuctionPaused = () => {
 
       if (isPausing && !isUnpausing) return proposal
     })
-  }, [paused, data?.proposals])
+  }, [paused, data?.proposals, auction])
 
   if (!paused) return null
 

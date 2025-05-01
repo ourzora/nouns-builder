@@ -24,11 +24,11 @@ export const Arguments = () => {
   construct fields
 
  */
-  const typeHelperText: any = {
-    ['address[]']: 'address[] - two or more addresses seperated by a " , "',
-  }
-
   const fields = React.useMemo(() => {
+    const typeHelperText: any = {
+      ['address[]']: 'address[] - two or more addresses seperated by a " , "',
+    }
+
     function getFieldsFromInputs(path: string[], inputs: any) {
       let result: any = []
       inputs.forEach((input: any) => {
@@ -63,7 +63,7 @@ export const Arguments = () => {
         },
       ]
     }
-  }, [customTransaction?.function])
+  }, [customTransaction])
 
   /*
 
@@ -80,7 +80,7 @@ export const Arguments = () => {
       }, [])
       composeCustomTransaction({ ...customTransaction, arguments: args })
     },
-    [customTransaction, fields]
+    [customTransaction, fields, composeCustomTransaction]
   )
 
   /*
@@ -174,7 +174,7 @@ export const Arguments = () => {
     }, [])
 
     return Yup.object().shape({ ...validators })
-  }, [fields])
+  }, [fields, customTransaction])
 
   /*
 
