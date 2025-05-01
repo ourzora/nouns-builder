@@ -1,9 +1,10 @@
 import { NETWORK_CONFIG } from '@smartinvoicexyz/constants'
 import { Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
-import { Button, Spinner, Stack, Text } from '@zoralabs/zord'
+import { Box, Button, Spinner, Stack, Text, atoms } from '@zoralabs/zord'
 import axios from 'axios'
 import { IPFS_GATEWAY } from 'ipfs-service/src/gateway'
 import _ from 'lodash'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo } from 'react'
 import useSWR from 'swr'
@@ -12,7 +13,6 @@ import { useContractRead } from 'wagmi'
 
 import Accordion from 'src/components/Home/accordian'
 import { Icon } from 'src/components/Icon'
-import { OptionalLink } from 'src/components/OptionalLink'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { TransactionType } from 'src/modules/create-proposal'
 import {
@@ -91,6 +91,10 @@ export const MilestoneDetails = ({
     }
   )
 
+  const invoiceUrl = !!invoiceAddress
+    ? `https://app.smartinvoice.xyz/invoice/${invoiceChain.id}/${invoiceAddress}`
+    : undefined
+
   const { invoiceCid, clientAddress, milestoneAmounts } = useMemo(() => {
     if (decodedTransaction.isNotDecoded) return {}
 
@@ -129,6 +133,7 @@ export const MilestoneDetails = ({
   const { data: numOfMilestonesReleased, isLoading: isLoadingReleased } = useContractRead(
     {
       address: invoiceAddress,
+      enabled: !!invoiceAddress,
       abi: [
         {
           inputs: [],
@@ -216,9 +221,9 @@ export const MilestoneDetails = ({
       doc.type === 'ipfs' ? doc.src.replace('ipfs://', `${IPFS_GATEWAY}/ipfs/`) : doc.src
 
     return (
-      <OptionalLink key={doc.src} enabled={true} href={href}>
+      <Link key={doc.src} href={href}>
         {href}
-      </OptionalLink>
+      </Link>
     )
   }, [])
 
@@ -266,5 +271,27 @@ export const MilestoneDetails = ({
 
   if (isLoading) return <Spinner size="md" />
 
-  return <Accordion items={milestonesDetails || []} />
+  return (
+    <>
+      <Accordion items={milestonesDetails || []} />
+      {!!invoiceUrl && (
+        <Box
+          color={'secondary'}
+          fontWeight={'heading'}
+          className={atoms({ textDecoration: 'underline' })}
+          mt="x2"
+          ml="x4"
+        >
+          <a href={invoiceUrl} target="_blank" rel="noreferrer">
+            <Stack direction="row" align="center">
+              <Text variant="label-sm" color="secondary">
+                View escrow details on Smart Invoice
+              </Text>
+              <Icon id="arrowTopRight" />
+            </Stack>
+          </a>
+        </Box>
+      )}
+    </>
+  )
 }
