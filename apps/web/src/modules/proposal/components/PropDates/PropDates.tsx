@@ -24,8 +24,10 @@ export const PropDates = ({ proposalId }: PropDatesProps) => {
     addresses: { token },
   } = useDaoStore()
 
-  const { data, mutate } = useSWR([SWR_KEYS.PROPDATES, chain.id, proposalId], () =>
-    getPropDates(token as `0x${string}`, chain.id, proposalId)
+  const { data, mutate } = useSWR(
+    [SWR_KEYS.PROPDATES, chain.id, proposalId],
+    () => getPropDates(token as `0x${string}`, chain.id, proposalId),
+    { revalidateOnMount: true, refreshInterval: 1000 * 5 }
   )
 
   const propDates = data ?? []
