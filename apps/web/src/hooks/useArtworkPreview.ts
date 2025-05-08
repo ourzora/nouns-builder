@@ -67,7 +67,7 @@ export const useArtworkPreview = ({ images, orderedLayers }: UseArtworkPreviewPr
         picker: 'random',
         trait: layer.trait,
         uri: selectedImage.uri,
-        content: selectedImage.content,
+        content: selectedImage.content as File,
       }
     })
   }, [layers])

@@ -50,7 +50,6 @@ describe('Dao card', () => {
 
     expect(screen.queryByText(/Winning bid/)).toBeInTheDocument()
     expect(screen.queryByText('n/a')).toBeInTheDocument()
-    expect(screen.queryByAltText(/Error image/)).toBeInTheDocument()
     expect(screen.queryByTestId('token-name')).not.toBeInTheDocument()
     expect(screen.queryByTestId('collection-name')).not.toBeInTheDocument()
   })

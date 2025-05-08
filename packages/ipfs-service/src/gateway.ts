@@ -1,6 +1,6 @@
 import { isNormalizeableIPFSUrl, normalizeIPFSUrl } from './url'
 
-const IPFS_GATEWAYS = [
+export const IPFS_GATEWAYS = [
   'https://nouns-builder.mypinata.cloud',
   'https://ipfs.io',
   'https://dweb.link',

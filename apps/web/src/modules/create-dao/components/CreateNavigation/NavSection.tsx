@@ -42,9 +42,7 @@ export const NavSection: React.FC<{
     <Flex
       direction="row"
       key={section.title}
-      className={
-        flowSectionWrapperVariants[isPreviewMode ? 'preview' : 'default']
-      }
+      className={flowSectionWrapperVariants[isPreviewMode ? 'preview' : 'default']}
       onClick={() => {
         if (isFulfilled) {
           setActiveSection(sections.indexOf(section))
@@ -66,4 +64,3 @@ export const NavSection: React.FC<{
     </Flex>
   )
 }
-

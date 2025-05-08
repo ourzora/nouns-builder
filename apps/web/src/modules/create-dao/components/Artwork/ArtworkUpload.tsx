@@ -10,13 +10,11 @@ import React, {
   useState,
 } from 'react'
 
-import {
-  ArtworkPreview,
-  ArtworkUpload as UploadComponent,
-} from 'src/components/Artwork'
+import { ArtworkPreview, ArtworkUpload as UploadComponent } from 'src/components/Artwork'
 import { LayerOrdering } from 'src/components/Artwork/LayerOrdering'
 import { artworkPreviewPanel } from 'src/components/Fields/styles.css'
 import { IPFSUpload, useArtworkPreview, useArtworkUpload } from 'src/hooks'
+
 import { useFormStore } from '../../stores'
 
 const previewVariants = {
@@ -70,7 +68,6 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
     setOrderedLayers,
   } = useFormStore()
 
-
   const { artwork } = setUpArtwork ?? {}
 
   const handleUploadStart = useCallback(() => {
@@ -112,10 +109,11 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
     onUploadError: handleUploadError,
   })
 
-  const { generateStackedImage, imagesToDraw, generatedImages, canvas } = useArtworkPreview({
-    images,
-    orderedLayers,
-  })
+  const { generateStackedImage, imagesToDraw, generatedImages, canvas } =
+    useArtworkPreview({
+      images,
+      orderedLayers,
+    })
 
   const handleUpload = (e: BaseSyntheticEvent) => {
     setUploadArtworkError(undefined)
@@ -125,7 +123,8 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
 
   // Set up artwork traits into store
   useEffect(() => {
-    if (!fileInfo || !filesArray || !fileInfo.traits || !formik || uploadArtworkError) return
+    if (!fileInfo || !filesArray || !fileInfo.traits || !formik || uploadArtworkError)
+      return
 
     setSetUpArtwork({
       ...formik.values,
