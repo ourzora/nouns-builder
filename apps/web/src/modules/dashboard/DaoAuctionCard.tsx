@@ -1,13 +1,13 @@
 import { Box, Flex, Text } from '@zoralabs/zord'
 import dayjs from 'dayjs'
-import { getFetchableUrl } from 'ipfs-service'
+import { getFetchableUrls } from 'ipfs-service'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { formatEther } from 'viem'
 import { useContractEvent } from 'wagmi'
 
-import { icons } from 'src/components/Icon'
+import { FallbackNextImage } from 'src/components/FallbackImage'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { auctionAbi } from 'src/data/contract/abis'
 import { useCountdown, useIsMounted } from 'src/hooks'
@@ -29,8 +29,6 @@ import {
   statsBox,
 } from './dashboard.css'
 
-const Warning = icons.warning
-
 type DaoAuctionCardProps = DashboardDaoProps & {
   userAddress: AddressType
   handleMutate: () => void
@@ -41,7 +39,6 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
   const { name: chainName, icon: chainIcon } =
     PUBLIC_ALL_CHAINS.find((chain) => chain.id === chainId) ?? {}
   const router = useRouter()
-  const [imgErr, setImgErr] = useState(false)
   const { endTime } = currentAuction ?? {}
 
   const [isEnded, setIsEnded] = useState(false)
@@ -99,39 +96,15 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
   return (
     <Flex className={outerAuctionCard}>
       <Flex className={auctionCardBrand} onClick={handleSelectAuction}>
-        {imgErr ? (
-          <Flex
-            width="x16"
-            height="x16"
-            position="relative"
-            overflow="hidden"
-            align="center"
-            justify="center"
-            borderRadius="curved"
-            backgroundColor="background2"
-            className={daoAvatarBox}
-          >
-            <Warning
-              height={'24px'}
-              width={'24px'}
-              style={{ position: 'absolute' }}
-              fill="grey"
-            />
-          </Flex>
-        ) : (
-          <Box className={daoAvatarBox}>
-            <Image
-              className={daoAvatar}
-              src={getFetchableUrl(tokenImage) || ''}
-              onError={() => {
-                setImgErr(true)
-              }}
-              unoptimized
-              layout="fixed"
-              alt=""
-            />
-          </Box>
-        )}
+        <Box className={daoAvatarBox}>
+          <FallbackNextImage
+            className={daoAvatar}
+            srcList={getFetchableUrls(tokenImage)}
+            unoptimized
+            layout="fixed"
+            alt=""
+          />
+        </Box>
         <Box>
           <Flex mb="x1" align="center">
             {chainIcon && (

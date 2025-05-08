@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getFetchableUrl } from 'ipfs-service'
+import { getFetchableUrls } from 'ipfs-service'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
 
@@ -46,13 +46,42 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   res.send(compositeRes)
 }
 
-const getImageData = async (imageUrl: string) => {
-  const fetchableUrl = getFetchableUrl(imageUrl)
-  if (!fetchableUrl) throw new Error('Invalid IPFS url: ' + imageUrl)
+const REQUEST_TIMEOUT = 10000 // 10s
 
-  return axios
-    .get(getFetchableUrl(fetchableUrl)!, { responseType: 'arraybuffer' })
-    .then((x) => Buffer.from(x.data, 'binary'))
+const getImageData = async (imageUrl: string): Promise<Buffer> => {
+  const urls = getFetchableUrls(imageUrl)
+  if (!urls?.length) throw new Error('Invalid IPFS url: ' + imageUrl)
+
+  const controller = new AbortController()
+
+  const fetchWithTimeout = async (url: string): Promise<Buffer> => {
+    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT)
+    try {
+      const res = await axios.get(url, {
+        responseType: 'arraybuffer',
+        signal: controller.signal,
+      })
+
+      if (res.status !== 200) {
+        throw new Error(`HTTP error! Status: ${res.status}`)
+      }
+
+      return Buffer.from(res.data, 'binary')
+    } finally {
+      clearTimeout(timeoutId)
+    }
+  }
+
+  const fetches = urls.map((url) =>
+    fetchWithTimeout(url).then((data) => {
+      controller.abort() // abort other requests
+      return data
+    })
+  )
+
+  return Promise.any(fetches).catch(() => {
+    throw new Error('Failed to fetch image from all fetchable URLs')
+  })
 }
 
 export default handler

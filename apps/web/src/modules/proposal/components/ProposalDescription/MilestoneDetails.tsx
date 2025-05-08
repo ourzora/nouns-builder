@@ -2,7 +2,7 @@ import { NETWORK_CONFIG } from '@smartinvoicexyz/constants'
 import { Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
 import { Box, Button, Spinner, Stack, Text, atoms } from '@zoralabs/zord'
 import axios from 'axios'
-import { IPFS_GATEWAY } from 'ipfs-service/src/gateway'
+import { getFetchableUrls } from 'ipfs-service'
 import _ from 'lodash'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -217,8 +217,9 @@ export const MilestoneDetails = ({
   const renderDocumentLink = useCallback((doc: Partial<Document>) => {
     if (!doc.src) return null
 
-    const href =
-      doc.type === 'ipfs' ? doc.src.replace('ipfs://', `${IPFS_GATEWAY}/ipfs/`) : doc.src
+    const href = doc.type === 'ipfs' ? getFetchableUrls(doc.src)?.[0] : doc.src
+
+    if (!href) return null
 
     return (
       <Link key={doc.src} href={href}>

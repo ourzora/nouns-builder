@@ -1,10 +1,10 @@
 import { Box, Flex, Paragraph } from '@zoralabs/zord'
 import dayjs from 'dayjs'
-import { getFetchableUrl } from 'ipfs-service'
-import Image from 'next/legacy/image'
+import { getFetchableUrls } from 'ipfs-service'
 import Link from 'next/link'
 import React, { useState } from 'react'
 
+import { FallbackNextImage } from 'src/components/FallbackImage'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { useCountdown } from 'src/hooks/useCountdown'
 import { useIsMounted } from 'src/hooks/useIsMounted'
@@ -42,7 +42,6 @@ export const DaoCard = ({
   endTime,
 }: DaoCardProps) => {
   const isMounted = useIsMounted()
-  const [imgErr, setImgErr] = React.useState<boolean>(false)
   const [isEnded, setIsEnded] = useState(false)
 
   const onEnd = () => {
@@ -65,21 +64,14 @@ export const DaoCard = ({
           position="relative"
           className={daoImage}
         >
-          {!!tokenImage ? (
-            <Image
-              priority
-              unoptimized
-              layout="fill"
-              src={!imgErr ? getFetchableUrl(tokenImage) || '' : '/ImageError.svg'}
-              onError={() => {
-                setImgErr(true)
-              }}
-              sizes="100vw"
-              alt={`${collectionName} image`}
-            />
-          ) : (
-            <Image priority layout="fill" src={'/ImageError.svg'} alt={`Error image`} />
-          )}
+          <FallbackNextImage
+            priority
+            unoptimized
+            fill
+            srcList={getFetchableUrls(tokenImage)}
+            sizes="100vw"
+            alt={`${collectionName} image`}
+          />
         </Box>
 
         <Box pt="x4" position={'relative'} overflow={'hidden'} className={title}>
