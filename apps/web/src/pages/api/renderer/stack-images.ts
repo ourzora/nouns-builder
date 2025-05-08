@@ -52,7 +52,6 @@ const getImageData = async (imageUrl: string): Promise<Buffer> => {
 
   for (const url of urls) {
     try {
-      console.log(`Trying: ${url}`)
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT)
 
@@ -62,7 +61,6 @@ const getImageData = async (imageUrl: string): Promise<Buffer> => {
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
       const arrayBuffer = await res.arrayBuffer()
-      console.log(`✅ Fetched from: ${url}`)
       return Buffer.from(arrayBuffer)
     } catch (err) {
       console.warn(`❌ Failed to fetch from ${url}: ${(err as Error).message}`)
@@ -71,7 +69,6 @@ const getImageData = async (imageUrl: string): Promise<Buffer> => {
 
   throw new Error('Failed to fetch image from all fetchable URLs')
 }
-
 
 export default handler
 

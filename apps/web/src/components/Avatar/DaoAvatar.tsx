@@ -1,7 +1,8 @@
 import { Box, BoxProps } from '@zoralabs/zord'
-import Image from 'next/image'
+import { getFetchableUrls } from 'ipfs-service'
 import { useMemo } from 'react'
 
+import { FallbackNextImage } from 'src/components/FallbackImage'
 import { useDaoFeedCard } from 'src/modules/dao'
 import { CHAIN_ID } from 'src/typings'
 import { gradientForAddress } from 'src/utils/gradient'
@@ -52,9 +53,9 @@ export function DaoAvatar({
       borderStyle={'solid'}
       {...props}
     >
-      <Image
+      <FallbackNextImage
         key={tokenUri?.name}
-        src={tokenUri?.image}
+        srcList={getFetchableUrls(tokenUri?.image)}
         alt={collectionAddress || 'Avatar image'}
         style={{
           objectFit: 'cover',
@@ -73,9 +74,9 @@ export function DaoAvatar({
       {...props}
     >
       {src && (
-        <Image
+        <FallbackNextImage
           key={src}
-          src={src}
+          srcList={getFetchableUrls(src)}
           alt={collectionAddress || 'Avatar image'}
           style={{
             objectFit: 'cover',
