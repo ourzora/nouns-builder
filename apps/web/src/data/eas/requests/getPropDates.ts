@@ -1,4 +1,4 @@
-import { getFetchableUrl } from 'ipfs-service'
+import { getFetchableUrls } from 'ipfs-service'
 import { Hex, getAddress, isAddress, isHex } from 'viem'
 
 import { PROPDATE_SCHEMA_UID } from 'src/constants/eas'
@@ -36,36 +36,45 @@ export interface PropDate {
 
 const REQUEST_TIMEOUT = 10000 // 10s
 
-const fetchWithTimeout = async (url: string) => {
+const fetchWithTimeout = async (
+  url: string,
+  controller: AbortController
+): Promise<string> => {
+  const { signal } = controller
+
+  const timeoutId = setTimeout(() => {
+    controller.abort()
+  }, REQUEST_TIMEOUT)
+
   try {
-    const controller = new AbortController()
-    const { signal } = controller
-
-    // Set a 10s timeout for the request
-    const timeoutId = setTimeout(function () {
-      controller.abort()
-    }, REQUEST_TIMEOUT)
-
     const res = await fetch(url, { signal })
-    clearTimeout(timeoutId)
-
     if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status.toString()}`)
+      throw new Error(`HTTP error! Status: ${res.status}`)
     }
-
     return await res.text()
-  } catch (error) {
-    console.error(`Failed to fetch from URL: ${url}`, error)
-    throw new Error(`Failed to fetch from URL: ${url}`)
+  } finally {
+    clearTimeout(timeoutId)
   }
 }
 
 const fetchFromURI = async (uri: string): Promise<string> => {
-  const url = getFetchableUrl(uri)
-  if (!url) {
+  const urls = getFetchableUrls(uri)
+  if (!urls?.length) {
     throw new Error('Invalid URI')
   }
-  return fetchWithTimeout(url)
+
+  const controller = new AbortController()
+
+  const fetchPromises = urls.map((url) =>
+    fetchWithTimeout(url, controller).then((result) => {
+      controller.abort() // abort all other pending fetches once one succeeds
+      return result
+    })
+  )
+
+  return Promise.any(fetchPromises).catch(() => {
+    throw new Error('Failed to fetch from all available URLs')
+  })
 }
 
 const getPropdateMessage = async (

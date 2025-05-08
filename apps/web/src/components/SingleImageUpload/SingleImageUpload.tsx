@@ -1,9 +1,9 @@
 import { Box, Flex, Stack } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
-import { getFetchableUrl, normalizeIPFSUrl, uploadFile } from 'ipfs-service'
-import Image from 'next/image'
+import { getFetchableUrls, normalizeIPFSUrl, uploadFile } from 'ipfs-service'
 import React, { ReactElement, useEffect, useState } from 'react'
 
+import { FallbackNextImage } from 'src/components/FallbackImage'
 import { Spinner } from 'src/components/Spinner'
 
 import {
@@ -86,8 +86,8 @@ const SingleImageUpload: React.FC<SingleImageUploadProps> = ({
           {isUploading && <Spinner alignSelf={'center'} m={'x0'} />}
 
           {!isUploading && isMounted && !!value && (
-            <Image
-              src={getFetchableUrl(value) || ''}
+            <FallbackNextImage
+              srcList={getFetchableUrls(value)}
               fill
               alt="Avatar"
               style={{

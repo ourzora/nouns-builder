@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
-import { getFetchableUrl } from 'ipfs-service'
-import Image from 'next/image'
+import { getFetchableUrls } from 'ipfs-service'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React from 'react'
 
 import { Avatar } from 'src/components/Avatar'
+import { FallbackNextImage } from 'src/components/FallbackImage'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
 import { useDelayedGovernance } from 'src/hooks/useDelayedGovernance'
 import { AddressType } from 'src/typings'
@@ -23,10 +23,6 @@ export const DaoProposals = ({
   chainId,
   userAddress,
 }: DashboardDaoProps & { userAddress?: AddressType }) => {
-  const daoImageSrc = React.useMemo(() => {
-    return daoImage ? getFetchableUrl(daoImage) : null
-  }, [daoImage])
-
   const { isGovernanceDelayed } = useDelayedGovernance({
     tokenAddress: tokenAddress,
     governorAddress: governorAddress,
@@ -42,10 +38,10 @@ export const DaoProposals = ({
       <Flex justify={'space-between'} mb={'x6'} align="center">
         <Link href={`/dao/${currentChainSlug}/${tokenAddress}`} passHref>
           <Flex align={'center'}>
-            {daoImageSrc ? (
+            {daoImage ? (
               <Box mr="x4">
-                <Image
-                  src={daoImageSrc}
+                <FallbackNextImage
+                  srcList={getFetchableUrls(daoImage)}
                   layout="fixed"
                   objectFit="contain"
                   style={{ borderRadius: '12px' }}

@@ -1,4 +1,4 @@
-import { IPFSUploadResponse, getFetchableUrl, uploadDirectory } from 'ipfs-service'
+import { IPFSUploadResponse, getFetchableUrls, uploadDirectory } from 'ipfs-service'
 import React from 'react'
 
 import { ArtworkType } from 'src/modules/create-dao/components/Artwork/ArtworkForm.schema'
@@ -63,6 +63,7 @@ export const useArtworkUpload = ({
         const index = artwork?.map((e: any) => e.trait).indexOf(upload.trait)
         const childIndex = artwork[index]?.properties.indexOf(upload.name)
         const childName = artwork[index]?.properties[childIndex]
+        const fetchableUrl = getFetchableUrls(upload?.ipfs?.uri)?.[0] ?? ''
 
         acc.push({
           trait: artwork[index]?.trait,
@@ -70,7 +71,7 @@ export const useArtworkUpload = ({
           cid: upload?.ipfs?.cid || '',
           uri: upload?.ipfs?.uri || '',
           url: encodeURI(
-            getFetchableUrl(upload?.ipfs?.uri) +
+            fetchableUrl +
               `/${sanitizeFileName(
                 upload.webkitRelativePath.split('/').slice(1).join('/')
               )}` || ''
@@ -291,7 +292,8 @@ export const useArtworkUpload = ({
     }
 
     handleUpload(filesArray)
-  }, [filesArray, uploadArtworkError, onUploadError, onUploadSuccess, onUploadStart])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filesArray, uploadArtworkError])
 
   return {
     images,

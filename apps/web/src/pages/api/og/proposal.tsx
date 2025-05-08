@@ -1,7 +1,8 @@
 import { ImageResponse } from '@vercel/og'
-import { getFetchableUrl } from 'ipfs-service/src/gateway'
+import { getFetchableUrls } from 'ipfs-service/src/gateway'
 import { NextRequest } from 'next/server'
 
+import { FallbackImage } from 'src/components/FallbackImage'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import NogglesLogo from 'src/layouts/assets/builder-framed.svg'
@@ -147,9 +148,9 @@ export default async function handler(req: NextRequest) {
             left: 95,
           }}
         >
-          <img
+          <FallbackImage
             alt="user image"
-            src={getFetchableUrl(data.daoImage)}
+            srcList={getFetchableUrls(data.daoImage)}
             style={{
               height: '52px',
               width: '52px',
