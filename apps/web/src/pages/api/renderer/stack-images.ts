@@ -50,40 +50,28 @@ const getImageData = async (imageUrl: string): Promise<Buffer> => {
   const urls = getFetchableUrls(imageUrl)
   if (!urls?.length) throw new Error('Invalid IPFS url: ' + imageUrl)
 
-  const fetchWithTimeout = async (url: string): Promise<Buffer> => {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT)
-
+  for (const url of urls) {
     try {
+      console.log(`Trying: ${url}`)
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT)
+
       const res = await fetch(url, { signal: controller.signal })
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`)
-      }
+      clearTimeout(timeoutId)
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
 
       const arrayBuffer = await res.arrayBuffer()
+      console.log(`✅ Fetched from: ${url}`)
       return Buffer.from(arrayBuffer)
-    } finally {
-      clearTimeout(timeoutId)
+    } catch (err) {
+      console.warn(`❌ Failed to fetch from ${url}: ${(err as Error).message}`)
     }
   }
 
-  const fetches = urls.map((url) =>
-    fetchWithTimeout(url)
-      .then((data) => {
-        // eslint-disable-next-line no-console
-        console.info(`✅ Fetched from: ${url}`)
-        return data
-      })
-      .catch((err) => {
-        console.warn(`❌ Failed to fetch from ${url}: ${err.message}`)
-        throw err
-      })
-  )
-
-  return Promise.any(fetches).catch(() => {
-    throw new Error('Failed to fetch image from all fetchable URLs')
-  })
+  throw new Error('Failed to fetch image from all fetchable URLs')
 }
+
 
 export default handler
 
