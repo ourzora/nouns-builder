@@ -83,4 +83,5 @@ export default handler
 
 export const config = {
   runtime: 'nodejs',
+  maxDuration: 20,
 }
