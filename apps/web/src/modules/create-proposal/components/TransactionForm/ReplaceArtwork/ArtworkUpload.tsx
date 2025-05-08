@@ -59,18 +59,28 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
   } = useArtworkStore()
   const { artwork } = setUpArtwork
 
-  const handleUploadSuccess = (ipfs: IPFSUpload[]) => {
-    setIpfsUpload(ipfs)
-    setIsUploadingToIPFS(false)
-  }
+  const handleUploadStart = React.useCallback(() => {
+    setIsUploadingToIPFS(true)
+  }, [setIsUploadingToIPFS])
 
-  const handleUploadError = async (err: Error) => {
-    setIpfsUpload([])
-    setIsUploadingToIPFS(false)
-    Sentry.captureException(err)
-    await Sentry.flush(2000)
-    return
-  }
+  const handleUploadSuccess = React.useCallback(
+    (ipfs: IPFSUpload[]) => {
+      setIpfsUpload(ipfs)
+      setIsUploadingToIPFS(false)
+    },
+    [setIpfsUpload, setIsUploadingToIPFS]
+  )
+
+  const handleUploadError = React.useCallback(
+    async (err: Error) => {
+      setIpfsUpload([])
+      setIsUploadingToIPFS(false)
+      Sentry.captureException(err)
+      await Sentry.flush(2000)
+      return
+    },
+    [setIpfsUpload, setIsUploadingToIPFS]
+  )
 
   const {
     images,
@@ -84,7 +94,7 @@ export const ArtworkUpload: React.FC<ArtworkFormProps> = ({
     artwork,
     ipfsUpload,
     isUploadingToIPFS,
-    onUploadStart: () => setIsUploadingToIPFS(true),
+    onUploadStart: handleUploadStart,
     onUploadSuccess: handleUploadSuccess,
     onUploadError: handleUploadError,
   })

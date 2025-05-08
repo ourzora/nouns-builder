@@ -1,11 +1,12 @@
 import { Box, Flex, Grid, Text } from '@zoralabs/zord'
-import { getFetchableUrl } from 'ipfs-service'
+import { getFetchableUrls } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import React from 'react'
 import useSWR from 'swr'
 import { Address, useBalance, useContractReads } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar/Avatar'
+import { FallbackNextLegacyImage } from 'src/components/FallbackImage'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { SDK } from 'src/data/subgraph/client'
@@ -87,10 +88,6 @@ export const About: React.FC = () => {
     return balance?.formatted ? formatCryptoVal(balance?.formatted) : null
   }, [balance])
 
-  const daoImageSrc = React.useMemo(() => {
-    return daoImage ? getFetchableUrl(daoImage) : null
-  }, [daoImage])
-
   return (
     <Box className={about}>
       <Flex
@@ -99,10 +96,10 @@ export const About: React.FC = () => {
         justify={{ '@initial': 'flex-start', '@768': 'space-between' }}
       >
         <Flex align="center" justify="flex-start" w="100%">
-          {daoImageSrc ? (
+          {daoImage ? (
             <Box mr="x4">
-              <Image
-                src={daoImageSrc}
+              <FallbackNextLegacyImage
+                srcList={getFetchableUrls(daoImage)}
                 layout="fixed"
                 objectFit="contain"
                 style={{ borderRadius: '100%' }}

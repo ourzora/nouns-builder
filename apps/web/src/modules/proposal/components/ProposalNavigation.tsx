@@ -1,11 +1,11 @@
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
-import { getFetchableUrl } from 'ipfs-service'
-import Image from 'next/legacy/image'
+import { getFetchableUrls } from 'ipfs-service'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { useContractReads } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar/Avatar'
+import { FallbackNextImage } from 'src/components/FallbackImage'
 import { Icon } from 'src/components/Icon'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { OptionalLink } from 'src/components/OptionalLink'
@@ -55,10 +55,6 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
 
   const [name, daoImage] = unpackOptionalArray(contractData, 2)
 
-  const daoImageSrc = React.useMemo(() => {
-    return daoImage ? getFetchableUrl(daoImage) : null
-  }, [daoImage])
-
   const handleNavigation = () => {
     handleBack ? handleBack() : router.back()
   }
@@ -70,10 +66,10 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
           <Flex direction={'row'} align={'center'} gap={'x2'}>
             <Icon id="arrowLeft" />
 
-            {daoImageSrc ? (
+            {daoImage ? (
               <Box mr="x2">
-                <Image
-                  src={daoImageSrc}
+                <FallbackNextImage
+                  srcList={getFetchableUrls(daoImage)}
                   layout="fixed"
                   objectFit="contain"
                   style={{ borderRadius: '100%' }}

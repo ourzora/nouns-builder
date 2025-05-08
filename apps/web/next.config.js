@@ -19,14 +19,39 @@ const nextConfig = {
   },
   images: {
     dangerouslyAllowSVG: true,
-    domains: [
-      'api.zora.co',
-      'zora-prod.mypinata.cloud',
-      'nftstorage.link',
-      'zora-dev.mypinata.cloud',
-      'ipfs.zora.co',
-      'ipfs.decentralized-content.com',
-      'nouns.build',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'nouns-builder.mypinata.cloud',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ipfs.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'dweb.link',
+      },
+      {
+        protocol: 'https',
+        hostname: 'w3s.link',
+      },
+      {
+        protocol: 'https',
+        hostname: 'flk-ipfs.xyz',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ipfs.decentralized-content.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'gateway.pinata.cloud',
+      },
+      {
+        protocol: 'https',
+        hostname: 'nouns.build',
+      },
     ],
   },
   async redirects() {

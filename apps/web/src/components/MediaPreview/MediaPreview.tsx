@@ -1,5 +1,5 @@
 import { Box } from '@zoralabs/zord'
-import { getFetchableUrl } from 'ipfs-service'
+import { getFetchableUrls } from 'ipfs-service'
 import { useMemo } from 'react'
 
 import { Audio } from './Audio'
@@ -17,8 +17,14 @@ export const MediaPreview: React.FC<MediaPreviewProps> = ({
   mediaUrl,
   coverUrl,
 }) => {
-  const fetchableMediaURL = useMemo(() => getFetchableUrl(mediaUrl) || '', [mediaUrl])
-  const fetchableCoverURL = useMemo(() => getFetchableUrl(coverUrl) || '', [coverUrl])
+  const fetchableMediaURL = useMemo(
+    () => getFetchableUrls(mediaUrl)?.[0] || '',
+    [mediaUrl]
+  )
+  const fetchableCoverURL = useMemo(
+    () => getFetchableUrls(coverUrl)?.[0] || '',
+    [coverUrl]
+  )
 
   if (fetchableMediaURL && mediaType?.startsWith('image')) {
     return <Image src={fetchableMediaURL} alt="Preview" />

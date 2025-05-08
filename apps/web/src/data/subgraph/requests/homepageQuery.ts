@@ -16,9 +16,13 @@ export const highestBidsRequest = async (
   let statusCode = null
 
   try {
+    const now = Math.floor(Date.now() / 1000)
+    const maxEnd = now + 60 * 60 * 24 * 30 // 30 days from now
+
     const where: Auction_Filter = {
       settled: false,
-      endTime_gt: Math.floor(Date.now() / 1000),
+      endTime_gt: now,
+      endTime_lt: maxEnd, // Prevents auctions with bugged timestamps
     }
 
     // filter spam daos from L2

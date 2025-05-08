@@ -1,7 +1,6 @@
 import { Box, Flex } from '@zoralabs/zord'
 import React from 'react'
 
-import { useLayoutStore } from 'src/stores/useLayoutStore'
 import {
   circleVariant,
   flowSectionWrapperVariants,
@@ -17,85 +16,50 @@ export const NavSection: React.FC<{
 }> = ({ sections, section }) => {
   const { fulfilledSections, activeSection, setActiveSection, setUpArtwork } =
     useFormStore()
-  const { isMobile } = useLayoutStore()
-  const [titleType, setTitleType] = React.useState<
-    'default' | 'active' | 'fulfilled' | 'preview' | 'previewActive'
-  >('default')
-  const [circleType, setCircleType] = React.useState<
-    | 'flowCircle'
-    | 'flowCircleLast'
-    | 'flowCircleActive'
-    | 'flowCircleActiveLast'
-    | 'flowFulfilledCircle'
-    | 'flowFulfilledCircleLast'
-    | 'preview'
-    | 'previewActive'
-  >('flowCircle')
 
-  React.useEffect(() => {
-    setCircleType(
-      activeSection === 4 &&
-        sections[activeSection]?.title === section?.title &&
-        !!setUpArtwork.artwork.length
-        ? 'previewActive'
-        : activeSection === 4 && !!setUpArtwork.artwork.length
-          ? 'preview'
-          : sections[activeSection]?.title === section?.title
-            ? sections.indexOf(section) + 1 === sections.length
-              ? 'flowCircleActiveLast'
-              : 'flowCircleActive'
-            : fulfilledSections.includes(section?.title)
-              ? sections.indexOf(section) + 1 === sections.length
-                ? 'flowFulfilledCircleLast'
-                : 'flowFulfilledCircle'
-              : sections.indexOf(section) + 1 === sections.length
-                ? 'flowCircleLast'
-                : 'flowCircle'
-    )
+  const isActive = sections[activeSection]?.title === section.title
+  const isFulfilled = fulfilledSections.includes(section.title)
+  const isLast = sections.indexOf(section) === sections.length - 1
+  const isPreviewMode = activeSection === 4 && !!setUpArtwork.artwork.length
 
-    setTitleType(
-      activeSection === 4 &&
-        sections[activeSection]?.title === section?.title &&
-        !!setUpArtwork.artwork.length
-        ? 'previewActive'
-        : activeSection === 4 && !!setUpArtwork.artwork.length
-          ? 'preview'
-          : fulfilledSections.includes(section?.title)
-            ? 'fulfilled'
-            : sections[activeSection]?.title === section?.title
-              ? 'active'
-              : 'default'
-    )
-  }, [section, sections, fulfilledSections, activeSection, setUpArtwork])
+  const getCircleType = () => {
+    if (isPreviewMode) return isActive ? 'previewActive' : 'preview'
+    if (isActive) return isLast ? 'flowCircleActiveLast' : 'flowCircleActive'
+    if (isFulfilled) return isLast ? 'flowFulfilledCircleLast' : 'flowFulfilledCircle'
+    return isLast ? 'flowCircleLast' : 'flowCircle'
+  }
+
+  const getTitleType = () => {
+    if (isPreviewMode) return isActive ? 'previewActive' : 'preview'
+    if (isFulfilled) return 'fulfilled'
+    return isActive ? 'active' : 'default'
+  }
+
+  const circleType = getCircleType()
+  const titleType = getTitleType()
 
   return (
     <Flex
-      direction={'row'}
-      key={section?.title}
-      className={
-        flowSectionWrapperVariants[
-          activeSection === 4 && !!setUpArtwork.artwork.length ? 'preview' : 'default'
-        ]
-      }
-      onClick={
-        !!(sections && fulfilledSections.includes(section?.title))
-          ? () => {
-              setActiveSection(sections.indexOf(section))
-            }
-          : () => {}
-      }
+      direction="row"
+      key={section.title}
+      className={flowSectionWrapperVariants[isPreviewMode ? 'preview' : 'default']}
+      onClick={() => {
+        if (isFulfilled) {
+          setActiveSection(sections.indexOf(section))
+        }
+      }}
     >
-      <Flex direction={'column'} align={'center'}>
+      <Flex direction="column" align="center">
         <Flex
-          align={'center'}
-          justify={'center'}
+          align="center"
+          justify="center"
           className={circleVariant[circleType]}
-          height={'x4'}
-          width={'x4'}
+          height="x4"
+          width="x4"
         >
-          {fulfilledSections.includes(section?.title)}
+          {isFulfilled}
         </Flex>
-        <Box className={flowTitleVariant[titleType]}>{section?.title}</Box>
+        <Box className={flowTitleVariant[titleType]}>{section.title}</Box>
       </Flex>
     </Flex>
   )

@@ -1,5 +1,5 @@
 import { Box, Flex, atoms } from '@zoralabs/zord'
-import { getFetchableUrl } from 'ipfs-service'
+import { getFetchableUrls } from 'ipfs-service'
 import React, { useState } from 'react'
 import {
   decodeEventLog,
@@ -17,6 +17,7 @@ import {
 } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
+import { FallbackImage } from 'src/components/FallbackImage'
 import { defaultBackButton } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon'
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
@@ -257,14 +258,14 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
               <ReviewItem
                 label="Dao Avatar"
                 value={
-                  <img
+                  <FallbackImage
                     className={atoms({
                       mt: 'x4',
                       height: 'x24',
                       width: 'x24',
                       borderRadius: 'round',
                     })}
-                    src={getFetchableUrl(general.daoAvatar)}
+                    srcList={getFetchableUrls(general.daoAvatar)}
                     alt=""
                   />
                 }

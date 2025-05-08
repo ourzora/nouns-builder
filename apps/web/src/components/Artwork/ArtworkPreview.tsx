@@ -11,7 +11,7 @@ import { Icon } from '../Icon'
 import AnimatedModal from '../Modal/AnimatedModal'
 
 export interface ArtworkPreviewProps {
-  canvas: React.MutableRefObject<null>
+  canvas: React.MutableRefObject<HTMLCanvasElement | null>
   generatedImages: any[]
   generateStackedImage: () => Promise<void>
   images: ImageProps[] | undefined

@@ -1,5 +1,5 @@
 import { Flex, Stack } from '@zoralabs/zord'
-import { getFetchableUrl, uploadFile } from 'ipfs-service'
+import { getFetchableUrls, uploadFile } from 'ipfs-service'
 import * as React from 'react'
 import { ReactElement } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -33,7 +33,7 @@ export const MarkdownEditor: React.FC<MarkdownEditorProps> = ({
   const saveImage = async function* (data: ArrayBuffer, blob: Blob) {
     const file = new File([blob], '')
     const { cid } = await uploadFile(file, { cache: true })
-    yield getFetchableUrl(cid) as string
+    yield getFetchableUrls(cid)?.[0] as string
 
     return true
   }
