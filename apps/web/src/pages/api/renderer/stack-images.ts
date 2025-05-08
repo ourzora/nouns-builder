@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { getFetchableUrls } from 'ipfs-service'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
@@ -6,6 +5,7 @@ import sharp from 'sharp'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 
 const SVG_DEFAULT_SIZE = 1080
+const REQUEST_TIMEOUT = 10000 // 10s
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let images = req.query.images
@@ -46,27 +46,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   res.send(compositeRes)
 }
 
-const REQUEST_TIMEOUT = 10000 // 10s
-
 const getImageData = async (imageUrl: string): Promise<Buffer> => {
   const urls = getFetchableUrls(imageUrl)
   if (!urls?.length) throw new Error('Invalid IPFS url: ' + imageUrl)
 
-  const controller = new AbortController()
-
   const fetchWithTimeout = async (url: string): Promise<Buffer> => {
+    const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT)
-    try {
-      const res = await axios.get(url, {
-        responseType: 'arraybuffer',
-        signal: controller.signal,
-      })
 
-      if (res.status !== 200) {
+    try {
+      const res = await fetch(url, { signal: controller.signal })
+      if (!res.ok) {
         throw new Error(`HTTP error! Status: ${res.status}`)
       }
 
-      return Buffer.from(res.data, 'binary')
+      const arrayBuffer = await res.arrayBuffer()
+      return Buffer.from(arrayBuffer)
     } finally {
       clearTimeout(timeoutId)
     }
@@ -74,7 +69,7 @@ const getImageData = async (imageUrl: string): Promise<Buffer> => {
 
   const fetches = urls.map((url) =>
     fetchWithTimeout(url).then((data) => {
-      controller.abort() // abort other requests
+      // Once one fetch succeeds, no need for the others
       return data
     })
   )
@@ -85,3 +80,7 @@ const getImageData = async (imageUrl: string): Promise<Buffer> => {
 }
 
 export default handler
+
+export const config = {
+  runtime: 'nodejs',
+}
