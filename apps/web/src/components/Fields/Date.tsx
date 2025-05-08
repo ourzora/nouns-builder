@@ -49,7 +49,7 @@ const Date: React.FC<DateProps> = ({
   React.useEffect(() => {
     if (!ref.current) return
 
-    flatpickr(ref.current, {
+    const fpInstance = flatpickr(ref.current, {
       enableTime,
       dateFormat,
       altInput: !!altFormat,
@@ -64,6 +64,11 @@ const Date: React.FC<DateProps> = ({
         }
       },
     })
+
+    return () => {
+      // Clean up flatpickr instance on unmount
+      fpInstance.destroy()
+    }
   }, [autoSubmit, formik, id, altFormat, dateFormat, enableTime])
 
   return (
