@@ -14,7 +14,9 @@ export function ipfsGatewayUrls(url: string | null | undefined): string[] | unde
   if (!url || typeof url !== 'string') return undefined
   const normalizedIPFSUrl = normalizeIPFSUrl(url)
   if (normalizedIPFSUrl) {
-    return IPFS_GATEWAYS.map(gateway => normalizedIPFSUrl.replace('ipfs://', `${gateway}/ipfs/`))
+    return IPFS_GATEWAYS.map((gateway) =>
+      normalizedIPFSUrl.replace('ipfs://', `${gateway}/ipfs/`),
+    )
   }
   return undefined
 }
@@ -26,10 +28,20 @@ export function getFetchableUrls(uri: string | null | undefined): string[] | und
     // Return the gateway URL
     return ipfsGatewayUrls(uri)
   }
-  // If it is already a url (or blob or data-uri)
-  if (/^(https|data|blob):/.test(uri)) {
+
+  // If it is already a blob or data-uri
+  if (/^(data:|blob:)/.test(uri)) {
     // Return the URI
     return [uri]
+  }
+
+  // If it is a http(s) URL
+  if (/^https?:\/\//.test(uri)) {
+    const replaced = uri.replace(
+      'api.zora.co/renderer/stack-images',
+      'nouns.build/api/renderer/stack-images',
+    )
+    return [replaced]
   }
   return undefined
 }
