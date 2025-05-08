@@ -5,7 +5,7 @@ import sharp from 'sharp'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 
 const SVG_DEFAULT_SIZE = 1080
-const REQUEST_TIMEOUT = 10000 // 10s
+const REQUEST_TIMEOUT = 20000 // 20s
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let images = req.query.images
@@ -68,10 +68,16 @@ const getImageData = async (imageUrl: string): Promise<Buffer> => {
   }
 
   const fetches = urls.map((url) =>
-    fetchWithTimeout(url).then((data) => {
-      // Once one fetch succeeds, no need for the others
-      return data
-    })
+    fetchWithTimeout(url)
+      .then((data) => {
+        // eslint-disable-next-line no-console
+        console.info(`✅ Fetched from: ${url}`)
+        return data
+      })
+      .catch((err) => {
+        console.warn(`❌ Failed to fetch from ${url}: ${err.message}`)
+        throw err
+      })
   )
 
   return Promise.any(fetches).catch(() => {
@@ -83,5 +89,5 @@ export default handler
 
 export const config = {
   runtime: 'nodejs',
-  maxDuration: 20,
+  maxDuration: 60,
 }
