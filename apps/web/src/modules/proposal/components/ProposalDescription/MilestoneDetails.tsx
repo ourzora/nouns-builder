@@ -13,7 +13,10 @@ import { useContractRead } from 'wagmi'
 
 import Accordion from 'src/components/Home/accordian'
 import { Icon } from 'src/components/Icon'
+import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
+import { SAFE_APP_URL } from 'src/constants/safe'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { useEnsData } from 'src/hooks/useEnsData'
 import { TransactionType } from 'src/modules/create-proposal'
 import {
   decodeEscrowData,
@@ -23,7 +26,7 @@ import {
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { DecodedTransaction } from './useDecodedTransactions'
 
@@ -37,8 +40,15 @@ const RELEASE_FUNCTION_ABI = [
   },
 ]
 
-const SAFE_APP_URL =
-  'https://app.safe.global/share/safe-app?appUrl=https://app.smartinvoice.xyz/invoices'
+const createAppUrl = (chainId: CHAIN_ID, invoiceAddress: Hex) => {
+  return `https://app.smartinvoice.xyz/invoice/${chainId}/${invoiceAddress}`
+}
+
+const createSafeAppUrl = (chainId: CHAIN_ID, safeAddress: Hex, invoiceAddress: Hex) => {
+  const safeUrl = SAFE_APP_URL[chainId]
+  const encodedUrl = encodeURIComponent(createAppUrl(chainId, invoiceAddress))
+  return `${safeUrl}:${safeAddress}&appUrl=${encodedUrl}`
+}
 
 const INVOICE_QUERY = `
   query GetInvoice($txHash: String!) {
@@ -87,12 +97,12 @@ export const MilestoneDetails = ({
         },
       })
 
-      return _.get(response, 'data.data.invoices[0].address')
+      return _.get(response, 'data.data.invoices[0].address') as AddressType
     }
   )
 
   const invoiceUrl = !!invoiceAddress
-    ? `https://app.smartinvoice.xyz/invoice/${invoiceChain.id}/${invoiceAddress}`
+    ? createAppUrl(invoiceChain.id, invoiceAddress)
     : undefined
 
   const { invoiceCid, clientAddress, milestoneAmounts } = useMemo(() => {
@@ -110,7 +120,7 @@ export const MilestoneDetails = ({
 
     return {
       invoiceCid: ipfsCid,
-      clientAddress,
+      clientAddress: clientAddress as AddressType,
       milestoneAmounts: decodedTxnArgs['_milestoneAmounts']['value']
         .split(',')
         .map((x: string) => formatEther(BigInt(x))),
@@ -148,17 +158,19 @@ export const MilestoneDetails = ({
     }
   )
 
+  const isClientTreasury = useMemo(
+    () =>
+      clientAddress &&
+      addresses.treasury &&
+      isAddressEqual(clientAddress, addresses.treasury),
+    [clientAddress, addresses.treasury]
+  )
+
+  const { displayName: clientDisplayName } = useEnsData(clientAddress)
+
   const handleReleaseMilestone = useCallback(
     async (index: number) => {
-      const isClientTreasury = isAddressEqual(
-        clientAddress as AddressType,
-        addresses.treasury as AddressType
-      )
-
-      if (!isClientTreasury) {
-        router.replace(SAFE_APP_URL)
-        return
-      }
+      if (!invoiceAddress) return
 
       const releaseMilestone = {
         target: invoiceAddress as AddressType,
@@ -187,12 +199,12 @@ export const MilestoneDetails = ({
         },
       })
     },
-    [router, clientAddress, addresses, addTransaction, invoiceData?.title, invoiceAddress]
+    [router, addTransaction, invoiceData?.title, invoiceAddress]
   )
 
   const renderMilestoneButton = useCallback(
     (index: number, isReleased: boolean, isNext: boolean) => {
-      if (isReleased) {
+      if (!clientAddress || !invoiceAddress || isReleased || !isNext) {
         return (
           <Button variant="secondary" disabled>
             <Icon id="checkInCircle" />
@@ -201,17 +213,32 @@ export const MilestoneDetails = ({
         )
       }
 
+      if (isClientTreasury) {
+        return (
+          <Button variant="primary" onClick={() => handleReleaseMilestone(index)}>
+            Release Milestone
+          </Button>
+        )
+      }
+
+      // TODO: handle other types of escrow delegates, current only supports safe
       return (
-        <Button
-          variant={isNext ? 'primary' : 'secondary'}
-          disabled={!isNext}
-          onClick={() => isNext && handleReleaseMilestone(index)}
+        <a
+          href={createSafeAppUrl(invoiceChain.id, clientAddress, invoiceAddress)}
+          target="_blank"
+          rel="noreferrer"
         >
-          Release Milestone
-        </Button>
+          <Button variant="primary">Release Milestone</Button>
+        </a>
       )
     },
-    [handleReleaseMilestone]
+    [
+      handleReleaseMilestone,
+      clientAddress,
+      invoiceAddress,
+      isClientTreasury,
+      invoiceChain.id,
+    ]
   )
 
   const renderDocumentLink = useCallback((doc: Partial<Document>) => {
@@ -276,22 +303,30 @@ export const MilestoneDetails = ({
     <>
       <Accordion items={milestonesDetails || []} />
       {!!invoiceUrl && (
-        <Box
-          color={'secondary'}
-          fontWeight={'heading'}
-          className={atoms({ textDecoration: 'underline' })}
-          mt="x2"
-          ml="x4"
-        >
-          <a href={invoiceUrl} target="_blank" rel="noreferrer">
+        <Stack direction="column" fontWeight={'heading'} mt="x2" ml="x4" gap="x2">
+          {!isClientTreasury && (
             <Stack direction="row" align="center">
-              <Text variant="label-sm" color="secondary">
-                View escrow details on Smart Invoice
+              <Text variant="label-sm" color="primary" mr="x2">
+                Escrow Release Delegated to
               </Text>
-              <Icon id="arrowTopRight" />
+              <Box color={'secondary'} className={atoms({ textDecoration: 'underline' })}>
+                <a
+                  href={`${ETHERSCAN_BASE_URL[invoiceChain.id]}/address/${clientAddress}`}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  <Text variant="label-sm">{clientDisplayName}</Text>
+                </a>
+              </Box>
             </Stack>
+          )}
+          <a href={invoiceUrl} target="_blank" rel="noreferrer">
+            <Button variant="secondary" size="sm">
+              View Smart Invoice
+              <Icon id="arrowTopRight" />
+            </Button>
           </a>
-        </Box>
+        </Stack>
       )}
     </>
   )
