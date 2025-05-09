@@ -424,7 +424,6 @@ export const MilestoneDetails = ({
                   </Button>
                 </a>
               )}
-
             </>
           )}
         </Stack>
