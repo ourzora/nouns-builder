@@ -1,7 +1,7 @@
 import { CHAIN_ID } from 'src/typings'
 
 // URLs should not include a trailing forward slash
-export const ETHERSCAN_BASE_URL = {
+export const ETHERSCAN_BASE_URL: Record<CHAIN_ID, string> = {
   [CHAIN_ID.ETHEREUM]: 'https://etherscan.io',
   [CHAIN_ID.OPTIMISM]: 'https://optimistic.etherscan.io',
   [CHAIN_ID.SEPOLIA]: 'https://sepolia.etherscan.io',
