@@ -116,7 +116,11 @@ const VoteModal: React.FC<{
   return (
     <Fragment>
       {/* Vote Modal */}
-      <AnimatedModal open={showVoteModal} size={isCastVoteSuccess ? 'small' : 'medium'}>
+      <AnimatedModal
+        open={showVoteModal}
+        size={isCastVoteSuccess ? 'small' : 'medium'}
+        close={() => setShowVoteModal(false)}
+      >
         {isCastVoteSuccess ? (
           <SuccessModalContent
             success={true}
