@@ -14,7 +14,8 @@ export type IsValidAddressResult = {
 
 export async function isValidAddress(
   address: Address,
-  provider: PublicClient | undefined = defaultProvider
+  provider: PublicClient | undefined = defaultProvider,
+  errorMessage = 'Invalid address'
 ): Promise<IsValidAddressResult> {
   try {
     if (isAddress(address)) return { data: true }
@@ -39,10 +40,10 @@ export async function isValidAddress(
 
     return {
       data: !!resolvedName,
-      error: resolvedName ? undefined : 'Invalid address',
+      error: resolvedName ? undefined : errorMessage,
     }
   } catch {
-    return { data: false, error: 'Invalid address' }
+    return { data: false, error: errorMessage }
   }
 }
 

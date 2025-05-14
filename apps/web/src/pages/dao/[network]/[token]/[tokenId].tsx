@@ -1,5 +1,5 @@
 import { Flex } from '@zoralabs/zord'
-import { GetServerSideProps } from 'next'
+import { GetServerSideProps, GetServerSidePropsResult } from 'next'
 import { useRouter } from 'next/router'
 import React, { useMemo } from 'react'
 import { useAccount } from 'wagmi'
@@ -13,6 +13,7 @@ import { CAST_ENABLED } from 'src/constants/farcasterEnabled'
 import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { getEscrowDelegate } from 'src/data/eas/requests/getEscrowDelegate'
 import { SDK } from 'src/data/subgraph/client'
+import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
 import { TokenWithDaoQuery } from 'src/data/subgraph/sdk.generated'
 import { useVotes } from 'src/hooks'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -50,6 +51,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
   collection,
   token,
   description,
+  tokenId,
   name,
   addresses,
   ogImageURL,
@@ -141,7 +143,7 @@ const TokenPage: NextPageWithLayout<TokenPageProps> = ({
           name,
           contractAddress: collection,
           chain,
-          image: token.image || undefined,
+          image: token?.image || undefined,
         }}
       />
 
@@ -175,6 +177,32 @@ TokenPage.getLayout = getDaoLayout
 
 export default TokenPage
 
+const getLatestTokenIdRedirect = async (
+  collectionAddress: AddressType,
+  chain: Chain,
+  network: string
+): Promise<GetServerSidePropsResult<TokenPageProps>> => {
+  const latestTokenId = await SDK.connect(chain.id)
+    .tokens({
+      where: {
+        dao: collectionAddress.toLowerCase(),
+      },
+      orderBy: Token_OrderBy.TokenId,
+      orderDirection: OrderDirection.Desc,
+      first: 1,
+    })
+    .then((x) => (x.tokens.length > 0 ? x.tokens[0].tokenId : undefined))
+
+  if (!latestTokenId) return { notFound: true }
+
+  return {
+    redirect: {
+      destination: `/dao/${network}/${collectionAddress}/${latestTokenId}`,
+      permanent: false,
+    },
+  }
+}
+
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   res,
@@ -183,7 +211,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const collection = params?.token as AddressType
   const tokenId = params?.tokenId as string
-  const network = params?.network
+  const network = params?.network as string
 
   try {
     const chain = PUBLIC_DEFAULT_CHAINS.find((x) => x.slug === network)
@@ -198,7 +226,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       })
       .then((x) => x.token)
 
-    if (!token) throw new Error('Token not found')
+    if (!token) return getLatestTokenIdRedirect(collection, chain, network)
 
     const {
       name,

@@ -2,7 +2,7 @@ import { FormikHelpers } from 'formik'
 import * as yup from 'yup'
 
 import { AddressType } from 'src/typings'
-import { addressValidationSchema } from 'src/utils/yup'
+import { addressValidationSchemaWithError } from 'src/utils/yup'
 
 export interface MilestoneFormValues {
   amount: number
@@ -61,12 +61,19 @@ export const MilestoneSchema = yup.object({
 
 export const EscrowFormSchema = yup
   .object({
-    clientAddress: addressValidationSchema,
-    recipientAddress: addressValidationSchema.test(
+    clientAddress: addressValidationSchemaWithError(
+      'Delegate address is invalid.',
+      'Delegate address is required.'
+    ),
+    recipientAddress: addressValidationSchemaWithError(
+      'Recipient address is invalid.',
+      'Recipient address is required.'
+    ).test(
       'not-same-as-client',
-      'Recipient address must be different from client address',
+      'Recipient address must be different from the delegate address.',
       function (value) {
-        return value?.toLowerCase() !== this?.parent.clientAddress.toLowerCase()
+        if (!this?.parent?.clientAddress) return true
+        return value?.toLowerCase() !== this?.parent?.clientAddress?.toLowerCase()
       }
     ),
     safetyValveDate: yup
@@ -100,11 +107,11 @@ export const EscrowFormSchema = yup
     milestones: yup
       .array()
       .of(MilestoneSchema)
-      .min(1, 'At least one milestone is required'),
+      .min(1, 'At least one milestone is required.'),
   })
   .test(
     'addresses-not-same',
-    'Client address and recipient address must be different',
+    'Delegate and recipient addresses must be different.',
     function (values) {
       return values.clientAddress !== values.recipientAddress
     }

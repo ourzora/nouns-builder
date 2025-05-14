@@ -50,12 +50,16 @@ export const Escrow: React.FC = () => {
       if (!treasury) {
         return
       }
+      const newProposalId = lastProposalId + 1
+      const escrowTitle = `Proposal #${newProposalId}`
+      const escrowDescription = `${window?.location.href.replace(
+        '/proposal/create',
+        '/vote/' + newProposalId
+      )}`
+
       const ipfsDataToUpload: InvoiceMetadata = {
-        title: 'Proposal #' + (lastProposalId + 1),
-        description: window?.location.href.replace(
-          '/proposal/create',
-          '/vote/' + lastProposalId + 1
-        ),
+        title: escrowTitle,
+        description: escrowDescription,
         endDate: new Date(
           values.milestones[values.milestones.length - 1].endDate
         ).getTime(),
