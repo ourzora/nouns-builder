@@ -6,6 +6,7 @@ import { readContract } from 'wagmi/actions'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
 import { getBids } from 'src/data/subgraph/requests/getBids'
+import { awaitSubgraphSync } from 'src/data/subgraph/requests/sync'
 import { useDaoStore } from 'src/modules/dao'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
@@ -30,6 +31,8 @@ export const useAuctionEvents = ({
     eventName: 'AuctionCreated',
     chainId,
     listener: async (logs) => {
+      await awaitSubgraphSync(chainId, logs[0].blockNumber)
+
       await mutate([SWR_KEYS.AUCTION, chainId, auction], () =>
         readContract({
           abi: auctionAbi,
@@ -53,7 +56,9 @@ export const useAuctionEvents = ({
     address: isTokenActiveAuction ? auction : undefined,
     abi: auctionAbi,
     eventName: 'AuctionBid',
-    listener: async () => {
+    listener: async (logs) => {
+      await awaitSubgraphSync(chainId, logs[0].blockNumber)
+
       await mutate([SWR_KEYS.AUCTION, chainId, auction], () =>
         readContract({
           abi: auctionAbi,

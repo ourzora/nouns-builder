@@ -2544,6 +2544,17 @@ export type ExploreDaosPageQuery = {
   }>
 }
 
+export type SyncStatusQueryVariables = Exact<{ [key: string]: never }>
+
+export type SyncStatusQuery = {
+  __typename?: 'Query'
+  _meta?: {
+    __typename?: '_Meta_'
+    hasIndexingErrors: boolean
+    block: { __typename?: '_Block_'; number: number }
+  } | null
+}
+
 export type MyDaosPageQueryVariables = Exact<{
   daos?: InputMaybe<Array<Scalars['String']> | Scalars['String']>
   orderBy?: InputMaybe<Auction_OrderBy>
@@ -3078,6 +3089,16 @@ export const ExploreDaosPageDocument = gql`
   }
   ${ExploreDaoFragmentDoc}
 `
+export const SyncStatusDocument = gql`
+  query syncStatus {
+    _meta {
+      block {
+        number
+      }
+      hasIndexingErrors
+    }
+  }
+`
 export const MyDaosPageDocument = gql`
   query myDaosPage($daos: [String!], $orderBy: Auction_orderBy, $skip: Int) {
     auctions(
@@ -3378,6 +3399,20 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'exploreDaosPage',
+        'query'
+      )
+    },
+    syncStatus(
+      variables?: SyncStatusQueryVariables,
+      requestHeaders?: Dom.RequestInit['headers']
+    ): Promise<SyncStatusQuery> {
+      return withWrapper(
+        (wrappedRequestHeaders) =>
+          client.request<SyncStatusQuery>(SyncStatusDocument, variables, {
+            ...requestHeaders,
+            ...wrappedRequestHeaders,
+          }),
+        'syncStatus',
         'query'
       )
     },
