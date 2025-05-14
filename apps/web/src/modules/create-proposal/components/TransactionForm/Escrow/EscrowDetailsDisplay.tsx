@@ -6,6 +6,7 @@ import { useDaoStore } from 'src/modules/dao'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 
+import { link } from './EscrowDetailsDisplay.css'
 import { EscrowFormValues } from './EscrowForm.schema'
 
 export default function EscrowDetailsDisplay() {
@@ -22,6 +23,7 @@ export default function EscrowDetailsDisplay() {
   const totalEscrowAmount = values?.milestones
     .map((x) => x.amount)
     .reduce((acc, x) => acc + x, 0)
+
   return (
     <Box
       position={isMobile ? 'relative' : 'absolute'}
@@ -35,7 +37,7 @@ export default function EscrowDetailsDisplay() {
       <Stack position={'sticky'} top={'x20'} right={'x0'} gap={'x5'} align="flex-end">
         {Number(totalEscrowAmount) > Number(treasuryBalance?.formatted) && (
           <Text variant="paragraph-sm" color="negative">
-            Escrow amount exceeding treasury balance
+            Escrow amount exceeding treasury balance.
           </Text>
         )}
         <Box>
@@ -50,9 +52,29 @@ export default function EscrowDetailsDisplay() {
           <Text fontSize={12} color="text4" style={{ fontWeight: 'bold' }}>
             Escrow Service by
           </Text>
-          <Text variant="heading-sm" style={{ fontWeight: 'bold' }}>
-            SmartInvoice
+          <a
+            href="https://www.smartinvoice.xyz/getting-started/what-is-smart-invoice"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text variant="heading-sm" style={{ fontWeight: 'bold' }} className={link}>
+              Smart Invoice
+            </Text>
+          </a>
+        </Box>
+        <Box style={{ textAlign: 'right' }}>
+          <Text fontSize={12} color="text4" style={{ fontWeight: 'bold' }}>
+            Arbitration by
           </Text>
+          <a
+            href="https://www.smartinvoice.xyz/arbitration/kleros-arbitration"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Text variant="heading-sm" style={{ fontWeight: 'bold' }} className={link}>
+              Kleros
+            </Text>
+          </a>
         </Box>
       </Stack>
     </Box>

@@ -359,6 +359,22 @@ export const MilestoneDetails = ({
           }
         )}
       />
+      {!!clientAddress && !isClientTreasury && (
+        <Stack direction="row" align="center">
+          <Text variant="label-sm" color="primary" mr="x2">
+            Escrow Release Delegated to
+          </Text>
+          <Box color={'secondary'} className={atoms({ textDecoration: 'underline' })}>
+            <a
+              href={`${ETHERSCAN_BASE_URL[invoiceChain.id]}/address/${clientAddress}`}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <Text variant="label-sm">{clientDisplayName}</Text>
+            </a>
+          </Box>
+        </Stack>
+      )}
       {!!invoiceUrl && !!clientAddress && (
         <Stack direction="column" fontWeight={'heading'} mt="x2" ml="x4" gap="x2">
           {isClientTreasury ? (
@@ -370,23 +386,6 @@ export const MilestoneDetails = ({
             </a>
           ) : (
             <>
-              <Stack direction="row" align="center">
-                <Text variant="label-sm" color="primary" mr="x2">
-                  Escrow Release Delegated to
-                </Text>
-                <Box
-                  color={'secondary'}
-                  className={atoms({ textDecoration: 'underline' })}
-                >
-                  <a
-                    href={`${ETHERSCAN_BASE_URL[invoiceChain.id]}/address/${clientAddress}`}
-                    rel="noreferrer"
-                    target="_blank"
-                  >
-                    <Text variant="label-sm">{clientDisplayName}</Text>
-                  </a>
-                </Box>
-              </Stack>
               {isClientAGnosisSafe ? (
                 <>
                   <a

@@ -1,9 +1,10 @@
-import { Box, Button, Flex, Stack } from '@zoralabs/zord'
+import { Box, Button, Flex, Stack, Text } from '@zoralabs/zord'
 import { FieldArray, Form, Formik } from 'formik'
 import type { FormikHelpers } from 'formik'
 import { useFormikContext } from 'formik'
 import { truncate } from 'lodash'
 import React, { useCallback, useState } from 'react'
+import { useBalance } from 'wagmi'
 
 import DatePicker from 'src/components/Fields/Date'
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -12,6 +13,7 @@ import Accordion from 'src/components/Home/accordian'
 import { Icon } from 'src/components/Icon'
 import SingleMediaUpload from 'src/components/SingleMediaUpload/SingleMediaUpload'
 import { useDaoStore } from 'src/modules/dao'
+import { useChainStore } from 'src/stores/useChainStore'
 
 import EscrowDetailsDisplay from './EscrowDetailsDisplay'
 import {
@@ -148,6 +150,13 @@ const EscrowForm: React.FC<EscrowFormProps> = ({ onSubmit, isSubmitting }) => {
     []
   )
 
+  const chain = useChainStore((x) => x.chain)
+
+  const { data: treasuryBalance } = useBalance({
+    address: treasury,
+    chainId: chain.id,
+  })
+
   return (
     <Box>
       <Formik
@@ -161,124 +170,175 @@ const EscrowForm: React.FC<EscrowFormProps> = ({ onSubmit, isSubmitting }) => {
         validateOnChange={false}
         validateOnBlur={true}
       >
-        {(formik) => (
-          <Box
-            data-testid="Escrow-form"
-            as={'fieldset'}
-            disabled={formik.isValidating || isSubmitting}
-            style={{ outline: 0, border: 0, padding: 0, margin: 0 }}
-          >
-            <Form>
-              <Stack gap={'x5'}>
-                <EscrowDetailsDisplay />
-                <SmartInput
-                  type={TEXT}
-                  formik={formik}
-                  {...formik.getFieldProps('recipientAddress')}
-                  id="recipientAddress"
-                  inputLabel={'Recipient'}
-                  placeholder={'0x...'}
-                  isAddress={true}
-                  errorMessage={
-                    formik.touched.recipientAddress && formik.errors.recipientAddress
-                      ? formik.errors.recipientAddress
-                      : undefined
-                  }
-                  helperText={`The wallet address that will receive funds when milestones are completed.`}
-                />
-                <SmartInput
-                  type={TEXT}
-                  formik={formik}
-                  {...formik.getFieldProps('clientAddress')}
-                  id="clientAddress"
-                  inputLabel={'Controller'}
-                  placeholder={'0x... or .eth'}
-                  isAddress={true}
-                  errorMessage={
-                    formik.touched.clientAddress && formik.errors.clientAddress
-                      ? formik.errors.clientAddress
-                      : undefined
-                  }
-                  helperText={`This wallet will control the escrow and release funds. It can be your DAO’s treasury or a working group’s multisig`}
-                />
+        {(formik) => {
+          const totalEscrowAmount = formik.values?.milestones
+            .map((x) => x.amount)
+            .reduce((acc, x) => acc + x, 0)
 
-                <DatePicker
-                  {...formik.getFieldProps('safetyValveDate')}
-                  formik={formik}
-                  id="safetyValveDate"
-                  inputLabel={'Safety Valve Date'}
-                  placeholder={'yyyy-mm-dd'}
-                  dateFormat="Y-m-d"
-                  errorMessage={
-                    formik.touched.safetyValveDate && formik.errors.safetyValveDate
-                      ? formik.errors.safetyValveDate
-                      : undefined
-                  }
-                  helperText={`The date after which the DAO or multisig can reclaim funds from escrow.`}
-                />
-                <Box mt={'x5'}>
-                  <FieldArray name="milestones">
-                    {({ push, remove }) => (
-                      <>
-                        <Accordion
-                          items={formik.values.milestones.map((_, index) => ({
-                            title: truncate(formik.values.milestones[index].title, {
-                              length: 32,
-                              separator: '...',
-                            }),
-                            description: (
-                              <MilestoneForm
-                                key={index}
-                                index={index}
-                                setIsMediaUploading={setIsMediaUploading}
-                                removeMilestone={() =>
-                                  formik.values.milestones.length != 1 && remove(index)
-                                }
-                              />
-                            ),
-                          }))}
-                        />
-                        <Flex align="center" justify="center">
-                          <Button
-                            variant="secondary"
-                            width={'auto'}
-                            onClick={() =>
-                              handleAddMilestone(
-                                push,
-                                formik.values?.milestones[
-                                  formik.values?.milestones.length - 1
-                                ],
-                                formik.values?.milestones.length + 1
+          const isTreasuryBalanceEnough =
+            Number(totalEscrowAmount) <= Number(treasuryBalance?.formatted)
+          const escrowAmountError = isTreasuryBalanceEnough
+            ? undefined
+            : 'Escrow amount exceeding treasury balance.'
+
+          const allErrors = {
+            ...formik.errors,
+            escrowAmount: escrowAmountError,
+          }
+
+          return (
+            <Box
+              data-testid="Escrow-form"
+              as={'fieldset'}
+              disabled={formik.isValidating || isSubmitting}
+              style={{ outline: 0, border: 0, padding: 0, margin: 0 }}
+            >
+              <Form>
+                <Stack gap={'x5'}>
+                  <EscrowDetailsDisplay />
+                  <SmartInput
+                    type={TEXT}
+                    formik={formik}
+                    {...formik.getFieldProps('recipientAddress')}
+                    id="recipientAddress"
+                    inputLabel={'Recipient'}
+                    placeholder={'0x...'}
+                    isAddress={true}
+                    errorMessage={
+                      formik.touched.recipientAddress && formik.errors.recipientAddress
+                        ? formik.errors.recipientAddress
+                        : undefined
+                    }
+                    helperText={`The wallet address that will receive funds when milestones are completed.`}
+                  />
+                  <SmartInput
+                    type={TEXT}
+                    formik={formik}
+                    {...formik.getFieldProps('clientAddress')}
+                    id="clientAddress"
+                    inputLabel={'Delegate'}
+                    placeholder={'0x... or .eth'}
+                    isAddress={true}
+                    errorMessage={
+                      formik.touched.clientAddress && formik.errors.clientAddress
+                        ? formik.errors.clientAddress
+                        : undefined
+                    }
+                    helperText={`This wallet will control the escrow and release funds. It can be your DAO’s treasury or a working group’s multisig`}
+                  />
+
+                  <DatePicker
+                    {...formik.getFieldProps('safetyValveDate')}
+                    formik={formik}
+                    id="safetyValveDate"
+                    inputLabel={'Safety Valve Date'}
+                    placeholder={'yyyy-mm-dd'}
+                    dateFormat="Y-m-d"
+                    errorMessage={
+                      formik.touched.safetyValveDate && formik.errors.safetyValveDate
+                        ? formik.errors.safetyValveDate
+                        : undefined
+                    }
+                    helperText={`The date after which the DAO or multisig can reclaim funds from escrow.`}
+                  />
+                  <Box mt={'x5'}>
+                    <FieldArray name="milestones">
+                      {({ push, remove }) => (
+                        <>
+                          <Accordion
+                            items={formik.values.milestones.map((_, index) => ({
+                              title: truncate(formik.values.milestones[index].title, {
+                                length: 32,
+                                separator: '...',
+                              }),
+                              description: (
+                                <MilestoneForm
+                                  key={index}
+                                  index={index}
+                                  setIsMediaUploading={setIsMediaUploading}
+                                  removeMilestone={() =>
+                                    formik.values.milestones.length != 1 && remove(index)
+                                  }
+                                />
+                              ),
+                            }))}
+                          />
+                          <Flex align="center" justify="center">
+                            <Button
+                              variant="secondary"
+                              width={'auto'}
+                              onClick={() =>
+                                handleAddMilestone(
+                                  push,
+                                  formik.values?.milestones[
+                                    formik.values?.milestones.length - 1
+                                  ],
+                                  formik.values?.milestones.length + 1
+                                )
+                              }
+                            >
+                              <Icon id="plus" />
+                              Create Milestone
+                            </Button>
+                          </Flex>
+                        </>
+                      )}
+                    </FieldArray>
+                  </Box>
+                  <Button
+                    mt={'x9'}
+                    variant={'outline'}
+                    borderRadius={'curved'}
+                    type="submit"
+                    disabled={
+                      isSubmitting ||
+                      isMediaUploading ||
+                      formik.values?.milestones?.length === 0
+                    }
+                  >
+                    {isSubmitting
+                      ? 'Adding Transaction to Queue'
+                      : 'Add Transaction to Queue'}
+                  </Button>
+                  {!formik.isValidating && Object.keys(allErrors).length > 0 && (
+                    <Stack mt="x2" gap="x1">
+                      {Object.entries(allErrors).flatMap(([key, error]) => {
+                        if (typeof error === 'string') {
+                          return [
+                            <Text key={key} color="negative" textAlign="left">
+                              - {error}
+                            </Text>,
+                          ]
+                        } else if (key === 'milestones' && Array.isArray(error)) {
+                          return error.flatMap((milestoneError, index) => {
+                            if (
+                              typeof milestoneError === 'object' &&
+                              milestoneError !== null
+                            ) {
+                              return Object.entries(milestoneError).map(
+                                ([field, msg]) => (
+                                  <Text
+                                    key={`milestone-${index}-${field}`}
+                                    color="negative"
+                                    textAlign="left"
+                                  >
+                                    - Milestone {index + 1} {field}: {msg}
+                                  </Text>
+                                )
                               )
                             }
-                          >
-                            <Icon id="plus" />
-                            Create Milestone
-                          </Button>
-                        </Flex>
-                      </>
-                    )}
-                  </FieldArray>
-                </Box>
-                <Button
-                  mt={'x9'}
-                  variant={'outline'}
-                  borderRadius={'curved'}
-                  type="submit"
-                  disabled={
-                    isSubmitting ||
-                    isMediaUploading ||
-                    formik.values?.milestones?.length === 0
-                  }
-                >
-                  {isSubmitting
-                    ? 'Adding Transaction to Queue'
-                    : 'Add Transaction to Queue'}
-                </Button>
-              </Stack>
-            </Form>
-          </Box>
-        )}
+                            return []
+                          })
+                        }
+                        return []
+                      })}
+                    </Stack>
+                  )}
+                </Stack>
+              </Form>
+            </Box>
+          )
+        }}
       </Formik>
     </Box>
   )
