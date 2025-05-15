@@ -1,4 +1,3 @@
-import { debounce } from 'lodash'
 import { Address } from 'wagmi'
 import * as Yup from 'yup'
 
@@ -9,37 +8,32 @@ import { getProvider } from 'src/utils/provider'
 const validateAddress = async (
   value: string | undefined,
   ctx: Yup.TestContext<any>,
-  res: (value: boolean | Yup.ValidationError) => void,
   errorMessage?: string
-) => {
+): Promise<boolean | Yup.ValidationError> => {
+  if (!value) return false
+
   try {
-    if (!value) return res(false)
     const { data: isValid, error } = await isValidAddress(
       value as Address,
       getProvider(CHAIN_ID.ETHEREUM),
       errorMessage
     )
-    if (error) return res(ctx.createError({ message: error, path: ctx.path }))
-    res(isValid)
-  } catch (err) {
-    res(false)
-  }
-}
 
-const deboucedValidateAddress = async (
-  value: string | undefined,
-  ctx: Yup.TestContext<any>,
-  errorMessage?: string
-) => {
-  const debouncedFn = debounce(validateAddress, 500)
-  return await new Promise<boolean | Yup.ValidationError>((res) =>
-    debouncedFn(value, ctx, res, errorMessage)
-  )
+    if (!isValid || error) {
+      return ctx.createError({ message: error || errorMessage || 'Invalid address' })
+    }
+
+    return true
+  } catch {
+    return ctx.createError({ message: errorMessage || 'Invalid address' })
+  }
 }
 
 export const addressValidationSchema = Yup.string()
   .required('*')
-  .test(deboucedValidateAddress)
+  .test('is-valid-address', '*', function (value) {
+    return validateAddress(value, this)
+  })
 
 export const addressValidationSchemaWithError = (
   invalidErrorMessage: string,
@@ -47,11 +41,15 @@ export const addressValidationSchemaWithError = (
 ) =>
   Yup.string()
     .required(requiredErrorMessage)
-    .test((value: string | undefined, ctx: Yup.TestContext<any>) =>
-      deboucedValidateAddress(value, ctx, invalidErrorMessage)
-    )
+    .test('is-valid-address', invalidErrorMessage, function (value) {
+      return validateAddress(value, this, invalidErrorMessage)
+    })
 
 export const addressValidationOptionalSchema = Yup.string().test(
-  (value: string | undefined, ctx: Yup.TestContext<any>) =>
-    value ? deboucedValidateAddress(value, ctx) : true
+  'is-valid-address-optional',
+  'Invalid address',
+  function (value) {
+    if (!value) return true
+    return validateAddress(value, this)
+  }
 )

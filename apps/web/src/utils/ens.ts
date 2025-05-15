@@ -1,7 +1,6 @@
 import { Address, PublicClient, isAddress } from 'viem'
 
 import { CHAIN_ID } from 'src/typings'
-import { getChainFromLocalStorage } from 'src/utils/getChainFromLocalStorage'
 
 import { getProvider } from './provider'
 
@@ -12,58 +11,73 @@ export type IsValidAddressResult = {
   error?: string
 }
 
+/**
+ * Checks if a string is a valid Ethereum address or a resolvable ENS name.
+ */
 export async function isValidAddress(
-  address: Address,
+  input: string,
   provider: PublicClient | undefined = defaultProvider,
-  errorMessage = 'Invalid address'
+  errorMessage = 'Must be a valid Ethereum address or resolvable ENS name'
 ): Promise<IsValidAddressResult> {
   try {
-    if (isAddress(address)) return { data: true }
+    if (isAddress(input)) return { data: true }
 
-    const { id: chainId } = getChainFromLocalStorage()
-
-    let resolvedName: string | null
-
-    if (chainId === CHAIN_ID.ETHEREUM || chainId === CHAIN_ID.SEPOLIA) {
-      resolvedName = await provider?.getEnsName({ address })
-    } else {
-      const [nameResponse, codeResponse] = await Promise.all([
-        provider?.getEnsName(address),
-        provider?.getBytecode(address),
-      ])
-
-      if (codeResponse !== '0x')
-        return { data: false, error: 'ENS for contracts is not supported on L2' }
-
-      resolvedName = nameResponse
-    }
-
+    const resolved = await provider?.getEnsAddress({ name: input })
     return {
-      data: !!resolvedName,
-      error: resolvedName ? undefined : errorMessage,
+      data: !!resolved,
+      error: resolved ? undefined : errorMessage,
     }
   } catch {
     return { data: false, error: errorMessage }
   }
 }
 
+// In-memory ENS resolution cache
+const ensAddressCache = new Map<string, string>()
+
 export async function getEnsAddress(
   nameOrAddress: string,
   provider: PublicClient | undefined = defaultProvider
-) {
-  let resolvedName
-  try {
-    resolvedName = await provider?.getEnsAddress({ name: nameOrAddress })
-  } catch (e) {
-    console.error('Error getting ENS address:', e)
+): Promise<string> {
+  if (!nameOrAddress) return nameOrAddress
+
+  // Check cache
+  if (ensAddressCache.has(nameOrAddress)) {
+    return ensAddressCache.get(nameOrAddress)!
   }
 
-  return resolvedName ?? nameOrAddress
+  try {
+    const resolved = await provider.getEnsAddress({ name: nameOrAddress })
+    const result = resolved ?? nameOrAddress
+    ensAddressCache.set(nameOrAddress, result)
+    return result
+  } catch (e) {
+    console.error('Error getting ENS address:', e)
+    return nameOrAddress
+  }
 }
+
+// In-memory reverse ENS cache
+const ensNameCache = new Map<Address, string | null>()
 
 export async function getEnsName(
   address: Address,
   provider: PublicClient | undefined = defaultProvider
-) {
-  return await provider?.getEnsName({ address })
+): Promise<string> {
+  if (!address) return address
+
+  // Check cache
+  if (ensNameCache.has(address)) {
+    return ensNameCache.get(address)!
+  }
+
+  try {
+    const name = await provider.getEnsName({ address })
+    const result = name ?? address
+    ensNameCache.set(address, result)
+    return result
+  } catch (e) {
+    console.error('Error getting ENS name:', e)
+    return address
+  }
 }

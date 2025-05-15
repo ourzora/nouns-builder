@@ -2,12 +2,10 @@ import { Box, Flex, atoms } from '@zoralabs/zord'
 import { FormikProps } from 'formik'
 import { motion } from 'framer-motion'
 import React, { ChangeEventHandler, ReactElement, WheelEvent } from 'react'
-import useSWR from 'swr'
-import { Address } from 'wagmi'
 
+import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
-import SWR_KEYS from 'src/constants/swrKeys'
-import { getEnsName } from 'src/utils/ens'
+import { useEnsData } from 'src/hooks/useEnsData'
 import { isEmpty } from 'src/utils/helpers'
 
 import {
@@ -62,9 +60,8 @@ const SmartInput: React.FC<SmartInputProps> = ({
   disableWheelEvent = type === 'number',
   isAddress,
 }) => {
-  const { data: ensName } = useSWR(
-    isAddress ? [SWR_KEYS.ENS, value] : null,
-    async () => await getEnsName(value as Address)
+  const { ensName, ensAvatar, ethAddress } = useEnsData(
+    isAddress ? (value as string | undefined) : undefined
   )
 
   /*
@@ -153,7 +150,11 @@ const SmartInput: React.FC<SmartInputProps> = ({
           position={'absolute'}
           className={inputCheckIcon['default']}
         >
-          <Icon fill="background1" id="check" />
+          {ensAvatar && ethAddress ? (
+            <Avatar address={ethAddress} src={ensAvatar} size="32" />
+          ) : (
+            <Icon fill="background1" id="check" />
+          )}
         </Flex>
       )}
       {(typeof value === 'number' || value) && perma ? (
