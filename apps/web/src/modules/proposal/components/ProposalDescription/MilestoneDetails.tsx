@@ -1,14 +1,12 @@
-import { NETWORK_CONFIG } from '@smartinvoicexyz/constants'
 import { Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
 import { Box, Button, Spinner, Stack, Text, atoms } from '@zoralabs/zord'
-import axios from 'axios'
 import { getFetchableUrls } from 'ipfs-service'
 import _ from 'lodash'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
 import useSWR from 'swr'
-import { Hex, encodeFunctionData, formatEther } from 'viem'
+import { Hex, decodeEventLog, encodeFunctionData, formatEther, isHex } from 'viem'
 import {
   useAccount,
   useContractRead,
@@ -35,6 +33,7 @@ import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType, CHAIN_ID } from 'src/typings'
 import { fetchFromURI } from 'src/utils/fetch'
+import { getProvider } from 'src/utils/provider'
 
 import { DecodedTransaction } from './useDecodedTransactions'
 
@@ -55,6 +54,46 @@ const GET_OWNERS_FUNCTION_ABI = [
     outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
     stateMutability: 'view',
     type: 'function',
+  },
+]
+
+const LOG_NEW_INVOICE_EVENT_ABI = [
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'index',
+        type: 'uint256',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'invoice',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256[]',
+        name: 'amounts',
+        type: 'uint256[]',
+      },
+      {
+        indexed: false,
+        internalType: 'bytes32',
+        name: 'invoiceType',
+        type: 'bytes32',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'version',
+        type: 'uint256',
+      },
+    ],
+    name: 'LogNewInvoice',
+    type: 'event',
   },
 ]
 
@@ -104,21 +143,32 @@ export const MilestoneDetails = ({
     collectionAddress: addresses?.token,
   })
 
-  const subgraphURL = useMemo(() => {
-    return NETWORK_CONFIG[invoiceChain.id]?.SUBGRAPH
-  }, [invoiceChain.id])
-
   const { data: invoiceAddress, isValidating: isLoadingInvoice } = useSWR(
-    [subgraphURL, executionTransactionHash],
+    [executionTransactionHash],
     async () => {
-      const response = await axios.post(subgraphURL, {
-        query: INVOICE_QUERY,
-        variables: {
-          txHash: executionTransactionHash,
-        },
+      if (!executionTransactionHash || !isHex(executionTransactionHash)) return undefined
+
+      const provider = getProvider(invoiceChain.id)
+      const { logs } = await provider.getTransactionReceipt({
+        hash: executionTransactionHash as Hex,
       })
 
-      return _.get(response, 'data.data.invoices[0].address') as AddressType
+      const parsedLogs = logs.map((log) => {
+        try {
+          return decodeEventLog({
+            abi: LOG_NEW_INVOICE_EVENT_ABI,
+            data: log?.data,
+            topics: log?.topics,
+          })
+        } catch {
+          return null
+        }
+      })
+
+      const parsedEvent = _.find(parsedLogs, { eventName: 'LogNewInvoice' })
+
+      // find data by provided key
+      return _.get(parsedEvent, `args.invoice`) as AddressType | undefined
     }
   )
 

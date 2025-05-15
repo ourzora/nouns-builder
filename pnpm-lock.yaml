@@ -63,9 +63,6 @@ importers:
       '@sentry/nextjs':
         specifier: ^7.105.0
         version: 7.119.0(encoding@0.1.13)(next@14.2.5(@babel/core@7.20.12)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(react@18.2.0)(webpack@5.75.0)
-      '@smartinvoicexyz/constants':
-        specifier: ^0.1.24
-        version: 0.1.24(bufferutil@4.0.7)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
       '@smartinvoicexyz/types':
         specifier: ^0.1.24
         version: 0.1.24(@emotion/react@11.14.0(@types/react@18.0.28)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.0.28)(react@18.2.0))(@types/react@18.0.28)(react@18.2.0))(@types/node@18.13.0)(@types/react@18.0.28)(bufferutil@4.0.7)(encoding@0.1.13)(framer-motion@6.5.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(graphql-ws@5.11.3(graphql@16.6.0))(graphql@16.6.0)(react-dom@18.2.0(react@18.2.0))(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -6117,9 +6114,9 @@ packages:
     resolution: {integrity: sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==}
     engines: {node: '>= 0.4'}
 
-  forge-std@https://codeload.github.com/foundry-rs/forge-std/tar.gz/6abf66980050ab03a35b52bdab814f55001d6929:
-    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/6abf66980050ab03a35b52bdab814f55001d6929}
-    version: 1.9.6
+  forge-std@https://codeload.github.com/foundry-rs/forge-std/tar.gz/77041d2ce690e692d6e03cc812b57d1ddaa4d505:
+    resolution: {tarball: https://codeload.github.com/foundry-rs/forge-std/tar.gz/77041d2ce690e692d6e03cc812b57d1ddaa4d505}
+    version: 1.9.7
 
   form-data@2.3.3:
     resolution: {integrity: sha512-1lLKB2Mu3aGP1Q/2eCOx0fNbRMe7XdwktwOruhfqqd0rIJWwN4Dh+E3hrPSlDCXnSR7UtZ1N38rVXm+6+MEhJQ==}
@@ -15592,7 +15589,7 @@ snapshots:
       '@openzeppelin/contracts-upgradeable': 4.8.1
       '@types/node': 18.13.0
       ds-test: https://codeload.github.com/dapphub/ds-test/tar.gz/e282159d5170298eb2455a6c05280ab5a73a4ef0
-      forge-std: https://codeload.github.com/foundry-rs/forge-std/tar.gz/6abf66980050ab03a35b52bdab814f55001d6929
+      forge-std: https://codeload.github.com/foundry-rs/forge-std/tar.gz/77041d2ce690e692d6e03cc812b57d1ddaa4d505
       micro-onchain-metadata-utils: 0.1.1
       sol-uriencode: 0.2.0
 
@@ -18247,7 +18244,7 @@ snapshots:
     dependencies:
       is-callable: 1.2.7
 
-  forge-std@https://codeload.github.com/foundry-rs/forge-std/tar.gz/6abf66980050ab03a35b52bdab814f55001d6929: {}
+  forge-std@https://codeload.github.com/foundry-rs/forge-std/tar.gz/77041d2ce690e692d6e03cc812b57d1ddaa4d505: {}
 
   form-data@2.3.3:
     dependencies:
