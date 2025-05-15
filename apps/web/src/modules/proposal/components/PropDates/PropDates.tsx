@@ -1,12 +1,20 @@
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
-import { useState } from 'react'
+import { toLower } from 'lodash'
+import { useMemo, useState } from 'react'
 import useSWR from 'swr'
 import { getAddress, zeroHash } from 'viem'
 
 import { Icon } from 'src/components/Icon'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { type PropDate, getPropDates } from 'src/data/eas/requests/getPropDates'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
+import { useDecodedTransactions } from 'src/hooks/useDecodedTransactions'
+import {
+  getEscrowBundler,
+  getEscrowBundlerV1,
+} from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
 import { useDaoStore } from 'src/modules/dao/stores'
+import { useInvoiceData } from 'src/modules/proposal/components/ProposalDescription/MilestoneDetails/useInvoiceData'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 
@@ -15,20 +23,36 @@ import { PropDateForm } from './PropDateForm'
 import { useDaoMembers } from './useDaoMembers'
 
 interface PropDatesProps {
-  proposalId: string
+  proposal: Proposal
 }
 
-export const PropDates = ({ proposalId }: PropDatesProps) => {
+export const PropDates = ({ proposal }: PropDatesProps) => {
   const chain = useChainStore((x) => x.chain)
   const {
     addresses: { token },
   } = useDaoStore()
+
+  const proposalId = proposal.proposalId
 
   const { data, mutate } = useSWR(
     [SWR_KEYS.PROPDATES, chain.id, proposalId],
     () => getPropDates(token as `0x${string}`, chain.id, proposalId),
     { revalidateOnMount: true, refreshInterval: 1000 * 5 }
   )
+
+  const decodedTransactions = useDecodedTransactions(proposal)
+
+  const decodedEscrowTxn = useMemo(
+    () =>
+      decodedTransactions?.find(
+        (t) =>
+          toLower(t.target) === toLower(getEscrowBundler(chain.id)) ||
+          toLower(t.target) === toLower(getEscrowBundlerV1(chain.id))
+      ),
+    [chain.id, decodedTransactions]
+  )
+
+  const { invoiceData } = useInvoiceData(chain.id, decodedEscrowTxn)
 
   const propDates = data ?? []
 
@@ -102,6 +126,7 @@ export const PropDates = ({ proposalId }: PropDatesProps) => {
                 },
                 proposalId,
                 propDates,
+                invoiceData,
                 replyTo: replyingTo,
               }}
             />
@@ -118,6 +143,7 @@ export const PropDates = ({ proposalId }: PropDatesProps) => {
                 isReplying={replyingTo?.txid === propDate.txid}
                 onReplyClick={handleReplyClick}
                 replies={replies}
+                invoiceData={invoiceData}
               />
             )
           })}

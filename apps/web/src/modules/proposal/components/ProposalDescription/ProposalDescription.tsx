@@ -12,6 +12,7 @@ import SWR_KEYS from 'src/constants/swrKeys'
 import { SDK } from 'src/data/subgraph/client'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
+import { useDecodedTransactions } from 'src/hooks/useDecodedTransactions'
 import { useEnsData } from 'src/hooks/useEnsData'
 import {
   getEscrowBundler,
@@ -23,7 +24,6 @@ import { propPageWrapper } from 'src/styles/Proposals.css'
 import { DecodedTransactions } from './DecodedTransactions'
 import { MilestoneDetails } from './MilestoneDetails'
 import { proposalDescription } from './ProposalDescription.css'
-import { useDecodedTransactions } from './useDecodedTransactions'
 
 const Section = ({ children, title }: { children: ReactNode; title: string }) => (
   <Box mb={{ '@initial': 'x6', '@768': 'x13' }}>
@@ -43,13 +43,12 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
   proposal,
   collection,
 }) => {
-  const { description, proposer, calldatas, values, targets, executionTransactionHash } =
-    proposal
+  const { description, proposer, executionTransactionHash } = proposal
 
   const { displayName } = useEnsData(proposer)
   const chain = useChainStore((x) => x.chain)
 
-  const decodedTransactions = useDecodedTransactions(targets, calldatas, values)
+  const decodedTransactions = useDecodedTransactions(proposal)
 
   const decodedEscrowTxn = useMemo(
     () =>

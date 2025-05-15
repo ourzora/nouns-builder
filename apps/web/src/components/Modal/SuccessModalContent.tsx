@@ -41,7 +41,7 @@ const SuccessModalContent: React.FC<SuccessModalContentProps> = ({
         </Flex>
       )}
 
-      {pending && <Spinner mx={'x4'} />}
+      {pending && <Spinner mb={'x4'} mx={'x4'} />}
 
       <Flex className={confirmRemoveHeadingStyle} mb={'x2'}>
         {title}

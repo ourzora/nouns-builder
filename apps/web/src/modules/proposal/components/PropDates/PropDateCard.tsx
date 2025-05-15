@@ -1,3 +1,4 @@
+import { InvoiceMetadata } from '@smartinvoicexyz/types'
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
 
 import { Avatar } from 'src/components/Avatar'
@@ -14,15 +15,23 @@ export const PropDateCard = ({
   isReplying,
   onReplyClick,
   replies = [],
+  invoiceData,
 }: {
   propDate: PropDate
   index: number
   isReplying: boolean
   onReplyClick: (propDate: PropDate) => void
   replies?: PropDate[]
+  invoiceData?: InvoiceMetadata
 }) => {
   const isMobile = useLayoutStore((x) => x.isMobile)
   const { ensName, ensAvatar } = useEnsData(propDate?.attester)
+
+  const milestoneTitle =
+    typeof propDate.milestoneId === 'number' &&
+    !!invoiceData?.milestones?.[propDate.milestoneId]?.title
+      ? invoiceData.milestones[propDate.milestoneId].title
+      : ''
 
   return (
     <Flex
@@ -48,6 +57,11 @@ export const PropDateCard = ({
           <Text variant={isMobile ? 'label-sm' : 'label-md'} fontWeight="display">
             {ensName || walletSnippet(propDate.attester)}
           </Text>
+          {milestoneTitle && (
+            <Text variant="label-sm" color="text3">
+              • {milestoneTitle}
+            </Text>
+          )}
           <Text variant="label-sm" color="text3">
             • {new Date(propDate.timeCreated * 1000).toLocaleDateString()}
           </Text>
