@@ -18,7 +18,7 @@ import { waitForTransaction } from 'wagmi/actions'
 import Accordion from 'src/components/Home/accordian'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
-import { SAFE_APP_URL } from 'src/constants/safe'
+import { SAFE_APP_URL, SAFE_HOME_URL } from 'src/constants/safe'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { useVotes } from 'src/hooks/useVotes'
@@ -107,19 +107,10 @@ const createSafeAppUrl = (chainId: CHAIN_ID, safeAddress: Hex, appUrl: string) =
   return `${safeUrl}:${safeAddress}&appUrl=${encodedUrl}`
 }
 
-const INVOICE_QUERY = `
-  query GetInvoice($txHash: String!) {
-    invoices(where: {
-      creationTxHash: $txHash
-    }) {
-      address
-      id
-      createdAt
-      network
-      creationTxHash
-    }
-  }
-`
+const createSafeUrl = (chainId: CHAIN_ID, safeAddress: Hex) => {
+  const safeUrl = SAFE_HOME_URL[chainId]
+  return `${safeUrl}:${safeAddress}`
+}
 
 interface MilestoneDetailsProps {
   decodedTransaction: DecodedTransaction
@@ -418,7 +409,11 @@ export const MilestoneDetails = ({
           </Text>
           <Box color={'secondary'} className={atoms({ textDecoration: 'underline' })}>
             <a
-              href={`${ETHERSCAN_BASE_URL[invoiceChain.id]}/address/${clientAddress}`}
+              href={
+                isClientAGnosisSafe
+                  ? createSafeUrl(invoiceChain.id, clientAddress)
+                  : `${ETHERSCAN_BASE_URL[invoiceChain.id]}/address/${clientAddress}`
+              }
               rel="noreferrer"
               target="_blank"
             >
