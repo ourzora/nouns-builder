@@ -20,6 +20,7 @@ import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { SAFE_APP_URL, SAFE_HOME_URL } from 'src/constants/safe'
 import SWR_KEYS from 'src/constants/swrKeys'
+import { DecodedTransaction } from 'src/hooks/useDecodedTransactions'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { useVotes } from 'src/hooks/useVotes'
 import { TransactionType } from 'src/modules/create-proposal'
@@ -34,8 +35,6 @@ import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType, CHAIN_ID } from 'src/typings'
 import { fetchFromURI } from 'src/utils/fetch'
 import { getProvider } from 'src/utils/provider'
-
-import { DecodedTransaction } from './useDecodedTransactions'
 
 const RELEASE_FUNCTION_ABI = [
   {

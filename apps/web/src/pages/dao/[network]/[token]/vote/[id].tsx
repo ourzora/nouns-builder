@@ -20,6 +20,7 @@ import {
   getProposal,
 } from 'src/data/subgraph/requests/proposalQuery'
 import type { Proposal_Filter } from 'src/data/subgraph/sdk.generated'
+import { decodeTransactions } from 'src/hooks/useDecodedTransactions'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
 import { type DaoContractAddresses, SectionHandler, useDaoStore } from 'src/modules/dao'
 import {
@@ -33,6 +34,7 @@ import { PropDates } from 'src/modules/proposal/components/PropDates'
 import { ProposalVotes } from 'src/modules/proposal/components/ProposalVotes'
 import type { NextPageWithLayout } from 'src/pages/_app'
 import type { ProposalOgMetadata } from 'src/pages/api/og/proposal'
+import { decodeTransaction } from 'src/services/abiService'
 import { useChainStore } from 'src/stores/useChainStore'
 import { propPageWrapper } from 'src/styles/Proposals.css'
 import type { AddressType } from 'src/typings'
@@ -273,6 +275,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     `public, s-maxage=${maxAge}, stale-while-revalidate=${swr}`
   )
 
+  const { targets, calldatas, values } = proposal
+
+  const decodedTransactions = await decodeTransactions(
+    chain.id,
+    targets,
+    calldatas,
+    values,
+    decodeTransaction
+  )
+
   return {
     props: {
       fallback: {
@@ -281,6 +293,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
 
         [unstable_serialize([SWR_KEYS.PROPDATES, chain.id, proposal.proposalId])]:
           propDates,
+
+        [unstable_serialize([
+          SWR_KEYS.PROPOSALS_TRANSACTIONS,
+          chain.id,
+          targets,
+          calldatas,
+          values,
+        ])]: decodedTransactions,
       },
       daoName: name,
       ogImageURL,

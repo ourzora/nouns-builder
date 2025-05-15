@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Hex, decodeFunctionData, getAbiItem } from 'viem'
 import { Address, getAddress, pad, trim } from 'viem'
 
 import { CHAIN_ID } from 'src/typings'
@@ -88,5 +89,42 @@ export const getContractABIByAddress = async (
     } else {
       throw new NotFoundError('Not verified')
     }
+  }
+}
+
+export const decodeTransaction = async (
+  chainId: CHAIN_ID,
+  contract: string,
+  calldata: string
+) => {
+  const { abi: abiJsonString } = await getContractABIByAddress(
+    chainId as CHAIN_ID,
+    contract
+  )
+  const abi = JSON.parse(abiJsonString)
+  const decodeResult = decodeFunctionData({ abi, data: calldata as Hex })
+  const functionSig = calldata.slice(0, 10)
+  const functionInfo = getAbiItem({
+    abi,
+    name: functionSig,
+  })
+
+  const argMapping = functionInfo.inputs.reduce(
+    (last: any, input: any, index: number) => {
+      last[input.name] = {
+        name: input.name,
+        type: input.type,
+        value: decodeResult.args[index]?.toString(),
+      }
+      return last
+    },
+    {}
+  )
+
+  return {
+    args: argMapping,
+    functionName: decodeResult.functionName,
+    functionSig: functionSig,
+    decoded: decodeResult.args.map((x: any) => x.toString()),
   }
 }

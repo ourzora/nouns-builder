@@ -4,6 +4,7 @@ import React, { Fragment } from 'react'
 import { formatEther } from 'viem'
 
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
+import { DecodedTransaction } from 'src/hooks/useDecodedTransactions'
 import {
   ESCROW_TYPE,
   ESCROW_TYPE_V1,
@@ -13,8 +14,6 @@ import {
 } from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
 import { useChainStore } from 'src/stores/useChainStore'
 import { walletSnippet } from 'src/utils/helpers'
-
-import { DecodedTransaction } from './useDecodedTransactions'
 
 interface DecodedTransactionProps {
   decodedTransactions: DecodedTransaction[] | undefined
