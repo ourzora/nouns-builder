@@ -41,6 +41,8 @@ export async function getEnsAddress(
 ): Promise<string> {
   if (!nameOrAddress) return nameOrAddress
 
+  if (isAddress(nameOrAddress)) return nameOrAddress
+
   // Check cache
   if (ensAddressCache.has(nameOrAddress)) {
     return ensAddressCache.get(nameOrAddress)!
