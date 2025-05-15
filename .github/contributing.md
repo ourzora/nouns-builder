@@ -18,7 +18,7 @@ If you're ready to contribute to the source code, please follow this [README](..
 
 If you're unsure where to begin, we highly recommend starting [a new discussion](https://github.com/ourzora/nouns-builder/discussions).
 
-You can also find other contributors in our [public Discord channel](https://discord.gg/JpMKps2W). Feel free to also reach out to us on [Twitter](https://twitter.com/nounsbuilder) if you have any questions.
+You can also find other contributors in our [public Discord channel](https://discord.com/invite/C6Zmt8aakt). Feel free to also reach out to us on [Twitter](https://twitter.com/nounsbuilder) if you have any questions.
 
 ---
 
