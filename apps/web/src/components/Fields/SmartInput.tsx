@@ -123,6 +123,7 @@ const SmartInput: React.FC<SmartInputProps> = ({
       )}
       <input
         id={id}
+        data-testid={id}
         type={type}
         onChange={onChange}
         onBlur={!!onBlur ? onBlur : handleBlur}

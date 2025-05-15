@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Address, isAddress } from 'viem'
 import { useEnsAddress, useEnsAvatar, useEnsName } from 'wagmi'
 
+import { useChainStore } from 'src/stores/useChainStore'
 import { CHAIN_ID } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 
@@ -18,21 +19,25 @@ export const useEnsData = (addressOrName?: string): EnsData => {
   const inputAddress = isAddressValid ? (addressOrName as Address) : undefined
   const inputName = isAddressValid ? undefined : (addressOrName as string)
 
+  const chain = useChainStore((x) => x.chain)
+
+  const chainId = chain.id == CHAIN_ID.FOUNDRY ? CHAIN_ID.FOUNDRY : CHAIN_ID.ETHEREUM
+
   const { data: ensName, isLoading: ensNameLoading } = useEnsName({
     address: inputAddress,
-    chainId: CHAIN_ID.ETHEREUM,
+    chainId,
     enabled: !!inputAddress,
   })
 
   const { data: ensAddress } = useEnsAddress({
     name: inputName,
-    chainId: CHAIN_ID.ETHEREUM,
+    chainId,
     enabled: !!inputName,
   })
 
   const { data: ensAvatar } = useEnsAvatar({
     name: ensName ?? inputName,
-    chainId: CHAIN_ID.ETHEREUM,
+    chainId,
     enabled: !!ensName || !!inputName,
   })
 
