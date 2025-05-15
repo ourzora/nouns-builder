@@ -146,6 +146,7 @@ export const defaultInputLabelStyle = style([
   atoms({
     display: 'inline-flex',
     fontSize: 16,
+    width: '100%',
     mb: 'x4',
   }),
   {
