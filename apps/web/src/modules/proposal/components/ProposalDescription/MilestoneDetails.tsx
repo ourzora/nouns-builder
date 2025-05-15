@@ -34,6 +34,7 @@ import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType, CHAIN_ID } from 'src/typings'
+import { fetchFromURI } from 'src/utils/fetch'
 
 import { DecodedTransaction } from './useDecodedTransactions'
 
@@ -148,11 +149,11 @@ export const MilestoneDetails = ({
   }, [decodedTransaction, invoiceChain.id])
 
   const { data: invoiceData, isValidating: isLoadingInvoiceData } = useSWR(
-    invoiceCid ? [SWR_KEYS.IPFS, invoiceCid] : undefined,
+    invoiceCid ? [SWR_KEYS.ESCROW_MILESTONES_IPFS_DATA, invoiceCid] : undefined,
     async () => {
       try {
-        const response = await axios.get(`https://ipfs.io/ipfs/${invoiceCid}`)
-        return response.data
+        const text = await fetchFromURI(`ipfs://${invoiceCid}`)
+        return JSON.parse(text)
       } catch (error) {
         console.error('Failed to fetch invoice data:', error)
         return null
@@ -160,23 +161,21 @@ export const MilestoneDetails = ({
     }
   )
 
-  const { data: numOfMilestonesReleased, isLoading: isLoadingReleased } = useContractRead(
-    {
-      address: invoiceAddress,
-      enabled: !!invoiceAddress,
-      abi: [
-        {
-          inputs: [],
-          name: 'released',
-          outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-          stateMutability: 'view',
-          type: 'function',
-        },
-      ],
-      functionName: 'released',
-      chainId: invoiceChain.id,
-    }
-  )
+  const { data: currentMilestoneData, isLoading: isLoadingMilestone } = useContractRead({
+    address: invoiceAddress,
+    enabled: !!invoiceAddress,
+    abi: [
+      {
+        inputs: [],
+        name: 'milestone',
+        outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+        stateMutability: 'view',
+        type: 'function',
+      },
+    ],
+    functionName: 'milestone',
+    chainId: invoiceChain.id,
+  })
 
   const { data: hasOwners, error: getOwnersError } = useContractRead({
     enabled: !!clientAddress,
@@ -191,9 +190,9 @@ export const MilestoneDetails = ({
     [hasOwners, getOwnersError]
   )
 
-  const releasedCount = useMemo(
-    () => Number(numOfMilestonesReleased?.toString() || 0),
-    [numOfMilestonesReleased]
+  const currentMilestone = useMemo(
+    () => Number(currentMilestoneData ?? 0),
+    [currentMilestoneData]
   )
 
   const isClientTreasury = useMemo(
@@ -223,14 +222,14 @@ export const MilestoneDetails = ({
       calldata: encodeFunctionData({
         abi: RELEASE_FUNCTION_ABI,
         functionName: 'release',
-        args: [releasedCount],
+        args: [currentMilestone],
       }),
       value: '',
     }
 
     const releaseEscrowTxnData = {
       type: TransactionType.RELEASE_ESCROW_MILESTONE,
-      summary: `Release Milestone #${releasedCount + 1} for ${invoiceData?.title}`,
+      summary: `Release Milestone #${currentMilestone + 1} for ${invoiceData?.title}`,
       transactions: [releaseMilestone],
     }
 
@@ -243,14 +242,14 @@ export const MilestoneDetails = ({
         token: router.query?.token,
       },
     })
-  }, [router, addTransaction, invoiceData?.title, invoiceAddress, releasedCount])
+  }, [router, addTransaction, invoiceData?.title, invoiceAddress, currentMilestone])
 
   const { config, error } = usePrepareContractWrite({
     enabled: !!invoiceAddress && isClientConnected,
     address: invoiceAddress,
     abi: RELEASE_FUNCTION_ABI,
     functionName: 'release',
-    args: [releasedCount],
+    args: [currentMilestone],
   })
 
   const { writeAsync } = useContractWrite(config)
@@ -270,95 +269,98 @@ export const MilestoneDetails = ({
     }
   }, [writeAsync, error])
 
-  const isLoading = isLoadingInvoice || isLoadingInvoiceData || isLoadingReleased
-
-  if (isLoading) return <Spinner size="md" />
+  const isLoading =
+    !invoiceData && (isLoadingInvoice || isLoadingInvoiceData || isLoadingMilestone)
 
   return (
     <>
-      <Accordion
-        items={invoiceData?.milestones?.map(
-          (milestone: MilestoneMetadata, index: number) => {
-            const isReleased = releasedCount - 1 >= index
-            const isNext = releasedCount === index
+      {isLoading ? (
+        <Spinner size="md" />
+      ) : (
+        <Accordion
+          items={invoiceData?.milestones?.map(
+            (milestone: MilestoneMetadata, index: number) => {
+              const isReleased = currentMilestone - 1 >= index
+              const isNext = currentMilestone === index
 
-            return {
-              title: <Text>{`${index + 1}. ${milestone.title}`}</Text>,
-              description: (
-                <Stack gap="x5">
-                  <Stack direction="row" align="center" justify="space-between">
-                    <Text variant="label-xs" color="tertiary">
-                      {`Amount: ${milestoneAmounts?.[index]} ETH`}
-                    </Text>
-                    <Text variant="label-xs" color="tertiary">
-                      {`Due by: ${new Date(
-                        (milestone?.endDate as number) * 1000
-                      ).toLocaleDateString()}`}
-                    </Text>
+              return {
+                title: <Text>{`${index + 1}. ${milestone.title}`}</Text>,
+                description: (
+                  <Stack gap="x5">
+                    <Stack direction="row" align="center" justify="space-between">
+                      <Text variant="label-xs" color="tertiary">
+                        {`Amount: ${milestoneAmounts?.[index]} ETH`}
+                      </Text>
+                      <Text variant="label-xs" color="tertiary">
+                        {`Due by: ${new Date(
+                          (milestone?.endDate as number) * 1000
+                        ).toLocaleDateString()}`}
+                      </Text>
+                    </Stack>
+
+                    <Text>{milestone.description || 'No Description'}</Text>
+
+                    <Stack>
+                      {milestone.documents?.map((doc) => {
+                        if (!doc.src) return null
+
+                        const href =
+                          doc.type === 'ipfs' ? getFetchableUrls(doc.src)?.[0] : doc.src
+
+                        if (!href) return null
+
+                        return (
+                          <Link key={doc.src} href={href}>
+                            {href}
+                          </Link>
+                        )
+                      })}
+                    </Stack>
+
+                    {!!invoiceAddress &&
+                      (() => {
+                        if (isReleased) {
+                          return (
+                            <Button variant="secondary" disabled>
+                              <Icon id="checkInCircle" />
+                              Milestone Released
+                            </Button>
+                          )
+                        }
+
+                        if (isNext && isClientTreasury) {
+                          return (
+                            <Button
+                              variant="primary"
+                              onClick={() => handleReleaseMilestoneAsProposal()}
+                              disabled={!hasThreshold}
+                            >
+                              Release Milestone
+                            </Button>
+                          )
+                        }
+
+                        if (isNext && isClientConnected) {
+                          return (
+                            <Button
+                              variant="primary"
+                              onClick={() => handleReleaseMilestoneDirect()}
+                              disabled={releasing}
+                            >
+                              {releasing ? 'Releasing...' : 'Release Milestone'}
+                            </Button>
+                          )
+                        }
+
+                        return null
+                      })()}
                   </Stack>
-
-                  <Text>{milestone.description || 'No Description'}</Text>
-
-                  <Stack>
-                    {milestone.documents?.map((doc) => {
-                      if (!doc.src) return null
-
-                      const href =
-                        doc.type === 'ipfs' ? getFetchableUrls(doc.src)?.[0] : doc.src
-
-                      if (!href) return null
-
-                      return (
-                        <Link key={doc.src} href={href}>
-                          {href}
-                        </Link>
-                      )
-                    })}
-                  </Stack>
-
-                  {!!invoiceAddress &&
-                    (() => {
-                      if (isReleased) {
-                        return (
-                          <Button variant="secondary" disabled>
-                            <Icon id="checkInCircle" />
-                            Milestone Released
-                          </Button>
-                        )
-                      }
-
-                      if (isNext && isClientTreasury) {
-                        return (
-                          <Button
-                            variant="primary"
-                            onClick={() => handleReleaseMilestoneAsProposal()}
-                            disabled={!hasThreshold}
-                          >
-                            Release Milestone
-                          </Button>
-                        )
-                      }
-
-                      if (isNext && isClientConnected) {
-                        return (
-                          <Button
-                            variant="primary"
-                            onClick={() => handleReleaseMilestoneDirect()}
-                            disabled={releasing}
-                          >
-                            {releasing ? 'Releasing...' : 'Release Milestone'}
-                          </Button>
-                        )
-                      }
-
-                      return null
-                    })()}
-                </Stack>
-              ),
+                ),
+              }
             }
-          }
-        )}
-      />
+          )}
+        />
+      )}
       {!!clientAddress && !isClientTreasury && (
         <Stack direction="row" align="center">
           <Text variant="label-sm" color="primary" mr="x2">
