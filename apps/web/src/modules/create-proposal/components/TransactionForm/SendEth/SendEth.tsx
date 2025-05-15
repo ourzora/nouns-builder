@@ -89,7 +89,6 @@ export const SendEth = () => {
                       ? formik.errors.recipientAddress
                       : undefined
                   }
-                  helperText={`The wallet address that will receive funds when milestones are completed.`}
                 />
 
                 <Box mt={'x5'}>
