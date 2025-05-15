@@ -3,6 +3,7 @@ import useSWR from 'swr'
 import { formatEther } from 'viem'
 
 import SWR_KEYS from 'src/constants/swrKeys'
+import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useChainStore } from 'src/stores/useChainStore'
 import { CHAIN_ID } from 'src/typings'
 
@@ -119,11 +120,11 @@ export const decodeTransactions = async (
 }
 
 export const useDecodedTransactions = (
-  targets: string[],
-  calldatas: string[],
-  values: string[]
+  proposal: Proposal
 ): DecodedTransaction[] | undefined => {
   const chain = useChainStore((x) => x.chain)
+
+  const { targets, calldatas, values } = proposal
 
   const { data: decodedTransactions } = useSWR(
     targets && calldatas && values

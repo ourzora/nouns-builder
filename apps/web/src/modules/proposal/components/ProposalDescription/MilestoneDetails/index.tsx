@@ -1,12 +1,10 @@
 import { Milestone as MilestoneMetadata } from '@smartinvoicexyz/types'
 import { Box, Button, Spinner, Stack, Text, atoms } from '@zoralabs/zord'
 import { getFetchableUrls } from 'ipfs-service'
-import _ from 'lodash'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useMemo, useState } from 'react'
-import useSWR from 'swr'
-import { Hex, decodeEventLog, encodeFunctionData, formatEther, isHex } from 'viem'
+import { Hex, encodeFunctionData } from 'viem'
 import {
   useAccount,
   useContractRead,
@@ -19,22 +17,16 @@ import Accordion from 'src/components/Home/accordian'
 import { Icon } from 'src/components/Icon'
 import { ETHERSCAN_BASE_URL } from 'src/constants/etherscan'
 import { SAFE_APP_URL, SAFE_HOME_URL } from 'src/constants/safe'
-import SWR_KEYS from 'src/constants/swrKeys'
 import { DecodedTransaction } from 'src/hooks/useDecodedTransactions'
 import { useEnsData } from 'src/hooks/useEnsData'
 import { useVotes } from 'src/hooks/useVotes'
 import { TransactionType } from 'src/modules/create-proposal'
-import {
-  decodeEscrowData,
-  decodeEscrowDataV1,
-  getEscrowBundlerV1,
-} from 'src/modules/create-proposal/components/TransactionForm/Escrow/EscrowUtils'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType, CHAIN_ID } from 'src/typings'
-import { fetchFromURI } from 'src/utils/fetch'
-import { getProvider } from 'src/utils/provider'
+
+import { useInvoiceData } from './useInvoiceData'
 
 const RELEASE_FUNCTION_ABI = [
   {
@@ -53,46 +45,6 @@ const GET_OWNERS_FUNCTION_ABI = [
     outputs: [{ internalType: 'address[]', name: '', type: 'address[]' }],
     stateMutability: 'view',
     type: 'function',
-  },
-]
-
-const LOG_NEW_INVOICE_EVENT_ABI = [
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'uint256',
-        name: 'index',
-        type: 'uint256',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'invoice',
-        type: 'address',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256[]',
-        name: 'amounts',
-        type: 'uint256[]',
-      },
-      {
-        indexed: false,
-        internalType: 'bytes32',
-        name: 'invoiceType',
-        type: 'bytes32',
-      },
-      {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'version',
-        type: 'uint256',
-      },
-    ],
-    name: 'LogNewInvoice',
-    type: 'event',
   },
 ]
 
@@ -133,73 +85,17 @@ export const MilestoneDetails = ({
     collectionAddress: addresses?.token,
   })
 
-  const { data: invoiceAddress, isValidating: isLoadingInvoice } = useSWR(
-    [executionTransactionHash],
-    async () => {
-      if (!executionTransactionHash || !isHex(executionTransactionHash)) return undefined
-
-      const provider = getProvider(invoiceChain.id)
-      const { logs } = await provider.getTransactionReceipt({
-        hash: executionTransactionHash as Hex,
-      })
-
-      const parsedLogs = logs.map((log) => {
-        try {
-          return decodeEventLog({
-            abi: LOG_NEW_INVOICE_EVENT_ABI,
-            data: log?.data,
-            topics: log?.topics,
-          })
-        } catch {
-          return null
-        }
-      })
-
-      const parsedEvent = _.find(parsedLogs, { eventName: 'LogNewInvoice' })
-
-      // find data by provided key
-      return _.get(parsedEvent, `args.invoice`) as AddressType | undefined
-    }
-  )
+  const {
+    invoiceAddress,
+    clientAddress,
+    milestoneAmounts,
+    invoiceData,
+    isLoadingInvoice,
+  } = useInvoiceData(invoiceChain.id, decodedTransaction, executionTransactionHash)
 
   const invoiceUrl = !!invoiceAddress
     ? createSmartInvoiceUrl(invoiceChain.id, invoiceAddress)
     : undefined
-
-  const { invoiceCid, clientAddress, milestoneAmounts } = useMemo(() => {
-    if (decodedTransaction.isNotDecoded) return {}
-
-    const isEscrowV1 =
-      _.toLower(decodedTransaction.target) ===
-      _.toLower(getEscrowBundlerV1(invoiceChain.id))
-
-    const decodedTxnArgs = decodedTransaction.transaction?.args
-
-    const { ipfsCid, clientAddress } = isEscrowV1
-      ? decodeEscrowDataV1(decodedTxnArgs?._escrowData?.value as Hex)
-      : decodeEscrowData(decodedTxnArgs?._escrowData?.value as Hex)
-
-    return {
-      invoiceCid: ipfsCid,
-      clientAddress: clientAddress as AddressType,
-      milestoneAmounts: decodedTxnArgs['_milestoneAmounts']['value']
-        .split(',')
-        .map((x: string) => formatEther(BigInt(x))),
-    }
-  }, [decodedTransaction, invoiceChain.id])
-
-  const { data: invoiceData, isValidating: isLoadingInvoiceData } = useSWR(
-    invoiceCid ? [SWR_KEYS.ESCROW_MILESTONES_IPFS_DATA, invoiceCid] : undefined,
-    async () => {
-      try {
-        const text = await fetchFromURI(`ipfs://${invoiceCid}`)
-        return JSON.parse(text)
-      } catch (error) {
-        console.error('Failed to fetch invoice data:', error)
-        return null
-      }
-    }
-  )
 
   const { data: currentMilestoneData, isLoading: isLoadingMilestone } = useContractRead({
     address: invoiceAddress,
@@ -309,14 +205,13 @@ export const MilestoneDetails = ({
     }
   }, [writeAsync, error])
 
-  const isLoading =
-    !invoiceData && (isLoadingInvoice || isLoadingInvoiceData || isLoadingMilestone)
+  const isLoading = !invoiceData && (isLoadingInvoice || isLoadingMilestone)
 
   return (
     <>
-      {isLoading ? (
-        <Spinner size="md" />
-      ) : (
+      {isLoading && <Spinner size="md" />}
+
+      {!isLoading && !!invoiceData?.milestones && (
         <Accordion
           items={invoiceData?.milestones?.map(
             (milestone: MilestoneMetadata, index: number) => {

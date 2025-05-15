@@ -14,6 +14,7 @@ import { fetchFromURI } from 'src/utils/fetch'
 export interface PropdateMessage {
   content: string
   labels?: string[]
+  milestoneId?: number
   attachments?: string[]
 }
 
@@ -29,6 +30,7 @@ export interface PropDate {
   attester: Hex
   proposalId: Hex
   originalMessageId: Hex
+  milestoneId: number | null
   message: string
   txid: Hex
   timeCreated: number
@@ -110,6 +112,9 @@ export async function getPropDates(
           proposalId: getDecodedValue(decodedData, 'proposalId') as Hex,
           originalMessageId: getDecodedValue(decodedData, 'originalMessageId') as Hex,
           message: parsedMessage.content,
+          milestoneId: !Number.isNaN(Number(parsedMessage.milestoneId))
+            ? Number(parsedMessage.milestoneId)
+            : null,
           timeCreated: attestation.timeCreated,
           txid: attestation.txid as Hex,
         }

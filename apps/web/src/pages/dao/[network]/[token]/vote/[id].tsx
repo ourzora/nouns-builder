@@ -97,7 +97,7 @@ const VotePage: NextPageWithLayout<VotePageProps> = ({
     if (isChainIdSupportedByEAS(chain.id)) {
       sections.push({
         title: 'Propdates',
-        component: [<PropDates key="propdates" proposalId={proposal.proposalId} />],
+        component: [<PropDates key="propdates" proposal={proposal} />],
       })
     }
     return sections
