@@ -6,6 +6,8 @@ This is Nouns Builder front-end website and subgraph mono-repo. You can find Nou
 - [Sepolia testnet](//testnet.nouns.build)
 
 For an introduction to Nouns Builder and its concept, you can find further [documentation here](https://builder-docs.vercel.app/).
+You can also find the [nouns protocol code here](https://github.com/ourzora/nouns-protocol).
+
 
 ### Apps and packages in this repository include:
 
