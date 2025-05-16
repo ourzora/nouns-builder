@@ -46,7 +46,6 @@ export async function getEscrowDelegate(
     const { attestations } = await SDK.connect(chainId).escrowDelegates(variables)
 
     if (!attestations || attestations.length === 0) {
-      console.warn('No escrow delegate attestations found')
       return null
     }
 

@@ -9,6 +9,7 @@ export enum TransactionType {
   CUSTOM = 'custom',
   UPGRADE = 'upgrade',
   ESCROW = 'escrow',
+  ESCROW_DELEGATE = 'escrow-delegate',
   PAUSE_AUCTIONS = 'pause-auctions',
   FIX_RENDERER_BASE = 'fix-renderer-base',
   RESUME_AUCTIONS = 'resume-auctions',
@@ -46,6 +47,12 @@ export const TRANSACTION_TYPES = {
   [TransactionType.ESCROW]: {
     title: 'Escrow Milestones',
     subTitle: 'Create a proposal and escrow milestones ',
+    icon: 'escrow',
+    iconBackdrop: 'rgba(255, 155, 155, 0.102)',
+  },
+  [TransactionType.ESCROW_DELEGATE]: {
+    title: 'Nominate Escrow Delegate',
+    subTitle: 'Create a proposal to nominate an escrow delegate',
     icon: 'escrow',
     iconBackdrop: 'rgba(255, 155, 155, 0.102)',
   },
