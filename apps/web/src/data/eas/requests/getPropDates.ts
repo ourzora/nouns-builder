@@ -94,7 +94,6 @@ export async function getPropDates(
     const { attestations } = await SDK.connect(chainId).propdates(variables)
 
     if (!attestations || attestations.length === 0) {
-      console.warn('No propdate attestations found')
       return []
     }
 
