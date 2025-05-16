@@ -53,8 +53,8 @@ export const TRANSACTION_TYPES = {
   [TransactionType.ESCROW_DELEGATE]: {
     title: 'Nominate Escrow Delegate',
     subTitle: 'Create a proposal to nominate an escrow delegate',
-    icon: 'escrow',
-    iconBackdrop: 'rgba(255, 155, 155, 0.102)',
+    icon: 'handshake',
+    iconBackdrop: 'rgba(0, 163, 255, 0.1)',
   },
   [TransactionType.DROPOSAL]: {
     title: 'Droposal: Single edition',
