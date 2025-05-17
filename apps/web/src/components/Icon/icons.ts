@@ -25,6 +25,7 @@ import External from './assets/external-16.svg'
 import Github from './assets/github.svg'
 import Globe from './assets/globe.svg'
 import HandlebarCircle from './assets/handlebar-circle.svg'
+import Handshake from './assets/handshake.svg'
 import Info16 from './assets/info-16.svg'
 import Migrate from './assets/migrate.svg'
 import Move from './assets/move.svg'
@@ -88,6 +89,7 @@ export const icons = {
   warning: Warning,
   'warning-16': Warning16,
   escrow: Escrow,
+  handshake: Handshake,
 }
 
 export type IconType = keyof typeof icons

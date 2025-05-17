@@ -433,7 +433,7 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
                   deployContractButtonStyle[isPendingTransaction ? 'pending' : 'default']
                 }
               >
-                {!isPendingTransaction ? `Deploy Contracts (1 of 2)` : `Deploying`}
+                {`${isPendingTransaction ? 'Deploying' : 'Deploy'} Contracts (1 of 2)`}
               </ContractButton>
             </Flex>
           </Flex>

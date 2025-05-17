@@ -84,6 +84,7 @@ export const useInvoiceData = (
       invoiceCid: ipfsCid,
       clientAddress: clientAddress as AddressType,
       milestoneAmounts: decodedTxnArgs['_milestoneAmounts']['value']
+        .toString()
         .split(',')
         .map((x: string) => formatEther(BigInt(x))),
     }

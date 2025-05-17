@@ -226,7 +226,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
         w={'100%'}
         mt={'x8'}
       >
-        Deploy Token Metadata (2 of 2)
+        {`${isPendingTransaction ? 'Deploying' : 'Deploy'} Token Metadata (2 of 2)`}
       </ContractButton>
       {transactions && transactions?.length > 1 && (
         <Flex color={'secondary'} w={'100%'} justify={'center'} py={'x4'}>

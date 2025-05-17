@@ -18,17 +18,17 @@ import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import {
+  AttestationParams,
   EAS_CONTRACT_ADDRESS,
   PROPDATE_SCHEMA,
   PROPDATE_SCHEMA_UID,
+  easAbi,
 } from 'src/constants/eas'
 import { MessageType, type PropDate } from 'src/data/eas/requests/getPropDates'
 import { useEnsData } from 'src/hooks'
 import { useDaoStore } from 'src/modules/dao/stores'
 import { CHAIN_ID } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
-
-import { easAbi } from './easAbi'
 
 const propDateValidationSchema = Yup.object().shape({
   milestoneId: Yup.number(),
@@ -165,18 +165,6 @@ const ReplyTo = ({
       </Text>
     </Flex>
   )
-}
-
-type AttestationParams = {
-  schema: Hex
-  data: {
-    recipient: Hex
-    expirationTime: bigint
-    revocable: boolean
-    refUID: Hex
-    data: Hex
-    value: bigint
-  }
 }
 
 const useDebounce = <T,>(value: T, delay: number): T => {

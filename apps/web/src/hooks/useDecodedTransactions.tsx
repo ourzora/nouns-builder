@@ -5,15 +5,7 @@ import { formatEther } from 'viem'
 import SWR_KEYS from 'src/constants/swrKeys'
 import { Proposal } from 'src/data/subgraph/requests/proposalQuery'
 import { useChainStore } from 'src/stores/useChainStore'
-import { CHAIN_ID } from 'src/typings'
-
-type Argument = { name: string; value: string; type: string }
-
-export type DecodedTransactionData = {
-  functionName: string
-  args: { [key: string]: Argument }
-  decoded?: string[] | undefined
-}
+import { CHAIN_ID, DecodedTransactionData } from 'src/typings'
 
 export type DecodedTransactionSuccess = {
   target: string
@@ -37,6 +29,7 @@ export const formatSendEth = (value: string) => {
     args: {
       ['Transfer']: { name: `value`, value: `${amount} ETH`, type: `uint256` },
     },
+    functionSig: '',
   }
 }
 
