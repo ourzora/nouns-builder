@@ -58,8 +58,8 @@ export async function getEscrowDelegate(
         return indexA - indexB
       }
 
-      // If same priority, sort by timeCreated (ascending)
-      return a.timeCreated - b.timeCreated
+      // If same priority, sort by timeCreated, latest first
+      return b.timeCreated - a.timeCreated
     })
 
     try {
