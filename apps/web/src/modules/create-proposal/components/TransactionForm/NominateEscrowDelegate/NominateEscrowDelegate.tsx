@@ -24,35 +24,25 @@ interface EscrowDelegateFormValues {
   escrowDelegate: string
 }
 
-const escrowDelegateFormSchema = (
-  _escrowDelegate: string | undefined,
-  _treasury: string | undefined
-) =>
+const escrowDelegateFormSchema = (_escrowDelegate: string | undefined) =>
   yup.object({
     escrowDelegate: addressValidationSchemaWithError(
       'Delegate address is invalid.',
       'Delegate address is required.'
-    )
-      .test(
-        'not-escrow-delegate',
-        'New delegate address must be different from the current delegate.',
-        (value) => {
-          if (!_escrowDelegate) {
-            return true
-          }
-          return _escrowDelegate?.toLowerCase() !== value?.toLowerCase()
+    ).test(
+      'not-escrow-delegate',
+      'New delegate address must be different from the current delegate.',
+      async (value) => {
+        if (!_escrowDelegate || !value) {
+          return true
         }
-      )
-      .test(
-        'not-treasury',
-        'New delegate address must be different from the treasury address.',
-        (value) => {
-          if (!_treasury) {
-            return true
-          }
-          return _treasury?.toLowerCase() !== value?.toLowerCase()
+        if (_escrowDelegate?.toLowerCase() === value?.toLowerCase()) {
+          return false
         }
-      ),
+        const valueAsAddress = await getEnsAddress(value)
+        return valueAsAddress?.toLowerCase() !== _escrowDelegate?.toLowerCase()
+      }
+    ),
   })
 
 const schemaEncoder = new SchemaEncoder(ESCROW_DELEGATE_SCHEMA)
@@ -106,13 +96,15 @@ export const NominateEscrowDelegate = () => {
     [addTransaction, chain.id, token]
   )
 
+  const currentDelegate = escrowDelegate ?? treasury
+
   return (
     <Box w={'100%'}>
       <Formik<EscrowDelegateFormValues>
         initialValues={{
           escrowDelegate: '',
         }}
-        validationSchema={escrowDelegateFormSchema(escrowDelegate, treasury)}
+        validationSchema={escrowDelegateFormSchema(currentDelegate)}
         onSubmit={handleNominateEscrowDelegateTransaction}
         validateOnMount={true}
       >
