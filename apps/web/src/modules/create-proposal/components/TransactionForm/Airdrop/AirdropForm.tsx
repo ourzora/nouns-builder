@@ -4,7 +4,8 @@ import type { FormikHelpers } from 'formik'
 import { useCallback } from 'react'
 import type { FC } from 'react'
 
-import { Icon } from 'src/components/Icon'
+import SmartInput from 'src/components/Fields/SmartInput'
+import { TEXT } from 'src/components/Fields/types'
 import Input from 'src/components/Input/Input'
 
 import airdropFormSchema, { AirdropFormValues } from './AirdropForm.schema'
@@ -40,34 +41,25 @@ const AirdropForm: FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
         validateOnMount={false}
         validateOnChange={false}
       >
-        {({ errors, touched, isValid, isValidating, dirty }) => (
+        {(formik) => (
           <Box
             data-testid="airdrop-form"
             as={'fieldset'}
-            disabled={isValidating || disabled}
+            disabled={formik.isValidating || disabled}
             style={{ outline: 0, border: 0, padding: 0, margin: 0 }}
           >
             <Flex as={Form} direction={'column'}>
-              <Input
-                name={'recipientAddress'}
-                label={'Recipient Wallet Address/ENS'}
-                type={'text'}
+              <SmartInput
+                type={TEXT}
+                formik={formik}
+                {...formik.getFieldProps('recipientAddress')}
+                id="recipientAddress"
+                inputLabel={'Recipient Wallet Address/ENS'}
                 placeholder={'0x...'}
-                autoComplete={'off'}
-                secondaryLabel={
-                  <Icon
-                    id={'checkInCircle'}
-                    fill={'positive'}
-                    style={{
-                      opacity:
-                        typeof errors.recipientAddress === 'undefined' && dirty ? 1 : 0,
-                      transition: '0.1s opacity',
-                    }}
-                  />
-                }
-                error={
-                  touched.recipientAddress && errors.recipientAddress
-                    ? errors.recipientAddress
+                isAddress={true}
+                errorMessage={
+                  formik.touched.recipientAddress && formik.errors.recipientAddress
+                    ? formik.errors.recipientAddress
                     : undefined
                 }
               />
@@ -81,7 +73,11 @@ const AirdropForm: FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
                   type={'number'}
                   placeholder={0}
                   min={0}
-                  error={touched.amount && errors.amount ? errors.amount : undefined}
+                  error={
+                    formik.touched.amount && formik.errors.amount
+                      ? formik.errors.amount
+                      : undefined
+                  }
                 />
               </Box>
 
@@ -90,7 +86,7 @@ const AirdropForm: FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
                 variant={'outline'}
                 borderRadius={'curved'}
                 type="submit"
-                disabled={!isValid || disabled}
+                disabled={!formik.isValid || disabled}
               >
                 Add Transaction to Queue
               </Button>

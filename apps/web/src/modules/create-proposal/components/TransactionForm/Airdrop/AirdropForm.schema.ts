@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 
 import type { AddressType } from 'src/typings'
-import { addressValidationSchema } from 'src/utils/yup'
+import { addressValidationSchemaWithError } from 'src/utils/yup'
 
 export interface AirdropFormValues {
   recipientAddress?: string | AddressType
@@ -9,7 +9,10 @@ export interface AirdropFormValues {
 }
 
 const airdropFormSchema = yup.object({
-  recipientAddress: addressValidationSchema,
+  recipientAddress: addressValidationSchemaWithError(
+    'Recipient address is invalid.',
+    'Recipient address is required.'
+  ),
   amount: yup.number().min(1, 'Must be at least 1 token').required(),
 })
 

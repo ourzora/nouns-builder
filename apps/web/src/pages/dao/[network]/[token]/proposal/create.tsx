@@ -1,7 +1,7 @@
 import { Flex, Stack } from '@zoralabs/zord'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { isAddressEqual } from 'viem'
 import { useAccount, useContractRead } from 'wagmi'
 
@@ -11,6 +11,7 @@ import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { auctionAbi } from 'src/data/contract/abis'
 import { L1_CHAINS } from 'src/data/contract/chains'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
+import { isChainIdSupportedByEAS } from 'src/data/eas/helpers'
 import { useVotes } from 'src/hooks'
 import { useDelayedGovernance } from 'src/hooks/useDelayedGovernance'
 import { getDaoLayout } from 'src/layouts/DaoLayout'
@@ -88,6 +89,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
   const isAllowedMigrationDao = token
     ? !!ALLOWED_MIGRATION_DAOS.find((x) => isAddressEqual(x, token))
     : false
+  const isEASSupported = useMemo(() => isChainIdSupportedByEAS(chain.id), [chain.id])
 
   const TRANSACTION_FORM_OPTIONS_FILTERED = TRANSACTION_FORM_OPTIONS.filter((x) => {
     if (x === TransactionType.MIGRATION && (!isL1Chain || !isAllowedMigrationDao))
@@ -95,6 +97,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
     if (x === TransactionType.PAUSE_AUCTIONS && paused) return false
     if (x === TransactionType.RESUME_AUCTIONS && !paused) return false
     if (x === TransactionType.FIX_RENDERER_BASE && !shouldFixRendererBase) return false
+    if (x === TransactionType.ESCROW_DELEGATE && !isEASSupported) return false
     return true
   })
 

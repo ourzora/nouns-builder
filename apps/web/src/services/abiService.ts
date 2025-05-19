@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { Hex, decodeFunctionData, getAbiItem } from 'viem'
 import { Address, getAddress, pad, trim } from 'viem'
 
-import { CHAIN_ID } from 'src/typings'
+import { CHAIN_ID, DecodedArg, DecodedTransactionData, DecodedValue } from 'src/typings'
 
 import { getProvider } from '../utils/provider'
 import { BackendFailedError, InvalidRequestError, NotFoundError } from './errors'
@@ -88,5 +89,67 @@ export const getContractABIByAddress = async (
     } else {
       throw new NotFoundError('Not verified')
     }
+  }
+}
+
+export const decodeTransaction = async (
+  chainId: CHAIN_ID,
+  contract: string,
+  calldata: string
+): Promise<DecodedTransactionData> => {
+  const { abi: abiJsonString } = await getContractABIByAddress(chainId, contract)
+
+  const abi = JSON.parse(abiJsonString)
+  const decodeResult = decodeFunctionData({ abi, data: calldata as Hex })
+  const functionSig = calldata.slice(0, 10)
+
+  const functionInfo = getAbiItem({
+    abi,
+    name: decodeResult.functionName,
+  })
+
+  const formatArgValue = (input: any, value: any): DecodedValue => {
+    if (input.type === 'tuple') {
+      return input.components.reduce((acc: any, component: any, i: number) => {
+        acc[component.name || i] = formatArgValue(component, value[component.name || i])
+        return acc
+      }, {})
+    }
+
+    if (input.type.endsWith('[]') && Array.isArray(value)) {
+      if (input.components) {
+        // Array of tuples
+        return value.map((v: any) =>
+          input.components.reduce((acc: any, component: any, i: number) => {
+            acc[component.name || i] = formatArgValue(component, v[component.name || i])
+            return acc
+          }, {})
+        )
+      }
+      // Array of base types
+      return value.map((v: any) => v?.toString?.() ?? v)
+    }
+
+    // Base type
+    return value?.toString?.() ?? value
+  }
+
+  const argMapping: Record<string, DecodedArg> = functionInfo.inputs.reduce(
+    (acc: Record<string, DecodedArg>, input: any, index: number) => {
+      const name = input.name || index.toString()
+      acc[name] = {
+        name,
+        type: input.type,
+        value: formatArgValue(input, decodeResult.args[index]),
+      }
+      return acc
+    },
+    {}
+  )
+
+  return {
+    args: argMapping,
+    functionName: decodeResult.functionName,
+    functionSig,
   }
 }

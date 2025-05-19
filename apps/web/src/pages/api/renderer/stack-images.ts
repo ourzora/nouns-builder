@@ -63,7 +63,7 @@ const getImageData = async (imageUrl: string): Promise<Buffer> => {
       const arrayBuffer = await res.arrayBuffer()
       return Buffer.from(arrayBuffer)
     } catch (err) {
-      console.warn(`❌ Failed to fetch from ${url}: ${(err as Error).message}`)
+      console.warn(`Failed to fetch from ${url}: ${(err as Error).message}`)
     }
   }
 

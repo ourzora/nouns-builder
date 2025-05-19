@@ -1,4 +1,3 @@
-import { getFetchableUrls } from 'ipfs-service'
 import { Hex, getAddress, isAddress, isHex } from 'viem'
 
 import { PROPDATE_SCHEMA_UID } from 'src/constants/eas'
@@ -10,10 +9,12 @@ import {
 } from 'src/data/eas/helpers'
 import { AttestationFragment } from 'src/data/eas/sdk.generated'
 import { CHAIN_ID } from 'src/typings'
+import { fetchFromURI } from 'src/utils/fetch'
 
 export interface PropdateMessage {
   content: string
   labels?: string[]
+  milestoneId?: number
   attachments?: string[]
 }
 
@@ -29,52 +30,10 @@ export interface PropDate {
   attester: Hex
   proposalId: Hex
   originalMessageId: Hex
+  milestoneId: number | null
   message: string
   txid: Hex
   timeCreated: number
-}
-
-const REQUEST_TIMEOUT = 10000 // 10s
-
-const fetchWithTimeout = async (
-  url: string,
-  controller: AbortController
-): Promise<string> => {
-  const { signal } = controller
-
-  const timeoutId = setTimeout(() => {
-    controller.abort()
-  }, REQUEST_TIMEOUT)
-
-  try {
-    const res = await fetch(url, { signal })
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`)
-    }
-    return await res.text()
-  } finally {
-    clearTimeout(timeoutId)
-  }
-}
-
-const fetchFromURI = async (uri: string): Promise<string> => {
-  const urls = getFetchableUrls(uri)
-  if (!urls?.length) {
-    throw new Error('Invalid URI')
-  }
-
-  const controller = new AbortController()
-
-  const fetchPromises = urls.map((url) =>
-    fetchWithTimeout(url, controller).then((result) => {
-      controller.abort() // abort all other pending fetches once one succeeds
-      return result
-    })
-  )
-
-  return Promise.any(fetchPromises).catch(() => {
-    throw new Error('Failed to fetch from all available URLs')
-  })
 }
 
 const getPropdateMessage = async (
@@ -135,7 +94,6 @@ export async function getPropDates(
     const { attestations } = await SDK.connect(chainId).propdates(variables)
 
     if (!attestations || attestations.length === 0) {
-      console.warn('No propdate attestations found')
       return []
     }
 
@@ -153,6 +111,9 @@ export async function getPropDates(
           proposalId: getDecodedValue(decodedData, 'proposalId') as Hex,
           originalMessageId: getDecodedValue(decodedData, 'originalMessageId') as Hex,
           message: parsedMessage.content,
+          milestoneId: !Number.isNaN(Number(parsedMessage.milestoneId))
+            ? Number(parsedMessage.milestoneId)
+            : null,
           timeCreated: attestation.timeCreated,
           txid: attestation.txid as Hex,
         }

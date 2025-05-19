@@ -4,8 +4,8 @@ import type { FormikHelpers } from 'formik'
 import { getAddress } from 'viem'
 import { useBalance } from 'wagmi'
 
-import { Icon } from 'src/components/Icon'
-import Input from 'src/components/Input/Input'
+import SmartInput from 'src/components/Fields/SmartInput'
+import { NUMBER, TEXT } from 'src/components/Fields/types'
 import { TransactionType, useProposalStore } from 'src/modules/create-proposal'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
@@ -68,57 +68,50 @@ export const SendEth = () => {
           validateOnMount={false}
           validateOnChange={false}
         >
-          {({ errors, touched, isValid, isValidating, dirty }) => (
+          {(formik) => (
             <Box
               data-testid="airdrop-form"
               as={'fieldset'}
-              disabled={isValidating}
+              disabled={formik.isValidating}
               style={{ outline: 0, border: 0, padding: 0, margin: 0 }}
             >
               <Flex as={Form} direction={'column'}>
-                <Input
-                  name={'recipientAddress'}
-                  label={'Recipient Wallet Address/ENS'}
-                  type={'text'}
+                <SmartInput
+                  type={TEXT}
+                  formik={formik}
+                  {...formik.getFieldProps('recipientAddress')}
+                  id="recipientAddress"
+                  inputLabel={'Recipient Wallet Address/ENS'}
                   placeholder={'0x...'}
-                  autoComplete={'off'}
-                  secondaryLabel={
-                    <Icon
-                      id={'checkInCircle'}
-                      fill={'positive'}
-                      style={{
-                        opacity:
-                          typeof errors.recipientAddress === 'undefined' && dirty ? 1 : 0,
-                        transition: '0.1s opacity',
-                      }}
-                    />
-                  }
-                  error={
-                    touched.recipientAddress && errors.recipientAddress
-                      ? errors.recipientAddress
+                  isAddress={true}
+                  errorMessage={
+                    formik.touched.recipientAddress && formik.errors.recipientAddress
+                      ? formik.errors.recipientAddress
                       : undefined
                   }
                 />
 
                 <Box mt={'x5'}>
-                  <Input
-                    name={'amount'}
-                    label={
-                      <Flex justify={'space-between'}>
+                  <SmartInput
+                    {...formik.getFieldProps(`amount`)}
+                    inputLabel={
+                      <Flex justify={'space-between'} width={'100%'}>
                         <Box fontWeight={'label'}>Amount</Box>
-                        <Box color={'text3'}>
+                        <Box color={'text3'} fontWeight="paragraph">
                           Treasury Balance: {`${treasuryBalance?.formatted} ETH`}
                         </Box>
                       </Flex>
                     }
-                    secondaryLabel={'ETH'}
-                    autoComplete={'off'}
-                    type={'number'}
-                    placeholder={0}
+                    id={`amount`}
+                    type={NUMBER}
+                    placeholder={'1.0 ETH'}
                     min={0}
-                    max={treasuryBalance?.formatted}
-                    step={'any'}
-                    error={touched.amount && errors.amount ? errors.amount : undefined}
+                    max={parseFloat(treasuryBalance?.formatted)}
+                    errorMessage={
+                      formik.touched.amount && formik.errors.amount
+                        ? formik.errors.amount
+                        : undefined
+                    }
                   />
                 </Box>
 
@@ -127,7 +120,7 @@ export const SendEth = () => {
                   variant={'outline'}
                   borderRadius={'curved'}
                   type="submit"
-                  disabled={!isValid}
+                  disabled={!formik.isValid}
                 >
                   Add Transaction to Queue
                 </Button>

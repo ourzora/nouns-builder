@@ -1,5 +1,6 @@
 import { SchemaEncoder } from '@ethereum-attestation-service/eas-sdk'
-import { Box, Button, Flex, Text } from '@zoralabs/zord'
+import { InvoiceMetadata } from '@smartinvoicexyz/types'
+import { Box, Button, Flex, Select, Text } from '@zoralabs/zord'
 import { Form, Formik, type FormikProps, useFormikContext } from 'formik'
 import { useEffect, useMemo, useState } from 'react'
 import { type Hex, getAddress, isAddress, zeroHash } from 'viem'
@@ -13,33 +14,36 @@ import * as Yup from 'yup'
 
 import { Avatar } from 'src/components/Avatar'
 import SmartInput from 'src/components/Fields/SmartInput'
+import { defaultInputLabelStyle } from 'src/components/Fields/styles.css'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'
 import {
+  AttestationParams,
   EAS_CONTRACT_ADDRESS,
   PROPDATE_SCHEMA,
   PROPDATE_SCHEMA_UID,
+  easAbi,
 } from 'src/constants/eas'
-import { type PropDate } from 'src/data/eas/requests/getPropDates'
+import { MessageType, type PropDate } from 'src/data/eas/requests/getPropDates'
 import { useEnsData } from 'src/hooks'
 import { useDaoStore } from 'src/modules/dao/stores'
 import { CHAIN_ID } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 
-import { easAbi } from './easAbi'
-
 const propDateValidationSchema = Yup.object().shape({
+  milestoneId: Yup.number(),
   proposalId: Yup.string()
     .required('Proposal ID (bytes32) is required')
     .matches(
       /^0x[a-fA-F0-9]{64}$/,
       'Proposal ID must be a valid bytes32 hex string (e.g., 0x...)'
     ),
-  replyTo: Yup.string().optional(),
+  replyTo: Yup.string(),
   message: Yup.string().required('Message is required'),
 })
 
 interface PropDateFormValues {
+  milestoneId: number
   proposalId: string
   replyTo: string
   message: string
@@ -66,15 +70,18 @@ export const PropDateForm = ({
   onSuccess,
   proposalId,
   replyTo,
+  invoiceData,
 }: {
   closeForm: () => void
   onSuccess: () => void
   proposalId: string
   replyTo?: PropDate
+  invoiceData?: InvoiceMetadata
 }) => {
   const initialValues = useMemo(
     () =>
       ({
+        milestoneId: -1,
         proposalId: proposalId,
         replyTo: replyTo?.txid ?? zeroHash,
         message: '',
@@ -93,7 +100,7 @@ export const PropDateForm = ({
       mb="x6"
     >
       <Flex justify="space-between" mb="x4" align="center">
-        <Text fontSize={18} fontWeight="label">
+        <Text fontSize={20} fontWeight="label">
           Create Propdate
         </Text>
       </Flex>
@@ -110,6 +117,7 @@ export const PropDateForm = ({
             onSuccess={onSuccess}
             replyTo={replyTo}
             formik={formik}
+            invoiceData={invoiceData}
           />
         )}
       </Formik>
@@ -159,18 +167,6 @@ const ReplyTo = ({
   )
 }
 
-type AttestationParams = {
-  schema: Hex
-  data: {
-    recipient: Hex
-    expirationTime: bigint
-    revocable: boolean
-    refUID: Hex
-    data: Hex
-    value: bigint
-  }
-}
-
 const useDebounce = <T,>(value: T, delay: number): T => {
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
@@ -195,11 +191,13 @@ const PropDateFormInner = ({
   onSuccess,
   replyTo,
   formik,
+  invoiceData,
 }: {
   closeForm: () => void
   onSuccess: () => void
   replyTo?: PropDate
   formik: FormikProps<PropDateFormValues>
+  invoiceData?: InvoiceMetadata
 }) => {
   const chainId = useChainId()
   const {
@@ -225,11 +223,24 @@ const PropDateFormInner = ({
       ? (debouncedValues.replyTo as Hex)
       : zeroHash
 
+    const milestoneId = debouncedValues.milestoneId
+    let message = debouncedValues.message
+    let messageType = MessageType.INLINE_TEXT
+
+    if (Number(milestoneId) >= 0) {
+      const messageJSON = {
+        milestoneId: Number(milestoneId),
+        content: debouncedValues.message,
+      }
+      message = JSON.stringify(messageJSON)
+      messageType = MessageType.INLINE_JSON
+    }
+
     return schemaEncoder.encodeData([
       { name: 'proposalId', value: debouncedValues.proposalId as Hex, type: 'bytes32' },
       { name: 'originalMessageId', value: originalMessageId, type: 'bytes32' },
-      { name: 'messageType', value: '0', type: 'uint8' },
-      { name: 'message', value: debouncedValues.message, type: 'string' },
+      { name: 'messageType', value: messageType, type: 'uint8' },
+      { name: 'message', value: message, type: 'string' },
     ]) as Hex
   }, [debouncedValues])
 
@@ -261,7 +272,7 @@ const PropDateFormInner = ({
     error: prepareError,
   } = usePrepareContractWrite({
     enabled: !!attestParams && !!easContractAddress,
-    address: easContractAddress, // Now properly typed as `0x${string}` | undefined
+    address: easContractAddress,
     abi: easAbi,
     functionName: 'attest',
     chainId: chainId,
@@ -369,9 +380,9 @@ const PropDateFormInner = ({
   return (
     <>
       <Form>
-        <Flex direction={'column'} w={'100%'} gap="x4">
+        <Flex direction={'column'} w={'100%'} py="x2" pl="x2">
           {replyTo && (
-            <Box mb="x2">
+            <Box pb="x8">
               <Text variant="label-md" mb="x1">
                 Replying to:
               </Text>
@@ -381,6 +392,26 @@ const PropDateFormInner = ({
                 ensAvatar={replyToEnsAvatar}
               />
             </Box>
+          )}
+
+          {!replyTo && !!invoiceData?.milestones && (
+            <Flex direction={'column'} pb="x8">
+              <label className={defaultInputLabelStyle}>Milestone (optional)</label>
+              <Select
+                {...formik.getFieldProps(`milestoneId`)}
+                id="milestoneId"
+                defaultValue="-1"
+              >
+                <option key="not-specific-milestone" value={-1}>
+                  No specific milestone
+                </option>
+                {invoiceData.milestones.map((milestone, i) => (
+                  <option key={milestone.title} value={i}>
+                    {milestone.title}
+                  </option>
+                ))}
+              </Select>
+            </Flex>
           )}
 
           <SmartInput
