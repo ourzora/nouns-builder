@@ -214,7 +214,7 @@ export function InnerBox<E extends ElementType = typeof BoxDefaultElement>(
   )
 }
 
-export const Box: PolymorphicForwardRefExoticComponent<
+export const Box = forwardRef(InnerBox) as PolymorphicForwardRefExoticComponent<
   BoxProps,
   typeof BoxDefaultElement
-> = forwardRef(InnerBox)
+>

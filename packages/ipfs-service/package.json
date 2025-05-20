@@ -12,15 +12,15 @@
     "tsconfig": "workspace:*",
     "eslint": "8.57.1",
     "eslint-config-custom": "workspace:*",
-    "typescript": "^5.1.6",
-    "vitest": "^0.27.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.4"
   },
   "dependencies": {
     "@brokerloop/ttlcache": "^3.2.3",
     "ipfs-core-types": "^0.13.0",
     "ipfs-http-client": "^59.0.0",
     "it-last": "^2.0.0",
-    "multiformats": "^10.0.2",
+    "multiformats": "^13.3.5",
     "url-join": "^5.0.0"
   }
 }

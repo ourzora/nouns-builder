@@ -52,10 +52,10 @@ export const InnerText = <E extends ElementType = typeof BoxDefaultElement>(
   )
 }
 
-export const Text: PolymorphicForwardRefExoticComponent<
+export const Text = forwardRef(InnerText) as PolymorphicForwardRefExoticComponent<
   TextProps,
   typeof BoxDefaultElement
-> = forwardRef(InnerText)
+>
 
 export interface ParagraphProps extends Omit<TextProps, 'variant'> {
   size?: 'xs' | 'sm' | 'md' | 'lg'

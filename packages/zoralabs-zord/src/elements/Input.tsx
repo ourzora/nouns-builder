@@ -29,5 +29,7 @@ const InnerInput = <E extends ElementType = 'input'>(
   )
 }
 
-export const Input: PolymorphicForwardRefExoticComponent<InputProps, 'input'> =
-  forwardRef(InnerInput)
+export const Input = forwardRef(InnerInput) as PolymorphicForwardRefExoticComponent<
+  InputProps,
+  'input'
+>
