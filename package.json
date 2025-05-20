@@ -19,7 +19,8 @@
     "husky": "^8.0.3",
     "prettier": "3.5.3",
     "syncpack": "^13.0.4",
-    "turbo": "1.13.4"
+    "turbo": "2.5.3"
   },
-  "packageManager": "pnpm@10.9.0"
+  "packageManager": "pnpm@10.11.0",
+  "name": "builder"
 }
