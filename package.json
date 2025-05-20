@@ -18,6 +18,7 @@
     "eslint-config-custom": "workspace:*",
     "husky": "^8.0.3",
     "prettier": "3.5.3",
+    "syncpack": "^13.0.4",
     "turbo": "1.13.4"
   },
   "packageManager": "pnpm@10.9.0"

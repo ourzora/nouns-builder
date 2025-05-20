@@ -1,7 +1,7 @@
 import { Atoms, atoms } from '../atoms'
 import { Box, BoxDefaultElement, BoxProps } from './Box'
 import { text, textVariants } from './Text.css'
-import React, { ElementType, ForwardedRef, forwardRef } from 'react'
+import { ElementType, ForwardedRef, forwardRef } from 'react'
 import type {
   PolymorphicForwardRefExoticComponent,
   PolymorphicPropsWithRef,
@@ -21,7 +21,7 @@ export interface TextProps extends BoxProps {
 export type TextComponentProps<E extends ElementType = typeof BoxDefaultElement> =
   PolymorphicPropsWithRef<TextProps, E>
 
-export function InnerText<E extends ElementType = typeof BoxDefaultElement>(
+export const InnerText = <E extends ElementType = typeof BoxDefaultElement>(
   {
     align,
     className,
@@ -29,28 +29,25 @@ export function InnerText<E extends ElementType = typeof BoxDefaultElement>(
     italic,
     textTransform,
     variant,
+    as,
     ...props
   }: PolymorphicPropsWithoutRef<TextProps, E>,
-  ref?: ForwardedRef<E>,
-) {
+  ref: ForwardedRef<any>, // or HTMLSpanElement if you want to narrow
+) => {
   return (
     <Box
       ref={ref}
+      as={as || 'span'}
       display={inline ? 'inline-block' : undefined}
       align={align}
       className={[
         'zord-text',
         variant && `zord-text-${variant}`,
-        text({
-          variant,
-          italic,
-        }),
-        atoms({
-          textTransform,
-        }),
+        text({ variant, italic }),
+        atoms({ textTransform }),
         className,
       ]}
-      {...props}
+      {...(props as any)} // casting to bypass spread type conflict
     />
   )
 }
@@ -72,7 +69,12 @@ export function Paragraph<E extends ElementType = typeof BoxDefaultElement>({
   variant,
   ...props
 }: ParagraphComponentProps<E>) {
-  return <Text variant={`paragraph-${size}`} {...props} />
+  return (
+    <Text
+      variant={`paragraph-${size}`}
+      {...(props as any)} // casting to bypass spread type conflict
+    />
+  )
 }
 
 export interface HeadingProps extends Omit<TextProps, 'variant'> {
@@ -87,7 +89,12 @@ export function Heading<E extends ElementType = typeof BoxDefaultElement>({
   variant,
   ...props
 }: HeadingComponentProps<E>) {
-  return <Text variant={`heading-${size}`} {...props} />
+  return (
+    <Text
+      variant={`heading-${size}`}
+      {...(props as any)} // casting to bypass spread type conflict
+    />
+  )
 }
 
 export interface DisplayProps extends Omit<TextProps, 'variant'> {
@@ -102,7 +109,12 @@ export function Display<E extends ElementType = typeof BoxDefaultElement>({
   variant,
   ...props
 }: DisplayComponentProps<E>) {
-  return <Text variant={`display-${size}`} {...props} />
+  return (
+    <Text
+      variant={`display-${size}`}
+      {...(props as any)} // casting to bypass spread type conflict
+    />
+  )
 }
 
 export interface EyebrowProps extends Omit<TextProps, 'variant'> {}
@@ -114,7 +126,12 @@ export function Eyebrow<E extends ElementType = typeof BoxDefaultElement>({
   variant,
   ...props
 }: EyebrowComponentProps<E>) {
-  return <Text variant="eyebrow" {...props} />
+  return (
+    <Text
+      variant="eyebrow"
+      {...(props as any)} // casting to bypass spread type conflict
+    />
+  )
 }
 
 export interface LabelProps extends Omit<TextProps, 'variant'> {
@@ -128,7 +145,12 @@ export function Label<E extends ElementType = typeof BoxDefaultElement>({
   size = 'md',
   ...props
 }: LabelComponentProps<E>) {
-  return <Text variant={`label-${size}`} {...props} />
+  return (
+    <Text
+      variant={`label-${size}`}
+      {...(props as any)} // casting to bypass spread type conflict
+    />
+  )
 }
 
 export interface MenuProps extends TextProps {}
