@@ -13,6 +13,7 @@ import { getProposals } from 'src/data/subgraph/requests/proposalsQuery'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
+import { getEnsAddress } from 'src/utils/ens'
 import { getChainFromLocalStorage } from 'src/utils/getChainFromLocalStorage'
 
 import EscrowForm from './EscrowForm'
@@ -129,6 +130,9 @@ export const Escrow: React.FC = () => {
         )
         return
       }
+
+      values.clientAddress = await getEnsAddress(values.clientAddress)
+      values.recipientAddress = await getEnsAddress(values.recipientAddress)
 
       // create bundler transaction data
       const escrowData = encodeEscrowData(values, treasury, cid, chainId)
