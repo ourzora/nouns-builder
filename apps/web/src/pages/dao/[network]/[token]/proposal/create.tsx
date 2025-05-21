@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 import { isAddressEqual } from 'viem'
-import { useAccount, useContractRead } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 
 import { ALLOWED_MIGRATION_DAOS } from 'src/constants/addresses'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
@@ -46,7 +46,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
   >()
   const transactions = useProposalStore((state) => state.transactions)
 
-  const { data: paused } = useContractRead({
+  const { data: paused } = useReadContract({
     abi: auctionAbi,
     address: auction,
     functionName: 'paused',

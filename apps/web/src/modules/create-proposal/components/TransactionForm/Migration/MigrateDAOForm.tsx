@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Paragraph, Spinner, Text } from '@zoralabs/zord'
 import { useState } from 'react'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import {
   defaultHelperTextStyle,
@@ -32,7 +32,7 @@ export const MigrateDAOForm = () => {
   )
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
-  const { data: auction } = useContractRead({
+  const { data: auction } = useReadContract({
     abi: auctionAbi,
     address: auctionAddress,
     functionName: 'auction',

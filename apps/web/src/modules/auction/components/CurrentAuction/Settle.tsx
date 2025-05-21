@@ -80,7 +80,7 @@ export const Settle = ({
   if (isEnding && !settling) {
     return (
       <Flex direction="column" align="center" width={'100%'}>
-        <Button disabled className={auctionActionButtonVariants['settling']}>
+        <Button disabled className={auctionActionButtonVariants['settling']} size="lg">
           Auction ending
         </Button>
       </Flex>
@@ -98,6 +98,7 @@ export const Settle = ({
               : auctionActionButtonVariants['settling']
           }
           variant={compact ? 'outline' : 'primary'}
+          size="lg"
         >
           Settling
         </Button>
@@ -115,6 +116,7 @@ export const Settle = ({
             : auctionActionButtonVariants['settle']
         }
         variant={compact ? 'outline' : 'primary'}
+        size="lg"
       >
         {isWinner ? 'Claim NFT' : 'Start next auction'}
       </ContractButton>

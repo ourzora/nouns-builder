@@ -3,7 +3,7 @@ import { getFetchableUrls } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import React from 'react'
 import useSWR from 'swr'
-import { Address } from 'viem'
+import { Address, formatEther } from 'viem'
 import { useBalance, useReadContracts } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar/Avatar'
@@ -13,13 +13,7 @@ import { metadataAbi, tokenAbi } from 'src/data/contract/abis'
 import { SDK } from 'src/data/subgraph/client'
 import { useLayoutStore } from 'src/stores'
 import { useChainStore } from 'src/stores/useChainStore'
-import {
-  about,
-  daoInfo,
-  daoName,
-  statistic,
-  statisticContent,
-} from 'src/styles/About.css'
+import { about, daoInfo, daoName, statisticContent } from 'src/styles/About.css'
 import { unpackOptionalArray } from 'src/utils/helpers'
 import { formatCryptoVal } from 'src/utils/numbers'
 
@@ -86,7 +80,7 @@ export const About: React.FC = () => {
   )
 
   const treasuryBalance = React.useMemo(() => {
-    return balance ? formatCryptoVal(balance.value) : null
+    return balance ? formatCryptoVal(formatEther(balance.value)) : null
   }, [balance])
 
   return (
@@ -136,17 +130,19 @@ export const About: React.FC = () => {
         />
         <Statistic title="Owners" content={data?.ownerCount} />
         <Statistic title="Total supply" content={Number(totalSupply)} />
-        <Box className={statistic} width={'100%'}>
-          <Text color="tertiary">Chain</Text>
-          <Flex align={'center'} mt={{ '@initial': 'x1', '@768': 'x3' }}>
-            <Box mr="x2">
-              <Image src={chain.icon} alt={chain.name} height={28} width={28} />
-            </Box>
-            <Text fontWeight={'display'} className={statisticContent}>
-              {chain.name}
-            </Text>
-          </Flex>
-        </Box>
+        <Statistic
+          title="Chain"
+          content={
+            <Flex align={'center'} mt={{ '@initial': 'x1', '@768': 'x3' }}>
+              <Box mr="x2">
+                <Image src={chain.icon} alt={chain.name} height={28} width={28} />
+              </Box>
+              <Text fontWeight={'display'} className={statisticContent}>
+                {chain.name}
+              </Text>
+            </Flex>
+          }
+        />
       </Flex>
 
       <DaoDescription description={description} />

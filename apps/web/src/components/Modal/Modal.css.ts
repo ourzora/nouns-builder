@@ -38,7 +38,7 @@ export const defaultAnimatedModalContent = style({
 export const smallAnimatedContent = style({
   position: 'fixed',
   left: '50%',
-  marginLeft: -448 / 2,
+  marginLeft: '-224px !important',
   width: 448,
   top: 120,
   gap: 24,
@@ -56,7 +56,7 @@ export const smallAnimatedContent = style({
 export const mediumAnimatedContent = style({
   position: 'fixed',
   left: '50%',
-  marginLeft: -680 / 2,
+  marginLeft: '-340px !important',
   width: 680,
   top: 120,
   gap: 24,
@@ -74,7 +74,7 @@ export const mediumAnimatedContent = style({
 export const largeAnimatedContent = style({
   position: 'fixed',
   left: '50%',
-  marginLeft: -912 / 2,
+  marginLeft: "-456px !important",
   width: 912,
   top: 120,
   gap: 24,

@@ -5,19 +5,18 @@ import { skeletonAnimation } from 'src/styles/animations.css'
 const tabBase = style({
   textTransform: 'capitalize',
   width: 'fit-content',
-  borderBottomLeftRadius: '0px',
-  borderBottomRightRadius: '0px',
+  borderRadius: '0px !important',
   selectors: {
     '&:not([disabled]):hover': {
-      backgroundColor: 'transparent ',
+      backgroundColor: 'transparent !important',
     },
   },
 })
 const selected = style({
-  borderBottom: '2px solid black',
+  borderBottom: '2px solid black !important',
 })
 const unselected = style({
-  borderBottom: '2px solid transparent',
+  borderBottom: '2px solid transparent !important',
 })
 const inner = style({
   fontSize: '14px',

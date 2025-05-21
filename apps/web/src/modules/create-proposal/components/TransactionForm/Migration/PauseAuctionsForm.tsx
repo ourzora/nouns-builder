@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Paragraph, Text } from '@zoralabs/zord'
 import { useState } from 'react'
 import { encodeFunctionData } from 'viem'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { defaultHelperTextStyle } from 'src/components/Fields/styles.css'
 import { Icon } from 'src/components/Icon/Icon'
@@ -19,7 +19,7 @@ export const PauseAuctionsForm = () => {
   const { auction, governor } = useDaoStore((state) => state.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const chain = useChainStore((x) => x.chain)
-  const { data: paused } = useContractRead({
+  const { data: paused } = useReadContract({
     abi: auctionAbi,
     address: auction,
     chainId: chain.id,

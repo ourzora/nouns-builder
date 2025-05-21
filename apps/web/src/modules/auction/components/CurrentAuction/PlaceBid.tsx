@@ -171,7 +171,7 @@ export const PlaceBid = ({
       ) : null}
 
       {!creatingBid ? (
-        <Flex wrap="wrap">
+        <Flex wrap="wrap" gap="x2">
           <form className={bidForm}>
             <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
               <input
@@ -179,7 +179,7 @@ export const PlaceBid = ({
                 type={'number'}
                 className={bidInput}
                 min={formattedMinBid}
-                max={balance?.formatted}
+                max={formatEther(balance?.value ?? 0n)}
                 onChange={(event) => setBidAmount(event.target.value)}
               />
               <Box position="absolute" style={{ top: 0, right: 0, bottom: 0 }}>
@@ -192,6 +192,7 @@ export const PlaceBid = ({
           <Flex w="100%" wrap="wrap" mt="x2">
             <ContractButton
               className={auctionActionButtonVariants['bid']}
+              size="lg"
               handleClick={handleCreateBid}
               disabled={address && isValidChain ? !isValidBid : false}
               mt={{ '@initial': 'x2', '@768': 'x0' }}
@@ -202,7 +203,6 @@ export const PlaceBid = ({
               <Fragment>
                 <Box
                   cursor="pointer"
-                  style={{ zIndex: 102 }}
                   onMouseOver={() => setShowTooltip(true)}
                   onMouseLeave={() => {
                     setShowTooltip(false)
@@ -212,16 +212,16 @@ export const PlaceBid = ({
                   }}
                 >
                   <ContractButton
-                    className={auctionActionButtonVariants['bid']}
+                    className={auctionActionButtonVariants['share']}
+                    size="lg"
                     ml="x2"
                     mt={{ '@initial': 'x2', '@768': 'x0' }}
                     handleClick={async () => {
                       const network = PUBLIC_IS_TESTNET
                         ? 'https://testnet.nouns.build'
                         : 'https://nouns.build'
-                      const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${
-                        addresses.token
-                      }`
+                      const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${addresses.token
+                        }`
                       if (address === undefined) {
                         await navigator.clipboard.writeText(baseUrl)
                         return
@@ -246,8 +246,8 @@ export const PlaceBid = ({
           </Flex>
         </Flex>
       ) : (
-        <Button className={auctionActionButtonVariants['bidding']} disabled>
-          placing {bidAmount} ETH bid
+        <Button className={auctionActionButtonVariants['bidding']} disabled size="lg">
+          Placing {bidAmount} ETH bid
         </Button>
       )}
     </Flex>

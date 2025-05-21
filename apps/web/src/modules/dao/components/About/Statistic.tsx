@@ -7,7 +7,7 @@ import { statistic, statisticContent } from 'src/styles/About.css'
 
 interface StatisticProps {
   title: string
-  content?: string | number
+  content?: string | number | React.ReactNode
   address?: string
 }
 
@@ -27,13 +27,17 @@ export const Statistic: React.FC<StatisticProps> = ({ title, content, address })
           </a>
         )}
       </Flex>
-      <Text
-        mt={{ '@initial': 'x1', '@768': 'x3' }}
-        fontWeight={'display'}
-        className={statisticContent}
-      >
-        {!!content ? content : undefined}
-      </Text>
+      {!content || typeof content === 'string' || typeof content === 'number' ? (
+        <Text
+          mt={{ '@initial': 'x1', '@768': 'x3' }}
+          fontWeight={'display'}
+          className={statisticContent}
+        >
+          {!!content ? content : undefined}
+        </Text>
+      ) : (
+        content
+      )}
     </Box>
   )
 }

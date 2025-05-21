@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { isAddress } from 'viem'
-import { useAccount, useContractRead } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 import { readContract } from 'wagmi/actions'
 
 import { Meta } from 'src/components/Meta'
@@ -42,7 +42,7 @@ const DaoPage: NextPageWithLayout<DaoPageProps> = ({ chainId, collectionAddress 
   const { addresses } = useDaoStore()
   const chain = useChainStore((x) => x.chain)
 
-  const { data: owner } = useContractRead({
+  const { data: owner } = useReadContract({
     abi: auctionAbi,
     address: addresses.auction,
     functionName: 'owner',

@@ -71,13 +71,15 @@ export const buttonSize = {
       fontSize: 16,
     }),
   ]),
-  lg: atoms({
-    px: 'x4',
-    height: 'x15',
-    minWidth: 'x23',
-    fontSize: 16,
-    fontWeight: 'label',
-  }),
+  lg: style([
+    atoms({
+      px: 'x4',
+      height: 'x15',
+      minWidth: 'x23',
+      fontSize: 18,
+      fontWeight: 'label',
+    }),
+  ]),
 }
 
 export const buttonVariants = {
