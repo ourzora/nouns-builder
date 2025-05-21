@@ -101,6 +101,6 @@ export const animatedModalContent = styleVariants({
   auto: [
     defaultAnimatedModalContent,
     smallAnimatedContent,
-    { marginLeft: -680 / 2, width: 680, height: 'auto' },
+    { marginLeft: '-340px !important', width: '680px !important', height: 'auto' },
   ],
 })

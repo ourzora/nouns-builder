@@ -134,7 +134,7 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
               onClick={() => setShowVoteModal(true)}
               className={proposalActionButtonVariants['vote']}
               w={{ '@initial': '100%', '@768': 'auto' }}
-              pr={{ '@initial': 'x2', '@768': 'x0' }}
+              //pr={{ '@initial': 'x2', '@768': 'x0' }}
             >
               {votesAvailable === 1 ? 'Submit Vote' : 'Submit Votes'}
             </Button>

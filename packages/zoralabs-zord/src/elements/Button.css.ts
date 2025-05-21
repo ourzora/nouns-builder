@@ -4,7 +4,7 @@ import { style } from '@vanilla-extract/css'
 
 export const baseButton = style([
   atoms({
-    borderRadius: 'normal',
+    borderRadius: 'curved',
     borderStyle: 'solid',
     borderWidth: 'none',
     alignItems: 'center',

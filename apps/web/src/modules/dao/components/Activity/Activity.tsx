@@ -125,7 +125,6 @@ export const Activity: React.FC = () => {
                 {!isMobile ? (
                   <ContractButton
                     className={delegateBtn}
-                    color="ghost"
                     borderColor="border"
                     borderStyle="solid"
                     borderWidth="normal"

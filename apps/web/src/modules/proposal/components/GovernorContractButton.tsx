@@ -19,13 +19,11 @@ import { useChainStore } from 'src/stores/useChainStore'
 
 import { uploadingSpinnerWhite } from './GovernorContractButton.css'
 
-type GovernorContractButtonProps<
-  TFunctionName extends ContractFunctionName<
+type GovernorContractButtonProps = Pick<
+  UseSimulateContractParameters<
     typeof governorAbi,
-    'nonpayable' | 'payable'
-  > = ContractFunctionName<typeof governorAbi, 'nonpayable' | 'payable'>,
-> = Pick<
-  UseSimulateContractParameters<typeof governorAbi, TFunctionName>,
+    ContractFunctionName<typeof governorAbi, 'nonpayable' | 'payable'>
+  >,
   'functionName' | 'args'
 > & {
   proposalId: string
