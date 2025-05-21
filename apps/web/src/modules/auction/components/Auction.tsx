@@ -3,6 +3,7 @@ import axios from 'axios'
 import React, { Fragment, ReactNode } from 'react'
 import useSWR from 'swr'
 import { formatEther } from 'viem'
+import { useConfig } from 'wagmi'
 import { readContract } from 'wagmi/actions'
 
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -45,6 +46,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
   const mintDate = mintedAt * 1000
   const bidAmount = token.auction?.winningBid?.amount
   const tokenPrice = bidAmount ? formatEther(bidAmount) : undefined
+  const config = useConfig()
 
   const { treasury } = useDaoStore((x) => x.addresses)
 
@@ -52,7 +54,7 @@ export const Auction: React.FC<AuctionControllerProps> = ({
     L1_CHAINS.find((x) => x === chain.id) && treasury
       ? [SWR_KEYS.DAO_MIGRATED, treasury]
       : null,
-    (_, treasury) =>
+    ([_key, treasury]) =>
       axios
         .get<L2MigratedResponse>(`/api/migrated?l1Treasury=${treasury}`)
         .then((x) => x.data)
@@ -60,8 +62,8 @@ export const Auction: React.FC<AuctionControllerProps> = ({
 
   const { data: auction } = useSWR(
     [SWR_KEYS.AUCTION, chain.id, auctionAddress],
-    (_, chainId, auctionAddress) =>
-      readContract({
+    ([_key, chainId, auctionAddress]) =>
+      readContract(config, {
         abi: auctionAbi,
         address: auctionAddress as AddressType,
         functionName: 'auction',

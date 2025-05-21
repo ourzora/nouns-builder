@@ -37,7 +37,7 @@ export const InnerText = <E extends ElementType = typeof BoxDefaultElement>(
   return (
     <Box
       ref={ref}
-      as={as || 'span'}
+      as={as || 'div'}
       display={inline ? 'inline-block' : undefined}
       align={align}
       className={[

@@ -1,5 +1,4 @@
-import { GraphQLClient } from 'graphql-request'
-import * as Dom from 'graphql-request/dist/types.dom'
+import { GraphQLClient, RequestOptions } from 'graphql-request'
 import gql from 'graphql-tag'
 
 export type Maybe<T> = T | null
@@ -11,18 +10,25 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>
 }
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never
+}
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never }
+type GraphQLClientRequestHeaders = RequestOptions['requestHeaders']
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string
-  String: string
-  Boolean: boolean
-  Int: number
-  Float: number
+  ID: { input: string; output: string }
+  String: { input: string; output: string }
+  Boolean: { input: boolean; output: boolean }
+  Int: { input: number; output: number }
+  Float: { input: number; output: number }
 }
 
 export type AffectedRowsOutput = {
   __typename?: 'AffectedRowsOutput'
-  count: Scalars['Int']
+  count: Scalars['Int']['output']
 }
 
 export type AggregateAttestation = {
@@ -88,31 +94,31 @@ export type AggregateTimestamp = {
 
 export type Attestation = {
   __typename?: 'Attestation'
-  attester: Scalars['String']
-  data: Scalars['String']
-  decodedDataJson: Scalars['String']
-  expirationTime: Scalars['Int']
-  id: Scalars['String']
-  ipfsHash: Scalars['String']
-  isOffchain: Scalars['Boolean']
-  recipient: Scalars['String']
-  refUID: Scalars['String']
-  revocable: Scalars['Boolean']
-  revocationTime: Scalars['Int']
-  revoked: Scalars['Boolean']
+  attester: Scalars['String']['output']
+  data: Scalars['String']['output']
+  decodedDataJson: Scalars['String']['output']
+  expirationTime: Scalars['Int']['output']
+  id: Scalars['String']['output']
+  ipfsHash: Scalars['String']['output']
+  isOffchain: Scalars['Boolean']['output']
+  recipient: Scalars['String']['output']
+  refUID: Scalars['String']['output']
+  revocable: Scalars['Boolean']['output']
+  revocationTime: Scalars['Int']['output']
+  revoked: Scalars['Boolean']['output']
   schema: Schema
-  schemaId: Scalars['String']
-  time: Scalars['Int']
-  timeCreated: Scalars['Int']
-  txid: Scalars['String']
+  schemaId: Scalars['String']['output']
+  time: Scalars['Int']['output']
+  timeCreated: Scalars['Int']['output']
+  txid: Scalars['String']['output']
 }
 
 export type AttestationAvgAggregate = {
   __typename?: 'AttestationAvgAggregate'
-  expirationTime?: Maybe<Scalars['Float']>
-  revocationTime?: Maybe<Scalars['Float']>
-  time?: Maybe<Scalars['Float']>
-  timeCreated?: Maybe<Scalars['Float']>
+  expirationTime?: Maybe<Scalars['Float']['output']>
+  revocationTime?: Maybe<Scalars['Float']['output']>
+  time?: Maybe<Scalars['Float']['output']>
+  timeCreated?: Maybe<Scalars['Float']['output']>
 }
 
 export type AttestationAvgOrderByAggregateInput = {
@@ -124,23 +130,23 @@ export type AttestationAvgOrderByAggregateInput = {
 
 export type AttestationCountAggregate = {
   __typename?: 'AttestationCountAggregate'
-  _all: Scalars['Int']
-  attester: Scalars['Int']
-  data: Scalars['Int']
-  decodedDataJson: Scalars['Int']
-  expirationTime: Scalars['Int']
-  id: Scalars['Int']
-  ipfsHash: Scalars['Int']
-  isOffchain: Scalars['Int']
-  recipient: Scalars['Int']
-  refUID: Scalars['Int']
-  revocable: Scalars['Int']
-  revocationTime: Scalars['Int']
-  revoked: Scalars['Int']
-  schemaId: Scalars['Int']
-  time: Scalars['Int']
-  timeCreated: Scalars['Int']
-  txid: Scalars['Int']
+  _all: Scalars['Int']['output']
+  attester: Scalars['Int']['output']
+  data: Scalars['Int']['output']
+  decodedDataJson: Scalars['Int']['output']
+  expirationTime: Scalars['Int']['output']
+  id: Scalars['Int']['output']
+  ipfsHash: Scalars['Int']['output']
+  isOffchain: Scalars['Int']['output']
+  recipient: Scalars['Int']['output']
+  refUID: Scalars['Int']['output']
+  revocable: Scalars['Int']['output']
+  revocationTime: Scalars['Int']['output']
+  revoked: Scalars['Int']['output']
+  schemaId: Scalars['Int']['output']
+  time: Scalars['Int']['output']
+  timeCreated: Scalars['Int']['output']
+  txid: Scalars['Int']['output']
 }
 
 export type AttestationCountOrderByAggregateInput = {
@@ -163,64 +169,64 @@ export type AttestationCountOrderByAggregateInput = {
 }
 
 export type AttestationCreateInput = {
-  attester: Scalars['String']
-  data: Scalars['String']
-  decodedDataJson?: InputMaybe<Scalars['String']>
-  expirationTime: Scalars['Int']
-  id: Scalars['String']
-  ipfsHash: Scalars['String']
-  isOffchain: Scalars['Boolean']
-  recipient: Scalars['String']
-  refUID: Scalars['String']
-  revocable: Scalars['Boolean']
-  revocationTime: Scalars['Int']
-  revoked: Scalars['Boolean']
+  attester: Scalars['String']['input']
+  data: Scalars['String']['input']
+  decodedDataJson?: InputMaybe<Scalars['String']['input']>
+  expirationTime: Scalars['Int']['input']
+  id: Scalars['String']['input']
+  ipfsHash: Scalars['String']['input']
+  isOffchain: Scalars['Boolean']['input']
+  recipient: Scalars['String']['input']
+  refUID: Scalars['String']['input']
+  revocable: Scalars['Boolean']['input']
+  revocationTime: Scalars['Int']['input']
+  revoked: Scalars['Boolean']['input']
   schema: SchemaCreateNestedOneWithoutAttestationsInput
-  time: Scalars['Int']
-  timeCreated: Scalars['Int']
-  txid: Scalars['String']
+  time: Scalars['Int']['input']
+  timeCreated: Scalars['Int']['input']
+  txid: Scalars['String']['input']
 }
 
 export type AttestationCreateManyInput = {
-  attester: Scalars['String']
-  data: Scalars['String']
-  decodedDataJson?: InputMaybe<Scalars['String']>
-  expirationTime: Scalars['Int']
-  id: Scalars['String']
-  ipfsHash: Scalars['String']
-  isOffchain: Scalars['Boolean']
-  recipient: Scalars['String']
-  refUID: Scalars['String']
-  revocable: Scalars['Boolean']
-  revocationTime: Scalars['Int']
-  revoked: Scalars['Boolean']
-  schemaId: Scalars['String']
-  time: Scalars['Int']
-  timeCreated: Scalars['Int']
-  txid: Scalars['String']
+  attester: Scalars['String']['input']
+  data: Scalars['String']['input']
+  decodedDataJson?: InputMaybe<Scalars['String']['input']>
+  expirationTime: Scalars['Int']['input']
+  id: Scalars['String']['input']
+  ipfsHash: Scalars['String']['input']
+  isOffchain: Scalars['Boolean']['input']
+  recipient: Scalars['String']['input']
+  refUID: Scalars['String']['input']
+  revocable: Scalars['Boolean']['input']
+  revocationTime: Scalars['Int']['input']
+  revoked: Scalars['Boolean']['input']
+  schemaId: Scalars['String']['input']
+  time: Scalars['Int']['input']
+  timeCreated: Scalars['Int']['input']
+  txid: Scalars['String']['input']
 }
 
 export type AttestationCreateManySchemaInput = {
-  attester: Scalars['String']
-  data: Scalars['String']
-  decodedDataJson?: InputMaybe<Scalars['String']>
-  expirationTime: Scalars['Int']
-  id: Scalars['String']
-  ipfsHash: Scalars['String']
-  isOffchain: Scalars['Boolean']
-  recipient: Scalars['String']
-  refUID: Scalars['String']
-  revocable: Scalars['Boolean']
-  revocationTime: Scalars['Int']
-  revoked: Scalars['Boolean']
-  time: Scalars['Int']
-  timeCreated: Scalars['Int']
-  txid: Scalars['String']
+  attester: Scalars['String']['input']
+  data: Scalars['String']['input']
+  decodedDataJson?: InputMaybe<Scalars['String']['input']>
+  expirationTime: Scalars['Int']['input']
+  id: Scalars['String']['input']
+  ipfsHash: Scalars['String']['input']
+  isOffchain: Scalars['Boolean']['input']
+  recipient: Scalars['String']['input']
+  refUID: Scalars['String']['input']
+  revocable: Scalars['Boolean']['input']
+  revocationTime: Scalars['Int']['input']
+  revoked: Scalars['Boolean']['input']
+  time: Scalars['Int']['input']
+  timeCreated: Scalars['Int']['input']
+  txid: Scalars['String']['input']
 }
 
 export type AttestationCreateManySchemaInputEnvelope = {
   data: Array<AttestationCreateManySchemaInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type AttestationCreateNestedManyWithoutSchemaInput = {
@@ -236,21 +242,21 @@ export type AttestationCreateOrConnectWithoutSchemaInput = {
 }
 
 export type AttestationCreateWithoutSchemaInput = {
-  attester: Scalars['String']
-  data: Scalars['String']
-  decodedDataJson?: InputMaybe<Scalars['String']>
-  expirationTime: Scalars['Int']
-  id: Scalars['String']
-  ipfsHash: Scalars['String']
-  isOffchain: Scalars['Boolean']
-  recipient: Scalars['String']
-  refUID: Scalars['String']
-  revocable: Scalars['Boolean']
-  revocationTime: Scalars['Int']
-  revoked: Scalars['Boolean']
-  time: Scalars['Int']
-  timeCreated: Scalars['Int']
-  txid: Scalars['String']
+  attester: Scalars['String']['input']
+  data: Scalars['String']['input']
+  decodedDataJson?: InputMaybe<Scalars['String']['input']>
+  expirationTime: Scalars['Int']['input']
+  id: Scalars['String']['input']
+  ipfsHash: Scalars['String']['input']
+  isOffchain: Scalars['Boolean']['input']
+  recipient: Scalars['String']['input']
+  refUID: Scalars['String']['input']
+  revocable: Scalars['Boolean']['input']
+  revocationTime: Scalars['Int']['input']
+  revoked: Scalars['Boolean']['input']
+  time: Scalars['Int']['input']
+  timeCreated: Scalars['Int']['input']
+  txid: Scalars['String']['input']
 }
 
 export type AttestationGroupBy = {
@@ -260,22 +266,22 @@ export type AttestationGroupBy = {
   _max?: Maybe<AttestationMaxAggregate>
   _min?: Maybe<AttestationMinAggregate>
   _sum?: Maybe<AttestationSumAggregate>
-  attester: Scalars['String']
-  data: Scalars['String']
-  decodedDataJson: Scalars['String']
-  expirationTime: Scalars['Int']
-  id: Scalars['String']
-  ipfsHash: Scalars['String']
-  isOffchain: Scalars['Boolean']
-  recipient: Scalars['String']
-  refUID: Scalars['String']
-  revocable: Scalars['Boolean']
-  revocationTime: Scalars['Int']
-  revoked: Scalars['Boolean']
-  schemaId: Scalars['String']
-  time: Scalars['Int']
-  timeCreated: Scalars['Int']
-  txid: Scalars['String']
+  attester: Scalars['String']['output']
+  data: Scalars['String']['output']
+  decodedDataJson: Scalars['String']['output']
+  expirationTime: Scalars['Int']['output']
+  id: Scalars['String']['output']
+  ipfsHash: Scalars['String']['output']
+  isOffchain: Scalars['Boolean']['output']
+  recipient: Scalars['String']['output']
+  refUID: Scalars['String']['output']
+  revocable: Scalars['Boolean']['output']
+  revocationTime: Scalars['Int']['output']
+  revoked: Scalars['Boolean']['output']
+  schemaId: Scalars['String']['output']
+  time: Scalars['Int']['output']
+  timeCreated: Scalars['Int']['output']
+  txid: Scalars['String']['output']
 }
 
 export type AttestationListRelationFilter = {
@@ -286,22 +292,22 @@ export type AttestationListRelationFilter = {
 
 export type AttestationMaxAggregate = {
   __typename?: 'AttestationMaxAggregate'
-  attester?: Maybe<Scalars['String']>
-  data?: Maybe<Scalars['String']>
-  decodedDataJson?: Maybe<Scalars['String']>
-  expirationTime?: Maybe<Scalars['Int']>
-  id?: Maybe<Scalars['String']>
-  ipfsHash?: Maybe<Scalars['String']>
-  isOffchain?: Maybe<Scalars['Boolean']>
-  recipient?: Maybe<Scalars['String']>
-  refUID?: Maybe<Scalars['String']>
-  revocable?: Maybe<Scalars['Boolean']>
-  revocationTime?: Maybe<Scalars['Int']>
-  revoked?: Maybe<Scalars['Boolean']>
-  schemaId?: Maybe<Scalars['String']>
-  time?: Maybe<Scalars['Int']>
-  timeCreated?: Maybe<Scalars['Int']>
-  txid?: Maybe<Scalars['String']>
+  attester?: Maybe<Scalars['String']['output']>
+  data?: Maybe<Scalars['String']['output']>
+  decodedDataJson?: Maybe<Scalars['String']['output']>
+  expirationTime?: Maybe<Scalars['Int']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  ipfsHash?: Maybe<Scalars['String']['output']>
+  isOffchain?: Maybe<Scalars['Boolean']['output']>
+  recipient?: Maybe<Scalars['String']['output']>
+  refUID?: Maybe<Scalars['String']['output']>
+  revocable?: Maybe<Scalars['Boolean']['output']>
+  revocationTime?: Maybe<Scalars['Int']['output']>
+  revoked?: Maybe<Scalars['Boolean']['output']>
+  schemaId?: Maybe<Scalars['String']['output']>
+  time?: Maybe<Scalars['Int']['output']>
+  timeCreated?: Maybe<Scalars['Int']['output']>
+  txid?: Maybe<Scalars['String']['output']>
 }
 
 export type AttestationMaxOrderByAggregateInput = {
@@ -325,22 +331,22 @@ export type AttestationMaxOrderByAggregateInput = {
 
 export type AttestationMinAggregate = {
   __typename?: 'AttestationMinAggregate'
-  attester?: Maybe<Scalars['String']>
-  data?: Maybe<Scalars['String']>
-  decodedDataJson?: Maybe<Scalars['String']>
-  expirationTime?: Maybe<Scalars['Int']>
-  id?: Maybe<Scalars['String']>
-  ipfsHash?: Maybe<Scalars['String']>
-  isOffchain?: Maybe<Scalars['Boolean']>
-  recipient?: Maybe<Scalars['String']>
-  refUID?: Maybe<Scalars['String']>
-  revocable?: Maybe<Scalars['Boolean']>
-  revocationTime?: Maybe<Scalars['Int']>
-  revoked?: Maybe<Scalars['Boolean']>
-  schemaId?: Maybe<Scalars['String']>
-  time?: Maybe<Scalars['Int']>
-  timeCreated?: Maybe<Scalars['Int']>
-  txid?: Maybe<Scalars['String']>
+  attester?: Maybe<Scalars['String']['output']>
+  data?: Maybe<Scalars['String']['output']>
+  decodedDataJson?: Maybe<Scalars['String']['output']>
+  expirationTime?: Maybe<Scalars['Int']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  ipfsHash?: Maybe<Scalars['String']['output']>
+  isOffchain?: Maybe<Scalars['Boolean']['output']>
+  recipient?: Maybe<Scalars['String']['output']>
+  refUID?: Maybe<Scalars['String']['output']>
+  revocable?: Maybe<Scalars['Boolean']['output']>
+  revocationTime?: Maybe<Scalars['Int']['output']>
+  revoked?: Maybe<Scalars['Boolean']['output']>
+  schemaId?: Maybe<Scalars['String']['output']>
+  time?: Maybe<Scalars['Int']['output']>
+  timeCreated?: Maybe<Scalars['Int']['output']>
+  txid?: Maybe<Scalars['String']['output']>
 }
 
 export type AttestationMinOrderByAggregateInput = {
@@ -475,10 +481,10 @@ export type AttestationScalarWhereWithAggregatesInput = {
 
 export type AttestationSumAggregate = {
   __typename?: 'AttestationSumAggregate'
-  expirationTime?: Maybe<Scalars['Int']>
-  revocationTime?: Maybe<Scalars['Int']>
-  time?: Maybe<Scalars['Int']>
-  timeCreated?: Maybe<Scalars['Int']>
+  expirationTime?: Maybe<Scalars['Int']['output']>
+  revocationTime?: Maybe<Scalars['Int']['output']>
+  time?: Maybe<Scalars['Int']['output']>
+  timeCreated?: Maybe<Scalars['Int']['output']>
 }
 
 export type AttestationSumOrderByAggregateInput = {
@@ -597,15 +603,15 @@ export type AttestationWhereInput = {
 }
 
 export type AttestationWhereUniqueInput = {
-  id?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']['input']>
 }
 
 export type BoolFieldUpdateOperationsInput = {
-  set?: InputMaybe<Scalars['Boolean']>
+  set?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type BoolFilter = {
-  equals?: InputMaybe<Scalars['Boolean']>
+  equals?: InputMaybe<Scalars['Boolean']['input']>
   not?: InputMaybe<NestedBoolFilter>
 }
 
@@ -613,20 +619,20 @@ export type BoolWithAggregatesFilter = {
   _count?: InputMaybe<NestedIntFilter>
   _max?: InputMaybe<NestedBoolFilter>
   _min?: InputMaybe<NestedBoolFilter>
-  equals?: InputMaybe<Scalars['Boolean']>
+  equals?: InputMaybe<Scalars['Boolean']['input']>
   not?: InputMaybe<NestedBoolWithAggregatesFilter>
 }
 
 export type EnsName = {
   __typename?: 'EnsName'
-  id: Scalars['String']
-  name: Scalars['String']
-  timestamp: Scalars['Int']
+  id: Scalars['String']['output']
+  name: Scalars['String']['output']
+  timestamp: Scalars['Int']['output']
 }
 
 export type EnsNameAvgAggregate = {
   __typename?: 'EnsNameAvgAggregate'
-  timestamp?: Maybe<Scalars['Float']>
+  timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 export type EnsNameAvgOrderByAggregateInput = {
@@ -635,10 +641,10 @@ export type EnsNameAvgOrderByAggregateInput = {
 
 export type EnsNameCountAggregate = {
   __typename?: 'EnsNameCountAggregate'
-  _all: Scalars['Int']
-  id: Scalars['Int']
-  name: Scalars['Int']
-  timestamp: Scalars['Int']
+  _all: Scalars['Int']['output']
+  id: Scalars['Int']['output']
+  name: Scalars['Int']['output']
+  timestamp: Scalars['Int']['output']
 }
 
 export type EnsNameCountOrderByAggregateInput = {
@@ -648,15 +654,15 @@ export type EnsNameCountOrderByAggregateInput = {
 }
 
 export type EnsNameCreateInput = {
-  id: Scalars['String']
-  name: Scalars['String']
-  timestamp: Scalars['Int']
+  id: Scalars['String']['input']
+  name: Scalars['String']['input']
+  timestamp: Scalars['Int']['input']
 }
 
 export type EnsNameCreateManyInput = {
-  id: Scalars['String']
-  name: Scalars['String']
-  timestamp: Scalars['Int']
+  id: Scalars['String']['input']
+  name: Scalars['String']['input']
+  timestamp: Scalars['Int']['input']
 }
 
 export type EnsNameGroupBy = {
@@ -666,16 +672,16 @@ export type EnsNameGroupBy = {
   _max?: Maybe<EnsNameMaxAggregate>
   _min?: Maybe<EnsNameMinAggregate>
   _sum?: Maybe<EnsNameSumAggregate>
-  id: Scalars['String']
-  name: Scalars['String']
-  timestamp: Scalars['Int']
+  id: Scalars['String']['output']
+  name: Scalars['String']['output']
+  timestamp: Scalars['Int']['output']
 }
 
 export type EnsNameMaxAggregate = {
   __typename?: 'EnsNameMaxAggregate'
-  id?: Maybe<Scalars['String']>
-  name?: Maybe<Scalars['String']>
-  timestamp?: Maybe<Scalars['Int']>
+  id?: Maybe<Scalars['String']['output']>
+  name?: Maybe<Scalars['String']['output']>
+  timestamp?: Maybe<Scalars['Int']['output']>
 }
 
 export type EnsNameMaxOrderByAggregateInput = {
@@ -686,9 +692,9 @@ export type EnsNameMaxOrderByAggregateInput = {
 
 export type EnsNameMinAggregate = {
   __typename?: 'EnsNameMinAggregate'
-  id?: Maybe<Scalars['String']>
-  name?: Maybe<Scalars['String']>
-  timestamp?: Maybe<Scalars['Int']>
+  id?: Maybe<Scalars['String']['output']>
+  name?: Maybe<Scalars['String']['output']>
+  timestamp?: Maybe<Scalars['Int']['output']>
 }
 
 export type EnsNameMinOrderByAggregateInput = {
@@ -731,7 +737,7 @@ export type EnsNameScalarWhereWithAggregatesInput = {
 
 export type EnsNameSumAggregate = {
   __typename?: 'EnsNameSumAggregate'
-  timestamp?: Maybe<Scalars['Int']>
+  timestamp?: Maybe<Scalars['Int']['output']>
 }
 
 export type EnsNameSumOrderByAggregateInput = {
@@ -760,26 +766,26 @@ export type EnsNameWhereInput = {
 }
 
 export type EnsNameWhereUniqueInput = {
-  id?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']['input']>
 }
 
 export type IntFieldUpdateOperationsInput = {
-  decrement?: InputMaybe<Scalars['Int']>
-  divide?: InputMaybe<Scalars['Int']>
-  increment?: InputMaybe<Scalars['Int']>
-  multiply?: InputMaybe<Scalars['Int']>
-  set?: InputMaybe<Scalars['Int']>
+  decrement?: InputMaybe<Scalars['Int']['input']>
+  divide?: InputMaybe<Scalars['Int']['input']>
+  increment?: InputMaybe<Scalars['Int']['input']>
+  multiply?: InputMaybe<Scalars['Int']['input']>
+  set?: InputMaybe<Scalars['Int']['input']>
 }
 
 export type IntFilter = {
-  equals?: InputMaybe<Scalars['Int']>
-  gt?: InputMaybe<Scalars['Int']>
-  gte?: InputMaybe<Scalars['Int']>
-  in?: InputMaybe<Array<Scalars['Int']>>
-  lt?: InputMaybe<Scalars['Int']>
-  lte?: InputMaybe<Scalars['Int']>
+  equals?: InputMaybe<Scalars['Int']['input']>
+  gt?: InputMaybe<Scalars['Int']['input']>
+  gte?: InputMaybe<Scalars['Int']['input']>
+  in?: InputMaybe<Array<Scalars['Int']['input']>>
+  lt?: InputMaybe<Scalars['Int']['input']>
+  lte?: InputMaybe<Scalars['Int']['input']>
   not?: InputMaybe<NestedIntFilter>
-  notIn?: InputMaybe<Array<Scalars['Int']>>
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>
 }
 
 export type IntWithAggregatesFilter = {
@@ -788,14 +794,14 @@ export type IntWithAggregatesFilter = {
   _max?: InputMaybe<NestedIntFilter>
   _min?: InputMaybe<NestedIntFilter>
   _sum?: InputMaybe<NestedIntFilter>
-  equals?: InputMaybe<Scalars['Int']>
-  gt?: InputMaybe<Scalars['Int']>
-  gte?: InputMaybe<Scalars['Int']>
-  in?: InputMaybe<Array<Scalars['Int']>>
-  lt?: InputMaybe<Scalars['Int']>
-  lte?: InputMaybe<Scalars['Int']>
+  equals?: InputMaybe<Scalars['Int']['input']>
+  gt?: InputMaybe<Scalars['Int']['input']>
+  gte?: InputMaybe<Scalars['Int']['input']>
+  in?: InputMaybe<Array<Scalars['Int']['input']>>
+  lt?: InputMaybe<Scalars['Int']['input']>
+  lte?: InputMaybe<Scalars['Int']['input']>
   not?: InputMaybe<NestedIntWithAggregatesFilter>
-  notIn?: InputMaybe<Array<Scalars['Int']>>
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>
 }
 
 export type Mutation = {
@@ -853,37 +859,37 @@ export type Mutation = {
 
 export type MutationCreateManyAttestationArgs = {
   data: Array<AttestationCreateManyInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type MutationCreateManyEnsNameArgs = {
   data: Array<EnsNameCreateManyInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type MutationCreateManyOffchainRevocationArgs = {
   data: Array<OffchainRevocationCreateManyInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type MutationCreateManySchemaArgs = {
   data: Array<SchemaCreateManyInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type MutationCreateManySchemaNameArgs = {
   data: Array<SchemaNameCreateManyInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type MutationCreateManyServiceStatArgs = {
   data: Array<ServiceStatCreateManyInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type MutationCreateManyTimestampArgs = {
   data: Array<TimestampCreateManyInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type MutationCreateOneAttestationArgs = {
@@ -1083,7 +1089,7 @@ export type MutationUpsertOneTimestampArgs = {
 }
 
 export type NestedBoolFilter = {
-  equals?: InputMaybe<Scalars['Boolean']>
+  equals?: InputMaybe<Scalars['Boolean']['input']>
   not?: InputMaybe<NestedBoolFilter>
 }
 
@@ -1091,30 +1097,30 @@ export type NestedBoolWithAggregatesFilter = {
   _count?: InputMaybe<NestedIntFilter>
   _max?: InputMaybe<NestedBoolFilter>
   _min?: InputMaybe<NestedBoolFilter>
-  equals?: InputMaybe<Scalars['Boolean']>
+  equals?: InputMaybe<Scalars['Boolean']['input']>
   not?: InputMaybe<NestedBoolWithAggregatesFilter>
 }
 
 export type NestedFloatFilter = {
-  equals?: InputMaybe<Scalars['Float']>
-  gt?: InputMaybe<Scalars['Float']>
-  gte?: InputMaybe<Scalars['Float']>
-  in?: InputMaybe<Array<Scalars['Float']>>
-  lt?: InputMaybe<Scalars['Float']>
-  lte?: InputMaybe<Scalars['Float']>
+  equals?: InputMaybe<Scalars['Float']['input']>
+  gt?: InputMaybe<Scalars['Float']['input']>
+  gte?: InputMaybe<Scalars['Float']['input']>
+  in?: InputMaybe<Array<Scalars['Float']['input']>>
+  lt?: InputMaybe<Scalars['Float']['input']>
+  lte?: InputMaybe<Scalars['Float']['input']>
   not?: InputMaybe<NestedFloatFilter>
-  notIn?: InputMaybe<Array<Scalars['Float']>>
+  notIn?: InputMaybe<Array<Scalars['Float']['input']>>
 }
 
 export type NestedIntFilter = {
-  equals?: InputMaybe<Scalars['Int']>
-  gt?: InputMaybe<Scalars['Int']>
-  gte?: InputMaybe<Scalars['Int']>
-  in?: InputMaybe<Array<Scalars['Int']>>
-  lt?: InputMaybe<Scalars['Int']>
-  lte?: InputMaybe<Scalars['Int']>
+  equals?: InputMaybe<Scalars['Int']['input']>
+  gt?: InputMaybe<Scalars['Int']['input']>
+  gte?: InputMaybe<Scalars['Int']['input']>
+  in?: InputMaybe<Array<Scalars['Int']['input']>>
+  lt?: InputMaybe<Scalars['Int']['input']>
+  lte?: InputMaybe<Scalars['Int']['input']>
   not?: InputMaybe<NestedIntFilter>
-  notIn?: InputMaybe<Array<Scalars['Int']>>
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>
 }
 
 export type NestedIntWithAggregatesFilter = {
@@ -1123,59 +1129,59 @@ export type NestedIntWithAggregatesFilter = {
   _max?: InputMaybe<NestedIntFilter>
   _min?: InputMaybe<NestedIntFilter>
   _sum?: InputMaybe<NestedIntFilter>
-  equals?: InputMaybe<Scalars['Int']>
-  gt?: InputMaybe<Scalars['Int']>
-  gte?: InputMaybe<Scalars['Int']>
-  in?: InputMaybe<Array<Scalars['Int']>>
-  lt?: InputMaybe<Scalars['Int']>
-  lte?: InputMaybe<Scalars['Int']>
+  equals?: InputMaybe<Scalars['Int']['input']>
+  gt?: InputMaybe<Scalars['Int']['input']>
+  gte?: InputMaybe<Scalars['Int']['input']>
+  in?: InputMaybe<Array<Scalars['Int']['input']>>
+  lt?: InputMaybe<Scalars['Int']['input']>
+  lte?: InputMaybe<Scalars['Int']['input']>
   not?: InputMaybe<NestedIntWithAggregatesFilter>
-  notIn?: InputMaybe<Array<Scalars['Int']>>
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>
 }
 
 export type NestedStringFilter = {
-  contains?: InputMaybe<Scalars['String']>
-  endsWith?: InputMaybe<Scalars['String']>
-  equals?: InputMaybe<Scalars['String']>
-  gt?: InputMaybe<Scalars['String']>
-  gte?: InputMaybe<Scalars['String']>
-  in?: InputMaybe<Array<Scalars['String']>>
-  lt?: InputMaybe<Scalars['String']>
-  lte?: InputMaybe<Scalars['String']>
+  contains?: InputMaybe<Scalars['String']['input']>
+  endsWith?: InputMaybe<Scalars['String']['input']>
+  equals?: InputMaybe<Scalars['String']['input']>
+  gt?: InputMaybe<Scalars['String']['input']>
+  gte?: InputMaybe<Scalars['String']['input']>
+  in?: InputMaybe<Array<Scalars['String']['input']>>
+  lt?: InputMaybe<Scalars['String']['input']>
+  lte?: InputMaybe<Scalars['String']['input']>
   not?: InputMaybe<NestedStringFilter>
-  notIn?: InputMaybe<Array<Scalars['String']>>
-  startsWith?: InputMaybe<Scalars['String']>
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>
+  startsWith?: InputMaybe<Scalars['String']['input']>
 }
 
 export type NestedStringWithAggregatesFilter = {
   _count?: InputMaybe<NestedIntFilter>
   _max?: InputMaybe<NestedStringFilter>
   _min?: InputMaybe<NestedStringFilter>
-  contains?: InputMaybe<Scalars['String']>
-  endsWith?: InputMaybe<Scalars['String']>
-  equals?: InputMaybe<Scalars['String']>
-  gt?: InputMaybe<Scalars['String']>
-  gte?: InputMaybe<Scalars['String']>
-  in?: InputMaybe<Array<Scalars['String']>>
-  lt?: InputMaybe<Scalars['String']>
-  lte?: InputMaybe<Scalars['String']>
+  contains?: InputMaybe<Scalars['String']['input']>
+  endsWith?: InputMaybe<Scalars['String']['input']>
+  equals?: InputMaybe<Scalars['String']['input']>
+  gt?: InputMaybe<Scalars['String']['input']>
+  gte?: InputMaybe<Scalars['String']['input']>
+  in?: InputMaybe<Array<Scalars['String']['input']>>
+  lt?: InputMaybe<Scalars['String']['input']>
+  lte?: InputMaybe<Scalars['String']['input']>
   not?: InputMaybe<NestedStringWithAggregatesFilter>
-  notIn?: InputMaybe<Array<Scalars['String']>>
-  startsWith?: InputMaybe<Scalars['String']>
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>
+  startsWith?: InputMaybe<Scalars['String']['input']>
 }
 
 export type OffchainRevocation = {
   __typename?: 'OffchainRevocation'
-  from: Scalars['String']
-  id: Scalars['String']
-  timestamp: Scalars['Int']
-  txid: Scalars['String']
-  uid: Scalars['String']
+  from: Scalars['String']['output']
+  id: Scalars['String']['output']
+  timestamp: Scalars['Int']['output']
+  txid: Scalars['String']['output']
+  uid: Scalars['String']['output']
 }
 
 export type OffchainRevocationAvgAggregate = {
   __typename?: 'OffchainRevocationAvgAggregate'
-  timestamp?: Maybe<Scalars['Float']>
+  timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 export type OffchainRevocationAvgOrderByAggregateInput = {
@@ -1184,12 +1190,12 @@ export type OffchainRevocationAvgOrderByAggregateInput = {
 
 export type OffchainRevocationCountAggregate = {
   __typename?: 'OffchainRevocationCountAggregate'
-  _all: Scalars['Int']
-  from: Scalars['Int']
-  id: Scalars['Int']
-  timestamp: Scalars['Int']
-  txid: Scalars['Int']
-  uid: Scalars['Int']
+  _all: Scalars['Int']['output']
+  from: Scalars['Int']['output']
+  id: Scalars['Int']['output']
+  timestamp: Scalars['Int']['output']
+  txid: Scalars['Int']['output']
+  uid: Scalars['Int']['output']
 }
 
 export type OffchainRevocationCountOrderByAggregateInput = {
@@ -1201,19 +1207,19 @@ export type OffchainRevocationCountOrderByAggregateInput = {
 }
 
 export type OffchainRevocationCreateInput = {
-  from: Scalars['String']
-  id?: InputMaybe<Scalars['String']>
-  timestamp: Scalars['Int']
-  txid: Scalars['String']
-  uid: Scalars['String']
+  from: Scalars['String']['input']
+  id?: InputMaybe<Scalars['String']['input']>
+  timestamp: Scalars['Int']['input']
+  txid: Scalars['String']['input']
+  uid: Scalars['String']['input']
 }
 
 export type OffchainRevocationCreateManyInput = {
-  from: Scalars['String']
-  id?: InputMaybe<Scalars['String']>
-  timestamp: Scalars['Int']
-  txid: Scalars['String']
-  uid: Scalars['String']
+  from: Scalars['String']['input']
+  id?: InputMaybe<Scalars['String']['input']>
+  timestamp: Scalars['Int']['input']
+  txid: Scalars['String']['input']
+  uid: Scalars['String']['input']
 }
 
 export type OffchainRevocationGroupBy = {
@@ -1223,20 +1229,20 @@ export type OffchainRevocationGroupBy = {
   _max?: Maybe<OffchainRevocationMaxAggregate>
   _min?: Maybe<OffchainRevocationMinAggregate>
   _sum?: Maybe<OffchainRevocationSumAggregate>
-  from: Scalars['String']
-  id: Scalars['String']
-  timestamp: Scalars['Int']
-  txid: Scalars['String']
-  uid: Scalars['String']
+  from: Scalars['String']['output']
+  id: Scalars['String']['output']
+  timestamp: Scalars['Int']['output']
+  txid: Scalars['String']['output']
+  uid: Scalars['String']['output']
 }
 
 export type OffchainRevocationMaxAggregate = {
   __typename?: 'OffchainRevocationMaxAggregate'
-  from?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  timestamp?: Maybe<Scalars['Int']>
-  txid?: Maybe<Scalars['String']>
-  uid?: Maybe<Scalars['String']>
+  from?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  timestamp?: Maybe<Scalars['Int']['output']>
+  txid?: Maybe<Scalars['String']['output']>
+  uid?: Maybe<Scalars['String']['output']>
 }
 
 export type OffchainRevocationMaxOrderByAggregateInput = {
@@ -1249,11 +1255,11 @@ export type OffchainRevocationMaxOrderByAggregateInput = {
 
 export type OffchainRevocationMinAggregate = {
   __typename?: 'OffchainRevocationMinAggregate'
-  from?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  timestamp?: Maybe<Scalars['Int']>
-  txid?: Maybe<Scalars['String']>
-  uid?: Maybe<Scalars['String']>
+  from?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  timestamp?: Maybe<Scalars['Int']['output']>
+  txid?: Maybe<Scalars['String']['output']>
+  uid?: Maybe<Scalars['String']['output']>
 }
 
 export type OffchainRevocationMinOrderByAggregateInput = {
@@ -1306,7 +1312,7 @@ export type OffchainRevocationScalarWhereWithAggregatesInput = {
 
 export type OffchainRevocationSumAggregate = {
   __typename?: 'OffchainRevocationSumAggregate'
-  timestamp?: Maybe<Scalars['Int']>
+  timestamp?: Maybe<Scalars['Int']['output']>
 }
 
 export type OffchainRevocationSumOrderByAggregateInput = {
@@ -1341,7 +1347,7 @@ export type OffchainRevocationWhereInput = {
 }
 
 export type OffchainRevocationWhereUniqueInput = {
-  id?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']['input']>
 }
 
 export type Query = {
@@ -1400,56 +1406,56 @@ export type Query = {
 export type QueryAggregateAttestationArgs = {
   cursor?: InputMaybe<AttestationWhereUniqueInput>
   orderBy?: InputMaybe<Array<AttestationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<AttestationWhereInput>
 }
 
 export type QueryAggregateEnsNameArgs = {
   cursor?: InputMaybe<EnsNameWhereUniqueInput>
   orderBy?: InputMaybe<Array<EnsNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<EnsNameWhereInput>
 }
 
 export type QueryAggregateOffchainRevocationArgs = {
   cursor?: InputMaybe<OffchainRevocationWhereUniqueInput>
   orderBy?: InputMaybe<Array<OffchainRevocationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<OffchainRevocationWhereInput>
 }
 
 export type QueryAggregateSchemaArgs = {
   cursor?: InputMaybe<SchemaWhereUniqueInput>
   orderBy?: InputMaybe<Array<SchemaOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaWhereInput>
 }
 
 export type QueryAggregateSchemaNameArgs = {
   cursor?: InputMaybe<SchemaNameWhereUniqueInput>
   orderBy?: InputMaybe<Array<SchemaNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaNameWhereInput>
 }
 
 export type QueryAggregateServiceStatArgs = {
   cursor?: InputMaybe<ServiceStatWhereUniqueInput>
   orderBy?: InputMaybe<Array<ServiceStatOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<ServiceStatWhereInput>
 }
 
 export type QueryAggregateTimestampArgs = {
   cursor?: InputMaybe<TimestampWhereUniqueInput>
   orderBy?: InputMaybe<Array<TimestampOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<TimestampWhereInput>
 }
 
@@ -1461,8 +1467,8 @@ export type QueryAttestationsArgs = {
   cursor?: InputMaybe<AttestationWhereUniqueInput>
   distinct?: InputMaybe<Array<AttestationScalarFieldEnum>>
   orderBy?: InputMaybe<Array<AttestationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<AttestationWhereInput>
 }
 
@@ -1474,8 +1480,8 @@ export type QueryEnsNamesArgs = {
   cursor?: InputMaybe<EnsNameWhereUniqueInput>
   distinct?: InputMaybe<Array<EnsNameScalarFieldEnum>>
   orderBy?: InputMaybe<Array<EnsNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<EnsNameWhereInput>
 }
 
@@ -1483,8 +1489,8 @@ export type QueryFindFirstAttestationArgs = {
   cursor?: InputMaybe<AttestationWhereUniqueInput>
   distinct?: InputMaybe<Array<AttestationScalarFieldEnum>>
   orderBy?: InputMaybe<Array<AttestationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<AttestationWhereInput>
 }
 
@@ -1492,8 +1498,8 @@ export type QueryFindFirstAttestationOrThrowArgs = {
   cursor?: InputMaybe<AttestationWhereUniqueInput>
   distinct?: InputMaybe<Array<AttestationScalarFieldEnum>>
   orderBy?: InputMaybe<Array<AttestationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<AttestationWhereInput>
 }
 
@@ -1501,8 +1507,8 @@ export type QueryFindFirstEnsNameArgs = {
   cursor?: InputMaybe<EnsNameWhereUniqueInput>
   distinct?: InputMaybe<Array<EnsNameScalarFieldEnum>>
   orderBy?: InputMaybe<Array<EnsNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<EnsNameWhereInput>
 }
 
@@ -1510,8 +1516,8 @@ export type QueryFindFirstEnsNameOrThrowArgs = {
   cursor?: InputMaybe<EnsNameWhereUniqueInput>
   distinct?: InputMaybe<Array<EnsNameScalarFieldEnum>>
   orderBy?: InputMaybe<Array<EnsNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<EnsNameWhereInput>
 }
 
@@ -1519,8 +1525,8 @@ export type QueryFindFirstOffchainRevocationArgs = {
   cursor?: InputMaybe<OffchainRevocationWhereUniqueInput>
   distinct?: InputMaybe<Array<OffchainRevocationScalarFieldEnum>>
   orderBy?: InputMaybe<Array<OffchainRevocationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<OffchainRevocationWhereInput>
 }
 
@@ -1528,8 +1534,8 @@ export type QueryFindFirstOffchainRevocationOrThrowArgs = {
   cursor?: InputMaybe<OffchainRevocationWhereUniqueInput>
   distinct?: InputMaybe<Array<OffchainRevocationScalarFieldEnum>>
   orderBy?: InputMaybe<Array<OffchainRevocationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<OffchainRevocationWhereInput>
 }
 
@@ -1537,8 +1543,8 @@ export type QueryFindFirstSchemaArgs = {
   cursor?: InputMaybe<SchemaWhereUniqueInput>
   distinct?: InputMaybe<Array<SchemaScalarFieldEnum>>
   orderBy?: InputMaybe<Array<SchemaOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaWhereInput>
 }
 
@@ -1546,8 +1552,8 @@ export type QueryFindFirstSchemaNameArgs = {
   cursor?: InputMaybe<SchemaNameWhereUniqueInput>
   distinct?: InputMaybe<Array<SchemaNameScalarFieldEnum>>
   orderBy?: InputMaybe<Array<SchemaNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaNameWhereInput>
 }
 
@@ -1555,8 +1561,8 @@ export type QueryFindFirstSchemaNameOrThrowArgs = {
   cursor?: InputMaybe<SchemaNameWhereUniqueInput>
   distinct?: InputMaybe<Array<SchemaNameScalarFieldEnum>>
   orderBy?: InputMaybe<Array<SchemaNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaNameWhereInput>
 }
 
@@ -1564,8 +1570,8 @@ export type QueryFindFirstSchemaOrThrowArgs = {
   cursor?: InputMaybe<SchemaWhereUniqueInput>
   distinct?: InputMaybe<Array<SchemaScalarFieldEnum>>
   orderBy?: InputMaybe<Array<SchemaOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaWhereInput>
 }
 
@@ -1573,8 +1579,8 @@ export type QueryFindFirstServiceStatArgs = {
   cursor?: InputMaybe<ServiceStatWhereUniqueInput>
   distinct?: InputMaybe<Array<ServiceStatScalarFieldEnum>>
   orderBy?: InputMaybe<Array<ServiceStatOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<ServiceStatWhereInput>
 }
 
@@ -1582,8 +1588,8 @@ export type QueryFindFirstServiceStatOrThrowArgs = {
   cursor?: InputMaybe<ServiceStatWhereUniqueInput>
   distinct?: InputMaybe<Array<ServiceStatScalarFieldEnum>>
   orderBy?: InputMaybe<Array<ServiceStatOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<ServiceStatWhereInput>
 }
 
@@ -1591,8 +1597,8 @@ export type QueryFindFirstTimestampArgs = {
   cursor?: InputMaybe<TimestampWhereUniqueInput>
   distinct?: InputMaybe<Array<TimestampScalarFieldEnum>>
   orderBy?: InputMaybe<Array<TimestampOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<TimestampWhereInput>
 }
 
@@ -1600,8 +1606,8 @@ export type QueryFindFirstTimestampOrThrowArgs = {
   cursor?: InputMaybe<TimestampWhereUniqueInput>
   distinct?: InputMaybe<Array<TimestampScalarFieldEnum>>
   orderBy?: InputMaybe<Array<TimestampOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<TimestampWhereInput>
 }
 
@@ -1637,8 +1643,8 @@ export type QueryGroupByAttestationArgs = {
   by: Array<AttestationScalarFieldEnum>
   having?: InputMaybe<AttestationScalarWhereWithAggregatesInput>
   orderBy?: InputMaybe<Array<AttestationOrderByWithAggregationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<AttestationWhereInput>
 }
 
@@ -1646,8 +1652,8 @@ export type QueryGroupByEnsNameArgs = {
   by: Array<EnsNameScalarFieldEnum>
   having?: InputMaybe<EnsNameScalarWhereWithAggregatesInput>
   orderBy?: InputMaybe<Array<EnsNameOrderByWithAggregationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<EnsNameWhereInput>
 }
 
@@ -1655,8 +1661,8 @@ export type QueryGroupByOffchainRevocationArgs = {
   by: Array<OffchainRevocationScalarFieldEnum>
   having?: InputMaybe<OffchainRevocationScalarWhereWithAggregatesInput>
   orderBy?: InputMaybe<Array<OffchainRevocationOrderByWithAggregationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<OffchainRevocationWhereInput>
 }
 
@@ -1664,8 +1670,8 @@ export type QueryGroupBySchemaArgs = {
   by: Array<SchemaScalarFieldEnum>
   having?: InputMaybe<SchemaScalarWhereWithAggregatesInput>
   orderBy?: InputMaybe<Array<SchemaOrderByWithAggregationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaWhereInput>
 }
 
@@ -1673,8 +1679,8 @@ export type QueryGroupBySchemaNameArgs = {
   by: Array<SchemaNameScalarFieldEnum>
   having?: InputMaybe<SchemaNameScalarWhereWithAggregatesInput>
   orderBy?: InputMaybe<Array<SchemaNameOrderByWithAggregationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaNameWhereInput>
 }
 
@@ -1682,8 +1688,8 @@ export type QueryGroupByServiceStatArgs = {
   by: Array<ServiceStatScalarFieldEnum>
   having?: InputMaybe<ServiceStatScalarWhereWithAggregatesInput>
   orderBy?: InputMaybe<Array<ServiceStatOrderByWithAggregationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<ServiceStatWhereInput>
 }
 
@@ -1691,8 +1697,8 @@ export type QueryGroupByTimestampArgs = {
   by: Array<TimestampScalarFieldEnum>
   having?: InputMaybe<TimestampScalarWhereWithAggregatesInput>
   orderBy?: InputMaybe<Array<TimestampOrderByWithAggregationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<TimestampWhereInput>
 }
 
@@ -1704,8 +1710,8 @@ export type QueryOffchainRevocationsArgs = {
   cursor?: InputMaybe<OffchainRevocationWhereUniqueInput>
   distinct?: InputMaybe<Array<OffchainRevocationScalarFieldEnum>>
   orderBy?: InputMaybe<Array<OffchainRevocationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<OffchainRevocationWhereInput>
 }
 
@@ -1721,8 +1727,8 @@ export type QuerySchemaNamesArgs = {
   cursor?: InputMaybe<SchemaNameWhereUniqueInput>
   distinct?: InputMaybe<Array<SchemaNameScalarFieldEnum>>
   orderBy?: InputMaybe<Array<SchemaNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaNameWhereInput>
 }
 
@@ -1730,8 +1736,8 @@ export type QuerySchemataArgs = {
   cursor?: InputMaybe<SchemaWhereUniqueInput>
   distinct?: InputMaybe<Array<SchemaScalarFieldEnum>>
   orderBy?: InputMaybe<Array<SchemaOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaWhereInput>
 }
 
@@ -1743,8 +1749,8 @@ export type QueryServiceStatsArgs = {
   cursor?: InputMaybe<ServiceStatWhereUniqueInput>
   distinct?: InputMaybe<Array<ServiceStatScalarFieldEnum>>
   orderBy?: InputMaybe<Array<ServiceStatOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<ServiceStatWhereInput>
 }
 
@@ -1756,8 +1762,8 @@ export type QueryTimestampsArgs = {
   cursor?: InputMaybe<TimestampWhereUniqueInput>
   distinct?: InputMaybe<Array<TimestampScalarFieldEnum>>
   orderBy?: InputMaybe<Array<TimestampOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<TimestampWhereInput>
 }
 
@@ -1770,23 +1776,23 @@ export type Schema = {
   __typename?: 'Schema'
   _count?: Maybe<SchemaCount>
   attestations: Array<Attestation>
-  creator: Scalars['String']
-  id: Scalars['String']
-  index: Scalars['String']
-  resolver: Scalars['String']
-  revocable: Scalars['Boolean']
-  schema: Scalars['String']
+  creator: Scalars['String']['output']
+  id: Scalars['String']['output']
+  index: Scalars['String']['output']
+  resolver: Scalars['String']['output']
+  revocable: Scalars['Boolean']['output']
+  schema: Scalars['String']['output']
   schemaNames: Array<SchemaName>
-  time: Scalars['Int']
-  txid: Scalars['String']
+  time: Scalars['Int']['output']
+  txid: Scalars['String']['output']
 }
 
 export type SchemaAttestationsArgs = {
   cursor?: InputMaybe<AttestationWhereUniqueInput>
   distinct?: InputMaybe<Array<AttestationScalarFieldEnum>>
   orderBy?: InputMaybe<Array<AttestationOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<AttestationWhereInput>
 }
 
@@ -1794,14 +1800,14 @@ export type SchemaSchemaNamesArgs = {
   cursor?: InputMaybe<SchemaNameWhereUniqueInput>
   distinct?: InputMaybe<Array<SchemaNameScalarFieldEnum>>
   orderBy?: InputMaybe<Array<SchemaNameOrderByWithRelationInput>>
-  skip?: InputMaybe<Scalars['Int']>
-  take?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  take?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<SchemaNameWhereInput>
 }
 
 export type SchemaAvgAggregate = {
   __typename?: 'SchemaAvgAggregate'
-  time?: Maybe<Scalars['Float']>
+  time?: Maybe<Scalars['Float']['output']>
 }
 
 export type SchemaAvgOrderByAggregateInput = {
@@ -1810,21 +1816,21 @@ export type SchemaAvgOrderByAggregateInput = {
 
 export type SchemaCount = {
   __typename?: 'SchemaCount'
-  attestations: Scalars['Int']
-  schemaNames: Scalars['Int']
+  attestations: Scalars['Int']['output']
+  schemaNames: Scalars['Int']['output']
 }
 
 export type SchemaCountAggregate = {
   __typename?: 'SchemaCountAggregate'
-  _all: Scalars['Int']
-  creator: Scalars['Int']
-  id: Scalars['Int']
-  index: Scalars['Int']
-  resolver: Scalars['Int']
-  revocable: Scalars['Int']
-  schema: Scalars['Int']
-  time: Scalars['Int']
-  txid: Scalars['Int']
+  _all: Scalars['Int']['output']
+  creator: Scalars['Int']['output']
+  id: Scalars['Int']['output']
+  index: Scalars['Int']['output']
+  resolver: Scalars['Int']['output']
+  revocable: Scalars['Int']['output']
+  schema: Scalars['Int']['output']
+  time: Scalars['Int']['output']
+  txid: Scalars['Int']['output']
 }
 
 export type SchemaCountOrderByAggregateInput = {
@@ -1840,26 +1846,26 @@ export type SchemaCountOrderByAggregateInput = {
 
 export type SchemaCreateInput = {
   attestations?: InputMaybe<AttestationCreateNestedManyWithoutSchemaInput>
-  creator: Scalars['String']
-  id: Scalars['String']
-  index: Scalars['String']
-  resolver: Scalars['String']
-  revocable: Scalars['Boolean']
-  schema: Scalars['String']
+  creator: Scalars['String']['input']
+  id: Scalars['String']['input']
+  index: Scalars['String']['input']
+  resolver: Scalars['String']['input']
+  revocable: Scalars['Boolean']['input']
+  schema: Scalars['String']['input']
   schemaNames?: InputMaybe<SchemaNameCreateNestedManyWithoutSchemaInput>
-  time: Scalars['Int']
-  txid: Scalars['String']
+  time: Scalars['Int']['input']
+  txid: Scalars['String']['input']
 }
 
 export type SchemaCreateManyInput = {
-  creator: Scalars['String']
-  id: Scalars['String']
-  index: Scalars['String']
-  resolver: Scalars['String']
-  revocable: Scalars['Boolean']
-  schema: Scalars['String']
-  time: Scalars['Int']
-  txid: Scalars['String']
+  creator: Scalars['String']['input']
+  id: Scalars['String']['input']
+  index: Scalars['String']['input']
+  resolver: Scalars['String']['input']
+  revocable: Scalars['Boolean']['input']
+  schema: Scalars['String']['input']
+  time: Scalars['Int']['input']
+  txid: Scalars['String']['input']
 }
 
 export type SchemaCreateNestedOneWithoutAttestationsInput = {
@@ -1885,27 +1891,27 @@ export type SchemaCreateOrConnectWithoutSchemaNamesInput = {
 }
 
 export type SchemaCreateWithoutAttestationsInput = {
-  creator: Scalars['String']
-  id: Scalars['String']
-  index: Scalars['String']
-  resolver: Scalars['String']
-  revocable: Scalars['Boolean']
-  schema: Scalars['String']
+  creator: Scalars['String']['input']
+  id: Scalars['String']['input']
+  index: Scalars['String']['input']
+  resolver: Scalars['String']['input']
+  revocable: Scalars['Boolean']['input']
+  schema: Scalars['String']['input']
   schemaNames?: InputMaybe<SchemaNameCreateNestedManyWithoutSchemaInput>
-  time: Scalars['Int']
-  txid: Scalars['String']
+  time: Scalars['Int']['input']
+  txid: Scalars['String']['input']
 }
 
 export type SchemaCreateWithoutSchemaNamesInput = {
   attestations?: InputMaybe<AttestationCreateNestedManyWithoutSchemaInput>
-  creator: Scalars['String']
-  id: Scalars['String']
-  index: Scalars['String']
-  resolver: Scalars['String']
-  revocable: Scalars['Boolean']
-  schema: Scalars['String']
-  time: Scalars['Int']
-  txid: Scalars['String']
+  creator: Scalars['String']['input']
+  id: Scalars['String']['input']
+  index: Scalars['String']['input']
+  resolver: Scalars['String']['input']
+  revocable: Scalars['Boolean']['input']
+  schema: Scalars['String']['input']
+  time: Scalars['Int']['input']
+  txid: Scalars['String']['input']
 }
 
 export type SchemaGroupBy = {
@@ -1915,26 +1921,26 @@ export type SchemaGroupBy = {
   _max?: Maybe<SchemaMaxAggregate>
   _min?: Maybe<SchemaMinAggregate>
   _sum?: Maybe<SchemaSumAggregate>
-  creator: Scalars['String']
-  id: Scalars['String']
-  index: Scalars['String']
-  resolver: Scalars['String']
-  revocable: Scalars['Boolean']
-  schema: Scalars['String']
-  time: Scalars['Int']
-  txid: Scalars['String']
+  creator: Scalars['String']['output']
+  id: Scalars['String']['output']
+  index: Scalars['String']['output']
+  resolver: Scalars['String']['output']
+  revocable: Scalars['Boolean']['output']
+  schema: Scalars['String']['output']
+  time: Scalars['Int']['output']
+  txid: Scalars['String']['output']
 }
 
 export type SchemaMaxAggregate = {
   __typename?: 'SchemaMaxAggregate'
-  creator?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  index?: Maybe<Scalars['String']>
-  resolver?: Maybe<Scalars['String']>
-  revocable?: Maybe<Scalars['Boolean']>
-  schema?: Maybe<Scalars['String']>
-  time?: Maybe<Scalars['Int']>
-  txid?: Maybe<Scalars['String']>
+  creator?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  index?: Maybe<Scalars['String']['output']>
+  resolver?: Maybe<Scalars['String']['output']>
+  revocable?: Maybe<Scalars['Boolean']['output']>
+  schema?: Maybe<Scalars['String']['output']>
+  time?: Maybe<Scalars['Int']['output']>
+  txid?: Maybe<Scalars['String']['output']>
 }
 
 export type SchemaMaxOrderByAggregateInput = {
@@ -1950,14 +1956,14 @@ export type SchemaMaxOrderByAggregateInput = {
 
 export type SchemaMinAggregate = {
   __typename?: 'SchemaMinAggregate'
-  creator?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  index?: Maybe<Scalars['String']>
-  resolver?: Maybe<Scalars['String']>
-  revocable?: Maybe<Scalars['Boolean']>
-  schema?: Maybe<Scalars['String']>
-  time?: Maybe<Scalars['Int']>
-  txid?: Maybe<Scalars['String']>
+  creator?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  index?: Maybe<Scalars['String']['output']>
+  resolver?: Maybe<Scalars['String']['output']>
+  revocable?: Maybe<Scalars['Boolean']['output']>
+  schema?: Maybe<Scalars['String']['output']>
+  time?: Maybe<Scalars['Int']['output']>
+  txid?: Maybe<Scalars['String']['output']>
 }
 
 export type SchemaMinOrderByAggregateInput = {
@@ -1973,18 +1979,18 @@ export type SchemaMinOrderByAggregateInput = {
 
 export type SchemaName = {
   __typename?: 'SchemaName'
-  attesterAddress: Scalars['String']
-  id: Scalars['String']
-  isCreator: Scalars['Boolean']
-  name: Scalars['String']
+  attesterAddress: Scalars['String']['output']
+  id: Scalars['String']['output']
+  isCreator: Scalars['Boolean']['output']
+  name: Scalars['String']['output']
   schema: Schema
-  schemaId: Scalars['String']
-  time: Scalars['Int']
+  schemaId: Scalars['String']['output']
+  time: Scalars['Int']['output']
 }
 
 export type SchemaNameAvgAggregate = {
   __typename?: 'SchemaNameAvgAggregate'
-  time?: Maybe<Scalars['Float']>
+  time?: Maybe<Scalars['Float']['output']>
 }
 
 export type SchemaNameAvgOrderByAggregateInput = {
@@ -1993,13 +1999,13 @@ export type SchemaNameAvgOrderByAggregateInput = {
 
 export type SchemaNameCountAggregate = {
   __typename?: 'SchemaNameCountAggregate'
-  _all: Scalars['Int']
-  attesterAddress: Scalars['Int']
-  id: Scalars['Int']
-  isCreator: Scalars['Int']
-  name: Scalars['Int']
-  schemaId: Scalars['Int']
-  time: Scalars['Int']
+  _all: Scalars['Int']['output']
+  attesterAddress: Scalars['Int']['output']
+  id: Scalars['Int']['output']
+  isCreator: Scalars['Int']['output']
+  name: Scalars['Int']['output']
+  schemaId: Scalars['Int']['output']
+  time: Scalars['Int']['output']
 }
 
 export type SchemaNameCountOrderByAggregateInput = {
@@ -2012,34 +2018,34 @@ export type SchemaNameCountOrderByAggregateInput = {
 }
 
 export type SchemaNameCreateInput = {
-  attesterAddress: Scalars['String']
-  id?: InputMaybe<Scalars['String']>
-  isCreator: Scalars['Boolean']
-  name: Scalars['String']
+  attesterAddress: Scalars['String']['input']
+  id?: InputMaybe<Scalars['String']['input']>
+  isCreator: Scalars['Boolean']['input']
+  name: Scalars['String']['input']
   schema: SchemaCreateNestedOneWithoutSchemaNamesInput
-  time: Scalars['Int']
+  time: Scalars['Int']['input']
 }
 
 export type SchemaNameCreateManyInput = {
-  attesterAddress: Scalars['String']
-  id?: InputMaybe<Scalars['String']>
-  isCreator: Scalars['Boolean']
-  name: Scalars['String']
-  schemaId: Scalars['String']
-  time: Scalars['Int']
+  attesterAddress: Scalars['String']['input']
+  id?: InputMaybe<Scalars['String']['input']>
+  isCreator: Scalars['Boolean']['input']
+  name: Scalars['String']['input']
+  schemaId: Scalars['String']['input']
+  time: Scalars['Int']['input']
 }
 
 export type SchemaNameCreateManySchemaInput = {
-  attesterAddress: Scalars['String']
-  id?: InputMaybe<Scalars['String']>
-  isCreator: Scalars['Boolean']
-  name: Scalars['String']
-  time: Scalars['Int']
+  attesterAddress: Scalars['String']['input']
+  id?: InputMaybe<Scalars['String']['input']>
+  isCreator: Scalars['Boolean']['input']
+  name: Scalars['String']['input']
+  time: Scalars['Int']['input']
 }
 
 export type SchemaNameCreateManySchemaInputEnvelope = {
   data: Array<SchemaNameCreateManySchemaInput>
-  skipDuplicates?: InputMaybe<Scalars['Boolean']>
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>
 }
 
 export type SchemaNameCreateNestedManyWithoutSchemaInput = {
@@ -2055,11 +2061,11 @@ export type SchemaNameCreateOrConnectWithoutSchemaInput = {
 }
 
 export type SchemaNameCreateWithoutSchemaInput = {
-  attesterAddress: Scalars['String']
-  id?: InputMaybe<Scalars['String']>
-  isCreator: Scalars['Boolean']
-  name: Scalars['String']
-  time: Scalars['Int']
+  attesterAddress: Scalars['String']['input']
+  id?: InputMaybe<Scalars['String']['input']>
+  isCreator: Scalars['Boolean']['input']
+  name: Scalars['String']['input']
+  time: Scalars['Int']['input']
 }
 
 export type SchemaNameGroupBy = {
@@ -2069,12 +2075,12 @@ export type SchemaNameGroupBy = {
   _max?: Maybe<SchemaNameMaxAggregate>
   _min?: Maybe<SchemaNameMinAggregate>
   _sum?: Maybe<SchemaNameSumAggregate>
-  attesterAddress: Scalars['String']
-  id: Scalars['String']
-  isCreator: Scalars['Boolean']
-  name: Scalars['String']
-  schemaId: Scalars['String']
-  time: Scalars['Int']
+  attesterAddress: Scalars['String']['output']
+  id: Scalars['String']['output']
+  isCreator: Scalars['Boolean']['output']
+  name: Scalars['String']['output']
+  schemaId: Scalars['String']['output']
+  time: Scalars['Int']['output']
 }
 
 export type SchemaNameListRelationFilter = {
@@ -2085,12 +2091,12 @@ export type SchemaNameListRelationFilter = {
 
 export type SchemaNameMaxAggregate = {
   __typename?: 'SchemaNameMaxAggregate'
-  attesterAddress?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  isCreator?: Maybe<Scalars['Boolean']>
-  name?: Maybe<Scalars['String']>
-  schemaId?: Maybe<Scalars['String']>
-  time?: Maybe<Scalars['Int']>
+  attesterAddress?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  isCreator?: Maybe<Scalars['Boolean']['output']>
+  name?: Maybe<Scalars['String']['output']>
+  schemaId?: Maybe<Scalars['String']['output']>
+  time?: Maybe<Scalars['Int']['output']>
 }
 
 export type SchemaNameMaxOrderByAggregateInput = {
@@ -2104,12 +2110,12 @@ export type SchemaNameMaxOrderByAggregateInput = {
 
 export type SchemaNameMinAggregate = {
   __typename?: 'SchemaNameMinAggregate'
-  attesterAddress?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  isCreator?: Maybe<Scalars['Boolean']>
-  name?: Maybe<Scalars['String']>
-  schemaId?: Maybe<Scalars['String']>
-  time?: Maybe<Scalars['Int']>
+  attesterAddress?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  isCreator?: Maybe<Scalars['Boolean']['output']>
+  name?: Maybe<Scalars['String']['output']>
+  schemaId?: Maybe<Scalars['String']['output']>
+  time?: Maybe<Scalars['Int']['output']>
 }
 
 export type SchemaNameMinOrderByAggregateInput = {
@@ -2184,7 +2190,7 @@ export type SchemaNameScalarWhereWithAggregatesInput = {
 
 export type SchemaNameSumAggregate = {
   __typename?: 'SchemaNameSumAggregate'
-  time?: Maybe<Scalars['Int']>
+  time?: Maybe<Scalars['Int']['output']>
 }
 
 export type SchemaNameSumOrderByAggregateInput = {
@@ -2260,7 +2266,7 @@ export type SchemaNameWhereInput = {
 }
 
 export type SchemaNameWhereUniqueInput = {
-  id?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']['input']>
 }
 
 export type SchemaOrderByWithAggregationInput = {
@@ -2324,7 +2330,7 @@ export type SchemaScalarWhereWithAggregatesInput = {
 
 export type SchemaSumAggregate = {
   __typename?: 'SchemaSumAggregate'
-  time?: Maybe<Scalars['Int']>
+  time?: Maybe<Scalars['Int']['output']>
 }
 
 export type SchemaSumOrderByAggregateInput = {
@@ -2422,20 +2428,20 @@ export type SchemaWhereInput = {
 }
 
 export type SchemaWhereUniqueInput = {
-  id?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']['input']>
 }
 
 export type ServiceStat = {
   __typename?: 'ServiceStat'
-  name: Scalars['String']
-  value: Scalars['String']
+  name: Scalars['String']['output']
+  value: Scalars['String']['output']
 }
 
 export type ServiceStatCountAggregate = {
   __typename?: 'ServiceStatCountAggregate'
-  _all: Scalars['Int']
-  name: Scalars['Int']
-  value: Scalars['Int']
+  _all: Scalars['Int']['output']
+  name: Scalars['Int']['output']
+  value: Scalars['Int']['output']
 }
 
 export type ServiceStatCountOrderByAggregateInput = {
@@ -2444,13 +2450,13 @@ export type ServiceStatCountOrderByAggregateInput = {
 }
 
 export type ServiceStatCreateInput = {
-  name: Scalars['String']
-  value: Scalars['String']
+  name: Scalars['String']['input']
+  value: Scalars['String']['input']
 }
 
 export type ServiceStatCreateManyInput = {
-  name: Scalars['String']
-  value: Scalars['String']
+  name: Scalars['String']['input']
+  value: Scalars['String']['input']
 }
 
 export type ServiceStatGroupBy = {
@@ -2458,14 +2464,14 @@ export type ServiceStatGroupBy = {
   _count?: Maybe<ServiceStatCountAggregate>
   _max?: Maybe<ServiceStatMaxAggregate>
   _min?: Maybe<ServiceStatMinAggregate>
-  name: Scalars['String']
-  value: Scalars['String']
+  name: Scalars['String']['output']
+  value: Scalars['String']['output']
 }
 
 export type ServiceStatMaxAggregate = {
   __typename?: 'ServiceStatMaxAggregate'
-  name?: Maybe<Scalars['String']>
-  value?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']['output']>
+  value?: Maybe<Scalars['String']['output']>
 }
 
 export type ServiceStatMaxOrderByAggregateInput = {
@@ -2475,8 +2481,8 @@ export type ServiceStatMaxOrderByAggregateInput = {
 
 export type ServiceStatMinAggregate = {
   __typename?: 'ServiceStatMinAggregate'
-  name?: Maybe<Scalars['String']>
-  value?: Maybe<Scalars['String']>
+  name?: Maybe<Scalars['String']['output']>
+  value?: Maybe<Scalars['String']['output']>
 }
 
 export type ServiceStatMinOrderByAggregateInput = {
@@ -2529,7 +2535,7 @@ export type ServiceStatWhereInput = {
 }
 
 export type ServiceStatWhereUniqueInput = {
-  name?: InputMaybe<Scalars['String']>
+  name?: InputMaybe<Scalars['String']['input']>
 }
 
 export enum SortOrder {
@@ -2538,54 +2544,54 @@ export enum SortOrder {
 }
 
 export type StringFieldUpdateOperationsInput = {
-  set?: InputMaybe<Scalars['String']>
+  set?: InputMaybe<Scalars['String']['input']>
 }
 
 export type StringFilter = {
-  contains?: InputMaybe<Scalars['String']>
-  endsWith?: InputMaybe<Scalars['String']>
-  equals?: InputMaybe<Scalars['String']>
-  gt?: InputMaybe<Scalars['String']>
-  gte?: InputMaybe<Scalars['String']>
-  in?: InputMaybe<Array<Scalars['String']>>
-  lt?: InputMaybe<Scalars['String']>
-  lte?: InputMaybe<Scalars['String']>
+  contains?: InputMaybe<Scalars['String']['input']>
+  endsWith?: InputMaybe<Scalars['String']['input']>
+  equals?: InputMaybe<Scalars['String']['input']>
+  gt?: InputMaybe<Scalars['String']['input']>
+  gte?: InputMaybe<Scalars['String']['input']>
+  in?: InputMaybe<Array<Scalars['String']['input']>>
+  lt?: InputMaybe<Scalars['String']['input']>
+  lte?: InputMaybe<Scalars['String']['input']>
   mode?: InputMaybe<QueryMode>
   not?: InputMaybe<NestedStringFilter>
-  notIn?: InputMaybe<Array<Scalars['String']>>
-  startsWith?: InputMaybe<Scalars['String']>
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>
+  startsWith?: InputMaybe<Scalars['String']['input']>
 }
 
 export type StringWithAggregatesFilter = {
   _count?: InputMaybe<NestedIntFilter>
   _max?: InputMaybe<NestedStringFilter>
   _min?: InputMaybe<NestedStringFilter>
-  contains?: InputMaybe<Scalars['String']>
-  endsWith?: InputMaybe<Scalars['String']>
-  equals?: InputMaybe<Scalars['String']>
-  gt?: InputMaybe<Scalars['String']>
-  gte?: InputMaybe<Scalars['String']>
-  in?: InputMaybe<Array<Scalars['String']>>
-  lt?: InputMaybe<Scalars['String']>
-  lte?: InputMaybe<Scalars['String']>
+  contains?: InputMaybe<Scalars['String']['input']>
+  endsWith?: InputMaybe<Scalars['String']['input']>
+  equals?: InputMaybe<Scalars['String']['input']>
+  gt?: InputMaybe<Scalars['String']['input']>
+  gte?: InputMaybe<Scalars['String']['input']>
+  in?: InputMaybe<Array<Scalars['String']['input']>>
+  lt?: InputMaybe<Scalars['String']['input']>
+  lte?: InputMaybe<Scalars['String']['input']>
   mode?: InputMaybe<QueryMode>
   not?: InputMaybe<NestedStringWithAggregatesFilter>
-  notIn?: InputMaybe<Array<Scalars['String']>>
-  startsWith?: InputMaybe<Scalars['String']>
+  notIn?: InputMaybe<Array<Scalars['String']['input']>>
+  startsWith?: InputMaybe<Scalars['String']['input']>
 }
 
 export type Timestamp = {
   __typename?: 'Timestamp'
-  from: Scalars['String']
-  id: Scalars['String']
-  timestamp: Scalars['Int']
-  tree: Scalars['String']
-  txid: Scalars['String']
+  from: Scalars['String']['output']
+  id: Scalars['String']['output']
+  timestamp: Scalars['Int']['output']
+  tree: Scalars['String']['output']
+  txid: Scalars['String']['output']
 }
 
 export type TimestampAvgAggregate = {
   __typename?: 'TimestampAvgAggregate'
-  timestamp?: Maybe<Scalars['Float']>
+  timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 export type TimestampAvgOrderByAggregateInput = {
@@ -2594,12 +2600,12 @@ export type TimestampAvgOrderByAggregateInput = {
 
 export type TimestampCountAggregate = {
   __typename?: 'TimestampCountAggregate'
-  _all: Scalars['Int']
-  from: Scalars['Int']
-  id: Scalars['Int']
-  timestamp: Scalars['Int']
-  tree: Scalars['Int']
-  txid: Scalars['Int']
+  _all: Scalars['Int']['output']
+  from: Scalars['Int']['output']
+  id: Scalars['Int']['output']
+  timestamp: Scalars['Int']['output']
+  tree: Scalars['Int']['output']
+  txid: Scalars['Int']['output']
 }
 
 export type TimestampCountOrderByAggregateInput = {
@@ -2611,19 +2617,19 @@ export type TimestampCountOrderByAggregateInput = {
 }
 
 export type TimestampCreateInput = {
-  from: Scalars['String']
-  id: Scalars['String']
-  timestamp: Scalars['Int']
-  tree?: InputMaybe<Scalars['String']>
-  txid: Scalars['String']
+  from: Scalars['String']['input']
+  id: Scalars['String']['input']
+  timestamp: Scalars['Int']['input']
+  tree?: InputMaybe<Scalars['String']['input']>
+  txid: Scalars['String']['input']
 }
 
 export type TimestampCreateManyInput = {
-  from: Scalars['String']
-  id: Scalars['String']
-  timestamp: Scalars['Int']
-  tree?: InputMaybe<Scalars['String']>
-  txid: Scalars['String']
+  from: Scalars['String']['input']
+  id: Scalars['String']['input']
+  timestamp: Scalars['Int']['input']
+  tree?: InputMaybe<Scalars['String']['input']>
+  txid: Scalars['String']['input']
 }
 
 export type TimestampGroupBy = {
@@ -2633,20 +2639,20 @@ export type TimestampGroupBy = {
   _max?: Maybe<TimestampMaxAggregate>
   _min?: Maybe<TimestampMinAggregate>
   _sum?: Maybe<TimestampSumAggregate>
-  from: Scalars['String']
-  id: Scalars['String']
-  timestamp: Scalars['Int']
-  tree: Scalars['String']
-  txid: Scalars['String']
+  from: Scalars['String']['output']
+  id: Scalars['String']['output']
+  timestamp: Scalars['Int']['output']
+  tree: Scalars['String']['output']
+  txid: Scalars['String']['output']
 }
 
 export type TimestampMaxAggregate = {
   __typename?: 'TimestampMaxAggregate'
-  from?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  timestamp?: Maybe<Scalars['Int']>
-  tree?: Maybe<Scalars['String']>
-  txid?: Maybe<Scalars['String']>
+  from?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  timestamp?: Maybe<Scalars['Int']['output']>
+  tree?: Maybe<Scalars['String']['output']>
+  txid?: Maybe<Scalars['String']['output']>
 }
 
 export type TimestampMaxOrderByAggregateInput = {
@@ -2659,11 +2665,11 @@ export type TimestampMaxOrderByAggregateInput = {
 
 export type TimestampMinAggregate = {
   __typename?: 'TimestampMinAggregate'
-  from?: Maybe<Scalars['String']>
-  id?: Maybe<Scalars['String']>
-  timestamp?: Maybe<Scalars['Int']>
-  tree?: Maybe<Scalars['String']>
-  txid?: Maybe<Scalars['String']>
+  from?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['String']['output']>
+  timestamp?: Maybe<Scalars['Int']['output']>
+  tree?: Maybe<Scalars['String']['output']>
+  txid?: Maybe<Scalars['String']['output']>
 }
 
 export type TimestampMinOrderByAggregateInput = {
@@ -2716,7 +2722,7 @@ export type TimestampScalarWhereWithAggregatesInput = {
 
 export type TimestampSumAggregate = {
   __typename?: 'TimestampSumAggregate'
-  timestamp?: Maybe<Scalars['Int']>
+  timestamp?: Maybe<Scalars['Int']['output']>
 }
 
 export type TimestampSumOrderByAggregateInput = {
@@ -2751,7 +2757,7 @@ export type TimestampWhereInput = {
 }
 
 export type TimestampWhereUniqueInput = {
-  id?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['String']['input']>
 }
 
 export type AttestationFragment = {
@@ -2765,9 +2771,9 @@ export type AttestationFragment = {
 }
 
 export type EscrowDelegatesQueryVariables = Exact<{
-  schemaId: Scalars['String']
-  recipient: Scalars['String']
-  attesters: Array<Scalars['String']> | Scalars['String']
+  schemaId: Scalars['String']['input']
+  recipient: Scalars['String']['input']
+  attesters: Array<Scalars['String']['input']> | Scalars['String']['input']
 }>
 
 export type EscrowDelegatesQuery = {
@@ -2784,8 +2790,8 @@ export type EscrowDelegatesQuery = {
 }
 
 export type PropdatesQueryVariables = Exact<{
-  schemaId: Scalars['String']
-  recipient: Scalars['String']
+  schemaId: Scalars['String']['input']
+  recipient: Scalars['String']['input']
 }>
 
 export type PropdatesQuery = {
@@ -2839,11 +2845,16 @@ export const PropdatesDocument = gql`
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
   operationName: string,
-  operationType?: string
+  operationType?: string,
+  variables?: any
 ) => Promise<T>
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) =>
-  action()
+const defaultWrapper: SdkFunctionWrapper = (
+  action,
+  _operationName,
+  _operationType,
+  _variables
+) => action()
 
 export function getSdk(
   client: GraphQLClient,
@@ -2852,7 +2863,7 @@ export function getSdk(
   return {
     escrowDelegates(
       variables: EscrowDelegatesQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<EscrowDelegatesQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -2861,12 +2872,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'escrowDelegates',
-        'query'
+        'query',
+        variables
       )
     },
     propdates(
       variables: PropdatesQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<PropdatesQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -2875,7 +2887,8 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'propdates',
-        'query'
+        'query',
+        variables
       )
     },
   }

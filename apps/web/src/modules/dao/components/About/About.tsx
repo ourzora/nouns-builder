@@ -3,7 +3,8 @@ import { getFetchableUrls } from 'ipfs-service'
 import Image from 'next/legacy/image'
 import React from 'react'
 import useSWR from 'swr'
-import { Address, useBalance, useContractReads } from 'wagmi'
+import { Address } from 'viem'
+import { useBalance, useReadContracts } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar/Avatar'
 import { FallbackNextLegacyImage } from 'src/components/FallbackImage'
@@ -48,7 +49,7 @@ export const About: React.FC = () => {
     chainId: chain.id,
   }
 
-  const { data: contractData } = useContractReads({
+  const { data: contractData } = useReadContracts({
     allowFailure: false,
     contracts: [
       { ...tokenContractParams, functionName: 'name' },
@@ -71,7 +72,7 @@ export const About: React.FC = () => {
 
   const { data } = useSWR(
     chain && token ? [SWR_KEYS.DAO_INFO, chain.id, token] : null,
-    async (_, chainId, token) => {
+    async ([_key, chainId, token]) => {
       const res = await SDK.connect(chainId)
         .daoInfo({
           tokenAddress: token.toLowerCase(),
@@ -85,7 +86,7 @@ export const About: React.FC = () => {
   )
 
   const treasuryBalance = React.useMemo(() => {
-    return balance?.formatted ? formatCryptoVal(balance?.formatted) : null
+    return balance ? formatCryptoVal(balance.value) : null
   }, [balance])
 
   return (

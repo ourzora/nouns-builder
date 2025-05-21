@@ -2,8 +2,8 @@ import * as Sentry from '@sentry/nextjs'
 import { Box, Button } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import { Address, parseEther } from 'viem'
-import { useNetwork } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { useChainId, useConfig } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -29,7 +29,8 @@ export const BidActionButton = ({
 }) => {
   const { minimumBidIncrement, reservePrice } = auctionConfig
   const { highestBid } = currentAuction || {}
-  const { chain: wagmiChain } = useNetwork()
+  const wagmiChainId = useChainId()
+  const config = useConfig()
   const { minBidAmount } = useMinBidIncrement({
     highestBid: highestBid?.amount ? BigInt(highestBid?.amount) : undefined,
     reservePrice: BigInt(reservePrice),
@@ -43,7 +44,7 @@ export const BidActionButton = ({
 
   const isValidBid = bidAmount && isMinBid
 
-  const isValidChain = wagmiChain?.id === chainId
+  const isValidChain = wagmiChainId === chainId
 
   const handleCreateBid = async () => {
     if (!isMinBid || !bidAmount || isLoading) return
@@ -51,7 +52,7 @@ export const BidActionButton = ({
     try {
       setIsLoading(true)
 
-      const config = await prepareWriteContract({
+      const data = await simulateContract(config, {
         abi: auctionAbi,
         address: auctionAddress as Address,
         functionName: 'createBid',
@@ -59,8 +60,8 @@ export const BidActionButton = ({
         value: parseEther(bidAmount.toString()),
       })
 
-      const tx = await writeContract(config)
-      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
+      const txHash = await writeContract(config, data.request)
+      if (txHash) await waitForTransactionReceipt(config, { hash: txHash, chainId })
       setBidAmount('')
     } catch (error) {
       console.error(error)

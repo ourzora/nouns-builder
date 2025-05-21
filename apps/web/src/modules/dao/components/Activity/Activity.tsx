@@ -28,7 +28,7 @@ import {
   selectDelegateBtn,
 } from 'src/styles/Proposals.css'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
-import { AddressType } from 'src/typings'
+import { AddressType, CHAIN_ID } from 'src/typings'
 import { walletSnippet } from 'src/utils/helpers'
 
 import { useDelegate } from '../../hooks'
@@ -52,7 +52,8 @@ export const Activity: React.FC = () => {
 
   const { data, error } = useSWR<ProposalsResponse>(
     isReady ? [SWR_KEYS.PROPOSALS, chain.id, query.token, query.page] : null,
-    (_, chainId, token, page) => getProposals(chainId, token, LIMIT, Number(page))
+    ([_key, chainId, token, page]) =>
+      getProposals(chainId as CHAIN_ID, token as string, LIMIT, Number(page))
   )
 
   const { handlePageBack, handlePageForward } = usePagination(data?.pageInfo?.hasNextPage)

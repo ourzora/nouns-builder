@@ -17,7 +17,8 @@ export const preAuctionValidationSchema = Yup.object().shape({
   auctionRewardRecipient: addressValidationOptionalSchema.when(
     'auctionRewardPercentage',
     (auctionRewardPercentage, schema) => {
-      if (auctionRewardPercentage > 0) return schema.required('*') // Recipient is required if reward percentage is greater than 0
+      if (!Number.isNaN(auctionRewardPercentage) && Number(auctionRewardPercentage) > 0)
+        return schema.required('*') // Recipient is required if reward percentage is greater than 0
       return schema
     }
   ),

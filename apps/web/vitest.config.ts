@@ -7,7 +7,15 @@ import { defineConfig } from 'vitest/config'
 // https://vitejs.dev/config/
 export default defineConfig({
   root: '.',
-  plugins: [react(), vanillaExtractPlugin(), svgr({ exportAsDefault: true })],
+  plugins: [
+    react(),
+    vanillaExtractPlugin(),
+    svgr({
+      svgrOptions: {
+        exportType: 'default',
+      },
+    }),
+  ],
   assetsInclude: ['**/*.md'],
   test: {
     globals: true,

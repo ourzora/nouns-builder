@@ -14,7 +14,8 @@ import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
 import { getEnsAddress } from 'src/utils/ens'
-import { getChainFromLocalStorage } from 'src/utils/getChainFromLocalStorage'
+import { useChainStore } from 'src/stores/useChainStore'
+import { CHAIN_ID } from 'src/typings'
 
 import EscrowForm from './EscrowForm'
 import { EscrowFormValues } from './EscrowForm.schema'
@@ -31,7 +32,7 @@ export const Escrow: React.FC = () => {
 
   const { query, isReady } = useRouter()
 
-  const { id: chainId } = getChainFromLocalStorage()
+  const chain = useChainStore((state) => state.chain)
 
   const addTransaction = useProposalStore((state) => state.addTransaction)
 
@@ -40,8 +41,9 @@ export const Escrow: React.FC = () => {
   } = useDaoStore()
 
   const { data } = useSWR<ProposalsResponse>(
-    isReady ? [SWR_KEYS.PROPOSALS, chainId, query.token, '0'] : null,
-    (_, chainId, token, _page) => getProposals(chainId, token, 1, Number(0))
+    isReady ? [SWR_KEYS.PROPOSALS, chain.id, query.token, '0'] : null,
+    ([_key, chainId, token, _page]) =>
+      getProposals(chainId as CHAIN_ID, token as string, 1, Number(0))
   )
 
   const lastProposalId = data?.proposals?.[0]?.proposalNumber ?? 0
@@ -81,16 +83,16 @@ export const Escrow: React.FC = () => {
               klerosCourt: 1,
               ...(x.mediaType && x.mediaUrl
                 ? {
-                    documents: [
-                      {
-                        id: 'doc-001',
-                        type: 'ipfs',
-                        src: x.mediaUrl,
-                        mimeType: x.mediaType,
-                        createdAt: new Date().getTime() / 1000,
-                      },
-                    ],
-                  }
+                  documents: [
+                    {
+                      id: 'doc-001',
+                      type: 'ipfs',
+                      src: x.mediaUrl,
+                      mimeType: x.mediaType,
+                      createdAt: new Date().getTime() / 1000,
+                    },
+                  ],
+                }
                 : {}),
             }) as MilestoneMetadata
         ),
@@ -135,12 +137,12 @@ export const Escrow: React.FC = () => {
       values.recipientAddress = await getEnsAddress(values.recipientAddress)
 
       // create bundler transaction data
-      const escrowData = encodeEscrowData(values, treasury, cid, chainId)
+      const escrowData = encodeEscrowData(values, treasury, cid, chain.id)
       const milestoneAmounts = values.milestones.map((x) => x.amount * 10 ** 18)
       const fundAmount = milestoneAmounts.reduce((acc, x) => acc + x, 0)
 
       const escrow = {
-        target: getEscrowBundler(chainId),
+        target: getEscrowBundler(chain.id),
         functionSignature: 'deployEscrow()',
         calldata: encodeFunctionData({
           abi: deployEscrowAbi,
@@ -169,7 +171,7 @@ export const Escrow: React.FC = () => {
       }
       setIsSubmitting(false)
     },
-    [addTransaction, chainId, lastProposalId, treasury]
+    [addTransaction, chain.id, lastProposalId, treasury]
   )
 
   return (

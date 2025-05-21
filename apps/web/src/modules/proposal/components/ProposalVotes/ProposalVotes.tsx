@@ -30,7 +30,7 @@ export const ProposalVotes: React.FC<ProposalVotesProps> = ({ proposal }) => {
   const { data: tokenAtTimestamp } = useSWR(
     addresses.token
       ? [SWR_KEYS.AUCTION_SETTLED, chain.id, addresses.token, proposal.timeCreated]
-      : undefined,
+      : null,
     () =>
       SDK.connect(chain.id)
         .tokens({

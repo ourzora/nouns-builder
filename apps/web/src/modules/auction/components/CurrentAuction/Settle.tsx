@@ -2,11 +2,12 @@ import { Button, Flex } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import {
   useAccount,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
+  useConfig,
+  useReadContract,
+  useSimulateContract,
+  useWriteContract,
 } from 'wagmi'
-import { waitForTransaction } from 'wagmi/actions'
+import { waitForTransactionReceipt } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -32,38 +33,44 @@ export const Settle = ({
 }: SettleProps) => {
   const chain = useChainStore((x) => x.chain)
   const addresses = useDaoStore?.((state) => state.addresses) || {}
+  const config = useConfig()
 
   const { address } = useAccount()
   const isWinner = owner != undefined && address == owner
 
   const auctionAddress = externalAuctionAddress || addresses?.auction
 
-  const { data: paused } = useContractRead({
-    enabled: !!auctionAddress,
+  const { data: paused } = useReadContract({
+    query: {
+      enabled: !!auctionAddress,
+    },
     address: auctionAddress,
     chainId: chain.id,
     abi: auctionAbi,
     functionName: 'paused',
   })
 
-  const { config, error } = usePrepareContractWrite({
-    enabled: !!auctionAddress,
+  const { data, error } = useSimulateContract({
+    query: {
+      enabled: !!auctionAddress,
+    },
     address: auctionAddress,
     abi: auctionAbi,
     functionName: paused ? 'settleAuction' : 'settleCurrentAndCreateNewAuction',
   })
 
-  const { writeAsync } = useContractWrite(config)
+  const { writeContractAsync } = useWriteContract()
 
   const [settling, setSettling] = useState(false)
 
   const handleSettle = async () => {
-    if (!!error) return
+    if (!!error || !data) return
 
     setSettling(true)
     try {
-      const tx = await writeAsync?.()
-      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
+      const txHash = await writeContractAsync?.(data.request)
+      if (txHash)
+        await waitForTransactionReceipt(config, { hash: txHash, chainId: chain.id })
       setSettling(false)
     } catch (error) {
       setSettling(false)

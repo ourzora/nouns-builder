@@ -11,7 +11,9 @@ import {
 
 import { CHAIN_ID, Chain } from 'src/typings'
 
-const MAINNET_CHAINS: Chain[] = [
+type Chains = [Chain, ...Chain[]]
+
+const MAINNET_CHAINS: Chains = [
   { ...mainnet, id: CHAIN_ID.ETHEREUM, slug: 'ethereum', icon: '/chains/ethereum.svg' },
   { ...zora, id: CHAIN_ID.ZORA, slug: 'zora', icon: '/chains/zora.png' },
   { ...base, id: CHAIN_ID.BASE, slug: 'base', icon: '/chains/base.svg' },
@@ -23,7 +25,7 @@ const MAINNET_CHAINS: Chain[] = [
   },
 ]
 
-const TESTNET_CHAINS: Chain[] = [
+const TESTNET_CHAINS: Chains = [
   { ...sepolia, id: CHAIN_ID.SEPOLIA, slug: 'sepolia', icon: '/chains/ethereum.svg' },
   {
     ...optimismSepolia,
@@ -47,6 +49,8 @@ const TESTNET_CHAINS: Chain[] = [
 
 export const PUBLIC_IS_TESTNET = process.env.NEXT_PUBLIC_NETWORK_TYPE === 'testnet'
 
-export const PUBLIC_ALL_CHAINS = [...MAINNET_CHAINS, ...TESTNET_CHAINS]
+export const PUBLIC_ALL_CHAINS: Chains = [...MAINNET_CHAINS, ...TESTNET_CHAINS]
 
-export const PUBLIC_DEFAULT_CHAINS = PUBLIC_IS_TESTNET ? TESTNET_CHAINS : MAINNET_CHAINS
+export const PUBLIC_DEFAULT_CHAINS: Chains = PUBLIC_IS_TESTNET
+  ? TESTNET_CHAINS
+  : MAINNET_CHAINS

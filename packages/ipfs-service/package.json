@@ -20,7 +20,7 @@
     "ipfs-core-types": "^0.13.0",
     "ipfs-http-client": "^59.0.0",
     "it-last": "^2.0.0",
-    "multiformats": "^13.3.5",
+    "multiformats": "^13.3.6",
     "url-join": "^5.0.0"
   }
 }

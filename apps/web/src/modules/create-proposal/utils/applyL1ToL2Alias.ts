@@ -1,7 +1,8 @@
-import { getPublicClient, readContract } from 'wagmi/actions'
+import { getBytecode, readContract } from 'wagmi/actions'
 
 import { L2_MIGRATION_DEPLOYER } from 'src/constants/addresses'
 import { L2DeployerABI } from 'src/data/contract/abis/L2MigrationDeployer'
+import { config } from 'src/data/contract/config'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
 // We are calling a pure function so we can default to any network with an L2 migration deployer
@@ -16,11 +17,9 @@ export const applyL1ToL2Alias = async ({
   l2ChainId?: CHAIN_ID
   address: AddressType
 }) => {
-  const publicClient = getPublicClient({ chainId: l1ChainId })
-
-  const bytecode = await publicClient.getBytecode({ address })
+  const bytecode = await getBytecode(config, { chainId: l1ChainId, address })
   if (bytecode) {
-    return await readContract({
+    return await readContract(config, {
       abi: L2DeployerABI,
       address: L2_MIGRATION_DEPLOYER[l2ChainId],
       chainId: l2ChainId,

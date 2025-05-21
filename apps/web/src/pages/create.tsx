@@ -119,7 +119,7 @@ const CreatePage: NextPageWithLayout = () => {
           justify={'center'}
         >
           <Flex direction={'column'} className={formWrapper}>
-            <AnimatePresence exitBeforeEnter={true}>
+            <AnimatePresence mode="wait">
               <motion.div
                 key={sections[activeSection]?.title}
                 variants={{

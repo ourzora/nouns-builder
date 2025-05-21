@@ -1,4 +1,4 @@
-import { Address } from 'wagmi'
+import { Address } from 'viem'
 import * as Yup from 'yup'
 
 import { CHAIN_ID } from 'src/typings'

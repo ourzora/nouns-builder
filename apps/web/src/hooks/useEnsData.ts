@@ -26,19 +26,25 @@ export const useEnsData = (addressOrName?: string): EnsData => {
   const { data: ensName, isLoading: ensNameLoading } = useEnsName({
     address: inputAddress,
     chainId,
-    enabled: !!inputAddress,
+    query: {
+      enabled: !!inputAddress,
+    },
   })
 
   const { data: ensAddress } = useEnsAddress({
     name: inputName,
     chainId,
-    enabled: !!inputName,
+    query: {
+      enabled: !!inputName,
+    },
   })
 
   const { data: ensAvatar } = useEnsAvatar({
     name: ensName ?? inputName,
     chainId,
-    enabled: !!ensName || !!inputName,
+    query: {
+      enabled: !!ensName || !!inputName,
+    },
   })
 
   const ethAddress = useMemo(() => {

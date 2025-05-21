@@ -1,7 +1,7 @@
 import { Flex } from '@zoralabs/zord'
 import React, { Fragment } from 'react'
 import { getAddress } from 'viem'
-import { useAccount, useContractReads } from 'wagmi'
+import { useAccount, useReadContracts } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
@@ -34,10 +34,11 @@ export const ProposalActions: React.FC<ProposalActionsProps> = ({
   const { proposer, title, voteStart, proposalId, proposalNumber, timeCreated, state } =
     proposal
 
-  const { data } = useContractReads({
-    enabled: !!userAddress,
+  const { data } = useReadContracts({
+    query: {
+      enabled: !!userAddress,
+    },
     allowFailure: false,
-    keepPreviousData: true,
     contracts: [
       {
         abi: governorAbi,

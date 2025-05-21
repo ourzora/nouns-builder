@@ -2,7 +2,7 @@ import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import { getFetchableUrls } from 'ipfs-service'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useContractReads } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar/Avatar'
 import { FallbackNextImage } from 'src/components/FallbackImage'
@@ -34,9 +34,11 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
   const token = addresses?.token
   const metadata = addresses?.metadata
 
-  const { data: contractData } = useContractReads({
+  const { data: contractData } = useReadContracts({
     allowFailure: false,
-    enabled: !!token && !!metadata,
+    query: {
+      enabled: !!token && !!metadata,
+    },
     contracts: [
       {
         abi: tokenAbi,
@@ -70,9 +72,7 @@ export const ProposalNavigation: React.FC<ProposalNavigationProps> = ({
               <Box mr="x2">
                 <FallbackNextImage
                   srcList={getFetchableUrls(daoImage)}
-                  layout="fixed"
-                  objectFit="contain"
-                  style={{ borderRadius: '100%' }}
+                  style={{ borderRadius: '100%', objectFit: 'contain' }}
                   alt={`${name} avatar`}
                   height={32}
                   width={32}

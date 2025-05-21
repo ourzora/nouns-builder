@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Hex, decodeFunctionData, getAbiItem } from 'viem'
+import { AbiFunction, Hex, decodeFunctionData, getAbiItem } from 'viem'
 import { Address, getAddress, pad, trim } from 'viem'
 
 import { CHAIN_ID, DecodedArg, DecodedTransactionData, DecodedValue } from 'src/typings'
@@ -134,18 +134,21 @@ export const decodeTransaction = async (
     return value?.toString?.() ?? value
   }
 
-  const argMapping: Record<string, DecodedArg> = functionInfo.inputs.reduce(
-    (acc: Record<string, DecodedArg>, input: any, index: number) => {
-      const name = input.name || index.toString()
-      acc[name] = {
-        name,
-        type: input.type,
-        value: formatArgValue(input, decodeResult.args[index]),
-      }
-      return acc
-    },
-    {}
-  )
+  if (!functionInfo) {
+    throw new NotFoundError('Function not found')
+  }
+
+  const argMapping: Record<string, DecodedArg> = (
+    functionInfo as AbiFunction
+  ).inputs.reduce((acc: Record<string, DecodedArg>, input: any, index: number) => {
+    const name = input.name || index.toString()
+    acc[name] = {
+      name,
+      type: input.type,
+      value: formatArgValue(input, decodeResult.args[index]),
+    }
+    return acc
+  }, {})
 
   return {
     args: argMapping,

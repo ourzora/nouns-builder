@@ -1,5 +1,6 @@
 import { readContract, readContracts } from 'wagmi/actions'
 
+import { config } from 'src/data/contract/config'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
 import { metadataAbi } from '../abis'
@@ -9,7 +10,7 @@ export const getPropertyItemsCount = async (
   metadataAddress: AddressType
 ) => {
   const baseParams = { address: metadataAddress, abi: metadataAbi, chainId: chainId }
-  const propertiesCount = await readContract({
+  const propertiesCount = await readContract(config, {
     ...baseParams,
     functionName: 'propertiesCount',
   }).then((x) => Number(x))
@@ -24,7 +25,7 @@ export const getPropertyItemsCount = async (
       }
     })
 
-  const propertyItemsCount = (await readContracts({
+  const propertyItemsCount = (await readContracts(config, {
     allowFailure: false,
     contracts,
   })) as bigint[]

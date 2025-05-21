@@ -1,9 +1,9 @@
 import { Box, Button, Flex, PopUp, Text } from '@zoralabs/zord'
 import React, { Fragment, memo, useEffect, useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import { formatEther, parseEther } from 'viem'
-import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { Address, formatEther, parseEther } from 'viem'
+import { useAccount, useBalance, useConfig, useReadContracts } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { Icon } from 'src/components/Icon/Icon'
@@ -37,11 +37,12 @@ export const PlaceBid = ({
   tokenId,
   daoName,
 }: PlaceBidProps) => {
-  const { address } = useAccount()
-  const { chain: wagmiChain } = useNetwork()
+  const { address, chain: wagmiChain } = useAccount()
   const { data: balance } = useBalance({ address: address, chainId: chain.id })
   const { mutate } = useSWRConfig()
   const { addresses } = useDaoStore()
+
+  const config = useConfig()
 
   const [creatingBid, setCreatingBid] = useState(false)
   const [showWarning, setShowWarning] = useState(false)
@@ -52,7 +53,7 @@ export const PlaceBid = ({
     address: addresses.auction as AddressType,
     chainId: chain.id,
   }
-  const { data } = useContractReads({
+  const { data } = useReadContracts({
     allowFailure: false,
     contracts: [
       { ...auctionContractParams, functionName: 'reservePrice' },
@@ -68,9 +69,7 @@ export const PlaceBid = ({
   })
 
   const { data: averageBid } = useSWR(
-    addresses.token
-      ? [SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token]
-      : undefined,
+    addresses.token ? [SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token] : null,
     () => averageWinningBid(chain.id, addresses.token as Address)
   )
 
@@ -101,27 +100,31 @@ export const PlaceBid = ({
     try {
       setCreatingBid(true)
 
-      let config
+      let txHash: `0x${string}`
       if (referral) {
-        config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           abi: auctionAbi,
           address: addresses.auction as Address,
           functionName: 'createBidWithReferral',
           args: [BigInt(tokenId), referral],
           value: parseEther(bidAmount),
+          chainId: chain.id,
         })
+        txHash = await writeContract(config, data.request)
       } else {
-        config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           abi: auctionAbi,
           address: addresses.auction as Address,
           functionName: 'createBid',
           args: [BigInt(tokenId)],
           value: parseEther(bidAmount),
+          chainId: chain.id,
         })
+        txHash = await writeContract(config, data.request)
       }
 
-      const tx = await writeContract(config)
-      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
+      if (txHash)
+        await waitForTransactionReceipt(config, { hash: txHash, chainId: chain.id })
 
       await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.token, tokenId], () =>
         getBids(chain.id, addresses.token!, tokenId)

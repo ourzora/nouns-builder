@@ -63,7 +63,6 @@ const ReviewProposalPage: NextPageWithLayout = () => {
         <a href="/guidelines" target="_blank" rel="noreferrer noopener">
           <Flex align={'center'} mb={'x10'} color="text1">
             <Text
-              as="a"
               fontSize={isMobile ? 14 : 18}
               fontWeight={'paragraph'}
               className={atoms({ textDecoration: 'underline' })}

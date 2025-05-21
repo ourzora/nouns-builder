@@ -1,6 +1,6 @@
 import { renderHook, waitFor } from '@testing-library/react'
 import { expect, vi } from 'vitest'
-import { useContractReads } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 
 import { DaoContractAddresses } from 'src/modules/dao'
 import { FOUNDRY_CHAIN } from 'src/test/fixtures/chain'
@@ -11,7 +11,7 @@ vi.mock('wagmi', async () => {
   const mod = await vi.importActual<typeof import('wagmi')>('wagmi')
   return {
     ...mod,
-    useContractReads: vi.fn(),
+    useReadContracts: vi.fn(),
   }
 })
 
@@ -43,7 +43,7 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine no upgrades given a set of undefined addresses', async () => {
-    vi.mocked(useContractReads).mockReturnValueOnce({
+    vi.mocked(useReadContracts).mockReturnValue({
       data: [
         false,
         '1.1.0',
@@ -67,20 +67,9 @@ describe('Use available upgrade hook', () => {
         null,
         null,
       ],
-      error: null,
-      fetchStatus: 'idle',
       isError: false,
-      isFetched: false,
-      isFetchedAfterMount: false,
-      isFetching: false,
       isLoading: false,
-      isRefetching: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-      isIdle: false,
-      status: 'idle',
-      internal: undefined as any,
-    })
+    } as any)
 
     const { result } = renderHook(() =>
       useAvailableUpgrade({
@@ -113,22 +102,11 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine no upgrades given contract reads loading', async () => {
-    vi.mocked(useContractReads).mockReturnValueOnce({
-      data: [null, null, null, null, null, null, null, null],
-      error: null,
-      fetchStatus: 'fetching',
+    vi.mocked(useReadContracts).mockReturnValue({
+      data: [null, null, null, null, null, null, null, null, null],
       isError: false,
-      isFetched: false,
-      isFetchedAfterMount: false,
-      isFetching: false,
       isLoading: true,
-      isRefetching: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-      isIdle: false,
-      status: 'loading',
-      internal: undefined as any,
-    })
+    } as any)
 
     const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
@@ -145,22 +123,11 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine no upgrades given an error', async () => {
-    vi.mocked(useContractReads).mockReturnValueOnce({
-      data: [null, null, null, null, null, null, null, null],
-      error: new Error('error'),
-      fetchStatus: 'idle',
+    vi.mocked(useReadContracts).mockReturnValue({
+      data: [null, null, null, null, null, null, null, null, null],
       isError: true,
-      isFetched: false,
-      isFetchedAfterMount: false,
-      isFetching: false,
       isLoading: false,
-      isRefetching: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-      isIdle: false,
-      status: 'error',
-      internal: undefined as any,
-    })
+    } as any)
 
     const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
@@ -179,7 +146,7 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine no upgrades given all modules are up to date', async () => {
-    vi.mocked(useContractReads).mockReturnValueOnce({
+    vi.mocked(useReadContracts).mockReturnValue({
       data: [
         false,
         '1.1.0',
@@ -205,18 +172,7 @@ describe('Use available upgrade hook', () => {
       ],
       isLoading: false,
       isError: false,
-      error: null,
-      fetchStatus: 'fetching',
-      isFetched: false,
-      isFetchedAfterMount: false,
-      isFetching: false,
-      isRefetching: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-      isIdle: false,
-      status: 'success',
-      internal: undefined as any,
-    })
+    } as any)
 
     const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
@@ -239,7 +195,7 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine no upgrades given no latest version', async () => {
-    vi.mocked(useContractReads).mockReturnValueOnce({
+    vi.mocked(useReadContracts).mockReturnValue({
       data: [
         false,
         null,
@@ -265,18 +221,7 @@ describe('Use available upgrade hook', () => {
       ],
       isLoading: false,
       isError: false,
-      error: null,
-      fetchStatus: 'fetching',
-      isFetched: false,
-      isFetchedAfterMount: false,
-      isFetching: false,
-      isRefetching: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-      isIdle: false,
-      status: 'success',
-      internal: undefined as any,
-    })
+    } as any)
 
     const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
@@ -294,8 +239,7 @@ describe('Use available upgrade hook', () => {
 
   //TODO: Re-visit with MSW for graphql requests
   it('should determine the available upgrades given some modules out of date', async () => {
-    //@ts-ignore
-    vi.mocked(useContractReads).mockReturnValue({
+    vi.mocked(useReadContracts).mockReturnValue({
       data: [
         false,
         '1.1.0',
@@ -319,7 +263,9 @@ describe('Use available upgrade hook', () => {
         '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
         '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
-    })
+      isError: false,
+      isLoading: false,
+    } as any)
 
     const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
@@ -364,7 +310,7 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine the available upgrades given some modules out of date and auction is currently paused', async () => {
-    vi.mocked(useContractReads).mockReturnValueOnce({
+    vi.mocked(useReadContracts).mockReturnValue({
       data: [
         true,
         '1.1.0',
@@ -388,20 +334,9 @@ describe('Use available upgrade hook', () => {
         '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
         '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
-      error: null,
-      fetchStatus: 'fetching',
       isError: false,
-      isFetched: false,
-      isFetchedAfterMount: false,
-      isFetching: false,
       isLoading: false,
-      isRefetching: false,
-      isSuccess: false,
-      refetch: vi.fn(),
-      isIdle: false,
-      status: 'success',
-      internal: undefined as any,
-    })
+    } as any)
 
     const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
@@ -434,8 +369,7 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine available upgrades given all modules out of date', async () => {
-    //@ts-ignore
-    vi.mocked(useContractReads).mockReturnValueOnce({
+    vi.mocked(useReadContracts).mockReturnValue({
       data: [
         false,
         '1.1.0',
@@ -459,7 +393,9 @@ describe('Use available upgrade hook', () => {
         '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
         '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
-    })
+      isError: false,
+      isLoading: false,
+    } as any)
 
     const { result } = renderHook(() => useAvailableUpgrade({ chainId, addresses }))
 
@@ -518,8 +454,7 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine no upgrades required given provided version is met', () => {
-    //@ts-ignore
-    vi.mocked(useContractReads).mockReturnValue({
+    vi.mocked(useReadContracts).mockReturnValue({
       data: [
         false,
         '1.2.0',
@@ -543,7 +478,9 @@ describe('Use available upgrade hook', () => {
         '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
         '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
-    })
+      isError: false,
+      isLoading: false,
+    } as any)
 
     const { result } = renderHook(() =>
       useAvailableUpgrade({ chainId, addresses, contractVersion: '1.1.0' })
@@ -568,8 +505,7 @@ describe('Use available upgrade hook', () => {
   })
 
   it('should determine upgrades to latest version given contract does not meet the provided version', async () => {
-    //@ts-ignore
-    vi.mocked(useContractReads).mockReturnValue({
+    vi.mocked(useReadContracts).mockReturnValue({
       data: [
         false,
         '1.2.0',
@@ -593,7 +529,9 @@ describe('Use available upgrade hook', () => {
         '0x2661fe1a882abfd28ae0c2769a90f327850397c6',
         '0x26f494af990123154e7cc067da7a311b07d54ae1',
       ],
-    })
+      isError: false,
+      isLoading: false,
+    } as any)
 
     const { result } = renderHook(() =>
       useAvailableUpgrade({ chainId, addresses, contractVersion: '1.1.0' })

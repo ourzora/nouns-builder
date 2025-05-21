@@ -5,8 +5,8 @@ import { Field, FieldProps, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { toHex } from 'viem'
-import { useAccount, useContractRead } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { useAccount, useConfig, useReadContract } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import TextInput from 'src/components/Fields/TextInput'
@@ -61,6 +61,7 @@ export const ReviewProposalForm = ({
   const router = useRouter()
   const addresses = useDaoStore((state) => state.addresses)
   const chain = useChainStore((x) => x.chain)
+  const config = useConfig()
   //@ts-ignore
   const { address } = useAccount()
   const { clearProposal } = useProposalStore()
@@ -72,16 +73,18 @@ export const ReviewProposalForm = ({
   const [proposing, setProposing] = useState<boolean>(false)
   const { clear: clearEscrowForm } = useEscrowFormStore()
 
-  const { data: votes, isLoading } = useContractRead({
+  const { data: votes, isLoading } = useReadContract({
     address: addresses?.token as AddressType,
     abi: tokenAbi,
-    enabled: !!address,
+    query: {
+      enabled: !!address,
+    },
     functionName: 'getVotes',
     chainId: chain.id,
     args: [address as AddressType],
   })
 
-  const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
+  const { data: proposalThreshold, isLoading: thresholdIsLoading } = useReadContract({
     address: addresses?.governor as AddressType,
     chainId: chain.id,
     abi: governorAbi,
@@ -155,7 +158,7 @@ export const ReviewProposalForm = ({
           description: values.title + '&&' + values.summary,
         }
 
-        const config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           abi: governorAbi,
           functionName: 'propose',
           address: addresses?.governor!,
@@ -163,10 +166,10 @@ export const ReviewProposalForm = ({
           args: [params.targets, params.values, params.calldatas, params.description],
         })
 
-        const { hash } = await writeContract(config)
+        const hash = await writeContract(config, data.request)
 
         setProposing(true)
-        await waitForTransaction({ hash })
+        await waitForTransactionReceipt(config, { hash, chainId: chain.id })
 
         router
           .push({
@@ -200,6 +203,7 @@ export const ReviewProposalForm = ({
       clearProposal,
       clearEscrowForm,
       chain.id,
+      config,
     ]
   )
 
@@ -229,7 +233,7 @@ export const ReviewProposalForm = ({
               />
 
               <Field name="title">
-                {({ field }: FieldProps) => (
+                {() => (
                   <TextInput
                     {...formik.getFieldProps('title')}
                     id={'title'}

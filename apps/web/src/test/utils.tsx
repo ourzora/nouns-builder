@@ -1,10 +1,9 @@
-import { RenderOptions, render } from '@testing-library/react'
-import { renderHook, waitFor } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { RenderOptions, act, render, renderHook, waitFor } from '@testing-library/react'
 import * as React from 'react'
-import { act } from 'react-dom/test-utils'
 import { SWRConfig } from 'swr'
 import { expect } from 'vitest'
-import { WagmiConfig, useConnect, useDisconnect } from 'wagmi'
+import { WagmiProvider, useConnect, useDisconnect } from 'wagmi'
 
 import { config } from './wagmi'
 
@@ -13,12 +12,14 @@ type ProvidersProps = {
 }
 
 export async function connectAs(user: 'alice' | 'bob' | 'carol') {
-  const { result } = renderWagmiHook(useConnect)
+  const { result } = renderWagmiHook(() => useConnect())
+
+  const connectors = result.current.connectors
 
   const CONNECTORS = {
-    alice: result.current.connectors[0],
-    bob: result.current.connectors[1],
-    carol: result.current.connectors[2],
+    alice: connectors[0],
+    bob: connectors[1],
+    carol: connectors[2],
   }
 
   await act(async () => {
@@ -26,34 +27,50 @@ export async function connectAs(user: 'alice' | 'bob' | 'carol') {
       connector: CONNECTORS[user],
     })
   })
-  await waitFor(() => expect(result.current.isSuccess).toBeTruthy())
+
+  await waitFor(() => {
+    // Newer wagmi uses `status` instead of isSuccess
+    expect(result.current.status).toBe('success')
+  })
 }
 
 /**
  * Utility function to disconnect the current user
  */
 export async function disconnect() {
-  const { result } = renderWagmiHook(useDisconnect)
+  const { result } = renderWagmiHook(() => useDisconnect())
 
-  await act(result.current.disconnectAsync)
-  await waitFor(() => expect(result.current.isSuccess).toBeTruthy())
+  await act(async () => {
+    await result.current.disconnectAsync()
+  })
+
+  await waitFor(() => {
+    expect(result.current.status).toBe('success')
+  })
 }
 
 /**
- * Custom renderHook that wraps the hook in WagmiConfig with the Wagmi test client
+ * Custom renderHook that wraps the hook in WagmiProvider with the test config
  */
 export function renderWagmiHook<TResult, TProps>(hook: (props: TProps) => TResult) {
-  return renderHook<TResult, TProps>(hook, {
-    wrapper: (props) => <WagmiConfig config={config} {...props} />,
+  return renderHook(hook, {
+    wrapper: ({ children }) => (
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </WagmiProvider>
+    ),
   })
 }
+
+const queryClient = new QueryClient()
+
 export function Providers({ children }: ProvidersProps) {
-  // render with a clear cache
-  // https://swr.vercel.app/docs/advanced/cache#reset-cache-between-test-cases
   return (
-    <WagmiConfig config={config}>
-      <SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
-    </WagmiConfig>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <SWRConfig value={{ provider: () => new Map() }}>{children}</SWRConfig>
+      </QueryClientProvider>
+    </WagmiProvider>
   )
 }
 

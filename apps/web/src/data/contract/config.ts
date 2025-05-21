@@ -1,26 +1,36 @@
-import { connectorsForWallets, getDefaultWallets } from '@rainbow-me/rainbowkit'
-import { safeWallet } from '@rainbow-me/rainbowkit/wallets'
-import { createConfig } from 'wagmi'
+import { getDefaultConfig } from '@rainbow-me/rainbowkit'
+import {
+  coinbaseWallet,
+  injectedWallet,
+  ledgerWallet,
+  metaMaskWallet,
+  rainbowWallet,
+  safeWallet,
+  walletConnectWallet,
+} from '@rainbow-me/rainbowkit/wallets'
 
 import { PUBLIC_WALLLET_CONNECT_PROJECT_ID } from 'src/constants/walletconnect'
 
-import { chains, publicClient } from './chains'
+import { chains, transports } from './chains'
 
-const { connectors: defaultConnectors } = getDefaultWallets({
-  appName: 'Nouns builder',
-  chains,
+export const config = getDefaultConfig({
+  ssr: true,
+  appName: 'Nouns Builder',
   projectId: PUBLIC_WALLLET_CONNECT_PROJECT_ID,
-})
-
-const safeConnector = connectorsForWallets([
-  {
-    groupName: 'Safe Wallet',
-    wallets: [safeWallet({ chains })],
-  },
-])
-
-export const config = createConfig({
-  autoConnect: true,
-  connectors: [...defaultConnectors(), ...safeConnector()],
-  publicClient,
+  chains,
+  transports,
+  wallets: [
+    {
+      groupName: 'Recommended',
+      wallets: [
+        injectedWallet,
+        rainbowWallet,
+        ledgerWallet,
+        safeWallet,
+        metaMaskWallet,
+        coinbaseWallet,
+        walletConnectWallet,
+      ],
+    },
+  ],
 })

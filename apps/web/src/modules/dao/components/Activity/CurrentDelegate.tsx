@@ -1,6 +1,6 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import React from 'react'
-import { useAccount, useContractRead } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 
 import { Avatar } from 'src/components/Avatar'
 import { Icon } from 'src/components/Icon'
@@ -23,13 +23,15 @@ export const CurrentDelegate = ({ toggleIsEditing }: CurrentDelegateProps) => {
   const { address: signerAddress } = useAccount()
   const chain = useChainStore((x) => x.chain)
 
-  const { data: delegateAddress } = useContractRead({
+  const { data: delegateAddress } = useReadContract({
     abi: tokenAbi,
     address: addresses.token,
     chainId: chain.id,
     functionName: 'delegates',
     args: [signerAddress || NULL_ADDRESS],
-    enabled: !!signerAddress,
+    query: {
+      enabled: !!signerAddress,
+    },
   })
 
   const { ensName, ensAvatar } = useEnsData(delegateAddress)

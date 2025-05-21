@@ -1,14 +1,14 @@
 import { SchemaEncoder } from '@ethereum-attestation-service/eas-sdk'
 import { InvoiceMetadata } from '@smartinvoicexyz/types'
 import { Box, Button, Flex, Select, Text } from '@zoralabs/zord'
-import { Form, Formik, type FormikProps, useFormikContext } from 'formik'
+import { Form, Formik, useFormikContext } from 'formik'
 import { useEffect, useMemo, useState } from 'react'
 import { type Hex, getAddress, isAddress, zeroHash } from 'viem'
 import {
   useChainId,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
 } from 'wagmi'
 import * as Yup from 'yup'
 
@@ -111,15 +111,12 @@ export const PropDateForm = ({
         onSubmit={() => {}}
         validateOnMount={true}
       >
-        {(formik) => (
-          <PropDateFormInner
-            closeForm={closeForm}
-            onSuccess={onSuccess}
-            replyTo={replyTo}
-            formik={formik}
-            invoiceData={invoiceData}
-          />
-        )}
+        <PropDateFormInner
+          closeForm={closeForm}
+          onSuccess={onSuccess}
+          replyTo={replyTo}
+          invoiceData={invoiceData}
+        />
       </Formik>
     </Box>
   )
@@ -190,13 +187,11 @@ const PropDateFormInner = ({
   closeForm,
   onSuccess,
   replyTo,
-  formik,
   invoiceData,
 }: {
   closeForm: () => void
   onSuccess: () => void
   replyTo?: PropDate
-  formik: FormikProps<PropDateFormValues>
   invoiceData?: InvoiceMetadata
 }) => {
   const chainId = useChainId()
@@ -209,8 +204,8 @@ const PropDateFormInner = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showStatusModal, setShowStatusModal] = useState(false)
 
-  const data = useFormikContext<PropDateFormValues>()
-  const currentValues = data?.values
+  const formik = useFormikContext<PropDateFormValues>()
+  const currentValues = formik?.values
 
   // Debounce form values to prevent constant recalculation during typing
   const debouncedValues = useDebounce(currentValues, 500)
@@ -266,12 +261,14 @@ const PropDateFormInner = ({
   const easContractAddress = EAS_CONTRACT_ADDRESS[chainId as CHAIN_ID]
 
   const {
-    config,
+    data,
     isError,
     isSuccess: isPrepareSuccess,
     error: prepareError,
-  } = usePrepareContractWrite({
-    enabled: !!attestParams && !!easContractAddress,
+  } = useSimulateContract({
+    query: {
+      enabled: !!attestParams && !!easContractAddress,
+    },
     address: easContractAddress,
     abi: easAbi,
     functionName: 'attest',
@@ -279,24 +276,22 @@ const PropDateFormInner = ({
     args: [attestParams],
   })
 
-  const {
-    writeAsync,
-    isLoading: isSigningLoading,
-    error: writeError,
-  } = useContractWrite(config)
+  const { writeContractAsync, error: writeError } = useWriteContract()
 
   const {
     isLoading: isWaitingTx,
     isSuccess: isTxSuccess,
     isError: isTxError,
     error: txError,
-  } = useWaitForTransaction({
+  } = useWaitForTransactionReceipt({
     hash: txHash,
-    enabled: !!txHash,
     chainId: chainId,
+    query: {
+      enabled: !!txHash,
+    },
   })
 
-  const isPending = isSigningLoading || isWaitingTx
+  const isPending = isWaitingTx
   const isLoading = isSubmitting || isPending
 
   const { ensName: replyToEnsName, ensAvatar: replyToEnsAvatar } = useEnsData(
@@ -311,11 +306,11 @@ const PropDateFormInner = ({
 
   useEffect(() => {
     const executeWrite = async () => {
-      if (isPrepareSuccess && isSubmitting && writeAsync) {
+      if (isPrepareSuccess && isSubmitting && data.request) {
         try {
-          const result = await writeAsync?.()
-          if (result?.hash) {
-            setTxHash(result.hash)
+          const result = await writeContractAsync(data.request)
+          if (result) {
+            setTxHash(result)
           } else {
             setErrorMessage('Failed to get transaction hash.')
           }
@@ -329,7 +324,7 @@ const PropDateFormInner = ({
     }
 
     executeWrite()
-  }, [isPrepareSuccess, isSubmitting, writeAsync])
+  }, [isPrepareSuccess, isSubmitting, writeContractAsync, data])
 
   useEffect(() => {
     if (isTxError) {
@@ -339,7 +334,7 @@ const PropDateFormInner = ({
     }
   }, [isTxSuccess, isTxError, txError])
 
-  // Effect to handle potential signing errors from useContractWrite
+  // Effect to handle potential signing errors from useWriteContract
   useEffect(() => {
     if (writeError) {
       const message = getErrorMessage(writeError)

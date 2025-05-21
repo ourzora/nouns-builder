@@ -1,4 +1,4 @@
-import { decode, encode } from 'bs58'
+import bs58 from 'bs58'
 import {
   Address,
   Hex,
@@ -22,7 +22,7 @@ export const ESCROW_TYPE = toHex(toBytes('updatable-v2', { size: 32 }))
 export const ESCROW_TYPE_V1 = toHex(toBytes('updatable', { size: 32 }))
 
 export function convertIpfsCidV0ToByte32(cid: string) {
-  return `0x${Buffer.from(decode(cid).slice(2)).toString('hex')}`
+  return `0x${Buffer.from(bs58.decode(cid).slice(2)).toString('hex')}`
 }
 
 export function convertByte32ToIpfsCidV0(str: Hex) {
@@ -30,7 +30,7 @@ export function convertByte32ToIpfsCidV0(str: Hex) {
   if (str.indexOf('0x') === 0) {
     newStr = str.slice(2)
   }
-  return encode(Buffer.from(`1220${newStr}`, 'hex'))
+  return bs58.encode(Buffer.from(`1220${newStr}`, 'hex'))
 }
 
 function getWrappedTokenAddress(chainId: number | string): Address {

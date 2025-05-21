@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useSWRConfig } from 'swr'
-import { useContractEvent } from 'wagmi'
+import { useConfig, useWatchContractEvent } from 'wagmi'
 import { readContract } from 'wagmi/actions'
 
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -24,17 +24,18 @@ export const useAuctionEvents = ({
   const router = useRouter()
   const { mutate } = useSWRConfig()
   const { auction } = useDaoStore((state) => state.addresses)
+  const config = useConfig()
 
-  useContractEvent({
+  useWatchContractEvent({
     address: isTokenActiveAuction ? auction : undefined,
     abi: auctionAbi,
     eventName: 'AuctionCreated',
     chainId,
-    listener: async (logs) => {
+    onLogs: async (logs) => {
       await awaitSubgraphSync(chainId, logs[0].blockNumber)
 
       await mutate([SWR_KEYS.AUCTION, chainId, auction], () =>
-        readContract({
+        readContract(config, {
           abi: auctionAbi,
           address: auction as AddressType,
           chainId,
@@ -52,15 +53,15 @@ export const useAuctionEvents = ({
     },
   })
 
-  useContractEvent({
+  useWatchContractEvent({
     address: isTokenActiveAuction ? auction : undefined,
     abi: auctionAbi,
     eventName: 'AuctionBid',
-    listener: async (logs) => {
+    onLogs: async (logs) => {
       await awaitSubgraphSync(chainId, logs[0].blockNumber)
 
       await mutate([SWR_KEYS.AUCTION, chainId, auction], () =>
-        readContract({
+        readContract(config, {
           abi: auctionAbi,
           address: auction as AddressType,
           chainId: chainId,

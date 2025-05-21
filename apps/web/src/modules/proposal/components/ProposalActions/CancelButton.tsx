@@ -1,6 +1,6 @@
 import { Box } from '@zoralabs/zord'
 import React, { useState } from 'react'
-import { Address } from 'wagmi'
+import { Address } from 'viem'
 
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
 import { SuccessModalContent } from 'src/components/Modal/SuccessModalContent'

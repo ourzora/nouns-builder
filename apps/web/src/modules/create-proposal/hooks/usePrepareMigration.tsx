@@ -1,7 +1,7 @@
 import axios from 'axios'
 import useSWRImmutable from 'swr/immutable'
 import { encodeFunctionData } from 'viem'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { L1_CROSS_DOMAIN_MESSENGER, L2_MIGRATION_DEPLOYER } from 'src/constants/addresses'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -29,22 +29,24 @@ export const usePrepareMigration = ({
   enabled: boolean
   migratingToChainId: CHAIN_ID
 }): { transactions: Transaction[] | undefined; error: Error | undefined } => {
-  const { id: currentChainId } = useChainStore((x) => x.chain)
+  const chain = useChainStore((x) => x.chain)
   const { addresses: currentAddresses } = useDaoStore()
 
   const currentDAOConfig = useFetchCurrentDAOConfig({
     enabled,
-    chainId: currentChainId,
+    chainId: chain.id,
     migratingToChainId,
     currentAddresses,
   })
 
-  const { data } = useContractRead({
-    enabled,
+  const { data } = useReadContract({
+    query: {
+      enabled,
+    },
     abi: auctionAbi,
     address: currentAddresses.auction as AddressType,
     functionName: 'auction',
-    chainId: currentChainId,
+    chainId: chain.id,
   })
 
   const [currentTokenId] = unpackOptionalArray(data, 6)
@@ -55,10 +57,10 @@ export const usePrepareMigration = ({
           SWR_KEYS.METADATA_ATTRIBUTES_MERKLE_ROOT,
           currentAddresses.metadata,
           currentTokenId,
-          currentChainId,
+          chain.id,
         ]
-      : undefined,
-    async (_, metadata, tokenId, chainId) => {
+      : null,
+    async ([_key, metadata, tokenId, chainId]) => {
       const attributes = await axios
         .get<
           number[][]
@@ -70,13 +72,13 @@ export const usePrepareMigration = ({
 
   const { data: memberMerkleRoot, error: memberError } = useSWRImmutable(
     enabled && currentAddresses.token
-      ? [SWR_KEYS.TOKEN_HOLDERS_MERKLE_ROOT, currentAddresses.token, currentChainId]
-      : undefined,
+      ? [SWR_KEYS.TOKEN_HOLDERS_MERKLE_ROOT, currentAddresses.token, chain.id]
+      : null,
     async () => {
       const snapshot = await axios
         .get<
           DaoMember[]
-        >(`/api/migrate/snapshot?token=${currentAddresses.token}&chainId=${currentChainId}`)
+        >(`/api/migrate/snapshot?token=${currentAddresses.token}&chainId=${chain.id}`)
         .then((x) => x.data)
       return prepareMemberMerkleRoot(snapshot)
     }
@@ -84,9 +86,9 @@ export const usePrepareMigration = ({
 
   const { data: encodedMetadata, error: metadataError } = useSWRImmutable(
     enabled && currentAddresses.token
-      ? [SWR_KEYS.ENCODED_DAO_METADATA, currentAddresses.token, currentChainId]
+      ? [SWR_KEYS.ENCODED_DAO_METADATA, currentAddresses.token, chain.id]
       : undefined,
-    async (_, token, chainId) => encodedDaoMetadataRequest(chainId, token)
+    async ([_key, token, chainId]) => encodedDaoMetadataRequest(chainId, token)
   )
 
   if (!attributesMerkleRoot || !memberMerkleRoot || !currentDAOConfig || !encodedMetadata)

@@ -43,7 +43,7 @@ export const AuctionChart = () => {
   const startSeconds = startTimeFromNow(startTime)
 
   const { data, error, isValidating } = useSWR(
-    isReady ? [token, chain.id, startSeconds] : undefined,
+    isReady ? [token, chain.id, startSeconds] : null,
     () =>
       axios
         .get<{

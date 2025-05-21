@@ -1,5 +1,5 @@
 import { formatEther } from 'viem'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType, CHAIN_ID } from 'src/typings'
@@ -16,25 +16,27 @@ export const useDaoFeedCard = ({
   auctionAddress,
   chainId,
 }: useDaoCardProps) => {
-  const { data: auction } = useContractRead({
+  const { data: auction } = useReadContract({
     address: auctionAddress as AddressType,
     chainId,
     abi: auctionAbi,
     functionName: 'auction',
   })
 
-  const [tokenId, highestBid, highestBidder, startTime, endTime] = unpackOptionalArray(
+  const [tokenId, highestBid, _highestBidder, _startTime, endTime] = unpackOptionalArray(
     auction,
     6
   )
 
-  const { data: token } = useContractRead({
+  const { data: token } = useReadContract({
     address: collectionAddress as AddressType,
     chainId,
     abi: tokenAbi,
     functionName: 'tokenURI',
     args: [tokenId!],
-    enabled: !!tokenId,
+    query: {
+      enabled: !!tokenId,
+    },
   })
 
   const decode = (token?: string) => {
