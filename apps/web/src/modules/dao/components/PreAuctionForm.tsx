@@ -15,6 +15,7 @@ import { auctionAbi } from 'src/data/contract/abis'
 import { useChainStore } from 'src/stores/useChainStore'
 import { sectionWrapperStyle } from 'src/styles/dao.css'
 import { AddressType } from 'src/typings'
+import { getEnsAddress } from 'src/utils/ens'
 import {
   compareAndReturn,
   fromSeconds,
@@ -106,11 +107,11 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
 
       if (supportsFounderReward) {
         const newAuctionRewardRecipient = values.auctionRewardRecipient
-          ? (values.auctionRewardRecipient as AddressType)
+          ? await getEnsAddress(values.auctionRewardRecipient as AddressType)
           : NULL_ADDRESS
 
         const initalAuctionRewardRecipient = initialValues['auctionRewardRecipient']
-          ? (initialValues['auctionRewardRecipient'] as AddressType)
+          ? await getEnsAddress(initialValues['auctionRewardRecipient'] as AddressType)
           : NULL_ADDRESS
 
         const isRewardRecipientEqual = isAddressEqual(

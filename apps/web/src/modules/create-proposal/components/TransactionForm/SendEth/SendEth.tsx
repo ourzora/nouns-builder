@@ -1,7 +1,7 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { Form, Formik } from 'formik'
 import type { FormikHelpers } from 'formik'
-import { getAddress } from 'viem'
+import { formatEther, getAddress } from 'viem'
 import { useBalance } from 'wagmi'
 
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -62,7 +62,9 @@ export const SendEth = () => {
       {treasuryBalance && (
         <Formik
           initialValues={initialValues}
-          validationSchema={sendEthSchema(parseFloat(treasuryBalance.formatted))}
+          validationSchema={sendEthSchema(
+            parseFloat(formatEther(treasuryBalance?.value))
+          )}
           onSubmit={handleSubmit}
           validateOnBlur
           validateOnMount={false}

@@ -4,6 +4,7 @@ import type { FormikHelpers } from 'formik'
 import { useFormikContext } from 'formik'
 import { truncate } from 'lodash'
 import React, { useCallback, useState } from 'react'
+import { formatEther } from 'viem'
 import { useBalance } from 'wagmi'
 
 import DatePicker from 'src/components/Fields/Date'
@@ -176,7 +177,7 @@ const EscrowForm: React.FC<EscrowFormProps> = ({ onSubmit, isSubmitting }) => {
             .reduce((acc, x) => acc + x, 0)
 
           const isTreasuryBalanceEnough =
-            Number(totalEscrowAmount) <= Number(treasuryBalance?.formatted)
+            Number(totalEscrowAmount) <= Number(formatEther(treasuryBalance?.value ?? 0n))
           const escrowAmountError = isTreasuryBalanceEnough
             ? undefined
             : 'Escrow amount exceeding treasury balance.'

@@ -38,24 +38,24 @@ const ensAddressCache = new Map<string, string>()
 export async function getEnsAddress(
   nameOrAddress: string,
   provider: PublicClient | undefined = defaultProvider
-): Promise<string> {
-  if (!nameOrAddress) return nameOrAddress
+): Promise<Address> {
+  if (!nameOrAddress) return nameOrAddress as Address
 
-  if (isAddress(nameOrAddress)) return nameOrAddress
+  if (isAddress(nameOrAddress)) return nameOrAddress as Address
 
   // Check cache
   if (ensAddressCache.has(nameOrAddress)) {
-    return ensAddressCache.get(nameOrAddress)!
+    return ensAddressCache.get(nameOrAddress)! as Address
   }
 
   try {
     const resolved = await provider.getEnsAddress({ name: nameOrAddress })
     const result = resolved ?? nameOrAddress
     ensAddressCache.set(nameOrAddress, result)
-    return result
+    return result as Address
   } catch (e) {
     console.error('Error getting ENS address:', e)
-    return nameOrAddress
+    return nameOrAddress as Address
   }
 }
 
