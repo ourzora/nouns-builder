@@ -41,8 +41,7 @@ export const Escrow: React.FC = () => {
 
   const { data } = useSWR<ProposalsResponse>(
     isReady ? [SWR_KEYS.PROPOSALS, chainId, query.token, '0'] : null,
-    ([_key, chainId, token, _page]) =>
-      getProposals(chainId as number, token as `0x${string}`, 1, Number(0))
+    (_, chainId, token, _page) => getProposals(chainId, token, 1, Number(0))
   )
 
   const lastProposalId = data?.proposals?.[0]?.proposalNumber ?? 0
