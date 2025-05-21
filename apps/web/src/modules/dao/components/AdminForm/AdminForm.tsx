@@ -214,14 +214,16 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
 
       if (field === 'founderAllocation') {
         // @ts-ignore
-        value = (value as TokenAllocation[]).map(
-          ({ founderAddress, allocationPercentage, endDate }) => ({
-            founderAddress: founderAddress as AddressType,
-            allocationPercentage: allocationPercentage
-              ? BigInt(allocationPercentage)
-              : 0n,
-            endDate: BigInt(Math.floor(new Date(endDate).getTime() / 1000)),
-          })
+        value = await Promise.all(
+          (value as TokenAllocation[]).map(
+            async ({ founderAddress, allocationPercentage, endDate }) => ({
+              founderAddress: (await getEnsAddress(founderAddress)) as AddressType,
+              allocationPercentage: allocationPercentage
+                ? BigInt(allocationPercentage)
+                : 0n,
+              endDate: BigInt(Math.floor(new Date(endDate).getTime() / 1000)),
+            })
+          )
         )
       }
 

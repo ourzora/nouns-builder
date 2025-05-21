@@ -17,11 +17,11 @@ import { defaultInputLabelStyle } from './Droposal.css'
 import droposalFormSchema, { DroposalFormValues } from './DroposalForm.schema'
 import { DroposalPreview } from './DroposalPreview'
 
-export interface AirdropFormProps {
+export interface DroposalFormProps {
   onSubmit?: (
     values: DroposalFormValues,
     actions: FormikHelpers<DroposalFormValues>
-  ) => void
+  ) => Promise<void> | void
   disabled?: boolean
 }
 
@@ -32,7 +32,7 @@ const editionSizeOptions = [
   { label: 'Open edition', value: 'open' },
 ]
 
-export const DroposalForm: React.FC<AirdropFormProps> = ({ onSubmit, disabled }) => {
+export const DroposalForm: React.FC<DroposalFormProps> = ({ onSubmit, disabled }) => {
   const [editionType, setEditionType] = useState<EditionType>('fixed')
   const [isIPFSUploading, setIsIPFSUploading] = useState(false)
   const { address: user } = useAccount()

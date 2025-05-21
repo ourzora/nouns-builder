@@ -8,6 +8,7 @@ import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType } from 'src/typings'
+import { getEnsAddress } from 'src/utils/ens'
 
 import { DroposalForm } from './DroposalForm'
 import { DroposalFormValues } from './DroposalForm.schema'
@@ -21,7 +22,7 @@ export const Droposal: React.FC = () => {
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const chain = useChainStore((x) => x.chain)
 
-  const handleDroposalTransaction = (
+  const handleDroposalTransaction = async (
     values: DroposalFormValues,
     actions: FormikHelpers<DroposalFormValues>
   ) => {
@@ -58,6 +59,9 @@ export const Droposal: React.FC = () => {
     const animationUri = mediaType?.startsWith('image') ? '' : mediaUrl
     const imageUri = mediaType?.startsWith('image') ? mediaUrl : coverUrl
 
+    const recipient = await getEnsAddress(fundsRecipient)
+    const admin = await getEnsAddress(defaultAdmin)
+
     const createEdition = {
       target: PUBLIC_ZORA_NFT_CREATOR[chain.id] as AddressType,
       functionSignature: 'createEdition()',
@@ -69,8 +73,8 @@ export const Droposal: React.FC = () => {
           symbol,
           BigInt(editionSize) || UINT_64_MAX,
           royaltyBPS,
-          fundsRecipient as AddressType,
-          defaultAdmin as AddressType,
+          recipient as AddressType,
+          admin as AddressType,
           salesConfig,
           description,
           animationUri,
