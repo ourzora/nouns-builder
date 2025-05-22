@@ -56,12 +56,12 @@ function InnerFlex<E extends React.ElementType = typeof BoxDefaultElement>(
         flexChildrenProp && flexChildren,
         className,
       )}
-      {...props}
+      {...(props as any)}
     />
   )
 }
 
-export const Flex: PolymorphicForwardRefExoticComponent<
+export const Flex = forwardRef(InnerFlex) as PolymorphicForwardRefExoticComponent<
   FlexProps,
   typeof BoxDefaultElement
-> = forwardRef(InnerFlex)
+>

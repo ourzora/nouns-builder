@@ -34,7 +34,7 @@ export const AuctionTokenPicker: React.FC<AuctionTokenPickerProps> = ({
   const { data } = useSWR(
     isReady
       ? [SWR_KEYS.DAO_NEXT_AND_PREVIOUS_TOKENS, chainId, collection, tokenId]
-      : undefined,
+      : null,
     () =>
       SDK.connect(chainId)
         .daoNextAndPreviousTokens({ tokenId, tokenAddress: collection.toLowerCase() })

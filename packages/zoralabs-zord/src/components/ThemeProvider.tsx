@@ -41,14 +41,13 @@ function InnerThemeProvider<E extends ElementType = typeof BoxDefaultElement>(
 ) {
   return (
     <Box
-      {...props}
+      {...(props as any)}
       ref={ref}
       className={themeClass({ theme, baseTheme, root }, className)}
     />
   )
 }
 
-export const ThemeProvider: PolymorphicForwardRefExoticComponent<
-  ThemeProviderProps,
-  typeof BoxDefaultElement
-> = forwardRef(InnerThemeProvider)
+export const ThemeProvider = forwardRef(
+  InnerThemeProvider,
+) as PolymorphicForwardRefExoticComponent<ThemeProviderProps, typeof BoxDefaultElement>

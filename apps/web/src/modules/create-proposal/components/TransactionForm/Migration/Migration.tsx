@@ -1,7 +1,7 @@
 import { Stack } from '@zoralabs/zord'
 import axios from 'axios'
 import useSWR from 'swr'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import SWR_KEYS from 'src/constants/swrKeys'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -27,7 +27,7 @@ export const Migration: React.FC = () => {
     addresses: { treasury, auction },
   } = useDaoStore()
 
-  const { data: paused } = useContractRead({
+  const { data: paused } = useReadContract({
     abi: auctionAbi,
     address: auction as AddressType,
     functionName: 'paused',
@@ -36,7 +36,7 @@ export const Migration: React.FC = () => {
 
   const { data: migratedRes } = useSWR(
     treasury ? [SWR_KEYS.DAO_MIGRATED, treasury] : null,
-    (_, treasury) =>
+    ([_key, treasury]) =>
       axios
         .get<L2MigratedResponse>(`/api/migrated?l1Treasury=${treasury}`)
         .then((x) => x.data)

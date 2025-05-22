@@ -2,8 +2,8 @@ import { Stack, Text } from '@zoralabs/zord'
 import { FormikHelpers } from 'formik'
 import gte from 'lodash/gte'
 import React from 'react'
-import { encodeFunctionData } from 'viem'
-import { Address, useContractRead } from 'wagmi'
+import { Address, encodeFunctionData } from 'viem'
+import { useReadContract } from 'wagmi'
 
 import { auctionAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
@@ -32,16 +32,18 @@ export const Airdrop: React.FC = () => {
     { chainId: chain.id, addresses, contractVersion: AIRDROP_CONTRACT_VERSION }
   )
 
-  const { data: auctionOwner } = useContractRead({
+  const { data: auctionOwner } = useReadContract({
     abi: auctionAbi,
     address: addresses?.auction,
     functionName: 'owner',
     chainId: chain.id,
   })
 
-  const { data: isMinter } = useContractRead({
+  const { data: isMinter } = useReadContract({
     // can only check minter on contracts where version >= 1.2.0
-    enabled: gte(currentVersions?.token, AIRDROP_CONTRACT_VERSION),
+    query: {
+      enabled: gte(currentVersions?.token, AIRDROP_CONTRACT_VERSION),
+    },
     abi: tokenAbi,
     address: addresses?.token,
     chainId: chain.id,

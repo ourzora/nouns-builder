@@ -3,13 +3,14 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { isAddress } from 'viem'
-import { useAccount, useContractRead } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 import { readContract } from 'wagmi/actions'
 
 import { Meta } from 'src/components/Meta'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
 import { PUBLIC_DEFAULT_CHAINS } from 'src/constants/defaultChains'
 import { auctionAbi } from 'src/data/contract/abis'
+import { config } from 'src/data/contract/config'
 import getDAOAddresses from 'src/data/contract/requests/getDAOAddresses'
 import { SDK } from 'src/data/subgraph/client'
 import { OrderDirection, Token_OrderBy } from 'src/data/subgraph/sdk.generated'
@@ -41,7 +42,7 @@ const DaoPage: NextPageWithLayout<DaoPageProps> = ({ chainId, collectionAddress 
   const { addresses } = useDaoStore()
   const chain = useChainStore((x) => x.chain)
 
-  const { data: owner } = useContractRead({
+  const { data: owner } = useReadContract({
     abi: auctionAbi,
     address: addresses.auction,
     functionName: 'owner',
@@ -145,7 +146,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       })
       .then((x) => (x.tokens.length > 0 ? x.tokens[0].tokenId : undefined))
 
-    const owner = await readContract({
+    const owner = await readContract(config, {
       abi: auctionAbi,
       address: addresses.auction as AddressType,
       functionName: 'owner',

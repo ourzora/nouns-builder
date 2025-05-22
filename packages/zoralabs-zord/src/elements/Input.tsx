@@ -15,19 +15,21 @@ export type InputComponentProps<E extends ElementType> = PolymorphicPropsWithRef
   E
 >
 
-function InnerInput<E extends ElementType = 'input'>(
-  { className, sizeVariant, ...props }: InputComponentProps<E>,
+const InnerInput = <E extends ElementType = 'input'>(
+  { className, size, as, ...props }: InputComponentProps<E>,
   ref: React.ForwardedRef<HTMLInputElement>,
-) {
+) => {
   return (
     <Box
       ref={ref}
-      as="input"
-      className={['zord-input', input({ sizeVariant }), className]}
-      {...props}
+      as={as || 'input'}
+      className={['zord-input', input({ sizeVariant: size }), className]}
+      {...(props as any)} // 👈 Cast here to bypass TS prop incompatibility
     />
   )
 }
 
-export const Input: PolymorphicForwardRefExoticComponent<InputProps, 'input'> =
-  forwardRef(InnerInput)
+export const Input = forwardRef(InnerInput) as PolymorphicForwardRefExoticComponent<
+  InputProps,
+  'input'
+>

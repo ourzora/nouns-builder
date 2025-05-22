@@ -30,7 +30,7 @@ const ReviewProposalPage: NextPageWithLayout = () => {
   const { query } = router
 
   const { addresses } = useDaoStore()
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
 
   const { isLoading, hasThreshold } = useVotes({
     chainId: chain.id,
@@ -52,8 +52,17 @@ const ReviewProposalPage: NextPageWithLayout = () => {
 
   if (isLoading) return null
 
+  if (!isConnected)
+    return (
+      <Flex className={notFoundWrap}>Please connect your wallet to access this page</Flex>
+    )
+
   if (!hasThreshold || isGovernanceDelayed) {
-    return <Flex className={notFoundWrap}>403 - Access Denied</Flex>
+    return (
+      <Flex className={notFoundWrap}>
+        Access Restricted - You don’t have permission to access this page
+      </Flex>
+    )
   }
 
   return (
@@ -63,7 +72,6 @@ const ReviewProposalPage: NextPageWithLayout = () => {
         <a href="/guidelines" target="_blank" rel="noreferrer noopener">
           <Flex align={'center'} mb={'x10'} color="text1">
             <Text
-              as="a"
               fontSize={isMobile ? 14 : 18}
               fontWeight={'paragraph'}
               className={atoms({ textDecoration: 'underline' })}

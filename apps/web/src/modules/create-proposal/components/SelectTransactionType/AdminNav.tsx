@@ -1,7 +1,7 @@
 import { Flex, Stack, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { auctionAbi } from 'src/data/contract/abis'
@@ -14,12 +14,14 @@ const AdminNav = () => {
   const addresses = useDaoStore((state) => state.addresses)
   const chain = useChainStore((state) => state.chain)
 
-  const { data: auction } = useContractRead({
+  const { data: auction } = useReadContract({
     abi: auctionAbi,
     address: addresses?.auction,
     chainId: chain.id,
     functionName: 'auction',
-    enabled: !!addresses?.auction,
+    query: {
+      enabled: !!addresses?.auction,
+    },
   })
 
   const [tokenId] = unpackOptionalArray(auction, 6)

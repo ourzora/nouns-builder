@@ -1,5 +1,5 @@
+import useSWR from 'swr'
 import { getAddress } from 'viem'
-import { useQuery } from 'wagmi'
 
 import {
   type DaoMember,
@@ -7,12 +7,9 @@ import {
 } from 'src/data/subgraph/requests/memberSnapshot'
 
 export const useDaoMembers = (chainId: number, token: string) => {
-  const { data: members } = useQuery<DaoMember[], Error>(
-    ['members', chainId, token],
-    () => memberSnapshotRequest(chainId, token),
-    {
-      enabled: !!token,
-    }
+  const { data: members } = useSWR<DaoMember[], Error>(
+    !!token ? ['members', chainId, token] : null,
+    () => memberSnapshotRequest(chainId, token)
   )
 
   if (!members) {

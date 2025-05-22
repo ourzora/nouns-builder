@@ -1,8 +1,9 @@
 import { Box, Button, Flex } from '@zoralabs/zord'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { useState } from 'react'
-import { Address } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { Address } from 'viem'
+import { useConfig } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -28,6 +29,7 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
   const [isLoading, setIsLoading] = useState(false)
   const { addresses } = useDaoStore()
   const chain = useChainStore((x) => x.chain)
+  const config = useConfig()
 
   const submitCallback = async (values: AddressFormProps) => {
     if (!values.address || !addresses.token) return
@@ -35,15 +37,15 @@ export const DelegateForm = ({ handleBack, handleUpdate }: DelegateFormProps) =>
     setIsLoading(true)
     try {
       const delegate = (await getEnsAddress(values.address)) as Address
-      const config = await prepareWriteContract({
+      const data = await simulateContract(config, {
         abi: tokenAbi,
         address: addresses.token,
         chainId: chain.id,
         functionName: 'delegate',
         args: [delegate],
       })
-      const { hash } = await writeContract(config)
-      await waitForTransaction({ hash })
+      const hash = await writeContract(config, data.request)
+      await waitForTransactionReceipt(config, { hash, chainId: chain.id })
 
       handleUpdate(values.address)
     } catch (e) {

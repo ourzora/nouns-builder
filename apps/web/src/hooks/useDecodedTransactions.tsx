@@ -123,7 +123,7 @@ export const useDecodedTransactions = (
     targets && calldatas && values
       ? [SWR_KEYS.PROPOSALS_TRANSACTIONS, chain.id, targets, calldatas, values]
       : null,
-    async (_, chainId, targets, calldatas, values) =>
+    async ([_key, chainId, targets, calldatas, values]) =>
       decodeTransactions(chainId, targets, calldatas, values),
     { revalidateOnFocus: false }
   )

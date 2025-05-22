@@ -28,29 +28,23 @@ export const proposalFormTitle = style({
 })
 
 export const delegateBtn = style({
-  fontSize: '1rem',
-  fontFamily: 'ptRoot!important',
-  borderRadius: '12px',
-  height: 40,
-  color: '#000',
-  backgroundColor: '#FFF',
+  fontFamily: 'ptRoot !important',
+  height: '40px !important',
+  color: '#000 !important',
+  backgroundColor: '#FFF !important',
   ':hover': {
-    backgroundColor: '#F9F9F9!important',
+    backgroundColor: '#F9F9F9 !important',
   },
 })
 
 export const createProposalBtn = style({
-  fontSize: '1rem',
-  fontFamily: 'ptRoot!important',
-  borderRadius: '12px',
-  height: 40,
-  color: 'white',
-  backgroundColor: 'black',
+  fontFamily: 'ptRoot !important',
+  height: '40px !important',
 })
 
 export const selectDelegateBtn = style({
   fontSize: '1rem',
-  fontFamily: 'ptRoot!important',
+  fontFamily: 'ptRoot !important',
   borderRadius: '12px',
   height: 40,
 })

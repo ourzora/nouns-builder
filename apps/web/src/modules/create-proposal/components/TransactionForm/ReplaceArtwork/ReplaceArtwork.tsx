@@ -40,7 +40,7 @@ export const ReplaceArtwork = () => {
   const { data } = useSWR(
     addresses.metadata
       ? [SWR_KEYS.ARTWORK_PROPERTY_ITEMS_COUNT, chain.id, addresses.metadata]
-      : undefined,
+      : null,
     () => {
       if (!addresses.metadata) return
       return getPropertyItemsCount(chain.id, addresses?.metadata)

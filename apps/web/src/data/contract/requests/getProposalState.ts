@@ -1,5 +1,6 @@
 import { readContract } from 'wagmi/actions'
 
+import { config } from 'src/data/contract/server.config'
 import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
 
 import { governorAbi } from '../abis'
@@ -22,7 +23,7 @@ export const getProposalState = async (
   proposalId: BytesType
 ) => {
   const baseParams = { address: governorAddress, abi: governorAbi, chainId }
-  return (await readContract({
+  return (await readContract(config, {
     ...baseParams,
     functionName: 'state',
     args: [proposalId],

@@ -8,13 +8,8 @@ import {
   parseAbiParameters,
   parseEther,
 } from 'viem'
-import { useAccount, useContractRead } from 'wagmi'
-import {
-  WriteContractUnpreparedArgs,
-  prepareWriteContract,
-  waitForTransaction,
-  writeContract,
-} from 'wagmi/actions'
+import { useAccount, useConfig, useReadContract } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { FallbackImage } from 'src/components/FallbackImage'
@@ -44,10 +39,6 @@ import { ReviewItem } from './ReviewItem'
 import { ReviewSection } from './ReviewSection'
 import { SuccessfulDeploy } from './SuccessfulDeploy'
 
-type FounderParameters = NonNullable<
-  WriteContractUnpreparedArgs<typeof managerAbi, 'deploy'>
->['args'][0]
-
 interface ReviewAndDeploy {
   title: string
 }
@@ -72,13 +63,14 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const chain = useChainStore((x) => x.chain)
   const isL2 = L2_CHAINS.includes(chain.id)
-  const { data: version, isLoading: isVersionLoading } = useContractRead({
+  const { data: version, isLoading: isVersionLoading } = useReadContract({
     abi: managerAbi,
     address: PUBLIC_MANAGER_ADDRESS[chain.id],
     functionName: 'contractVersion',
     chainId: chain.id,
   })
   const { address } = useAccount()
+  const config = useConfig()
 
   const {
     founderAllocation,
@@ -101,14 +93,13 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     setActiveSection(activeSection - 1)
   }
 
-  const founderParams: FounderParameters = [
-    ...founderAllocation,
-    ...contributionAllocation,
-  ].map(({ founderAddress, allocationPercentage: allocation, endDate }) => ({
-    wallet: founderAddress as AddressType,
-    ownershipPct: allocation ? BigInt(allocation) : BigInt(0),
-    vestExpiry: BigInt(Math.floor(new Date(endDate).getTime() / 1000)),
-  }))
+  const founderParams = [...founderAllocation, ...contributionAllocation].map(
+    ({ founderAddress, allocationPercentage: allocation, endDate }) => ({
+      wallet: founderAddress as AddressType,
+      ownershipPct: allocation ? BigInt(allocation) : BigInt(0),
+      vestExpiry: BigInt(Math.floor(new Date(endDate).getTime() / 1000)),
+    })
+  )
 
   const tokenParamsHex = encodeAbiParameters(
     parseAbiParameters(
@@ -183,9 +174,9 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
     setIsPendingTransaction(true)
     let transaction
     try {
-      let config: any
+      let txHash: `0x${string}`
       if (version?.startsWith('2')) {
-        config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           address: PUBLIC_MANAGER_ADDRESS[chain.id],
           chainId: chain.id,
           abi: managerV2Abi,
@@ -201,18 +192,23 @@ export const ReviewAndDeploy: React.FC<ReviewAndDeploy> = ({ title }) => {
             govParams,
           ],
         })
+        txHash = await writeContract(config, data.request)
       } else {
-        config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           address: PUBLIC_MANAGER_ADDRESS[chain.id],
           chainId: chain.id,
           abi: managerAbi,
           functionName: 'deploy',
           args: [founderParams, tokenParams, auctionParams, govParams],
         })
+        txHash = await writeContract(config, data.request)
       }
 
-      const tx = await writeContract(config)
-      if (tx.hash) transaction = await waitForTransaction({ hash: tx.hash })
+      if (txHash)
+        transaction = await waitForTransactionReceipt(config, {
+          hash: txHash,
+          chainId: chain.id,
+        })
     } catch (e) {
       console.error('Error deploying DAO:', e)
       setIsPendingTransaction(false)

@@ -1,16 +1,15 @@
 import { ConnectButton as RKConnectButton } from '@rainbow-me/rainbowkit'
 import { Flex, Text } from '@zoralabs/zord'
 import React from 'react'
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useAccount, useSwitchChain } from 'wagmi'
 
 import { useChainStore } from 'src/stores/useChainStore'
 
 import { connectButtonWrapper } from './Nav.styles.css'
 
 export const ConnectButton = () => {
-  const { address } = useAccount()
-  const { chain: wagmiChain } = useNetwork()
-  const { switchNetwork } = useSwitchNetwork()
+  const { address, chain: wagmiChain } = useAccount()
+  const { switchChain } = useSwitchChain()
   const chain = useChainStore((x) => x.chain)
 
   if (address && wagmiChain?.id !== chain?.id) {
@@ -21,7 +20,7 @@ export const ConnectButton = () => {
         alignSelf={'center'}
         align={'center'}
         justify={'center'}
-        onClick={() => switchNetwork?.(chain.id)}
+        onClick={() => switchChain?.({ chainId: chain.id })}
         py={'x2'}
         style={{
           backgroundColor: '#F5E2E2',
@@ -31,7 +30,7 @@ export const ConnectButton = () => {
         }}
         cursor={'pointer'}
       >
-        <Text variant={'paragraph-md'}>Wrong Network</Text>
+        <Text variant={'paragraph-md'}>Wrong Chain</Text>
       </Flex>
     )
   }

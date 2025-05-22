@@ -64,7 +64,7 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
     !!collection && !!proposer
       ? [SWR_KEYS.TOKEN_IMAGE, chain.id, collection, proposer]
       : null,
-    async (_, chainId, collection, proposer) => {
+    async ([_key, chainId, collection, proposer]) => {
       const data = await SDK.connect(chainId).tokens({
         where: { owner: proposer.toLowerCase(), tokenContract: collection.toLowerCase() },
         first: 1,
@@ -91,13 +91,14 @@ export const ProposalDescription: React.FC<ProposalDescriptionProps> = ({
         <Section title="Description">
           <Paragraph overflow={'auto'}>
             {description && (
-              <ReactMarkdown
-                className={proposalDescription}
-                rehypePlugins={[rehypeRaw, rehypeSanitize]}
-                remarkPlugins={[remarkGfm]}
-              >
-                {description}
-              </ReactMarkdown>
+              <Box className={proposalDescription}>
+                <ReactMarkdown
+                  rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {description}
+                </ReactMarkdown>
+              </Box>
             )}
           </Paragraph>
         </Section>

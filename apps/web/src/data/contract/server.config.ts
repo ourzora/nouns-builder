@@ -1,7 +1,8 @@
 import { createConfig } from 'wagmi'
 
-import { publicClient } from './chains'
+import { chains, transports } from './chains'
 
-createConfig({
-  publicClient,
+export const config = createConfig({
+  chains,
+  transports,
 })

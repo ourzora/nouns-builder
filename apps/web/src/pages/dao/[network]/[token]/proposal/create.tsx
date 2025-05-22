@@ -3,7 +3,7 @@ import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 import { isAddressEqual } from 'viem'
-import { useAccount, useContractRead } from 'wagmi'
+import { useAccount, useReadContract } from 'wagmi'
 
 import { ALLOWED_MIGRATION_DAOS } from 'src/constants/addresses'
 import { CACHE_TIMES } from 'src/constants/cacheTimes'
@@ -46,7 +46,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
   >()
   const transactions = useProposalStore((state) => state.transactions)
 
-  const { data: paused } = useContractRead({
+  const { data: paused } = useReadContract({
     abi: auctionAbi,
     address: auction,
     functionName: 'paused',
@@ -64,7 +64,7 @@ const CreateProposalPage: NextPageWithLayout = () => {
     }
   }, [transactions, transactionType, setTransactionType])
 
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
 
   const { isLoading, hasThreshold } = useVotes({
     chainId: chain.id,
@@ -109,8 +109,17 @@ const CreateProposalPage: NextPageWithLayout = () => {
 
   if (isLoading) return null
 
+  if (!isConnected)
+    return (
+      <Flex className={notFoundWrap}>Please connect your wallet to access this page</Flex>
+    )
+
   if (!hasThreshold || isGovernanceDelayed) {
-    return <Flex className={notFoundWrap}>403 - Access Denied</Flex>
+    return (
+      <Flex className={notFoundWrap}>
+        Access Restricted - You don’t have permission to access this page
+      </Flex>
+    )
   }
 
   return (

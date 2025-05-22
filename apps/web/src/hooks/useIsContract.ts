@@ -10,8 +10,11 @@ export const useIsContract = ({
   address?: AddressType
   chainId?: CHAIN_ID
 }) => {
-  return useSWRImmutable(address ? [address, chainId] : undefined, async (address) => {
-    const provider = getProvider(chainId)
-    return await provider.getBytecode({ address }).then((x) => x !== '0x')
-  })
+  return useSWRImmutable(
+    address ? [address, chainId] : null,
+    async ([address, chainId]) => {
+      const provider = getProvider(chainId)
+      return await provider.getCode({ address }).then((x) => x !== '0x')
+    }
+  )
 }

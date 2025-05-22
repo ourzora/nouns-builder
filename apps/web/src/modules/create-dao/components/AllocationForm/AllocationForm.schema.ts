@@ -2,41 +2,39 @@ import * as Yup from 'yup'
 
 import { addressValidationSchema } from 'src/utils/yup'
 
-export const allocationSchema = Yup.object().shape({
+export const allocationSchema = Yup.object({
   founderAddress: addressValidationSchema,
   allocationPercentage: Yup.number()
     .transform((value) => (isNaN(value) ? undefined : value))
     .required('*')
     .integer('Must be whole number')
     .max(100, '< 100')
-    .when('admin', (admin, schema) => {
-      if (!admin) return schema.min(1, '> 0') // (condition, errorMessage) - allocation represented as % must be greater than or equal to 0
-      return schema
-    }),
+    .when(['admin'], ([admin], schema) => (!admin ? schema.min(1, '> 0') : schema)),
   endDate: Yup.string()
     .required('*')
-    .test('isDateInFuture', 'Must be in future', (value: string | undefined) => {
+    .test('isDateInFuture', 'Must be in future', (value?: string) => {
       if (!value) return false
       const date = new Date(value)
-      const now = new Date()
-      return date > now
+      return date > new Date()
     }),
-  admin: Yup.boolean(),
+  admin: Yup.boolean().default(false),
 })
 
-export const validationSchemaContributions = Yup.object().shape({
-  builderAllocation: Yup.object().when({
-    is: (exists: object | undefined) => !!exists,
-    then: allocationSchema,
+export const validationSchemaContributions = Yup.object({
+  builderAllocation: Yup.mixed().when([], {
+    is: (val: unknown) => !!val,
+    then: () => allocationSchema,
+    otherwise: () => Yup.mixed().notRequired(),
   }),
-  nounsAllocation: Yup.object().when({
-    is: (exists: object | undefined) => !!exists,
-    then: allocationSchema,
+  nounsAllocation: Yup.mixed().when([], {
+    is: (val: unknown) => !!val,
+    then: () => allocationSchema,
+    otherwise: () => Yup.mixed().notRequired(),
   }),
 })
 
 export const validationSchemaFounderAllocation = (signerAddress: string | null) =>
-  Yup.object().shape({
+  Yup.object({
     founderAllocation: Yup.array()
       .of(allocationSchema)
       .min(1, 'Founder is required')
@@ -45,7 +43,7 @@ export const validationSchemaFounderAllocation = (signerAddress: string | null) 
         'The founder must be the connected wallet.',
         function (value) {
           if (value?.[0]) {
-            return value?.[0]['founderAddress'] === signerAddress
+            return value[0].founderAddress === signerAddress
           }
           return false
         }
@@ -55,7 +53,7 @@ export const validationSchemaFounderAllocation = (signerAddress: string | null) 
         'Founder allocation addresses should be unique.',
         function (values) {
           const addresses = values?.map((v) => v.founderAddress)
-          return values?.length === new Set(addresses)?.size
+          return values?.length === new Set(addresses).size
         }
       ),
   })

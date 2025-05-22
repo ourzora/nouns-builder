@@ -27,7 +27,7 @@ export function InnerStack<E extends ElementType = typeof BoxDefaultElement>(
   )
 }
 
-export const Stack: PolymorphicForwardRefExoticComponent<
+export const Stack = forwardRef(InnerStack) as PolymorphicForwardRefExoticComponent<
   StackProps,
   typeof BoxDefaultElement
-> = forwardRef(InnerStack)
+>

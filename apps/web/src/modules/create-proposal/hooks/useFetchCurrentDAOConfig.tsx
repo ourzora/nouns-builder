@@ -1,6 +1,6 @@
 import useSWRImmutable from 'swr/immutable'
 import { encodeAbiParameters, parseAbiParameters } from 'viem'
-import { useContractReads } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 
 import {
   L2_MIGRATION_DEPLOYER,
@@ -37,9 +37,11 @@ export const useFetchCurrentDAOConfig = ({
     chainId,
   })
 
-  const { data } = useContractReads({
+  const { data } = useReadContracts({
     allowFailure: false,
-    enabled,
+    query: {
+      enabled,
+    },
     contracts: [
       { ...contracts.token, functionName: 'name' },
       { ...contracts.token, functionName: 'symbol' },
@@ -83,7 +85,7 @@ export const useFetchCurrentDAOConfig = ({
     existingFounders && existingFounders.length > 0
       ? ['founder-allias', existingFounders]
       : undefined,
-    (_, founders) => {
+    ([_key, founders]) => {
       return Promise.all(
         founders.map(async (x) => {
           return {

@@ -7,6 +7,7 @@ import { auctionAbi, governorAbi } from 'src/data/contract/abis'
 import { AddressType, BytesType, CHAIN_ID } from 'src/typings'
 
 const app = new Frog({
+  title: 'Nouns Builder',
   basePath: '/api/frames',
 })
 

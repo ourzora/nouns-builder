@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Text } from '@zoralabs/zord'
 import { useState } from 'react'
-import { Address, useContractRead } from 'wagmi'
+import { Address } from 'viem'
+import { useReadContract } from 'wagmi'
 
 import SmartInput from 'src/components/Fields/SmartInput'
 import { Icon } from 'src/components/Icon'
@@ -95,7 +96,7 @@ export const VetoAction: React.FC<OwnerActionsProps> = ({
     chainId: chain.id,
   }
 
-  const { data: daoName } = useContractRead({
+  const { data: daoName } = useReadContract({
     ...tokenContractParams,
     functionName: 'name',
   })

@@ -93,7 +93,7 @@ export const useInvoiceData = (
   const { data: invoiceAddress, isValidating: isLoadingInvoiceAddress } = useSWR(
     executionTransactionHash
       ? [SWR_KEYS.INVOICE_LOG_NEW_INVOICE, chainId, executionTransactionHash]
-      : undefined,
+      : null,
     async () => {
       if (!executionTransactionHash || !isHex(executionTransactionHash)) return undefined
 
@@ -122,7 +122,7 @@ export const useInvoiceData = (
   )
 
   const { data: invoiceData, isValidating: isLoadingInvoiceData } = useSWR(
-    invoiceCid ? [SWR_KEYS.ESCROW_MILESTONES_IPFS_DATA, invoiceCid] : undefined,
+    invoiceCid ? [SWR_KEYS.ESCROW_MILESTONES_IPFS_DATA, invoiceCid] : null,
     async () => {
       if (!invoiceCid) return undefined
       try {

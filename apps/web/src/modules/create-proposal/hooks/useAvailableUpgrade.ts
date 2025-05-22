@@ -5,7 +5,7 @@ import lt from 'lodash/lt'
 import pickBy from 'lodash/pickBy'
 import useSWR from 'swr'
 import { encodeFunctionData } from 'viem'
-import { useContractReads } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 
 import { PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -60,9 +60,11 @@ export const useAvailableUpgrade = ({
     () => getProposals(chainId, addresses?.token as string, 100)
   )
 
-  const { data, isLoading, isError } = useContractReads({
+  const { data, isLoading, isError } = useReadContracts({
     allowFailure: false,
-    enabled: !!addresses?.token,
+    query: {
+      enabled: !!addresses?.token,
+    },
     contracts: [
       {
         abi: auctionAbi,

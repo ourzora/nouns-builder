@@ -55,7 +55,7 @@ const TabSwitchAnimation = ({
   topSectionView: string
 }) => {
   return (
-    <AnimatePresence exitBeforeEnter={true}>
+    <AnimatePresence mode="wait">
       <motion.div
         style={{
           width: '100%',

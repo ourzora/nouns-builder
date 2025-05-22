@@ -10,7 +10,7 @@ import {
   buttonVariants,
 } from './Button.css'
 import { iconVariants } from './Icon.css'
-import React, { ElementType, ForwardedRef, forwardRef, useMemo } from 'react'
+import { ElementType, ForwardedRef, forwardRef, useMemo } from 'react'
 import {
   PolymorphicForwardRefExoticComponent,
   PolymorphicPropsWithRef,
@@ -113,7 +113,7 @@ export function InnerButton<E extends ElementType = typeof ButtonDefaultElement>
   )
 }
 
-export const Button: PolymorphicForwardRefExoticComponent<
+export const Button = forwardRef(InnerButton) as PolymorphicForwardRefExoticComponent<
   ButtonProps,
   typeof ButtonDefaultElement
-> = forwardRef(InnerButton)
+>

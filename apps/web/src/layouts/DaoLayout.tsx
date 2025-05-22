@@ -18,7 +18,7 @@ function DaoLayout({
 }
 
 export function getDaoLayout(page: ReactElement) {
-  const addresses = page.props?.addresses ?? {}
+  const addresses = (page.props as any)?.addresses ?? {}
 
   return (
     <LayoutWrapper>

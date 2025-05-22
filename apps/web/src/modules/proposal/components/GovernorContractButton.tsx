@@ -1,8 +1,14 @@
 import { Box, ButtonProps } from '@zoralabs/zord'
 import React, { useState } from 'react'
 import { useSWRConfig } from 'swr'
-import { useContractWrite, usePrepareContractWrite } from 'wagmi'
-import { PrepareWriteContractConfig, waitForTransaction } from 'wagmi/actions'
+import { ContractFunctionName } from 'viem'
+import {
+  UseSimulateContractParameters,
+  useConfig,
+  useSimulateContract,
+  useWriteContract,
+} from 'wagmi'
+import { waitForTransactionReceipt } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -13,12 +19,12 @@ import { useChainStore } from 'src/stores/useChainStore'
 
 import { uploadingSpinnerWhite } from './GovernorContractButton.css'
 
-type GovernorContractButtonProps<
-  TFunctionName extends string = string,
-  TChainId extends number = number,
-> = Omit<
-  PrepareWriteContractConfig<typeof governorAbi, TFunctionName, TChainId>,
-  'address' | 'abi'
+type GovernorContractButtonProps = Pick<
+  UseSimulateContractParameters<
+    typeof governorAbi,
+    ContractFunctionName<typeof governorAbi, 'nonpayable' | 'payable'>
+  >,
+  'functionName' | 'args'
 > & {
   proposalId: string
   buttonText: string
@@ -26,10 +32,7 @@ type GovernorContractButtonProps<
   onSuccess: () => void
 } & ButtonProps
 
-export function GovernorContractButton<
-  TFunctionName extends string = string,
-  TChainId extends number = number,
->({
+export function GovernorContractButton({
   functionName,
   args,
   proposalId,
@@ -41,26 +44,29 @@ export function GovernorContractButton<
   const { addresses } = useDaoStore()
   const { mutate } = useSWRConfig()
   const chain = useChainStore((x) => x.chain)
+  const config = useConfig()
 
   const [isPending, setIsPending] = useState<boolean>(false)
 
-  const { config, isError } = usePrepareContractWrite({
-    enabled: !!addresses?.governor,
+  const { data, isError } = useSimulateContract({
+    query: {
+      enabled: !!addresses?.governor,
+    },
     address: addresses?.governor,
     abi: governorAbi,
     functionName: functionName,
     args: args,
   })
 
-  const { writeAsync } = useContractWrite(config)
+  const { writeContractAsync } = useWriteContract()
 
   const handleClick = async () => {
-    if (!writeAsync) return
+    if (!writeContractAsync || !data) return
 
     try {
       setIsPending(true)
-      const { hash } = await writeAsync?.()
-      await waitForTransaction({ hash })
+      const hash = await writeContractAsync(data.request)
+      await waitForTransactionReceipt(config, { hash, chainId: chain.id })
 
       await mutate(
         [SWR_KEYS.PROPOSAL, chain.id, proposalId],

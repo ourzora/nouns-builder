@@ -1,13 +1,5 @@
-import { GetContractResult } from 'wagmi/actions'
 import { create } from 'zustand'
 
-import {
-  auctionAbi,
-  governorAbi,
-  metadataAbi,
-  tokenAbi,
-  treasuryAbi,
-} from 'src/data/contract/abis'
 import { AddressType } from 'src/typings'
 
 export interface DaoContractAddresses {
@@ -17,14 +9,6 @@ export interface DaoContractAddresses {
   treasury?: AddressType
   governor?: AddressType
   escrowDelegate?: AddressType
-}
-
-export interface DaoContracts {
-  tokenContract?: GetContractResult<typeof tokenAbi>
-  metadataContract?: GetContractResult<typeof metadataAbi>
-  auctionContract?: GetContractResult<typeof auctionAbi>
-  treasuryContract?: GetContractResult<typeof treasuryAbi>
-  governorContract?: GetContractResult<typeof governorAbi>
 }
 
 export interface DaoStoreProps {

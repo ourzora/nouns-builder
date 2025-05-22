@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { formatEther } from 'viem'
-import { useContractEvent } from 'wagmi'
+import { useWatchContractEvent } from 'wagmi'
 
 import { FallbackNextImage } from 'src/components/FallbackImage'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
@@ -48,23 +48,23 @@ export const DaoAuctionCard = (props: DaoAuctionCardProps) => {
     setIsEnded(true)
   }
 
-  useContractEvent({
+  useWatchContractEvent({
     address: auctionAddress,
     abi: auctionAbi,
     eventName: 'AuctionCreated',
     chainId,
-    listener: async () => {
+    onLogs: async () => {
       setTimeout(() => {
         handleMutate()
       }, 3000)
     },
   })
-  useContractEvent({
+  useWatchContractEvent({
     address: auctionAddress,
     abi: auctionAbi,
     eventName: 'AuctionBid',
     chainId,
-    listener: async () => {
+    onLogs: async () => {
       setTimeout(() => {
         handleMutate()
       }, 3000)
