@@ -3,8 +3,8 @@ import { Formik, FormikValues } from 'formik'
 import isEqual from 'lodash/isEqual'
 import React, { BaseSyntheticEvent } from 'react'
 import { formatEther, isAddressEqual, parseEther } from 'viem'
-import { useContractReads } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { useConfig, useReadContracts } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import SmartInput from 'src/components/Fields/SmartInput'
@@ -34,6 +34,7 @@ interface PreAuctionFormSettingsProps {
 export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
   const { addresses } = useDaoStore()
   const chain = useChainStore((x) => x.chain)
+  const config = useConfig()
 
   const auctionContractParams = {
     abi: auctionAbi,
@@ -41,7 +42,7 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
     chainId: chain.id,
   }
 
-  const { data } = useContractReads({
+  const { data } = useReadContracts({
     allowFailure: true,
     contracts: [
       { ...auctionContractParams, functionName: 'duration' },
@@ -83,26 +84,26 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
     try {
       const newDuration = values.auctionDuration
       if (!isEqual(newDuration, initialValues['auctionDuration'])) {
-        const config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           ...auctionContractParams,
           address: auctionContractParams.address,
           functionName: 'setDuration',
           args: [BigInt(toSeconds(newDuration))],
         })
-        const { hash } = await writeContract(config)
-        await waitForTransaction({ hash })
+        const hash = await writeContract(config, data.request)
+        await waitForTransactionReceipt(config, { hash, chainId: chain.id })
       }
 
       const newReservePrice = values.auctionReservePrice
       if (!isEqual(newReservePrice, initialValues['auctionReservePrice'])) {
-        const config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           ...auctionContractParams,
           address: auctionContractParams.address,
           functionName: 'setReservePrice',
           args: [parseEther(newReservePrice.toString())],
         })
-        const { hash } = await writeContract(config)
-        await waitForTransaction({ hash })
+        const hash = await writeContract(config, data.request)
+        await waitForTransactionReceipt(config, { hash, chainId: chain.id })
       }
 
       if (supportsFounderReward) {
@@ -127,7 +128,7 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
         )
 
         if (!isRewardRecipientEqual || !isRewardPercentageEqual) {
-          const config = await prepareWriteContract({
+          const data = await simulateContract(config, {
             ...auctionContractParams,
             address: auctionContractParams.address,
             functionName: 'setFounderReward',
@@ -138,8 +139,8 @@ export const PreAuctionForm: React.FC<PreAuctionFormSettingsProps> = () => {
               },
             ],
           })
-          const { hash } = await writeContract(config)
-          await waitForTransaction({ hash })
+          const hash = await writeContract(config, data.request)
+          await waitForTransactionReceipt(config, { hash, chainId: chain.id })
         }
       }
     } finally {

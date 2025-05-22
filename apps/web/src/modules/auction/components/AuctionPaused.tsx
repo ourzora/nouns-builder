@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import useSWR from 'swr'
 import { encodeFunctionData } from 'viem'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -16,6 +16,7 @@ import {
 } from 'src/data/subgraph/requests/proposalsQuery'
 import { useDaoStore } from 'src/modules/dao'
 import { useChainStore } from 'src/stores/useChainStore'
+import { CHAIN_ID } from 'src/typings'
 
 export const AuctionPaused = () => {
   const { query, isReady } = useRouter()
@@ -24,7 +25,7 @@ export const AuctionPaused = () => {
 
   const { auction } = useDaoStore((x) => x.addresses)
 
-  const { data: paused } = useContractRead({
+  const { data: paused } = useReadContract({
     abi: auctionAbi,
     address: auction,
     functionName: 'paused',
@@ -33,7 +34,8 @@ export const AuctionPaused = () => {
 
   const { data } = useSWR<ProposalsResponse>(
     paused && isReady ? [SWR_KEYS.PROPOSALS, chain.id, query.token, query.page] : null,
-    (_, chainId, token, page) => getProposals(chainId, token, LIMIT, Number(page))
+    ([_key, chainId, token, page]) =>
+      getProposals(chainId as CHAIN_ID, token as string, LIMIT, Number(page))
   )
 
   const pausedProposal = useMemo(() => {

@@ -1,6 +1,6 @@
 import { Box, Button, Paragraph } from '@zoralabs/zord'
 import { encodeFunctionData } from 'viem'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
 import { TransactionType } from 'src/modules/create-proposal/constants'
@@ -13,7 +13,7 @@ export const ResumeAuctions = () => {
   const { auction } = useDaoStore((state) => state.addresses)
   const addTransaction = useProposalStore((state) => state.addTransaction)
   const chain = useChainStore((x) => x.chain)
-  const { data: paused } = useContractRead({
+  const { data: paused } = useReadContract({
     abi: auctionAbi,
     address: auction,
     chainId: chain.id,

@@ -2,12 +2,9 @@ import { Atoms, Box, Button, Flex, Stack, Text, theme } from '@zoralabs/zord'
 import { Field, Formik, Form as FormikForm } from 'formik'
 import React, { Fragment } from 'react'
 import { useSWRConfig } from 'swr'
-import {
-  SendTransactionResult,
-  prepareWriteContract,
-  waitForTransaction,
-  writeContract,
-} from 'wagmi/actions'
+import { Hex } from 'viem'
+import { useConfig } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { Icon } from 'src/components/Icon'
@@ -58,6 +55,8 @@ const VoteModal: React.FC<{
     reason: '',
   }
 
+  const config = useConfig()
+
   const handleSubmit = async (values: FormValues) => {
     if (!addresses.governor) return
 
@@ -67,25 +66,24 @@ const VoteModal: React.FC<{
       chainId: chain.id,
     }
 
-    let vote: Promise<SendTransactionResult>
+    let txHash: Hex
     if (values.reason.length > 0) {
-      const config = await prepareWriteContract({
+      const data = await simulateContract(config, {
         ...governorContractParams,
         functionName: 'castVoteWithReason',
         args: [proposalId as BytesType, BigInt(values.choice as Choice), values.reason],
       })
-      vote = writeContract(config)
+      txHash = await writeContract(config, data.request)
     } else {
-      const config = await prepareWriteContract({
+      const data = await simulateContract(config, {
         ...governorContractParams,
         functionName: 'castVote',
         args: [proposalId as BytesType, BigInt(values.choice!)],
       })
-      vote = writeContract(config)
+      txHash = await writeContract(config, data.request)
     }
 
-    const { hash } = await vote
-    await waitForTransaction({ hash })
+    await waitForTransactionReceipt(config, { hash: txHash, chainId: chain.id })
 
     await mutate(
       [SWR_KEYS.PROPOSAL, chain.id, proposalId],

@@ -7,11 +7,12 @@ import { useCallback, useMemo, useState } from 'react'
 import { Hex, encodeFunctionData } from 'viem'
 import {
   useAccount,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
+  useConfig,
+  useReadContract,
+  useSimulateContract,
+  useWriteContract,
 } from 'wagmi'
-import { waitForTransaction } from 'wagmi/actions'
+import { waitForTransactionReceipt } from 'wagmi/actions'
 
 import Accordion from 'src/components/Home/accordian'
 import { Icon } from 'src/components/Icon'
@@ -77,6 +78,7 @@ export const MilestoneDetails = ({
   const { addresses } = useDaoStore()
   const { addTransaction } = useProposalStore()
   const { address } = useAccount()
+  const config = useConfig()
 
   const { hasThreshold } = useVotes({
     chainId: invoiceChain.id,
@@ -97,9 +99,11 @@ export const MilestoneDetails = ({
     ? createSmartInvoiceUrl(invoiceChain.id, invoiceAddress)
     : undefined
 
-  const { data: currentMilestoneData, isLoading: isLoadingMilestone } = useContractRead({
+  const { data: currentMilestoneData, isLoading: isLoadingMilestone } = useReadContract({
     address: invoiceAddress,
-    enabled: !!invoiceAddress,
+    query: {
+      enabled: !!invoiceAddress,
+    },
     abi: [
       {
         inputs: [],
@@ -113,8 +117,10 @@ export const MilestoneDetails = ({
     chainId: invoiceChain.id,
   })
 
-  const { data: hasOwners, error: getOwnersError } = useContractRead({
-    enabled: !!clientAddress,
+  const { data: hasOwners, error: getOwnersError } = useReadContract({
+    query: {
+      enabled: !!clientAddress,
+    },
     address: clientAddress,
     abi: GET_OWNERS_FUNCTION_ABI,
     functionName: 'getOwners',
@@ -180,30 +186,36 @@ export const MilestoneDetails = ({
     })
   }, [router, addTransaction, invoiceData?.title, invoiceAddress, currentMilestone])
 
-  const { config, error } = usePrepareContractWrite({
-    enabled: !!invoiceAddress && isClientConnected,
+  const { data, error } = useSimulateContract({
+    query: {
+      enabled: !!invoiceAddress && isClientConnected,
+    },
     address: invoiceAddress,
     abi: RELEASE_FUNCTION_ABI,
     functionName: 'release',
     args: [currentMilestone],
   })
 
-  const { writeAsync } = useContractWrite(config)
+  const { writeContractAsync } = useWriteContract()
 
   const [releasing, setReleasing] = useState(false)
 
   const handleReleaseMilestoneDirect = useCallback(async () => {
-    if (!!error) return
+    if (!!error || !data) return
 
     setReleasing(true)
     try {
-      const tx = await writeAsync?.()
-      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
+      const txHash = await writeContractAsync?.(data.request)
+      if (txHash)
+        await waitForTransactionReceipt(config, {
+          hash: txHash,
+          chainId: invoiceChain.id,
+        })
       setReleasing(false)
     } catch (error) {
       setReleasing(false)
     }
-  }, [writeAsync, error])
+  }, [writeContractAsync, error, data, config, invoiceChain.id])
 
   const isLoading = !invoiceData && (isLoadingInvoice || isLoadingMilestone)
 

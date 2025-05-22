@@ -1,4 +1,4 @@
-import { Chain as WagmiChain } from 'wagmi'
+import { Chain as WagmiChain } from 'viem'
 
 export interface Duration {
   seconds?: number

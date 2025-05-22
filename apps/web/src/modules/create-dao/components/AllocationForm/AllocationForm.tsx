@@ -3,7 +3,7 @@ import { FieldArray, Form, Formik, FormikProps } from 'formik'
 import sum from 'lodash/sum'
 import React, { useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
-import { shallow } from 'zustand/shallow'
+import { useShallow } from 'zustand/shallow'
 
 import {
   defaultBackButton,
@@ -49,7 +49,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
     vetoerAddress,
     auctionSettings: { auctionDuration },
   } = useFormStore(
-    (state) => ({
+    useShallow((state) => ({
       founderAllocation: state.founderAllocation,
       setFounderAllocation: state.setFounderAllocation,
       contributionAllocation: state.contributionAllocation,
@@ -59,8 +59,7 @@ export const AllocationForm: React.FC<AllocationFormProps> = ({ title }) => {
       vetoPower: state.vetoPower,
       vetoerAddress: state.vetoerAddress,
       auctionSettings: state.auctionSettings,
-    }),
-    shallow
+    }))
   )
 
   const { address } = useAccount()

@@ -5,8 +5,8 @@ import { Field, FieldProps, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { toHex } from 'viem'
-import { useAccount, useContractRead } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { useAccount, useConfig, useReadContract } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import TextInput from 'src/components/Fields/TextInput'
@@ -17,7 +17,7 @@ import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { ErrorResult } from 'src/services/errorResult'
-import { Simulation, SimulationResult } from 'src/services/simulationService'
+import { SimulationOutput, SimulationResult } from 'src/services/simulationService'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
@@ -61,27 +61,29 @@ export const ReviewProposalForm = ({
   const router = useRouter()
   const addresses = useDaoStore((state) => state.addresses)
   const chain = useChainStore((x) => x.chain)
-  //@ts-ignore
+  const config = useConfig()
   const { address } = useAccount()
   const { clearProposal } = useProposalStore()
 
   const [error, setError] = useState<string | undefined>()
   const [simulationError, setSimulationError] = useState<string | undefined>()
   const [simulating, setSimulating] = useState<boolean>(false)
-  const [simulations, setSimulations] = useState<Array<Simulation>>([])
+  const [simulations, setSimulations] = useState<Array<SimulationOutput>>([])
   const [proposing, setProposing] = useState<boolean>(false)
   const { clear: clearEscrowForm } = useEscrowFormStore()
 
-  const { data: votes, isLoading } = useContractRead({
+  const { data: votes, isLoading } = useReadContract({
     address: addresses?.token as AddressType,
     abi: tokenAbi,
-    enabled: !!address,
+    query: {
+      enabled: !!address,
+    },
     functionName: 'getVotes',
     chainId: chain.id,
     args: [address as AddressType],
   })
 
-  const { data: proposalThreshold, isLoading: thresholdIsLoading } = useContractRead({
+  const { data: proposalThreshold, isLoading: thresholdIsLoading } = useReadContract({
     address: addresses?.governor as AddressType,
     chainId: chain.id,
     abi: governorAbi,
@@ -110,12 +112,12 @@ export const ReviewProposalForm = ({
       } = prepareProposalTransactions(values.transactions)
 
       if (!!CHAINS_TO_SIMULATE.find((x) => x === chain.id)) {
-        let simulationResults
+        let simulationResult
 
         try {
           setSimulating(true)
 
-          simulationResults = await axios
+          simulationResult = await axios
             .post<SimulationResult>('/api/simulate', {
               treasuryAddress: addresses?.treasury,
               chainId: chain.id,
@@ -137,17 +139,17 @@ export const ReviewProposalForm = ({
         } finally {
           setSimulating(false)
         }
-        const simulationFailed = simulationResults?.success === false
+        const simulationFailed = simulationResult?.success === false
         if (simulationFailed) {
           const failed =
-            simulationResults?.simulations.filter(({ success }) => success === false) ||
-            []
+            simulationResult?.simulations.filter(({ status }) => status === false) || []
           setSimulations(failed)
           return
         }
       }
 
       try {
+        setProposing(true)
         const params = {
           targets: targets,
           values: transactionValues,
@@ -155,7 +157,7 @@ export const ReviewProposalForm = ({
           description: values.title + '&&' + values.summary,
         }
 
-        const config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           abi: governorAbi,
           functionName: 'propose',
           address: addresses?.governor!,
@@ -163,10 +165,9 @@ export const ReviewProposalForm = ({
           args: [params.targets, params.values, params.calldatas, params.description],
         })
 
-        const { hash } = await writeContract(config)
+        const hash = await writeContract(config, data.request)
 
-        setProposing(true)
-        await waitForTransaction({ hash })
+        await waitForTransactionReceipt(config, { hash, chainId: chain.id })
 
         router
           .push({
@@ -184,7 +185,11 @@ export const ReviewProposalForm = ({
           })
       } catch (err: any) {
         setProposing(false)
-        if (err.code === 'ACTION_REJECTED') {
+        if (
+          err?.code === 'ACTION_REJECTED' ||
+          err?.message?.includes('rejected') ||
+          err?.message?.includes('denied')
+        ) {
           setError(ERROR_CODE.REJECTED)
           return
         }
@@ -200,6 +205,7 @@ export const ReviewProposalForm = ({
       clearProposal,
       clearEscrowForm,
       chain.id,
+      config,
     ]
   )
 
@@ -229,7 +235,7 @@ export const ReviewProposalForm = ({
               />
 
               <Field name="title">
-                {({ field }: FieldProps) => (
+                {() => (
                   <TextInput
                     {...formik.getFieldProps('title')}
                     id={'title'}

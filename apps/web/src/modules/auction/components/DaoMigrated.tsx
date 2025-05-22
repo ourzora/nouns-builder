@@ -1,6 +1,6 @@
 import { Box, Stack, atoms } from '@zoralabs/zord'
 import Link from 'next/link'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { Icon } from 'src/components/Icon'
 import { PUBLIC_ALL_CHAINS } from 'src/constants/defaultChains'
@@ -21,7 +21,7 @@ export const DaoMigrated = ({
 
   const { auction } = useDaoStore((x) => x.addresses)
 
-  const { data: paused } = useContractRead({
+  const { data: paused } = useReadContract({
     abi: auctionAbi,
     address: auction,
     functionName: 'paused',

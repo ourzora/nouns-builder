@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
 import { formatEther } from 'viem'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { auctionAbi } from 'src/data/contract/abis'
 import { AuctionBidFragment } from 'src/data/subgraph/sdk.generated'
@@ -41,7 +41,7 @@ export const CurrentAuction = ({
   const [isEnded, setIsEnded] = useState(false)
   const [isEnding, setIsEnding] = useState(false)
 
-  const { data: auctionVersion } = useContractRead({
+  const { data: auctionVersion } = useReadContract({
     abi: auctionAbi,
     address: auctionAddress,
     functionName: 'contractVersion',

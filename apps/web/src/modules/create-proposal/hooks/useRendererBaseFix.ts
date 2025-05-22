@@ -2,7 +2,7 @@ import isUndefined from 'lodash/isUndefined'
 import pickBy from 'lodash/pickBy'
 import useSWR from 'swr'
 import { encodeFunctionData } from 'viem'
-import { useContractRead } from 'wagmi'
+import { useReadContract } from 'wagmi'
 
 import { RENDERER_BASE } from 'src/constants/rendererBase'
 import SWR_KEYS from 'src/constants/swrKeys'
@@ -58,7 +58,7 @@ export const useRendererBaseFix = ({
     data: rendererBase,
     isLoading,
     isError,
-  } = useContractRead({
+  } = useReadContract({
     abi: metadataAbi,
     address: metadata,
     chainId: chainId,

@@ -4,8 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import isEqual from 'lodash/isEqual'
 import { useRouter } from 'next/router'
 import React, { BaseSyntheticEvent } from 'react'
-import { encodeFunctionData, formatEther } from 'viem'
-import { Address, useContractReads } from 'wagmi'
+import { Address, encodeFunctionData, formatEther } from 'viem'
+import { useReadContracts } from 'wagmi'
 
 import DaysHoursMinsSecs from 'src/components/Fields/DaysHoursMinsSecs'
 import Radio from 'src/components/Fields/Radio'
@@ -75,7 +75,7 @@ export const AdminForm: React.FC<AdminFormProps> = ({ collectionAddress }) => {
     address: addresses?.token as Address,
   }
 
-  const { data } = useContractReads({
+  const { data } = useReadContracts({
     allowFailure: false,
     contracts: [
       { ...auctionContractParams, chainId: chain.id, functionName: 'duration' },

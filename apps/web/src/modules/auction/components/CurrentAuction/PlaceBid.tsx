@@ -1,9 +1,9 @@
 import { Box, Button, Flex, PopUp, Text } from '@zoralabs/zord'
 import React, { Fragment, memo, useEffect, useState } from 'react'
 import useSWR, { useSWRConfig } from 'swr'
-import { formatEther, parseEther } from 'viem'
-import { Address, useAccount, useBalance, useContractReads, useNetwork } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { Address, formatEther, parseEther } from 'viem'
+import { useAccount, useBalance, useConfig, useReadContracts } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import { Icon } from 'src/components/Icon/Icon'
@@ -37,11 +37,12 @@ export const PlaceBid = ({
   tokenId,
   daoName,
 }: PlaceBidProps) => {
-  const { address } = useAccount()
-  const { chain: wagmiChain } = useNetwork()
+  const { address, chain: wagmiChain } = useAccount()
   const { data: balance } = useBalance({ address: address, chainId: chain.id })
   const { mutate } = useSWRConfig()
   const { addresses } = useDaoStore()
+
+  const config = useConfig()
 
   const [creatingBid, setCreatingBid] = useState(false)
   const [showWarning, setShowWarning] = useState(false)
@@ -52,7 +53,7 @@ export const PlaceBid = ({
     address: addresses.auction as AddressType,
     chainId: chain.id,
   }
-  const { data } = useContractReads({
+  const { data } = useReadContracts({
     allowFailure: false,
     contracts: [
       { ...auctionContractParams, functionName: 'reservePrice' },
@@ -68,9 +69,7 @@ export const PlaceBid = ({
   })
 
   const { data: averageBid } = useSWR(
-    addresses.token
-      ? [SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token]
-      : undefined,
+    addresses.token ? [SWR_KEYS.AVERAGE_WINNING_BID, chain.id, addresses.token] : null,
     () => averageWinningBid(chain.id, addresses.token as Address)
   )
 
@@ -101,27 +100,31 @@ export const PlaceBid = ({
     try {
       setCreatingBid(true)
 
-      let config
+      let txHash: `0x${string}`
       if (referral) {
-        config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           abi: auctionAbi,
           address: addresses.auction as Address,
           functionName: 'createBidWithReferral',
           args: [BigInt(tokenId), referral],
           value: parseEther(bidAmount),
+          chainId: chain.id,
         })
+        txHash = await writeContract(config, data.request)
       } else {
-        config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           abi: auctionAbi,
           address: addresses.auction as Address,
           functionName: 'createBid',
           args: [BigInt(tokenId)],
           value: parseEther(bidAmount),
+          chainId: chain.id,
         })
+        txHash = await writeContract(config, data.request)
       }
 
-      const tx = await writeContract(config)
-      if (tx?.hash) await waitForTransaction({ hash: tx.hash })
+      if (txHash)
+        await waitForTransactionReceipt(config, { hash: txHash, chainId: chain.id })
 
       await mutate([SWR_KEYS.AUCTION_BIDS, chain.id, addresses.token, tokenId], () =>
         getBids(chain.id, addresses.token!, tokenId)
@@ -168,7 +171,7 @@ export const PlaceBid = ({
       ) : null}
 
       {!creatingBid ? (
-        <Flex wrap="wrap">
+        <Flex wrap="wrap" gap="x2">
           <form className={bidForm}>
             <Box position="relative" mr={{ '@initial': 'x0', '@768': 'x2' }}>
               <input
@@ -176,7 +179,7 @@ export const PlaceBid = ({
                 type={'number'}
                 className={bidInput}
                 min={formattedMinBid}
-                max={balance?.formatted}
+                max={formatEther(balance?.value ?? 0n)}
                 onChange={(event) => setBidAmount(event.target.value)}
               />
               <Box position="absolute" style={{ top: 0, right: 0, bottom: 0 }}>
@@ -189,6 +192,7 @@ export const PlaceBid = ({
           <Flex w="100%" wrap="wrap" mt="x2">
             <ContractButton
               className={auctionActionButtonVariants['bid']}
+              size="lg"
               handleClick={handleCreateBid}
               disabled={address && isValidChain ? !isValidBid : false}
               mt={{ '@initial': 'x2', '@768': 'x0' }}
@@ -199,7 +203,6 @@ export const PlaceBid = ({
               <Fragment>
                 <Box
                   cursor="pointer"
-                  style={{ zIndex: 102 }}
                   onMouseOver={() => setShowTooltip(true)}
                   onMouseLeave={() => {
                     setShowTooltip(false)
@@ -209,7 +212,8 @@ export const PlaceBid = ({
                   }}
                 >
                   <ContractButton
-                    className={auctionActionButtonVariants['bid']}
+                    className={auctionActionButtonVariants['share']}
+                    size="lg"
                     ml="x2"
                     mt={{ '@initial': 'x2', '@768': 'x0' }}
                     handleClick={async () => {
@@ -243,8 +247,8 @@ export const PlaceBid = ({
           </Flex>
         </Flex>
       ) : (
-        <Button className={auctionActionButtonVariants['bidding']} disabled>
-          placing {bidAmount} ETH bid
+        <Button className={auctionActionButtonVariants['bidding']} disabled size="lg">
+          Placing {bidAmount} ETH bid
         </Button>
       )}
     </Flex>

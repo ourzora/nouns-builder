@@ -77,12 +77,12 @@ export function InnerGrid<E extends ElementType>(
         className,
       ]}
       style={{ gridTemplateColumns, gridTemplateRows, ...style }}
-      {...props}
+      {...(props as any)}
     />
   )
 }
 
-export const Grid: PolymorphicForwardRefExoticComponent<
+export const Grid = forwardRef(InnerGrid) as PolymorphicForwardRefExoticComponent<
   GridProps,
   typeof BoxDefaultElement
-> = forwardRef(InnerGrid)
+>

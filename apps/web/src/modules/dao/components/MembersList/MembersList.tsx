@@ -37,7 +37,7 @@ export const MembersList = ({
     data: members,
     error,
     isValidating,
-  } = useSWR(isReady ? [token, chain.id, query.page] : undefined, () =>
+  } = useSWR(isReady ? [token, chain.id, query.page] : null, () =>
     axios
       .get<MembersQuery>(
         `/api/membersList/${token}?chainId=${chain.id}&page=${query.page}&limit=${LIMIT}`

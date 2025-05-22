@@ -93,7 +93,7 @@ export const SectionHandler: React.FC<SectionHandlerProps> = ({
         </Box>
       )}
       <Flex direction="column" className={sectionHandler} mx={'auto'}>
-        <AnimatePresence exitBeforeEnter={true}>
+        <AnimatePresence mode="wait">
           <motion.div
             key={activeSection?.title}
             variants={{

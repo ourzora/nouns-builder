@@ -4,9 +4,9 @@ import { Formik } from 'formik'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
-import { parseEther } from 'viem'
-import { useAccount, useBalance, useNetwork, useSwitchNetwork } from 'wagmi'
-import { sendTransaction, waitForTransaction } from 'wagmi/actions'
+import { formatEther, parseEther } from 'viem'
+import { useAccount, useBalance, useConfig, useSwitchChain } from 'wagmi'
+import { sendTransaction, waitForTransactionReceipt } from 'wagmi/actions'
 
 import Input from 'src/components/Input/Input'
 import { L2ChainType, PUBLIC_L1_BRIDGE_ADDRESS } from 'src/constants/addresses'
@@ -21,9 +21,8 @@ import bridgeFormSchema, { BridgeFormValues } from './BridgeForm.schema'
 import { NetworkSelector } from './NetworkSelector'
 
 export const BridgeForm = () => {
-  const { address } = useAccount()
-  const { chain: userChain } = useNetwork()
-  const { switchNetwork } = useSwitchNetwork()
+  const { address, chain: userChain } = useAccount()
+  const { switchChain: switchNetwork } = useSwitchChain()
   const { closeBridgeModal } = useBridgeModal()
   const { openConnectModal } = useConnectModal()
   const { data: isContractWallet } = useIsContract({ address })
@@ -52,6 +51,8 @@ export const BridgeForm = () => {
     amount: 0,
   }
 
+  const config = useConfig()
+
   const handleSubmit = async (values: BridgeFormValues) => {
     const bridge = PUBLIC_L1_BRIDGE_ADDRESS[l2Chain.id as L2ChainType]
 
@@ -59,11 +60,12 @@ export const BridgeForm = () => {
 
     setLoading(true)
     try {
-      const { hash } = await sendTransaction({
+      const hash = await sendTransaction(config, {
+        chainId: l1Chain.id,
         to: PUBLIC_L1_BRIDGE_ADDRESS[l2Chain.id as L2ChainType],
         value: parseEther(values.amount.toString()),
       })
-      await waitForTransaction({ hash })
+      await waitForTransactionReceipt(config, { hash, chainId: l1Chain.id })
     } catch (err) {
       console.error('Error sending bridge transaction', err)
     } finally {
@@ -71,8 +73,12 @@ export const BridgeForm = () => {
     }
   }
 
-  const formattedL1Balance = userL1Balance ? parseFloat(userL1Balance.formatted) : 0
-  const formattedL2Balance = userL2Balance ? parseFloat(userL2Balance.formatted) : 0
+  const formattedL1Balance = userL1Balance
+    ? parseFloat(formatEther(userL1Balance.value))
+    : 0
+  const formattedL2Balance = userL2Balance
+    ? parseFloat(formatEther(userL2Balance.value))
+    : 0
 
   const getButtonText = (isAmountInvalid: boolean) => {
     if (isContractWallet) return 'Contract wallets are not supported'
@@ -176,7 +182,7 @@ export const BridgeForm = () => {
                   type={'number'}
                   placeholder={0}
                   min={0}
-                  max={userL2Balance?.formatted}
+                  max={parseFloat(formatEther(userL2Balance?.value ?? 0n))}
                   step={'any'}
                 />
                 <Text mt="x3" color="text3">
@@ -200,7 +206,7 @@ export const BridgeForm = () => {
                 </Button>
               ) : (
                 <Button
-                  onClick={() => switchNetwork?.(l1Chain.id)}
+                  onClick={() => switchNetwork?.({ chainId: l1Chain.id })}
                   type="button"
                   w="100%"
                   mt="x5"

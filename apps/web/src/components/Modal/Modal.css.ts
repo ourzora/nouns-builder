@@ -38,7 +38,7 @@ export const defaultAnimatedModalContent = style({
 export const smallAnimatedContent = style({
   position: 'fixed',
   left: '50%',
-  marginLeft: -448 / 2,
+  marginLeft: '-224px !important',
   width: 448,
   top: 120,
   gap: 24,
@@ -48,7 +48,7 @@ export const smallAnimatedContent = style({
     'screen and (max-width: 768px)': {
       width: 'calc(100% - 50px)',
       left: 25,
-      marginLeft: 0,
+      marginLeft: '0 !important',
     },
   },
 })
@@ -56,7 +56,7 @@ export const smallAnimatedContent = style({
 export const mediumAnimatedContent = style({
   position: 'fixed',
   left: '50%',
-  marginLeft: -680 / 2,
+  marginLeft: '-340px !important',
   width: 680,
   top: 120,
   gap: 24,
@@ -66,7 +66,7 @@ export const mediumAnimatedContent = style({
     'screen and (max-width: 768px)': {
       width: 'calc(100% - 50px)',
       left: 25,
-      marginLeft: 0,
+      marginLeft: '0 !important',
     },
   },
 })
@@ -74,7 +74,7 @@ export const mediumAnimatedContent = style({
 export const largeAnimatedContent = style({
   position: 'fixed',
   left: '50%',
-  marginLeft: -912 / 2,
+  marginLeft: '-456px !important',
   width: 912,
   top: 120,
   gap: 24,
@@ -84,12 +84,12 @@ export const largeAnimatedContent = style({
     'screen and (max-width: 1000px)': {
       width: 'calc(100% - 50px)',
       left: 25,
-      marginLeft: 0,
+      marginLeft: '0 !important',
     },
     'screen and (max-width: 768px)': {
       width: 'calc(100% - 50px)',
       left: 25,
-      marginLeft: 0,
+      marginLeft: '0 !important',
     },
   },
 })
@@ -101,6 +101,6 @@ export const animatedModalContent = styleVariants({
   auto: [
     defaultAnimatedModalContent,
     smallAnimatedContent,
-    { marginLeft: -680 / 2, width: 680, height: 'auto' },
+    { marginLeft: '-340px !important', width: '680px !important', height: 'auto' },
   ],
 })

@@ -10,7 +10,7 @@ interface AnimatedModalProps {
   open?: boolean
   close?: any
   size?: 'small' | 'medium' | 'large' | 'auto'
-  trigger?: ReactElement
+  trigger?: ReactElement<any>
 }
 
 const AnimatedModal: React.FC<AnimatedModalProps> = ({

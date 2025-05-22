@@ -1,7 +1,7 @@
 import { Button, Flex, Text } from '@zoralabs/zord'
 import React, { Fragment, useEffect, useState } from 'react'
 import { getAddress } from 'viem'
-import { useAccount, useContractEvent } from 'wagmi'
+import { useAccount, useWatchContractEvent } from 'wagmi'
 
 import { governorAbi } from 'src/data/contract/abis'
 import { ProposalState } from 'src/data/contract/requests/getProposalState'
@@ -66,11 +66,11 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
 
   const shouldListen = !signerVote && !!userAddress && state === ProposalState.Active
 
-  useContractEvent({
+  useWatchContractEvent({
     address: shouldListen ? governor : undefined,
     abi: governorAbi,
     eventName: 'VoteCast',
-    listener: async (logs) => {
+    onLogs: async (logs) => {
       const { voter, proposalId: id, support, weight, reason } = logs[0].args
       if (id === proposalId && voter && getAddress(voter) === getAddress(userAddress!)) {
         const eventVote: ProposalVote = {
@@ -134,7 +134,7 @@ export const VoteStatus: React.FC<VoteStatusProps> = ({
               onClick={() => setShowVoteModal(true)}
               className={proposalActionButtonVariants['vote']}
               w={{ '@initial': '100%', '@768': 'auto' }}
-              pr={{ '@initial': 'x2', '@768': 'x0' }}
+              //pr={{ '@initial': 'x2', '@768': 'x0' }}
             >
               {votesAvailable === 1 ? 'Submit Vote' : 'Submit Votes'}
             </Button>

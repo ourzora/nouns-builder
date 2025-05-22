@@ -4,18 +4,18 @@ import { IPFSUpload } from 'src/hooks'
 
 import { OrderedTraits } from '../../../components/Artwork/LayerBox'
 
-export interface PropertyItem {
+export type PropertyItem = {
   propertyId: bigint
   name: string
   isNewProperty: boolean
 }
 
-export interface IPFSGroup {
+export type IPFSGroup = {
   baseUri: string
   extension: string
 }
 
-export interface Properties {
+export type Properties = {
   names: string[]
   items: PropertyItem[]
   data: IPFSGroup

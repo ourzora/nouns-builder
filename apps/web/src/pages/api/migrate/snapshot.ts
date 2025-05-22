@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { Address } from 'viem'
 
-import 'src/data/contract/server.config'
 import { memberSnapshotRequest } from 'src/data/subgraph/requests/memberSnapshot'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

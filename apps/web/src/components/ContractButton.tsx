@@ -1,6 +1,6 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Button, ButtonProps } from '@zoralabs/zord'
-import { useAccount, useBalance, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useAccount, useBalance, useSwitchChain } from 'wagmi'
 
 import { useBridgeModal } from 'src/hooks/useBridgeModal'
 import { useChainStore } from 'src/stores/useChainStore'
@@ -14,8 +14,7 @@ export const ContractButton = ({
   handleClick,
   ...rest
 }: ContractButtonProps) => {
-  const { address: userAddress } = useAccount()
-  const { chain: userChain } = useNetwork()
+  const { address: userAddress, chain: userChain } = useAccount()
   const appChain = useChainStore((x) => x.chain)
   const { canUserBridge, openBridgeModal } = useBridgeModal()
   const { data: userBalance } = useBalance({
@@ -24,16 +23,16 @@ export const ContractButton = ({
   })
 
   const { openConnectModal } = useConnectModal()
-  const { switchNetwork } = useSwitchNetwork()
+  const { switchChain } = useSwitchChain()
 
-  const handleSwitchNetwork = () => switchNetwork?.(appChain.id)
+  const handleSwitchChain = () => switchChain?.({ chainId: appChain.id })
 
   const handleClickWithValidation = (
     e?: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     if (!userAddress) return openConnectModal?.()
     if (canUserBridge && userBalance?.decimals === 0) return openBridgeModal()
-    if (userChain?.id !== appChain.id) return handleSwitchNetwork()
+    if (userChain?.id !== appChain.id) return handleSwitchChain()
     handleClick(e)
   }
 

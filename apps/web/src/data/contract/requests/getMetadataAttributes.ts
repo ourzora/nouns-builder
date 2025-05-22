@@ -2,6 +2,7 @@ import { Address } from 'viem'
 import { readContracts } from 'wagmi/actions'
 
 import { metadataAbi } from 'src/data/contract/abis'
+import { config } from 'src/data/contract/server.config'
 import { CHAIN_ID } from 'src/typings'
 
 export const getMetadataAttributes = async (
@@ -20,10 +21,12 @@ export const getMetadataAttributes = async (
     })
   }
 
-  const lengthResult = (await readContracts({
-    contracts: lengthRequests,
-    allowFailure: false,
-  })) as number[]
+  const lengthResult = (
+    await readContracts(config, {
+      contracts: lengthRequests,
+      allowFailure: false,
+    })
+  ).map((result) => Number(result)) as number[]
 
   let attributeRequests = []
   for (let currentTokenId = 0; currentTokenId <= finalTokenId; currentTokenId++) {
@@ -47,10 +50,12 @@ export const getMetadataAttributes = async (
 
   for (let i = 0; i < attributeRequests.length; i += batchSize) {
     const batch = attributeRequests.slice(i, i + batchSize)
-    const batchResult = (await readContracts({
-      contracts: batch,
-      allowFailure: false,
-    })) as number[]
+    const batchResult = (
+      await readContracts(config, {
+        contracts: batch,
+        allowFailure: false,
+      })
+    ).map((result) => Number(result)) as number[]
     attributeResult.push(...batchResult)
   }
 

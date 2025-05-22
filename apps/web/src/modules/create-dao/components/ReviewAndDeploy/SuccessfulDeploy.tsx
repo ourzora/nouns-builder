@@ -1,8 +1,8 @@
 import { Box, Flex, Paragraph, Text } from '@zoralabs/zord'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { useAccount, useContractRead } from 'wagmi'
-import { prepareWriteContract, waitForTransaction, writeContract } from 'wagmi/actions'
+import { useAccount, useConfig, useReadContract } from 'wagmi'
+import { simulateContract, waitForTransactionReceipt, writeContract } from 'wagmi/actions'
 
 import { ContractButton } from 'src/components/ContractButton'
 import CopyButton from 'src/components/CopyButton/CopyButton'
@@ -18,7 +18,7 @@ import {
 import { walletSnippet } from 'src/utils/helpers'
 
 import { useFormStore } from '../../stores'
-import { transformFileProperties } from '../../utils'
+import { Properties, transformFileProperties } from '../../utils'
 
 interface DeployedDaoProps extends DaoContractAddresses {
   title: string
@@ -40,6 +40,7 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   title,
 }) => {
   const router = useRouter()
+  const config = useConfig()
   const { general, ipfsUpload, orderedLayers, setFulfilledSections, resetForm } =
     useFormStore()
   const chain = useChainStore((x) => x.chain)
@@ -48,8 +49,10 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
   const [deploymentError, setDeploymentError] = useState<string | undefined>()
   const { address } = useAccount()
 
-  const { data: tokenOwner } = useContractRead({
-    enabled: !!token,
+  const { data: tokenOwner } = useReadContract({
+    query: {
+      enabled: !!token,
+    },
     abi: tokenAbi,
     address: token,
     chainId: chain.id,
@@ -74,8 +77,8 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
 
   */
 
-  const transactions = React.useMemo(() => {
-    if (!orderedLayers || !ipfsUpload) return
+  const transactions: Properties[] = React.useMemo(() => {
+    if (!orderedLayers || !ipfsUpload) return []
 
     return transformFileProperties(orderedLayers, ipfsUpload, 500)
   }, [orderedLayers, ipfsUpload])
@@ -96,15 +99,15 @@ export const SuccessfulDeploy: React.FC<DeployedDaoProps> = ({
     setIsPendingTransaction(true)
     for await (const transaction of transactions) {
       try {
-        const config = await prepareWriteContract({
+        const data = await simulateContract(config, {
           abi: metadataAbi,
           address: addresses.metadata,
           functionName: 'addProperties',
           chainId: chain.id,
           args: [transaction.names, transaction.items, transaction.data],
         })
-        const tx = await writeContract(config)
-        await waitForTransaction({ hash: tx.hash })
+        const txHash = await writeContract(config, data.request)
+        await waitForTransactionReceipt(config, { hash: txHash, chainId: chain.id })
       } catch (err) {
         console.warn(err)
         setIsPendingTransaction(false)

@@ -1,5 +1,5 @@
 import isNil from 'lodash/isNil'
-import { useContractReads } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { AddressType, CHAIN_ID } from 'src/typings'
@@ -15,10 +15,11 @@ export const useVotes = ({
   governorAddress?: AddressType
   signerAddress?: AddressType
 }) => {
-  const { data, isLoading } = useContractReads({
-    enabled: !!collectionAddress && !!governorAddress && !!signerAddress,
+  const { data, isLoading } = useReadContracts({
+    query: {
+      enabled: !!collectionAddress && !!governorAddress && !!signerAddress,
+    },
     allowFailure: false,
-    keepPreviousData: true,
     contracts: [
       {
         address: collectionAddress as AddressType,

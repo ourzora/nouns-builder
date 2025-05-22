@@ -35,12 +35,11 @@ const animation = {
   },
 }
 
-export const vetoValidationSchema = Yup.object().shape({
+export const vetoValidationSchema = Yup.object({
   vetoPower: Yup.boolean().required(),
-  vetoerAddress: Yup.string().when('vetoPower', {
-    is: true,
-    then: addressValidationSchema,
-  }),
+  vetoerAddress: Yup.string().when(['vetoPower'], ([vetoPower], schema) =>
+    vetoPower ? addressValidationSchema : schema.notRequired()
+  ),
 })
 
 export const VetoForm: React.FC<VetoFormProps> = ({ title }) => {

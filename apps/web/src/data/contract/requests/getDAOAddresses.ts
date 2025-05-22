@@ -1,6 +1,7 @@
 import { readContract } from 'wagmi/actions'
 
 import { NULL_ADDRESS, PUBLIC_MANAGER_ADDRESS } from 'src/constants/addresses'
+import { config } from 'src/data/contract/server.config'
 import { getEscrowDelegate } from 'src/data/eas/requests/getEscrowDelegate'
 import { AddressType, CHAIN_ID } from 'src/typings'
 import { unpackOptionalArray } from 'src/utils/helpers'
@@ -8,7 +9,7 @@ import { unpackOptionalArray } from 'src/utils/helpers'
 import { managerAbi } from '../abis'
 
 const getDAOAddresses = async (chainId: CHAIN_ID, tokenAddress: AddressType) => {
-  const addresses = await readContract({
+  const addresses = await readContract(config, {
     abi: managerAbi,
     address: PUBLIC_MANAGER_ADDRESS[chainId],
     functionName: 'getAddresses',

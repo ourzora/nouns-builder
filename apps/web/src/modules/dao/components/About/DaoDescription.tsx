@@ -74,13 +74,14 @@ export const DaoDescription = ({ description }: { description?: string }) => {
           maxHeight: isExpanded ? '100%' : UNEXPANDED_BOX_HEIGHT,
         }}
       >
-        <ReactMarkdown
-          className={daoDescription}
-          rehypePlugins={[rehypeRaw, rehypeSanitize]}
-          remarkPlugins={[remarkGfm]}
-        >
-          {correctedDescription}
-        </ReactMarkdown>
+        <Box className={daoDescription}>
+          <ReactMarkdown
+            rehypePlugins={[rehypeRaw, rehypeSanitize]}
+            remarkPlugins={[remarkGfm]}
+          >
+            {correctedDescription}
+          </ReactMarkdown>
+        </Box>
       </Box>
       {isOverHeight && (
         <Button

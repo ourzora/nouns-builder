@@ -14,7 +14,7 @@ export enum SimulationError {
 interface TransactionCardProps {
   handleEdit?: () => void
   handleRemove?: () => void
-  simulationUrls?: Array<string | undefined>
+  simulationUrl?: string
   simulationError?: SimulationError
   transaction: BuilderTransaction
   disabled?: boolean
@@ -25,7 +25,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
   handleEdit,
   handleRemove,
   simulationError,
-  simulationUrls,
+  simulationUrl,
   transaction,
   disabled,
   children,
@@ -95,16 +95,14 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
 
       {simulationError === SimulationError.TransactionFailed && (
         <Box color="negative" mt={'x2'}>
-          <Text mb={'x2'}>
-            Some of the transactions in this bundle will fail to execute.
-          </Text>
-          {simulationUrls?.map((url) => (
-            <Text key={url} mb={'x2'} fontWeight={'display'}>
-              <a href={url} target="_blank" rel="noreferrer">
+          <Text mb={'x2'}>This transaction will fail to execute.</Text>
+          {simulationUrl && (
+            <Text mb={'x2'} fontWeight={'display'}>
+              <a href={simulationUrl} target="_blank" rel="noreferrer">
                 View details
               </a>
             </Text>
-          ))}
+          )}
         </Box>
       )}
     </Box>

@@ -1,5 +1,4 @@
-import { GraphQLClient } from 'graphql-request'
-import * as Dom from 'graphql-request/dist/types.dom'
+import { GraphQLClient, RequestOptions } from 'graphql-request'
 import gql from 'graphql-tag'
 
 export type Maybe<T> = T | null
@@ -11,18 +10,25 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
   [SubKey in K]: Maybe<T[SubKey]>
 }
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = {
+  [_ in K]?: never
+}
+export type Incremental<T> =
+  | T
+  | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never }
+type GraphQLClientRequestHeaders = RequestOptions['requestHeaders']
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string
-  String: string
-  Boolean: boolean
-  Int: number
-  Float: number
-  BigDecimal: any
-  BigInt: any
-  Bytes: any
-  Int8: any
-  Timestamp: any
+  ID: { input: string; output: string }
+  String: { input: string; output: string }
+  Boolean: { input: boolean; output: boolean }
+  Int: { input: number; output: number }
+  Float: { input: number; output: number }
+  BigDecimal: { input: any; output: any }
+  BigInt: { input: any; output: any }
+  Bytes: { input: any; output: any }
+  Int8: { input: any; output: any }
+  Timestamp: { input: any; output: any }
 }
 
 export enum Aggregation_Interval {
@@ -32,96 +38,96 @@ export enum Aggregation_Interval {
 
 export type Auction = {
   __typename?: 'Auction'
-  bidCount: Scalars['Int']
+  bidCount: Scalars['Int']['output']
   bids?: Maybe<Array<AuctionBid>>
   dao: Dao
-  endTime: Scalars['BigInt']
-  extended: Scalars['Boolean']
-  firstBidTime?: Maybe<Scalars['BigInt']>
+  endTime: Scalars['BigInt']['output']
+  extended: Scalars['Boolean']['output']
+  firstBidTime?: Maybe<Scalars['BigInt']['output']>
   highestBid?: Maybe<AuctionBid>
-  id: Scalars['ID']
-  settled: Scalars['Boolean']
-  startTime: Scalars['BigInt']
+  id: Scalars['ID']['output']
+  settled: Scalars['Boolean']['output']
+  startTime: Scalars['BigInt']['output']
   token: Token
   winningBid?: Maybe<AuctionBid>
 }
 
 export type AuctionBidsArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<AuctionBid_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<AuctionBid_Filter>
 }
 
 export type AuctionBid = {
   __typename?: 'AuctionBid'
-  amount: Scalars['BigInt']
+  amount: Scalars['BigInt']['output']
   auction: Auction
-  bidTime: Scalars['BigInt']
-  bidder: Scalars['Bytes']
-  id: Scalars['ID']
+  bidTime: Scalars['BigInt']['output']
+  bidder: Scalars['Bytes']['output']
+  id: Scalars['ID']['output']
 }
 
 export type AuctionBid_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
-  amount?: InputMaybe<Scalars['BigInt']>
-  amount_gt?: InputMaybe<Scalars['BigInt']>
-  amount_gte?: InputMaybe<Scalars['BigInt']>
-  amount_in?: InputMaybe<Array<Scalars['BigInt']>>
-  amount_lt?: InputMaybe<Scalars['BigInt']>
-  amount_lte?: InputMaybe<Scalars['BigInt']>
-  amount_not?: InputMaybe<Scalars['BigInt']>
-  amount_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  amount?: InputMaybe<Scalars['BigInt']['input']>
+  amount_gt?: InputMaybe<Scalars['BigInt']['input']>
+  amount_gte?: InputMaybe<Scalars['BigInt']['input']>
+  amount_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  amount_lt?: InputMaybe<Scalars['BigInt']['input']>
+  amount_lte?: InputMaybe<Scalars['BigInt']['input']>
+  amount_not?: InputMaybe<Scalars['BigInt']['input']>
+  amount_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
   and?: InputMaybe<Array<InputMaybe<AuctionBid_Filter>>>
-  auction?: InputMaybe<Scalars['String']>
+  auction?: InputMaybe<Scalars['String']['input']>
   auction_?: InputMaybe<Auction_Filter>
-  auction_contains?: InputMaybe<Scalars['String']>
-  auction_contains_nocase?: InputMaybe<Scalars['String']>
-  auction_ends_with?: InputMaybe<Scalars['String']>
-  auction_ends_with_nocase?: InputMaybe<Scalars['String']>
-  auction_gt?: InputMaybe<Scalars['String']>
-  auction_gte?: InputMaybe<Scalars['String']>
-  auction_in?: InputMaybe<Array<Scalars['String']>>
-  auction_lt?: InputMaybe<Scalars['String']>
-  auction_lte?: InputMaybe<Scalars['String']>
-  auction_not?: InputMaybe<Scalars['String']>
-  auction_not_contains?: InputMaybe<Scalars['String']>
-  auction_not_contains_nocase?: InputMaybe<Scalars['String']>
-  auction_not_ends_with?: InputMaybe<Scalars['String']>
-  auction_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  auction_not_in?: InputMaybe<Array<Scalars['String']>>
-  auction_not_starts_with?: InputMaybe<Scalars['String']>
-  auction_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  auction_starts_with?: InputMaybe<Scalars['String']>
-  auction_starts_with_nocase?: InputMaybe<Scalars['String']>
-  bidTime?: InputMaybe<Scalars['BigInt']>
-  bidTime_gt?: InputMaybe<Scalars['BigInt']>
-  bidTime_gte?: InputMaybe<Scalars['BigInt']>
-  bidTime_in?: InputMaybe<Array<Scalars['BigInt']>>
-  bidTime_lt?: InputMaybe<Scalars['BigInt']>
-  bidTime_lte?: InputMaybe<Scalars['BigInt']>
-  bidTime_not?: InputMaybe<Scalars['BigInt']>
-  bidTime_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  bidder?: InputMaybe<Scalars['Bytes']>
-  bidder_contains?: InputMaybe<Scalars['Bytes']>
-  bidder_gt?: InputMaybe<Scalars['Bytes']>
-  bidder_gte?: InputMaybe<Scalars['Bytes']>
-  bidder_in?: InputMaybe<Array<Scalars['Bytes']>>
-  bidder_lt?: InputMaybe<Scalars['Bytes']>
-  bidder_lte?: InputMaybe<Scalars['Bytes']>
-  bidder_not?: InputMaybe<Scalars['Bytes']>
-  bidder_not_contains?: InputMaybe<Scalars['Bytes']>
-  bidder_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  auction_contains?: InputMaybe<Scalars['String']['input']>
+  auction_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  auction_ends_with?: InputMaybe<Scalars['String']['input']>
+  auction_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  auction_gt?: InputMaybe<Scalars['String']['input']>
+  auction_gte?: InputMaybe<Scalars['String']['input']>
+  auction_in?: InputMaybe<Array<Scalars['String']['input']>>
+  auction_lt?: InputMaybe<Scalars['String']['input']>
+  auction_lte?: InputMaybe<Scalars['String']['input']>
+  auction_not?: InputMaybe<Scalars['String']['input']>
+  auction_not_contains?: InputMaybe<Scalars['String']['input']>
+  auction_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  auction_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  auction_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  auction_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  auction_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  auction_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  auction_starts_with?: InputMaybe<Scalars['String']['input']>
+  auction_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  bidTime?: InputMaybe<Scalars['BigInt']['input']>
+  bidTime_gt?: InputMaybe<Scalars['BigInt']['input']>
+  bidTime_gte?: InputMaybe<Scalars['BigInt']['input']>
+  bidTime_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  bidTime_lt?: InputMaybe<Scalars['BigInt']['input']>
+  bidTime_lte?: InputMaybe<Scalars['BigInt']['input']>
+  bidTime_not?: InputMaybe<Scalars['BigInt']['input']>
+  bidTime_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  bidder?: InputMaybe<Scalars['Bytes']['input']>
+  bidder_contains?: InputMaybe<Scalars['Bytes']['input']>
+  bidder_gt?: InputMaybe<Scalars['Bytes']['input']>
+  bidder_gte?: InputMaybe<Scalars['Bytes']['input']>
+  bidder_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  bidder_lt?: InputMaybe<Scalars['Bytes']['input']>
+  bidder_lte?: InputMaybe<Scalars['Bytes']['input']>
+  bidder_not?: InputMaybe<Scalars['Bytes']['input']>
+  bidder_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  bidder_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
   or?: InputMaybe<Array<InputMaybe<AuctionBid_Filter>>>
 }
 
@@ -142,58 +148,58 @@ export enum AuctionBid_OrderBy {
 
 export type AuctionConfig = {
   __typename?: 'AuctionConfig'
-  duration: Scalars['BigInt']
-  id: Scalars['ID']
-  minimumBidIncrement: Scalars['BigInt']
-  reservePrice: Scalars['BigInt']
-  timeBuffer: Scalars['BigInt']
+  duration: Scalars['BigInt']['output']
+  id: Scalars['ID']['output']
+  minimumBidIncrement: Scalars['BigInt']['output']
+  reservePrice: Scalars['BigInt']['output']
+  timeBuffer: Scalars['BigInt']['output']
 }
 
 export type AuctionConfig_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<AuctionConfig_Filter>>>
-  duration?: InputMaybe<Scalars['BigInt']>
-  duration_gt?: InputMaybe<Scalars['BigInt']>
-  duration_gte?: InputMaybe<Scalars['BigInt']>
-  duration_in?: InputMaybe<Array<Scalars['BigInt']>>
-  duration_lt?: InputMaybe<Scalars['BigInt']>
-  duration_lte?: InputMaybe<Scalars['BigInt']>
-  duration_not?: InputMaybe<Scalars['BigInt']>
-  duration_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
-  minimumBidIncrement?: InputMaybe<Scalars['BigInt']>
-  minimumBidIncrement_gt?: InputMaybe<Scalars['BigInt']>
-  minimumBidIncrement_gte?: InputMaybe<Scalars['BigInt']>
-  minimumBidIncrement_in?: InputMaybe<Array<Scalars['BigInt']>>
-  minimumBidIncrement_lt?: InputMaybe<Scalars['BigInt']>
-  minimumBidIncrement_lte?: InputMaybe<Scalars['BigInt']>
-  minimumBidIncrement_not?: InputMaybe<Scalars['BigInt']>
-  minimumBidIncrement_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  duration?: InputMaybe<Scalars['BigInt']['input']>
+  duration_gt?: InputMaybe<Scalars['BigInt']['input']>
+  duration_gte?: InputMaybe<Scalars['BigInt']['input']>
+  duration_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  duration_lt?: InputMaybe<Scalars['BigInt']['input']>
+  duration_lte?: InputMaybe<Scalars['BigInt']['input']>
+  duration_not?: InputMaybe<Scalars['BigInt']['input']>
+  duration_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  minimumBidIncrement?: InputMaybe<Scalars['BigInt']['input']>
+  minimumBidIncrement_gt?: InputMaybe<Scalars['BigInt']['input']>
+  minimumBidIncrement_gte?: InputMaybe<Scalars['BigInt']['input']>
+  minimumBidIncrement_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  minimumBidIncrement_lt?: InputMaybe<Scalars['BigInt']['input']>
+  minimumBidIncrement_lte?: InputMaybe<Scalars['BigInt']['input']>
+  minimumBidIncrement_not?: InputMaybe<Scalars['BigInt']['input']>
+  minimumBidIncrement_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
   or?: InputMaybe<Array<InputMaybe<AuctionConfig_Filter>>>
-  reservePrice?: InputMaybe<Scalars['BigInt']>
-  reservePrice_gt?: InputMaybe<Scalars['BigInt']>
-  reservePrice_gte?: InputMaybe<Scalars['BigInt']>
-  reservePrice_in?: InputMaybe<Array<Scalars['BigInt']>>
-  reservePrice_lt?: InputMaybe<Scalars['BigInt']>
-  reservePrice_lte?: InputMaybe<Scalars['BigInt']>
-  reservePrice_not?: InputMaybe<Scalars['BigInt']>
-  reservePrice_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  timeBuffer?: InputMaybe<Scalars['BigInt']>
-  timeBuffer_gt?: InputMaybe<Scalars['BigInt']>
-  timeBuffer_gte?: InputMaybe<Scalars['BigInt']>
-  timeBuffer_in?: InputMaybe<Array<Scalars['BigInt']>>
-  timeBuffer_lt?: InputMaybe<Scalars['BigInt']>
-  timeBuffer_lte?: InputMaybe<Scalars['BigInt']>
-  timeBuffer_not?: InputMaybe<Scalars['BigInt']>
-  timeBuffer_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  reservePrice?: InputMaybe<Scalars['BigInt']['input']>
+  reservePrice_gt?: InputMaybe<Scalars['BigInt']['input']>
+  reservePrice_gte?: InputMaybe<Scalars['BigInt']['input']>
+  reservePrice_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  reservePrice_lt?: InputMaybe<Scalars['BigInt']['input']>
+  reservePrice_lte?: InputMaybe<Scalars['BigInt']['input']>
+  reservePrice_not?: InputMaybe<Scalars['BigInt']['input']>
+  reservePrice_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  timeBuffer?: InputMaybe<Scalars['BigInt']['input']>
+  timeBuffer_gt?: InputMaybe<Scalars['BigInt']['input']>
+  timeBuffer_gte?: InputMaybe<Scalars['BigInt']['input']>
+  timeBuffer_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  timeBuffer_lt?: InputMaybe<Scalars['BigInt']['input']>
+  timeBuffer_lte?: InputMaybe<Scalars['BigInt']['input']>
+  timeBuffer_not?: InputMaybe<Scalars['BigInt']['input']>
+  timeBuffer_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
 }
 
 export enum AuctionConfig_OrderBy {
@@ -208,140 +214,140 @@ export type Auction_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<Auction_Filter>>>
-  bidCount?: InputMaybe<Scalars['Int']>
-  bidCount_gt?: InputMaybe<Scalars['Int']>
-  bidCount_gte?: InputMaybe<Scalars['Int']>
-  bidCount_in?: InputMaybe<Array<Scalars['Int']>>
-  bidCount_lt?: InputMaybe<Scalars['Int']>
-  bidCount_lte?: InputMaybe<Scalars['Int']>
-  bidCount_not?: InputMaybe<Scalars['Int']>
-  bidCount_not_in?: InputMaybe<Array<Scalars['Int']>>
+  bidCount?: InputMaybe<Scalars['Int']['input']>
+  bidCount_gt?: InputMaybe<Scalars['Int']['input']>
+  bidCount_gte?: InputMaybe<Scalars['Int']['input']>
+  bidCount_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  bidCount_lt?: InputMaybe<Scalars['Int']['input']>
+  bidCount_lte?: InputMaybe<Scalars['Int']['input']>
+  bidCount_not?: InputMaybe<Scalars['Int']['input']>
+  bidCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
   bids_?: InputMaybe<AuctionBid_Filter>
-  dao?: InputMaybe<Scalars['String']>
+  dao?: InputMaybe<Scalars['String']['input']>
   dao_?: InputMaybe<Dao_Filter>
-  dao_contains?: InputMaybe<Scalars['String']>
-  dao_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_ends_with?: InputMaybe<Scalars['String']>
-  dao_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_gt?: InputMaybe<Scalars['String']>
-  dao_gte?: InputMaybe<Scalars['String']>
-  dao_in?: InputMaybe<Array<Scalars['String']>>
-  dao_lt?: InputMaybe<Scalars['String']>
-  dao_lte?: InputMaybe<Scalars['String']>
-  dao_not?: InputMaybe<Scalars['String']>
-  dao_not_contains?: InputMaybe<Scalars['String']>
-  dao_not_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_not_ends_with?: InputMaybe<Scalars['String']>
-  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_not_in?: InputMaybe<Array<Scalars['String']>>
-  dao_not_starts_with?: InputMaybe<Scalars['String']>
-  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  dao_starts_with?: InputMaybe<Scalars['String']>
-  dao_starts_with_nocase?: InputMaybe<Scalars['String']>
-  endTime?: InputMaybe<Scalars['BigInt']>
-  endTime_gt?: InputMaybe<Scalars['BigInt']>
-  endTime_gte?: InputMaybe<Scalars['BigInt']>
-  endTime_in?: InputMaybe<Array<Scalars['BigInt']>>
-  endTime_lt?: InputMaybe<Scalars['BigInt']>
-  endTime_lte?: InputMaybe<Scalars['BigInt']>
-  endTime_not?: InputMaybe<Scalars['BigInt']>
-  endTime_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  extended?: InputMaybe<Scalars['Boolean']>
-  extended_in?: InputMaybe<Array<Scalars['Boolean']>>
-  extended_not?: InputMaybe<Scalars['Boolean']>
-  extended_not_in?: InputMaybe<Array<Scalars['Boolean']>>
-  firstBidTime?: InputMaybe<Scalars['BigInt']>
-  firstBidTime_gt?: InputMaybe<Scalars['BigInt']>
-  firstBidTime_gte?: InputMaybe<Scalars['BigInt']>
-  firstBidTime_in?: InputMaybe<Array<Scalars['BigInt']>>
-  firstBidTime_lt?: InputMaybe<Scalars['BigInt']>
-  firstBidTime_lte?: InputMaybe<Scalars['BigInt']>
-  firstBidTime_not?: InputMaybe<Scalars['BigInt']>
-  firstBidTime_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  highestBid?: InputMaybe<Scalars['String']>
+  dao_contains?: InputMaybe<Scalars['String']['input']>
+  dao_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_gt?: InputMaybe<Scalars['String']['input']>
+  dao_gte?: InputMaybe<Scalars['String']['input']>
+  dao_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_lt?: InputMaybe<Scalars['String']['input']>
+  dao_lte?: InputMaybe<Scalars['String']['input']>
+  dao_not?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  endTime?: InputMaybe<Scalars['BigInt']['input']>
+  endTime_gt?: InputMaybe<Scalars['BigInt']['input']>
+  endTime_gte?: InputMaybe<Scalars['BigInt']['input']>
+  endTime_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  endTime_lt?: InputMaybe<Scalars['BigInt']['input']>
+  endTime_lte?: InputMaybe<Scalars['BigInt']['input']>
+  endTime_not?: InputMaybe<Scalars['BigInt']['input']>
+  endTime_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  extended?: InputMaybe<Scalars['Boolean']['input']>
+  extended_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  extended_not?: InputMaybe<Scalars['Boolean']['input']>
+  extended_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  firstBidTime?: InputMaybe<Scalars['BigInt']['input']>
+  firstBidTime_gt?: InputMaybe<Scalars['BigInt']['input']>
+  firstBidTime_gte?: InputMaybe<Scalars['BigInt']['input']>
+  firstBidTime_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  firstBidTime_lt?: InputMaybe<Scalars['BigInt']['input']>
+  firstBidTime_lte?: InputMaybe<Scalars['BigInt']['input']>
+  firstBidTime_not?: InputMaybe<Scalars['BigInt']['input']>
+  firstBidTime_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  highestBid?: InputMaybe<Scalars['String']['input']>
   highestBid_?: InputMaybe<AuctionBid_Filter>
-  highestBid_contains?: InputMaybe<Scalars['String']>
-  highestBid_contains_nocase?: InputMaybe<Scalars['String']>
-  highestBid_ends_with?: InputMaybe<Scalars['String']>
-  highestBid_ends_with_nocase?: InputMaybe<Scalars['String']>
-  highestBid_gt?: InputMaybe<Scalars['String']>
-  highestBid_gte?: InputMaybe<Scalars['String']>
-  highestBid_in?: InputMaybe<Array<Scalars['String']>>
-  highestBid_lt?: InputMaybe<Scalars['String']>
-  highestBid_lte?: InputMaybe<Scalars['String']>
-  highestBid_not?: InputMaybe<Scalars['String']>
-  highestBid_not_contains?: InputMaybe<Scalars['String']>
-  highestBid_not_contains_nocase?: InputMaybe<Scalars['String']>
-  highestBid_not_ends_with?: InputMaybe<Scalars['String']>
-  highestBid_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  highestBid_not_in?: InputMaybe<Array<Scalars['String']>>
-  highestBid_not_starts_with?: InputMaybe<Scalars['String']>
-  highestBid_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  highestBid_starts_with?: InputMaybe<Scalars['String']>
-  highestBid_starts_with_nocase?: InputMaybe<Scalars['String']>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  highestBid_contains?: InputMaybe<Scalars['String']['input']>
+  highestBid_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  highestBid_ends_with?: InputMaybe<Scalars['String']['input']>
+  highestBid_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  highestBid_gt?: InputMaybe<Scalars['String']['input']>
+  highestBid_gte?: InputMaybe<Scalars['String']['input']>
+  highestBid_in?: InputMaybe<Array<Scalars['String']['input']>>
+  highestBid_lt?: InputMaybe<Scalars['String']['input']>
+  highestBid_lte?: InputMaybe<Scalars['String']['input']>
+  highestBid_not?: InputMaybe<Scalars['String']['input']>
+  highestBid_not_contains?: InputMaybe<Scalars['String']['input']>
+  highestBid_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  highestBid_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  highestBid_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  highestBid_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  highestBid_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  highestBid_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  highestBid_starts_with?: InputMaybe<Scalars['String']['input']>
+  highestBid_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
   or?: InputMaybe<Array<InputMaybe<Auction_Filter>>>
-  settled?: InputMaybe<Scalars['Boolean']>
-  settled_in?: InputMaybe<Array<Scalars['Boolean']>>
-  settled_not?: InputMaybe<Scalars['Boolean']>
-  settled_not_in?: InputMaybe<Array<Scalars['Boolean']>>
-  startTime?: InputMaybe<Scalars['BigInt']>
-  startTime_gt?: InputMaybe<Scalars['BigInt']>
-  startTime_gte?: InputMaybe<Scalars['BigInt']>
-  startTime_in?: InputMaybe<Array<Scalars['BigInt']>>
-  startTime_lt?: InputMaybe<Scalars['BigInt']>
-  startTime_lte?: InputMaybe<Scalars['BigInt']>
-  startTime_not?: InputMaybe<Scalars['BigInt']>
-  startTime_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  token?: InputMaybe<Scalars['String']>
+  settled?: InputMaybe<Scalars['Boolean']['input']>
+  settled_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  settled_not?: InputMaybe<Scalars['Boolean']['input']>
+  settled_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  startTime?: InputMaybe<Scalars['BigInt']['input']>
+  startTime_gt?: InputMaybe<Scalars['BigInt']['input']>
+  startTime_gte?: InputMaybe<Scalars['BigInt']['input']>
+  startTime_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  startTime_lt?: InputMaybe<Scalars['BigInt']['input']>
+  startTime_lte?: InputMaybe<Scalars['BigInt']['input']>
+  startTime_not?: InputMaybe<Scalars['BigInt']['input']>
+  startTime_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  token?: InputMaybe<Scalars['String']['input']>
   token_?: InputMaybe<Token_Filter>
-  token_contains?: InputMaybe<Scalars['String']>
-  token_contains_nocase?: InputMaybe<Scalars['String']>
-  token_ends_with?: InputMaybe<Scalars['String']>
-  token_ends_with_nocase?: InputMaybe<Scalars['String']>
-  token_gt?: InputMaybe<Scalars['String']>
-  token_gte?: InputMaybe<Scalars['String']>
-  token_in?: InputMaybe<Array<Scalars['String']>>
-  token_lt?: InputMaybe<Scalars['String']>
-  token_lte?: InputMaybe<Scalars['String']>
-  token_not?: InputMaybe<Scalars['String']>
-  token_not_contains?: InputMaybe<Scalars['String']>
-  token_not_contains_nocase?: InputMaybe<Scalars['String']>
-  token_not_ends_with?: InputMaybe<Scalars['String']>
-  token_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  token_not_in?: InputMaybe<Array<Scalars['String']>>
-  token_not_starts_with?: InputMaybe<Scalars['String']>
-  token_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  token_starts_with?: InputMaybe<Scalars['String']>
-  token_starts_with_nocase?: InputMaybe<Scalars['String']>
-  winningBid?: InputMaybe<Scalars['String']>
+  token_contains?: InputMaybe<Scalars['String']['input']>
+  token_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  token_ends_with?: InputMaybe<Scalars['String']['input']>
+  token_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  token_gt?: InputMaybe<Scalars['String']['input']>
+  token_gte?: InputMaybe<Scalars['String']['input']>
+  token_in?: InputMaybe<Array<Scalars['String']['input']>>
+  token_lt?: InputMaybe<Scalars['String']['input']>
+  token_lte?: InputMaybe<Scalars['String']['input']>
+  token_not?: InputMaybe<Scalars['String']['input']>
+  token_not_contains?: InputMaybe<Scalars['String']['input']>
+  token_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  token_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  token_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  token_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  token_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  token_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  token_starts_with?: InputMaybe<Scalars['String']['input']>
+  token_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  winningBid?: InputMaybe<Scalars['String']['input']>
   winningBid_?: InputMaybe<AuctionBid_Filter>
-  winningBid_contains?: InputMaybe<Scalars['String']>
-  winningBid_contains_nocase?: InputMaybe<Scalars['String']>
-  winningBid_ends_with?: InputMaybe<Scalars['String']>
-  winningBid_ends_with_nocase?: InputMaybe<Scalars['String']>
-  winningBid_gt?: InputMaybe<Scalars['String']>
-  winningBid_gte?: InputMaybe<Scalars['String']>
-  winningBid_in?: InputMaybe<Array<Scalars['String']>>
-  winningBid_lt?: InputMaybe<Scalars['String']>
-  winningBid_lte?: InputMaybe<Scalars['String']>
-  winningBid_not?: InputMaybe<Scalars['String']>
-  winningBid_not_contains?: InputMaybe<Scalars['String']>
-  winningBid_not_contains_nocase?: InputMaybe<Scalars['String']>
-  winningBid_not_ends_with?: InputMaybe<Scalars['String']>
-  winningBid_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  winningBid_not_in?: InputMaybe<Array<Scalars['String']>>
-  winningBid_not_starts_with?: InputMaybe<Scalars['String']>
-  winningBid_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  winningBid_starts_with?: InputMaybe<Scalars['String']>
-  winningBid_starts_with_nocase?: InputMaybe<Scalars['String']>
+  winningBid_contains?: InputMaybe<Scalars['String']['input']>
+  winningBid_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  winningBid_ends_with?: InputMaybe<Scalars['String']['input']>
+  winningBid_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  winningBid_gt?: InputMaybe<Scalars['String']['input']>
+  winningBid_gte?: InputMaybe<Scalars['String']['input']>
+  winningBid_in?: InputMaybe<Array<Scalars['String']['input']>>
+  winningBid_lt?: InputMaybe<Scalars['String']['input']>
+  winningBid_lte?: InputMaybe<Scalars['String']['input']>
+  winningBid_not?: InputMaybe<Scalars['String']['input']>
+  winningBid_not_contains?: InputMaybe<Scalars['String']['input']>
+  winningBid_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  winningBid_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  winningBid_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  winningBid_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  winningBid_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  winningBid_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  winningBid_starts_with?: InputMaybe<Scalars['String']['input']>
+  winningBid_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
 }
 
 export enum Auction_OrderBy {
@@ -391,95 +397,95 @@ export enum Auction_OrderBy {
 }
 
 export type BlockChangedFilter = {
-  number_gte: Scalars['Int']
+  number_gte: Scalars['Int']['input']
 }
 
 export type Block_Height = {
-  hash?: InputMaybe<Scalars['Bytes']>
-  number?: InputMaybe<Scalars['Int']>
-  number_gte?: InputMaybe<Scalars['Int']>
+  hash?: InputMaybe<Scalars['Bytes']['input']>
+  number?: InputMaybe<Scalars['Int']['input']>
+  number_gte?: InputMaybe<Scalars['Int']['input']>
 }
 
 export type Dao = {
   __typename?: 'DAO'
-  auctionAddress: Scalars['Bytes']
+  auctionAddress: Scalars['Bytes']['output']
   auctionConfig: AuctionConfig
   auctions: Array<Auction>
-  contractImage: Scalars['String']
+  contractImage: Scalars['String']['output']
   currentAuction?: Maybe<Auction>
-  description: Scalars['String']
-  governorAddress: Scalars['Bytes']
-  id: Scalars['ID']
-  metadataAddress: Scalars['Bytes']
+  description: Scalars['String']['output']
+  governorAddress: Scalars['Bytes']['output']
+  id: Scalars['ID']['output']
+  metadataAddress: Scalars['Bytes']['output']
   metadataProperties?: Maybe<Array<MetadataProperty>>
-  name: Scalars['String']
-  ownerCount: Scalars['Int']
+  name: Scalars['String']['output']
+  ownerCount: Scalars['Int']['output']
   owners: Array<DaoTokenOwner>
-  projectURI: Scalars['String']
-  proposalCount: Scalars['Int']
+  projectURI: Scalars['String']['output']
+  proposalCount: Scalars['Int']['output']
   proposals: Array<Proposal>
-  symbol: Scalars['String']
-  tokenAddress: Scalars['Bytes']
+  symbol: Scalars['String']['output']
+  tokenAddress: Scalars['Bytes']['output']
   tokens: Array<Token>
-  totalAuctionSales: Scalars['BigInt']
-  totalSupply: Scalars['Int']
-  treasuryAddress: Scalars['Bytes']
+  totalAuctionSales: Scalars['BigInt']['output']
+  totalSupply: Scalars['Int']['output']
+  treasuryAddress: Scalars['Bytes']['output']
 }
 
 export type DaoAuctionsArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Auction_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<Auction_Filter>
 }
 
 export type DaoMetadataPropertiesArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<MetadataProperty_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<MetadataProperty_Filter>
 }
 
 export type DaoOwnersArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<DaoTokenOwner_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<DaoTokenOwner_Filter>
 }
 
 export type DaoProposalsArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Proposal_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<Proposal_Filter>
 }
 
 export type DaoTokensArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Token_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<Token_Filter>
 }
 
 export type DaoTokenOwner = {
   __typename?: 'DAOTokenOwner'
   dao: Dao
-  daoTokenCount: Scalars['Int']
+  daoTokenCount: Scalars['Int']['output']
   daoTokens: Array<Token>
-  id: Scalars['ID']
-  owner: Scalars['Bytes']
+  id: Scalars['ID']['output']
+  owner: Scalars['Bytes']['output']
 }
 
 export type DaoTokenOwnerDaoTokensArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Token_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<Token_Filter>
 }
 
@@ -487,55 +493,55 @@ export type DaoTokenOwner_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<DaoTokenOwner_Filter>>>
-  dao?: InputMaybe<Scalars['String']>
-  daoTokenCount?: InputMaybe<Scalars['Int']>
-  daoTokenCount_gt?: InputMaybe<Scalars['Int']>
-  daoTokenCount_gte?: InputMaybe<Scalars['Int']>
-  daoTokenCount_in?: InputMaybe<Array<Scalars['Int']>>
-  daoTokenCount_lt?: InputMaybe<Scalars['Int']>
-  daoTokenCount_lte?: InputMaybe<Scalars['Int']>
-  daoTokenCount_not?: InputMaybe<Scalars['Int']>
-  daoTokenCount_not_in?: InputMaybe<Array<Scalars['Int']>>
+  dao?: InputMaybe<Scalars['String']['input']>
+  daoTokenCount?: InputMaybe<Scalars['Int']['input']>
+  daoTokenCount_gt?: InputMaybe<Scalars['Int']['input']>
+  daoTokenCount_gte?: InputMaybe<Scalars['Int']['input']>
+  daoTokenCount_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  daoTokenCount_lt?: InputMaybe<Scalars['Int']['input']>
+  daoTokenCount_lte?: InputMaybe<Scalars['Int']['input']>
+  daoTokenCount_not?: InputMaybe<Scalars['Int']['input']>
+  daoTokenCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
   daoTokens_?: InputMaybe<Token_Filter>
   dao_?: InputMaybe<Dao_Filter>
-  dao_contains?: InputMaybe<Scalars['String']>
-  dao_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_ends_with?: InputMaybe<Scalars['String']>
-  dao_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_gt?: InputMaybe<Scalars['String']>
-  dao_gte?: InputMaybe<Scalars['String']>
-  dao_in?: InputMaybe<Array<Scalars['String']>>
-  dao_lt?: InputMaybe<Scalars['String']>
-  dao_lte?: InputMaybe<Scalars['String']>
-  dao_not?: InputMaybe<Scalars['String']>
-  dao_not_contains?: InputMaybe<Scalars['String']>
-  dao_not_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_not_ends_with?: InputMaybe<Scalars['String']>
-  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_not_in?: InputMaybe<Array<Scalars['String']>>
-  dao_not_starts_with?: InputMaybe<Scalars['String']>
-  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  dao_starts_with?: InputMaybe<Scalars['String']>
-  dao_starts_with_nocase?: InputMaybe<Scalars['String']>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  dao_contains?: InputMaybe<Scalars['String']['input']>
+  dao_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_gt?: InputMaybe<Scalars['String']['input']>
+  dao_gte?: InputMaybe<Scalars['String']['input']>
+  dao_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_lt?: InputMaybe<Scalars['String']['input']>
+  dao_lte?: InputMaybe<Scalars['String']['input']>
+  dao_not?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
   or?: InputMaybe<Array<InputMaybe<DaoTokenOwner_Filter>>>
-  owner?: InputMaybe<Scalars['Bytes']>
-  owner_contains?: InputMaybe<Scalars['Bytes']>
-  owner_gt?: InputMaybe<Scalars['Bytes']>
-  owner_gte?: InputMaybe<Scalars['Bytes']>
-  owner_in?: InputMaybe<Array<Scalars['Bytes']>>
-  owner_lt?: InputMaybe<Scalars['Bytes']>
-  owner_lte?: InputMaybe<Scalars['Bytes']>
-  owner_not?: InputMaybe<Scalars['Bytes']>
-  owner_not_contains?: InputMaybe<Scalars['Bytes']>
-  owner_not_in?: InputMaybe<Array<Scalars['Bytes']>>
+  owner?: InputMaybe<Scalars['Bytes']['input']>
+  owner_contains?: InputMaybe<Scalars['Bytes']['input']>
+  owner_gt?: InputMaybe<Scalars['Bytes']['input']>
+  owner_gte?: InputMaybe<Scalars['Bytes']['input']>
+  owner_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  owner_lt?: InputMaybe<Scalars['Bytes']['input']>
+  owner_lte?: InputMaybe<Scalars['Bytes']['input']>
+  owner_not?: InputMaybe<Scalars['Bytes']['input']>
+  owner_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  owner_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
 }
 
 export enum DaoTokenOwner_OrderBy {
@@ -565,250 +571,250 @@ export type Dao_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<Dao_Filter>>>
-  auctionAddress?: InputMaybe<Scalars['Bytes']>
-  auctionAddress_contains?: InputMaybe<Scalars['Bytes']>
-  auctionAddress_gt?: InputMaybe<Scalars['Bytes']>
-  auctionAddress_gte?: InputMaybe<Scalars['Bytes']>
-  auctionAddress_in?: InputMaybe<Array<Scalars['Bytes']>>
-  auctionAddress_lt?: InputMaybe<Scalars['Bytes']>
-  auctionAddress_lte?: InputMaybe<Scalars['Bytes']>
-  auctionAddress_not?: InputMaybe<Scalars['Bytes']>
-  auctionAddress_not_contains?: InputMaybe<Scalars['Bytes']>
-  auctionAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  auctionConfig?: InputMaybe<Scalars['String']>
+  auctionAddress?: InputMaybe<Scalars['Bytes']['input']>
+  auctionAddress_contains?: InputMaybe<Scalars['Bytes']['input']>
+  auctionAddress_gt?: InputMaybe<Scalars['Bytes']['input']>
+  auctionAddress_gte?: InputMaybe<Scalars['Bytes']['input']>
+  auctionAddress_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  auctionAddress_lt?: InputMaybe<Scalars['Bytes']['input']>
+  auctionAddress_lte?: InputMaybe<Scalars['Bytes']['input']>
+  auctionAddress_not?: InputMaybe<Scalars['Bytes']['input']>
+  auctionAddress_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  auctionAddress_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  auctionConfig?: InputMaybe<Scalars['String']['input']>
   auctionConfig_?: InputMaybe<AuctionConfig_Filter>
-  auctionConfig_contains?: InputMaybe<Scalars['String']>
-  auctionConfig_contains_nocase?: InputMaybe<Scalars['String']>
-  auctionConfig_ends_with?: InputMaybe<Scalars['String']>
-  auctionConfig_ends_with_nocase?: InputMaybe<Scalars['String']>
-  auctionConfig_gt?: InputMaybe<Scalars['String']>
-  auctionConfig_gte?: InputMaybe<Scalars['String']>
-  auctionConfig_in?: InputMaybe<Array<Scalars['String']>>
-  auctionConfig_lt?: InputMaybe<Scalars['String']>
-  auctionConfig_lte?: InputMaybe<Scalars['String']>
-  auctionConfig_not?: InputMaybe<Scalars['String']>
-  auctionConfig_not_contains?: InputMaybe<Scalars['String']>
-  auctionConfig_not_contains_nocase?: InputMaybe<Scalars['String']>
-  auctionConfig_not_ends_with?: InputMaybe<Scalars['String']>
-  auctionConfig_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  auctionConfig_not_in?: InputMaybe<Array<Scalars['String']>>
-  auctionConfig_not_starts_with?: InputMaybe<Scalars['String']>
-  auctionConfig_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  auctionConfig_starts_with?: InputMaybe<Scalars['String']>
-  auctionConfig_starts_with_nocase?: InputMaybe<Scalars['String']>
+  auctionConfig_contains?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_ends_with?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_gt?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_gte?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_in?: InputMaybe<Array<Scalars['String']['input']>>
+  auctionConfig_lt?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_lte?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_not?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_not_contains?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  auctionConfig_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_starts_with?: InputMaybe<Scalars['String']['input']>
+  auctionConfig_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
   auctions_?: InputMaybe<Auction_Filter>
-  contractImage?: InputMaybe<Scalars['String']>
-  contractImage_contains?: InputMaybe<Scalars['String']>
-  contractImage_contains_nocase?: InputMaybe<Scalars['String']>
-  contractImage_ends_with?: InputMaybe<Scalars['String']>
-  contractImage_ends_with_nocase?: InputMaybe<Scalars['String']>
-  contractImage_gt?: InputMaybe<Scalars['String']>
-  contractImage_gte?: InputMaybe<Scalars['String']>
-  contractImage_in?: InputMaybe<Array<Scalars['String']>>
-  contractImage_lt?: InputMaybe<Scalars['String']>
-  contractImage_lte?: InputMaybe<Scalars['String']>
-  contractImage_not?: InputMaybe<Scalars['String']>
-  contractImage_not_contains?: InputMaybe<Scalars['String']>
-  contractImage_not_contains_nocase?: InputMaybe<Scalars['String']>
-  contractImage_not_ends_with?: InputMaybe<Scalars['String']>
-  contractImage_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  contractImage_not_in?: InputMaybe<Array<Scalars['String']>>
-  contractImage_not_starts_with?: InputMaybe<Scalars['String']>
-  contractImage_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  contractImage_starts_with?: InputMaybe<Scalars['String']>
-  contractImage_starts_with_nocase?: InputMaybe<Scalars['String']>
-  currentAuction?: InputMaybe<Scalars['String']>
+  contractImage?: InputMaybe<Scalars['String']['input']>
+  contractImage_contains?: InputMaybe<Scalars['String']['input']>
+  contractImage_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  contractImage_ends_with?: InputMaybe<Scalars['String']['input']>
+  contractImage_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  contractImage_gt?: InputMaybe<Scalars['String']['input']>
+  contractImage_gte?: InputMaybe<Scalars['String']['input']>
+  contractImage_in?: InputMaybe<Array<Scalars['String']['input']>>
+  contractImage_lt?: InputMaybe<Scalars['String']['input']>
+  contractImage_lte?: InputMaybe<Scalars['String']['input']>
+  contractImage_not?: InputMaybe<Scalars['String']['input']>
+  contractImage_not_contains?: InputMaybe<Scalars['String']['input']>
+  contractImage_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  contractImage_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  contractImage_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  contractImage_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  contractImage_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  contractImage_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  contractImage_starts_with?: InputMaybe<Scalars['String']['input']>
+  contractImage_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  currentAuction?: InputMaybe<Scalars['String']['input']>
   currentAuction_?: InputMaybe<Auction_Filter>
-  currentAuction_contains?: InputMaybe<Scalars['String']>
-  currentAuction_contains_nocase?: InputMaybe<Scalars['String']>
-  currentAuction_ends_with?: InputMaybe<Scalars['String']>
-  currentAuction_ends_with_nocase?: InputMaybe<Scalars['String']>
-  currentAuction_gt?: InputMaybe<Scalars['String']>
-  currentAuction_gte?: InputMaybe<Scalars['String']>
-  currentAuction_in?: InputMaybe<Array<Scalars['String']>>
-  currentAuction_lt?: InputMaybe<Scalars['String']>
-  currentAuction_lte?: InputMaybe<Scalars['String']>
-  currentAuction_not?: InputMaybe<Scalars['String']>
-  currentAuction_not_contains?: InputMaybe<Scalars['String']>
-  currentAuction_not_contains_nocase?: InputMaybe<Scalars['String']>
-  currentAuction_not_ends_with?: InputMaybe<Scalars['String']>
-  currentAuction_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  currentAuction_not_in?: InputMaybe<Array<Scalars['String']>>
-  currentAuction_not_starts_with?: InputMaybe<Scalars['String']>
-  currentAuction_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  currentAuction_starts_with?: InputMaybe<Scalars['String']>
-  currentAuction_starts_with_nocase?: InputMaybe<Scalars['String']>
-  description?: InputMaybe<Scalars['String']>
-  description_contains?: InputMaybe<Scalars['String']>
-  description_contains_nocase?: InputMaybe<Scalars['String']>
-  description_ends_with?: InputMaybe<Scalars['String']>
-  description_ends_with_nocase?: InputMaybe<Scalars['String']>
-  description_gt?: InputMaybe<Scalars['String']>
-  description_gte?: InputMaybe<Scalars['String']>
-  description_in?: InputMaybe<Array<Scalars['String']>>
-  description_lt?: InputMaybe<Scalars['String']>
-  description_lte?: InputMaybe<Scalars['String']>
-  description_not?: InputMaybe<Scalars['String']>
-  description_not_contains?: InputMaybe<Scalars['String']>
-  description_not_contains_nocase?: InputMaybe<Scalars['String']>
-  description_not_ends_with?: InputMaybe<Scalars['String']>
-  description_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  description_not_in?: InputMaybe<Array<Scalars['String']>>
-  description_not_starts_with?: InputMaybe<Scalars['String']>
-  description_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  description_starts_with?: InputMaybe<Scalars['String']>
-  description_starts_with_nocase?: InputMaybe<Scalars['String']>
-  governorAddress?: InputMaybe<Scalars['Bytes']>
-  governorAddress_contains?: InputMaybe<Scalars['Bytes']>
-  governorAddress_gt?: InputMaybe<Scalars['Bytes']>
-  governorAddress_gte?: InputMaybe<Scalars['Bytes']>
-  governorAddress_in?: InputMaybe<Array<Scalars['Bytes']>>
-  governorAddress_lt?: InputMaybe<Scalars['Bytes']>
-  governorAddress_lte?: InputMaybe<Scalars['Bytes']>
-  governorAddress_not?: InputMaybe<Scalars['Bytes']>
-  governorAddress_not_contains?: InputMaybe<Scalars['Bytes']>
-  governorAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
-  metadataAddress?: InputMaybe<Scalars['Bytes']>
-  metadataAddress_contains?: InputMaybe<Scalars['Bytes']>
-  metadataAddress_gt?: InputMaybe<Scalars['Bytes']>
-  metadataAddress_gte?: InputMaybe<Scalars['Bytes']>
-  metadataAddress_in?: InputMaybe<Array<Scalars['Bytes']>>
-  metadataAddress_lt?: InputMaybe<Scalars['Bytes']>
-  metadataAddress_lte?: InputMaybe<Scalars['Bytes']>
-  metadataAddress_not?: InputMaybe<Scalars['Bytes']>
-  metadataAddress_not_contains?: InputMaybe<Scalars['Bytes']>
-  metadataAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  metadataProperties?: InputMaybe<Array<Scalars['String']>>
+  currentAuction_contains?: InputMaybe<Scalars['String']['input']>
+  currentAuction_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  currentAuction_ends_with?: InputMaybe<Scalars['String']['input']>
+  currentAuction_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  currentAuction_gt?: InputMaybe<Scalars['String']['input']>
+  currentAuction_gte?: InputMaybe<Scalars['String']['input']>
+  currentAuction_in?: InputMaybe<Array<Scalars['String']['input']>>
+  currentAuction_lt?: InputMaybe<Scalars['String']['input']>
+  currentAuction_lte?: InputMaybe<Scalars['String']['input']>
+  currentAuction_not?: InputMaybe<Scalars['String']['input']>
+  currentAuction_not_contains?: InputMaybe<Scalars['String']['input']>
+  currentAuction_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  currentAuction_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  currentAuction_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  currentAuction_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  currentAuction_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  currentAuction_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  currentAuction_starts_with?: InputMaybe<Scalars['String']['input']>
+  currentAuction_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  description?: InputMaybe<Scalars['String']['input']>
+  description_contains?: InputMaybe<Scalars['String']['input']>
+  description_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  description_ends_with?: InputMaybe<Scalars['String']['input']>
+  description_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  description_gt?: InputMaybe<Scalars['String']['input']>
+  description_gte?: InputMaybe<Scalars['String']['input']>
+  description_in?: InputMaybe<Array<Scalars['String']['input']>>
+  description_lt?: InputMaybe<Scalars['String']['input']>
+  description_lte?: InputMaybe<Scalars['String']['input']>
+  description_not?: InputMaybe<Scalars['String']['input']>
+  description_not_contains?: InputMaybe<Scalars['String']['input']>
+  description_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  description_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  description_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  description_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  description_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  description_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  description_starts_with?: InputMaybe<Scalars['String']['input']>
+  description_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  governorAddress?: InputMaybe<Scalars['Bytes']['input']>
+  governorAddress_contains?: InputMaybe<Scalars['Bytes']['input']>
+  governorAddress_gt?: InputMaybe<Scalars['Bytes']['input']>
+  governorAddress_gte?: InputMaybe<Scalars['Bytes']['input']>
+  governorAddress_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  governorAddress_lt?: InputMaybe<Scalars['Bytes']['input']>
+  governorAddress_lte?: InputMaybe<Scalars['Bytes']['input']>
+  governorAddress_not?: InputMaybe<Scalars['Bytes']['input']>
+  governorAddress_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  governorAddress_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  metadataAddress?: InputMaybe<Scalars['Bytes']['input']>
+  metadataAddress_contains?: InputMaybe<Scalars['Bytes']['input']>
+  metadataAddress_gt?: InputMaybe<Scalars['Bytes']['input']>
+  metadataAddress_gte?: InputMaybe<Scalars['Bytes']['input']>
+  metadataAddress_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  metadataAddress_lt?: InputMaybe<Scalars['Bytes']['input']>
+  metadataAddress_lte?: InputMaybe<Scalars['Bytes']['input']>
+  metadataAddress_not?: InputMaybe<Scalars['Bytes']['input']>
+  metadataAddress_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  metadataAddress_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  metadataProperties?: InputMaybe<Array<Scalars['String']['input']>>
   metadataProperties_?: InputMaybe<MetadataProperty_Filter>
-  metadataProperties_contains?: InputMaybe<Array<Scalars['String']>>
-  metadataProperties_contains_nocase?: InputMaybe<Array<Scalars['String']>>
-  metadataProperties_not?: InputMaybe<Array<Scalars['String']>>
-  metadataProperties_not_contains?: InputMaybe<Array<Scalars['String']>>
-  metadataProperties_not_contains_nocase?: InputMaybe<Array<Scalars['String']>>
-  name?: InputMaybe<Scalars['String']>
-  name_contains?: InputMaybe<Scalars['String']>
-  name_contains_nocase?: InputMaybe<Scalars['String']>
-  name_ends_with?: InputMaybe<Scalars['String']>
-  name_ends_with_nocase?: InputMaybe<Scalars['String']>
-  name_gt?: InputMaybe<Scalars['String']>
-  name_gte?: InputMaybe<Scalars['String']>
-  name_in?: InputMaybe<Array<Scalars['String']>>
-  name_lt?: InputMaybe<Scalars['String']>
-  name_lte?: InputMaybe<Scalars['String']>
-  name_not?: InputMaybe<Scalars['String']>
-  name_not_contains?: InputMaybe<Scalars['String']>
-  name_not_contains_nocase?: InputMaybe<Scalars['String']>
-  name_not_ends_with?: InputMaybe<Scalars['String']>
-  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  name_not_in?: InputMaybe<Array<Scalars['String']>>
-  name_not_starts_with?: InputMaybe<Scalars['String']>
-  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  name_starts_with?: InputMaybe<Scalars['String']>
-  name_starts_with_nocase?: InputMaybe<Scalars['String']>
+  metadataProperties_contains?: InputMaybe<Array<Scalars['String']['input']>>
+  metadataProperties_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>
+  metadataProperties_not?: InputMaybe<Array<Scalars['String']['input']>>
+  metadataProperties_not_contains?: InputMaybe<Array<Scalars['String']['input']>>
+  metadataProperties_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>
+  name?: InputMaybe<Scalars['String']['input']>
+  name_contains?: InputMaybe<Scalars['String']['input']>
+  name_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  name_ends_with?: InputMaybe<Scalars['String']['input']>
+  name_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_gt?: InputMaybe<Scalars['String']['input']>
+  name_gte?: InputMaybe<Scalars['String']['input']>
+  name_in?: InputMaybe<Array<Scalars['String']['input']>>
+  name_lt?: InputMaybe<Scalars['String']['input']>
+  name_lte?: InputMaybe<Scalars['String']['input']>
+  name_not?: InputMaybe<Scalars['String']['input']>
+  name_not_contains?: InputMaybe<Scalars['String']['input']>
+  name_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  name_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  name_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_starts_with?: InputMaybe<Scalars['String']['input']>
+  name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
   or?: InputMaybe<Array<InputMaybe<Dao_Filter>>>
-  ownerCount?: InputMaybe<Scalars['Int']>
-  ownerCount_gt?: InputMaybe<Scalars['Int']>
-  ownerCount_gte?: InputMaybe<Scalars['Int']>
-  ownerCount_in?: InputMaybe<Array<Scalars['Int']>>
-  ownerCount_lt?: InputMaybe<Scalars['Int']>
-  ownerCount_lte?: InputMaybe<Scalars['Int']>
-  ownerCount_not?: InputMaybe<Scalars['Int']>
-  ownerCount_not_in?: InputMaybe<Array<Scalars['Int']>>
+  ownerCount?: InputMaybe<Scalars['Int']['input']>
+  ownerCount_gt?: InputMaybe<Scalars['Int']['input']>
+  ownerCount_gte?: InputMaybe<Scalars['Int']['input']>
+  ownerCount_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  ownerCount_lt?: InputMaybe<Scalars['Int']['input']>
+  ownerCount_lte?: InputMaybe<Scalars['Int']['input']>
+  ownerCount_not?: InputMaybe<Scalars['Int']['input']>
+  ownerCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
   owners_?: InputMaybe<DaoTokenOwner_Filter>
-  projectURI?: InputMaybe<Scalars['String']>
-  projectURI_contains?: InputMaybe<Scalars['String']>
-  projectURI_contains_nocase?: InputMaybe<Scalars['String']>
-  projectURI_ends_with?: InputMaybe<Scalars['String']>
-  projectURI_ends_with_nocase?: InputMaybe<Scalars['String']>
-  projectURI_gt?: InputMaybe<Scalars['String']>
-  projectURI_gte?: InputMaybe<Scalars['String']>
-  projectURI_in?: InputMaybe<Array<Scalars['String']>>
-  projectURI_lt?: InputMaybe<Scalars['String']>
-  projectURI_lte?: InputMaybe<Scalars['String']>
-  projectURI_not?: InputMaybe<Scalars['String']>
-  projectURI_not_contains?: InputMaybe<Scalars['String']>
-  projectURI_not_contains_nocase?: InputMaybe<Scalars['String']>
-  projectURI_not_ends_with?: InputMaybe<Scalars['String']>
-  projectURI_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  projectURI_not_in?: InputMaybe<Array<Scalars['String']>>
-  projectURI_not_starts_with?: InputMaybe<Scalars['String']>
-  projectURI_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  projectURI_starts_with?: InputMaybe<Scalars['String']>
-  projectURI_starts_with_nocase?: InputMaybe<Scalars['String']>
-  proposalCount?: InputMaybe<Scalars['Int']>
-  proposalCount_gt?: InputMaybe<Scalars['Int']>
-  proposalCount_gte?: InputMaybe<Scalars['Int']>
-  proposalCount_in?: InputMaybe<Array<Scalars['Int']>>
-  proposalCount_lt?: InputMaybe<Scalars['Int']>
-  proposalCount_lte?: InputMaybe<Scalars['Int']>
-  proposalCount_not?: InputMaybe<Scalars['Int']>
-  proposalCount_not_in?: InputMaybe<Array<Scalars['Int']>>
+  projectURI?: InputMaybe<Scalars['String']['input']>
+  projectURI_contains?: InputMaybe<Scalars['String']['input']>
+  projectURI_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  projectURI_ends_with?: InputMaybe<Scalars['String']['input']>
+  projectURI_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  projectURI_gt?: InputMaybe<Scalars['String']['input']>
+  projectURI_gte?: InputMaybe<Scalars['String']['input']>
+  projectURI_in?: InputMaybe<Array<Scalars['String']['input']>>
+  projectURI_lt?: InputMaybe<Scalars['String']['input']>
+  projectURI_lte?: InputMaybe<Scalars['String']['input']>
+  projectURI_not?: InputMaybe<Scalars['String']['input']>
+  projectURI_not_contains?: InputMaybe<Scalars['String']['input']>
+  projectURI_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  projectURI_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  projectURI_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  projectURI_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  projectURI_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  projectURI_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  projectURI_starts_with?: InputMaybe<Scalars['String']['input']>
+  projectURI_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  proposalCount?: InputMaybe<Scalars['Int']['input']>
+  proposalCount_gt?: InputMaybe<Scalars['Int']['input']>
+  proposalCount_gte?: InputMaybe<Scalars['Int']['input']>
+  proposalCount_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  proposalCount_lt?: InputMaybe<Scalars['Int']['input']>
+  proposalCount_lte?: InputMaybe<Scalars['Int']['input']>
+  proposalCount_not?: InputMaybe<Scalars['Int']['input']>
+  proposalCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
   proposals_?: InputMaybe<Proposal_Filter>
-  symbol?: InputMaybe<Scalars['String']>
-  symbol_contains?: InputMaybe<Scalars['String']>
-  symbol_contains_nocase?: InputMaybe<Scalars['String']>
-  symbol_ends_with?: InputMaybe<Scalars['String']>
-  symbol_ends_with_nocase?: InputMaybe<Scalars['String']>
-  symbol_gt?: InputMaybe<Scalars['String']>
-  symbol_gte?: InputMaybe<Scalars['String']>
-  symbol_in?: InputMaybe<Array<Scalars['String']>>
-  symbol_lt?: InputMaybe<Scalars['String']>
-  symbol_lte?: InputMaybe<Scalars['String']>
-  symbol_not?: InputMaybe<Scalars['String']>
-  symbol_not_contains?: InputMaybe<Scalars['String']>
-  symbol_not_contains_nocase?: InputMaybe<Scalars['String']>
-  symbol_not_ends_with?: InputMaybe<Scalars['String']>
-  symbol_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  symbol_not_in?: InputMaybe<Array<Scalars['String']>>
-  symbol_not_starts_with?: InputMaybe<Scalars['String']>
-  symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  symbol_starts_with?: InputMaybe<Scalars['String']>
-  symbol_starts_with_nocase?: InputMaybe<Scalars['String']>
-  tokenAddress?: InputMaybe<Scalars['Bytes']>
-  tokenAddress_contains?: InputMaybe<Scalars['Bytes']>
-  tokenAddress_gt?: InputMaybe<Scalars['Bytes']>
-  tokenAddress_gte?: InputMaybe<Scalars['Bytes']>
-  tokenAddress_in?: InputMaybe<Array<Scalars['Bytes']>>
-  tokenAddress_lt?: InputMaybe<Scalars['Bytes']>
-  tokenAddress_lte?: InputMaybe<Scalars['Bytes']>
-  tokenAddress_not?: InputMaybe<Scalars['Bytes']>
-  tokenAddress_not_contains?: InputMaybe<Scalars['Bytes']>
-  tokenAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>
+  symbol?: InputMaybe<Scalars['String']['input']>
+  symbol_contains?: InputMaybe<Scalars['String']['input']>
+  symbol_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  symbol_ends_with?: InputMaybe<Scalars['String']['input']>
+  symbol_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  symbol_gt?: InputMaybe<Scalars['String']['input']>
+  symbol_gte?: InputMaybe<Scalars['String']['input']>
+  symbol_in?: InputMaybe<Array<Scalars['String']['input']>>
+  symbol_lt?: InputMaybe<Scalars['String']['input']>
+  symbol_lte?: InputMaybe<Scalars['String']['input']>
+  symbol_not?: InputMaybe<Scalars['String']['input']>
+  symbol_not_contains?: InputMaybe<Scalars['String']['input']>
+  symbol_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  symbol_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  symbol_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  symbol_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  symbol_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  symbol_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  symbol_starts_with?: InputMaybe<Scalars['String']['input']>
+  symbol_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  tokenAddress?: InputMaybe<Scalars['Bytes']['input']>
+  tokenAddress_contains?: InputMaybe<Scalars['Bytes']['input']>
+  tokenAddress_gt?: InputMaybe<Scalars['Bytes']['input']>
+  tokenAddress_gte?: InputMaybe<Scalars['Bytes']['input']>
+  tokenAddress_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  tokenAddress_lt?: InputMaybe<Scalars['Bytes']['input']>
+  tokenAddress_lte?: InputMaybe<Scalars['Bytes']['input']>
+  tokenAddress_not?: InputMaybe<Scalars['Bytes']['input']>
+  tokenAddress_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  tokenAddress_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
   tokens_?: InputMaybe<Token_Filter>
-  totalAuctionSales?: InputMaybe<Scalars['BigInt']>
-  totalAuctionSales_gt?: InputMaybe<Scalars['BigInt']>
-  totalAuctionSales_gte?: InputMaybe<Scalars['BigInt']>
-  totalAuctionSales_in?: InputMaybe<Array<Scalars['BigInt']>>
-  totalAuctionSales_lt?: InputMaybe<Scalars['BigInt']>
-  totalAuctionSales_lte?: InputMaybe<Scalars['BigInt']>
-  totalAuctionSales_not?: InputMaybe<Scalars['BigInt']>
-  totalAuctionSales_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  totalSupply?: InputMaybe<Scalars['Int']>
-  totalSupply_gt?: InputMaybe<Scalars['Int']>
-  totalSupply_gte?: InputMaybe<Scalars['Int']>
-  totalSupply_in?: InputMaybe<Array<Scalars['Int']>>
-  totalSupply_lt?: InputMaybe<Scalars['Int']>
-  totalSupply_lte?: InputMaybe<Scalars['Int']>
-  totalSupply_not?: InputMaybe<Scalars['Int']>
-  totalSupply_not_in?: InputMaybe<Array<Scalars['Int']>>
-  treasuryAddress?: InputMaybe<Scalars['Bytes']>
-  treasuryAddress_contains?: InputMaybe<Scalars['Bytes']>
-  treasuryAddress_gt?: InputMaybe<Scalars['Bytes']>
-  treasuryAddress_gte?: InputMaybe<Scalars['Bytes']>
-  treasuryAddress_in?: InputMaybe<Array<Scalars['Bytes']>>
-  treasuryAddress_lt?: InputMaybe<Scalars['Bytes']>
-  treasuryAddress_lte?: InputMaybe<Scalars['Bytes']>
-  treasuryAddress_not?: InputMaybe<Scalars['Bytes']>
-  treasuryAddress_not_contains?: InputMaybe<Scalars['Bytes']>
-  treasuryAddress_not_in?: InputMaybe<Array<Scalars['Bytes']>>
+  totalAuctionSales?: InputMaybe<Scalars['BigInt']['input']>
+  totalAuctionSales_gt?: InputMaybe<Scalars['BigInt']['input']>
+  totalAuctionSales_gte?: InputMaybe<Scalars['BigInt']['input']>
+  totalAuctionSales_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  totalAuctionSales_lt?: InputMaybe<Scalars['BigInt']['input']>
+  totalAuctionSales_lte?: InputMaybe<Scalars['BigInt']['input']>
+  totalAuctionSales_not?: InputMaybe<Scalars['BigInt']['input']>
+  totalAuctionSales_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  totalSupply?: InputMaybe<Scalars['Int']['input']>
+  totalSupply_gt?: InputMaybe<Scalars['Int']['input']>
+  totalSupply_gte?: InputMaybe<Scalars['Int']['input']>
+  totalSupply_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  totalSupply_lt?: InputMaybe<Scalars['Int']['input']>
+  totalSupply_lte?: InputMaybe<Scalars['Int']['input']>
+  totalSupply_not?: InputMaybe<Scalars['Int']['input']>
+  totalSupply_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  treasuryAddress?: InputMaybe<Scalars['Bytes']['input']>
+  treasuryAddress_contains?: InputMaybe<Scalars['Bytes']['input']>
+  treasuryAddress_gt?: InputMaybe<Scalars['Bytes']['input']>
+  treasuryAddress_gte?: InputMaybe<Scalars['Bytes']['input']>
+  treasuryAddress_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  treasuryAddress_lt?: InputMaybe<Scalars['Bytes']['input']>
+  treasuryAddress_lte?: InputMaybe<Scalars['Bytes']['input']>
+  treasuryAddress_not?: InputMaybe<Scalars['Bytes']['input']>
+  treasuryAddress_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  treasuryAddress_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
 }
 
 export enum Dao_OrderBy {
@@ -850,11 +856,11 @@ export enum Dao_OrderBy {
 
 export type MetadataItem = {
   __typename?: 'MetadataItem'
-  id: Scalars['ID']
-  index: Scalars['Int']
-  isNewProperty: Scalars['Boolean']
-  name: Scalars['String']
-  propertyId: Scalars['BigInt']
+  id: Scalars['ID']['output']
+  index: Scalars['Int']['output']
+  isNewProperty: Scalars['Boolean']['output']
+  name: Scalars['String']['output']
+  propertyId: Scalars['BigInt']['output']
   propertyInfo: MetadataProperty
 }
 
@@ -862,76 +868,76 @@ export type MetadataItem_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<MetadataItem_Filter>>>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
-  index?: InputMaybe<Scalars['Int']>
-  index_gt?: InputMaybe<Scalars['Int']>
-  index_gte?: InputMaybe<Scalars['Int']>
-  index_in?: InputMaybe<Array<Scalars['Int']>>
-  index_lt?: InputMaybe<Scalars['Int']>
-  index_lte?: InputMaybe<Scalars['Int']>
-  index_not?: InputMaybe<Scalars['Int']>
-  index_not_in?: InputMaybe<Array<Scalars['Int']>>
-  isNewProperty?: InputMaybe<Scalars['Boolean']>
-  isNewProperty_in?: InputMaybe<Array<Scalars['Boolean']>>
-  isNewProperty_not?: InputMaybe<Scalars['Boolean']>
-  isNewProperty_not_in?: InputMaybe<Array<Scalars['Boolean']>>
-  name?: InputMaybe<Scalars['String']>
-  name_contains?: InputMaybe<Scalars['String']>
-  name_contains_nocase?: InputMaybe<Scalars['String']>
-  name_ends_with?: InputMaybe<Scalars['String']>
-  name_ends_with_nocase?: InputMaybe<Scalars['String']>
-  name_gt?: InputMaybe<Scalars['String']>
-  name_gte?: InputMaybe<Scalars['String']>
-  name_in?: InputMaybe<Array<Scalars['String']>>
-  name_lt?: InputMaybe<Scalars['String']>
-  name_lte?: InputMaybe<Scalars['String']>
-  name_not?: InputMaybe<Scalars['String']>
-  name_not_contains?: InputMaybe<Scalars['String']>
-  name_not_contains_nocase?: InputMaybe<Scalars['String']>
-  name_not_ends_with?: InputMaybe<Scalars['String']>
-  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  name_not_in?: InputMaybe<Array<Scalars['String']>>
-  name_not_starts_with?: InputMaybe<Scalars['String']>
-  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  name_starts_with?: InputMaybe<Scalars['String']>
-  name_starts_with_nocase?: InputMaybe<Scalars['String']>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  index?: InputMaybe<Scalars['Int']['input']>
+  index_gt?: InputMaybe<Scalars['Int']['input']>
+  index_gte?: InputMaybe<Scalars['Int']['input']>
+  index_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  index_lt?: InputMaybe<Scalars['Int']['input']>
+  index_lte?: InputMaybe<Scalars['Int']['input']>
+  index_not?: InputMaybe<Scalars['Int']['input']>
+  index_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  isNewProperty?: InputMaybe<Scalars['Boolean']['input']>
+  isNewProperty_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  isNewProperty_not?: InputMaybe<Scalars['Boolean']['input']>
+  isNewProperty_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  name?: InputMaybe<Scalars['String']['input']>
+  name_contains?: InputMaybe<Scalars['String']['input']>
+  name_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  name_ends_with?: InputMaybe<Scalars['String']['input']>
+  name_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_gt?: InputMaybe<Scalars['String']['input']>
+  name_gte?: InputMaybe<Scalars['String']['input']>
+  name_in?: InputMaybe<Array<Scalars['String']['input']>>
+  name_lt?: InputMaybe<Scalars['String']['input']>
+  name_lte?: InputMaybe<Scalars['String']['input']>
+  name_not?: InputMaybe<Scalars['String']['input']>
+  name_not_contains?: InputMaybe<Scalars['String']['input']>
+  name_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  name_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  name_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_starts_with?: InputMaybe<Scalars['String']['input']>
+  name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
   or?: InputMaybe<Array<InputMaybe<MetadataItem_Filter>>>
-  propertyId?: InputMaybe<Scalars['BigInt']>
-  propertyId_gt?: InputMaybe<Scalars['BigInt']>
-  propertyId_gte?: InputMaybe<Scalars['BigInt']>
-  propertyId_in?: InputMaybe<Array<Scalars['BigInt']>>
-  propertyId_lt?: InputMaybe<Scalars['BigInt']>
-  propertyId_lte?: InputMaybe<Scalars['BigInt']>
-  propertyId_not?: InputMaybe<Scalars['BigInt']>
-  propertyId_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  propertyInfo?: InputMaybe<Scalars['String']>
+  propertyId?: InputMaybe<Scalars['BigInt']['input']>
+  propertyId_gt?: InputMaybe<Scalars['BigInt']['input']>
+  propertyId_gte?: InputMaybe<Scalars['BigInt']['input']>
+  propertyId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  propertyId_lt?: InputMaybe<Scalars['BigInt']['input']>
+  propertyId_lte?: InputMaybe<Scalars['BigInt']['input']>
+  propertyId_not?: InputMaybe<Scalars['BigInt']['input']>
+  propertyId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  propertyInfo?: InputMaybe<Scalars['String']['input']>
   propertyInfo_?: InputMaybe<MetadataProperty_Filter>
-  propertyInfo_contains?: InputMaybe<Scalars['String']>
-  propertyInfo_contains_nocase?: InputMaybe<Scalars['String']>
-  propertyInfo_ends_with?: InputMaybe<Scalars['String']>
-  propertyInfo_ends_with_nocase?: InputMaybe<Scalars['String']>
-  propertyInfo_gt?: InputMaybe<Scalars['String']>
-  propertyInfo_gte?: InputMaybe<Scalars['String']>
-  propertyInfo_in?: InputMaybe<Array<Scalars['String']>>
-  propertyInfo_lt?: InputMaybe<Scalars['String']>
-  propertyInfo_lte?: InputMaybe<Scalars['String']>
-  propertyInfo_not?: InputMaybe<Scalars['String']>
-  propertyInfo_not_contains?: InputMaybe<Scalars['String']>
-  propertyInfo_not_contains_nocase?: InputMaybe<Scalars['String']>
-  propertyInfo_not_ends_with?: InputMaybe<Scalars['String']>
-  propertyInfo_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  propertyInfo_not_in?: InputMaybe<Array<Scalars['String']>>
-  propertyInfo_not_starts_with?: InputMaybe<Scalars['String']>
-  propertyInfo_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  propertyInfo_starts_with?: InputMaybe<Scalars['String']>
-  propertyInfo_starts_with_nocase?: InputMaybe<Scalars['String']>
+  propertyInfo_contains?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_ends_with?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_gt?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_gte?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_in?: InputMaybe<Array<Scalars['String']['input']>>
+  propertyInfo_lt?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_lte?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_not?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_not_contains?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  propertyInfo_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_starts_with?: InputMaybe<Scalars['String']['input']>
+  propertyInfo_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
 }
 
 export enum MetadataItem_OrderBy {
@@ -950,21 +956,21 @@ export enum MetadataItem_OrderBy {
 
 export type MetadataProperty = {
   __typename?: 'MetadataProperty'
-  createdAt: Scalars['BigInt']
+  createdAt: Scalars['BigInt']['output']
   dao: Dao
-  deleted: Scalars['Boolean']
-  id: Scalars['ID']
-  ipfsBaseUri: Scalars['String']
-  ipfsExtension: Scalars['String']
+  deleted: Scalars['Boolean']['output']
+  id: Scalars['ID']['output']
+  ipfsBaseUri: Scalars['String']['output']
+  ipfsExtension: Scalars['String']['output']
   items: Array<MetadataItem>
-  names: Array<Scalars['String']>
+  names: Array<Scalars['String']['output']>
 }
 
 export type MetadataPropertyItemsArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<MetadataItem_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<MetadataItem_Filter>
 }
 
@@ -972,94 +978,94 @@ export type MetadataProperty_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<MetadataProperty_Filter>>>
-  createdAt?: InputMaybe<Scalars['BigInt']>
-  createdAt_gt?: InputMaybe<Scalars['BigInt']>
-  createdAt_gte?: InputMaybe<Scalars['BigInt']>
-  createdAt_in?: InputMaybe<Array<Scalars['BigInt']>>
-  createdAt_lt?: InputMaybe<Scalars['BigInt']>
-  createdAt_lte?: InputMaybe<Scalars['BigInt']>
-  createdAt_not?: InputMaybe<Scalars['BigInt']>
-  createdAt_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  dao?: InputMaybe<Scalars['String']>
+  createdAt?: InputMaybe<Scalars['BigInt']['input']>
+  createdAt_gt?: InputMaybe<Scalars['BigInt']['input']>
+  createdAt_gte?: InputMaybe<Scalars['BigInt']['input']>
+  createdAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  createdAt_lt?: InputMaybe<Scalars['BigInt']['input']>
+  createdAt_lte?: InputMaybe<Scalars['BigInt']['input']>
+  createdAt_not?: InputMaybe<Scalars['BigInt']['input']>
+  createdAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  dao?: InputMaybe<Scalars['String']['input']>
   dao_?: InputMaybe<Dao_Filter>
-  dao_contains?: InputMaybe<Scalars['String']>
-  dao_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_ends_with?: InputMaybe<Scalars['String']>
-  dao_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_gt?: InputMaybe<Scalars['String']>
-  dao_gte?: InputMaybe<Scalars['String']>
-  dao_in?: InputMaybe<Array<Scalars['String']>>
-  dao_lt?: InputMaybe<Scalars['String']>
-  dao_lte?: InputMaybe<Scalars['String']>
-  dao_not?: InputMaybe<Scalars['String']>
-  dao_not_contains?: InputMaybe<Scalars['String']>
-  dao_not_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_not_ends_with?: InputMaybe<Scalars['String']>
-  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_not_in?: InputMaybe<Array<Scalars['String']>>
-  dao_not_starts_with?: InputMaybe<Scalars['String']>
-  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  dao_starts_with?: InputMaybe<Scalars['String']>
-  dao_starts_with_nocase?: InputMaybe<Scalars['String']>
-  deleted?: InputMaybe<Scalars['Boolean']>
-  deleted_in?: InputMaybe<Array<Scalars['Boolean']>>
-  deleted_not?: InputMaybe<Scalars['Boolean']>
-  deleted_not_in?: InputMaybe<Array<Scalars['Boolean']>>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
-  ipfsBaseUri?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_contains?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_contains_nocase?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_ends_with?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_ends_with_nocase?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_gt?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_gte?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_in?: InputMaybe<Array<Scalars['String']>>
-  ipfsBaseUri_lt?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_lte?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_not?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_not_contains?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_not_contains_nocase?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_not_ends_with?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_not_in?: InputMaybe<Array<Scalars['String']>>
-  ipfsBaseUri_not_starts_with?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_starts_with?: InputMaybe<Scalars['String']>
-  ipfsBaseUri_starts_with_nocase?: InputMaybe<Scalars['String']>
-  ipfsExtension?: InputMaybe<Scalars['String']>
-  ipfsExtension_contains?: InputMaybe<Scalars['String']>
-  ipfsExtension_contains_nocase?: InputMaybe<Scalars['String']>
-  ipfsExtension_ends_with?: InputMaybe<Scalars['String']>
-  ipfsExtension_ends_with_nocase?: InputMaybe<Scalars['String']>
-  ipfsExtension_gt?: InputMaybe<Scalars['String']>
-  ipfsExtension_gte?: InputMaybe<Scalars['String']>
-  ipfsExtension_in?: InputMaybe<Array<Scalars['String']>>
-  ipfsExtension_lt?: InputMaybe<Scalars['String']>
-  ipfsExtension_lte?: InputMaybe<Scalars['String']>
-  ipfsExtension_not?: InputMaybe<Scalars['String']>
-  ipfsExtension_not_contains?: InputMaybe<Scalars['String']>
-  ipfsExtension_not_contains_nocase?: InputMaybe<Scalars['String']>
-  ipfsExtension_not_ends_with?: InputMaybe<Scalars['String']>
-  ipfsExtension_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  ipfsExtension_not_in?: InputMaybe<Array<Scalars['String']>>
-  ipfsExtension_not_starts_with?: InputMaybe<Scalars['String']>
-  ipfsExtension_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  ipfsExtension_starts_with?: InputMaybe<Scalars['String']>
-  ipfsExtension_starts_with_nocase?: InputMaybe<Scalars['String']>
+  dao_contains?: InputMaybe<Scalars['String']['input']>
+  dao_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_gt?: InputMaybe<Scalars['String']['input']>
+  dao_gte?: InputMaybe<Scalars['String']['input']>
+  dao_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_lt?: InputMaybe<Scalars['String']['input']>
+  dao_lte?: InputMaybe<Scalars['String']['input']>
+  dao_not?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  deleted?: InputMaybe<Scalars['Boolean']['input']>
+  deleted_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  deleted_not?: InputMaybe<Scalars['Boolean']['input']>
+  deleted_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  ipfsBaseUri?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_contains?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_ends_with?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_gt?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_gte?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_in?: InputMaybe<Array<Scalars['String']['input']>>
+  ipfsBaseUri_lt?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_lte?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_not?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_not_contains?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  ipfsBaseUri_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_starts_with?: InputMaybe<Scalars['String']['input']>
+  ipfsBaseUri_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_contains?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_ends_with?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_gt?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_gte?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_in?: InputMaybe<Array<Scalars['String']['input']>>
+  ipfsExtension_lt?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_lte?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_not?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_not_contains?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  ipfsExtension_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_starts_with?: InputMaybe<Scalars['String']['input']>
+  ipfsExtension_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
   items_?: InputMaybe<MetadataItem_Filter>
-  names?: InputMaybe<Array<Scalars['String']>>
-  names_contains?: InputMaybe<Array<Scalars['String']>>
-  names_contains_nocase?: InputMaybe<Array<Scalars['String']>>
-  names_not?: InputMaybe<Array<Scalars['String']>>
-  names_not_contains?: InputMaybe<Array<Scalars['String']>>
-  names_not_contains_nocase?: InputMaybe<Array<Scalars['String']>>
+  names?: InputMaybe<Array<Scalars['String']['input']>>
+  names_contains?: InputMaybe<Array<Scalars['String']['input']>>
+  names_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>
+  names_not?: InputMaybe<Array<Scalars['String']['input']>>
+  names_not_contains?: InputMaybe<Array<Scalars['String']['input']>>
+  names_not_contains_nocase?: InputMaybe<Array<Scalars['String']['input']>>
   or?: InputMaybe<Array<InputMaybe<MetadataProperty_Filter>>>
 }
 
@@ -1097,54 +1103,54 @@ export enum OrderDirection {
 
 export type Proposal = {
   __typename?: 'Proposal'
-  abstainVotes: Scalars['Int']
-  againstVotes: Scalars['Int']
-  calldatas?: Maybe<Scalars['String']>
-  canceled: Scalars['Boolean']
+  abstainVotes: Scalars['Int']['output']
+  againstVotes: Scalars['Int']['output']
+  calldatas?: Maybe<Scalars['String']['output']>
+  canceled: Scalars['Boolean']['output']
   dao: Dao
-  description?: Maybe<Scalars['String']>
-  descriptionHash: Scalars['Bytes']
-  executableFrom?: Maybe<Scalars['BigInt']>
-  executed: Scalars['Boolean']
-  executionTransactionHash?: Maybe<Scalars['Bytes']>
-  expiresAt?: Maybe<Scalars['BigInt']>
-  forVotes: Scalars['Int']
-  id: Scalars['ID']
-  proposalId: Scalars['Bytes']
-  proposalNumber: Scalars['Int']
-  proposalThreshold: Scalars['BigInt']
-  proposer: Scalars['Bytes']
-  queued: Scalars['Boolean']
-  quorumVotes: Scalars['BigInt']
-  snapshotBlockNumber: Scalars['BigInt']
-  targets: Array<Scalars['Bytes']>
-  timeCreated: Scalars['BigInt']
-  title?: Maybe<Scalars['String']>
-  transactionHash: Scalars['Bytes']
-  values: Array<Scalars['BigInt']>
-  vetoed: Scalars['Boolean']
-  voteCount: Scalars['Int']
-  voteEnd: Scalars['BigInt']
-  voteStart: Scalars['BigInt']
+  description?: Maybe<Scalars['String']['output']>
+  descriptionHash: Scalars['Bytes']['output']
+  executableFrom?: Maybe<Scalars['BigInt']['output']>
+  executed: Scalars['Boolean']['output']
+  executionTransactionHash?: Maybe<Scalars['Bytes']['output']>
+  expiresAt?: Maybe<Scalars['BigInt']['output']>
+  forVotes: Scalars['Int']['output']
+  id: Scalars['ID']['output']
+  proposalId: Scalars['Bytes']['output']
+  proposalNumber: Scalars['Int']['output']
+  proposalThreshold: Scalars['BigInt']['output']
+  proposer: Scalars['Bytes']['output']
+  queued: Scalars['Boolean']['output']
+  quorumVotes: Scalars['BigInt']['output']
+  snapshotBlockNumber: Scalars['BigInt']['output']
+  targets: Array<Scalars['Bytes']['output']>
+  timeCreated: Scalars['BigInt']['output']
+  title?: Maybe<Scalars['String']['output']>
+  transactionHash: Scalars['Bytes']['output']
+  values: Array<Scalars['BigInt']['output']>
+  vetoed: Scalars['Boolean']['output']
+  voteCount: Scalars['Int']['output']
+  voteEnd: Scalars['BigInt']['output']
+  voteStart: Scalars['BigInt']['output']
   votes: Array<ProposalVote>
 }
 
 export type ProposalVotesArgs = {
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<ProposalVote_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   where?: InputMaybe<ProposalVote_Filter>
 }
 
 export type ProposalVote = {
   __typename?: 'ProposalVote'
-  id: Scalars['ID']
+  id: Scalars['ID']['output']
   proposal: Proposal
-  reason?: Maybe<Scalars['String']>
+  reason?: Maybe<Scalars['String']['output']>
   support: ProposalVoteSupport
-  voter: Scalars['Bytes']
-  weight: Scalars['Int']
+  voter: Scalars['Bytes']['output']
+  weight: Scalars['Int']['output']
 }
 
 export enum ProposalVoteSupport {
@@ -1157,78 +1163,78 @@ export type ProposalVote_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<ProposalVote_Filter>>>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
   or?: InputMaybe<Array<InputMaybe<ProposalVote_Filter>>>
-  proposal?: InputMaybe<Scalars['String']>
+  proposal?: InputMaybe<Scalars['String']['input']>
   proposal_?: InputMaybe<Proposal_Filter>
-  proposal_contains?: InputMaybe<Scalars['String']>
-  proposal_contains_nocase?: InputMaybe<Scalars['String']>
-  proposal_ends_with?: InputMaybe<Scalars['String']>
-  proposal_ends_with_nocase?: InputMaybe<Scalars['String']>
-  proposal_gt?: InputMaybe<Scalars['String']>
-  proposal_gte?: InputMaybe<Scalars['String']>
-  proposal_in?: InputMaybe<Array<Scalars['String']>>
-  proposal_lt?: InputMaybe<Scalars['String']>
-  proposal_lte?: InputMaybe<Scalars['String']>
-  proposal_not?: InputMaybe<Scalars['String']>
-  proposal_not_contains?: InputMaybe<Scalars['String']>
-  proposal_not_contains_nocase?: InputMaybe<Scalars['String']>
-  proposal_not_ends_with?: InputMaybe<Scalars['String']>
-  proposal_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  proposal_not_in?: InputMaybe<Array<Scalars['String']>>
-  proposal_not_starts_with?: InputMaybe<Scalars['String']>
-  proposal_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  proposal_starts_with?: InputMaybe<Scalars['String']>
-  proposal_starts_with_nocase?: InputMaybe<Scalars['String']>
-  reason?: InputMaybe<Scalars['String']>
-  reason_contains?: InputMaybe<Scalars['String']>
-  reason_contains_nocase?: InputMaybe<Scalars['String']>
-  reason_ends_with?: InputMaybe<Scalars['String']>
-  reason_ends_with_nocase?: InputMaybe<Scalars['String']>
-  reason_gt?: InputMaybe<Scalars['String']>
-  reason_gte?: InputMaybe<Scalars['String']>
-  reason_in?: InputMaybe<Array<Scalars['String']>>
-  reason_lt?: InputMaybe<Scalars['String']>
-  reason_lte?: InputMaybe<Scalars['String']>
-  reason_not?: InputMaybe<Scalars['String']>
-  reason_not_contains?: InputMaybe<Scalars['String']>
-  reason_not_contains_nocase?: InputMaybe<Scalars['String']>
-  reason_not_ends_with?: InputMaybe<Scalars['String']>
-  reason_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  reason_not_in?: InputMaybe<Array<Scalars['String']>>
-  reason_not_starts_with?: InputMaybe<Scalars['String']>
-  reason_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  reason_starts_with?: InputMaybe<Scalars['String']>
-  reason_starts_with_nocase?: InputMaybe<Scalars['String']>
+  proposal_contains?: InputMaybe<Scalars['String']['input']>
+  proposal_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  proposal_ends_with?: InputMaybe<Scalars['String']['input']>
+  proposal_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  proposal_gt?: InputMaybe<Scalars['String']['input']>
+  proposal_gte?: InputMaybe<Scalars['String']['input']>
+  proposal_in?: InputMaybe<Array<Scalars['String']['input']>>
+  proposal_lt?: InputMaybe<Scalars['String']['input']>
+  proposal_lte?: InputMaybe<Scalars['String']['input']>
+  proposal_not?: InputMaybe<Scalars['String']['input']>
+  proposal_not_contains?: InputMaybe<Scalars['String']['input']>
+  proposal_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  proposal_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  proposal_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  proposal_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  proposal_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  proposal_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  proposal_starts_with?: InputMaybe<Scalars['String']['input']>
+  proposal_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  reason?: InputMaybe<Scalars['String']['input']>
+  reason_contains?: InputMaybe<Scalars['String']['input']>
+  reason_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  reason_ends_with?: InputMaybe<Scalars['String']['input']>
+  reason_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  reason_gt?: InputMaybe<Scalars['String']['input']>
+  reason_gte?: InputMaybe<Scalars['String']['input']>
+  reason_in?: InputMaybe<Array<Scalars['String']['input']>>
+  reason_lt?: InputMaybe<Scalars['String']['input']>
+  reason_lte?: InputMaybe<Scalars['String']['input']>
+  reason_not?: InputMaybe<Scalars['String']['input']>
+  reason_not_contains?: InputMaybe<Scalars['String']['input']>
+  reason_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  reason_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  reason_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  reason_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  reason_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  reason_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  reason_starts_with?: InputMaybe<Scalars['String']['input']>
+  reason_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
   support?: InputMaybe<ProposalVoteSupport>
   support_in?: InputMaybe<Array<ProposalVoteSupport>>
   support_not?: InputMaybe<ProposalVoteSupport>
   support_not_in?: InputMaybe<Array<ProposalVoteSupport>>
-  voter?: InputMaybe<Scalars['Bytes']>
-  voter_contains?: InputMaybe<Scalars['Bytes']>
-  voter_gt?: InputMaybe<Scalars['Bytes']>
-  voter_gte?: InputMaybe<Scalars['Bytes']>
-  voter_in?: InputMaybe<Array<Scalars['Bytes']>>
-  voter_lt?: InputMaybe<Scalars['Bytes']>
-  voter_lte?: InputMaybe<Scalars['Bytes']>
-  voter_not?: InputMaybe<Scalars['Bytes']>
-  voter_not_contains?: InputMaybe<Scalars['Bytes']>
-  voter_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  weight?: InputMaybe<Scalars['Int']>
-  weight_gt?: InputMaybe<Scalars['Int']>
-  weight_gte?: InputMaybe<Scalars['Int']>
-  weight_in?: InputMaybe<Array<Scalars['Int']>>
-  weight_lt?: InputMaybe<Scalars['Int']>
-  weight_lte?: InputMaybe<Scalars['Int']>
-  weight_not?: InputMaybe<Scalars['Int']>
-  weight_not_in?: InputMaybe<Array<Scalars['Int']>>
+  voter?: InputMaybe<Scalars['Bytes']['input']>
+  voter_contains?: InputMaybe<Scalars['Bytes']['input']>
+  voter_gt?: InputMaybe<Scalars['Bytes']['input']>
+  voter_gte?: InputMaybe<Scalars['Bytes']['input']>
+  voter_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  voter_lt?: InputMaybe<Scalars['Bytes']['input']>
+  voter_lte?: InputMaybe<Scalars['Bytes']['input']>
+  voter_not?: InputMaybe<Scalars['Bytes']['input']>
+  voter_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  voter_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  weight?: InputMaybe<Scalars['Int']['input']>
+  weight_gt?: InputMaybe<Scalars['Int']['input']>
+  weight_gte?: InputMaybe<Scalars['Int']['input']>
+  weight_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  weight_lt?: InputMaybe<Scalars['Int']['input']>
+  weight_lte?: InputMaybe<Scalars['Int']['input']>
+  weight_not?: InputMaybe<Scalars['Int']['input']>
+  weight_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
 }
 
 export enum ProposalVote_OrderBy {
@@ -1269,279 +1275,279 @@ export enum ProposalVote_OrderBy {
 export type Proposal_Filter = {
   /** Filter for the block changed event. */
   _change_block?: InputMaybe<BlockChangedFilter>
-  abstainVotes?: InputMaybe<Scalars['Int']>
-  abstainVotes_gt?: InputMaybe<Scalars['Int']>
-  abstainVotes_gte?: InputMaybe<Scalars['Int']>
-  abstainVotes_in?: InputMaybe<Array<Scalars['Int']>>
-  abstainVotes_lt?: InputMaybe<Scalars['Int']>
-  abstainVotes_lte?: InputMaybe<Scalars['Int']>
-  abstainVotes_not?: InputMaybe<Scalars['Int']>
-  abstainVotes_not_in?: InputMaybe<Array<Scalars['Int']>>
-  againstVotes?: InputMaybe<Scalars['Int']>
-  againstVotes_gt?: InputMaybe<Scalars['Int']>
-  againstVotes_gte?: InputMaybe<Scalars['Int']>
-  againstVotes_in?: InputMaybe<Array<Scalars['Int']>>
-  againstVotes_lt?: InputMaybe<Scalars['Int']>
-  againstVotes_lte?: InputMaybe<Scalars['Int']>
-  againstVotes_not?: InputMaybe<Scalars['Int']>
-  againstVotes_not_in?: InputMaybe<Array<Scalars['Int']>>
+  abstainVotes?: InputMaybe<Scalars['Int']['input']>
+  abstainVotes_gt?: InputMaybe<Scalars['Int']['input']>
+  abstainVotes_gte?: InputMaybe<Scalars['Int']['input']>
+  abstainVotes_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  abstainVotes_lt?: InputMaybe<Scalars['Int']['input']>
+  abstainVotes_lte?: InputMaybe<Scalars['Int']['input']>
+  abstainVotes_not?: InputMaybe<Scalars['Int']['input']>
+  abstainVotes_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  againstVotes?: InputMaybe<Scalars['Int']['input']>
+  againstVotes_gt?: InputMaybe<Scalars['Int']['input']>
+  againstVotes_gte?: InputMaybe<Scalars['Int']['input']>
+  againstVotes_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  againstVotes_lt?: InputMaybe<Scalars['Int']['input']>
+  againstVotes_lte?: InputMaybe<Scalars['Int']['input']>
+  againstVotes_not?: InputMaybe<Scalars['Int']['input']>
+  againstVotes_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
   and?: InputMaybe<Array<InputMaybe<Proposal_Filter>>>
-  calldatas?: InputMaybe<Scalars['String']>
-  calldatas_contains?: InputMaybe<Scalars['String']>
-  calldatas_contains_nocase?: InputMaybe<Scalars['String']>
-  calldatas_ends_with?: InputMaybe<Scalars['String']>
-  calldatas_ends_with_nocase?: InputMaybe<Scalars['String']>
-  calldatas_gt?: InputMaybe<Scalars['String']>
-  calldatas_gte?: InputMaybe<Scalars['String']>
-  calldatas_in?: InputMaybe<Array<Scalars['String']>>
-  calldatas_lt?: InputMaybe<Scalars['String']>
-  calldatas_lte?: InputMaybe<Scalars['String']>
-  calldatas_not?: InputMaybe<Scalars['String']>
-  calldatas_not_contains?: InputMaybe<Scalars['String']>
-  calldatas_not_contains_nocase?: InputMaybe<Scalars['String']>
-  calldatas_not_ends_with?: InputMaybe<Scalars['String']>
-  calldatas_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  calldatas_not_in?: InputMaybe<Array<Scalars['String']>>
-  calldatas_not_starts_with?: InputMaybe<Scalars['String']>
-  calldatas_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  calldatas_starts_with?: InputMaybe<Scalars['String']>
-  calldatas_starts_with_nocase?: InputMaybe<Scalars['String']>
-  canceled?: InputMaybe<Scalars['Boolean']>
-  canceled_in?: InputMaybe<Array<Scalars['Boolean']>>
-  canceled_not?: InputMaybe<Scalars['Boolean']>
-  canceled_not_in?: InputMaybe<Array<Scalars['Boolean']>>
-  dao?: InputMaybe<Scalars['String']>
+  calldatas?: InputMaybe<Scalars['String']['input']>
+  calldatas_contains?: InputMaybe<Scalars['String']['input']>
+  calldatas_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  calldatas_ends_with?: InputMaybe<Scalars['String']['input']>
+  calldatas_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  calldatas_gt?: InputMaybe<Scalars['String']['input']>
+  calldatas_gte?: InputMaybe<Scalars['String']['input']>
+  calldatas_in?: InputMaybe<Array<Scalars['String']['input']>>
+  calldatas_lt?: InputMaybe<Scalars['String']['input']>
+  calldatas_lte?: InputMaybe<Scalars['String']['input']>
+  calldatas_not?: InputMaybe<Scalars['String']['input']>
+  calldatas_not_contains?: InputMaybe<Scalars['String']['input']>
+  calldatas_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  calldatas_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  calldatas_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  calldatas_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  calldatas_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  calldatas_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  calldatas_starts_with?: InputMaybe<Scalars['String']['input']>
+  calldatas_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  canceled?: InputMaybe<Scalars['Boolean']['input']>
+  canceled_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  canceled_not?: InputMaybe<Scalars['Boolean']['input']>
+  canceled_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  dao?: InputMaybe<Scalars['String']['input']>
   dao_?: InputMaybe<Dao_Filter>
-  dao_contains?: InputMaybe<Scalars['String']>
-  dao_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_ends_with?: InputMaybe<Scalars['String']>
-  dao_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_gt?: InputMaybe<Scalars['String']>
-  dao_gte?: InputMaybe<Scalars['String']>
-  dao_in?: InputMaybe<Array<Scalars['String']>>
-  dao_lt?: InputMaybe<Scalars['String']>
-  dao_lte?: InputMaybe<Scalars['String']>
-  dao_not?: InputMaybe<Scalars['String']>
-  dao_not_contains?: InputMaybe<Scalars['String']>
-  dao_not_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_not_ends_with?: InputMaybe<Scalars['String']>
-  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_not_in?: InputMaybe<Array<Scalars['String']>>
-  dao_not_starts_with?: InputMaybe<Scalars['String']>
-  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  dao_starts_with?: InputMaybe<Scalars['String']>
-  dao_starts_with_nocase?: InputMaybe<Scalars['String']>
-  description?: InputMaybe<Scalars['String']>
-  descriptionHash?: InputMaybe<Scalars['Bytes']>
-  descriptionHash_contains?: InputMaybe<Scalars['Bytes']>
-  descriptionHash_gt?: InputMaybe<Scalars['Bytes']>
-  descriptionHash_gte?: InputMaybe<Scalars['Bytes']>
-  descriptionHash_in?: InputMaybe<Array<Scalars['Bytes']>>
-  descriptionHash_lt?: InputMaybe<Scalars['Bytes']>
-  descriptionHash_lte?: InputMaybe<Scalars['Bytes']>
-  descriptionHash_not?: InputMaybe<Scalars['Bytes']>
-  descriptionHash_not_contains?: InputMaybe<Scalars['Bytes']>
-  descriptionHash_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  description_contains?: InputMaybe<Scalars['String']>
-  description_contains_nocase?: InputMaybe<Scalars['String']>
-  description_ends_with?: InputMaybe<Scalars['String']>
-  description_ends_with_nocase?: InputMaybe<Scalars['String']>
-  description_gt?: InputMaybe<Scalars['String']>
-  description_gte?: InputMaybe<Scalars['String']>
-  description_in?: InputMaybe<Array<Scalars['String']>>
-  description_lt?: InputMaybe<Scalars['String']>
-  description_lte?: InputMaybe<Scalars['String']>
-  description_not?: InputMaybe<Scalars['String']>
-  description_not_contains?: InputMaybe<Scalars['String']>
-  description_not_contains_nocase?: InputMaybe<Scalars['String']>
-  description_not_ends_with?: InputMaybe<Scalars['String']>
-  description_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  description_not_in?: InputMaybe<Array<Scalars['String']>>
-  description_not_starts_with?: InputMaybe<Scalars['String']>
-  description_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  description_starts_with?: InputMaybe<Scalars['String']>
-  description_starts_with_nocase?: InputMaybe<Scalars['String']>
-  executableFrom?: InputMaybe<Scalars['BigInt']>
-  executableFrom_gt?: InputMaybe<Scalars['BigInt']>
-  executableFrom_gte?: InputMaybe<Scalars['BigInt']>
-  executableFrom_in?: InputMaybe<Array<Scalars['BigInt']>>
-  executableFrom_lt?: InputMaybe<Scalars['BigInt']>
-  executableFrom_lte?: InputMaybe<Scalars['BigInt']>
-  executableFrom_not?: InputMaybe<Scalars['BigInt']>
-  executableFrom_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  executed?: InputMaybe<Scalars['Boolean']>
-  executed_in?: InputMaybe<Array<Scalars['Boolean']>>
-  executed_not?: InputMaybe<Scalars['Boolean']>
-  executed_not_in?: InputMaybe<Array<Scalars['Boolean']>>
-  executionTransactionHash?: InputMaybe<Scalars['Bytes']>
-  executionTransactionHash_contains?: InputMaybe<Scalars['Bytes']>
-  executionTransactionHash_gt?: InputMaybe<Scalars['Bytes']>
-  executionTransactionHash_gte?: InputMaybe<Scalars['Bytes']>
-  executionTransactionHash_in?: InputMaybe<Array<Scalars['Bytes']>>
-  executionTransactionHash_lt?: InputMaybe<Scalars['Bytes']>
-  executionTransactionHash_lte?: InputMaybe<Scalars['Bytes']>
-  executionTransactionHash_not?: InputMaybe<Scalars['Bytes']>
-  executionTransactionHash_not_contains?: InputMaybe<Scalars['Bytes']>
-  executionTransactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  expiresAt?: InputMaybe<Scalars['BigInt']>
-  expiresAt_gt?: InputMaybe<Scalars['BigInt']>
-  expiresAt_gte?: InputMaybe<Scalars['BigInt']>
-  expiresAt_in?: InputMaybe<Array<Scalars['BigInt']>>
-  expiresAt_lt?: InputMaybe<Scalars['BigInt']>
-  expiresAt_lte?: InputMaybe<Scalars['BigInt']>
-  expiresAt_not?: InputMaybe<Scalars['BigInt']>
-  expiresAt_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  forVotes?: InputMaybe<Scalars['Int']>
-  forVotes_gt?: InputMaybe<Scalars['Int']>
-  forVotes_gte?: InputMaybe<Scalars['Int']>
-  forVotes_in?: InputMaybe<Array<Scalars['Int']>>
-  forVotes_lt?: InputMaybe<Scalars['Int']>
-  forVotes_lte?: InputMaybe<Scalars['Int']>
-  forVotes_not?: InputMaybe<Scalars['Int']>
-  forVotes_not_in?: InputMaybe<Array<Scalars['Int']>>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
+  dao_contains?: InputMaybe<Scalars['String']['input']>
+  dao_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_gt?: InputMaybe<Scalars['String']['input']>
+  dao_gte?: InputMaybe<Scalars['String']['input']>
+  dao_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_lt?: InputMaybe<Scalars['String']['input']>
+  dao_lte?: InputMaybe<Scalars['String']['input']>
+  dao_not?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  description?: InputMaybe<Scalars['String']['input']>
+  descriptionHash?: InputMaybe<Scalars['Bytes']['input']>
+  descriptionHash_contains?: InputMaybe<Scalars['Bytes']['input']>
+  descriptionHash_gt?: InputMaybe<Scalars['Bytes']['input']>
+  descriptionHash_gte?: InputMaybe<Scalars['Bytes']['input']>
+  descriptionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  descriptionHash_lt?: InputMaybe<Scalars['Bytes']['input']>
+  descriptionHash_lte?: InputMaybe<Scalars['Bytes']['input']>
+  descriptionHash_not?: InputMaybe<Scalars['Bytes']['input']>
+  descriptionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  descriptionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  description_contains?: InputMaybe<Scalars['String']['input']>
+  description_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  description_ends_with?: InputMaybe<Scalars['String']['input']>
+  description_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  description_gt?: InputMaybe<Scalars['String']['input']>
+  description_gte?: InputMaybe<Scalars['String']['input']>
+  description_in?: InputMaybe<Array<Scalars['String']['input']>>
+  description_lt?: InputMaybe<Scalars['String']['input']>
+  description_lte?: InputMaybe<Scalars['String']['input']>
+  description_not?: InputMaybe<Scalars['String']['input']>
+  description_not_contains?: InputMaybe<Scalars['String']['input']>
+  description_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  description_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  description_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  description_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  description_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  description_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  description_starts_with?: InputMaybe<Scalars['String']['input']>
+  description_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  executableFrom?: InputMaybe<Scalars['BigInt']['input']>
+  executableFrom_gt?: InputMaybe<Scalars['BigInt']['input']>
+  executableFrom_gte?: InputMaybe<Scalars['BigInt']['input']>
+  executableFrom_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  executableFrom_lt?: InputMaybe<Scalars['BigInt']['input']>
+  executableFrom_lte?: InputMaybe<Scalars['BigInt']['input']>
+  executableFrom_not?: InputMaybe<Scalars['BigInt']['input']>
+  executableFrom_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  executed?: InputMaybe<Scalars['Boolean']['input']>
+  executed_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  executed_not?: InputMaybe<Scalars['Boolean']['input']>
+  executed_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  executionTransactionHash?: InputMaybe<Scalars['Bytes']['input']>
+  executionTransactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>
+  executionTransactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>
+  executionTransactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>
+  executionTransactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  executionTransactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>
+  executionTransactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>
+  executionTransactionHash_not?: InputMaybe<Scalars['Bytes']['input']>
+  executionTransactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  executionTransactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  expiresAt?: InputMaybe<Scalars['BigInt']['input']>
+  expiresAt_gt?: InputMaybe<Scalars['BigInt']['input']>
+  expiresAt_gte?: InputMaybe<Scalars['BigInt']['input']>
+  expiresAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  expiresAt_lt?: InputMaybe<Scalars['BigInt']['input']>
+  expiresAt_lte?: InputMaybe<Scalars['BigInt']['input']>
+  expiresAt_not?: InputMaybe<Scalars['BigInt']['input']>
+  expiresAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  forVotes?: InputMaybe<Scalars['Int']['input']>
+  forVotes_gt?: InputMaybe<Scalars['Int']['input']>
+  forVotes_gte?: InputMaybe<Scalars['Int']['input']>
+  forVotes_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  forVotes_lt?: InputMaybe<Scalars['Int']['input']>
+  forVotes_lte?: InputMaybe<Scalars['Int']['input']>
+  forVotes_not?: InputMaybe<Scalars['Int']['input']>
+  forVotes_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
   or?: InputMaybe<Array<InputMaybe<Proposal_Filter>>>
-  proposalId?: InputMaybe<Scalars['Bytes']>
-  proposalId_contains?: InputMaybe<Scalars['Bytes']>
-  proposalId_gt?: InputMaybe<Scalars['Bytes']>
-  proposalId_gte?: InputMaybe<Scalars['Bytes']>
-  proposalId_in?: InputMaybe<Array<Scalars['Bytes']>>
-  proposalId_lt?: InputMaybe<Scalars['Bytes']>
-  proposalId_lte?: InputMaybe<Scalars['Bytes']>
-  proposalId_not?: InputMaybe<Scalars['Bytes']>
-  proposalId_not_contains?: InputMaybe<Scalars['Bytes']>
-  proposalId_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  proposalNumber?: InputMaybe<Scalars['Int']>
-  proposalNumber_gt?: InputMaybe<Scalars['Int']>
-  proposalNumber_gte?: InputMaybe<Scalars['Int']>
-  proposalNumber_in?: InputMaybe<Array<Scalars['Int']>>
-  proposalNumber_lt?: InputMaybe<Scalars['Int']>
-  proposalNumber_lte?: InputMaybe<Scalars['Int']>
-  proposalNumber_not?: InputMaybe<Scalars['Int']>
-  proposalNumber_not_in?: InputMaybe<Array<Scalars['Int']>>
-  proposalThreshold?: InputMaybe<Scalars['BigInt']>
-  proposalThreshold_gt?: InputMaybe<Scalars['BigInt']>
-  proposalThreshold_gte?: InputMaybe<Scalars['BigInt']>
-  proposalThreshold_in?: InputMaybe<Array<Scalars['BigInt']>>
-  proposalThreshold_lt?: InputMaybe<Scalars['BigInt']>
-  proposalThreshold_lte?: InputMaybe<Scalars['BigInt']>
-  proposalThreshold_not?: InputMaybe<Scalars['BigInt']>
-  proposalThreshold_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  proposer?: InputMaybe<Scalars['Bytes']>
-  proposer_contains?: InputMaybe<Scalars['Bytes']>
-  proposer_gt?: InputMaybe<Scalars['Bytes']>
-  proposer_gte?: InputMaybe<Scalars['Bytes']>
-  proposer_in?: InputMaybe<Array<Scalars['Bytes']>>
-  proposer_lt?: InputMaybe<Scalars['Bytes']>
-  proposer_lte?: InputMaybe<Scalars['Bytes']>
-  proposer_not?: InputMaybe<Scalars['Bytes']>
-  proposer_not_contains?: InputMaybe<Scalars['Bytes']>
-  proposer_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  queued?: InputMaybe<Scalars['Boolean']>
-  queued_in?: InputMaybe<Array<Scalars['Boolean']>>
-  queued_not?: InputMaybe<Scalars['Boolean']>
-  queued_not_in?: InputMaybe<Array<Scalars['Boolean']>>
-  quorumVotes?: InputMaybe<Scalars['BigInt']>
-  quorumVotes_gt?: InputMaybe<Scalars['BigInt']>
-  quorumVotes_gte?: InputMaybe<Scalars['BigInt']>
-  quorumVotes_in?: InputMaybe<Array<Scalars['BigInt']>>
-  quorumVotes_lt?: InputMaybe<Scalars['BigInt']>
-  quorumVotes_lte?: InputMaybe<Scalars['BigInt']>
-  quorumVotes_not?: InputMaybe<Scalars['BigInt']>
-  quorumVotes_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  snapshotBlockNumber?: InputMaybe<Scalars['BigInt']>
-  snapshotBlockNumber_gt?: InputMaybe<Scalars['BigInt']>
-  snapshotBlockNumber_gte?: InputMaybe<Scalars['BigInt']>
-  snapshotBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']>>
-  snapshotBlockNumber_lt?: InputMaybe<Scalars['BigInt']>
-  snapshotBlockNumber_lte?: InputMaybe<Scalars['BigInt']>
-  snapshotBlockNumber_not?: InputMaybe<Scalars['BigInt']>
-  snapshotBlockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  targets?: InputMaybe<Array<Scalars['Bytes']>>
-  targets_contains?: InputMaybe<Array<Scalars['Bytes']>>
-  targets_contains_nocase?: InputMaybe<Array<Scalars['Bytes']>>
-  targets_not?: InputMaybe<Array<Scalars['Bytes']>>
-  targets_not_contains?: InputMaybe<Array<Scalars['Bytes']>>
-  targets_not_contains_nocase?: InputMaybe<Array<Scalars['Bytes']>>
-  timeCreated?: InputMaybe<Scalars['BigInt']>
-  timeCreated_gt?: InputMaybe<Scalars['BigInt']>
-  timeCreated_gte?: InputMaybe<Scalars['BigInt']>
-  timeCreated_in?: InputMaybe<Array<Scalars['BigInt']>>
-  timeCreated_lt?: InputMaybe<Scalars['BigInt']>
-  timeCreated_lte?: InputMaybe<Scalars['BigInt']>
-  timeCreated_not?: InputMaybe<Scalars['BigInt']>
-  timeCreated_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  title?: InputMaybe<Scalars['String']>
-  title_contains?: InputMaybe<Scalars['String']>
-  title_contains_nocase?: InputMaybe<Scalars['String']>
-  title_ends_with?: InputMaybe<Scalars['String']>
-  title_ends_with_nocase?: InputMaybe<Scalars['String']>
-  title_gt?: InputMaybe<Scalars['String']>
-  title_gte?: InputMaybe<Scalars['String']>
-  title_in?: InputMaybe<Array<Scalars['String']>>
-  title_lt?: InputMaybe<Scalars['String']>
-  title_lte?: InputMaybe<Scalars['String']>
-  title_not?: InputMaybe<Scalars['String']>
-  title_not_contains?: InputMaybe<Scalars['String']>
-  title_not_contains_nocase?: InputMaybe<Scalars['String']>
-  title_not_ends_with?: InputMaybe<Scalars['String']>
-  title_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  title_not_in?: InputMaybe<Array<Scalars['String']>>
-  title_not_starts_with?: InputMaybe<Scalars['String']>
-  title_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  title_starts_with?: InputMaybe<Scalars['String']>
-  title_starts_with_nocase?: InputMaybe<Scalars['String']>
-  transactionHash?: InputMaybe<Scalars['Bytes']>
-  transactionHash_contains?: InputMaybe<Scalars['Bytes']>
-  transactionHash_gt?: InputMaybe<Scalars['Bytes']>
-  transactionHash_gte?: InputMaybe<Scalars['Bytes']>
-  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']>>
-  transactionHash_lt?: InputMaybe<Scalars['Bytes']>
-  transactionHash_lte?: InputMaybe<Scalars['Bytes']>
-  transactionHash_not?: InputMaybe<Scalars['Bytes']>
-  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']>
-  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  values?: InputMaybe<Array<Scalars['BigInt']>>
-  values_contains?: InputMaybe<Array<Scalars['BigInt']>>
-  values_contains_nocase?: InputMaybe<Array<Scalars['BigInt']>>
-  values_not?: InputMaybe<Array<Scalars['BigInt']>>
-  values_not_contains?: InputMaybe<Array<Scalars['BigInt']>>
-  values_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']>>
-  vetoed?: InputMaybe<Scalars['Boolean']>
-  vetoed_in?: InputMaybe<Array<Scalars['Boolean']>>
-  vetoed_not?: InputMaybe<Scalars['Boolean']>
-  vetoed_not_in?: InputMaybe<Array<Scalars['Boolean']>>
-  voteCount?: InputMaybe<Scalars['Int']>
-  voteCount_gt?: InputMaybe<Scalars['Int']>
-  voteCount_gte?: InputMaybe<Scalars['Int']>
-  voteCount_in?: InputMaybe<Array<Scalars['Int']>>
-  voteCount_lt?: InputMaybe<Scalars['Int']>
-  voteCount_lte?: InputMaybe<Scalars['Int']>
-  voteCount_not?: InputMaybe<Scalars['Int']>
-  voteCount_not_in?: InputMaybe<Array<Scalars['Int']>>
-  voteEnd?: InputMaybe<Scalars['BigInt']>
-  voteEnd_gt?: InputMaybe<Scalars['BigInt']>
-  voteEnd_gte?: InputMaybe<Scalars['BigInt']>
-  voteEnd_in?: InputMaybe<Array<Scalars['BigInt']>>
-  voteEnd_lt?: InputMaybe<Scalars['BigInt']>
-  voteEnd_lte?: InputMaybe<Scalars['BigInt']>
-  voteEnd_not?: InputMaybe<Scalars['BigInt']>
-  voteEnd_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  voteStart?: InputMaybe<Scalars['BigInt']>
-  voteStart_gt?: InputMaybe<Scalars['BigInt']>
-  voteStart_gte?: InputMaybe<Scalars['BigInt']>
-  voteStart_in?: InputMaybe<Array<Scalars['BigInt']>>
-  voteStart_lt?: InputMaybe<Scalars['BigInt']>
-  voteStart_lte?: InputMaybe<Scalars['BigInt']>
-  voteStart_not?: InputMaybe<Scalars['BigInt']>
-  voteStart_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  proposalId?: InputMaybe<Scalars['Bytes']['input']>
+  proposalId_contains?: InputMaybe<Scalars['Bytes']['input']>
+  proposalId_gt?: InputMaybe<Scalars['Bytes']['input']>
+  proposalId_gte?: InputMaybe<Scalars['Bytes']['input']>
+  proposalId_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  proposalId_lt?: InputMaybe<Scalars['Bytes']['input']>
+  proposalId_lte?: InputMaybe<Scalars['Bytes']['input']>
+  proposalId_not?: InputMaybe<Scalars['Bytes']['input']>
+  proposalId_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  proposalId_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  proposalNumber?: InputMaybe<Scalars['Int']['input']>
+  proposalNumber_gt?: InputMaybe<Scalars['Int']['input']>
+  proposalNumber_gte?: InputMaybe<Scalars['Int']['input']>
+  proposalNumber_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  proposalNumber_lt?: InputMaybe<Scalars['Int']['input']>
+  proposalNumber_lte?: InputMaybe<Scalars['Int']['input']>
+  proposalNumber_not?: InputMaybe<Scalars['Int']['input']>
+  proposalNumber_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  proposalThreshold?: InputMaybe<Scalars['BigInt']['input']>
+  proposalThreshold_gt?: InputMaybe<Scalars['BigInt']['input']>
+  proposalThreshold_gte?: InputMaybe<Scalars['BigInt']['input']>
+  proposalThreshold_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  proposalThreshold_lt?: InputMaybe<Scalars['BigInt']['input']>
+  proposalThreshold_lte?: InputMaybe<Scalars['BigInt']['input']>
+  proposalThreshold_not?: InputMaybe<Scalars['BigInt']['input']>
+  proposalThreshold_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  proposer?: InputMaybe<Scalars['Bytes']['input']>
+  proposer_contains?: InputMaybe<Scalars['Bytes']['input']>
+  proposer_gt?: InputMaybe<Scalars['Bytes']['input']>
+  proposer_gte?: InputMaybe<Scalars['Bytes']['input']>
+  proposer_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  proposer_lt?: InputMaybe<Scalars['Bytes']['input']>
+  proposer_lte?: InputMaybe<Scalars['Bytes']['input']>
+  proposer_not?: InputMaybe<Scalars['Bytes']['input']>
+  proposer_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  proposer_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  queued?: InputMaybe<Scalars['Boolean']['input']>
+  queued_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  queued_not?: InputMaybe<Scalars['Boolean']['input']>
+  queued_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  quorumVotes?: InputMaybe<Scalars['BigInt']['input']>
+  quorumVotes_gt?: InputMaybe<Scalars['BigInt']['input']>
+  quorumVotes_gte?: InputMaybe<Scalars['BigInt']['input']>
+  quorumVotes_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  quorumVotes_lt?: InputMaybe<Scalars['BigInt']['input']>
+  quorumVotes_lte?: InputMaybe<Scalars['BigInt']['input']>
+  quorumVotes_not?: InputMaybe<Scalars['BigInt']['input']>
+  quorumVotes_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  snapshotBlockNumber?: InputMaybe<Scalars['BigInt']['input']>
+  snapshotBlockNumber_gt?: InputMaybe<Scalars['BigInt']['input']>
+  snapshotBlockNumber_gte?: InputMaybe<Scalars['BigInt']['input']>
+  snapshotBlockNumber_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  snapshotBlockNumber_lt?: InputMaybe<Scalars['BigInt']['input']>
+  snapshotBlockNumber_lte?: InputMaybe<Scalars['BigInt']['input']>
+  snapshotBlockNumber_not?: InputMaybe<Scalars['BigInt']['input']>
+  snapshotBlockNumber_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  targets?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  targets_contains?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  targets_contains_nocase?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  targets_not?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  targets_not_contains?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  targets_not_contains_nocase?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  timeCreated?: InputMaybe<Scalars['BigInt']['input']>
+  timeCreated_gt?: InputMaybe<Scalars['BigInt']['input']>
+  timeCreated_gte?: InputMaybe<Scalars['BigInt']['input']>
+  timeCreated_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  timeCreated_lt?: InputMaybe<Scalars['BigInt']['input']>
+  timeCreated_lte?: InputMaybe<Scalars['BigInt']['input']>
+  timeCreated_not?: InputMaybe<Scalars['BigInt']['input']>
+  timeCreated_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  title?: InputMaybe<Scalars['String']['input']>
+  title_contains?: InputMaybe<Scalars['String']['input']>
+  title_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  title_ends_with?: InputMaybe<Scalars['String']['input']>
+  title_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  title_gt?: InputMaybe<Scalars['String']['input']>
+  title_gte?: InputMaybe<Scalars['String']['input']>
+  title_in?: InputMaybe<Array<Scalars['String']['input']>>
+  title_lt?: InputMaybe<Scalars['String']['input']>
+  title_lte?: InputMaybe<Scalars['String']['input']>
+  title_not?: InputMaybe<Scalars['String']['input']>
+  title_not_contains?: InputMaybe<Scalars['String']['input']>
+  title_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  title_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  title_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  title_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  title_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  title_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  title_starts_with?: InputMaybe<Scalars['String']['input']>
+  title_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  transactionHash?: InputMaybe<Scalars['Bytes']['input']>
+  transactionHash_contains?: InputMaybe<Scalars['Bytes']['input']>
+  transactionHash_gt?: InputMaybe<Scalars['Bytes']['input']>
+  transactionHash_gte?: InputMaybe<Scalars['Bytes']['input']>
+  transactionHash_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  transactionHash_lt?: InputMaybe<Scalars['Bytes']['input']>
+  transactionHash_lte?: InputMaybe<Scalars['Bytes']['input']>
+  transactionHash_not?: InputMaybe<Scalars['Bytes']['input']>
+  transactionHash_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  transactionHash_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  values?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  values_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  values_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  values_not?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  values_not_contains?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  values_not_contains_nocase?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  vetoed?: InputMaybe<Scalars['Boolean']['input']>
+  vetoed_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  vetoed_not?: InputMaybe<Scalars['Boolean']['input']>
+  vetoed_not_in?: InputMaybe<Array<Scalars['Boolean']['input']>>
+  voteCount?: InputMaybe<Scalars['Int']['input']>
+  voteCount_gt?: InputMaybe<Scalars['Int']['input']>
+  voteCount_gte?: InputMaybe<Scalars['Int']['input']>
+  voteCount_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  voteCount_lt?: InputMaybe<Scalars['Int']['input']>
+  voteCount_lte?: InputMaybe<Scalars['Int']['input']>
+  voteCount_not?: InputMaybe<Scalars['Int']['input']>
+  voteCount_not_in?: InputMaybe<Array<Scalars['Int']['input']>>
+  voteEnd?: InputMaybe<Scalars['BigInt']['input']>
+  voteEnd_gt?: InputMaybe<Scalars['BigInt']['input']>
+  voteEnd_gte?: InputMaybe<Scalars['BigInt']['input']>
+  voteEnd_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  voteEnd_lt?: InputMaybe<Scalars['BigInt']['input']>
+  voteEnd_lte?: InputMaybe<Scalars['BigInt']['input']>
+  voteEnd_not?: InputMaybe<Scalars['BigInt']['input']>
+  voteEnd_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  voteStart?: InputMaybe<Scalars['BigInt']['input']>
+  voteStart_gt?: InputMaybe<Scalars['BigInt']['input']>
+  voteStart_gte?: InputMaybe<Scalars['BigInt']['input']>
+  voteStart_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  voteStart_lt?: InputMaybe<Scalars['BigInt']['input']>
+  voteStart_lte?: InputMaybe<Scalars['BigInt']['input']>
+  voteStart_not?: InputMaybe<Scalars['BigInt']['input']>
+  voteStart_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
   votes_?: InputMaybe<ProposalVote_Filter>
 }
 
@@ -1625,160 +1631,160 @@ export type Query_MetaArgs = {
 
 export type QueryAuctionArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryAuctionBidArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryAuctionBidsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<AuctionBid_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<AuctionBid_Filter>
 }
 
 export type QueryAuctionConfigArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryAuctionConfigsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<AuctionConfig_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<AuctionConfig_Filter>
 }
 
 export type QueryAuctionsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Auction_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<Auction_Filter>
 }
 
 export type QueryDaoArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryDaosArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Dao_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<Dao_Filter>
 }
 
 export type QueryDaotokenOwnerArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryDaotokenOwnersArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<DaoTokenOwner_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<DaoTokenOwner_Filter>
 }
 
 export type QueryMetadataItemArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryMetadataItemsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<MetadataItem_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<MetadataItem_Filter>
 }
 
 export type QueryMetadataPropertiesArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<MetadataProperty_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<MetadataProperty_Filter>
 }
 
 export type QueryMetadataPropertyArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryProposalArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryProposalVoteArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryProposalVotesArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<ProposalVote_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<ProposalVote_Filter>
 }
 
 export type QueryProposalsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Proposal_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<Proposal_Filter>
 }
 
 export type QueryTokenArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type QueryTokensArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Token_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<Token_Filter>
 }
@@ -1815,160 +1821,160 @@ export type Subscription_MetaArgs = {
 
 export type SubscriptionAuctionArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionAuctionBidArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionAuctionBidsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<AuctionBid_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<AuctionBid_Filter>
 }
 
 export type SubscriptionAuctionConfigArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionAuctionConfigsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<AuctionConfig_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<AuctionConfig_Filter>
 }
 
 export type SubscriptionAuctionsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Auction_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<Auction_Filter>
 }
 
 export type SubscriptionDaoArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionDaosArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Dao_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<Dao_Filter>
 }
 
 export type SubscriptionDaotokenOwnerArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionDaotokenOwnersArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<DaoTokenOwner_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<DaoTokenOwner_Filter>
 }
 
 export type SubscriptionMetadataItemArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionMetadataItemsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<MetadataItem_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<MetadataItem_Filter>
 }
 
 export type SubscriptionMetadataPropertiesArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<MetadataProperty_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<MetadataProperty_Filter>
 }
 
 export type SubscriptionMetadataPropertyArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionProposalArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionProposalVoteArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionProposalVotesArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<ProposalVote_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<ProposalVote_Filter>
 }
 
 export type SubscriptionProposalsArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Proposal_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<Proposal_Filter>
 }
 
 export type SubscriptionTokenArgs = {
   block?: InputMaybe<Block_Height>
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
   subgraphError?: _SubgraphErrorPolicy_
 }
 
 export type SubscriptionTokensArgs = {
   block?: InputMaybe<Block_Height>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Token_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   subgraphError?: _SubgraphErrorPolicy_
   where?: InputMaybe<Token_Filter>
 }
@@ -1976,16 +1982,16 @@ export type SubscriptionTokensArgs = {
 export type Token = {
   __typename?: 'Token'
   auction?: Maybe<Auction>
-  content?: Maybe<Scalars['String']>
+  content?: Maybe<Scalars['String']['output']>
   dao: Dao
-  id: Scalars['ID']
-  image?: Maybe<Scalars['String']>
-  mintedAt: Scalars['BigInt']
-  name: Scalars['String']
-  owner: Scalars['Bytes']
+  id: Scalars['ID']['output']
+  image?: Maybe<Scalars['String']['output']>
+  mintedAt: Scalars['BigInt']['output']
+  name: Scalars['String']['output']
+  owner: Scalars['Bytes']['output']
   ownerInfo: DaoTokenOwner
-  tokenContract: Scalars['Bytes']
-  tokenId: Scalars['BigInt']
+  tokenContract: Scalars['Bytes']['output']
+  tokenId: Scalars['BigInt']['output']
 }
 
 export type Token_Filter = {
@@ -1993,153 +1999,153 @@ export type Token_Filter = {
   _change_block?: InputMaybe<BlockChangedFilter>
   and?: InputMaybe<Array<InputMaybe<Token_Filter>>>
   auction_?: InputMaybe<Auction_Filter>
-  content?: InputMaybe<Scalars['String']>
-  content_contains?: InputMaybe<Scalars['String']>
-  content_contains_nocase?: InputMaybe<Scalars['String']>
-  content_ends_with?: InputMaybe<Scalars['String']>
-  content_ends_with_nocase?: InputMaybe<Scalars['String']>
-  content_gt?: InputMaybe<Scalars['String']>
-  content_gte?: InputMaybe<Scalars['String']>
-  content_in?: InputMaybe<Array<Scalars['String']>>
-  content_lt?: InputMaybe<Scalars['String']>
-  content_lte?: InputMaybe<Scalars['String']>
-  content_not?: InputMaybe<Scalars['String']>
-  content_not_contains?: InputMaybe<Scalars['String']>
-  content_not_contains_nocase?: InputMaybe<Scalars['String']>
-  content_not_ends_with?: InputMaybe<Scalars['String']>
-  content_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  content_not_in?: InputMaybe<Array<Scalars['String']>>
-  content_not_starts_with?: InputMaybe<Scalars['String']>
-  content_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  content_starts_with?: InputMaybe<Scalars['String']>
-  content_starts_with_nocase?: InputMaybe<Scalars['String']>
-  dao?: InputMaybe<Scalars['String']>
+  content?: InputMaybe<Scalars['String']['input']>
+  content_contains?: InputMaybe<Scalars['String']['input']>
+  content_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  content_ends_with?: InputMaybe<Scalars['String']['input']>
+  content_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  content_gt?: InputMaybe<Scalars['String']['input']>
+  content_gte?: InputMaybe<Scalars['String']['input']>
+  content_in?: InputMaybe<Array<Scalars['String']['input']>>
+  content_lt?: InputMaybe<Scalars['String']['input']>
+  content_lte?: InputMaybe<Scalars['String']['input']>
+  content_not?: InputMaybe<Scalars['String']['input']>
+  content_not_contains?: InputMaybe<Scalars['String']['input']>
+  content_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  content_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  content_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  content_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  content_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  content_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  content_starts_with?: InputMaybe<Scalars['String']['input']>
+  content_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao?: InputMaybe<Scalars['String']['input']>
   dao_?: InputMaybe<Dao_Filter>
-  dao_contains?: InputMaybe<Scalars['String']>
-  dao_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_ends_with?: InputMaybe<Scalars['String']>
-  dao_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_gt?: InputMaybe<Scalars['String']>
-  dao_gte?: InputMaybe<Scalars['String']>
-  dao_in?: InputMaybe<Array<Scalars['String']>>
-  dao_lt?: InputMaybe<Scalars['String']>
-  dao_lte?: InputMaybe<Scalars['String']>
-  dao_not?: InputMaybe<Scalars['String']>
-  dao_not_contains?: InputMaybe<Scalars['String']>
-  dao_not_contains_nocase?: InputMaybe<Scalars['String']>
-  dao_not_ends_with?: InputMaybe<Scalars['String']>
-  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  dao_not_in?: InputMaybe<Array<Scalars['String']>>
-  dao_not_starts_with?: InputMaybe<Scalars['String']>
-  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  dao_starts_with?: InputMaybe<Scalars['String']>
-  dao_starts_with_nocase?: InputMaybe<Scalars['String']>
-  id?: InputMaybe<Scalars['ID']>
-  id_gt?: InputMaybe<Scalars['ID']>
-  id_gte?: InputMaybe<Scalars['ID']>
-  id_in?: InputMaybe<Array<Scalars['ID']>>
-  id_lt?: InputMaybe<Scalars['ID']>
-  id_lte?: InputMaybe<Scalars['ID']>
-  id_not?: InputMaybe<Scalars['ID']>
-  id_not_in?: InputMaybe<Array<Scalars['ID']>>
-  image?: InputMaybe<Scalars['String']>
-  image_contains?: InputMaybe<Scalars['String']>
-  image_contains_nocase?: InputMaybe<Scalars['String']>
-  image_ends_with?: InputMaybe<Scalars['String']>
-  image_ends_with_nocase?: InputMaybe<Scalars['String']>
-  image_gt?: InputMaybe<Scalars['String']>
-  image_gte?: InputMaybe<Scalars['String']>
-  image_in?: InputMaybe<Array<Scalars['String']>>
-  image_lt?: InputMaybe<Scalars['String']>
-  image_lte?: InputMaybe<Scalars['String']>
-  image_not?: InputMaybe<Scalars['String']>
-  image_not_contains?: InputMaybe<Scalars['String']>
-  image_not_contains_nocase?: InputMaybe<Scalars['String']>
-  image_not_ends_with?: InputMaybe<Scalars['String']>
-  image_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  image_not_in?: InputMaybe<Array<Scalars['String']>>
-  image_not_starts_with?: InputMaybe<Scalars['String']>
-  image_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  image_starts_with?: InputMaybe<Scalars['String']>
-  image_starts_with_nocase?: InputMaybe<Scalars['String']>
-  mintedAt?: InputMaybe<Scalars['BigInt']>
-  mintedAt_gt?: InputMaybe<Scalars['BigInt']>
-  mintedAt_gte?: InputMaybe<Scalars['BigInt']>
-  mintedAt_in?: InputMaybe<Array<Scalars['BigInt']>>
-  mintedAt_lt?: InputMaybe<Scalars['BigInt']>
-  mintedAt_lte?: InputMaybe<Scalars['BigInt']>
-  mintedAt_not?: InputMaybe<Scalars['BigInt']>
-  mintedAt_not_in?: InputMaybe<Array<Scalars['BigInt']>>
-  name?: InputMaybe<Scalars['String']>
-  name_contains?: InputMaybe<Scalars['String']>
-  name_contains_nocase?: InputMaybe<Scalars['String']>
-  name_ends_with?: InputMaybe<Scalars['String']>
-  name_ends_with_nocase?: InputMaybe<Scalars['String']>
-  name_gt?: InputMaybe<Scalars['String']>
-  name_gte?: InputMaybe<Scalars['String']>
-  name_in?: InputMaybe<Array<Scalars['String']>>
-  name_lt?: InputMaybe<Scalars['String']>
-  name_lte?: InputMaybe<Scalars['String']>
-  name_not?: InputMaybe<Scalars['String']>
-  name_not_contains?: InputMaybe<Scalars['String']>
-  name_not_contains_nocase?: InputMaybe<Scalars['String']>
-  name_not_ends_with?: InputMaybe<Scalars['String']>
-  name_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  name_not_in?: InputMaybe<Array<Scalars['String']>>
-  name_not_starts_with?: InputMaybe<Scalars['String']>
-  name_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  name_starts_with?: InputMaybe<Scalars['String']>
-  name_starts_with_nocase?: InputMaybe<Scalars['String']>
+  dao_contains?: InputMaybe<Scalars['String']['input']>
+  dao_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_gt?: InputMaybe<Scalars['String']['input']>
+  dao_gte?: InputMaybe<Scalars['String']['input']>
+  dao_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_lt?: InputMaybe<Scalars['String']['input']>
+  dao_lte?: InputMaybe<Scalars['String']['input']>
+  dao_not?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains?: InputMaybe<Scalars['String']['input']>
+  dao_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  dao_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with?: InputMaybe<Scalars['String']['input']>
+  dao_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['ID']['input']>
+  id_gt?: InputMaybe<Scalars['ID']['input']>
+  id_gte?: InputMaybe<Scalars['ID']['input']>
+  id_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  id_lt?: InputMaybe<Scalars['ID']['input']>
+  id_lte?: InputMaybe<Scalars['ID']['input']>
+  id_not?: InputMaybe<Scalars['ID']['input']>
+  id_not_in?: InputMaybe<Array<Scalars['ID']['input']>>
+  image?: InputMaybe<Scalars['String']['input']>
+  image_contains?: InputMaybe<Scalars['String']['input']>
+  image_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  image_ends_with?: InputMaybe<Scalars['String']['input']>
+  image_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  image_gt?: InputMaybe<Scalars['String']['input']>
+  image_gte?: InputMaybe<Scalars['String']['input']>
+  image_in?: InputMaybe<Array<Scalars['String']['input']>>
+  image_lt?: InputMaybe<Scalars['String']['input']>
+  image_lte?: InputMaybe<Scalars['String']['input']>
+  image_not?: InputMaybe<Scalars['String']['input']>
+  image_not_contains?: InputMaybe<Scalars['String']['input']>
+  image_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  image_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  image_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  image_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  image_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  image_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  image_starts_with?: InputMaybe<Scalars['String']['input']>
+  image_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  mintedAt?: InputMaybe<Scalars['BigInt']['input']>
+  mintedAt_gt?: InputMaybe<Scalars['BigInt']['input']>
+  mintedAt_gte?: InputMaybe<Scalars['BigInt']['input']>
+  mintedAt_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  mintedAt_lt?: InputMaybe<Scalars['BigInt']['input']>
+  mintedAt_lte?: InputMaybe<Scalars['BigInt']['input']>
+  mintedAt_not?: InputMaybe<Scalars['BigInt']['input']>
+  mintedAt_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  name?: InputMaybe<Scalars['String']['input']>
+  name_contains?: InputMaybe<Scalars['String']['input']>
+  name_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  name_ends_with?: InputMaybe<Scalars['String']['input']>
+  name_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_gt?: InputMaybe<Scalars['String']['input']>
+  name_gte?: InputMaybe<Scalars['String']['input']>
+  name_in?: InputMaybe<Array<Scalars['String']['input']>>
+  name_lt?: InputMaybe<Scalars['String']['input']>
+  name_lte?: InputMaybe<Scalars['String']['input']>
+  name_not?: InputMaybe<Scalars['String']['input']>
+  name_not_contains?: InputMaybe<Scalars['String']['input']>
+  name_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  name_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  name_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  name_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  name_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  name_starts_with?: InputMaybe<Scalars['String']['input']>
+  name_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
   or?: InputMaybe<Array<InputMaybe<Token_Filter>>>
-  owner?: InputMaybe<Scalars['Bytes']>
-  ownerInfo?: InputMaybe<Scalars['String']>
+  owner?: InputMaybe<Scalars['Bytes']['input']>
+  ownerInfo?: InputMaybe<Scalars['String']['input']>
   ownerInfo_?: InputMaybe<DaoTokenOwner_Filter>
-  ownerInfo_contains?: InputMaybe<Scalars['String']>
-  ownerInfo_contains_nocase?: InputMaybe<Scalars['String']>
-  ownerInfo_ends_with?: InputMaybe<Scalars['String']>
-  ownerInfo_ends_with_nocase?: InputMaybe<Scalars['String']>
-  ownerInfo_gt?: InputMaybe<Scalars['String']>
-  ownerInfo_gte?: InputMaybe<Scalars['String']>
-  ownerInfo_in?: InputMaybe<Array<Scalars['String']>>
-  ownerInfo_lt?: InputMaybe<Scalars['String']>
-  ownerInfo_lte?: InputMaybe<Scalars['String']>
-  ownerInfo_not?: InputMaybe<Scalars['String']>
-  ownerInfo_not_contains?: InputMaybe<Scalars['String']>
-  ownerInfo_not_contains_nocase?: InputMaybe<Scalars['String']>
-  ownerInfo_not_ends_with?: InputMaybe<Scalars['String']>
-  ownerInfo_not_ends_with_nocase?: InputMaybe<Scalars['String']>
-  ownerInfo_not_in?: InputMaybe<Array<Scalars['String']>>
-  ownerInfo_not_starts_with?: InputMaybe<Scalars['String']>
-  ownerInfo_not_starts_with_nocase?: InputMaybe<Scalars['String']>
-  ownerInfo_starts_with?: InputMaybe<Scalars['String']>
-  ownerInfo_starts_with_nocase?: InputMaybe<Scalars['String']>
-  owner_contains?: InputMaybe<Scalars['Bytes']>
-  owner_gt?: InputMaybe<Scalars['Bytes']>
-  owner_gte?: InputMaybe<Scalars['Bytes']>
-  owner_in?: InputMaybe<Array<Scalars['Bytes']>>
-  owner_lt?: InputMaybe<Scalars['Bytes']>
-  owner_lte?: InputMaybe<Scalars['Bytes']>
-  owner_not?: InputMaybe<Scalars['Bytes']>
-  owner_not_contains?: InputMaybe<Scalars['Bytes']>
-  owner_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  tokenContract?: InputMaybe<Scalars['Bytes']>
-  tokenContract_contains?: InputMaybe<Scalars['Bytes']>
-  tokenContract_gt?: InputMaybe<Scalars['Bytes']>
-  tokenContract_gte?: InputMaybe<Scalars['Bytes']>
-  tokenContract_in?: InputMaybe<Array<Scalars['Bytes']>>
-  tokenContract_lt?: InputMaybe<Scalars['Bytes']>
-  tokenContract_lte?: InputMaybe<Scalars['Bytes']>
-  tokenContract_not?: InputMaybe<Scalars['Bytes']>
-  tokenContract_not_contains?: InputMaybe<Scalars['Bytes']>
-  tokenContract_not_in?: InputMaybe<Array<Scalars['Bytes']>>
-  tokenId?: InputMaybe<Scalars['BigInt']>
-  tokenId_gt?: InputMaybe<Scalars['BigInt']>
-  tokenId_gte?: InputMaybe<Scalars['BigInt']>
-  tokenId_in?: InputMaybe<Array<Scalars['BigInt']>>
-  tokenId_lt?: InputMaybe<Scalars['BigInt']>
-  tokenId_lte?: InputMaybe<Scalars['BigInt']>
-  tokenId_not?: InputMaybe<Scalars['BigInt']>
-  tokenId_not_in?: InputMaybe<Array<Scalars['BigInt']>>
+  ownerInfo_contains?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_ends_with?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_gt?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_gte?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_in?: InputMaybe<Array<Scalars['String']['input']>>
+  ownerInfo_lt?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_lte?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_not?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_not_contains?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_not_contains_nocase?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_not_ends_with?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_not_ends_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_not_in?: InputMaybe<Array<Scalars['String']['input']>>
+  ownerInfo_not_starts_with?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_not_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_starts_with?: InputMaybe<Scalars['String']['input']>
+  ownerInfo_starts_with_nocase?: InputMaybe<Scalars['String']['input']>
+  owner_contains?: InputMaybe<Scalars['Bytes']['input']>
+  owner_gt?: InputMaybe<Scalars['Bytes']['input']>
+  owner_gte?: InputMaybe<Scalars['Bytes']['input']>
+  owner_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  owner_lt?: InputMaybe<Scalars['Bytes']['input']>
+  owner_lte?: InputMaybe<Scalars['Bytes']['input']>
+  owner_not?: InputMaybe<Scalars['Bytes']['input']>
+  owner_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  owner_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  tokenContract?: InputMaybe<Scalars['Bytes']['input']>
+  tokenContract_contains?: InputMaybe<Scalars['Bytes']['input']>
+  tokenContract_gt?: InputMaybe<Scalars['Bytes']['input']>
+  tokenContract_gte?: InputMaybe<Scalars['Bytes']['input']>
+  tokenContract_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  tokenContract_lt?: InputMaybe<Scalars['Bytes']['input']>
+  tokenContract_lte?: InputMaybe<Scalars['Bytes']['input']>
+  tokenContract_not?: InputMaybe<Scalars['Bytes']['input']>
+  tokenContract_not_contains?: InputMaybe<Scalars['Bytes']['input']>
+  tokenContract_not_in?: InputMaybe<Array<Scalars['Bytes']['input']>>
+  tokenId?: InputMaybe<Scalars['BigInt']['input']>
+  tokenId_gt?: InputMaybe<Scalars['BigInt']['input']>
+  tokenId_gte?: InputMaybe<Scalars['BigInt']['input']>
+  tokenId_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
+  tokenId_lt?: InputMaybe<Scalars['BigInt']['input']>
+  tokenId_lte?: InputMaybe<Scalars['BigInt']['input']>
+  tokenId_not?: InputMaybe<Scalars['BigInt']['input']>
+  tokenId_not_in?: InputMaybe<Array<Scalars['BigInt']['input']>>
 }
 
 export enum Token_OrderBy {
@@ -2184,13 +2190,13 @@ export enum Token_OrderBy {
 export type _Block_ = {
   __typename?: '_Block_'
   /** The hash of the block */
-  hash?: Maybe<Scalars['Bytes']>
+  hash?: Maybe<Scalars['Bytes']['output']>
   /** The block number */
-  number: Scalars['Int']
+  number: Scalars['Int']['output']
   /** The hash of the parent block */
-  parentHash?: Maybe<Scalars['Bytes']>
+  parentHash?: Maybe<Scalars['Bytes']['output']>
   /** Integer representation of the timestamp stored in blocks for the chain */
-  timestamp?: Maybe<Scalars['Int']>
+  timestamp?: Maybe<Scalars['Int']['output']>
 }
 
 /** The type for the top-level _meta field */
@@ -2205,9 +2211,9 @@ export type _Meta_ = {
    */
   block: _Block_
   /** The deployment ID */
-  deployment: Scalars['String']
+  deployment: Scalars['String']['output']
   /** If `true`, the subgraph encountered indexing errors at some past block */
-  hasIndexingErrors: Scalars['Boolean']
+  hasIndexingErrors: Scalars['Boolean']['output']
 }
 
 export enum _SubgraphErrorPolicy_ {
@@ -2299,7 +2305,7 @@ export type TokenFragment = {
 }
 
 export type ActiveAuctionsQueryVariables = Exact<{
-  first: Scalars['Int']
+  first: Scalars['Int']['input']
   where: Auction_Filter
 }>
 
@@ -2312,7 +2318,7 @@ export type ActiveAuctionsQuery = {
 }
 
 export type ActiveDaosQueryVariables = Exact<{
-  first: Scalars['Int']
+  first: Scalars['Int']['input']
   where: Dao_Filter
 }>
 
@@ -2322,7 +2328,7 @@ export type ActiveDaosQuery = {
 }
 
 export type AuctionBidsQueryVariables = Exact<{
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
 }>
 
 export type AuctionBidsQuery = {
@@ -2339,11 +2345,11 @@ export type AuctionBidsQuery = {
 }
 
 export type AuctionHistoryQueryVariables = Exact<{
-  startTime: Scalars['BigInt']
-  daoId: Scalars['ID']
+  startTime: Scalars['BigInt']['input']
+  daoId: Scalars['ID']['input']
   orderBy?: InputMaybe<Auction_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  first?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type AuctionHistoryQuery = {
@@ -2361,7 +2367,7 @@ export type AuctionHistoryQuery = {
 }
 
 export type DaoInfoQueryVariables = Exact<{
-  tokenAddress: Scalars['ID']
+  tokenAddress: Scalars['ID']['input']
 }>
 
 export type DaoInfoQuery = {
@@ -2371,8 +2377,8 @@ export type DaoInfoQuery = {
 
 export type DaoMembersListQueryVariables = Exact<{
   where?: InputMaybe<DaoTokenOwner_Filter>
-  first?: InputMaybe<Scalars['Int']>
-  skip?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
+  skip?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<DaoTokenOwner_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
 }>
@@ -2389,8 +2395,8 @@ export type DaoMembersListQuery = {
 }
 
 export type DaoMetadataQueryVariables = Exact<{
-  tokenAddress: Scalars['ID']
-  first: Scalars['Int']
+  tokenAddress: Scalars['ID']['input']
+  first: Scalars['Int']['input']
 }>
 
 export type DaoMetadataQuery = {
@@ -2413,8 +2419,8 @@ export type DaoMetadataQuery = {
 }
 
 export type DaoNextAndPreviousTokensQueryVariables = Exact<{
-  tokenAddress: Scalars['String']
-  tokenId: Scalars['BigInt']
+  tokenAddress: Scalars['String']['input']
+  tokenId: Scalars['BigInt']['input']
 }>
 
 export type DaoNextAndPreviousTokensQuery = {
@@ -2425,7 +2431,7 @@ export type DaoNextAndPreviousTokensQuery = {
 }
 
 export type DaoOgMetadataQueryVariables = Exact<{
-  tokenAddress: Scalars['ID']
+  tokenAddress: Scalars['ID']['input']
 }>
 
 export type DaoOgMetadataQuery = {
@@ -2448,8 +2454,8 @@ export type DaoOgMetadataQuery = {
 
 export type DaoTokenOwnersQueryVariables = Exact<{
   where?: InputMaybe<DaoTokenOwner_Filter>
-  first?: InputMaybe<Scalars['Int']>
-  skip?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
+  skip?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type DaoTokenOwnersQuery = {
@@ -2468,8 +2474,8 @@ export type DaoTokenOwnersQuery = {
 
 export type DashboardQueryVariables = Exact<{
   where?: InputMaybe<DaoTokenOwner_Filter>
-  first?: InputMaybe<Scalars['Int']>
-  skip?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
+  skip?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type DashboardQuery = {
@@ -2529,8 +2535,8 @@ export type ExploreDaosPageQueryVariables = Exact<{
   orderBy?: InputMaybe<Auction_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
   where?: InputMaybe<Auction_Filter>
-  skip?: InputMaybe<Scalars['Int']>
-  first?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
+  first?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type ExploreDaosPageQuery = {
@@ -2556,9 +2562,9 @@ export type SyncStatusQuery = {
 }
 
 export type MyDaosPageQueryVariables = Exact<{
-  daos?: InputMaybe<Array<Scalars['String']> | Scalars['String']>
+  daos?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>
   orderBy?: InputMaybe<Auction_OrderBy>
-  skip?: InputMaybe<Scalars['Int']>
+  skip?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type MyDaosPageQuery = {
@@ -2573,7 +2579,7 @@ export type MyDaosPageQuery = {
 }
 
 export type ProposalQueryVariables = Exact<{
-  proposalId: Scalars['ID']
+  proposalId: Scalars['ID']['input']
 }>
 
 export type ProposalQuery = {
@@ -2615,7 +2621,7 @@ export type ProposalQuery = {
 
 export type ProposalOgMetadataQueryVariables = Exact<{
   where: Proposal_Filter
-  first: Scalars['Int']
+  first: Scalars['Int']['input']
 }>
 
 export type ProposalOgMetadataQuery = {
@@ -2666,8 +2672,8 @@ export type ProposalOgMetadataQuery = {
 
 export type ProposalsQueryVariables = Exact<{
   where?: InputMaybe<Proposal_Filter>
-  first: Scalars['Int']
-  skip?: InputMaybe<Scalars['Int']>
+  first: Scalars['Int']['input']
+  skip?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type ProposalsQuery = {
@@ -2708,7 +2714,7 @@ export type ProposalsQuery = {
 }
 
 export type TokenWithDaoQueryVariables = Exact<{
-  id: Scalars['ID']
+  id: Scalars['ID']['input']
 }>
 
 export type TokenWithDaoQuery = {
@@ -2746,8 +2752,8 @@ export type TokensQueryVariables = Exact<{
   where?: InputMaybe<Token_Filter>
   orderBy?: InputMaybe<Token_OrderBy>
   orderDirection?: InputMaybe<OrderDirection>
-  first?: InputMaybe<Scalars['Int']>
-  skip?: InputMaybe<Scalars['Int']>
+  first?: InputMaybe<Scalars['Int']['input']>
+  skip?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type TokensQuery = {
@@ -2765,7 +2771,7 @@ export type TokensQuery = {
 }
 
 export type TotalAuctionSalesQueryVariables = Exact<{
-  tokenAddress: Scalars['ID']
+  tokenAddress: Scalars['ID']['input']
 }>
 
 export type TotalAuctionSalesQuery = {
@@ -3222,11 +3228,16 @@ export const TotalAuctionSalesDocument = gql`
 export type SdkFunctionWrapper = <T>(
   action: (requestHeaders?: Record<string, string>) => Promise<T>,
   operationName: string,
-  operationType?: string
+  operationType?: string,
+  variables?: any
 ) => Promise<T>
 
-const defaultWrapper: SdkFunctionWrapper = (action, _operationName, _operationType) =>
-  action()
+const defaultWrapper: SdkFunctionWrapper = (
+  action,
+  _operationName,
+  _operationType,
+  _variables
+) => action()
 
 export function getSdk(
   client: GraphQLClient,
@@ -3235,7 +3246,7 @@ export function getSdk(
   return {
     activeAuctions(
       variables: ActiveAuctionsQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<ActiveAuctionsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3244,12 +3255,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'activeAuctions',
-        'query'
+        'query',
+        variables
       )
     },
     activeDaos(
       variables: ActiveDaosQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<ActiveDaosQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3258,12 +3270,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'activeDaos',
-        'query'
+        'query',
+        variables
       )
     },
     auctionBids(
       variables: AuctionBidsQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<AuctionBidsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3272,12 +3285,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'auctionBids',
-        'query'
+        'query',
+        variables
       )
     },
     auctionHistory(
       variables: AuctionHistoryQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<AuctionHistoryQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3286,12 +3300,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'auctionHistory',
-        'query'
+        'query',
+        variables
       )
     },
     daoInfo(
       variables: DaoInfoQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<DaoInfoQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3300,12 +3315,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoInfo',
-        'query'
+        'query',
+        variables
       )
     },
     daoMembersList(
       variables?: DaoMembersListQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<DaoMembersListQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3314,12 +3330,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoMembersList',
-        'query'
+        'query',
+        variables
       )
     },
     daoMetadata(
       variables: DaoMetadataQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<DaoMetadataQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3328,12 +3345,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoMetadata',
-        'query'
+        'query',
+        variables
       )
     },
     daoNextAndPreviousTokens(
       variables: DaoNextAndPreviousTokensQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<DaoNextAndPreviousTokensQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3343,12 +3361,13 @@ export function getSdk(
             { ...requestHeaders, ...wrappedRequestHeaders }
           ),
         'daoNextAndPreviousTokens',
-        'query'
+        'query',
+        variables
       )
     },
     daoOGMetadata(
       variables: DaoOgMetadataQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<DaoOgMetadataQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3357,12 +3376,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoOGMetadata',
-        'query'
+        'query',
+        variables
       )
     },
     daoTokenOwners(
       variables?: DaoTokenOwnersQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<DaoTokenOwnersQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3371,12 +3391,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'daoTokenOwners',
-        'query'
+        'query',
+        variables
       )
     },
     dashboard(
       variables?: DashboardQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<DashboardQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3385,12 +3406,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'dashboard',
-        'query'
+        'query',
+        variables
       )
     },
     exploreDaosPage(
       variables?: ExploreDaosPageQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<ExploreDaosPageQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3399,12 +3421,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'exploreDaosPage',
-        'query'
+        'query',
+        variables
       )
     },
     syncStatus(
       variables?: SyncStatusQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<SyncStatusQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3413,12 +3436,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'syncStatus',
-        'query'
+        'query',
+        variables
       )
     },
     myDaosPage(
       variables?: MyDaosPageQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<MyDaosPageQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3427,12 +3451,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'myDaosPage',
-        'query'
+        'query',
+        variables
       )
     },
     proposal(
       variables: ProposalQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<ProposalQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3441,12 +3466,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposal',
-        'query'
+        'query',
+        variables
       )
     },
     proposalOGMetadata(
       variables: ProposalOgMetadataQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<ProposalOgMetadataQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3455,12 +3481,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposalOGMetadata',
-        'query'
+        'query',
+        variables
       )
     },
     proposals(
       variables: ProposalsQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<ProposalsQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3469,12 +3496,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'proposals',
-        'query'
+        'query',
+        variables
       )
     },
     tokenWithDao(
       variables: TokenWithDaoQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<TokenWithDaoQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3483,12 +3511,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'tokenWithDao',
-        'query'
+        'query',
+        variables
       )
     },
     tokens(
       variables?: TokensQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<TokensQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3497,12 +3526,13 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'tokens',
-        'query'
+        'query',
+        variables
       )
     },
     totalAuctionSales(
       variables: TotalAuctionSalesQueryVariables,
-      requestHeaders?: Dom.RequestInit['headers']
+      requestHeaders?: GraphQLClientRequestHeaders
     ): Promise<TotalAuctionSalesQuery> {
       return withWrapper(
         (wrappedRequestHeaders) =>
@@ -3511,7 +3541,8 @@ export function getSdk(
             ...wrappedRequestHeaders,
           }),
         'totalAuctionSales',
-        'query'
+        'query',
+        variables
       )
     },
   }

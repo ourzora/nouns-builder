@@ -28,7 +28,7 @@ export default async function handler(
       })
     }
     return res
-      .status(400)
+      .status(500)
       .json({ error: 'Unexpected Error: Unable to simulate these transactions' })
   }
 }

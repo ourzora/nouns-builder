@@ -1,7 +1,7 @@
 import { Flex, Text, vars } from '@zoralabs/zord'
 import React, { Fragment, useState } from 'react'
 import { useSWRConfig } from 'swr'
-import { Address } from 'wagmi'
+import { Address } from 'viem'
 
 import { Countdown } from 'src/components/Countdown'
 import AnimatedModal from 'src/components/Modal/AnimatedModal'
