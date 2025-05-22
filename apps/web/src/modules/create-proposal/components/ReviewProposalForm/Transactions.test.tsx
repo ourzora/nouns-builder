@@ -74,7 +74,7 @@ describe('List of transactions', () => {
           ]}
           simulations={[
             {
-              index: 1,
+              index: 0,
               status: false,
               id: 'id-1',
               url: 'url-1',
@@ -181,7 +181,7 @@ describe('List of transactions', () => {
     expect(reviewCards).toHaveLength(2)
 
     const firstReviewCard = reviewCards[0]
-    expect(within(firstReviewCard).queryAllByText(/View details/)).toHaveLength(2)
+    expect(within(firstReviewCard).queryAllByText(/View details/)).toHaveLength(1)
 
     const secondReviewCard = reviewCards[1]
     expect(within(secondReviewCard).queryAllByText(/View details/)).toHaveLength(1)
