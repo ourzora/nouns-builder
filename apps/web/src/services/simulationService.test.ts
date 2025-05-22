@@ -4,11 +4,8 @@ import { vi } from 'vitest'
 
 import { CHAIN_ID } from 'src/typings'
 
-import { createClient } from './createClient'
 import { InvalidRequestError } from './errors'
-import { Simulation, simulate } from './simulationService'
-
-const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
+import { SimulationOutput, SimulationRequestBody, simulate } from './simulationService'
 
 vi.mock('axios', () => {
   return {
@@ -20,14 +17,7 @@ vi.mock('axios', () => {
   }
 })
 
-vi.mock('./createClient', async () => {
-  return {
-    createClient: vi.fn().mockReturnValue({
-      getTransactionReceipt: vi.fn(),
-      sendTransaction: vi.fn(),
-    }),
-  }
-})
+const { TENDERLY_USER, TENDERLY_PROJECT, TENDERLY_ACCESS_KEY } = process.env
 
 describe('simulationService', () => {
   beforeEach(() => {
@@ -36,15 +26,28 @@ describe('simulationService', () => {
 
   describe('simulate', () => {
     const treasuryAddress: Address = '0xbcdfd67cce7bf4f49c0631ddd14eadff4d5ca15d'
-    const request = {
+    const request: SimulationRequestBody = {
       treasuryAddress,
       chainId: CHAIN_ID.ETHEREUM,
       targets: [
         '0x7d8ba3e0745079b292f68e421d292c05da2d0721',
         '0xa7c8f84ec8cbed6e8fb793904cd1ec9ddfc9c35d',
       ],
-      calldatas: ['sendEth()', 'sendEth()'],
+      calldatas: ['0x', '0x'],
       values: ['1', '2'],
+    }
+
+    const sampleOutput: SimulationOutput = {
+      index: 0,
+      id: '',
+      status: true,
+      url: `https://dashboard.tenderly.co/shared/simulation/<simulationId>`,
+      gas_used: Number(parseEther('0.005')),
+      block_number: 0,
+      from: treasuryAddress,
+      to: treasuryAddress,
+      input: treasuryAddress,
+      value: '0',
     }
 
     const receipt = {
@@ -69,8 +72,8 @@ describe('simulationService', () => {
         simulate({
           treasuryAddress,
           chainId: CHAIN_ID.ETHEREUM,
-          targets: ['t1', 't2', 't3'],
-          calldatas: ['c1', 'c2'],
+          targets: ['0xt1', '0xt2', '0xt3'],
+          calldatas: ['0xc1', '0xc2'],
           values: ['v1, v2'],
         })
       ).rejects.toThrow(InvalidRequestError)
@@ -79,8 +82,8 @@ describe('simulationService', () => {
         simulate({
           treasuryAddress,
           chainId: CHAIN_ID.ETHEREUM,
-          targets: ['t1'],
-          calldatas: ['c1'],
+          targets: ['0xt1'],
+          calldatas: ['0xc1'],
           values: ['v1, v2'],
         })
       ).rejects.toThrow(InvalidRequestError)
@@ -89,8 +92,8 @@ describe('simulationService', () => {
         simulate({
           treasuryAddress,
           chainId: CHAIN_ID.ETHEREUM,
-          targets: ['t1'],
-          calldatas: ['c1', 'c2'],
+          targets: ['0xt1'],
+          calldatas: ['0xc1', '0xc2'],
           values: ['v1, v2'],
         })
       ).rejects.toThrow(InvalidRequestError)
@@ -100,7 +103,7 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           ...request,
-          treasuryAddress: '0xnonsense',
+          treasuryAddress: '0xnonsense' as Address,
         })
       ).rejects.toThrow(InvalidRequestError)
     })
@@ -109,125 +112,81 @@ describe('simulationService', () => {
       expect(() =>
         simulate({
           ...request,
-          targets: ['nonsense1', '0xa7c8f84ec8cbed6e8fb793904cd1ec9ddfc9c35d'],
+          targets: ['0xnonsense1', '0xa7c8f84ec8cbed6e8fb793904cd1ec9ddfc9c35d'],
         })
       ).rejects.toThrow(InvalidRequestError)
     })
 
     it('returns succeeded simulations', async () => {
-      const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createClient(forkId, CHAIN_ID.ETHEREUM)
+      const expectedSimulations: SimulationOutput[] = [
+        {
+          ...sampleOutput,
+          index: 0,
+          id: simulationId,
+          status: true,
+          url: `https://dashboard.tenderly.co/shared/simulation/${simulationId}`,
+          gas_used: Number(parseEther('0.005')),
+        },
+        {
+          ...sampleOutput,
+          index: 1,
+          id: simulationId,
+          status: true,
+          url: `https://dashboard.tenderly.co/shared/simulation/${simulationId}`,
+          gas_used: Number(parseEther('0.005')),
+        },
+      ]
 
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
-        data: { simulation_fork: { id: forkId } },
+        data: { simulation_results: expectedSimulations.map((s) => ({ simulation: s })) },
       })
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
-      vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValue({
-        ...receipt,
-        status: 'success', // success status
-        gasUsed: parseEther('0.5'),
-      })
-
-      vi.mocked(axios.get).mockResolvedValue({
-        status: 200,
-        data: { fork: { head_simulation_id: simulationId } },
-      })
-
-      const spy = vi.spyOn(axios, 'delete')
 
       const response = await simulate(request)
-
-      const expectedSimulations: Simulation[] = [
-        {
-          index: 0,
-          simulationId,
-          success: true,
-          simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5').toString(),
-        },
-        {
-          index: 1,
-          simulationId,
-          success: true,
-          simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5').toString(),
-        },
-      ]
 
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: true,
-        totalGasUsed: parseEther('1').toString(),
+        totalGasUsed: parseEther('0.01').toString(),
       })
-
-      expect(spy).toHaveBeenCalledOnce()
-      expect(spy).toHaveBeenCalledWith(
-        `https://api.tenderly.co/api/v2/project/nouns-builder/forks/${forkId}`,
-        { headers: { 'X-Access-Key': TENDERLY_ACCESS_KEY as string } }
-      )
     })
 
     it('returns simulations with an error', async () => {
-      const forkId = 'forkId'
       const simulationId = 'simulationId'
 
-      const forkProvider = createClient(forkId, CHAIN_ID.ETHEREUM)
+      const expectedSimulations: SimulationOutput[] = [
+        {
+          ...sampleOutput,
+          index: 0,
+          id: simulationId,
+          status: true,
+          url: `https://dashboard.tenderly.co/shared/simulation/${simulationId}`,
+          gas_used: Number(parseEther('0.005')),
+        },
+        {
+          ...sampleOutput,
+          index: 1,
+          id: simulationId,
+          status: false,
+          url: `https://dashboard.tenderly.co/shared/simulation/${simulationId}`,
+          gas_used: Number(parseEther('0.005')),
+        },
+      ]
 
       vi.mocked(axios.post).mockResolvedValueOnce({
         status: 200,
-        data: { simulation_fork: { id: forkId } },
+        data: { simulation_results: expectedSimulations.map((s) => ({ simulation: s })) },
       })
-
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 1
-      vi.mocked(forkProvider.sendTransaction).mockResolvedValueOnce('0xHash') // mock eth_sendTransaction 2
-      vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
-        ...receipt,
-        status: 'success', // success status
-        gasUsed: parseEther('0.5'),
-      })
-      vi.mocked(forkProvider.getTransactionReceipt).mockResolvedValueOnce({
-        ...receipt,
-        status: 'reverted', // failed status
-        gasUsed: parseEther('0.5'),
-      })
-
-      vi.mocked(axios.get).mockResolvedValue({
-        status: 200,
-        data: { fork: { head_simulation_id: simulationId } },
-      })
-
-      const spy = vi.spyOn(axios, 'delete')
 
       const response = await simulate(request)
-
-      const expectedSimulations: Simulation[] = [
-        {
-          index: 0,
-          simulationId,
-          success: true,
-          simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5').toString(),
-        },
-        {
-          index: 1,
-          simulationId,
-          success: false,
-          simulationUrl: `https://dashboard.tenderly.co/public/${TENDERLY_USER}/${TENDERLY_PROJECT}/fork-simulation/${simulationId}`,
-          gasUsed: parseEther('0.5').toString(),
-        },
-      ]
 
       expect(response).toEqual({
         simulations: expectedSimulations,
         success: false,
-        totalGasUsed: parseEther('1').toString(),
+        totalGasUsed: parseEther('0.01').toString(),
       })
-
-      expect(spy).not.toHaveBeenCalled()
     })
   })
 })

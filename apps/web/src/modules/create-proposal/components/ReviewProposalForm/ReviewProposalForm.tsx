@@ -17,7 +17,7 @@ import { SUCCESS_MESSAGES } from 'src/constants/messages'
 import { governorAbi, tokenAbi } from 'src/data/contract/abis'
 import { useDaoStore } from 'src/modules/dao'
 import { ErrorResult } from 'src/services/errorResult'
-import { Simulation, SimulationResult } from 'src/services/simulationService'
+import { SimulationOutput, SimulationResult } from 'src/services/simulationService'
 import { useChainStore } from 'src/stores/useChainStore'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
@@ -62,14 +62,13 @@ export const ReviewProposalForm = ({
   const addresses = useDaoStore((state) => state.addresses)
   const chain = useChainStore((x) => x.chain)
   const config = useConfig()
-  //@ts-ignore
   const { address } = useAccount()
   const { clearProposal } = useProposalStore()
 
   const [error, setError] = useState<string | undefined>()
   const [simulationError, setSimulationError] = useState<string | undefined>()
   const [simulating, setSimulating] = useState<boolean>(false)
-  const [simulations, setSimulations] = useState<Array<Simulation>>([])
+  const [simulations, setSimulations] = useState<Array<SimulationOutput>>([])
   const [proposing, setProposing] = useState<boolean>(false)
   const { clear: clearEscrowForm } = useEscrowFormStore()
 
@@ -113,12 +112,12 @@ export const ReviewProposalForm = ({
       } = prepareProposalTransactions(values.transactions)
 
       if (!!CHAINS_TO_SIMULATE.find((x) => x === chain.id)) {
-        let simulationResults
+        let simulationResult
 
         try {
           setSimulating(true)
 
-          simulationResults = await axios
+          simulationResult = await axios
             .post<SimulationResult>('/api/simulate', {
               treasuryAddress: addresses?.treasury,
               chainId: chain.id,
@@ -140,17 +139,17 @@ export const ReviewProposalForm = ({
         } finally {
           setSimulating(false)
         }
-        const simulationFailed = simulationResults?.success === false
+        const simulationFailed = simulationResult?.success === false
         if (simulationFailed) {
           const failed =
-            simulationResults?.simulations.filter(({ success }) => success === false) ||
-            []
+            simulationResult?.simulations.filter(({ status }) => status === false) || []
           setSimulations(failed)
           return
         }
       }
 
       try {
+        setProposing(true)
         const params = {
           targets: targets,
           values: transactionValues,
@@ -168,7 +167,6 @@ export const ReviewProposalForm = ({
 
         const hash = await writeContract(config, data.request)
 
-        setProposing(true)
         await waitForTransactionReceipt(config, { hash, chainId: chain.id })
 
         router

@@ -10,11 +10,11 @@ import { unpackOptionalArray } from 'src/utils/helpers'
 
 export interface L2MigratedResponse {
   migrated:
-  | {
-    l2TokenAddress: AddressType
-    chainId: CHAIN_ID
-  }
-  | undefined
+    | {
+        l2TokenAddress: AddressType
+        chainId: CHAIN_ID
+      }
+    | undefined
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

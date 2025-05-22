@@ -220,8 +220,9 @@ export const PlaceBid = ({
                       const network = PUBLIC_IS_TESTNET
                         ? 'https://testnet.nouns.build'
                         : 'https://nouns.build'
-                      const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${addresses.token
-                        }`
+                      const baseUrl = `${network}/dao/${chain.name.toLowerCase()}/${
+                        addresses.token
+                      }`
                       if (address === undefined) {
                         await navigator.clipboard.writeText(baseUrl)
                         return

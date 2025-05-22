@@ -74,7 +74,7 @@ export const mediumAnimatedContent = style({
 export const largeAnimatedContent = style({
   position: 'fixed',
   left: '50%',
-  marginLeft: "-456px !important",
+  marginLeft: '-456px !important',
   width: 912,
   top: 120,
   gap: 24,

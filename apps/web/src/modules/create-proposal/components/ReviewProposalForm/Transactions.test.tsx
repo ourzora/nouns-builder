@@ -1,6 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
 import { Formik } from 'formik'
-import { parseEther } from 'viem'
 import { vi } from 'vitest'
 
 import { TransactionType } from '../../constants/transactionType'
@@ -76,10 +75,15 @@ describe('List of transactions', () => {
           simulations={[
             {
               index: 1,
-              success: false,
-              simulationId: 'id-1',
-              simulationUrl: 'url-1',
-              gasUsed: parseEther('0.1').toString(),
+              status: false,
+              id: 'id-1',
+              url: 'url-1',
+              gas_used: 10000,
+              from: '0x123',
+              to: '0x123',
+              value: '0',
+              input: '0x123',
+              block_number: 1,
             },
           ]}
         />
@@ -133,24 +137,39 @@ describe('List of transactions', () => {
           simulations={[
             {
               index: 0,
-              success: false,
-              simulationId: 'id-0',
-              simulationUrl: 'url-0',
-              gasUsed: parseEther('0.1').toString(),
+              status: false,
+              id: 'id-0',
+              url: 'url-0',
+              gas_used: 10000,
+              from: '0x123',
+              to: '0x123',
+              value: '0',
+              input: '0x123',
+              block_number: 1,
             },
             {
               index: 1,
-              success: false,
-              simulationId: 'id-1',
-              simulationUrl: 'url-1',
-              gasUsed: parseEther('0.1').toString(),
+              status: false,
+              id: 'id-1',
+              url: 'url-1',
+              gas_used: 10000,
+              from: '0x123',
+              to: '0x123',
+              value: '0',
+              input: '0x123',
+              block_number: 1,
             },
             {
               index: 2,
-              success: false,
-              simulationId: 'id-2',
-              simulationUrl: 'url-3',
-              gasUsed: parseEther('0.1').toString(),
+              status: false,
+              id: 'id-2',
+              url: 'url-2',
+              gas_used: 10000,
+              from: '0x123',
+              to: '0x123',
+              value: '0',
+              input: '0x123',
+              block_number: 1,
             },
           ]}
         />

@@ -159,12 +159,15 @@ export const auctionActionButton = style({
 
 export const auctionActionButtonVariants = styleVariants({
   bid: [auctionActionButton],
-  share: [auctionActionButton, {
-    minWidth: 'auto !important',
-    ':hover': {
-      zIndex: 102,
+  share: [
+    auctionActionButton,
+    {
+      minWidth: 'auto !important',
+      ':hover': {
+        zIndex: 102,
+      },
     },
-  }],
+  ],
   bidding: [
     auctionActionButton,
     { width: '100%', background: '#F1F1F1', color: '#B3B3B3' },

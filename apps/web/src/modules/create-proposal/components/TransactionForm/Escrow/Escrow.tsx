@@ -13,9 +13,9 @@ import { getProposals } from 'src/data/subgraph/requests/proposalsQuery'
 import { TransactionType } from 'src/modules/create-proposal/constants'
 import { useProposalStore } from 'src/modules/create-proposal/stores'
 import { useDaoStore } from 'src/modules/dao'
-import { getEnsAddress } from 'src/utils/ens'
 import { useChainStore } from 'src/stores/useChainStore'
 import { CHAIN_ID } from 'src/typings'
+import { getEnsAddress } from 'src/utils/ens'
 
 import EscrowForm from './EscrowForm'
 import { EscrowFormValues } from './EscrowForm.schema'
@@ -83,16 +83,16 @@ export const Escrow: React.FC = () => {
               klerosCourt: 1,
               ...(x.mediaType && x.mediaUrl
                 ? {
-                  documents: [
-                    {
-                      id: 'doc-001',
-                      type: 'ipfs',
-                      src: x.mediaUrl,
-                      mimeType: x.mediaType,
-                      createdAt: new Date().getTime() / 1000,
-                    },
-                  ],
-                }
+                    documents: [
+                      {
+                        id: 'doc-001',
+                        type: 'ipfs',
+                        src: x.mediaUrl,
+                        mimeType: x.mediaType,
+                        createdAt: new Date().getTime() / 1000,
+                      },
+                    ],
+                  }
                 : {}),
             }) as MilestoneMetadata
         ),
