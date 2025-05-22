@@ -21,15 +21,15 @@ export const config = getDefaultConfig({
   transports,
   wallets: [
     {
-      groupName: 'Recommended',
+      groupName: 'Popular',
       wallets: [
-        injectedWallet,
-        rainbowWallet,
-        ledgerWallet,
-        safeWallet,
         metaMaskWallet,
+        rainbowWallet,
         coinbaseWallet,
         walletConnectWallet,
+        injectedWallet,
+        ledgerWallet,
+        safeWallet,
       ],
     },
   ],
