@@ -20,7 +20,6 @@ export const useVotes = ({
       enabled: !!collectionAddress && !!governorAddress && !!signerAddress,
     },
     allowFailure: false,
-    //keepPreviousData: true,
     contracts: [
       {
         address: collectionAddress as AddressType,

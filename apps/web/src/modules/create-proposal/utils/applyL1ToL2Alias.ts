@@ -2,7 +2,7 @@ import { getBytecode, readContract } from 'wagmi/actions'
 
 import { L2_MIGRATION_DEPLOYER } from 'src/constants/addresses'
 import { L2DeployerABI } from 'src/data/contract/abis/L2MigrationDeployer'
-import { config } from 'src/data/contract/config'
+import { config } from 'src/data/contract/server.config'
 import { AddressType, CHAIN_ID } from 'src/typings'
 
 // We are calling a pure function so we can default to any network with an L2 migration deployer

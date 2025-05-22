@@ -30,7 +30,7 @@ export const ConnectButton = () => {
         }}
         cursor={'pointer'}
       >
-        <Text variant={'paragraph-md'}>Wrong Chain</Text>
+        <Text variant={'paragraph-md'}>Wrong Network</Text>
       </Flex>
     )
   }

@@ -185,7 +185,11 @@ export const ReviewProposalForm = ({
           })
       } catch (err: any) {
         setProposing(false)
-        if (err.code === 'ACTION_REJECTED') {
+        if (
+          err?.code === 'ACTION_REJECTED' ||
+          err?.message?.includes('rejected') ||
+          err?.message?.includes('denied')
+        ) {
           setError(ERROR_CODE.REJECTED)
           return
         }
