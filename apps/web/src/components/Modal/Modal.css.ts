@@ -48,7 +48,7 @@ export const smallAnimatedContent = style({
     'screen and (max-width: 768px)': {
       width: 'calc(100% - 50px)',
       left: 25,
-      marginLeft: 0,
+      marginLeft: '0 !important',
     },
   },
 })
@@ -66,7 +66,7 @@ export const mediumAnimatedContent = style({
     'screen and (max-width: 768px)': {
       width: 'calc(100% - 50px)',
       left: 25,
-      marginLeft: 0,
+      marginLeft: '0 !important',
     },
   },
 })
@@ -84,12 +84,12 @@ export const largeAnimatedContent = style({
     'screen and (max-width: 1000px)': {
       width: 'calc(100% - 50px)',
       left: 25,
-      marginLeft: 0,
+      marginLeft: '0 !important',
     },
     'screen and (max-width: 768px)': {
       width: 'calc(100% - 50px)',
       left: 25,
-      marginLeft: 0,
+      marginLeft: '0 !important',
     },
   },
 })
