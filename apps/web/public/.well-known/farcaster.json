@@ -1,0 +1,17 @@
+{
+  "frame": {
+    "version": "0.0.1",
+    "name": "Nouns Builder",
+    "iconUrl": "https://testnet-nouns-builder-git-feat-mini-app-nouns-builder.vercel.app/noggles.png",
+    "homeUrl": "https://testnet-nouns-builder-git-feat-mini-app-nouns-builder.vercel.app",
+    "imageUrl": "https://testnet-nouns-builder-git-feat-mini-app-nouns-builder.vercel.app/builder.png",
+    "buttonTitle": "Open Nouns Builder",
+    "splashImageUrl": "https://testnet-nouns-builder-git-feat-mini-app-nouns-builder.vercel.app/noggles.png",
+    "splashBackgroundColor": "#ffffff"
+  },
+  "accountAssociation": {
+    "header": "eyJmaWQiOjM5NzE0MywidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDZGRGRBRjE5RjNERjJiMWNCYTE2YTM1MkIzZTJiQzkwQTVEMWU2OTEifQ",
+    "payload": "eyJkb21haW4iOiJ0ZXN0bmV0LW5vdW5zLWJ1aWxkZXItZ2l0LWZlYXQtbWluaS1hcHAtbm91bnMtYnVpbGRlci52ZXJjZWwuYXBwIn0",
+    "signature": "MHgxZjA4ZjU1OWRiYWUzMzA0MWNjZWUxYTFkNmI3MWUyOWZjNzBmNzkwMzEzZDNmZTQzNWViMzc1MjFmZDMzOTM0MDI2ZmM4MWJmMDQwZjEyNjBhNGNkNGEwMTQ3NTIxNTExMjgwYTZlNWYwYTA5OTFjYjliYzMyMGZkNDU5N2U2OTFi"
+  }
+}
